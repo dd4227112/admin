@@ -3,62 +3,56 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4> Subscription -<?= $type ?></h4>
-                <span></span>
-            </div>
-        </div>					
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
         <div class="page-body">
           <div class="row">
+
             <div class="col-sm-12">
              <div class="card">
+                    <div class="card-block">     
+                        <?php if ($type == 'allowance' || $type == 'deduction') { ?>
+                            <div class="col-sm-12 col-xs-12 col-sm-offset-3 list-group">
+                                <div class="list-group-item">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th><?= __("Name") ?></th>
+                                                <th><?= __("Description") ?></th>
 
-                
-                <?php if ($type == 'allowance' || $type == 'deduction') { ?>
-                    <div class="col-sm-12 col-xs-12 col-sm-offset-3 list-group">
-                        <div class="list-group-item">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th><?= __("name") ?></th>
-                                        <th><?= __("description") ?></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-
-                                        <td><?= ucfirst($type) ?></td>
-                                        <td><?= $allowance->name ?></td>
-                                        <td><?= $allowance->description ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                                <td><?= ucfirst($type) ?></td>
+                                                <td><?= $allowance->name ?></td>
+                                                <td><?= $allowance->description ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        <?php } ?> 
                     </div>
-                <?php } ?>
-
-				         <div  class="card-block">
-					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
-                            <?php if (isset($users) && !empty($users)) { ?>
-                                <table id="example1" class="table dataTable tablesubscriber">
-                                   <thead>
+            
+                        <div class="card-block">     
+                            <div class="table-responsive">
+                                <table id="example1" class="table dataTable table-sm table-striped table-bordered nowrap">
+                                    <thead>
                                        <tr>
-                                           <th class=""><?= __('#') ?></th>
-                                           <th class="col-sm-1">Name</th>
-                                           <th class="col-sm-2">Email</th>
-                                           <th class="col-sm-2">Phone Number</th>
-                                           <th class="col-sm-2">Amount</th>
-                                           <th class="col-sm-2">Deadline</th>
-                                           <th class="col-sm-2"><?= __('action') ?></th>
+                                           <th> #</th>
+                                           <th>Name</th>
+                                           <th>Email</th>
+                                           <th>Phone Number</th>
+                                           <th>Amount</th>
+                                           <th>Deadline</th>
+                                           <th>Actions</th>
                                        </tr>
-                                   </thead>
-                                   <tbody>
-                                       <?php
-                                       if (!empty($users)) {
+                                    </thead>
+                                    <tbody>
+                                               <?php
+                                           if (!empty($users)) {
                                            $i = 1;
                                            foreach ($users as $user) {
                                                $arr = array(
@@ -67,70 +61,81 @@
                                                );
                                                ?>
                                                <tr id="std<?= $user->id; ?>">
-                                                   <td data-title="<?= __('slno') ?>">
+                                                   <td>
                                                        <?php echo $i; ?>
                                                    </td>
-                                                   <td data-title="<?= __('student_name') ?>">
-                                                       <?php echo $user->name; ?>
+                                                   <td>
+                                                       <?php echo $user->firstname.' '.$user->lastname; ?>
                                                    </td>
                                                
-                                                   <td data-title="<?= __('student_section') ?>">
-                                                       <?php echo $user->email; ?>
+                                                   <td>
+                                                       <?= warp($user->email,4); ?>
                                                    </td>
-                                                   <td data-title="<?= __('student_section') ?>">
+                                                   <td>
                                                        <?php echo $user->phone; ?>
                                                    </td>
-                                                   <td data-title="<?= __('student_section') ?>">
+                                                   <td class="text-center">
                                                        <?php
                                                        $allowance_ = \App\Models\UserAllowance::where('user_id', $user->id)->where('deadline', '>', date('Y-m-d'))->first();
                                                        $amount = !empty($allowance_) ? $allowance_->amount : '';
                                                        $deadline = !empty($allowance_) ? $allowance_->deadline : '';
                                                        ?>
-                                                      <input placeholder="Amount" type="number" class="form-control" id="amount<?= $user->id ?>" name="amount" value="<?= $amount ?>" >
+                                                      <input placeholder="Amount" type="number" class="form-control col-sm-12" id="amount<?= $user->id ?>" name="amount" value="<?= $amount ?>" >
                                                    </td>
-                                                   <td data-title="<?= __('student_section') ?>">
-                                                       <input  type="date" class="form-control" id="deadline<?= $user->id ?>" name="amount" value="<?= $deadline ?>" >
+                                                   <td>
+                                                      <input  type="date" class="form-control col-sm-12" id="deadline<?= $user->id ?>" name="amount" value="<?= $deadline ?>" >
                                                    </td>
-                                                   <td data-title="<?= __('action') ?>">
+                                                   <td>
                                                        <?php
                                                        if (in_array($user->id, $subscriptions)) {
                                                            ?>
-                                                           <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')" class="btn btn-danger btn-sm mrg"><i class="fa fa-trash-o"></i> Remove</a>
+                                                           <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Remove</a>
                                                        <?php } else { ?>
                                                            <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')" class="btn btn-sm btn-success">Save</a>
-                                                          
                                                        <?php } ?>
                                                             <span id="stat<?= $user->id ?>"></span>
                                                    </td>
                                                </tr>
-                                               <?php
-                                               $i++;
-                                           }
-                                       }
-                                       ?>
-                                   </tbody>
-                               </table>
-                               <?php }  ?>
-								 
-                     </div>									
-                 </div>
+                                          <?php $i++; } } ?>
+                                      </tbody>
+                                      <tfoot>
+                                       <tr>
+                                          <th> #</th>
+                                           <th>Name</th>
+                                           <th>Email</th>
+                                           <th>Phone Number</th>
+                                           <th>Amount</th>
+                                           <th>Deadline</th>
+                                           <th>Actions</th>
+                                        </tr>
+                                    </tfoot>
+                                  </table>
+                               </div>
+                            </div>
+        
+
+
+
             </div> 
         </div>
      </div>
   </div>
+</div>
 </div>
 
 <script type="text/javascript">
     function submit_deduction(a) {
         var amount = $('#amount' + a).val();
         var deadline = $('#deadline' + a).val();
+          console.log(deadline);
+
         $.ajax({
             type: 'POST',
             url: "<?= url('allowance/monthlyAddSubscriber/null') ?>",
             data: {user_id: a, amount: amount, deadline: deadline, allowance_id: '<?= $set ?>', type: 0},
             dataType: "html ",
             beforeSend: function (xhr) {
-                $('#stat' + a ).html('<a href="#/refresh"><i class="fa fa-spinner"></i> </a>');
+                $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-30 text-c-red"></i> </a>');
             },
             complete: function (xhr, status) {
                 $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');
@@ -150,7 +155,7 @@
             data: {user_id: a, set: '<?= $set ?>', type: 'allowance'},
             dataType: "html ",
             beforeSend: function (xhr) {
-                $('#stat' + a ).html('<a href="#/refresh"><i class="fa fa-spinner"></i> </a>');
+                $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-30 text-c-red"></i> </a>');
             },
             complete: function (xhr, status) {
                 $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');

@@ -1,19 +1,24 @@
 @extends('layouts.app') 
 @section('content') 
+<?php  
+if($type == 2) {
+    $deductionType = 'Monthly deductions';
+  }else{
+    $deductionType = 'Fixed Deductions';
+  } 
+ $breadcrumb = array('title' => $deductionType,'subtitle'=>'accounts','head'=>'payroll');
+  ?>
+
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4> Subscription - &nbsp;<?= $type ?></h4>
-                <span>Pension Fund Status</span>
-            </div>
-        </div>					
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+      					
         <div class="page-body">
           <div class="row">
             <div class="col-sm-12">
              <div class="card">
         
+            <div class="card-block">
               <?php if ($type == 'allowance' || $type == 'deduction') { ?>
                 <div class="col-sm-12 col-xs-12 col-sm-offset-3 list-group">
                     <div class="list-group-item">
@@ -40,29 +45,34 @@
                         </div>
                      </div>
                     <?php } ?>
+               </div>
+                
+                
 
-				         <div id=""  class="card-block">
-					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
-                          
-								<table class="table dataTable">
+				    
+                        
+                        <div class="card-block">     
+                            <div class="table-responsive">
+                                <table id="example1" class="table dataTable table-sm table-striped table-bordered nowrap">
+
 									<thead>
                                         <tr>
-                                            <th class=""><?= __('#') ?></th>
-                                            <th class="col-sm-2">Name</th>
-                                            <th class="col-sm-2">User role</th>
-                                            <th class="col-sm-2">Email</th>
-                                            <th class="col-sm-2">Phone Number</th>
+                                            <th><?= __('#') ?></th>
+                                            <th>Name</th>
+                                            <th>User role</th>
+                                            <th>Email</th>
+                                            <th>Phone Number</th>
                                             <?php if ($type == 'pension') { ?>
-                                                <th class="col-sm-2">National ID/Check  Number</th>
+                                                <th>National ID/Check  Number</th>
                                             <?php } ?>
                                             <?php if ($type == 'allowance' || $type == 'deduction') { ?>
-                                                <th class="col-sm-2"><?= (bool) $allowance->is_percentage == false ? __('amount') : __('percent') ?></th>
+                                                <th><?= (bool) $allowance->is_percentage == false ? __('amount') : __('percent') ?></th>
                                                 <?php
                                             }
                                             if ($type == 'deduction') {?>
-                                                <th class="col-sm-2"><?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('Employer percent') ?></th>
+                                                <th><?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('Employer percent') ?></th>
                                             <?php } ?> 
-                                            <th class="col-sm-2" colspan="2"><?= __('action') ?></th>
+                                            <th colspan="2"><?= __('action') ?></th>
                                         </tr>
 									</thead>
                                     <tbody>
@@ -72,29 +82,29 @@
                                             foreach ($users as $user) {
                                                 $arr = array(
                                                     'user_id' => $user->id
-                                                    // 'table' => $user->table
+                                            
                                                 );
                                                 ?>
                                                 <tr id="std<?= $user->id; ?>">
-                                                    <td data-title="<?= __('#') ?>">
+                                                    <td>
                                                         <?php echo $i; ?>
                                                     </td>
                 
-                                                    <td data-title="<?= __('Name') ?>">
+                                                    <td>
                                                         <?php echo ucfirst($user->firstname.' '.$user->lastname); ?>
                                                     </td>
-                                                    <td data-title="<?= __('student_roll') ?>">
+                                                    <td>
                                                         <?php echo $user->role->name; ?>
                                                     </td>
-                                                    <td data-title="<?= __('student_section') ?>">
+                                                    <td>
                                                         <?php echo $user->email; ?>
                                                     </td>
-                                                    <td data-title="<?= __('student_section') ?>">
+                                                    <td>
                                                         <?php echo $user->phone; ?>
                                                     </td>
                                                     
                                                     <?php if ($type == 'allowance' || $type == 'deduction') { ?>
-                                                        <td data-title="<?= __('amount') ?>">
+                                                        <td>
                                                             <?php
                                                             if ($type == 'allowance') {
                                                                 $user_allowance = \App\Models\UserAllowance::where('user_id', $user->id)->where('allowance_id', $set)->first();
@@ -142,7 +152,7 @@
                                                             <span id="check<?= $user->id ?>"></span>
                                                         </td>
                                                         <?php } ?>
-                                                      <td data-title="<?= __('action') ?>">
+                                                      <td>
                                                         <?php
                                                         if (in_array($user->id, $subscriptions)) {?>
                                                             <a href="<?= url('payroll/deleteSubscriber/null/?user_id=' . $user->id  . '&set=' . $set . '&type=' . $type) ?>" class="btn btn-danger btn-sm mrg"><i class="fa fa-trash-o"></i> Remove</a>
@@ -151,21 +161,18 @@
                                                        <?php } ?>
                                                     </td>
                                                 </tr>
-                                                <?php
-                                              $i++;
-                                            }
-                                        }
-                                        ?>
-                               </tbody>
-                            </table>
-						
-								 
-                     </div>									
-                 </div>
-            </div> 
+                                                <?php $i++; } }?>
+                                      </tbody>
+                                    </table>					
+                                </div>
+                            </div>
+                   
+                   
         </div>
      </div>
+    </div>
   </div>
+</div>
 </div>
 
 

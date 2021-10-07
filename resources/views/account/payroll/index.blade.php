@@ -2,46 +2,22 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Salaries</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Payroll</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-        <div class="page-body">
+       
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
+        <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
 
-                        <?php
-                        // $usertype = session("usertype");
-                        ?>
-                        <div class="m-10">
-                           <h5 class="page-header">
-                            <a class="btn btn-success" href="<?php echo url('payroll/create') ?>"><i class="fa fa-plus"></i>
-                                Add Payroll</a>&nbsp; 
-                          </h5>
+            
+                        <div class="card-header">
+                              <a class="btn btn-success" href="<?php echo url('payroll/create') ?>">
+                                Add Payroll
+                            </a>
                         </div>
 
                         <div class="col-lg-12 col-xl-12">                                      
-                            <!-- Nav tabs -->
                             <ul class="nav nav-tabs md-tabs" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Payroll List</a>
@@ -54,30 +30,24 @@
                             </ul>
 
                             <!-- Tab panes -->
-                            <div class="tab-content card-block">
                                 <div class="tab-pane active" id="home3" role="tabpanel">
-                                  <div id="hide-table">
-                                            <a
-                                                class="right"><i class="fa fa-question-circle" data-container="body"
-                                                             data-toggle="popover" data-placement="right" data-trigger="hover"
-                                                             data-content="Use the buttons below to either copy or download the information on the table below. "
-                                                             title="Export Buttons"></i></a>
-
-                                         <div class="table-responsive table-sm table-striped table-bordered table-hover">          
-                                            <table id="example1" class="table dataTable">
+                                     <div class="card-block">
+                                     
+                                      <div class="table-responsive">
+                                          <table class="table dataTable table-sm table-striped table-bordered nowrap">
                                                 <thead>
                                                     <tr>
-                                                        <th class="col-sm-1"><?= __('#') ?></th>
-                                                        <th class="col-sm-2"><?= __('Payment date') ?></th>
-                                                        <th class="col-sm-2"><?= __('Total users') ?></th>
-                                                        <th class="col-sm-2"><?= __('Basic pay') ?></th>
-                                                        <th class="col-sm-1"><?= __('Allowance') ?></th>
-                                                        <th class="col-sm-1"><?= __('Gross pay') ?></th>
-                                                        <th class="col-sm-1"><?= __('Pension') ?></th>
-                                                        <th class="col-sm-1"><?= __('Deduction') ?></th>
-                                                        <th class="col-sm-1"><?= __('Tax') ?></th>
-                                                        <th class="col-sm-1"><?= __('Paye') ?></th>
-                                                        <th class="col-sm-1"><?= __('Net pay') ?></th>
+                                                        <th><?= __('#') ?></th>
+                                                        <th><?= __('Payment date') ?></th>
+                                                        <th><?= __('Total users') ?></th>
+                                                        <th><?= __('Basic pay') ?></th>
+                                                        <th><?= __('Allowance') ?></th>
+                                                        <th><?= __('Gross pay') ?></th>
+                                                        <th><?= __('Pension') ?></th>
+                                                        <th><?= __('Deduction') ?></th>
+                                                        <th><?= __('Tax') ?></th>
+                                                        <th><?= __('Paye') ?></th>
+                                                        <th><?= __('Net pay') ?></th>
 
                                                         <?php
                                                         if (can_access('manage_payroll')) {
@@ -93,37 +63,37 @@
                                                         foreach ($salaries as $salary) {
                                                             ?>
                                                             <tr>
-                                                                <td data-title="<?= __('#') ?>">
+                                                                <td>
                                                                     <?php echo $i; ?>
                                                                 </td>
-                                                                <td data-title="<?= __('payment_date') ?>">
+                                                                <td>
                                                                     <?php
                                                                     echo date('d M Y', strtotime($salary->payment_date));
                                                                     ?>
                                                                 </td>
-                                                                <td data-title="<?= __('total_users') ?>">
+                                                                <td>
                                                                     <?php echo $salary->total_users; ?>
                                                                 </td>
-                                                                <td data-title="<?= __('basic_pay') ?>">
+                                                                <td>
                                                                     <?php echo money($salary->basic_pay); ?>
                                                                 </td>
-                                                                <td data-title="<?= __('allowance') ?>">
+                                                                <td>
                                                                     <?php
                                                                     echo money($salary->allowance);
                                                                     ?>
 
-                                                                <td data-title="<?= __('gross_pay') ?>">
+                                                                <td>
                                                                     <?php echo money($salary->gross_pay); ?>
                                                                 </td>
-                                                                <td data-title="<?= __('paye') ?>">
+                                                                <td>
                                                                     <?php echo money($salary->pension); ?></td>
-                                                                <td data-title="<?= __('deduction') ?>">
+                                                                <td>
                                                                     <?php echo money($salary->deduction); ?></td>
-                                                                <td data-title="<?= __('tax') ?>">
+                                                                <td>
                                                                     <?php echo money($salary->tax); ?></td>
-                                                                <td data-title="<?= __('paye') ?>">
+                                                                <td>
                                                                     <?php echo money($salary->paye); ?></td>
-                                                                <td data-title="<?= __('net_pay') ?>">
+                                                                <td>
                                                                     <?php echo money($salary->net_pay); ?></td>
                                                                     <?php
                                                                 if (can_access('manage_payroll')) {
@@ -147,7 +117,10 @@
                                             </table>
                                          </div>
                                         </div>
-                                </div>
+                                     
+
+
+
                                 <div class="tab-pane" id="profile3" role="tabpanel">
                                   <div class="row">
 

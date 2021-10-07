@@ -27,6 +27,7 @@ class Account extends Controller {
     }
 
     public function projection() {
+        $this->data['breadcrumb'] = array('title' => 'Create invoices','subtitle'=>'invoices','head'=>'accounts');
         $this->data['budget'] = [];
         return view('account.projection', $this->data);
     }
@@ -43,6 +44,7 @@ class Account extends Controller {
 
 
     public function invoice() {
+        $this->data['breadcrumb'] = array('title' => 'Shulesoft invoices','subtitle'=>'invoices','head'=>'accounts');
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
@@ -85,6 +87,7 @@ class Account extends Controller {
     }
 
     public function invoiceReport() {
+        $this->data['breadcrumb'] = array('title' => 'Invoices report','subtitle'=>'reports','head'=>'accounts');
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
         if((int) $project_id == 1) {
@@ -95,10 +98,10 @@ class Account extends Controller {
             $this->data['to'] = $to;
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-            
-           // $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereIn('id', \App\Models\Payment::whereBetween('date', [$from_date, $to_date])->get(['invoice_id']))->get() : Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
-             $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}'");
-           // dd($this->data['invoices']);
+    
+             $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
+             $this->data['invoice_reports'] = \DB::select("select extract(month from p.created_at) as month , sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
+           // dd($this->data['invoice_reports']);
             return view('account.invoice.report', $this->data);
         }  
 
@@ -1423,7 +1426,8 @@ class Account extends Controller {
 
 
     // List of standing orders
-    public function standingOrders() {              
+    public function standingOrders() {   
+        $this->data['breadcrumb'] = array('title' => 'Standing orders','subtitle'=>'standing orders','head'=>'accounts');
          $this->data['standingorders'] = \App\Models\StandingOrder::latest()->get();
          $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing', $this->data);

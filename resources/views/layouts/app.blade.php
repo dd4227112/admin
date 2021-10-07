@@ -31,6 +31,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
    
         <!-- select 2 -->
         <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
+        
 
         {{-- date picker --}}
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -546,7 +547,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
 
-                                             <li class=" pcoded-hasmenu">
+                                             {{-- <li class=" pcoded-hasmenu">
                                                <a href="javascript:void(0)">
                                                  <span class="pcoded-mtext text-bold">Loans</span>
                                                </a>
@@ -570,8 +571,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                        <span class="pcoded-mtext">Sales Status</span>
                                                     </a>
                                                  </li>
-                                            </ul>
-                                        </li>
+                                               </ul>
+                                            </li> --}}
 
                                                
 
@@ -623,26 +624,24 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script type="text/javascript" src="<?= $root ?>/files/assets/pages/dashboard/custom-dashboard.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/script.min.js"></script>
 
-     {{-- Datatables --}}
-   
-    <script src="<?= $root ?>/files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="<?= $root ?>/files/assets/pages/data-table/js/jszip.min.js"></script>
-    <script src="<?= $root ?>/files/assets/pages/data-table/js/pdfmake.min.js"></script>
-    <script src="<?= $root ?>/files/assets/pages/data-table/js/vfs_fonts.js"></script>
-    <script src="<?= $root ?>/files/assets/pages/thousandth/thousands.js"></script>
-    <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="<?= $root ?>/files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="<?= $root ?>/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+     {{-- select 2 --}}
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/assets/pages/advance-elements/select2-custom.js"></script>
 
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js'); ?>"></script>
+    {{-- dtatables --}}
+    <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/assets/pages/data-table/js/jszip.min.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/assets/pages/data-table/js/pdfmake.min.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/assets/pages/data-table/js/vfs_fonts.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/assets/pages/thousandth/thousands.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
-
-    
-
-    </body>
+ </body>
     <?php
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/activity/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>

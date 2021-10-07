@@ -66,8 +66,8 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
 
                     <div class="col-md-6 col-xl-4">
                            <?php
-                                    $total_activity = \collect(DB::select('select count(*) from admin.tasks a where   a.user_id in (select id from admin.users where department=3) and ' . $where))->first()->count;
-                                    ?>
+                               $total_activity = \collect(DB::select('select count(*) from admin.tasks a where   a.user_id in (select id from admin.users where department=3) and ' . $where))->first()->count;
+                            ?>
                           <x-smallCard title="New Tasks Recorded"
                                 :value="$total_activity"
                                 icon="feather icon-book f-40 text-c-red"

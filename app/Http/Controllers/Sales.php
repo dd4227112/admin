@@ -41,8 +41,8 @@ class Sales extends Controller {
      */
 
     public function index() {
-     //  $this->data['faqs'] = [];
-        return view('sales.index');
+        $this->data['breadcrumb'] = array('title' => 'Sales material','subtitle'=>'sales','head'=>'materials');
+        return view('sales.index', $this->data);
     }
 
     public function faq() {
@@ -60,6 +60,7 @@ class Sales extends Controller {
     }
 
     public function prospect() {
+        $this->data['breadcrumb'] = array('title' => 'Sales prospect reports','subtitle'=>'sales','head'=>'prospect');
         $this->data['demo_requests'] = DB::table('website_demo_requests')->where('status', 0)->get();
         $this->data['join_requests'] = DB::table('website_join_shulesoft')->where('status', 0)->get();
         $this->data['page'] = $page = request()->segment(3);
@@ -125,6 +126,7 @@ class Sales extends Controller {
     }
 
     public function school() {
+        $this->data['breadcrumb'] = array('title' => 'Schools','subtitle'=>'sales','head'=>'sales schools');
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
@@ -425,6 +427,7 @@ class Sales extends Controller {
     }
 
     function addSchool() {
+    $this->data['breadcrumb'] = array('title' => 'New school','subtitle'=>'sales','head'=>'add school');
         if ($_POST) {
             $array = [
                 'name' => strtoupper(request('name')),
@@ -434,7 +437,7 @@ class Sales extends Controller {
             DB::table('admin.schools')->insert($array);
             return redirect('sales/school')->with('success', request('name') . ' successfully');
         }
-        return view('sales.add_school');
+        return view('sales.add_school',$this->data);
     }
 
     public function onboard() {
@@ -857,6 +860,8 @@ class Sales extends Controller {
     }
 
     public function salesStatus() {
+    $this->data['breadcrumb'] = array('title' => 'Sales status','subtitle'=>'sales','head'=>'status');
+
         $page = request()->segment(3);
         if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             //current day

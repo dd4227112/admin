@@ -3,34 +3,17 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Deductions</span>
-            </div>
+        
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="<?= url("deduction/index") ?>"><?= __('deduction') ?></a>
-                    </li>
-                    
-                </ul>
-            </div>
 
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
 
                 <div class="col-sm-12">
                     <!-- Zero config.table start -->
                     <div class="card">
-                        <header class="panel-heading">
+                        <header class="card-header">
                            Fill all basic information correctly
                         </header>
                         <div class="card-body">

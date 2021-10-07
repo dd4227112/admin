@@ -48,7 +48,7 @@
 
                     <div class="col-xl-3 col-md-6">
                           <x-smallCard title="Active Users" :value="$summary['active_users']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-yellow text-white">
-                        </x-smallCard>
+                         </x-smallCard>
                     </div>
 
                     <div class="col-xl-3 col-md-6">
@@ -150,6 +150,9 @@
 
 <script>
 Highcharts.chart('containa', {
+      chart: {
+        type: 'column'
+    },
     title: {
         text: 'Schools onboarding Trend'
     },
@@ -182,6 +185,7 @@ Highcharts.chart('containa', {
 
     series: [{
         name: 'Schools',
+        colorByPoint: true,
         data: [<?php foreach($new_schools as $teacher){ echo $teacher->schools.','; }?>]
     }],
     responsive: {
@@ -249,7 +253,7 @@ Highcharts.chart('onboardPie', {
 
 Highcharts.chart('onboardBar', {
     chart: {
-        type: 'column'
+        type: 'line'
     },
     title: {
         text: 'Schools Vs Months'

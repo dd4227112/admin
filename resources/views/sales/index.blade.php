@@ -2,28 +2,9 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Sales Materials</h4>
-                <span>Use this part to get all important resources to support you in sales</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Sales</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Materials</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+     <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+     
+
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
@@ -42,14 +23,7 @@
                                         <a class="nav-link" data-toggle="tab" href="#profile5" role="tab">Legals</a>
                                         <div class="slide"></div>
                                     </li>
-<!--                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#messages5" role="tab">Scripts</a>
-                                        <div class="slide"></div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">FAQ</a>
-                                        <div class="slide"></div>
-                                    </li>-->
+
                                 </ul>
                                 <!-- Tab panes -->
                                 <div class="tab-content tabs-left-content card-block">
@@ -69,18 +43,7 @@
                                                 </div>
                                             </div>
 
-<!--                                            <div class="col-lg-4 col-xl-3 col-sm-6">
-                                                <div class="badge-box">
-                                                    <div class="sub-title">Company Profile
 
-                                                    </div>
-
-                                                    <p>
-                                                        This explains in details about the company history, products and services
-                                                    </p>
-                                                  <a href="https://drive.google.com/file/d/1z8NyES8tK_U35d-wUNfluiADOZlyXskM/view?usp=sharing" target="_blank" class="badge badge-warning">Download (V 1.0)</a>
-                                                </div>
-                                            </div>-->
                                             <div class="col-lg-4 col-xl-3 col-sm-6">
                                                 <div class="badge-box">
                                                     <div class="sub-title">ShuleSoft Proposal

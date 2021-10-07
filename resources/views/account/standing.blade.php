@@ -3,29 +3,8 @@
 
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>School standing orders</h4>
-        <span>The Part holds will show all the standing orders.</span>
-
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Account</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Standing orders </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
+    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+   
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">

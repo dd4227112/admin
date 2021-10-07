@@ -1,31 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-
 <div class="main-body">
     <div class="page-wrapper">
         
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Schools</h4>
-                <span>List of private schools in Tanzania</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Sales</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Report</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+   
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
@@ -39,46 +19,37 @@
                                 foreach ($school_types as $type) {
                                     ?>
                                     <div class="col-lg-3 col-xl-3 col-sm-12">
-                                        <div class="card counter-card-<?= $i ?>">
-                                            <div class="card-block-big">
-                                                <div>
-                                                    <h3><?= $type->count ?></h3>
-                                                    <p><?= $type->type ?></p>
-                                                    <div class="progress ">
-                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'pink' : 'success' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <i class="icofont icofont-comment"></i>
-                                            </div>
-                                        </div>
+                                
+                                          <?php $opt =  $i == 1 ? 'yellow' : 'green' ?>
+                                          <x-smallCard :title="$type->type"
+                                                :value="$type->count"
+                                                icon="feather icon-book f-40 text-c-red"
+                                                cardcolor="bg-c-blue text-white"
+                                                >
+                                        </x-smallCard>
+
+            
                                     </div>
                                     <?php
                                     $total += $type->count;
                                     $i++;
                                 }
                                 ?>
-                                <div class="col-lg-3 col-xl-3 col-sm-12">
-                                    <div class="card counter-card-<?= $i ?>">
-                                        <div class="card-block-big">
-                                            <div>
-                                                <h3><?= $total ?></h3>
-                                                <p>Total</p>
-                                                <div class="progress ">
-                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <small><?= $nmb_schools ?> Use NMB, <?= $use_shulesoft ?> use ShuleSoft, <?= $nmb_shulesoft_schools ?> use NMB & ShuleSoft</small>
-                                            </div>
-                                            <i class="icofont icofont-comment"></i>
-                                        </div>
-                                    </div>
-                                </div>
+                                 <div class="col-lg-6 col-xl-6 col-sm-12">
+                        
+                                 <?php $percent = $nmb_schools.'  Use nmb '. $use_shulesoft .' use ShuleSoft, ' .$nmb_shulesoft_schools. ' use NMB & ShuleSoft'; ?>
+                                    <x-analyticCard :value="$total" name="Total" icon="feather icon-trending-up text-white f-16"  
+                                    color="bg-c-yellow"  topicon="feather icon-file f-50" :subtitle="$percent"></x-analyticCard>
+                                </div> 
                             </div>
                         </div>
 
                         <div class="row">
                            <?php if(can_access('add_school')) { ?>
-                             <div class="col-lg-3">
-                                 <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar" class="btn btn-success">add New School</a>
+                             <div class="col-lg-3"> 
+                                    <div class="card-body">
+                                    <a href="<?= url('sales/addSchool') ?>"  class="btn btn-success">Add new school</a>
+                                  </div>
                              </div>
                            <?php } ?>
                         
@@ -104,12 +75,13 @@
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="white-box">
-                                    <h3 class="box-title">List of all Schools</h3>
-                                    
+                                
+                                    <div class="card-header">
+                                        <h5>List of all schools</h5>
+                                    </div>
                                         <div class="card-block">
-                                             <div class="table-responsive">
-                                             <table id="list_of_schools" class="display nowrap table-borderd table dataTable">
+                                        <div class="table-responsive">
+                                            <table id="list_of_schools" class="table dataTable table-striped table-bordered nowrap">
                                               <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -130,7 +102,7 @@
                                         </table>
                                     </div>
                                   </div>
-                                </div>
+                            
                             </div>
                         </div>
                     </div>

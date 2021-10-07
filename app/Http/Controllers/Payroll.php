@@ -11,14 +11,16 @@ class Payroll extends Controller {
     }
 
     public function taxes() {
+        $this->data['breadcrumb'] = array('title' => 'Taxes','subtitle'=>'accounts','head'=>'payroll');
         $this->data['taxes'] = DB::table('constant.paye')->get();
         $this->data['subview'] = 'account.payroll.taxes';
         return view($this->data['subview'], $this->data);
     }
 
     public function pension() {
+        $this->data['breadcrumb'] = array('title' => 'Pensions','subtitle'=>'accounts','head'=>'payroll');
         $this->data['pensions'] = \App\Models\Pension::all();
-      //  dd($this->data['pensions']);
+    
         $id = request()->segment(3);
         $this->data['set'] = $id;
         if ((int) $id) {
@@ -41,6 +43,7 @@ class Payroll extends Controller {
 
 
     function addPension(Request $request) {
+        $this->data['breadcrumb'] = array('title' => 'Pensions','subtitle'=>'accounts','head'=>'payroll');
         if (!empty($_POST)) {
             $request->validate([
             'name' => 'required|unique:pensions,name',
@@ -199,6 +202,7 @@ class Payroll extends Controller {
 
     
     public function index() {
+        $this->data['breadcrumb'] = array('title' => 'Salaries','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         $this->data['set'] = $id;
         $this->data['salaries'] = DB::select('select count(*) as total_users, sum(basic_pay) as basic_pay, sum(allowance) as allowance, sum(gross_pay)
@@ -239,6 +243,7 @@ class Payroll extends Controller {
     }
 
     public function create() {
+        $this->data['breadcrumb'] = array('title' => 'Create payroll','subtitle'=>'accounts','head'=>'payroll');
             $this->data['create'] = 0;
             $this->data['special'] = (int) request()->segment(3) > 0 ? 1 : 0;
             if ($_POST) {

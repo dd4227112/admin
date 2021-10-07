@@ -2,42 +2,27 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span style="font-size: 18px;"><?= date('d/m/Y',strtotime($set)) ?> Monthly Payroll </span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="<?= url("payroll/index") ?>">Accounts</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Payroll</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        <?php $month = date('F',strtotime($set)) .' monthly payroll'; 
+        $breadcrumb= array('title' => $month,'subtitle'=>'accounts','head'=>'payroll');
+          
+        ?>
+    
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+  
+
         <div class="page-body">
 
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
-                        <div class="col-lg-12 col-xl-12">                                      
+                                                             
                           
                             <!-- Tab panes -->
-                            <div class="tab-content card-block">
-                                <div class="tab-pane active" id="home3" role="tabpanel">
-                                  <div id="hide-table">
-                                         <div class="table-responsive table-sm table-striped table-bordered table-hover">          
-                            
-                                            <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+                            <div class="card-block">
+                              
+                                        <div class="table-responsive">
+		          
+                                             <table class="table dataTable table-sm table-striped table-bordered nowrap">
                                                 <thead>
                                                     <tr>
                                                         <th class="col-sm-1"><?= __('#') ?></th>
@@ -188,19 +173,14 @@
                                                         <td data-title="<?= __('action') ?>"> <a href="<?= url('payroll/summary/null/?set=' . $set . '&month=' . date('M') . '&month=' . date('m')) . '&' . http_build_query(array('basic_pay' => $total_basic_pay, 'allowance' => $sum_of_total_allowances, 'gross_pay' => $total_gross_pay, 'pension' => $total_pension, 'deduction' => $sum_of_total_deductions, 'tax' => $total_taxable_amount, 'paye' => $total_paye, 'net_pay' => $total_net_pay)) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Summary</a></td>
                                                     </tr>
                                                 </tfoot>
-                                            </table>
-
+                                            </table>  
                                          </div>
-                                        </div>
                                 </div>
-                              
                             </div>
-                         </div>
-                     </div>
-                </div> 
-            </div>
+                        </div> 
+                    </div>
+                </div>
         </div>
-</div>
 @endsection
 
 

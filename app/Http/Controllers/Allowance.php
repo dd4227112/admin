@@ -8,35 +8,16 @@ use App\Models\SalaryAllowance;
 
 class Allowance extends Controller {
 
-    /**
-     * -----------------------------------------
-     * 
-     * ******* Address****************
-     * INETS COMPANY LIMITED
-     * P.O BOX 32258, DAR ES SALAAM
-     * TANZANIA
-     * 
-     * 
-     * *******Office Location *********
-     * 11th block, Bima Road, Mikocheni B, Kinondoni, Dar es salaam
-     * 
-     * 
-     * ********Contacts***************
-     * Email: <info@inetstz.com>
-     * Website: <www.inetstz.com>
-     * Mobile: <+255 655 406 004>
-     * Tel:    <+255 22 278 0228>
-     * -----------------------------------------
-     */
+ 
     function __construct() {
          $this->middleware('auth');
         $this->data['insight'] = $this;
         // parent::__construct();
-        // $this->lang->load('email');
-        // $this->lang->load('payroll');
     }
 
     public function index() {
+        $this->data['breadcrumb'] = array('title' => 'Allowances','subtitle'=>'accounts','head'=>'payroll');
+
            $this->data['category'] = $id = request()->segment(3);
             if ((int) $id > 0) {
                 $this->data['allowances'] = \App\Models\Allowance::where('category', $id)->get();
@@ -48,6 +29,8 @@ class Allowance extends Controller {
        }
 
     public function add() {
+        $this->data['breadcrumb'] = array('title' => 'Add allowances','subtitle'=>'accounts','head'=>'payroll');
+
             if ($_POST) {
                 // $this->validate(request(), [
                 //     'name' => 'required|max:255',
@@ -66,23 +49,19 @@ class Allowance extends Controller {
                 $allowance = \App\Models\Allowance::create($data);
                 return redirect('allowance/index/'.$allowance->category)->with('success', 'Successfully!');
             } else {
-                $this->data['view'] = 'account.payroll.allowance.add';
-                //$this->load->view('_layout_main', $this->data);
-                return view($this->data['view'], $this->data);
+               // $this->data['view'] = 'account.payroll.allowance.add';
+                return view('account.payroll.allowance.add', $this->data);
             }
     }
 
     public function edit() {
+        $this->data['breadcrumb'] = array('title' => 'Edit allowances','subtitle'=>'accounts','head'=>'payroll');
          $id = request()->segment(3);
             if ((int) $id) {
          $this->data['allowance'] = \App\Models\Allowance::find($id);
                 if ($this->data['allowance']) {
                     if ($_POST) {
-                        // $this->validate(request(), [
-                        //     'name' => 'required|max:255',
-                        //     "is_percentage" => "required",
-                        //     "description" => "required"
-                        //    ]);
+                      
                      $this->data['allowance']->update(request()->except('_token'));
                      return redirect('allowance/index/'.$this->data['allowance']->category)->with('success', 'Allowance Updated Successfully!');
                     } else {
@@ -141,6 +120,7 @@ class Allowance extends Controller {
     }
 
      public function monthlysubscribe() {
+        $this->data['breadcrumb'] = array('title' => 'Subscription-Allowance','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;
@@ -162,6 +142,7 @@ class Allowance extends Controller {
     }
     
     public function monthlyAddSubscriber() {
+        dd(request()->all());
         $allowance = UserAllowance::where('user_id', request('user_id'))->where('allowance_id', request('allowance_id'))->where('deadline', '>', request('deadline'));
         if (!empty($allowance->first())) {
             $allowance->update(request()->all());

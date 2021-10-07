@@ -3,72 +3,50 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Salaries</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item"><a href="<?= url("dashboard/index") ?>"><i
-                        class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a></li>
-                    <li class="breadcrumb-item"><a href="<?= url("payroll/index") ?>"><?= __('Payroll') ?></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+       
         
         <div class="page-body">
 
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="card">
-                        <div class="col-lg-12 col-xl-12">                                      
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs md-tabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Payroll List</a>
-                                    <div class="slide"></div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Summary</a>
-                                    <div class="slide"></div>
-                                </li>
-                            </ul>
+        <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="col-lg-12 col-xl-12">                                      
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs md-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Payroll List</a>
+                            <div class="slide"></div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Summary</a>
+                            <div class="slide"></div>
+                        </li>
+                    </ul>
 
                             <!-- Tab panes -->
-                            <div class="tab-content card-block">
-                                <div class="tab-pane active" id="home3" role="tabpanel">
-                                  <div id="hide-table">
-
-        <div class="row">
-            <div class="col-sm-12">
+             <div class="card-block">
                 <form class="form-horizontal" role="form" method="post">
-
-           
-                 <div class="col-sm-12">
-                    <div class="table-responsive table-striped table-bordered ">
-                        <table id="example1" class="table dataTable">
+                  <div class="table-responsive">
+                    <table class="table dataTable table-sm table-striped table-bordered nowrap">
                             <thead>
                                 <tr>
-                                    <th class="col-sm-1"><?= __('#') ?></th>
-                                    <th class="col-sm-2"><?= __('Employee name') ?></th>
-                                    <th class="col-sm-2">User designation</th>
-                                    <!--<th class="col-sm-2"><?= __('Employee Number') ?></th>-->
-                                    <th class="col-sm-1">Bank</th>
-                                    <th class="col-sm-2"><?= __('Bank Account') ?></th>
-                                    <th class="col-sm-2"><?= __('Basic Pay') ?></th>
-                                    <th class="col-sm-1"><?= __('Allowance') ?></th>
-                                    <th class="col-sm-1"><?= __('Gross pay') ?></th>
-                                    <th class="col-sm-1"><?= __('Pension') ?></th>
-                                    <th class="col-sm-1"><?= __('deduction') ?></th>
-                                    <th class="col-sm-1"><?= __('Taxable Amount') ?></th>
-                                    <th class="col-sm-1"><?= __('Paye') ?></th>
-                                    <th class="col-sm-1"><?= __('Net Pay') ?></th>
+                                    <th ><?= __('#') ?></th>
+                                    <th><?= __('Employee name') ?></th>
+                                    <th>User designation</th>
+                                    <th >Bank</th>
+                                    <th><?= __('Bank Account') ?></th>
+                                    <th><?= __('Basic Pay') ?></th>
+                                    <th><?= __('Allowance') ?></th>
+                                    <th ><?= __('Gross pay') ?></th>
+                                    <th ><?= __('Pension') ?></th>
+                                    <th ><?= __('deduction') ?></th>
+                                    <th ><?= __('Taxable Amount') ?></th>
+                                    <th ><?= __('Paye') ?></th>
+                                    <th ><?= __('Net Pay') ?></th>
                                     <?php
                                     if (can_access('manage_payroll')) {?>   
-                                            {{-- <th class="col-sm-1"><?= __('Action') ?></th>                                                                                                                                        <!--<th class="col-sm-4"><?= __('action') ?></th>--> --}}
+                                            {{-- <th ><?= __('Action') ?></th>                                                                                                                                        <!--<th class="col-sm-4"><?= __('action') ?></th>--> --}}
                                     <?php } ?>
                                 </tr>
                             </thead>
@@ -543,9 +521,7 @@
                             "payment_type_id"=>1,
                             'bank_account_id'=>$bank_account->id,
                             'user_id' => Auth::user()->id,
-                            // 'uname' => session('username'),
-                            // 'usertype' => session('usertype'),
-                           // 'created_by' => '{' . session('id') . ',' . session('table') . '}'
+                          
                         );
                         $insert_id = \DB::table('expenses')->insertGetId($array, "id");
                         //specify all expenses accomplished by 
@@ -555,13 +531,6 @@
                     <?= csrf_field() ?>
                   </form>
                  </div> 
-               </div>
-
-
-                                        
-                </div>
-              </div>      
-             </div>
            </div>
          </div>
         </div> 

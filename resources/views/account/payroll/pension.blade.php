@@ -3,83 +3,60 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Pension Fund Status</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Payroll</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+       
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
         <div class="page-body">
             <div class="row">
 
-                <div class="col-lg-12">
-                    <div class="card">
-                        <?php
-                        $usertype = session("usertype");
-                        //if(can_access('add_payroll')) {
-                        ?>
-                        <div class="card-header">
-                            <h5 class="page-header">
+                    <div class="col-sm-12">
+                        <div class="card">
+                        <div class="card-block">
+                            <div class="card-header">
+                              <h5 class="page-header">
                                 <a class="btn btn-success btn-sm" href="<?php echo url('payroll/addPension') ?>">
                                     <i class="fa fa-plus"></i> 
                                     Add Pension Fund
                                 </a>
-                            </h5>
-                        </div>
-                        <?php //} ?>
-                        <div id="hide-table"  class="card-block">
-                          <div class="table-responsive table-sm table-striped table-bordered table-hover">
-                            <?php if (isset($pensions) && !empty($pensions)) { ?>
-                                <table id="example1" class="table dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th class="col-lg-1">#</th>
-                                            <th class="col-lg-1">Name</th>
-                                            <th class="col-lg-1">Employer Percentage</th>
-                                            <th class="col-lg-1">Employee Percentage</th>
-                                            <th class="col-lg-2">Address</th>
-                                            <th class="col-lg-1">Members</th>
-                                            <th class="col-lg-2 text-center">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                              </h5>
+                            </div>
+
+                            
+                                <div class="table-responsive">
+                                  <table class="table dataTable table-sm table-striped table-bordered nowrap">
+                                        <thead>
+                                          <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Employer Percentage</th>
+                                            <th>Employee Percentage</th>
+                                            <th>Address</th>
+                                            <th>Members</th>
+                                            <th class="text-center">Actions</th>
+                                          </tr>
+                                        </thead>
+                                         <tbody>
                                         <?php
                                         $i = 1;
                                         foreach ($pensions as $pension) {
                                             ?>
                                             <tr>
-                                                <td data-title="<?= __('slno') ?>">
+                                                <td>
                                                     <?php echo $i; ?>
                                                 </td>
-                                                <td data-title="<?= __('payroll_name') ?>">
+                                                <td>
                                                     <?php echo $pension->name; ?>
                                                 </td>
-                                                <td data-title="<?= __('employer_percentage') ?>">
+                                                <td>
                                                     <?php echo $pension->employer_percentage; ?> %
                                                 </td>
-                                                <td data-title="<?= __('employee_percentage') ?>">
+                                                <td>
                                                     <?php echo $pension->employee_percentage; ?>%
                                                 </td>
-                                                <td data-title="<?= __('employee_percentage') ?>">
+                                                <td>
                                                     <?php echo $pension->address; ?>
                                                 </td>
-                                                <td data-title="<?= __('members') ?>">
+                                                <td>
                                                     <?php echo $pension->userPensions->count(); ?>
                                                 </td>
                                                 <td data-title="<?= __('employee_percentage') ?>">
@@ -92,14 +69,26 @@
                                             $i++;
                                         }
                                         ?>
-                                    </tbody>
-                                </table>
-                               </div>
-                            <?php } ?>
+                                       </tbody>
+                                        <tfoot>
+                                          <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Employer Percentage</th>
+                                            <th>Employee Percentage</th>
+                                            <th>Address</th>
+                                            <th>Members</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
 
-                </div> <!-- col-sm-12 -->
+
             </div><!-- row -->
         </div><!-- Body -->
     </div><!-- /.box -->
