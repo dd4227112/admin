@@ -11,7 +11,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <meta name="description" content="ShuleSoft Admin">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <meta name="keywords" content="ShuleSoft, Admin, Admin Panel">
         <meta name="author" content="ShuleSoft">
         <!-- Favicon icon -->
@@ -45,6 +45,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script src="https://code.highcharts.com/modules/export-data.js"></script>
         <script src="https://code.highcharts.com/modules/accessibility.js"></script>
         <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+
             
      </head>
     <body>

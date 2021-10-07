@@ -184,7 +184,7 @@ class Payroll extends Controller {
         }
     }
 
-    public function checknumber() {
+    public function checknumber() { 
         $insert = array(
             'checknumber' => request('inputs'),
         );
@@ -201,8 +201,7 @@ class Payroll extends Controller {
         $this->data['set'] = $id;
         $this->data['salaries'] = DB::select('select count(*) as total_users, sum(basic_pay) as basic_pay, sum(allowance) as allowance, sum(gross_pay)
                          as gross_pay, sum(pension_fund) as pension, sum(deduction) as deduction, sum(tax) as tax, sum(paye) as paye, sum(net_pay) as net_pay, 
-                         payment_date,reference FROM admin.salaries group by payment_date,reference order by payment_date');
-                     
+                         payment_date,reference FROM admin.salaries group by payment_date,reference order by payment_date desc');           
         return view('account/payroll/index', $this->data);
     }
 
@@ -243,12 +242,9 @@ class Payroll extends Controller {
             if ($_POST) {
                 $payroll_date = request('payroll_date');
                 $refer_expense_id = $this->getSalaryCategory();
-            //    dd($payroll_date);
                 if ((int) $refer_expense_id > 0) {
                     $this->data['create'] = 1;
-                    $this->data['refer_expense_id'] = $refer_expense_id;
-                   // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                   
+                    $this->data['refer_expense_id'] = $refer_expense_id;  
                     $this->data['users'] = $this->getUsers();
                     $this->data['view'] = 'account/payroll/create';
                     return view($this->data['view'], $this->data)->with('success','Success!');
@@ -270,9 +266,9 @@ class Payroll extends Controller {
     }
 
     public function payslip() {
+        $this->data['breadcrumb'] = array('title' => 'Payroll payslip','subtitle'=>'accounts','head'=>'payroll');
         $this->data['set'] = request('set');
         $this->data['salary'] = \App\Models\Salary::where('payment_date', request('set'))->where('user_id', request('id'))->first();
-       
         $user = \App\Models\User::where('id', request('id'))->first();
         if ($_POST) {
             $settings = DB::table('admin.payslip_settings')->first();
@@ -288,7 +284,6 @@ class Payroll extends Controller {
         $this->data['user'] = !empty($user) ? $user : die('User not found');
         $this->data["subview"] = "account.payroll.payslip";
         return view($this->data["subview"],$this->data);
-        // $this->load->view('_layout_main', $this->data);
     }
 
     public function salary() {

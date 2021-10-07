@@ -13,20 +13,16 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs md-tabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Payroll List</a>
-                            <div class="slide"></div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Summary</a>
+                            <a class="nav-link active" data-toggle="tab" href="#home3" role="tab"> <strong>PAYROLL LIST</strong></a>
                             <div class="slide"></div>
                         </li>
                     </ul>
 
                             <!-- Tab panes -->
-             <div class="card-block">
-                <form class="form-horizontal" role="form" method="post">
-                  <div class="table-responsive">
-                    <table class="table dataTable table-sm table-striped table-bordered nowrap">
+                    <div class="card-block">
+                     <form class="form-horizontal" role="form" method="post">
+                        <div class="table-responsive">
+                            <table class="table dataTable table-sm table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th ><?= __('#') ?></th>
@@ -460,41 +456,33 @@
                         </table>
                       </div>
                      </div>
-                    <div class="col-sm-12">
-
-                    </div>
+                    
                     <?php if ($create == 0) { ?>
-
-                        <div class='form-group center col-sm-12'>
-
-                            <label for="title" class="col-sm-5 control-label">
+                       
+                     <div class="row">
+                        <div class='form-group  col-sm-4'>
+                            <label class="col-sm-12 control-label">
                                 Payroll Date
                             </label>
-                            <div class="col-sm-3">
-                                <input type="date" class="form-control calendar" required="" name="payroll_date" value="<?= date('Y-m-d') ?>" >
+                            <div class="col-sm-12">
+                                <input type="date" class="form-control" required="" name="payroll_date" value="<?= date('Y-m-d') ?>" >
                             </div>
-                            <span class="col-sm-4 control-label">
-                                <?php echo form_error($errors, 'email_sms'); ?>
-                            </span>
                         </div>
-
-                        <div class='form-group center col-sm-12'>
-                            <label for="email_sms" class="col-sm-5 control-label">
-                                Notify users By SMS & Emails
+  
+                
+                        <div class='form-group col-sm-4'>
+                            <label class="col-sm-12 control-label">
+                                Notify company employees
                             </label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <input type="checkbox" id="check_message_to_send" onclick="$('#message_to_send').toggle()" class="form-control" name="send_sms_email" value="1" >
                             </div>
-                            <div class="col-sm-4">
-                                <textarea style="display:none" id="message_to_send" class="form-control" name="message_body">Hello #name Salary for this #salary_date has been issued. Your Net payment amount is #net_payment. For More information, login into your account</textarea>
+                            <div class="col-sm-12">
+                                <textarea style="display:none" id="message_to_send" class="form-control" name="message_body">Hello #name Salary for this #salary_date has been issued. Your Net payment amount is #net_payment.</textarea>
                             </div>
-                            <span class="col-sm-4 control-label">
-                                <?php echo form_error($errors, 'email_sms'); ?>
-                            </span>
                         </div>
-                        <div class='form-group center' >
-                            <label for="title" class="col-sm-1 control-label">
-                            </label>
+
+                        <div class='form-group  col-sm-4'>
                             <div class="col-sm-6">
                                 <input type="submit" class="btn btn-success" value="Create Payroll">
                             </div>
@@ -537,27 +525,4 @@
 </div>
 
 
-<script>
-    function save(a, b, column, table) {
-        var val = $('#' + a).text();
-        if (val !== '') {
-            $.ajax({
-                type: 'POST',
-                url: "<?= url('profile/editProfile/null') ?>",
-                data: {"id": b, newvalue: val, column: column, table: table},
-                dataType: "html",
-                beforeSend: function (xhr) {
-                    $('#stat' + a).html('<a href="#/refresh"<i class="fa fa-spinner"></i> </a>');
-                },
-                complete: function (xhr, status) {
-                    $('#stat' + a).html('<span class="label label-success">' + status + '</span>');
-                },
-                success: function (data) {
-                    toast(data);
-                }
-            });
-        }
-    }
-
-</script>
 @endsection

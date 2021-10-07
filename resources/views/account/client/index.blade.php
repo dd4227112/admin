@@ -76,9 +76,9 @@
                                             <td><?= warp($client->address,20) ?></td>
                                             <td>{{money( $client->payments()->sum('amount') )}}</td>
                                             <td>    
-                                                <a href="<?= url('account/client/edit/' . $client->id) ?>" class="btn btn-sm btn-primary">Edit</a>
+                                           <a href="<?= url('account/client/edit/' . $client->id) ?>" class="btn btn-sm btn-primary">Edit</a>
                                                 {{-- <a href="<?= url('account/client/delete/' . $client->id) ?>" class="btn btn-sm btn-danger">Delete</a></td>  --}}
-                                        </tr>
+                                          </tr>
                                         <?php $i++; $total_amount+=$client->payments()->sum('amount'); ?>
                                         @endforeach
                                     </tbody>

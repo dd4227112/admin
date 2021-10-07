@@ -2,26 +2,19 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <?php $month = date('F',strtotime($set)) .' monthly payroll'; 
+        <?php $month = date('F,Y',strtotime($set)) .' - monthly payroll'; 
         $breadcrumb= array('title' => $month,'subtitle'=>'accounts','head'=>'payroll');
           
         ?>
     
       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
-  
-
         <div class="page-body">
-
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
-                                                             
-                          
-                            <!-- Tab panes -->
                             <div class="card-block">
                               
                                         <div class="table-responsive">
-		          
                                              <table class="table dataTable table-sm table-striped table-bordered nowrap">
                                                 <thead>
                                                     <tr>
