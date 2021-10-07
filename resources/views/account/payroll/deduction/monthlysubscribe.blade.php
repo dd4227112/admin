@@ -1,20 +1,22 @@
 @extends('layouts.app')
 @section('content')
 
+<?php  
+ $types = $type == 'allowance' ? 'allowance' :  'deduction' || 'pension';
+ $deductionType = 'Subscription - '.$types;
+
+ $breadcrumb = array('title' => $deductionType,'subtitle'=>'accounts','head'=>'payroll');
+  ?>
+
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4> Subscription - <?= $type ?></h4>
-                <span></span>
-            </div>
-        </div>
-    
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
         <div class="page-body">
           <div class="row">
             <div class="col-sm-12">
              <div class="card">
+
+			<div  class="card-block">
                 <?php if ($type == 'allowance' || $type == 'deduction') { ?>
                     <div class="col-sm-12 col-xs-12 col-sm-offset-3 list-group">
                         <div class="list-group-item">
@@ -39,20 +41,22 @@
                         </div>
                     </div>
                 <?php } ?>
+             </div>
+              
 
 				         <div  class="card-block">
-					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
+                            <div class="table-responsive">
                             <?php if (isset($users) && !empty($users)) { ?>
                                 <table id="example1" class="table table-striped table-bordered table-hover no-footer dataTable tablesubscriber">
                                     <thead>
                                         <tr>
-                                            <th class="col-sm-1"><?= __('#') ?></th>
-                                            <th class="col-sm-2">Name</th>
-                                            <th class="col-sm-2">Email</th>
-                                            <th class="col-sm-2">Phone Number</th>
-                                            <th class="col-sm-2">Amount</th>
-                                            <th class="col-sm-2">Deadline</th>
-                                            <th class="col-sm-2"><?= __('action') ?></th>
+                                            <th><?= __('#') ?></th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone Number</th>
+                                            <th>Amount</th>
+                                            <th>Deadline</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -66,20 +70,20 @@
                                                 );
                                                 ?>
                                                 <tr>
-                                                    <td data-title="<?= __('#') ?>">
+                                                    <td>
                                                         <?php echo $i; ?>
                                                     </td>
-                                                    <td data-title="<?= __('student_name') ?>">
+                                                    <td>
                                                         <?php echo $user->firstname.' '.$user->lastname; ?>
                                                     </td>
                                              
-                                                    <td data-title="<?= __('email') ?>">
+                                                    <td>
                                                         <?php echo $user->email; ?>
                                                     </td>
-                                                    <td data-title="<?= __('phone') ?>">
+                                                    <td>
                                                         <?php echo $user->phone; ?>
                                                     </td>
-                                                    <td data-title="<?= __('amount') ?>">
+                                                    <td>
                                                         <?php
                                                         $deduction = \App\Models\UserDeduction::where('user_id', $user->id)->where('deduction_id', $allowance->id)->where('deadline', '>', date('Y-m-d'))->first();
                                                         $amount = !empty($deduction)  ? $deduction->amount : '';
@@ -90,7 +94,7 @@
                                                     <td>
                                                         <input  type="date" class="form-control" id="deadline<?= $user->id ?>" name="deadline" value="<?= date($deadline)?>" >
                                                     </td>
-                                                    <td data-title="<?= __('action') ?>">
+                                                    <td>
                                                         <?php
                                                         if (in_array($user->id, $subscriptions)) {
                                                             ?>
@@ -98,7 +102,7 @@
                                                         <?php } else { ?>
                                                             <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')" class="btn btn-sm btn-success">Save</a>
                                                         <?php } ?>
-                                                             <span id="stat<?= $user->id ?>"></span>
+                                                        <span id="stat<?= $user->id ?>"></span>
                                                     </td>
                                                 </tr>
                                                 <?php

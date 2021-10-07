@@ -19,8 +19,7 @@ class Payroll extends Controller {
 
     public function pension() {
         $this->data['breadcrumb'] = array('title' => 'Pensions','subtitle'=>'accounts','head'=>'payroll');
-        $this->data['pensions'] = \App\Models\Pension::all();
-    
+        $this->data['pensions'] = \App\Models\Pension::latest()->get();
         $id = request()->segment(3);
         $this->data['set'] = $id;
         if ((int) $id) {
@@ -86,17 +85,12 @@ class Payroll extends Controller {
         }
     }
 
-    function editPension(Request $request) {
+    function editPension() {
+        $this->data['breadcrumb'] = array('title' => 'Edit pension','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         $this->data['pension'] = \App\Models\Pension::find($id);
         if (!empty($_POST)) {
-            // $request->validate([
-            //     'name' => 'required',
-            //     'employer_percentage' => 'required|min:1|numeric',
-            //     'employee_percentage' => 'required|min:1|numeric',
-            //     'refer_pension_id' => 'required',
-            //     'address' => 'required'
-            //     ]);
+          
             $pensions = request()->all();
             $this->data['pension']->update($pensions);
             DB::table('refer_expense')->where("predefined", $this->data['pension']->id)->where("financial_category_id", 3)->where('code', 'EC-1001' . $this->data['pension']->id)->update(['name' => request('name') . ' Contributions']);

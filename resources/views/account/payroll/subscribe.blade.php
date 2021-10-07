@@ -1,11 +1,16 @@
 @extends('layouts.app') 
 @section('content') 
 <?php  
-if($type == 2) {
-    $deductionType = 'Monthly deductions';
-  }else{
-    $deductionType = 'Fixed Deductions';
-  } 
+ if($type == 'allowance'){
+   $types =  'allowance';
+ }elseif($type == 'deduction'){
+    $types == 'deduction';
+ }else{
+    $types == 'pension';
+ }
+
+ $deductionType = 'Subscription - '.$types;
+
  $breadcrumb = array('title' => $deductionType,'subtitle'=>'accounts','head'=>'payroll');
   ?>
 
@@ -18,7 +23,7 @@ if($type == 2) {
             <div class="col-sm-12">
              <div class="card">
         
-            <div class="card-block">
+             <div class="card-block">
               <?php if ($type == 'allowance' || $type == 'deduction') { ?>
                 <div class="col-sm-12 col-xs-12 col-sm-offset-3 list-group">
                     <div class="list-group-item">
@@ -45,16 +50,16 @@ if($type == 2) {
                         </div>
                      </div>
                     <?php } ?>
-               </div>
-                
-                
+               </div> 
 
-				    
-                        
+
+
+
+
+
                         <div class="card-block">     
                             <div class="table-responsive">
-                                <table id="example1" class="table dataTable table-sm table-striped table-bordered nowrap">
-
+                                <table id="example1" class="table table-striped table-bordered table-hover no-footer dataTable tablesubscriber">
 									<thead>
                                         <tr>
                                             <th><?= __('#') ?></th>
@@ -162,22 +167,23 @@ if($type == 2) {
                                                     </td>
                                                 </tr>
                                                 <?php $i++; } }?>
-                                      </tbody>
-                                    </table>					
-                                </div>
-                            </div>
+                                            </tbody>
+                                        </table>					
+                                    </div>
+                                </div> 
+  
                    
                    
+                   </div>
+               </div>
+            </div>
+           </div>
         </div>
-     </div>
     </div>
-  </div>
-</div>
-</div>
-
 
 
 <script type="text/javascript">
+
     $(".checknumber").blur(function (event) {
         var inputs = $(this).val();
         var user_id = $(this).attr('id');
@@ -194,7 +200,7 @@ if($type == 2) {
                 },
                 dataType: "html ",
                 beforeSend: function (xhr) {
-                    $('#check' + user_id).html('<a href="#/refresh"><i class="fa fa-spinner"></i> </a>');
+                    $('#check' + user_id).html('<a href="#/refresh"> </a>');
                 },
                 complete: function (xhr, status) {
                     $('#check' + user_id).html('<span class="label label-success">' + status + '</span>');
@@ -230,7 +236,6 @@ if($type == 2) {
     $('.subscribe').click(function () {
         var user_id = $(this).attr("id");
         var tag_id = "<?= $set ?>";
-     //   var table = $(this).attr("table");
         var datatype = $(this).attr("datatype");
         var amount = $('#amount' + user_id ).val();
         var employer_amount = $('#employer_amount' + user_id).val();
@@ -262,7 +267,6 @@ if($type == 2) {
     });
 
   function subscribeUser(datatype, user_id, tag_id, is_percentage, inputValue = null, employer_amount = null) {
-
         if (parseInt(user_id) && parseInt(tag_id)) {
             $.ajax({
                 type: 'POST',

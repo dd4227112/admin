@@ -73,7 +73,7 @@
                                             <td>{{$client->email}}</td>
                                             <td>{{$client->phone}}</td>
                                             <td><?= date('d-m-Y H:i:s', strtotime($client->created_at)) ?></td>
-                                            <td><?= warp($client->address) ?></td>
+                                            <td><?= warp($client->address,20) ?></td>
                                             <td>{{money( $client->payments()->sum('amount') )}}</td>
                                             <td>    
                                                 <a href="<?= url('account/client/edit/' . $client->id) ?>" class="btn btn-sm btn-primary">Edit</a>

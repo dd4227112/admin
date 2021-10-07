@@ -147,6 +147,7 @@ class Deduction extends Controller {
     }
 
     public function monthlysubscribe() {
+        $this->data['breadcrumb'] = array('title' => 'Subscription-Allowance','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;
@@ -161,10 +162,7 @@ class Deduction extends Controller {
             $this->data['subscriptions'] = $data;
             $this->data['view'] = 'account.payroll.deduction.monthlysubscribe';
             return view($this->data['view'], $this->data);
-        } else {
-            $this->data["subview"] = "error";
-           // $this->load->view('_layout_main', $this->data);
-        }
+        } 
     }
 
     function monthlyAddSubscriber() {
