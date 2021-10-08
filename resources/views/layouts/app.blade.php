@@ -24,6 +24,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/jquery.mCustomScrollbar.css">
 
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
+        <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
+      
         <!-- Data Table Css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/pages/data-table/css/buttons.dataTables.min.css">
@@ -32,14 +36,18 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- select 2 -->
         <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
         
-
         {{-- date picker --}}
+         {{-- <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>  --}}
+
+        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script> 
+
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+        {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script> --}}
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
        
-
         {{-- highcharts --}}
         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/modules/series-label.js"></script>
@@ -725,8 +733,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
              
         </div>   
 
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script>
+     
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/popper.js/js/popper.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"></script>
@@ -744,7 +751,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
      {{-- select 2 --}}
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>/files/assets/pages/advance-elements/select2-custom.js"></script>
+  
 
     {{-- dtatables --}}
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -758,6 +765,21 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+
+     <!-- i18next.min.js -->
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
+
+    <!-- Custom js -->
+    <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
+    <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
+      
+
+      
+       
 
  </body>
     <?php
