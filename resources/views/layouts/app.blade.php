@@ -39,6 +39,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
        
+
+        {{-- highcharts --}}
         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/modules/series-label.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -408,12 +410,120 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </li>
                                 <?php }  ?>
 
-                                <li class="">
-                                    <a href="navbar-light.htm">
-                                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                                
+
+
+                                <?php if (can_access('manage_operations')) { ?>
+                                <li class="pcoded-hasmenu">
+                                   
+                                      <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
                                         <span class="pcoded-mtext">OPERATIONS</span>
                                     </a>
+                                    <ul class="pcoded-submenu">
+                                       
+                                          
+                                          <li class=" ">
+                                            <a href="<?= url('account/standingOrders') ?>">
+                                                <span class="pcoded-mtext">Standing order</span>
+                                            </a>
+                                        </li>
+
+                                        
+                                       <?php if (!can_access('manage_transactions')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Transactions</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('revenue/index') ?>">
+                                                        <span class="pcoded-mtext">Revenue</span>
+                                                    </a>
+                                                </li>
+                                             
+                                                <li class="">
+                                                    <a href="<?= url('expense/index/4') ?>">
+                                                        <span class="pcoded-mtext">  Expense</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/transaction/1') ?>">
+                                                        <span class="pcoded-mtext">  Fixed assets</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/transaction/5') ?>">
+                                                        <span class="pcoded-mtext"> Current assets</span>
+                                                    </a>
+                                                </li>
+
+                                                  <li class="">
+                                                    <a href="<?= url('account/transaction/2') ?>">
+                                                        <span class="pcoded-mtext">Liabilities</span>
+                                                    </a>
+                                                </li>
+
+                                                    <li class="">
+                                                    <a href="<?= url('account/transaction/3') ?>">
+                                                        <span class="pcoded-mtext"> Capital</span>
+                                                    </a>
+                                                </li>
+
+                                                  <li class="">
+                                                    <a href="<?= url('account/reconciliation') ?>">
+                                                        <span class="pcoded-mtext">Reconciliation</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                     <?php } ?>
+
+                                              
+                                       <?php if (can_access('manage_payroll')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Payroll</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('payroll/taxes') ?>">
+                                                        <span class="pcoded-mtext">TAX</span>
+                                                    </a>
+                                                </li>
+                                             
+                                                <li class="">
+                                                    <a href="<?= url('payroll/pension') ?>">
+                                                        <span class="pcoded-mtext">  Pension Fund </span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('allowance/index') ?>">
+                                                        <span class="pcoded-mtext">  Allowances </span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('deduction/index') ?>">
+                                                        <span class="pcoded-mtext"> Deductions </span>
+                                                    </a>
+                                                </li>
+
+                                                  <li class="">
+                                                    <a href="<?= url('Payroll/index') ?>">
+                                                        <span class="pcoded-mtext">Salaries</span>
+                                                    </a>
+                                                </li>
+                                               
+                                            </ul>
+                                        </li>
+                                     <?php } ?>
+                                    </ul>
                                 </li>
+                               <?php } ?>
 
                                   <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
@@ -458,6 +568,14 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <span class="pcoded-mtext">Standing order</span>
                                             </a>
                                         </li>
+
+                                         <?php if (!can_access('payment_remainder')) { ?>
+                                        <li class=" ">
+                                            <a href="<?= url('customer/remaindpayment') ?>">
+                                                <span class="pcoded-mtext">Remaind payment</span>
+                                            </a>
+                                        </li>
+                                        <?php } ?>
 
                                         
                                        <?php if (!can_access('manage_transactions')) { ?>
@@ -614,7 +732,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/modernizr/js/modernizr.js"></script>
     <!-- Chart js -->
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/chart.js/js/Chart.js"></script>
     <script src="<?= $root ?>/files/assets/pages/widget/amchart/amcharts.js"></script>
     <script src="<?= $root ?>/files/assets/pages/widget/amchart/serial.js"></script>
     <script src="<?= $root ?>/files/assets/pages/widget/amchart/light.js"></script>

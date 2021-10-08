@@ -391,6 +391,7 @@ group by ownership');
     }
 
     public function moduleUsage() {
+        $this->data['breadcrumb'] = array('title' => 'School','subtitle'=>'Sales','head'=>'report');
         $end_date = date('Y-m-01');
         $where = "a.created_at::date >='" . $end_date . "'";
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;

@@ -1036,7 +1036,6 @@ class Customer extends Controller {
                             z.id = r.refer_zone_id join admin.partner_schools t on t.branch_id = p.id 
                             group by t.branch_id,p.id,d.name,r.name,z.name");
         $this->data['branches'] = $sql;
-
         return view('customer.usage.banksbranches', $this->data);
     }
 
@@ -1163,6 +1162,7 @@ class Customer extends Controller {
     }
 
     public function logs() {
+        $this->data['breadcrumb'] = array('title' => 'ShuleSoft Customers','subtitle'=>'customers','head'=>'marketing');
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request()->segment(3);
@@ -1735,12 +1735,20 @@ class Customer extends Controller {
     }
 
 
-    public function updateSchools(){
-        $schools = DB::select("select s.id as school_id,a.id,a.username from admin.clients a join admin.client_schools b on a.id = b.client_id join admin.schools s on s.id = b.school_id");
-        foreach($schools as $value){
-             \DB::table('admin.schools')->where('id', $value->school_id)->update(['schema_name' => $value->username]);
-          }
-          echo 'Successfuuly';
+    // public function updateSchools(){
+    //     $schools = DB::select("select s.id as school_id,a.id,a.username from admin.clients a join admin.client_schools b on a.id = b.client_id join admin.schools s on s.id = b.school_id");
+    //     foreach($schools as $value){
+    //          \DB::table('admin.schools')->where('id', $value->school_id)->update(['schema_name' => $value->username]);
+    //       }
+    //       echo 'Successfuuly';
+    // }
+
+
+    public function remaindpayment(){
+        $this->data['breadcrumb'] = array('title' => 'List of unpaid invoices','subtitle'=>'payments','head'=>'accounts');
+        $this->data['unpaidclients'] = DB::select("select * from admin.clients where id in ( select client_id from admin.invoices where extract(year from created_at::date) = extract(year from current_date) and id not in (select invoice_id from admin.payments ))");
+            // \App\Models\Clients::whereIn('id',\App\Models\Invoice::whereNotIn('id',\App\Models\Payment()))
+        return view('customer.remaindpayment', $this->data);
     }
 
 
