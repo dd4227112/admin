@@ -81,7 +81,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
          //0   $this->sendSORemainder();
-         //0   $this->updateCompleteItems();
+            $this->updateCompleteItems();
         })->dailyAt('04:40'); // Eq to 07:40 AM
 
         $schedule->call(function () {
