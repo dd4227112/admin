@@ -739,7 +739,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/SmoothScroll.js"></script>
     <script src="<?= $root ?>/files/assets/js/pcoded.min.js"></script>
     <script src="<?= $root ?>/files/assets/js/vartical-layout.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>/files/assets/pages/dashboard/custom-dashboard.js"></script>
+    {{-- <script type="text/javascript" src="<?= $root ?>/files/assets/pages/dashboard/custom-dashboard.js"></script> --}}
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/script.min.js"></script>
 
      {{-- select 2 --}}
@@ -880,11 +880,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         }
                                     });
 
-                                    $('.clockpicker').clockpicker({
-                                        donetext: 'Done'
-                                    }).find('input').change(function () {
-                                        console.log(this.value);
-                                    });
+                                    // $('.clockpicker').clockpicker({
+                                    //     donetext: 'Done'
+                                    // }).find('input').change(function () {
+                                    //     console.log(this.value);
+                                    // });
                             </script>
                         <?php } ?>
                     </html>

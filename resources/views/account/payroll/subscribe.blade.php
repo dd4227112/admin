@@ -157,8 +157,9 @@
                             </div>
 
 
-<script type="text/javascript">
-
+      <script type="text/javascript">
+    
+      
     $(".checknumber").blur(function (event) {
         var inputs = $(this).val();
         var user_id = $(this).attr('id');
