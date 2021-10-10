@@ -1,78 +1,56 @@
 @extends('layouts.app')
 @section('content')
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Payment Api Requests</h4>
-                <span>This parts show all api requests done with a bank</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Software</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">API requests</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+       
         <div class="page-body">
-            <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
 
+                           <div class="card">
+                            <div class="card-block">
+                             <form method="post">
 
+                             <div class="row">
+                                <div class="col-sm-12 col-xl-3 m-b-30">
+                                    <h4 class="sub-title">Select School</h4>
+                                    <select name="schema_name" class="form-control form-control-info select2" id="payment_schema">
+                                        <option value="0">Select</option>
+                                        <?php
+                                        $schemas = DB::select('select distinct "schema_name" from admin.all_setting  where payment_integrated=1');
+                                        foreach ($schemas as $schema) {
+                                            ?>
+                                            <option value="<?= $schema->schema_name ?>"><?= $schema->schema_name ?></option>
+                                        <?php }
+                                        ?>
+                                    </select>
+                                </div>
 
-                        <div class="card-block">
-                            <div class="col-md-12 col-xl-12">
-                                <form method="post">
-                                    <div class="form-group row col-lg-offset-6">
+                                 <div class="col-sm-12 col-xl-3 m-b-30">
+                                    <h4 class="sub-title">Start date</h4>
+                                    <input type="date" name="start_date" class="form-control"/>
+                                  </div>
 
-                                        <label class="col-sm-4 col-form-label">Select School</label>
-                                        <div class="col-sm-4">
-                                            <select name="schema_name" class="form-control select2" id="payment_schema">
-                                                <option value="0">Select</option>
-                                                <?php
-                                                $schemas = DB::select('select distinct "schema_name" from admin.all_setting  where payment_integrated=1');
-                                                foreach ($schemas as $schema) {
-                                                    ?>
-                                                    <option value="<?= $schema->schema_name ?>"><?= $schema->schema_name ?></option>
-                                                <?php }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row col-lg-offset-6">
-                                        <label class="col-sm-4 col-form-label">Start Date</label>
-                                        <div class="col-sm-4">
-                                            <input type="date" name="start_date" class="form-control"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row col-lg-offset-6">
-                                        <label class="col-sm-4 col-form-label">End Date</label>
-                                        <div class="col-sm-4">
-                                            <input type="date" name="end_date" class="form-control"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row col-lg-offset-6">
-                                        <label class="col-sm-4 col-form-label"></label>
-                                        <div class="col-sm-4">
-                                            <?= csrf_field() ?>
-                                            <input type="submit" name="submit" class="form-control btn btn-success"/>
-                                        </div>
-                                    </div>
+                                  <div class="col-sm-12 col-xl-3 m-b-30">
+                                     <h4 class="sub-title">Start date</h4>
+                                     <input type="date" name="end_date" class="form-control"/>
+                                  </div>
+
+                                   <div class="col-sm-12 col-xl-3 m-b-30">
+                                      <h4 class="sub-title"> &nbsp;&nbsp; </h4>
+                                      <button type="submit" name="submit" class="btn btn-primary"> Submit </button>
+                                   </div>
+                                </div>
+                                  <?= csrf_field() ?>
                                 </form>
+                                </div>
                             </div>
-                            <div id="sync_status"></div>
+                        
+                     <?php if (isset($returns) && !empty($returns)) { ?>
+                        <div class="card">
+                        <div class="card-block">
+                           <div id="sync_status"></div>
                             <div class="table-responsive dt-responsive "> 
                                 <table id="api_requests" class="table table-striped dataTable table-bordered nowrap">
                                     <thead>
@@ -90,10 +68,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        if (isset($returns) && !empty($returns)) {
-                                            foreach ($returns as $return) {
-
+                                        <?php foreach ($returns as $return) {
                                                 $data = $return->transactions;
                                                 if (!empty($data)) {
                                                     $trans = (object) $data;
@@ -125,16 +100,19 @@
                                                         }
                                                     }
                                                 }
-                                            }
-                                        }
-                                        ?>
+                                            } ?>
+                                       
                                     </tbody>
                                 </table>
-                            </div>
-                        </div> </div>
-                </div> </div>
-        </div> </div>
-</div>
+                             </div>
+                           </div>
+                         </div>
+                      <?php   } ?>
+
+                    </div> 
+              </div> 
+           </div>
+     </div>
 
 <script type="text/javascript">
     reconcile = function (a) {
@@ -143,11 +121,9 @@
             method: 'get',
             success: function (data) {
                 $('#sync_status').html(data).addClass('alert alert-success');
-
             }
         });
     }
-
 
     $(".select2").select2({
         theme: "bootstrap",
@@ -155,61 +131,7 @@
         allowClear: false,
         debug: true
     });
-    //    $(document).ready(function () {
-    //        var table = $('#api_requests').DataTable({
-    //            "processing": true,
-    //            "serverSide": true,
-    //            'serverMethod': 'post',
-    //            'ajax': {
-    //               'url': "<?= url('software/api/null?tag=get') ?>"
-    //            },
-    //            "columns": [
-    //                {"data": "id"},
-    //                {"data": "content"},
-    //                {"data": "created_at"},
-    //                {"data": ""}
-    //            ],
-    //            "columnDefs": [
-    //                {
-    //                    "targets": 3,
-    //                    "data": null,
-    //                    "render": function (data, type, row, meta) {
-    //
-    //                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
-    //
-    //
-    //                    }
-    //
-    //                }
-    //            ],
-    //
-    //            rowCallback: function (row, data) {
-    //                //$(row).addClass('selectRow');
-    //                $(row).attr('id', 'log' + data.id);
-    //            }
-    //        });
-    //        delete_log = function (a) {
-    //            $.ajax({
-    //                url: '<?= url('software/logsDelete') ?>/null',
-    //                method: 'get',
-    //                data: {id: a},
-    //                success: function (data) {
-    //                    if (data == '1') {
-    //                        $('#log' + a).fadeOut();
-    //                    }
-    //                }
-    //            });
-    //        }
-    //    }
-    //    );
-    //    $('#schema_select').change(function () {
-    //        var schema = $(this).val();
-    //        if (schema == 0) {
-    //            return false;
-    //        } else {
-    //            window.location.href = "<?= url('software/logs') ?>/" + schema;
-//        }
-//    });
+
 
 </script>
 @endsection

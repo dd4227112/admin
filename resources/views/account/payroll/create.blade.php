@@ -75,16 +75,16 @@
                                             <?= (int) $basic_salary == 0 ? 0 : money($basic_salary) ?>
                                          </td>
                                         <td>
-                                            <?php
+                                            <?php  
                                             //calculate user allowances
-                                            $allowances = \App\Models\UserAllowance::where('user_id', $user->id)->get();
+                                            $allowances = \App\Models\UserAllowance::where('user_id', (int)$user->id)->get();
                                             $allowance_ids = array();
                                             $total_allowance = 0;
                                             $taxable_allowances = 0;
                                             $non_taxable_allowances = 0;
                                             $no_pension_allowances = 0;
                                             if (!empty($allowances) ) {
-                                                foreach ($allowances as $value) {
+                                                foreach ($allowances as $value) { 
                                                     $all_amount = (float) $value->amount > 0 ? $value->amount : $value->allowance->amount;
                                                     $all_percent = (float) $value->percent > 0 ? $value->percent : $value->allowance->percent;
 
@@ -92,7 +92,7 @@
                                                     $all_now = date_create(date('Y-m-d'));
                                                     $all_diffi = date_diff($all_now, $all_end_date);
                                                     $all_time_diff = $all_diffi->format("%R%a");
-                                                    if ($value->allowance->type == 0) {
+                                                    if ($value->allowance->type == 0) { 
                                                         //taxable allowances
                                                         if ($value->allowance->category == 2 && (int) $all_time_diff > 0) {
                                                             $allowance_tax_amount = $value->allowance->is_percentage == 1 ? $basic_salary * $all_percent / 100 : $all_amount;
@@ -144,7 +144,8 @@
                                                 $total_allowance = 0;
                                                 $taxable_allowances = 0;
                                             }
-                                            echo money($total_allowance);
+                                            
+                                             echo money($total_allowance);
                                             $sum_of_total_allowances += $total_allowance;
                                             ?>
                                         </td>
@@ -380,7 +381,7 @@
                                             }
                                         }
 
-                                        //total deductions which are expense to schools
+                                        //total deductions which are expense to company
                                         $totals = \DB::select('SELECT sum(employer_amount::integer) as employer_amount, name, expense_id from (
                                       select a.employer_amount, b.name, c.id as expense_id from salary_deductions a join deductions b on a.deduction_id=b.id join refer_expense c on b.name=c.name where a.salary_id=' . $salary_id . ' and a.employer_amount is not null and a.employer_amount::integer >= 0 group by a.employer_amount,b.name,c.id ) b group by name,expense_id');
                                        

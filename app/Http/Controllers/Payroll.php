@@ -59,9 +59,7 @@ class Payroll extends Controller {
     
              DB::table('refer_expense')->insert([
               ["name" => request('name') . ' Contributions', "financial_category_id" => 3, "account_group_id" => $account_group_id, 'code' => 'EC-1001' . $pension->id, 'predefined' => $pension->id]]);
-           // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-           // return redirect(base_url('payroll/pension'));
-           return redirect('payroll/pension')->with('success', 'Successfully!');
+           return redirect('payroll/pension')->with('info', 'Successfully!');
         } else {
           $this->data['subview'] = 'account.payroll.add_pension';
           return view($this->data['subview'], $this->data);
@@ -78,7 +76,7 @@ class Payroll extends Controller {
             if (empty($user_pension)) {
                 $pension->delete();
                 DB::table('refer_expense')->where("predefined", $pension->id)->where("financial_category_id", 3)->where('code', 'EC-1001' . $pension->id)->delete();
-                return redirect('payroll/pension')->with('success', 'Successfully!');
+                return redirect('payroll/pension')->with('success','Pension Deleted Successfully');
             } else {
                 return redirect('payroll/pension')->with('error', 'You cannot delete this pension fund. There are members already subscribed!');
             }
@@ -94,7 +92,7 @@ class Payroll extends Controller {
             $pensions = request()->all();
             $this->data['pension']->update($pensions);
             DB::table('refer_expense')->where("predefined", $this->data['pension']->id)->where("financial_category_id", 3)->where('code', 'EC-1001' . $this->data['pension']->id)->update(['name' => request('name') . ' Contributions']);
-            return redirect('payroll/pension')->with('success', 'Successfully updated!');
+              return redirect('payroll/pension')->with('message','Pension Edited Successfully');
         } else {
             $this->data['subview'] = 'account.payroll.edit_pension';
             return view($this->data['subview'], $this->data);
@@ -125,7 +123,7 @@ class Payroll extends Controller {
         $id = request('set');
         
         switch ($type) {
-            case 'pension':
+            case 'pension': 
                 DB::table('user_pensions')->where('user_id', $user_id)->where('pension_id', $id)->delete();
                 $url = url("payroll/pension/" . $id);
                 break;
@@ -160,7 +158,7 @@ class Payroll extends Controller {
         $insert_array = array(
             'user_id' => request('user_id'),
              $table_id => request('tag_id'),
-            'created_by' =>  Auth::user()->id  
+            'created_by' =>  \Auth::user()->id  
         );
         
     
@@ -249,7 +247,7 @@ class Payroll extends Controller {
                     $this->data['view'] = 'account/payroll/create';
                     return view($this->data['view'], $this->data)->with('success','Success!');
                 } else {
-                    return redirect(url('payroll/create'))->with('error', 'Please define first expense category called salary in Account setting');
+                    return redirect(url('payroll/create'))->with('error', ' Please define first expense category called salary in Account setting');
                 }
             } else {
                 $this->data['users'] = $this->getUsers();
@@ -311,11 +309,11 @@ class Payroll extends Controller {
         }
     }
 
-    function delete($id, $x, $y) {
-        DB::statement('delete FROM ' . set_schema_name() . 'salaries where reference=\'' . $y . '\'');
-        DB::statement('delete from ' . set_schema_name() . 'expense where ref_no=\'' . $y . '\'');
-        $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-        return redirect(base_url("payroll/index"));
+    function delete() {
+        $reference = request()->segment(3);
+        DB::statement('delete FROM admin.salaries where reference=\'' . $reference . '\'');
+        DB::statement('delete from admin.expenses where ref_no=\'' . $reference . '\'');
+        return redirect(url("payroll/index"));
     }
 
     public function viewTaxSummary() {

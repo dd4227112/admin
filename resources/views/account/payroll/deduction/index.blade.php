@@ -70,7 +70,7 @@ if($type == 2) {
                                     <tbody>
                                         <?php
                                         $i = 1;
-                                        foreach ($deductions as $deduction) {
+                                        foreach ($deductions as $deduction) { 
                                             ?>
                                             <tr>
                                                 <td>
@@ -103,7 +103,7 @@ if($type == 2) {
                                                 <td>
                                                     <?php echo '<a  href="' . url("deduction/edit/$deduction->id") . ' " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
                                                     <?php
-                                                    echo (int) $deduction->predefined ==1 ? "": '<a  href="' . url("deduction/delete/$deduction->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>';
+                                                    echo (int) $deduction->predefined ==1 ? "": '<a  href="' . url("deduction/delete/$deduction->id") . ' " class="btn btn-danger btn-sm"><i class="icofont icofont-star"></i> ' . __('delete') . ' </a>';
                                                     $sub = $type == 1 ? 'subscribe' : 'monthlysubscribe';
                                                     ?>
                                                     <a href="<?= url('deduction/' . $sub . '/' . $deduction->id) ?>" class="btn btn-primary btn-sm mrg" ><i class="fa fa-users"></i> members</a>

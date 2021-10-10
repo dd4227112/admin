@@ -1,10 +1,7 @@
 @extends('layouts.app')
 @section('content')
-
 <?php  
- $types = $type == 'allowance' ? 'allowance' :  'deduction' || 'pension';
- $deductionType = 'Subscription - '.$types;
-
+ $deductionType = 'Subscription - deduction';
  $breadcrumb = array('title' => $deductionType,'subtitle'=>'accounts','head'=>'payroll');
   ?>
 
@@ -23,18 +20,17 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Type</th>
-                                        <th><?= __("name") ?></th>
-                                        <th><?= __("description") ?></th>
-
+                                        <th> <strong>Type </strong></th>
+                                        <th> <strong> name </strong></th>
+                                        <th> <strong> Description </strong></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
 
                                         <td><?= ucfirst($type) ?></td>
-                                        <td><?= $allowance->name ?></td>
-                                        <td><?= $allowance->description ?></td>
+                                        <td><?= $udeduction->name ?></td>
+                                        <td><?= $udeduction->description ?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -85,14 +81,14 @@
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $deduction = \App\Models\UserDeduction::where('user_id', $user->id)->where('deduction_id', $allowance->id)->where('deadline', '>', date('Y-m-d'))->first();
+                                                        $deduction = \App\Models\UserDeduction::where('user_id', $user->id)->where('deduction_id', $udeduction->id)->where('deadline', '>', date('Y-m-d'))->first();
                                                         $amount = !empty($deduction)  ? $deduction->amount : '';
                                                         $deadline = !empty($deduction)  ? $deduction->deadline : '';
                                                         ?>
-                                                        <input placeholder="<?= __("amount") ?>" type="number" class="form-control" id="amount<?= $user->id ?>" name="amount" value="<?= $amount ?>" >
+                                                        <input placeholder="Amount" style="width:100px;" type="number" class="form-control" id="amount<?= $user->id ?>" name="amount" value="<?= $amount ?>" >
                                                     </td>
                                                     <td>
-                                                        <input  type="date" class="form-control" id="deadline<?= $user->id ?>" name="deadline" value="<?= date($deadline)?>" >
+                                                        <input  type="date" style="width:150px;" class="form-control" id="deadline<?= $user->id ?>" name="deadline" value="<?= date($deadline)?>" >
                                                     </td>
                                                     <td>
                                                         <?php
@@ -129,11 +125,14 @@
         var deadline = $('#deadline' + a).val();
         $.ajax({
             type: 'POST',
+             headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             },
             url: "<?= url('deduction/monthlyAddSubscriber/null') ?>",
             data: {user_id: a, amount: amount, deadline: deadline, deduction_id: '<?= $set ?>', type: 0},
             dataType: "html ",
             beforeSend: function (xhr) {
-                $('#stat' + a ).html('<a href="#/refresh"><i class="fa fa-spinner"></i> </a>');
+                $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-15 text-c-green"></i> </a>');
             },
             complete: function (xhr, status) {
                 $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');
@@ -216,7 +215,6 @@
     });
 
     function subscribeUser(datatype, user_id, tag_id, table, inputValue = null) {
-
         if (parseInt(user_id) && parseInt(tag_id)) {
             $.ajax({
                 type: 'POST',

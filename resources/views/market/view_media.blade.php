@@ -1,34 +1,14 @@
 @extends('layouts.app')
 @section('content')
 
-<!-- Sidebar inner chat end-->
-<!-- Main-body start -->
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-      <h4>Shulesoft Social Media Posts</h4>
-      <span> Social Media Post of <u><?=$post->created_at?> </u></span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Company Post</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">posts</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+     
     <!-- Page-header end -->
     <?php
-                $medias = \App\Models\SocialMediaPost::where('post_id', $post->id)->get();
-                  ?>
+      $medias = \App\Models\SocialMediaPost::where('post_id', $post->id)->get();
+        ?>
     <!-- Page-body start -->
     <div class="page-body">
       <div class="row">
@@ -39,7 +19,9 @@
             <div class="card">
               <div class="card-header">
                 <h5 class="card-header-text">Title: {{ $post->title }}</h5>
-                <table class="table m-0">
+               
+                      <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+
                               <tbody>
                                 <tr>
                                   <th scope="row">Category</th>
@@ -66,18 +48,18 @@
                                       <tr>
                                     </tbody>
                                   </table>
-              </div>
-              <div class="card-block">
-                <div class="view-info">
-                
-                          <h5 class="card-header-text">Social Media Engagement</h4>
-                          <a href="<?= url('/Marketing/socialMedia/show/' . $post->id.'/0')?>" class="btn btn-info  f-right"> <i class="icofont icofont-edit"></i> Update </a>
-                          </div>
-                          <div class="card-block user-desc">
+                                </div>
+
+           
+                     <div class="view-info">
+                       <h5 class="card-header-text">Social Media Engagement</h4>
+                      <a href="<?= url('/Marketing/socialMedia/show/' . $post->id.'/0')?>" class="btn btn-info  f-right"> <i class="icofont icofont-edit"></i> Update </a>
+                     </div>
+                      
                           
-                          <div class="col-lg-12 col-xl-12">
-                            <table class="table m-0">
-                            <tr>
+                      <div class="col-lg-12 col-xl-12">
+                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                        <tr>
                         <thead>
                           <th>Icon </th>
                           <th>Source</th>
@@ -130,21 +112,20 @@
                               </table>
                           </div>
 
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <div class="card">
-                          <div class="card-header">
-                            <h5 class="card-header-text">More About this Post</h5>
-                          </div>
-                          <div class="card-block user-desc">
-                            <div class="view-desc">
-                              <p><?= $post->note ?></p>
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="card">
+                                <div class="card-header">
+                                  <h5 class="card-header-text">More About this Post</h5>
+                                </div>
+                                <div class="card-block user-desc">
+                                  <div class="view-desc">
+                                    <p><?= $post->note ?></p>
+                                  </div>
+                                  </div>
+                                </div>
                             </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                           
                   </div>
                 </div>
               </div>

@@ -184,6 +184,7 @@ group by ownership');
      * @return \Illuminate\Http\Response
      */
     public function socialMedia() {
+       $this->data['breadcrumb'] = array('title' => 'Digital marketing','subtitle'=>'social media','head'=>'marketing');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
@@ -195,20 +196,9 @@ group by ownership');
                     'note' => request('note'),
                     'title' => request('title')
                 ];
-                //    dd($data);
+            
                 $post = \App\Models\MediaPost::create($data);
-                /*  $user = \App\Models\User::find($user_id);
-                  $message = 'Hello ' . $user->firstname . '<br/>'
-                  . 'A task has been allocated to you'
-                  . '<ul>'
-                  . '<li>Task: ' . $post->activity . '</li>'
-                  . '<li>Type: ' . $post->taskType->name . '</li>'
-                  . '<li>Deadline: ' . $post->date . '</li>'
-                  . '</ul>';
-                  $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-                 */
-
-
+            
                 if (!empty($post->id) && request('socialmedia_id')) {
                     $modules = request('socialmedia_id');
                     foreach ($modules as $key => $value) {
@@ -255,6 +245,7 @@ group by ownership');
     }
 
     public function addEvent() {
+        $this->data['breadcrumb'] = array('title' => 'Add event','subtitle'=>'events','head'=>'marketing');
         if ($_POST) {
             $file_id = null;
             $attach_id = null;
@@ -286,14 +277,11 @@ group by ownership');
     }
 
     public function Events() {
-        /**
-         * add option for someone to write an attendance and upload via excel in case you visit TAMONGSCO 
-         */
+       $this->data['breadcrumb'] = array('title' => 'ShuleSoft Events','subtitle'=>'events','head'=>'marketing');
         $id = request()->segment(3);
         if ((int) $id > 0) {
-
+             
             if ($_POST) {
-
                 $body = request('message');
                 $sms = request('sms');
                 $email = request('email');

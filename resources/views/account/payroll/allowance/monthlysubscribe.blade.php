@@ -127,15 +127,16 @@
     function submit_deduction(a) {
         var amount = $('#amount' + a).val();
         var deadline = $('#deadline' + a).val();
-          console.log(deadline);
-
         $.ajax({
             type: 'POST',
+            headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             },
             url: "<?= url('allowance/monthlyAddSubscriber/null') ?>",
             data: {user_id: a, amount: amount, deadline: deadline, allowance_id: '<?= $set ?>', type: 0},
             dataType: "html ",
             beforeSend: function (xhr) {
-                $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-30 text-c-red"></i> </a>');
+                $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-15 text-c-green"></i> </a>');
             },
             complete: function (xhr, status) {
                 $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');
@@ -155,7 +156,7 @@
             data: {user_id: a, set: '<?= $set ?>', type: 'allowance'},
             dataType: "html ",
             beforeSend: function (xhr) {
-                $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-30 text-c-red"></i> </a>');
+                $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-15 text-c-green"></i> </a>');
             },
             complete: function (xhr, status) {
                 $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');
@@ -222,6 +223,9 @@
         if (parseInt(user_id) && parseInt(tag_id)) {
             $.ajax({
                 type: 'POST',
+                  headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 url: "<?= url('payroll/subscribe') ?>",
                 data: {"user_id": user_id, "tag_id": tag_id, table: table, datatype: datatype, checknumber: inputValue},
                 dataType: "html",

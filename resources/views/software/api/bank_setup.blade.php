@@ -2,31 +2,15 @@
 @section('content')
 <?php $root = url('/') . '/public/';
 function bank_data($schema){
-     return \collect(\DB::select("select a.name,a.number,b.* from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id where b.schema_name ='{$schema}' "))->first();   
+     return \collect(\DB::select("select a.name,a.number,b.* from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id
+      where b.schema_name ='{$schema}' "))->first();   
 }
-?>
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>                             
+?>                         
 
 <div class="main-body">
   <div class="page-wrapper">
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>Customer Analysis</h4>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="index-2.html">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Dashboard</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Error Logs</a>
-          </li>
-        </ul>
-      </div>
-    </div> 
+    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    
     <div class="page-body">
       <div class="row">
         <div class="col-md-12 col-xl-12">
@@ -35,8 +19,7 @@ function bank_data($schema){
               <!-- Row start -->
               <div class="row">
                 <div class="col-lg-12 col-xl-12">
-                  <!-- <h6 class="sub-title">Tab With Icon</h6> -->
-                  <!-- Nav tabs -->
+                
                   <ul class="nav nav-tabs md-tabs " role="tablist">
                   
                     <li class="nav-item">
@@ -53,11 +36,9 @@ function bank_data($schema){
 
                   </ul>
                   <!-- Tab panes -->
-                  <div class="tab-content card-block">
+                  <div class="tab-content">
                     <div class="tab-pane active" id="requirements" role="tabpanel">
-                     
                       <div class="card-block">
-                       
                           <div class="table-responsive dt-responsive">
                             <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                             <thead>
@@ -83,7 +64,6 @@ function bank_data($schema){
                                     <td><?= $value->invoice_prefix ?></td>
                                     <td><?= $value->api_username ?></td>
                                     <td><?= $value->api_password ?></td>
-                                
                                 </tr>
                                  <?php $i++; } ?>
                                 <?php  } ?>
@@ -97,7 +77,6 @@ function bank_data($schema){
                                 <th>Invoice Prefix</th>
                                 <th>Live username</th>
                                 <th>Live password </th>
-                              
                             </tr>
                           </tfoot>
                         </table>
@@ -192,7 +171,6 @@ function bank_data($schema){
 $('#check_account').change(function (event) {
         var schema = $(this).val();
             $.ajax({ 
-                // method: 'get',
                 type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

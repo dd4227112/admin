@@ -3,6 +3,7 @@
 
 <div class="main-body">
     <div class="page-wrapper">
+        <?php $breadcrumb = array('title' => isset($allowance_type) ? $allowance_type : 'Allowances','subtitle'=>'accounts','head'=>'payroll');  ?>
         <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
                 <div class="card">  

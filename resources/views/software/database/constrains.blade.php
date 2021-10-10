@@ -11,37 +11,18 @@ $d = $database->loadSchema();
 ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Database</h4>
-                <span></span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Database</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Constrains</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+        
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="white-box">
-                            <center>
+                        <div class="card-block">
+                            <div class="text-center">
                                 <h3 class="box-title m-b-0">Constrains Relations</h3>
                                 <p class="text-muted m-b-30 font-13"> Choose constrain to compare</p>
-                            </center>    
+                            </div> 
+                            <div class="text-center"> 
                             <div class="form-group">
                                 <select class="form-control" id="check_key">
                                     <option>Select Type</option>
@@ -50,9 +31,10 @@ $d = $database->loadSchema();
                                     <option value="CHECK">CHECK</option>
                                     <option value="UNIQUE">UNIQUE</option>
                                 </select>
+                             </div>
                             </div>
-
                         </div>
+
                         <div class="row">
                             <div class="col-sm-12 panel_error"  style="display: none;">
                                 <!-- Animation card start -->
@@ -61,8 +43,6 @@ $d = $database->loadSchema();
                                         <h5>Error Message</h5>
                                         <div class="card-header-right">
                                             <i class="icofont icofont-rounded-down"></i>
-                                          
-                                            <!--<i class="icofont icofont-close-circled"></i>-->
                                         </div>
                                     </div>
                                     <div class="card-block">
@@ -78,13 +58,13 @@ $d = $database->loadSchema();
                             </div>
                         </div>
 
+                        <div class="card-block">
                         <div class="table-responsive">
-
-                            <table class="table">
+                            <table class="table dataTable table-bordered nowrap">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Schema Name</th>
+                                        <th>Schema</th>
                                         <th>Options</th>
                                     </tr>
                                 </thead>
@@ -123,7 +103,7 @@ $d = $database->loadSchema();
                                                                             <?php foreach ($missing_constrains as $constrain) { ?>
                                                                                 <tr>
                                                                                     <td>{{$constrain}}</td>
-                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-constrain='{{$constrain}}' data-relation="{{$sub}}" class="sync_relation">Sync </a>
+                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-constrain='{{$constrain}}' data-relation="{{$sub}}" class="sync_relation btn btn-sm btn-info">Sync </a>
                                                                                         <span id="{{$table.$schema.$constrain}}"></span>
                                                                                     </td>
                                                                                 </tr>
@@ -147,6 +127,8 @@ $d = $database->loadSchema();
                             </table>
                         </div>
                     </div>
+
+                 </div>
                 </div>
             </div>
         </div>
@@ -166,7 +148,10 @@ $d = $database->loadSchema();
             var relation_type = $(this).attr('data-relation');
             $(this).hide();
             $.ajax({
-                type: 'GET',
+                 type: 'POST',
+                 headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
                 url: "<?= url('software/syncConstrain/null') ?>",
                 data: {
                     "constrain": constrain,

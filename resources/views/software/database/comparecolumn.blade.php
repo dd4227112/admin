@@ -11,34 +11,15 @@ $d = $database->loadSchema();
 ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Database</h4>
-                <span></span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Database</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Columns</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+       
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
+                    <div class="card-block">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table dataTable table-bordered nowrap">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -81,7 +62,7 @@ $d = $database->loadSchema();
                                                                             <?php foreach ($missing_columns as $column) { ?>
                                                                                 <tr>
                                                                                     <td>{{$column}}</td>
-                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-column='{{$column}}' class="sync_column">Sync </a>
+                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-column='{{$column}}' class="sync_column btn btn-sm btn-primary">Sync </a>
                                                                                         <span id="{{$table.$schema.$column}}"></span>
                                                                                     </td>
                                                                                 </tr>
@@ -103,6 +84,7 @@ $d = $database->loadSchema();
                                     ?>
                                 </tbody>
                             </table>
+                          </div>
                         </div>
                     </div>
                 </div>

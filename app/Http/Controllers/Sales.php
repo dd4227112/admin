@@ -887,9 +887,9 @@ class Sales extends Controller {
     }
 
     public function addLead() {
+       $this->data['breadcrumb'] = array('title' => 'Sales leads','subtitle'=>'new','head'=>'sales');
         //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
         if ($_POST) {
-    
              $task_data = ['school_id'=>request('school_id'),'school_name'=>request('school_name'),'school_phone'=>request('school_phone'),'school_title'=>request('school_title'),
                       'students'=>request('students'),'start_date'=>date('Y-m-d', strtotime(request('start_date'))),'end_date'=>date('Y-m-d', strtotime(request('end_date'))),
                       'task_type_id'=>request('task_type_id'),'next_action'=>request('next_action'),'budget'=>request('budget'),

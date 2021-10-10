@@ -32,13 +32,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/pages/data-table/css/buttons.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
-   
-        <!-- select 2 -->
-        <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
         
-        {{-- date picker --}}
-         {{-- <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>  --}}
+    
 
         <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script> 
@@ -55,6 +50,14 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script src="https://code.highcharts.com/modules/export-data.js"></script>
         <script src="https://code.highcharts.com/modules/accessibility.js"></script>
         <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+
+         {{-- select 2 --}}
+        <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+
+        {{--  alert --}}
+       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 
             
      </head>
@@ -422,7 +425,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
 
                                 <?php if (can_access('manage_operations')) { ?>
-                                <li class="pcoded-hasmenu">
+                                   <li class="pcoded-hasmenu">
                                    
                                       <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
@@ -431,11 +434,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     <ul class="pcoded-submenu">
                                        
                                           
-                                          <li class=" ">
-                                            <a href="<?= url('account/standingOrders') ?>">
-                                                <span class="pcoded-mtext">Standing order</span>
-                                            </a>
-                                        </li>
+                                    <li class=" ">
+                                        <a href="<?= url('account/standingOrders') ?>">
+                                            <span class="pcoded-mtext">Standing order</span>
+                                        </a>
+                                    </li>
 
                                         
                                        <?php if (!can_access('manage_transactions')) { ?>
@@ -447,36 +450,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <li class="">
                                                     <a href="<?= url('revenue/index') ?>">
                                                         <span class="pcoded-mtext">Revenue</span>
-                                                    </a>
-                                                </li>
-                                             
-                                                <li class="">
-                                                    <a href="<?= url('expense/index/4') ?>">
-                                                        <span class="pcoded-mtext">  Expense</span>
-                                                    </a>
-                                                </li>
-
-                                                 <li class="">
-                                                    <a href="<?= url('account/transaction/1') ?>">
-                                                        <span class="pcoded-mtext">  Fixed assets</span>
-                                                    </a>
-                                                </li>
-
-                                                 <li class="">
-                                                    <a href="<?= url('account/transaction/5') ?>">
-                                                        <span class="pcoded-mtext"> Current assets</span>
-                                                    </a>
-                                                </li>
-
-                                                  <li class="">
-                                                    <a href="<?= url('account/transaction/2') ?>">
-                                                        <span class="pcoded-mtext">Liabilities</span>
-                                                    </a>
-                                                </li>
-
-                                                    <li class="">
-                                                    <a href="<?= url('account/transaction/3') ?>">
-                                                        <span class="pcoded-mtext"> Capital</span>
                                                     </a>
                                                 </li>
 
@@ -533,28 +506,119 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </li>
                                <?php } ?>
 
-                                  <li class="pcoded-hasmenu">
+                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-settings"></i></span>
                                         <span class="pcoded-mtext">ENGINEERING</span>
-                                    </a>
-                                    <ul class="pcoded-submenu">
-                                        <li class=" ">
-                                            <a href="widget-statistic.htm">
-                                                <span class="pcoded-mtext">Statistic</span>
-                                            </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="widget-data.htm">
-                                                <span class="pcoded-mtext">Data</span>
-                                            </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="widget-chart.htm">
-                                                <span class="pcoded-mtext">Chart Widget</span>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                    </a>        
+                                 
+                                        <ul class="pcoded-submenu">
+                                            <li class=" ">
+                                                <a href="<?= url('software/template') ?>">
+                                                    <span class="pcoded-mtext">Templates & Policies</span>
+                                                </a>
+                                            </li>
+
+                                            <?php if (can_access('manage_database')) { ?>
+                                            <li class=" pcoded-hasmenu">
+                                                <a href="javascript:void(0)">
+                                                    <span class="pcoded-mtext">Database</span>
+                                                </a>
+                                                <ul class="pcoded-submenu">
+                                                    <li class="">
+                                                        <a href="<?= url('software/compareTable') ?>">
+                                                            <span class="pcoded-mtext">Tables</span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="">
+                                                        <a href="<?= url('software/compareColumn') ?>">
+                                                            <span class="pcoded-mtext">Columns</span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="">
+                                                        <a href="<?= url('software/constrains') ?>">
+                                                            <span class="pcoded-mtext">Constrains</span>
+                                                        </a>
+                                                    </li>
+
+                                                     {{-- <li class="">
+                                                        <a href="<?= url('software/backup') ?>">
+                                                            <span class="pcoded-mtext">Backup</span>
+                                                        </a>
+                                                    </li> --}}
+
+                                                      {{-- <li class="">
+                                                        <a href="<?= url('software/analysis') ?>">
+                                                            <span class="pcoded-mtext">Reports</span>
+                                                        </a>
+                                                    </li> --}}
+
+                                                      <li class="">
+                                                        <a href="<?= url('software/upgrade') ?>">
+                                                            <span class="pcoded-mtext">Create Script</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        <?php } ?>
+
+                                         <?php if (can_access('manage_database')) { ?>
+                                            <li class=" pcoded-hasmenu">
+                                                <a href="javascript:void(0)">
+                                                    <span class="pcoded-mtext">Payment Integration</span>
+                                                </a>
+                                                <ul class="pcoded-submenu">
+                                                    <li class="">
+                                                        <a href="<?= url('software/banksetup') ?>">
+                                                            <span class="pcoded-mtext">banksetup</span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="">
+                                                        <a href="<?= url('software/invoice/live') ?>">
+                                                            <span class="pcoded-mtext">Live Invoices</span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="">
+                                                        <a href="<?= url('software/invoice/uat') ?>">
+                                                            <span class="pcoded-mtext">Testing Invoices</span>
+                                                        </a>
+                                                    </li>
+
+                                                     <li class="">
+                                                        <a href="<?= url('software/api') ?>">
+                                                            <span class="pcoded-mtext">API Requests</span>
+                                                        </a>
+                                                    </li>
+
+                                                    
+                                                     <li class="">
+                                                        <a href="<?= url('software/reconciliation') ?>">
+                                                            <span class="pcoded-mtext">Reconciliation</span>
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            </li>
+                                        <?php } ?>
+
+                                            <li class=" ">
+                                                <a href="<?= url('software/logs') ?>">
+                                                    <span class="pcoded-mtext">Error Logs</span>
+                                                </a>
+                                            </li>
+
+                                            <?php if(can_access('view_sms_status')) { ?>
+                                            <li class=" ">
+                                                <a href="<?= url('software/smsstatus') ?>">
+                                                    <span class="pcoded-mtext">SMS Status</span>
+                                                </a>
+                                            </li>
+                                          <?php } ?>
+                                        </ul>
                                 </li>
 
                                  
@@ -587,7 +651,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                         
                                        <?php if (!can_access('manage_transactions')) { ?>
-                                        <li class=" pcoded-hasmenu">
+                                        <li class="pcoded-hasmenu">
                                             <a href="javascript:void(0)">
                                                 <span class="pcoded-mtext">Transactions</span>
                                             </a>
@@ -720,7 +784,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                         <div class="pcoded-inner-content">
 
                           <div class="main-body">
-                              {{-- @include('layouts.notifications') --}}
                               @yield('content')
                           </div>
 
@@ -785,6 +848,44 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <?php
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/activity/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
+          <script>
+                @if(Session::has('success'))
+                toastr.options =
+                {
+                   "closeButton" : true,
+                   "progressBar" : true
+                }
+                toastr.success("{{ session('success') }}");
+                @endif
+
+                @if(Session::has('error'))
+                toastr.options =
+                {
+                "closeButton" : true,
+                "progressBar" : true
+                }
+                toastr.error("{{ session('error') }}");
+                @endif
+
+                @if(Session::has('info'))
+                toastr.options =
+                {
+                "closeButton" : true,
+                "progressBar" : true
+                }
+                toastr.info("{{ session('info') }}");
+                @endif
+
+                @if(Session::has('warning'))
+                toastr.options =
+                {
+                "closeButton" : true,
+                "progressBar" : true
+                }
+                toastr.warning("{{ session('warning') }}");
+                @endif
+            </script>
+
         <script type="text/javascript">
 
 
@@ -912,10 +1013,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                     </html>
                     <?php
 ///echo url()->current();
-if (preg_match('/localhost/', url()->current())) {
-    ?>
-    <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
-<?php } ?>
+// if (preg_match('/localhost/', url()->current())) {?>
+    {{-- <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
+  <?php } ?> --}}
 
             
             

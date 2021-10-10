@@ -57,8 +57,9 @@ class Software extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function compareTable($schema = 'betatwo') {
+    public function comparetable($schema = 'betatwo') {
       //  dd($schema);
+        $this->data['breadcrumb'] = array('title' => 'Compare tables','subtitle'=>'software','head'=>'database');
         $this->data['data'] = $this->compareSchemaTables($schema);
         $view = 'software.database.' . strtolower('compareTable');
         if (view()->exists($view)) {
@@ -67,6 +68,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
+        $this->data['breadcrumb'] = array('title' => 'Compare columns','subtitle'=>'software','head'=>'database');
         $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')')
            AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
@@ -254,6 +256,7 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function upgrade() {
+       $this->data['breadcrumb'] = array('title' => 'Create script','subtitle'=>'software','head'=>'database');
         if (request('sql') != '') {
             $this->data['script'] = $this->createUpgradeScript();
         } else {
@@ -285,6 +288,7 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function constrains() {
+       $this->data['breadcrumb'] = array('title' => 'Constrains','subtitle'=>'software','head'=>'database');
         $type = $this->data['sub'] = request()->segment(3);
         if ($type == 'CHECK') {
             $relations = DB::select('SELECT nspname as "table_schema",conname as constraint_name, replace( conrelid::regclass::text , nspname||\'.\', \'\') AS TABLE_NAME FROM   pg_constraint c JOIN   pg_namespace n ON n.oid = c.connamespace WHERE  contype IN (\'c\') ORDER  BY "nspname"');
@@ -299,7 +303,6 @@ ORDER BY c.oid, a.attnum";
         foreach ($relations as $table) {
             array_push($this->data['constrains'][$table->table_schema][$table->table_name], $table->constraint_name);
         }
-        //  return $this->data['constrains'];
         return view('software.database.constrains', $this->data);
     }
 
@@ -333,8 +336,11 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function logs() { 
+        $this->data['breadcrumb'] = array('title' => 'Error logs','subtitle'=>'software','head'=>'system errors');
         $this->data['schema_name'] = $schema = request()->segment(3);
         $this->data['error_log_count'] =  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null"))->count();
+        $this->data['error_log_resolved'] =  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is not null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is not null"))->count();
+
         $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
@@ -376,10 +382,11 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function api() {
+       $this->data['breadcrumb'] = array('title' => 'Payment Api Requests','subtitle'=>'API Requests','head'=>'software');
         if (request('tag')) {
             return $this->ajaxTable('api.requests', ['id', 'content', 'created_at']);
         }
-        return view('software.api.requests');
+        return view('software.api.requests',$this->data);
     }
 
     // public function banksetup() {
@@ -433,10 +440,10 @@ ORDER BY c.oid, a.attnum";
      }
 
       public function banksetup() {  
+        $this->data['breadcrumb'] = array('title' => 'Bank integrations','subtitle'=>'software','head'=>'credentials');
         $this->data['settings'] = DB::table('admin.all_setting')->get();
         $skip = ['beta_testing','beta','betatwo','public','constant','api'];
         $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name',$skip)->get();
-          
         return view('software.api.bank_setup', $this->data);
     }
 
@@ -468,7 +475,7 @@ ORDER BY c.oid, a.attnum";
           //send email to shulesoft personel
           $bank_id = (int) request('bank_id'); $schema = request('schema');
           $client = DB::table('admin.clients')->where('username',$schema)->first();
-
+           
           if ((int) request('bank_id') > 0) {
                 $bank = \collect(\DB::select("select a.* from $schema.bank_accounts a join constant.refer_banks b on a.refer_bank_id = b.id where a.id = '$bank_id' "))->first();
                 if($bank->refer_bank_id == '8'){  // CRDB Mr Pallangyo, for now  adding manually
@@ -626,13 +633,17 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function reconciliation() {
+       $this->data['breadcrumb'] = array('title' => 'Reconciliation','subtitle'=>'API requests','head'=>'software');
         $this->data['returns'] = [];
         $this->data['prefix']='';
         if ($_POST) {
-            $schema = request('schema_name');
+           // $schema = request('schema_name');
+            $schema = 'canossa';
 
             //echo 3535335;
-            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema . '\'');
+            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and 
+              api_password is not null and "schema_name"=\'' . $schema . '\'');
+            
             $returns = [];
             $background = new \App\Http\Controllers\Background();
 
@@ -687,6 +698,7 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function template() {
+       $this->data['breadcrumb'] = array('title' => 'Sofware materials','subtitle'=>'software','head'=>'materials');
         $this->data['faqs'] = [];
         return view('software.index', $this->data);
     }
@@ -749,6 +761,7 @@ ORDER BY c.oid, a.attnum";
 
 
     public function smsStatus() {
+       $this->data['breadcrumb'] = array('title' => 'SMS Status','subtitle'=>'software','head'=>'sms keys');
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
         return view('software.status_sms', $this->data);
     }

@@ -45,13 +45,12 @@ class Customer extends Controller {
     function faq() {
         if ((int) request('id') > 0 && request('action') == 'delete') {
             DB::table('faq')->where('id', request('id'))->delete();
-            return redirect()->back()->with('success', 'success');
+            return redirect()->back()->with('success', 'successfully');
         }
         if ($_POST) {
             $id = DB::table('faq')->insertGetId(['question' => request('question'), 'answer' => request('answer'), 'created_by' => Auth::user()->id]);
             echo $id > 0 ? 'Success' : ' Error, try again later';
         }
-
         $this->data['faqs'] = DB::table('faq')->get();
         return view('customer.faq', $this->data);
     }
@@ -126,7 +125,6 @@ class Customer extends Controller {
             echo 'updated';
         } else {
             $task = \App\Models\Task::create($data);
-
             DB::table('tasks_users')->insert([
                 'task_id' => $task->id,
                 'user_id' => Auth::user()->id,
@@ -205,7 +203,6 @@ class Customer extends Controller {
 
         $train = \App\Models\TrainItemAllocation::find($ttask_id);
         $task_id = $train->task_id;
-
         if ((int) $user_id > 0 && (int) $task_id > 0) {
             $section = \App\Models\TrainItem::find($section_id);
             $obj = [
@@ -383,29 +380,8 @@ class Customer extends Controller {
         return view('customer.' . $page, $this->data);
     }
 
-    public function parents() {
-        
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id) {
-        
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
     public function update() {
-
         $this->data['faqs'] = DB::table('faq')->get();
         return view('customer.message.updates', $this->data);
     }
@@ -421,7 +397,6 @@ class Customer extends Controller {
 
             $users = DB::table('all_users')->whereIn('usertype', request('for'))->where('table', '<>', 'setting')->where('status', 1)->get();
             foreach ($users as $user) {
-
                 $replacements = array(
                     $user->name
                 );
@@ -615,7 +590,7 @@ class Customer extends Controller {
                     foreach ($users as $user_id) {
                         DB::table('tasks_users')->insert([
                             'task_id' => $task->id,
-                            'user_id' => $user_id
+                            'user_id' => $user_id 
                         ]);
                         $user = \App\Models\User::find($user_id);
                         $message = 'Hello ' . $user->firstname . '<br/>'
@@ -886,6 +861,7 @@ class Customer extends Controller {
     }
 
     public function requirements() {
+       $this->data['breadcrumb'] = array('title' => 'Requirements','subtitle'=>'customer requirements','head'=>'marketing');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
@@ -895,6 +871,7 @@ class Customer extends Controller {
         }
 
          if ($tab == 'edit' && $id > 0) {
+           $this->data['breadcrumb'] = array('title' => 'Edit requirements','subtitle'=>'customer requirements','head'=>'marketing');
             $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
             return view('customer/edit_requirement', $this->data);
         }
@@ -947,7 +924,7 @@ class Customer extends Controller {
         $data = request()->except('_token','req_id');
         \App\Models\Requirement::where('id', $id)->update($data);
        // return redirect()->back()->with('success', 'Edited successfully!');
-        return redirect('customer/requirements');
+        return redirect('customer/requirements')->with('success', 'Edited successfully!');
     }
 
     public function updateReq() {
@@ -999,7 +976,7 @@ class Customer extends Controller {
             ]);
             $this->send_whatsapp_sms($data->contact, $message1);
         }
-       return redirect()->back()->with('success', 'success');
+       return redirect()->back()->with('success', 'Updated successfully!');
     }
 
     public function usageAnalysis() {
@@ -1063,9 +1040,7 @@ class Customer extends Controller {
     public function customerslist() {
         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
         $sql = DB::table('admin.all_setting')->whereNotIn('schema_name', $skip);
-
         strlen(request('region')) > 3 ? $sql->whereIn(DB::raw('lower(region)'), explode(',', strtolower(request('region')))) : '';
-
         $this->data['customers'] = $sql->get();
         return view('customer.usage.customer_list', $this->data);
     }

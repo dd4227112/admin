@@ -1,116 +1,49 @@
 @extends('layouts.app')
 @section('content')
 
-<script type="text/javascript" src="<?= url('/public') ?>/assets/select2/select2.js"></script> 
-
 <div class="main-body">
-    <div class="page-wrapper">
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>System Errors</h4>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Error Logs</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+ <div class="page-wrapper">
+     <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
         <div class="page-body">
-            <div class="row">
-                <div class="col-lg-6"></div>
-                <div class="card table-card widget-danger-card col-lg-6">
-                    <div class="card-footer">
-                        <div class="task-list-table">
-                            <p class="task-due"><strong>School with highest Error Logs : </strong><strong class="label label-danger"><?= !empty($danger_schema)? $danger_schema->schema_name : '' ?></strong></p>
-                        </div>
-                        <div class="task-board m-0">
-                            <a href="#" class="btn btn-info btn-mini b-none" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>
-
-                        </div>
-                        <!-- end of pull-right class -->
-                    </div>
+          <div class="col-lg-12">
+            
+             <div class="row">
+                   <p style="font-size:18px;"> <strong class="pl-10">School with highest Error Logs</strong>  <label class="badge badge-inverse-danger"> <?= !empty($danger_schema)? $danger_schema->schema_name : '' ?> </label> </p>
                 </div>
             </div>
+
+
             <div class="row">
-
                 <!-- Documents card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks dark-primary-border">
-                        <div class="card-block">
-                            <h5>All Errors</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-document-folder"></i>
-                                </li>
-                                <li class="text-right">
-                                    <?= $error_log_count ?>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="col-md-6 col-xl-4">
+                      <x-smallCard title="All errors"
+                                :value="$error_log_count"
+                                icon="feather icon-layers f-50 text-c-red"
+                                cardcolor="bg-c-yellow text-white"
+                                >
+                     </x-smallCard>
                 </div>
-                <!-- Documents card end -->
-                <!-- New clients card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks warning-border">
-                        <div class="card-block">
-                            <h5>Database Errors</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-ui-user-group text-warning"></i>
-                                </li>
-                                <li class="text-right text-warning">
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- New clients card end -->
-                <!-- New files card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks danger-border">
-                        <div class="card-block">
-                            <h5>Fatal Errors </h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-files text-danger"></i>
-                                </li>
-                                <li class="text-right text-danger">
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+               
+                <div class="col-md-6 col-xl-4">
+                      <x-smallCard title="Fatal errors"
+                                :value="$error_log_count"
+                                icon="feather icon-book f-50 text-c-red"
+                                cardcolor="bg-c-pink text-white"
+                                >
+                     </x-smallCard>
                 </div>
 
-                <!-- New files card end -->
-                <!-- Open Project card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks">
-                        <div class="card-block">
-                            <h5>Resolved Errors</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-ui-folder text-primary"></i>
-                                </li>
-                                <li class="text-right text-primary">
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="col-md-6 col-xl-4">
+                     <x-smallCard title="Resolved errors"
+                                :value="$error_log_resolved"
+                                icon="feather icon-check-circle f-50 text-c-red"
+                                cardcolor="bg-c-green text-white"
+                                >
+                     </x-smallCard>
                 </div>
 
                 <!-- Open Project card end -->
+              
                 <div class="col-md-12 col-xl-12">
                     <div class="form-group row col-lg-offset-6">
                         <label class="col-sm-4 col-form-label"><?= isset($schema_name) ? $schema_name. ' errors': 'Select School' ?></label>
@@ -130,7 +63,6 @@
                 </div>
 
 
-                
                 <div class="col-md-12 col-xl-12">
                     <div class="card tab-card">
                         <ul class="nav nav-tabs md-tabs" role="tablist">
@@ -252,8 +184,6 @@
 
                                         <div class="mail-body-content">
                                             <div class="card">
-
-
                                                 <div class="card-block table-border-style">
                                                     <div class="table-responsive analytic-table">
                                                         <table class="table">
@@ -272,7 +202,6 @@
                                                                     ?>
                                                                     <tr>
                                                                         <td>
-
                                                                             <span class="table-msg"><?= $log->error_instance ?></span>
                                                                         </td>
                                                                         <td><?= $log->count ?></td>
@@ -308,6 +237,9 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
+                 'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 'url': "<?= url('sales/show/null?page=errors') ?>"
             },
             "columns": [
@@ -392,6 +324,9 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
+                  'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 'url': "<?= url('sales/show/null?page=errors_resolved') ?>"
             },
             "columns": [

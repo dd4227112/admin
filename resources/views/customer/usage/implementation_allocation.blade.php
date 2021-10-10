@@ -27,7 +27,7 @@
                                                     $array[$schema_name->table_schema] = $schema_name->table_schema;
                                                 }
 
-                                                echo form_dropdown("refer_bank_id", $array, old("refer_bank_id"), "id='refer_bank_id' class='form-control' ");
+                                                echo form_dropdown("refer_bank_id", $array, old("refer_bank_id"), "id='refer_bank_id' class='form-control select2' ");
                                                 ?>
                                             </div>
                                             <div class="col-lg-4"></div>
@@ -123,7 +123,7 @@
                                                                     <?php
                                                                     if (preg_match('/not implemented/i', $status)) {
                                                                         ?>
-                                                                        <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-sucess btn-sm btn-xs task_allocated_id">Save</button>
+                                                                        <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-success btn-sm task_allocated_id">Save</button>
                                                                     <?php } ?>
                                                                 </td>
                                                             </tr>
@@ -206,6 +206,12 @@
     }
     $(document).ready(task_group);
 
+    $(".select2").select2({
+      theme: "bootstrap",
+      dropdownAutoWidth: false,
+      allowClear: false,
+      debug: true
+  }); 
 
   
 </script>
