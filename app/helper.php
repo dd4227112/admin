@@ -270,7 +270,6 @@ function timeAgo($datetime, $full = false) {
  * @return  string
  */
 if (!function_exists('form_dropdown')) {
-
     function form_dropdown($name = '', $options = array(), $selected = array(), $extra = '') {
         if (!is_array($selected)) {
             $selected = array($selected);
@@ -331,27 +330,33 @@ function validate_phone_number($number,$country_code=NULL) {
 
 function btn_attendance($id, $method, $class, $name) {
     return "<input type='checkbox' class='" . $class . "' $method id='" . $id . "' data-placement='top' data-toggle='tooltip' data-original-title='" . $name . "' > ";
+
 }
 
-function timeZones($value) {
-    $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
-    $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
-    return $date->format('Y-m-d H:i:s');
-}
 
-function cdate($date) {
-    return date('d-m-Y H:i:s');
-}
+ function timeZones($value)
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+        $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
+        return $date->format('Y-m-d H:i:s');
+    }
 
-function remove_comma($string_number) {
-    return trim(str_replace(',', '', $string_number));
-}
+    
+   function cdate($date){
+        return date('d-m-Y H:i:s');
+    }
 
-function school_full_name($schema_name = null) {
-    return \App\Models\Client::where('username', $schema_name)->first()->name;
-}
 
-function warp($word, $size = 80) {
+    function remove_comma($string_number) {
+        return trim(str_replace(',', '', $string_number));
+    }
+
+
+    function school_full_name($schema_name = null){
+        return \App\Models\Client::where('username',$schema_name)->first()->name;
+    }
+
+function warp($word, $size) {
     return wordwrap($word, $size, "<br />\n");
 }
 
@@ -366,7 +371,6 @@ if (!function_exists('img')) {
         if (!is_array($src)) {
             $src = array('src' => $src);
         }
-
         // If there is no alt attribute defined, set it to an empty string
         if (!isset($src['alt'])) {
             $src['alt'] = '';

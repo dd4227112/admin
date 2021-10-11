@@ -175,7 +175,6 @@ class Customer extends Controller {
     }
 
     function types() {
-
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -240,8 +239,9 @@ class Customer extends Controller {
             $message = 'Hello ' . $user->firstname . ' '. $user->lastname . '.'
             . chr(10) . 'A task of '. $train->trainItem->content .'at ' . $train->client->name
             . chr(10) . 'Has been allocated to you'
-            . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) .'.'
-            . chr(10) . 'Thanks You.';
+            . chr(10) . 'The taks is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) .'.'
+            . chr(10) . 'By :'. \Auth::user()->name
+            . chr(10) . 'Thank You.';
             $this->send_whatsapp_sms($user->phone, $message); 
 
             //email to zone manager
@@ -925,7 +925,7 @@ class Customer extends Controller {
                     . chr(10) . 'There is ' . $new_req . '.'
                     . chr(10) .  strip_tags($req->note) 
                     . chr(10) . 'By: ' . $req->user->name . '.'
-                    . chr(10) . 'Thanks and regards,';
+                    . chr(10) . 'Thanks and regards.';
                      $this->send_whatsapp_sms($user->phone, $sms);
 
                     DB::table('public.sms')->insert([
@@ -954,7 +954,6 @@ class Customer extends Controller {
     public function updateReq() {
         $id = request('id');
         $action = request('action');
-
         \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
         $data = \App\Models\Requirement::where('id', $id)->first();
         $user = \App\Models\User::where('id', $data->user_id)->first();  
@@ -1204,7 +1203,6 @@ class Customer extends Controller {
     }
 
     public function karibu() {
-
         $this->data['clients'] = DB::connection('karibusms')->table('client')->whereNotNull('keyname')->get();
         $this->data['shulesoft'] = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
         if ((int) request()->segment(3) > 0) {
@@ -1735,6 +1733,15 @@ class Customer extends Controller {
         }
         $final = rtrim($sql, 'UNION ALL');
         return DB::select($final);
+    }
+
+
+    public function updateSchools(){
+        $schools = DB::select("select s.id as school_id,a.id,a.username from admin.clients a join admin.client_schools b on a.id = b.client_id join admin.schools s on s.id = b.school_id");
+        foreach($schools as $value){
+             \DB::table('admin.schools')->where('id', $value->school_id)->update(['schema_name' => $value->username]);
+          }
+          echo 'Successfuuly';
     }
 
 

@@ -152,7 +152,7 @@ final class BarcodeQR extends Controller
 	 *
 	 * @param string $url
 	 */
-	public function url($url = null) {
+	public function url_format($url = null) {
 		$this->_data = preg_match("#^https?\:\/\/#", $url) ? $url : "http://{$url}";
 	}
 

@@ -175,10 +175,9 @@
                                                     <td><?= $i ?></td>                                                
                                                     <td><?= date('d-m-Y', strtotime($error->created_at)) ?></td>
                                                     <td><?= $error->schema_name ?></td>
-                                                    <td><?= ($error->error_message) ?></td>
-                                                    <td><?= warp($error->file) ?></td> 
-                                                   <td><?= warp($error->url) ?></td>
-                                                    
+                                                    <td><?= warp($error->error_message,100) ?></td>
+                                                    <td><?= warp($error->file,20) ?></td> 
+                                                    <td><?= warp($error->url,20) ?></td>
                                                 </tr>
                                                <?php $i++; } ?>
                                             </tbody>
@@ -317,7 +316,9 @@
                 {"data": "schema_name"},
                 {"data": "error_message"},
                 {"data": "file"},
-                {"data": "url"}
+                {"data": "url"},
+              //  {"data": "created_by"},
+             //   {"data": ""}
             ],
             "columnDefs": [
                 {

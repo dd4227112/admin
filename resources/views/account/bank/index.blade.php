@@ -69,7 +69,7 @@
                                                         <?php echo $i; ?>
                                                     </td>
                                                     <td data-title="<?= __('bankaccount_name') ?>">
-                                                         <?php echo warp($account->referBank->name); ?> 
+                                                         <?php echo warp($account->referBank->name,20); ?> 
                                                     </td>
                                                     <td data-title="<?= __('bankaccount_branch') ?>">
                                                         <?php echo $account->branch ?>

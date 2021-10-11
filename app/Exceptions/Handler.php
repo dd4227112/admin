@@ -23,7 +23,6 @@ class Handler extends ExceptionHandler {
         \Illuminate\Session\TokenMismatchException::class,
         \Illuminate\Validation\ValidationException::class,
     ];
-
     /**
      * Report or log an exception.
      *
@@ -32,6 +31,7 @@ class Handler extends ExceptionHandler {
      * @param  \Exception  $exception
      * @return void
      */
+
     function createLog($e) {
         $line = @$e->getTrace()[0]['line'];
         $object = [

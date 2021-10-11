@@ -122,7 +122,7 @@ $root = url('/') . '/public/'; ?>
                                             <td><?= $rating->schema_name?></td>
                                             <td><?= date('d-m-Y', strtotime($rating->created_at)) ?></td>
                                             <td><?= isset($rating->modules->name) ? $rating->modules->name : '' ?></td>
-                                            <td class="text-left"><?= warp($rating->comment) ?></td>
+                                            <td class="text-left"><?= warp($rating->comment,20) ?></td>
                                             <td class="text-left"><?= $rating->rate?></td>
                                           </tr>
                                         <?php $i++; } ?>

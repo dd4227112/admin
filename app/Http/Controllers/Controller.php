@@ -352,10 +352,57 @@ class Controller extends BaseController {
       public function send_whatsapp_sms($phone, $message) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
-            DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '{$message}','0',admin.whatsapp_phone('{$phone}') from admin.users where status=1 and phone ='{$phone}'");
+            DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "')");
         }
         return $this;
     }
+
+ 
+
+    // public function weeklyAccountsReports(){
+    //     $schemas = (new \App\Http\Controllers\Software())->loadSchema();
+    //     foreach ($schemas as $schema) {
+    //         if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
+    //             $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
+    //             $revenue = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
+    //             $expenses = \collect(DB::select("select coalesce(sum(c.amount::numeric),0) as expense from " . $schema->table_schema . ".expense c join " .$schema->table_schema . " .refer_expense b on c.refer_expense_id=b.id join " .$schema->table_schema . ".account_groups a on a.id = b.account_group_id where extract(week from c.created_at::date) = extract(week from current_date) AND extract(year from c.created_at::date) = extract(year from current_date)"))->first();
+    //             $fees = \collect(DB::select("select  coalesce(coalesce(sum(a.total_amount),0)-sum(a.discount_amount),0) as amount, coalesce(coalesce(sum(a.total_payment_invoice_fee_amount),0)+ coalesce(sum(a.total_advance_invoice_fee_amount)),0) as paid_amount, sum(a.balance) as balance from  " . $schema->table_schema . ".invoice_balances a join  " . $schema->table_schema . ".invoices c on c.id=a.invoice_id join  " . $schema->table_schema . ".fees_installments i on i.id=a.fees_installment_id join  " . $schema->table_schema . ".fees b on i.fee_id=b.id WHERE extract(week from a.created_at::date) = extract(week from current_date) AND extract(year from a.created_at::date) = extract(year from current_date)"))->first();
+    //             if(!empty($directors)){
+    //                   foreach ($directors as $director) {
+    //                           $message = 'Dear sir/madam'
+    //                             . chr(10) . 'Kindly find the account report for your school this week starts at ' .date( 'F, d Y', strtotime( 'monday this week' ))
+    //                             . chr(10) . 'Total revenues Tsh ' . money($revenue->amount) .''
+    //                             . chr(10) . 'Total expenses Tsh ' . money($expenses->expense) .''
+    //                             . chr(10) . 'Fees collected Tsh ' . money($fees->paid_amount) .''
+    //                             . chr(10) . 'Thanks.';
+    //                           $controller = new \App\Http\Controllers\Controller();
+    //                           $controller->send_whatsapp_sms($director->phone, $message);
+    //                   }
+    //             }
+    //         }
+    //     }
+    //  }
+
+
+    //    public function monthlyAccountsReports(){
+    //     $schemas = (new \App\Http\Controllers\Software())->loadSchema();
+    //     foreach ($schemas as $schema) {
+    //         if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
+    //             $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
+    //             $fees = \collect(DB::select("select  coalesce(coalesce(sum(a.total_amount),0)-sum(a.discount_amount),0) as amount, coalesce(coalesce(sum(a.total_payment_invoice_fee_amount),0)+ coalesce(sum(a.total_advance_invoice_fee_amount)),0) as paid_amount, sum(a.balance) as balance from  " . $schema->table_schema . ".invoice_balances a join  " . $schema->table_schema . ".invoices c on c.id=a.invoice_id join  " . $schema->table_schema . ".fees_installments i on i.id=a.fees_installment_id join  " . $schema->table_schema . ".fees b on i.fee_id=b.id WHERE extract(month from a.created_at::date) = extract(month from current_date) AND extract(year from a.created_at::date) = extract(year from current_date)"))->first();
+    //             if(!empty($directors)){
+    //                   foreach ($directors as $director) {
+    //                           $message = 'Dear sir/madam'
+    //                             . chr(10) . 'Kindly find the reports on the fees for your school this month starts at ' .date( 'F, d Y', strtotime( 'monday this week' ))
+    //                             . chr(10) . 'Total Fees Tsh ' . money($fees->paid_amount) .''
+    //                             . chr(10) . 'Thanks.';
+    //                           $controller = new \App\Http\Controllers\Controller();
+    //                           $controller->send_whatsapp_sms($director->phone, $message);
+    //                   }
+    //             }
+    //         }
+    //     }
+    //  }
 
 }
 
