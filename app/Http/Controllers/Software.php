@@ -631,7 +631,7 @@ ORDER BY c.oid, a.attnum";
         if ($_POST) {
             $schema = request('schema_name');
 
-            //echo 3535335;
+            // echo 3535335;
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();

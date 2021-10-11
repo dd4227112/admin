@@ -310,7 +310,7 @@ class Kernel extends ConsoleKernel {
             "token" => $token
         );
         $push_status = 'check_invoice';
-        //$push_status = 'invoice_submission';
+        
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -369,7 +369,7 @@ class Kernel extends ConsoleKernel {
             );
 
             $push_status = 'invoice_cancel';
-            //$push_status = 'invoice_submission';
+            
             echo $push_status . $invoice->schema_name;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
@@ -430,7 +430,7 @@ class Kernel extends ConsoleKernel {
 
     public function pushStudentInvoice($fields, $invoice, $token) {
         $push_status = 'invoice_submission';
-        //$push_status = 'invoice_submission';
+        
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -445,9 +445,7 @@ class Kernel extends ConsoleKernel {
         $result = json_decode($curl);
         print_r($result);
         echo chr(10);
-        // echo $result->description;
-        //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-
+      
         if (isset($result) && !empty($result)) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
