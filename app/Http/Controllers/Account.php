@@ -98,10 +98,8 @@ class Account extends Controller {
             $this->data['to'] = $to;
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-    
              $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
              $this->data['invoice_reports'] = \DB::select("select extract(month from p.created_at) as month , sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
-           // dd($this->data['invoice_reports']);
             return view('account.invoice.report', $this->data);
         }  
 
@@ -140,8 +138,10 @@ class Account extends Controller {
         $set = $this->data['set'] = 1;
         if ((int) $invoice_id > 0) {
             $payment_id = request()->segment(4);
-            $this->data['invoice'] = \collect(DB::select("select i.id,f.amount,i.reference,i.date,i.token,c.username,c.name,c.phone,c.email,c.start_usage_date,p.amount as paid,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where p.id = '{$payment_id}' and i.id ='{$invoice_id}' "))->first();
-           // dd($this->data['invoice']);
+            $this->data['invoice'] = \collect(DB::select("select i.id,f.amount,i.reference,i.date,i.token,c.username,c.name,c.phone,c.email,
+            c.start_usage_date,p.amount as paid,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join 
+            admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where p.id = '{$payment_id}' and i.id ='{$invoice_id}' "))->first();
+        
             $this->data['usage_start_date'] = $this->data['invoice']->start_usage_date;
            
             $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));

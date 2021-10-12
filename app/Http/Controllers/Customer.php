@@ -1710,21 +1710,46 @@ class Customer extends Controller {
     }
 
 
-    // public function updateSchools(){
-    //     $schools = DB::select("select s.id as school_id,a.id,a.username from admin.clients a join admin.client_schools b on a.id = b.client_id join admin.schools s on s.id = b.school_id");
-    //     foreach($schools as $value){
-    //          \DB::table('admin.schools')->where('id', $value->school_id)->update(['schema_name' => $value->username]);
-    //       }
-    //       echo 'Successfuuly';
-    // }
 
 
     public function remaindpayment(){
+        $year = (int) date('Y');
         $this->data['breadcrumb'] = array('title' => 'List of unpaid invoices','subtitle'=>'payments','head'=>'accounts');
-        $this->data['unpaidclients'] = DB::select("select * from admin.clients where id in ( select client_id from admin.invoices where extract(year from created_at::date) = extract(year from current_date) and id not in (select invoice_id from admin.payments ))");
-            // \App\Models\Clients::whereIn('id',\App\Models\Invoice::whereNotIn('id',\App\Models\Payment()))
+        // $this->data['unpaidclients'] = DB::select("select * from admin.clients where id in ( select client_id from admin.invoices where extract(year from created_at::date) = extract(year from current_date)
+        //                                             and pay_status = '1' and id not in (select invoice_id from admin.payments ))");
+        $account = \collect(DB::select("select id from admin.account_years where name='{$year}' "))->first();
+        $this->data['unpaidclients'] = \App\Models\Invoice::whereIn('id', \App\Models\InvoiceFee::get(['invoice_id']))->whereNotIn('id', \App\Models\Payment::get(['invoice_id']))->where('account_year_id', $account->id)->latest()->get();
         return view('customer.remaindpayment', $this->data);
     }
+
+
+    public function remainderMessages(){ 
+        $unpaid_clients = \DB::select("select username from admin.clients where id in ( select client_id from admin.invoices where extract(year from created_at::date) = extract(year from current_date) and pay_status = '1' and id not in (select invoice_id from admin.payments))");
+    
+        foreach ($unpaid_clients as $schema) {
+                 $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' or usertype ilike '%Admin%' and schema_name = '{$schema->username}'");
+                   if(!empty($directors)){
+                      foreach ($directors as $director) {
+                              $message = 'Dear ' . $director->name .'.'
+                                . chr(10) . 'This is the remainder of your school '. $schema->username
+                                . chr(10) . 'Thanks.';
+                              $controller = new \App\Http\Controllers\Controller();
+                              $controller->send_whatsapp_sms($director->phone, $message);
+                      }
+                }
+            }
+     }
+
+
+
+     public function updateUnpaidClient(){
+           $invoice_id = request('invoice_id');
+           if(!empty($invoice_id)){ 
+             $invoice = \App\Models\Invoice::findOrFail($invoice_id)->first();
+             $invoice->update(['pay_status' => '0']);
+           }
+
+     }
 
 
  

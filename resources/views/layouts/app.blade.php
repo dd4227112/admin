@@ -641,13 +641,13 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                             </a>
                                         </li>
 
-                                         <?php if (!can_access('payment_remainder')) { ?>
+                                         {{-- <?php if (!can_access('payment_remainder')) { ?>
                                         <li class=" ">
                                             <a href="<?= url('customer/remaindpayment') ?>">
                                                 <span class="pcoded-mtext">Remaind payment</span>
                                             </a>
                                         </li>
-                                        <?php } ?>
+                                        <?php } ?> --}}
 
                                         
                                        <?php if (!can_access('manage_transactions')) { ?>

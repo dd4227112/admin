@@ -24,7 +24,7 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Except this school</th>
+                                                <th>Except</th>
                                                 <th>Client Name</th>
                                                 <th>Invoice  #</th>
                                                 <th>Amount</th>
@@ -34,27 +34,35 @@
                              
                                         <tbody>
                                             <?php $x = 1;
-                                            foreach ($unpaidclients as $value) {?>
+                                            foreach ($unpaidclients as $value) {
+                                                $amount = $value->invoiceFees()->sum('amount');
+                                                $paid = $value->payments()->sum('amount');
+                    
+                                                //$unpaid = $amount - $paid;
+                                                // $total_paid += $paid;
+                                                // $total_amount += $amount;
+                                                // $total_unpaid += $unpaid;
+                                                
+                                                ?>
                                                 <tr>
                                                     <td><?= $x ?></td>
-                                                    <th scope="row" class="text-center"><input type="checkbox"/></th>
-                                                    <td><?= $value->name ?></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td class="text-center">
+                                                    <?php
+                                                          $check = \App\Models\Invoice::where('id', $value->id)->where('pay_status',0)->first();
+                                                          !empty($check) ? $checked = 'checked' : $checked = '';
+                                                
+                                                      ?>
+                                                     <input  type="checkbox"  {{ $checked }}  class="mychoice"  name="invoice_id"  value="<?=$value->id ?>"/>
+                                                    </td>
+                                                    <td><?= warp(strtoupper($value->client->name),20) ?></td>
+                                                    <td><?= $value->reference ?></td>
+                                                    <td><?= money($amount) ?></td>
+                                                    <td><?= money($paid) ?></td>
                                                     
                                                 </tr>
                                             <?php $x++; } ?>
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                {{-- <td colspan="3">Total</td>
-                                                <td><?= money($total_amount) ?></td>
-                                                <td><?= money($total_paid) ?></td>
-                                                <td><?= $total_sms ?></td>
-                                                <td colspan="4"></td> --}}
-                                            </tr>
-                                        </tfoot>
+                                      
                                     </table>
                                </div>
                             </div>
@@ -78,23 +86,27 @@
 
 
 <script type="text/javascript">
-    $('#schema_project').change(function () {
-        var schema = $(this).val();
-        if (schema > 0) {
-            $('#year_id').show();
-            return false;
-        } else {
-          //  window.location.href = "<?= url('account/invoice') ?>/" + schema;
-        }
+  $(document).ready(function() {
+  $('.mychoice').click(function() {
+    var invoice_id = $(this).val();
+   //  alert(invoice_id);
+
+    $.ajax({
+     method: 'post',
+     url: "<?= url('customer/updateUnpaidClient') ?>",
+     data: {
+        invoice_id: invoice_id
+     },
+     headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+      dataType: 'html',
+      success: function(data) {
+        //  ... do something with the data...
+          window.location.reload(); 
+      }
     });
-    $('#year_select').change(function () {
-        var year = $(this).val();
-        var project = $('#schema_project').val();
-        if (year == 0) {
-            return false;
-        } else {
-            window.location.href = "<?= url('account/invoice') ?>/" + project + '/' + year;
-        }
-    });
+  });
+});
 </script>
 @endsection
