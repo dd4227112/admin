@@ -315,7 +315,7 @@ class Kernel extends ConsoleKernel {
             "token" => $token
         );
         $push_status = 'check_invoice';
-        //$push_status = 'invoice_submission';
+        
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -374,7 +374,7 @@ class Kernel extends ConsoleKernel {
             );
 
             $push_status = 'invoice_cancel';
-            //$push_status = 'invoice_submission';
+            
             echo $push_status . $invoice->schema_name;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
@@ -435,7 +435,7 @@ class Kernel extends ConsoleKernel {
 
     public function pushStudentInvoice($fields, $invoice, $token) {
         $push_status = 'invoice_submission';
-        //$push_status = 'invoice_submission';
+        
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -450,9 +450,7 @@ class Kernel extends ConsoleKernel {
         $result = json_decode($curl);
         print_r($result);
         echo chr(10);
-        // echo $result->description;
-        //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-
+      
         if (isset($result) && !empty($result)) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
@@ -540,7 +538,7 @@ class Kernel extends ConsoleKernel {
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 0, 'updated_at' => 'now()']);
                     }
 
                     DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
