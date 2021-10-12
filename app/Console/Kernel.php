@@ -1370,6 +1370,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
       public function RefreshMaterializedView(){
           DB::statement("REFRESH MATERIALIZED VIEW admin.all_users");
+          DB::statement("REFRESH MATERIALIZED VIEW admin.all_setting");
       }
 
 }
