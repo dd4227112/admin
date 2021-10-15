@@ -1761,10 +1761,10 @@ class Customer extends Controller {
                                 . chr(10) . 'napenda kukutaarifu kwamba tarehe ya malipo ya mfumo wa ShuleSoft system umepita na unahitajika kufanya malipo kuondoa namna yeyote ya usumbufu ikiwemo system kujifunga'
                                 . chr(10) . 'Asante.';
                             
-                              $this->send_sms($director->phone, $message, 1);
+                            //  $this->send_sms($director->phone, $message, 1);
                               $this->send_sms($director->phone, $ujumbe, 1);
                               $controller = new \App\Http\Controllers\Controller();
-                              $controller->send_whatsapp_sms($director->phone, $message);
+                            //  $controller->send_whatsapp_sms($director->phone, $message);
                               $controller->send_whatsapp_sms($director->phone, $ujumbe);
 
                       }
