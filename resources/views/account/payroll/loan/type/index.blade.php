@@ -74,7 +74,7 @@
                                             </td>
                                             <td class="">
                                                  <?php $edit_url = "loan/type/edit/$loan_type->id"; $delete_url = "loan/type/delete/$loan_type->id"; ?>
-                                                <x-button :url="$edit_url"  color="primary" size="sm" shape="round" title="Edit"></x-button>
+                                                <x-button :url="$edit_url" color="primary"  shape="round" title="Edit"></x-button>
                                                 <x-button :url="$delete_url" classes="btn-danger btn-sm btn-round" title="Delete"></x-button>
                                              {{-- <?php echo '<a  href="' . url("loan/type/edit/$loan_type->id") . ' " class="btn btn-info btn-sm"> ' . __('edit') . ' </a>' ?> --}}
                                              {{-- <?php

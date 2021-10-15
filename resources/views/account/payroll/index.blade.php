@@ -33,7 +33,7 @@
                                         
                                         <div class="tab-content card-block">
 
-                                          {{-- <div class="tab-pane active" id="home7" role="tabpanel">
+                                          <div class="tab-pane active" id="home7" role="tabpanel">
                                             <div class="dt-responsive table-responsive">
                                               <table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
@@ -82,7 +82,7 @@
                                                      </tbody>
                                                   </table>
                                                  </div>
-                                             </div> --}}
+                                             </div> 
 
                                                <div class="tab-pane" id="profile7" role="tabpanel">
                                                     <div class="card-body">

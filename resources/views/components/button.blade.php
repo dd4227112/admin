@@ -1,1 +1,2 @@
- <a  href="<?= url($url) ?>" class="btn {{$classes}} btn-{{$color}} btn-{{$size}} btn-{{$shape}}"> {{$title}} </a>
+ <a  href="<?= url($url) ?>" class="btn btn-{{$color}} btn-{{$btnsize}} btn-{{$shape}}" data-placement="top" 
+    data-toggle="tooltip" data-original-title="{{$toggleTitle}}"> {{$title}} </a>

@@ -11,13 +11,17 @@ class button extends Component
      *
      * @return void
      */
-    public $url,$size,$title,$color;
-    public function __construct($url,$size,$title,$color)
-    {
-        $this->url = $url;
-        $this->size = $size;
+    public $url,$btnsize,$title,$color,$shape,$toggleTitle;
+    public function __construct($url,$btnsize,$title,$color,$shape,$toggleTitle)
+    {  
+       // $this->url = $url;
+        dd($btnsize);
+
+        $this->btnsize = $btnsize;
         $this->title = $title;
         $this->color = $color;
+        $this->shape = $shape;
+        $this->toggleTitle = $toggleTitle;
         
     }
 
