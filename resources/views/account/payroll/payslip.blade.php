@@ -75,39 +75,36 @@ if (empty($payslip_settings)) {
                                                         <table class="table">
                                                             <thead>
                                                             <tr>
-                                                              <th  style="max-width:30%" class="m-10">
+                                                              <th  style="max-width:25%" class="m-10">
                                                              <?php 
                                                                 $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on 
                                                                 a.company_file_id = f.id where a.id = '$user->id'"))->first(); 
                                                                 $local = $root . 'assets/images/user.png';
                                                                 ?>
-                                                            <img class="img-rounded" style="margin-left:2em" height="82em" width="82em" 
-                                                            src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" 
-                                                            alt="User-Profile-Image"> 
-
-                                                            </th>
-                                                            <th>
-                                                            <?php if ((int) $payslip_settings->show_address == 1) { ?>
-                                                            <address style="margin-left:1em;margin-left: 1em; font-size: 13px; max-width: 70%;">
-                                                            <br/>
-                                                                    <br>Name: <?= $salary->user->name ?>
-                                                                    <br>Address: <?= $user->address; ?>
-                                                                    <br>Phone: <?= $user->phone; ?>
-                                                                    <br>Email: <?= $user->email; ?>
-                                                                <?php } ?>
-                                                            </address>
+                                                                <img class="img-rounded" style="margin-left:2em" height="72em" width="72em" 
+                                                                src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" 
+                                                                alt="User-Profile-Image"> 
                                                             </th>
 
+                                                        
+                                                              
+                                                             <th style="font-size: 17px; font-size: 100%; max-width: 100%;">
+                                                                <b>Name:</b> <?= $salary->user->name ?>
+                                                                <br>
+                                                                {{-- <b>Address:</b> <?= $user->address ?? ''?>
+                                                                <br> --}}
+                                                                <b>Phone No:</b>  <?= $user->phone ?? '' ?>
+                                                                <br>
+                                                                <b>Email :</b>  <?= $user->email ?? '' ?>
+                                                              </th>
                                                            
 
-                                                            <th style="font-size: 17px; font-size: 100%; max-width: 100%;">
-                                                                <b>ID No: </b><?php    ?>
+                                                              <th style="font-size: 17px; font-size: 100%; max-width: 100%;">
+                                                                <b>Payment Date:</b> <?= date('d-m-Y', strtotime($salary->payment_date)) ?>
                                                                 <br>
-                                                                <b>Payment Date:</b> <?= $salary->payment_date ?>
+                                                                <b>Bank Name:</b> <?= $user->bank_name ?? ''?>
                                                                 <br>
-                                                                <b>Bank Name:</b> 
-                                                                <br>
-                                                                <b>Bank Account No:</b> 
+                                                                <b>Bank Account No:</b>  <?= $user->bank_account ?? '' ?>
                                                               </th>
                                                              </tr>
                                                           </thead>
@@ -131,11 +128,12 @@ if (empty($payslip_settings)) {
                                                                     <tr>
 
                                                                         <td>1</td>
-                                                                        <td>Basic Salary</td>
+                                                                        <td><b>Basic Salary</b></td>
                                                                         <td align='center'><?php
                                                                             $basic_salary = $salary->basic_pay;
                                                                             echo money($basic_salary);
-                                                                            ?></td>
+                                                                            ?>
+                                                                       </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>2</td>
@@ -158,11 +156,11 @@ if (empty($payslip_settings)) {
                                                                                             foreach ($allowances as $value) {
                                                                                                 echo '<tr>';
                                                                                                 $total_allowance += $value->amount;
-                                                                                                $all_name = !empty($value->allowance) ? $value->allowance->name : '';
-                                                                                                echo '<td>' . $all_name . '</td>';
+                                                                                                $all_name = !empty($value->allowance->name) ? $value->allowance->name : '';
                                                                                                 echo '<td>' . money($value->amount) . '</td>';
                                                                                                 echo '</tr>';
-                                                                                            }
+                                                                                              }
+                                                                                            
                                                                                         }
                                                                                         ?> 
                                                                                     </tbody>
@@ -195,6 +193,7 @@ if (empty($payslip_settings)) {
                                                                             echo money($pension_employee_contribution);
                                                                             ?></td>
                                                                     </tr>
+
                                                                     <tr>
                                                                         <td>4</td>
                                                                         <td><b>Deductions</b>
@@ -227,68 +226,68 @@ if (empty($payslip_settings)) {
                                                                                         ?>
                                                                                     </tbody>
                                                                                 </table>
-                                                                            </div></td>
+                                                                            </div>
+                                                                          
+                                                                        </td>
 
                                                                         <td align='center'  style="padding-top: 3%"><?= money($total_deductions) ?></td>
                                                                     </tr>
                                                                     <tr>
-
                                                                         <td colspan="2">TOTAL DEDUCTIONS</td>
                                                                         <td align='center'><?= money($total_deductions + $pension_employee_contribution) ?></td>
+                                                                    </tr>
+                                                                 </tr>
+
+
+                                                                      <tr>
+                                                                        <td>5</td>
+                                                                        <td><b>Payment status:</b>
+                                                                               <div class="x_content col-lg-offset-1">
+                                                                                <table>
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>Name</th>
+                                                                                            <th>Total </th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+
+                                                                                    
+                                                                                     <?php if ($payslip_settings->show_tax_summary == 1) { ?>
+                                                                                         <tr>
+                                                                                            <th>Taxable Amount</th>
+                                                                                            <th> <?php $taxable_amount = $gross_pay - $pension_employee_contribution;
+                                                                                               echo money($taxable_amount); ?></th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th> PAYE</th>
+                                                                                            <th> <?= money($salary->paye) ?></th>
+                                                                                        </tr>
+                                                                                      <?php } ?>
+                                                                                    
+
+                                                                                         <?php if ($payslip_settings->show_employer_contribution == 1) { ?>
+                                                                                          <tr>
+                                                                                            <th>Contributions</th>
+                                                                                            <th><?= money($pension_employee_contribution) ?></th>
+                                                                                          </tr>
+                                                                                         <?php } ?>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                          </td>
+                                                                       </tr>
+                                                                       <tr>
+                                                                        <td colspan="2">NET PAYMENT</td>
+                                                                        <td align='center'><?= money($salary->net_pay) ?></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
                                                         </div>
                                                         <!-- /.col -->
                                                     </div>
-                                                    <!-- /.row -->
-
-                                                    <div class="row">
-                                                        <!-- accepted payments column -->
-                                                        <div class="col-xs-6">
-                                                            <p class="lead">Payment status:</p>
-
-                                                            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                                                                PROCESSED
-                                                            </p>
-                                                        </div>
-                                                        <!-- /.col -->
-                                                        <div class="col-xs-6">
-                                                            <p class="lead">Summary</p>
-                                                            <div class="table-responsive">
-                                                                <table class="table">
-                                                                    <tbody>
-                                                                        <?php if ($payslip_settings->show_tax_summary == 1) { ?>
-                                                                            <tr>
-                                                                                <th style="width:50%">Taxable Amount:</th>
-                                                                                <td><?php
-                                                                                    //calculate user taxable amount
-                                                                                    $taxable_amount = $gross_pay - $pension_employee_contribution;
-                                                                                    echo money($taxable_amount);
-                                                                                    ?></td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th>PAYE</th>
-                                                                                <td><?= money($salary->paye) ?></td>
-                                                                            </tr>
-                                                                        <?php } ?>
-                                                                        <?php if ($payslip_settings->show_employer_contribution == 1) { ?>
-                                                                            <tr>
-                                                                                <th>Contributions:</th>
-                                                                                <td><?= money($pension_employee_contribution) ?></td>
-                                                                            </tr>
-                                                                        <?php } ?>
-                                                                        <tr>
-                                                                            <th>NET PAY:</th>
-                                                                            <td><?= money($salary->net_pay) ?></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                  
                                                 
-
                                                     <br/>
                                                     <div class="row">
                                                         <div class="responsive-table">
@@ -297,7 +296,8 @@ if (empty($payslip_settings)) {
 
                                                                     <tr>
                                                                         <?php if ($payslip_settings->show_employee_signature == 1) { ?>
-                                                                            <td  style="width: 80%">....<?php if ($payslip_settings->show_employee_digital_signature == 1) { ?> <img src="<?= isset($user_info->signature)?$user_info->signature:'' ?>" width="75" height="54"/> <?php } ?>.......</td>
+                                                                            <td  style="width: 80%">....<?php if ($payslip_settings->show_employee_digital_signature == 1) { ?>
+                                                                             <img src="<?= isset($user_info->signature)?$user_info->signature:'' ?>" width="75" height="54"/> <?php } ?>.......</td>
                                                                         <?php } ?>
                                                                         <td></td>
                                                                         <td ></td>
@@ -305,7 +305,8 @@ if (empty($payslip_settings)) {
                                                                         if ($payslip_settings->show_employer_signature == 1) {
                                                                             $setting = \App\Models\Setting::first();
                                                                             ?>
-                                                                            <td  style="width: 80%">.....<?php if ($payslip_settings->show_employer_digital_signature == 1) { ?> <img src="<?= isset($setting->signature)?$setting->signature:'' ?>" width="75"                                                                                                      height="54"> <?php } ?>........</td>
+                                                                            <td  style="width: 80%">.....<?php if ($payslip_settings->show_employer_digital_signature == 1) { ?> 
+                                                                                <img src="<?= isset($setting->signature)?$setting->signature:'' ?>" width="75"                                                                                                      height="54"> <?php } ?>........</td>
                                                                             <?php } ?>
                                                                     </tr> 
                                                                     <tr>

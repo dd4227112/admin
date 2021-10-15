@@ -171,7 +171,7 @@
                 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-4">
-                        <input type="submit" class="btn btn-primary btn-block" value="Save" >
+                        <button type="submit" class="btn btn-primary btn-mini btn-block">Submit </button>
                     </div>
                 </div>
                 <?= csrf_field() ?>

@@ -135,9 +135,9 @@
                                                                 ?>
                                                             </td>
                                                           
-                                                            <td  class="text-center">
-                                                                   <?php $_url = "payroll/payslip/null/?id=' . $salary->user_id . '&table=' . $salary->table . '&month=' . date('m') . '&set=' . $set";?>
-                                                            <x-button :url="$_url" color="primary" btnsize="sm"  title="Preview" shape="round" toggleTitle="Show payslip"></x-button>
+                                                            <td class="text-center">
+                                                              <?php $month =date('m'); $_url = "payroll/payslip/null/?id=$salary->user_id&month=$month&set=$set";?>
+                                                              <x-button :url="$_url" color="primary" btnsize="sm"  title="Preview" shape="round" toggleTitle="Show payslip"></x-button>
 
                                                                 {{-- <a href="<?= url('payroll/payslip/null/?id=' . $salary->user_id . '&table=' . $salary->table . '&month=' . date('m') . '&set=' . $set) ?>" 
                                                                     class="btn btn-success btn-sm" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip">

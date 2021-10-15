@@ -263,11 +263,11 @@ class Payroll extends Controller {
         return \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
     }
 
-    public function payslip() {
+    public function payslip() { 
         $this->data['breadcrumb'] = array('title' => 'Payroll payslip','subtitle'=>'accounts','head'=>'payroll');
         $this->data['set'] = request('set');
-        $this->data['salary'] = \App\Models\Salary::where('payment_date', request('set'))->where('user_id', request('id'))->first();
-        $user = \App\Models\User::where('id', request('id'))->first();
+        $this->data['salary'] = \App\Models\Salary::where('payment_date', request('set'))->where('user_id', (int) request('id'))->first();
+        $user = \App\Models\User::where('id',(int) request('id'))->first();
         if ($_POST) {
             $settings = DB::table('admin.payslip_settings')->first();
             $vars = get_object_vars($settings);

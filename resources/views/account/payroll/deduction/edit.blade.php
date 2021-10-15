@@ -201,10 +201,10 @@
                                         echo "<div class='form-group' >";
                                     ?>
                                     <label for="grade" class="col-sm-2 control-label">
-                                        <?= __("account_number") ?><span class="red"></span>
+                                        <?= __("Account number") ?><span class="red"></span>
                                     </label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" id="account_number"   placeholder="<?= __('account_number') ?>" name="account_number" value="<?= old('account_number') ?>" >
+                                        <input type="text" class="form-control" id="account_number"   placeholder="<?= __('Account number') ?>" name="account_number" value="<?= old('account_number') ?>" >
                                      
                                     </div>
                                     <span class="col-sm-4 control-label">

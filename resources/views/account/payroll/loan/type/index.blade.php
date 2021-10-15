@@ -13,7 +13,7 @@
                // $usertype = session("usertype");
                 if(!can_access('manage_loans')) { ?>
 				     <div class="card-header">
-                        <x-button url="loan/add" classes="btn-primary" title="Add new loan type"></x-button>
+                         <x-button url="loan/add" color="primary" btnsize="sm" title="Add new loan type"></x-button> 
 					</div>
                    <?php } ?>
 
@@ -72,10 +72,10 @@
                                               <td data-title="<?= __('description') ?>">
                                                 <?php echo $loan_type->description; ?>
                                             </td>
-                                            <td class="">
+                                            <td class="text-center">
                                                  <?php $edit_url = "loan/type/edit/$loan_type->id"; $delete_url = "loan/type/delete/$loan_type->id"; ?>
-                                                <x-button :url="$edit_url" color="primary"  shape="round" title="Edit"></x-button>
-                                                <x-button :url="$delete_url" classes="btn-danger btn-sm btn-round" title="Delete"></x-button>
+                                                <x-button :url="$edit_url" color="primary"  shape="round"  title="Edit"></x-button>
+                                                <x-button :url="$delete_url"  color="danger"  shape="round" title="Delete"></x-button> 
                                              {{-- <?php echo '<a  href="' . url("loan/type/edit/$loan_type->id") . ' " class="btn btn-info btn-sm"> ' . __('edit') . ' </a>' ?> --}}
                                              {{-- <?php
                                                 echo '<a  href="' . url("loan/type/delete/$loan_type->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>';
