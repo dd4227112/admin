@@ -62,9 +62,9 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
 
-          $schedule->call(function () {
-            (new Customer())->remainderMessages();
-        })->everyMinute();
+        //   $schedule->call(function () {
+        //     (new Customer())->remainderMessages();
+        // })->everyMinute();
 
         //  $schedule->call(function () {
         //(new Message())->karibusmsEmails();
