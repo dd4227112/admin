@@ -139,7 +139,7 @@ class Payroll extends Controller {
                 $url = url("allowance/index/");
                 break;
         }
-        return request()->ajax() == TRUE ? 'success' : redirect($url)->with('success', 'Successfully Unsubscribed');
+        return request()->ajax() == TRUE ? 'Successfully Unsubscribed' : redirect($url)->with('success', 'Successfully Unsubscribed');
     }
 
     public function subscribe() {

@@ -43,6 +43,8 @@ class Customer extends Controller {
     }
 
     function faq() {
+        $this->data['breadcrumb'] = array('title' => 'FAQ','subtitle'=>'frequent asked questions','head'=>'operations');
+
         if ((int) request('id') > 0 && request('action') == 'delete') {
             DB::table('faq')->where('id', request('id'))->delete();
             return redirect()->back()->with('success', 'successfully');
@@ -173,6 +175,7 @@ class Customer extends Controller {
     }
 
     function types() {
+        $this->data['breadcrumb'] = array('title' => 'Schools Setup','subtitle'=>'customer service','head'=>'operations');
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -352,6 +355,7 @@ class Customer extends Controller {
     }
 
     public function guide() {
+        $this->data['breadcrumb'] = array('title' => 'ShuleSoft User Guide','subtitle'=>'guide','head'=>'operations');
         if (request()->segment(3) == 'delete') {
             \App\Model\Guide::findOrFail(request()->segment(4))->delete();
             return redirect()->back();
@@ -394,7 +398,6 @@ class Customer extends Controller {
                 'release_date' => 'date'
             ]);
             DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for', 'subject']), ['for' => implode(',', request('for'))]));
-
             $users = DB::table('all_users')->whereIn('usertype', request('for'))->where('table', '<>', 'setting')->where('status', 1)->get();
             foreach ($users as $user) {
                 $replacements = array(
@@ -573,6 +576,7 @@ class Customer extends Controller {
     }
 
     public function activity() {
+       $this->data['breadcrumb'] = array('title' => 'Create activity','subtitle'=>'add new activity','head'=>'operations');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
@@ -1079,6 +1083,7 @@ class Customer extends Controller {
     }
 
     public function modules() {
+        $this->data['breadcrumb'] = array('title' => 'Schools Modules Usage','subtitle'=>'modules','head'=>'operations');
         $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
         $sch = [];
         foreach ($schemas as $schema) {
@@ -1136,7 +1141,7 @@ class Customer extends Controller {
         return view('customer.call.index', $this->data);
     }
 
-    public function logs() {
+    public function logs() { 
         $this->data['breadcrumb'] = array('title' => 'ShuleSoft Customers','subtitle'=>'customers','head'=>'marketing');
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
@@ -1195,6 +1200,7 @@ class Customer extends Controller {
     }
 
     public function sequence() {
+        $this->data['breadcrumb'] = array('title' => 'Training Sequence','subtitle'=>'shuleSoft training sequence','head'=>'operations');
         $this->data['sequences'] = \App\Models\Sequence::all();
         return view('customer.training.sequence', $this->data);
     }
@@ -1724,8 +1730,7 @@ class Customer extends Controller {
 
 
     public function remainderMessages(){ 
-        $unpaid_clients = \DB::select("select username from admin.clients where id in ( select client_id from admin.invoices where extract(year from created_at::date) = extract(year from current_date) and pay_status = '1' and id not in (select invoice_id from admin.payments))");
-    
+        $unpaid_clients = \DB::select("select * from admin.clients_remain_payments");
         foreach ($unpaid_clients as $schema) {
                  $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' or usertype ilike '%Admin%' and schema_name = '{$schema->username}'");
                    if(!empty($directors)){

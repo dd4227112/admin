@@ -130,10 +130,10 @@
                                                         <span id="check<?= $user->id ?>"></span>
                                                     </td>
                                                     <?php } ?>
-                                                    <td>
+                                                    <td class="text-center">
                                                     <?php
                                                     if (in_array($user->id, $subscriptions)) {?>
-                                                        <a href="<?= url('payroll/deleteSubscriber/null/?user_id=' . $user->id  . '&set=' . $set . '&type=' . $type) ?>" class="btn btn-sm btn-danger"> REMOVE </a>
+                                                        <a href="<?= url('payroll/deleteSubscriber/null/?user_id=' . $user->id  . '&set=' . $set . '&type=' . $type) ?>" style="font-size: 10px;" class="btn btn-round btn-mini btn-danger"> remove </a>
                                                     <?php } else { ?>
                                                         <input type="checkbox" value="<?= $user->id; ?>" name="result<?= $user->id; ?>" class="subscribe" id="<?= $user->id ?>" datatype="<?= $type ?>"  class="check<?= $user->id ?>">
                                                     <?php } ?>
@@ -166,21 +166,21 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 url: "<?= url('payroll/checknumber') ?>",
-                        data: {
-                            "inputs": inputs,
-                            user_id: user_id,
-                            'pension_id': pension_id
-                        },
+                data: {
+                    "inputs": inputs,
+                    user_id: user_id,
+                    'pension_id': pension_id
+                },
                 dataType: "html ",
                 beforeSend: function (xhr) {
-                    $('#check' + user_id).html('<a href="#/refresh"> </a>');
+                    $('#check' + user_id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
                 },
                 complete: function (xhr, status) {
-                   $('#check' + user_id).html('<span class="label label-info">' + status + '</span>');
+                   $('#check' + user_id).html('<label class="badge badge-info ">' + status + '</label>');
                 },
                 success: function (data) {
-                    toast(data);
-                    window.location.reload();
+                     toastr.success(data);
+                     window.location.reload();
                 }
             });
         }
@@ -199,8 +199,10 @@
             data: "id=" + a,
             dataType: "html",
             success: function (data) {
-                swal('success', data, 'success');
-                $('#std' + a).hide();
+               // swal('success', data, 'success');
+                toastr.success(data);
+
+               // $('#std' + a).hide();
                 window.location.reload();
             }
         });
@@ -251,6 +253,7 @@
                 dataType: "html",
                 success: function (data) {
                   //  toast(data);
+                    toastr.success(data);
                     window.location.reload();
                 }
             });

@@ -1,36 +1,16 @@
 @extends('layouts.app')
 @section('content')
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Loan</h4>
-                <span>Add loan</span>
-            </div>
+      
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
-            <div class="page-header-breadcrumb">
-                 <ul class="breadcrumb-title">
-                   <li class="breadcrumb-item">
-                        <a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="<?= url("loan/index") ?>"><i class="fa fa-laptop"></i> <?= __('loan_application') ?></a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
                     <!-- Zero config.table start -->
                     <div class="card">
-                        <header class="card-header">
-                           Fill all basic information correctly
-                        </header>
+                      
                         <div class="card-body row">
                             <div id="error_area">
 
@@ -43,10 +23,10 @@
                                 @endif
 
                             </div>
-                            <div class="col-lg-8">
+                            <div class="col-lg-7">
                                 <form class="form-horizontal" role="form" method="post" action="<?= url('Loan/loanAdd') ?>">
-                                    <div class="form-group">              
-                                        <label for="user" class="col-sm-2 control-label">
+                                    {{-- <div class="form-group">              
+                                        <label for="user" class="col-sm-6 control-label">
                                             Borrower
                                         </label>
                                         <div class="col-sm-6">
@@ -59,39 +39,40 @@
                                             echo form_dropdown("user_id", $array, old("user_id"), "id='user_id' class='form-control select2'");
                                             ?>
                                         </div>
-                                    </div>
+                                    </div> --}}
+
 
                                     <div class="form-group">              
-                                        <label for="loan_type" class="col-sm-2 control-label">
-                                            <?= __("source") ?>
+                                        <label for="loan_type" class="col-sm-6 control-label">
+                                            <?= __("Source") ?>
                                         </label>
                                         <div class="col-sm-6">
                                             <?php
                                             $array = array("0" => __("select"));
                                             $deduction_types = [
-                                                '1' => 'Loan From School',
+                                                '1' => 'Loan From Company',
                                                 '2' => 'Loan From Bank'
                                             ];
                                             $loan_sources = DB::table('constant.loan_sources')->get();
                                             foreach ($loan_sources as $source) {
                                                 $array[$source->id] = $source->name;
                                             }
-                                            echo form_dropdown("loan_source_id", $array, old("loan_source_id"), "id='loan_source_id' class='form-control select2'");
+                                            echo form_dropdown("loan_source_id", $array, old("loan_source_id"), "id='loan_source_id' class='js-example-basic-single'");
                                             ?>
                                         </div>
                                     </div>
                                     
                                     <div class="form-group">              
-                                        <label for="loan_type" class="col-sm-2 control-label">
-                                            <?= __("loan_type") ?>
+                                        <label for="loan_type" class="col-sm-6 control-label">
+                                            <?= __("Loan type") ?>
                                         </label>
-                                        <div class="col-sm-6">
+                                       <div class="col-sm-6 m-b-30">
                                             <?php
                                             $array = array("0" => __("select"));
                                             foreach ($loan_types as $loan) {
                                                 $array[$loan->id] = $loan->name;
                                             }
-                                            echo form_dropdown("loan_type_id", $array, old("loan_type_id"), "id='loan_type_id' class='form-control select2'");
+                                            echo form_dropdown("loan_type_id", $array, old("loan_type_id"), "id='loan_type_id' class='js-example-basic-single'");
                                             ?>
                                         </div>
                                     </div>
@@ -101,10 +82,10 @@
                                         if (form_error($errors, 'amount'))
                                             echo "<div class='form-group has-error' >";
                                         else
-                                            echo "<div class='form-group' >";
+                                            echo "<div class='form-group'>";
                                         ?>
-                                        <label for="amount" class="col-sm-2 control-label">
-                                            <?= __("amount") ?><span class="red">*</span>
+                                        <label for="amount" class="col-sm-6 control-label">
+                                            <?= __("Amount") ?><span class="red">*</span>
                                         </label>
                                         <div class="col-sm-6">
                                             <input placeholder="<?= __("amount") ?>" type="text" class="form-control transaction_amount" id="amount" name="amount" value="<?= old('amount') ?>" onkeyup="loan()">
@@ -124,8 +105,8 @@
                                     else
                                         echo "<div class='form-group' >";
                                     ?>
-                                    <label for="months" class="col-sm-2 control-label">
-                                        <?= __("months") ?><span class="red">*</span>
+                                    <label for="months" class="col-sm-6 control-label">
+                                        <?= __("Months") ?><span class="red">*</span>
                                     </label>
                                     <div class="col-sm-6">
                                         <input placeholder="<?= __("months") ?>" type="number" class="form-control" id="months" name="months" value="<?= old('months') ?>"  onkeyup="loan()">
@@ -152,8 +133,8 @@
                         else
                             echo "<div class='form-group' >";
                         ?>
-                        <label for="note" class="col-sm-2 control-label">
-                            <?= __("description") ?><span class="red">*</span>
+                        <label for="note" class="col-sm-6 control-label">
+                            <?= __("Description") ?><span class="red">*</span>
                         </label>
                         <div class="col-sm-6">
                             <textarea style="resize:none;" placeholder="<?= __("description") ?>" class="form-control" id="note" name="description" required><?= old('description') ?></textarea>
@@ -180,7 +161,7 @@
                 </form>
               </div>
 
-                  <div class="col-lg-4">
+                  <div class="col-lg-5">
                     <p class="lead">Summary</p>
                     <div class="table-responsive">
                         <table class="table">
@@ -233,20 +214,28 @@
 </div>
 
 <script type="text/javascript">
-    $(".select2").select2({
-    theme: "bootstrap",
-    dropdownAutoWidth: false,
-    allowClear: false,
-    debug: true
-   });
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
+
+//     $(".select2").select2({
+//     theme: "bootstrap",
+//     dropdownAutoWidth: false,
+//     allowClear: false,
+//     debug: true
+//    });
 
     $('#loan_type_id').change(function () {
         var val = $(this).val();
+        
         if (val == 0) {
             $('#hide-table').hide();
         } else {
             $.ajax({
                 type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 url: "<?= url('loan/getDetails') ?>",
                 data: "id=" + val,
                 dataType: "JSON",
@@ -326,7 +315,6 @@
                 data: {amount: amount, month: month, rate: rate},
                 dataType: "JSON",
                 success: function (data) {
-
                     var net_salary = $('#net_salary').text();
                     var ratio = $('#ratio').text();
                     var final_salary = net_salary - data;
@@ -336,11 +324,10 @@
                     $('#user_net_salary_hidden').val(final_salary);
                     var valid_amount = ratio * net_salary / 100;
                     if (final_salary < valid_amount) {
-                        $('.credit_ratio').show().html('Not Qualified').removeClass('label-success').addClass('label label-danger');
+                        $('.credit_ratio').show().html('Not Qualified').removeClass('label-success').addClass('badge badge-inverse-danger');
                         $('#submit_loan_btn').attr('disabled', 'disabled');
                     } else {
-                        $('.credit_ratio').show().html('Qualified').removeClass('label-danger').addClass('label label-success');
-                      
+                        $('.credit_ratio').show().html('Qualified').removeClass('label-danger').addClass('badge badge-inverse-success');
                         $('#submit_loan_btn').removeAttr('disabled');
                     }
                     $('#qualified_hidden').val($('.credit_ratio').text());

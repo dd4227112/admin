@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\Message;
+use App\Http\Controllers\Customer;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Background;
 use DB;
@@ -59,6 +60,11 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             (new Message())->sendEmail();
         })->everyMinute();
+
+         $schedule->call(function () {
+            (new Customer())->remainderMessages();
+        })->dailyAt('03:30'); 
+
         //  $schedule->call(function () {
         //(new Message())->karibusmsEmails();
         // })->everyMinute();

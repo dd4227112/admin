@@ -3,26 +3,10 @@
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>User group List</h4>
-        <span>The Part holds all written record of user groups.</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">User groups</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">groups</a>
-          </li>
-        </ul>
-      </div>
-    </div>
- 
+    <?php 
+    $breadcrumb = array('title' => $group->name,'subtitle'=>'operations','head'=>'school list'); ?>
+    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+   
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">

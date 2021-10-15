@@ -1,9 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
-<style>
+{{-- <style>
       #blinkingg {
         animation:blinkingText 1.7s infinite;
       }
@@ -15,24 +13,18 @@
         100%{   color: transparent;    }
       }
 
-</style>
+</style> --}}
 <?php
-$root = url('/') . '/public/';
 $page = request()->segment(3);
 $today = 0;
 ?>
-<div class="page-wrapper">
-  <div class="page-header">
-    <div class="page-header-title">
-      <h4>Task Reports </h4>
-    </div>
-    <div class="page-header-breadcrumb">
-       
-  </div>
-</div>
+<div class="main-body">
+ <div class="page-wrapper">
+  <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
 <div class="page-body">
 <div class="row">
-<div class="col-lg-4">
+     <div class="col-lg-4">
           <select class="form-control" id="check_custom_date">
             <option value="" selected >Select Options Here</option>
             <option value="today">Today</option>
@@ -43,11 +35,11 @@ $today = 0;
           <div  style="display: none" id="show_date">
           <form action="#" method="post" onsubmit="this.submit(); this.reset(); return false;">
             <div class="input-daterange input-group" id="datepicker">
-              <input type="date" class="input-sm form-control" name="start" id="start_date">
+              <input type="date" class="input-sm form-control" name="start" id="start_date" style="width: 40px;">
               <span class="input-group-addon">to</span>
               <input type="date" class="input-sm form-control" name="end" id="end_date">
               <br>
-              </div>
+            </div>
               <?php
               if (in_array(Auth::user()->role_id,  [1,8])) {
               $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
@@ -57,7 +49,7 @@ $today = 0;
               <input type="submit" Value="Submit" class="input-sm btn btn-sm btn-success" id="search_custom"/>
           </div>
           <?= csrf_field() ?>
-            </form>
+         </form>
         
           <div  style="display: none" id="today_list">
           <form action="#" method="post" onsubmit="this.submit(); this.reset(); return false;">
@@ -76,59 +68,37 @@ $today = 0;
   <div class="row">
       <div class="col-lg-12">
         <div class="card">
-        <div class="card-header">
-        <h5> 
-        TASK SUMMARY BY 
-         <?php
-          if(count($task_users)>0){
-            foreach($task_users as $us){
-              echo '<u>'.$us->firstname . ' '. $us->lastname .' </u> &nbsp; &nbsp;';
-            }
-          }else{
-            echo '<u>'.Auth::user()->name .'</u>';
-          }
-         ?>
-         
-         </h5> 
-         <span style="float: right">Total Task - <?=count($tasks)?></span>
 
-        </div>
           <div class="card-block">
+            <div class="row">
+              <div class="col-sm-6 col-xl-6">
+            <?php
+              if(count($task_users)>0){
+                foreach($task_users as $us){
+                  $name = 'TASK SUMMARY BY '.$us->firstname . ' '. $us->lastname;
+                }
+              }else{
+                  $name =  'TASK SUMMARY BY '.\Auth::user()->name;
+              }
+            ?>
+           <x-analyticCard :value="count($tasks)" :name="$name" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue"  topicon="feather icon-activity f-50" subtitle="Activities"></x-analyticCard>
+            </div>
+           </div>
+          </div>
 
+          <div class="card-block">
             <div class="row">
               <?php
               $i = 1;
               $total = 0;
                 foreach($tasks as $task){
               ?>
-              <div class="col-sm-6 col-xl-3">
-                <div class="card counter-card-<?= $i ?>">
-                  <div class="card-block-big">
-                    <div>
-                      <h3><?= $task->count ?></h3>
-                      <p><?= ucfirst($task->status)?> Task</p>
-                      <div class="progress ">
-                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'pink' : 'success' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                    </div>
-                    <i class="icofont icofont-trophy-alt" id="blinkingg"></i>
-                  </div>
-                </div>
+              <div class="col-sm-6 col-xl-6">
+                 <x-analyticCard :value="$task->count" :name="ucfirst($task->status)" icon="feather icon-trending-up text-white f-16"  color="bg-c-pink"  topicon="feather icon-activity f-50" subtitle="No students schools"></x-analyticCard>
               </div>
-                  <?php } ?>
-              <div class="col-sm-6 col-xl-3">
-                <div class="card counter-card-<?= $i ?>">
-                  <div class="card-block-big">
-                    <div>
-                      <h3><?= count($activities) ?></h3>
-                      <p> Support Activities</p>
-                      <div class="progress ">
-                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-info" role="progressbar" style="width: 70%" aria-valuenow="<?=count($tasks)?>" aria-valuemin="0" aria-valuemax="<?=sizeof($tasks)?>"></div>
-                      </div>
-                    </div>
-                    <i class="icofont icofont-list" id="blinkingg"></i>
-                  </div>
-                </div>
+              <?php } ?>
+              <div class="col-sm-6 col-xl-6">
+                 <x-analyticCard :value="count($activities)" name="Support Activities" icon="feather icon-trending-up text-white f-16"  color="bg-c-green"  topicon="feather icon-activity f-50" subtitle="No students schools"></x-analyticCard>
               </div>
             </div>
           </div>
@@ -156,8 +126,8 @@ $today = 0;
        
       </div>
       <div class="card-block">
-        <div class="table-responsive">
-          <table class="table dataTable responsive">
+         <div class="table-responsive dt-responsive">
+            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
             <thead>
               <tr>
                 <th width="5%">#</th>
@@ -195,31 +165,6 @@ $today = 0;
   </div>
 
 
-
-  <div class="col-lg-6">
-    <div class="card">
-      <div class="card-header">
-        <h5>Seven Day Perfomance Trend</h5>
-      </div>
-      <div class="card-block">
-        <?php
-        //echo $insight->createChartBySql($logs, 'schema_name', ' Schools Activities ', 'bar', false);
-        ?>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="card">
-      <div class="card-header">
-        <h5>Task Modules Statistics</h5>
-      </div>
-      <div class="card-block">
-        <?php
-       // echo $insight->createChartBySql($logs, 'schema_name', ' Schools Activities ', 'line', false);
-        ?>
-      </div>
-    </div>
-  </div>
 </div>
 </div>
 </div>

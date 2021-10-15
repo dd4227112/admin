@@ -149,8 +149,6 @@ class Allowance extends Controller {
         } else {
             UserAllowance::create(request()->all());
         }
-      //  print_r(request()->all());
-        echo 'success';
-        return request()->ajax() == TRUE ? 'success' : redirect()->back()->with('success', 'Successfully subscribed');
+        return request()->ajax() == TRUE ? 'Successfully subscribed' : redirect()->back()->with('success', 'Successfully subscribed');
     }
 }

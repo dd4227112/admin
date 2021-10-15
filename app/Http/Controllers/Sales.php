@@ -972,6 +972,7 @@ class Sales extends Controller {
     }
 
     public function schoolVisit() {
+       $this->data['breadcrumb'] = array('title' => 'Requirements','subtitle'=>'customer requirements','head'=>'marketing');
         $page = request()->segment(3);
         if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             //current day
@@ -1022,8 +1023,8 @@ class Sales extends Controller {
     }
 }
 
-    public function addVisit() {
-
+    public function addvisit() {
+       $this->data['breadcrumb'] = array('title' => 'Shulesoft Visitation Definition','subtitle'=>'client visitation','head'=>'operations');
         $schools = DB::table('all_setting')->orderBy('created_at', 'DESC')->get();
         $all_school = [];
         foreach ($schools as $school) {

@@ -67,12 +67,23 @@
                                         <td><?= $i ?></td>
                                         <td><?= ucwords($user->firstname. ' ' .$user->lastname) ?></td>
                                         <td><?= $user->designation->name ?></td>
-                                        <td><?= $user->bank_name ?> </td>
                                         <td>
-                                           <?= $user->bank_account ?>
+                                            <span style="text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" 
+                                            onblur="save('<?= $user->id . 'bank_name' ?>', '<?= $user->id ?>', 'bank_name')" 
+                                            id="<?= $user->id . 'bank_name' ?>"><?= $user->bank_name == '' ? 'null' : $user->bank_name ?></span>
+                                            <span id="stat<?= $user->id .  'bank_name' ?>"></span>
                                         </td>
                                         <td>
-                                            <?= (int) $basic_salary == 0 ? 0 : money($basic_salary) ?>
+                                            <span style="text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" 
+                                            onblur="save('<?= $user->id . 'bank_account' ?>', '<?= $user->id ?>', 'bank_account')" 
+                                            id="<?= $user->id . 'bank_account' ?>"><?= $user->bank_account == '' ? 'null' : $user->bank_account ?></span>
+                                            <span id="stat<?= $user->id . 'bank_account' ?>"></span>
+                                        </td>
+                                        <td>
+                                            <span style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" 
+                                            onblur="save('<?= $user->id . 'salary' ?>', '<?= $user->id ?>', 'salary')" 
+                                            id="<?= $user->id . 'salary' ?>"><?= (int) $basic_salary == 0 ? 0 : $basic_salary ?></span>
+                                            <span id="stat<?= $user->id . 'salary' ?>"></span>
                                          </td>
                                         <td>
                                             <?php  
@@ -525,5 +536,27 @@
    </div>
 </div>
 
-
+<script>
+  function save(a, b, column) {
+        var val = $('#' + a).text();
+        if (val !== '') {
+            $.ajax({
+                type: 'POST',
+                url: "<?= base_url('account/editProfile/null') ?>",
+                data: {"id": b, newvalue: val, column: column},
+                dataType: "html",
+                beforeSend: function (xhr) {
+                    $('#stat' + a).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
+                },
+                complete: function (xhr, status)  {
+                    $('#stat' + a).html('<label class="badge badge-info ">' + status + '</label>');
+                },
+                success: function (data) {
+                     toastr.success(data);
+                   //  window.location.reload();
+                }
+            });
+        }
+    }
+</script>
 @endsection

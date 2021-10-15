@@ -228,6 +228,7 @@ class Account extends Controller {
 
     
     public function project() {
+       $this->data['breadcrumb'] = array('title' => 'Projects','subtitle'=>'Company Projects/Services','head'=>'settings');
         $this->data['projects'] = Project::all();
         return view('account.project', $this->data);
     }
@@ -449,6 +450,7 @@ class Account extends Controller {
     }
 
     public function client() {
+       $this->data['breadcrumb'] = array('title' => 'Company Clients','subtitle'=>'clients','head'=>'operations');
         $this->data['clients'] = \App\Models\Client::all();
         $seg = request()->segment(3);
         $id = request()->segment(4);
@@ -911,6 +913,7 @@ class Account extends Controller {
 
 
     public function bank() {
+       $this->data['breadcrumb'] = array('title' => 'Our banks','subtitle'=>'banks','head'=>'settings');
         $this->data['bankaccounts'] = \App\Models\BankAccount::latest()->get();
         return view('account.bank.index', $this->data);
     }
@@ -966,6 +969,7 @@ class Account extends Controller {
     }
 
     public function groups() {
+       $this->data['breadcrumb'] = array('title' => 'Account Groups','subtitle'=>'accounts','head'=>'settings');
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::latest()->get();
         $this->data["category"] = \App\Models\FinancialCategory::latest()->get();
@@ -987,6 +991,7 @@ class Account extends Controller {
     }
 
     public function chart() {
+       $this->data['breadcrumb'] = array('title' => 'Charts of Account','subtitle'=>'accounts','head'=>'settings');
         $this->data['set'] = 0;
         $this->data['id'] = 0;
         $this->data['expenses'] = ReferExpense::all();
@@ -1487,6 +1492,7 @@ class Account extends Controller {
     }
 
     public function holidays(){
+       $this->data['breadcrumb'] = array('title' => 'Holidays','subtitle'=>'Public holidays','head'=>'settings');
         $option = request()->segment(3);
         $id = request()->segment(4);
         $this->data['holidays'] = DB::select("select * from admin.public_days where country_id = '1' order by date desc limit 10");
@@ -1494,12 +1500,12 @@ class Account extends Controller {
           if($_POST){
               $data = ['name'=>request('holiday_name'), 'date'=>request('holiday_date'),'country_id' => '1'];
               DB::table('admin.public_days')->insert($data);
-            return redirect()->back();
+             return redirect()->back()->with('success','Holiday created successfully');
           }
 
             if($option == 'delete'){
               DB::table('admin.public_days')->where('id',$id)->delete();
-              return redirect()->back();
+              return redirect()->back()->with('info','Holiday deleted successfully');;
            }
         return view('account.holidays', $this->data);
     }
@@ -1513,6 +1519,42 @@ class Account extends Controller {
             if($id == 'edit'){
                return view('account.invoice.pro_forma', $this->data);
             }
+    }
+
+
+
+       public function editProfile() {
+        $new_value = request('newvalue');
+        $column = request('column');
+        
+        if (request('column') == 'email') {
+            if (!filter_var($new_value, FILTER_VALIDATE_EMAIL)) {
+                die('<span class="red">This email is not valid</span>');
+            }
+            $user = \App\Model\User::where('email', $new_value)->first();
+            if (!empty($user)) {
+                die('<span class="red">This email already exists</span>');
+            }
+        } else if (request('column') == 'phone') {
+           // $new_value = $valid[1];
+            $user = \App\Model\User::where('phone', $new_value)->first();           
+            $valid = validate_phone_number($user->phone);
+            if (count($valid) != 2) {
+                die('<span class="red">This phone number is not valid</span>');
+            }
+            
+            if (!empty($user)) {
+                die('<span class="red">This phone already exists</span>');
+            }
+        } else if (request('column') == 'username') {
+            $user = \App\Model\User::where('username', $new_value)->first();
+            if (!empty($user)) {
+                die('<span class="red">This username already exists</span>');
+            }
+        } 
+
+        $update = DB::table('admin.users')->where('id',request('id'))->update([$column => $new_value]);
+        echo $update > 0 ? $new_value : 'No changes happened';
     }
 
 }

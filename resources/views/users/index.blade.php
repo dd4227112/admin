@@ -1,53 +1,30 @@
 @extends('layouts.app')
-
 @section('content') 
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Company Staff Members </h4>
-                <span>This Part show all Active Company Staff Members</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Exams</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Listing</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+    
+        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
         <?php if (can_access('manage_users')) { ?>
             <div class="page-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div id="wrapper" class="card">
-                            <div id="editorForm">
-                            <br>
-                                <div class="row">
+                        <div  class="card">
+                          
+                                  <div class="card-block">
+                                   <div class="row">
                                     <div class="col-md-6">
                                         <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
                                     </div>
                                     <div class="col-md-6 text-right">
                                         <button class="btn btn-primary" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button>                   
                                     </div>
-                                    {{-- @if ($message = Session::get('success'))
-                                    <div class="alert alert-success">
-                                        <p>{{ $message }}</p>
-                                    </div>
-                                    @endif --}}
-                                    <hr>
+                                   </div>
+                                </div>
+                                  
+                                   
                                     <div class="card-block">
-
                                         <div class="table-responsive dt-responsive ">
                                             <table class="table table-bordered dataTable">
                                                 <thead>
@@ -89,12 +66,13 @@
                                             </table>
                                         </div>
                                     </div>
-                                <?php } ?>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
+           <?php } ?>
+
         </div>
     </div>
 

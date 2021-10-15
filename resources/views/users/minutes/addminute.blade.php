@@ -3,33 +3,14 @@
 @section('content')
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4 class="box-title">Company Minute </h4>
-        <span>Register all users who are supposed to be in the system</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Users/minutes">Company Minute</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Create</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
+  
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
     <div class="page-body">
       <div class="row">
-        <div id="outer" class="container">
-          <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
-            <div id="editorForm">
+        <div  class="col-sm-12">
+          <div class="card">
+          
+           
 
               @if (sizeof($errors) > 0)
               <div class="alert alert-danger">
@@ -41,9 +22,10 @@
                 </ul>
               </div>
               @endif
+
+              <div class="card-block">
               <form method="post" action="#" enctype='multipart/form-data'>
               {{ csrf_field() }}
-              <div class="card-block">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <strong>Meeting Title:</strong>
@@ -125,8 +107,6 @@
                     &emsp;Submit&emsp;
                   </button>
                 </div>
-              </div>
-
               </form>
 
             </div>

@@ -17,9 +17,10 @@
                             </div>
                             <div class="card-block">
                                 <!-- Row start -->
-                                <div class="row">
+                                <div class="row m-b-30">
                                     <div class="col-lg-12 col-xl-12">
-                                        <ul class="nav nav-tabs md-tabs " role="tablist">
+
+                                        <ul class="nav nav-tabs md-tabs" role="tablist">
                                             <li class="nav-item">
                                                 <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"><strong>Payroll List</strong></a>
                                                 <div class="slide"></div>
@@ -31,7 +32,8 @@
                                         </ul>
                                         
                                         <div class="tab-content card-block">
-                                          <div class="tab-pane active" id="home7" role="tabpanel">
+
+                                          {{-- <div class="tab-pane active" id="home7" role="tabpanel">
                                             <div class="dt-responsive table-responsive">
                                               <table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
@@ -70,8 +72,8 @@
                                                         <td> <?php echo money($salary->net_pay); ?></td>
                                                         <?php if (can_access('manage_payroll')) { ?>
                                                         <td> <?php
-                                                            echo '<a href="' . url("payroll/show/$salary->payment_date") . '  " class="btn btn-success btn-sm mr-2"> View </a>';
-                                                            echo '<a href="' . url("payroll/delete/$salary->reference") . '  " class="btn btn-danger btn-sm"> Delete </a>';
+                                                            echo '<a href="' . url("payroll/show/$salary->payment_date") . '  " class="btn btn-success btn-mini btn-round mr-2"> View </a>';
+                                                            echo '<a href="' . url("payroll/delete/$salary->reference") . '  " class="btn btn-danger btn-mini btn-round"> Delete </a>';
                                                             ?>
                                                         </td>
                                                         <?php } ?>
@@ -80,17 +82,16 @@
                                                      </tbody>
                                                   </table>
                                                  </div>
-                                             </div>
+                                             </div> --}}
 
-                                            <div class="tab-pane" id="profile7" role="tabpanel">
-                                                  <div class="card shadow mb-2">
-                                                        <div class="card-body">
-                                                            <figure class="highcharts-figure">
-                                                                <div id="onboardPie" style="height: 300px; width:750px;"></div>
-                                                            </figure>
-                                                        </div>
+                                               <div class="tab-pane" id="profile7" role="tabpanel">
+                                                    <div class="card-body">
+                                                        <figure class="highcharts-figure">
+                                                            <div id="onboardPie" style="height: 300px; width:800px;"></div>
+                                                        </figure>
                                                     </div>
-                                            </div>
+                                              </div> 
+
                                         </div>
                                     </div>
 
@@ -104,9 +105,7 @@
                 </div> 
             </div>
         </div>
-</div>
-
-
+   </div>
 
 
 <script type="text/javascript">

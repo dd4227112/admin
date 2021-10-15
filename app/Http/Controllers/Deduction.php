@@ -98,8 +98,6 @@ class Deduction extends Controller {
                 $user_deductions = UserDeduction::where('deduction_id', $id)->first();
                 $salary_deductions = \App\Models\SalaryDeduction::where('deduction_id', $id)->first();
                 if (!empty($user_deductions) || !empty($salary_deductions)) {
-                    //you cannot delete this
-                   // dd('You cant');
                     return redirect()->back()->with('error', 'You cannot delete this deduction because some users are already allocated on this deduction!');
                 } else {
                     \App\Models\Deduction::destroy($id);
@@ -158,7 +156,7 @@ class Deduction extends Controller {
         } else {
             UserDeduction::create($obj);
         }
-        echo 'success';
+        echo 'successful subscribed';
     }
 
     function excel() {

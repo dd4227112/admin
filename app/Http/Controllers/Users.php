@@ -24,6 +24,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $this->data['breadcrumb'] = array('title' => 'ShuleSoft Users','subtitle'=>'employees','head'=>'Human resource');
         $this->data['users'] = User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
         return view('users.index', $this->data);
     }
@@ -34,9 +35,10 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        $breadcrumb = array('title' => 'Create user','subtitle'=>'employees','head'=>'Human resource');
         $users = User::where('created_by', Auth::user()->id)->get();
         $roles = DB::table('roles')->get();
-        return view('users.create', compact('users', 'roles'));
+        return view('users.create', compact('users', 'roles','breadcrumb'));
     }
 
     /**
@@ -105,13 +107,10 @@ class Users extends Controller {
 
     public function show() {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
-
-        $this->data['breadcrumb'] = array('title' => \Auth::user()->name.' profile','subtitle'=>'profile','head'=>'user');
-
-        $this->data['user'] = User::findOrFail($id);
+        $this->data['user'] = $user = User::findOrFail($id);
+        $this->data['breadcrumb'] = array('title' => $user->name.' profile','subtitle'=>'profile','head'=>'user');
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
         $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->orderBy('created_at','desc')->get();
-        
         $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->orderBy('created_at','desc')->get();
         $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->orderBy('created_at','desc')->get();
         $this->data['learnings'] = \App\Models\Learning::where('user_id', $id)->orderBy('created_at','desc')->get();
@@ -395,6 +394,7 @@ class Users extends Controller {
     }
 
     public function applicant() {
+        $this->data['breadcrumb'] = array('title' => 'Applicants','subtitle'=>'human resource','head'=>'applicants');
         $this->data['applicants'] = DB::table('admin.applicants')->get();
         $this->data['applicant'] = DB::table('admin.applicants')->first();
         return view('users.applicant', $this->data);
@@ -426,11 +426,13 @@ class Users extends Controller {
     }
 
     public function minutes() {
+       $this->data['breadcrumb'] = array('title' => 'Add meeting','subtitle'=>'add new meeting','head'=>'operations');
         $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
         return view('users.minutes.minutes', $this->data);
     }
 
     public function addMinute() {
+       $this->data['breadcrumb'] = array('title' => 'Add meeting','subtitle'=>'add new meeting','head'=>'operations');
         if ($_POST) {
             $filename = '';
             if (!empty(request('attached'))) {
@@ -469,6 +471,7 @@ class Users extends Controller {
     }
 
     public function showMinute() {
+       $this->data['breadcrumb'] = array('title' => 'Shulesoft Meeting Minutes','subtitle'=>'meeting','head'=>'operations');
         $id = request()->segment(3);
         $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
         return view('users.minutes.view_minute', $this->data);
@@ -477,7 +480,7 @@ class Users extends Controller {
     public function deleteMinute() {
         $id = request()->segment(3);
         \App\Models\Minutes::where('id', $id)->delete();
-        return redirect()->back()->with('success', 'Minute Deleted');
+        return redirect()->back()->with('success', 'Minute Deleted successful');
     }
 
     public function tasks() {
@@ -731,6 +734,7 @@ class Users extends Controller {
 
 
     public function usergroup(){
+        $this->data['breadcrumb'] = array('title' => 'Clients Group','subtitle'=>'customers','head'=>'operations');
         $tab = request()->segment(3);
         $this->data['groups'] = \App\Models\Group::get();
         if($tab == 'add'){
@@ -774,6 +778,7 @@ class Users extends Controller {
     public function group_clients(){
         $g_id = request()->segment(3);
         if($g_id > 0){
+            $this->data['group'] = \App\Models\Group::findOrFail($g_id);
             $this->data['schools'] = \App\Models\Client::whereIn('id',\App\Models\ClientGroup::where('group_id', $g_id)->get(['client_id']))->get();
         }
         return view('users.groups.schools', $this->data);
@@ -850,7 +855,7 @@ class Users extends Controller {
 
     
      public function addLead() {
-        //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
+        $this->data['breadcrumb'] = array('title' => 'HR Requests','subtitle'=>'customers','head'=>'operations');
         if ($_POST) {
 
             $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);

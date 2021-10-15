@@ -13,19 +13,19 @@
                     <!-- tab panel personal start -->
                     <div class="tab-pane active" id="personal" role="tabpanel">
                         <!-- personal card start -->
+
+
                         <div class="card">
                             <div class="card-block">
-                                <div class="view-info">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <div class="general-info">
                                                 <div class="row">
-                                                    <div class="col-lg-12 col-xl-12">
-                                                        <table class="table m-0">
+                                                      <div class="table-responsive">
+                                                         <table class="table dataTable table-hover">
                                                             <tbody>
                                                                 <tr>
                                                                     <th scope="row">Added Date</th>
-                                                                    <th>{{ $requirement->created_at }} </th>
+                                                                    <th>{{ date('d-m-Y', strtotime($requirement->created_at)) }} </th>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Staff Members</th>
@@ -42,7 +42,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <th> Client Name</th>
-                                                                    <th><?= isset($requirement->school->name) ? $requirement->school->name : 'General requirement' ?>
+                                                                    <th><?= isset($requirement->school->name) ? $requirement->school->name : ' <label class="badge badge-inverse-success">General requirement</label>' ?>
                                                                     <code><?= isset($requirement->school->type) ? $requirement->school->type : ''  ?></code>
                                                                     </th>
                                                                 </tr>
@@ -54,17 +54,12 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <!-- end of row -->
-                                            </div>
-                                            <!-- end of general info -->
-                                        </div>
-                                        <!-- end of col-lg-12 -->
-                                    </div>
-                                    <!-- end of row -->
-                                </div>
+                                           </div>
+                                       </div>
+                                  </div>
+                               </div>
 
-                                <!-- end of card-block -->
-                            </div>
+
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="card">

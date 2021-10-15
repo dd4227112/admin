@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <?php $root = url('/') . '/public/' ?>
 
 <?php
@@ -19,117 +18,61 @@ foreach ($user_permission as $permis) {
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
-                        <div class="col-md-12 col-xl-4">
-                            <div class="card counter-card-1">
-                                <div class="card-block-big">
-                                    <div class="media-left">
-                                        <a href="#" class="profile-image">
-                                            <img class="user-img img-circle" src="<?= $user->company_file_id !='' ? $user->companyFile->path : $root . 'assets/images/user.png' ?>" alt="User-Profile-Image" height="100">
-                                        </a>
-                                    </div>
-                                    
+                     
+                      <div class="col-md-6 col-xl-4">
+                         <div class="card rounded-card user-card">
+                            <div class="card-block">
+                                    <img class="img-fluid img-circle" src="<?= $user->company_file_id !='' ? $user->companyFile->path : $root . 'assets/images/user.png' ?>" alt="round-img" height="10">
+                                <div class="user-content">
+                                    <h4 class="">{{ $user->firstname }} {{ $user->lastname }}</h4>
+                                    <p class="m-b-0 text-muted"><?= $user->designation->abbreviation ? $user->designation->name.'  ' . '('.$user->designation->abbreviation.')' : '' ?></p>
                                 </div>
                             </div>
-                        </div>
+                         </div>
+                       </div>
+
                         <?php
                         if (Auth::user()->role_id != 7) { 
-                            $sql = "SELECT basic_pay FROM admin.salaries WHERE user_id = '$user->id' ORDER BY id DESC LIMIT 1";
-                            $salary = \collect(DB::select($sql))->first();
-                    
-                        //     $salary_per_minute = $salary->basic_pay / $minutes;
-                        //    $salary_per_minute = empty($salary_per_minute) ? 0 : $salary_per_minute;
-                        //     dd($salary_per_minute);
+                           
                             ?>
                             <div class="col-md-6 col-xl-4">
-                                <div class="card counter-card-2">
-                                    <div class="card-block-big">
-                                        <div> 
-                                            <h3>Tsh <?= isset($user->salary) ? money($user->salary) : '' ?></h3>
-                                            <p>Basic Salary 
-                                                <span class="f-right text-success">
-                                                    <i class="icofont icofont-arrow-up"></i>
-                                                </span>
-                                            </p>
-                                            <div class="progress ">
-                                                <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <i class="icofont icofont-coffee-mug"></i>
-                                    </div>
-                                </div>
+                                <?php $pay = isset($user->salary) ? $user->salary : 1 ?>
+                                <x-analyticCard :value="$pay" name="Basic Salary" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue" 
+                                 topicon="feather icon-user f-30" subtitle="Monthly basic salary"></x-analyticCard>
                             </div>
                             
                             <div class="col-md-6 col-xl-4">
-                                <div class="card counter-card-3">
-                                    <div class="card-block-big">
-                                        <div>
-                                            <h3>Tsh 0/=</h3>
-                                            <p>This Month Bonus
-                                                <span class="f-right text-default">
-                                                    <i class="icofont icofont-arrow-up"></i>
-                                                    Based on performance
-                                                </span></p>
-                                            <div class="progress ">
-                                                <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <i class="icofont icofont-upload"></i>
-                                    </div>
-                                </div>
+                                 <?php $month_bonus = 0 ?>
+                                <x-analyticCard :value="$month_bonus" name="This Month Bonus" icon="feather icon-trending-up text-white f-16"  color="bg-c-green" 
+                                 topicon="feather icon-user f-30" subtitle="Based on performance"></x-analyticCard>
                             </div>
+
                         <?php } else { ?>
                             <div class="col-md-6 col-xl-4">
-                                <div class="card counter-card-2">
-                                    <div class="card-block-big">
-                                        <div>
-                                            <h3><?php
-                                                $no = DB::table('admin.nmb_schools')->count();
-                                                echo $no;
-                                                ?></h3>
-                                            <p>Total Schools with NMB
-                                                <span class="f-right text-success">
-                                                    <i class="icofont icofont-arrow-up"></i>
-
-                                                </span>
-                                            </p>
-                                            <div class="progress ">
-                                                <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <i class="icofont icofont-coffee-mug"></i>
-                                    </div>
-                                </div>
+                
+                                  <?php $nmb_schools = \DB::table('admin.nmb_schools')->count(); ?>
+                                <x-analyticCard :value="$nmb_schools" name="NMB Schools" icon="feather icon-trending-up text-white f-16"  color="bg-c-yellow" 
+                                    topicon="feather icon-user f-30" subtitle="Total Schools with NMB">
+                                </x-analyticCard>
                             </div>
-                            <div class="col-md-6 col-xl-4">
-                                <div class="card counter-card-3">
-                                    <div class="card-block-big">
-                                        <div>
-                                            <h3>
-                                                <?php
-                                                $b = \collect(\DB::select('select count(distinct branch) as count from admin.nmb_schools'))->first();
-                                                echo $b->count;
-                                                ?></h3>
-                                                   <p>Branches with Schools
-                                                   <span class="f-right text-default">
-                                                    <i class="icofont icofont-arrow-up"></i>
 
-                                                </span></p>
-                                            <div class="progress ">
-                                                <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <i class="icofont icofont-upload"></i>
-                                    </div>
-                                </div>
+                            <div class="col-md-6 col-xl-4">
+                                 <?php $b = \collect(\DB::select('select count(distinct branch) as count from admin.nmb_schools'))->first(); ?>
+                                <x-analyticCard :value="$b->count" name="Branches" icon="feather icon-trending-up text-white f-16"  color="bg-c-pink" 
+                                    topicon="feather icon-user f-30" subtitle="Branches with Schools">
+                                </x-analyticCard>
                             </div>
                         <?php } ?>
                     </div>
                 </div>
             </div>
+
+
             <!--profile cover end-->
-            <div class="row ">
+            <div class="row">
                 <div class="col-lg-12 col-xl-12">
                     <!-- Nav tabs -->
+                
                     <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#home5" role="tab" aria-expanded="true">Personal Info</a>
@@ -163,8 +106,6 @@ foreach ($user_permission as $permis) {
                             <div class="slide"></div>
                         </li>
                  
-                 
-
                         <?php if (Auth::user()->id == 2) { ?>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Permissions</a>
@@ -176,6 +117,7 @@ foreach ($user_permission as $permis) {
                             </li>
                         <?php } ?>
                     </ul>
+                
 
                     <!-- Tab panes -->
                     <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">

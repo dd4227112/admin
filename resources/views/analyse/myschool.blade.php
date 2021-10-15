@@ -1,39 +1,10 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-<style>
-    .ui-dialog-titlebar {display:none;}
-</style>
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>List of Schools to manage</h4>
-                <span></span>
-            </div>
-            <?php
-            if (!preg_match('/crdb/i', Auth::user()->email)) {
-                ?>
-              
-            <?php } ?>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Customer Support</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Activities</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
         <div class="page-body">
             <div class="row">
@@ -41,59 +12,36 @@
                 if (sizeof($schools) > 0) {
                     ?>
                     <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-block">
+                            <div class="row">
 
-                                <div class="row">
-                                    <?php
-                                    $i = 1;
-                                    $total = 0;
-                                    ?>
                                     <div class="col-md-12 col-xl-4">
-                                        <div class="card counter-card-<?= $i ?>">
-                                            <div class="card-block-big">
-                                                <div>
-                                                    <h3><?= count($schools) ?></h3>
-                                                    <p>Private Schools</p>
-                                                    <div class="progress ">
-                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'pink' : 'success' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <i class="icofont icofont-gift"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-xl-4">
-                                        <div class="card counter-card-<?= $i ?>">
-                                            <div class="card-block-big">
-                                                <div>
-                                                    <h3>Tsh <?= number_format(count($schools)*407*10000) ?> </h3>
-                                                    <p>Estimated Value</p>
-                                                    <div class="progress ">
-                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-warning" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <i class="icofont icofont-warning"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-xl-4">
-                                        <div class="card counter-card-<?= $i ?>">
-                                            <div class="card-block-big">
-                                                <div>
-                                                    <h3> Tsh <?= number_format(sizeof($schools)*407*10000*0.03 + sizeof($schools)*100000 ) ?> </h3>
-                                                    <p>Your Revenue Estimate</p>
-                                                    <div class="progress ">
-                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="4" aria-valuemin="0" aria-valuemax="<?= sizeof($schools) ?>"></div>
-                                                    </div>
-                                                </div>
-                                                <i class="icofont icofont-trophy-alt"></i>
-                                            </div>
-                                        </div>
+                                          <x-smallCard title="Private Schools"
+                                            :value="count($schools)"
+                                            icon="feather icon-book f-50 text-c-red"
+                                            cardcolor="bg-c-pink text-white"
+                                            >
+                                         </x-smallCard>
                                     </div>
 
+                                    <div class="col-md-12 col-xl-4">
+                                           <?php $value = count($schools)*407*10000; ?>
+                                          <x-smallCard title="Estimated Value"
+                                            :value="$value"
+                                            icon="feather icon-book f-50 text-c-red"
+                                            cardcolor="bg-c-green text-white"
+                                            >
+                                         </x-smallCard>
+                                    </div>
 
-                                </div>
+                                    <div class="col-md-12 col-xl-4">
+                                           <?php $value_ = sizeof($schools)*407*10000*0.03 + sizeof($schools)*100000; ?>
+                                          <x-smallCard title="Your Revenue Estimate"
+                                            :value="$value_"
+                                            icon="feather icon-book f-50 text-c-red"
+                                            cardcolor="bg-c-blue text-white"
+                                            >
+                                         </x-smallCard>
+                                    </div>
                             </div>
                         <?php } ?>
                     </div>
@@ -109,11 +57,11 @@
                     <div class="card">
                         <div class="card-header row">
                          <div class="col-sm-8">
-                            <h5>List of Schools Under &nbsp;&nbsp;<a  style="font-size: 16px;" href="<?= url('users/show/'.$staff->id) ?>"><?= $staff->name ?></a> </h5>
+                            <h5>List of Schools Under &nbsp;&nbsp;ShuleSoft </h5>
                          </div>
                    
 
-                          <div class="col-sm-4">
+                          {{-- <div class="col-sm-4">
                             <?php if (Auth::user()->role_id == 1) { ?>
                                 <span style="float: right2">
                                     <select class="form-control select2" style="width:200px;" id='taskdate'>
@@ -124,12 +72,12 @@
                                     </select>
                                 </span>
                             <?php } ?>
-                        </div>
+                        </div> --}}
                      </div>
                         
                         <div class="card-block">
-                            <div class="table-responsive">
-                                <table class="table dataTable">
+                             <div class="table-responsive dt-responsive">
+                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                     <thead>
                                         <tr>
                                             <th>#</th>

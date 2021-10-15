@@ -213,13 +213,14 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         echo $this->createChartBySql($sql_, 'age', 'Overall Average', 'scatter', false);
         $corr = \collect(DB::SELECT('select corr(count,age) from (' . $sql_ . ' ) x '))->first();
         echo '<p>Correlation Factor : ' . round($corr->corr, 3) . '</p>';
-    }
+    } 
 
     public function charts() {
         return view('analyse.charts.logins', $this->data);
     }
 
     public function myschools() {
+        $this->data['breadcrumb'] = array('title' => 'Clients list','subtitle'=>'shulesoft schools','head'=>'operations');
         if (request()->segment(3) != '') {
             $id = request()->segment(3);
         } else {
@@ -242,18 +243,15 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
              // Else select schools/clients based on school associates
           //  $schools =  \App\Models\UserClient::where('user_id', $id)->get();
              $schools =  \App\Models\ClientSchool::latest()->get();
-            
          }
-     
         $this->data['schools'] =  $schools;
         $this->data['users'] = \App\Models\User::where('status', 1)->where('role_id','<>','7')->get();
-
         $this->data['staff'] = \App\Models\User::where('id', $id)->where('status','=','1')->first();
-        
         return view('analyse.myschool', $this->data);
     }
 
     public function myreport() {
+        $this->data['breadcrumb'] = array('title' => 'Task Reports','subtitle'=>'shuleSoft tasks reports','head'=>'operations');
         $id = [];
         if ($_POST) {
 

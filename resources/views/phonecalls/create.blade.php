@@ -5,28 +5,8 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Phone Calls Management </h4>
-                <span>List Phone calls records</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Phone calls</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Create</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+        
         <div class="page-body">
             <div class="row">
                 <div class="col-md-12 col-xl-12">

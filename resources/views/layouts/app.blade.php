@@ -23,6 +23,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/jquery.mCustomScrollbar.css">
+ 
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
 
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
@@ -33,13 +35,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/pages/data-table/css/buttons.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
         
-    
 
         <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script> 
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script> --}}
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
        
@@ -52,14 +52,59 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script src="https://code.highcharts.com/highcharts-3d.js"></script>
 
          {{-- select 2 --}}
-        <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script> 
+
+       <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
+    <!-- Multi Select css -->
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css">
+
 
         {{--  alert --}}
        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 
-            
+          <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
+    <!-- Multi Select css -->
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css">
+
+
+        {{--  alert --}}
+       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+         <script type="text/javascript">
+            ajax_setup = function () {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    async: true,
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        // jQuery('.theme-loader').show();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // jQuery('.theme-loader').hide();
+                    },
+                    complete: function (xhr, status) {
+                        // jQuery('.theme-loader').hide();
+                    }
+                });
+            }
+            $(document).ready(ajax_setup);
+            function toast(message) {
+                new PNotify({
+                    title: 'Feedback',
+                    text: message,
+                    type: 'success',
+                    hide: 'false',
+                    icon: 'icofont icofont-info-circle'
+                });
+            }
+      </script>
+ 
      </head>
     <body>
       <!-- Pre-loader start -->
@@ -134,8 +179,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <div class="main-search morphsearch-search">
                                     <div class="input-group">
                                         <span class="input-group-addon search-close"><i class="feather icon-x text-light"></i></span>
-                                        <input type="text" class="form-control">
-                                        <span class="input-group-addon search-btn"><i class="feather icon-search text-light"></i></span>
+                                          <input type="text" class="form-control">
+                                          <span class="input-group-addon search-btn"><i class="feather icon-search text-light"></i></span>
                                     </div>
                                 </div>
                             </li>
@@ -213,6 +258,52 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </div>
                             </li>
                         </ul>
+
+                        
+
+                        <script>
+                            search_inputs = function () {
+                                $('#search_inputs').keyup(function () {
+                                    var val = $(this).val();
+                                    $.ajax({
+                                        type: "post",
+                                        url: "<?= url('analyse/search') ?>",
+                                        data: "q=" + val,
+                                        dataType: 'JSON',
+                                        success: function (data) {
+                                            console.log(data);
+                                            $('#search_people').html(data.people);
+                                            $('#search_schools').html(data.schools);
+                                            $('#search_activities').html(data.activities);
+                                        }
+                                    });
+                                })
+                            }
+                            $(document).ready(search_inputs);
+                        </script>
+                        {{-- <div id="morphsearch" class="morphsearch">
+                            <form class="morphsearch-form">
+                                <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
+                                <button class="morphsearch-submit" type="submit">Search</button>
+                            </form>
+                            <div class="morphsearch-content">
+                                <div class="dummy-column">
+                                    <h2>Invoices</h2>
+                                    <span id="search_people"></span>
+                                </div>
+                                <div class="dummy-column" style="overflow-y: scroll;">
+                                    <h2>Schools</h2>
+                                    <span id="search_schools"></span>
+                                </div>
+                                <div class="dummy-column">
+                                    <h2>Activity</h2>
+                                    <span id="search_activities"></span>
+                                </div>
+                            </div>
+                            <span class="morphsearch-close"><i class="icofont icofont-search-alt-1"></i></span>
+                        </div> --}}
+
+
                     </div>
                 </div>
             </nav>
@@ -433,31 +524,35 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     </a>
                                     <ul class="pcoded-submenu">
                                        
-                                          
-                                    <li class=" ">
-                                        <a href="<?= url('account/standingOrders') ?>">
-                                            <span class="pcoded-mtext">Standing order</span>
-                                        </a>
-                                    </li>
-
-                                        
-                                       <?php if (!can_access('manage_transactions')) { ?>
+                                       <?php if (can_access('manage_users')) { ?>
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Transactions</span>
+                                                <span class="pcoded-mtext">Human resource</span>
                                             </a>
                                             <ul class="pcoded-submenu">
                                                 <li class="">
-                                                    <a href="<?= url('revenue/index') ?>">
-                                                        <span class="pcoded-mtext">Revenue</span>
+                                                    <a href="<?= url('users/index') ?>">
+                                                        <span class="pcoded-mtext">Users</span>
                                                     </a>
                                                 </li>
 
-                                                  <li class="">
-                                                    <a href="<?= url('account/reconciliation') ?>">
-                                                        <span class="pcoded-mtext">Reconciliation</span>
+                                                <li class="">
+                                                    <a href="<?= url('attendance/index') ?>">
+                                                        <span class="pcoded-mtext">Attendance</span>
                                                     </a>
                                                 </li>
+
+                                                <li class="">
+                                                    <a href="<?= url('users/applicant') ?>">
+                                                        <span class="pcoded-mtext">Applicants</span>
+                                                    </a>
+                                                </li>
+
+                                                 {{-- <li class="">
+                                                    <a href="<?= url('users/template') ?>">
+                                                        <span class="pcoded-mtext">Forms & Templates</span>
+                                                    </a>
+                                                </li> --}}
                                             </ul>
                                         </li>
                                      <?php } ?>
@@ -466,42 +561,218 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                        <?php if (can_access('manage_payroll')) { ?>
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Payroll</span>
+                                                <span class="pcoded-mtext">Partnerships</span>
                                             </a>
                                             <ul class="pcoded-submenu">
-                                                <li class="">
-                                                    <a href="<?= url('payroll/taxes') ?>">
-                                                        <span class="pcoded-mtext">TAX</span>
+                                                {{-- <li class="">
+                                                    <a href="<?= url('Partner/index') ?>">
+                                                        <span class="pcoded-mtext">Onboard Requests</span>
+                                                    </a>
+                                                </li> --}}
+
+                                                 <?php if(!can_access('create_user_group')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('users/usergroup') ?>">
+                                                        <span class="pcoded-mtext">School Groups</span>
                                                     </a>
                                                 </li>
-                                             
-                                                <li class="">
-                                                    <a href="<?= url('payroll/pension') ?>">
-                                                        <span class="pcoded-mtext">  Pension Fund </span>
-                                                    </a>
-                                                </li>
+                                                <?php } ?>
 
                                                  <li class="">
-                                                    <a href="<?= url('allowance/index') ?>">
-                                                        <span class="pcoded-mtext">  Allowances </span>
+                                                    <a href="<?= url('Partner/partners') ?>">
+                                                        <span class="pcoded-mtext">Partners</span>
                                                     </a>
                                                 </li>
-
-                                                 <li class="">
-                                                    <a href="<?= url('deduction/index') ?>">
-                                                        <span class="pcoded-mtext"> Deductions </span>
-                                                    </a>
-                                                </li>
-
-                                                  <li class="">
-                                                    <a href="<?= url('Payroll/index') ?>">
-                                                        <span class="pcoded-mtext">Salaries</span>
-                                                    </a>
-                                                </li>
-                                               
                                             </ul>
                                         </li>
                                      <?php } ?>
+
+                                          <?php if (can_access('manage_customers')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Customer service</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                        
+                                                 <li class="">
+                                                    <a href="<?= url('general/show/whatsapp_integrations') ?>">
+                                                        <span class="pcoded-mtext">WhatsApp Integration</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('customer/setup') ?>">
+                                                        <span class="pcoded-mtext">System Setup</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="">
+                                                    <a href="<?= url('Phone_call/index') ?>">
+                                                        <span class="pcoded-mtext">Phone Calls</span>
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                     <?php } ?>
+
+                                    <?php  if (can_access('training') ){ ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Training</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                 <li class="">
+                                                    <a href="<?= url('customer/guide') ?>">
+                                                        <span class="pcoded-mtext">User Guide</span>
+                                                    </a>
+                                                </li> 
+
+                                                 <li class="">
+                                                    <a href="<?= url('customer/faq') ?>">
+                                                        <span class="pcoded-mtext">FAQ</span>
+                                                    </a>
+                                                </li>
+                                            
+                                                 <li class="">
+                                                    <a href="<?= url('customer/sequence') ?>">
+                                                        <span class="pcoded-mtext">Sequence</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                     <?php } ?>
+
+                                   
+                                      <?php  if (can_access('my_schools')) { ?>
+                                        <li class="pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Schools</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                 <li class="">
+                                                    <a href="<?= url('analyse/myschools') ?>">
+                                                        <span class="pcoded-mtext">Clients list</span>
+                                                    </a>
+                                                </li> 
+
+                                                 <li class="">
+                                                    <a href="<?= url('analyse/myreport') ?>">
+                                                        <span class="pcoded-mtext">Task reports</span>
+                                                    </a>
+                                                </li>
+                                                
+                                                 <li class="">
+                                                    <a href="<?= url('sales/schoolVisit/1') ?>">
+                                                        <span class="pcoded-mtext">School visitation</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                     <?php } ?>
+
+                                    <?php if(!can_access('settings')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Settings</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                 <li class="">
+                                                    <a href="<?= url('account/client') ?>">
+                                                        <span class="pcoded-mtext">Clients </span>
+                                                    </a>
+                                                </li> 
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/bank') ?>">
+                                                        <span class="pcoded-mtext">Banking</span>
+                                                    </a>
+                                                </li>
+                                                
+                                                 <li class="">
+                                                    <a href="<?= url('account/groups') ?>">
+                                                        <span class="pcoded-mtext">Account Groups</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="">
+                                                    <a href="<?= url('account/chart') ?>">
+                                                        <span class="pcoded-mtext">Charts of Account</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/project') ?>">
+                                                        <span class="pcoded-mtext">Company projects</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/holidays') ?>">
+                                                        <span class="pcoded-mtext">Holidays</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                     <?php } ?>
+
+                                      <?php if (Auth::user()->role_id != 7 ) { ?>
+                                       <li class=" ">
+                                         <a href="<?= url('customer/activity') ?>">
+                                            <span class="pcoded-mtext">Task allocation</span>
+                                         </a>
+                                       </li>
+                                     <?php } ?>
+
+                                     <?php if (can_access('meeting_minutes')) { ?>
+                                      <li class=" ">
+                                         <a href="<?= url('users/minutes') ?>">
+                                            <span class="pcoded-mtext">Meetings</span>
+                                         </a>
+                                       </li>
+                                     <?php } ?>
+                                    
+                                     <?php if (can_access('meeting_minutes')) { ?>
+                                        <li class=" ">
+                                         <a href="<?= url('users/hrrequest') ?>">
+                                            <span class="pcoded-mtext">HR Requests</span>
+                                         </a>
+                                       </li>
+                                     <?php } ?>
+
+                                     <?php if (can_access('customer_module')) { ?>
+                                      <li class=" ">
+                                         <a href="<?= url('customer/modules') ?>">
+                                            <span class="pcoded-mtext">Customer Modules</span>
+                                         </a>
+                                       </li>
+                                     <?php } ?>
+                                    
+                                       
+                                        <li class=" ">
+                                         <a href="<?= url('customer/requirements') ?>">
+                                            <span class="pcoded-mtext">Customer requirements</span>
+                                         </a>
+                                       </li>
+
+                                    <?php if (Auth::user()->role_id == 1) { ?>
+                                      <li class=" ">
+                                         <a href="<?= url('role/userpermission') ?>">
+                                            <span class="pcoded-mtext">Permissions</span>
+                                         </a>
+                                       </li>
+                                   <?php } ?>
+                                    
+
+                                     <?php if (Auth::user()->department == 9 || Auth::user()->department == 10) { ?>
+                                       <li class=" ">
+                                         <a href="<?= url('partner/index') ?>">
+                                            <span class="pcoded-mtext">Onboarded Schools</span>
+                                         </a>
+                                       </li>
+                                   <?php } ?>
+
+
                                     </ul>
                                 </li>
                                <?php } ?>
@@ -737,39 +1008,31 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                         <span class="pcoded-mtext">Salaries</span>
                                                     </a>
                                                 </li>
-
-                                             {{-- <li class=" pcoded-hasmenu">
-                                               <a href="javascript:void(0)">
-                                                 <span class="pcoded-mtext text-bold">Loans</span>
-                                               </a>
-                                            <ul class="pcoded-submenu">
-                                                <li class="">
-                                                    <a href="<?= url('sales/index') ?>">
-                                                       <span class="pcoded-mtext">Sales materials</span>
-                                                    </a>
-                                                 </li>
-                                             
-                                                <?php if (can_access('onboard_school')) { ?>
-                                                 <li class="">
-                                                    <a href="<?= url('sales/school') ?>">
-                                                        <span class="pcoded-mtext">List of Schools</span>
-                                                    </a>
-                                                  </li>
-                                                <?php } ?>
-
-                                                <li class="">
-                                                    <a href="<?= url('sales/salesStatus') ?>">
-                                                       <span class="pcoded-mtext">Sales Status</span>
-                                                    </a>
-                                                 </li>
-                                               </ul>
-                                            </li> --}}
-
-                                               
-
                                             </ul>
                                         </li>
                                      <?php } ?>
+
+
+                                           <?php if(!can_access('manage_loans')) { ?>
+                                              <li class=" pcoded-hasmenu">
+                                               <a href="javascript:void(0)">
+                                                 <span class="pcoded-mtext text-bold">Loans</span>
+                                               </a>
+                                               <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('loan/type') ?>">
+                                                       <span class="pcoded-mtext">Loans types</span>
+                                                    </a>
+                                                 </li>
+                                             
+                                                 <li class="">
+                                                    <a href="<?= url('loan/index') ?>">
+                                                        <span class="pcoded-mtext">Borrowers </span>
+                                                    </a>
+                                                  </li>
+                                               </ul>
+                                            </li> 
+                                         <?php } ?>
 
                                       
                                     </ul>
@@ -793,18 +1056,38 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                     </div>
                 </div>
             </div>
-             
-        </div>   
+        </div>  
+        
+        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script> 
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+       
+        {{-- highcharts --}}
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/series-label.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+
+         {{-- select 2 --}}
+        <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script> 
+
+    
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
      
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/popper.js/js/popper.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/modernizr/js/modernizr.js"></script>
-    <!-- Chart js -->
+    {{-- <!-- Chart js -->
     <script src="<?= $root ?>/files/assets/pages/widget/amchart/amcharts.js"></script>
     <script src="<?= $root ?>/files/assets/pages/widget/amchart/serial.js"></script>
-    <script src="<?= $root ?>/files/assets/pages/widget/amchart/light.js"></script>
+    <script src="<?= $root ?>/files/assets/pages/widget/amchart/light.js"></script> --}}
     <script src="<?= $root ?>/files/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/SmoothScroll.js"></script>
     <script src="<?= $root ?>/files/assets/js/pcoded.min.js"></script>
@@ -813,7 +1096,13 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/script.min.js"></script>
 
      {{-- select 2 --}}
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script>
+    {{-- <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script> --}}
+
+
+     <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script>
+<!-- Multiselect js -->
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/multiselect/js/jquery.multi-select.js"></script>
   
 
     {{-- dtatables --}}
@@ -829,21 +1118,16 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
-
-     <!-- i18next.min.js -->
-        <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
+    <!-- i18next.min.js -->
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/i18next/i18next.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
 
     <!-- Custom js -->
     <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
     <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
       
-
-      
-       
-
  </body>
     <?php
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/activity/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {

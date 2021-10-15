@@ -89,9 +89,9 @@
                                                        <?php
                                                        if (in_array($user->id, $subscriptions)) {
                                                            ?>
-                                                           <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Remove</a>
+                                                           <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')"  style="font-size: 12px;" class="btn btn-round btn btn-danger"> Remove</a>
                                                        <?php } else { ?>
-                                                           <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')" class="btn btn-sm btn-success">Save</a>
+                                                           <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')"  style="font-size: 12px;" class="btn btn-round btn btn-sm btn-success">Save</a>
                                                        <?php } ?>
                                                             <span id="stat<?= $user->id ?>"></span>
                                                    </td>
@@ -127,6 +127,9 @@
     function submit_deduction(a) {
         var amount = $('#amount' + a).val();
         var deadline = $('#deadline' + a).val();
+         if(amount == '' || deadline == ''){
+                 toastr.error(" You must provide amount and deadline date to subscribe");
+         } else {
         $.ajax({
             type: 'POST',
             headers: {
@@ -139,14 +142,14 @@
                 $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-15 text-c-green"></i> </a>');
             },
             complete: function (xhr, status) {
-                $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');
+                $('#stat' + a ).html('<label class="badge badge-info">' + status + '</label>');
             },
             success: function (data) {
-                $('#stat' + a ).html(data);
-                window.location.reload();
+                 toastr.success(data);
+                 window.location.reload();
             }
-        }
-        );
+        });
+      }
     }
 
     function remove_user(a) {
@@ -159,11 +162,11 @@
                 $('#stat' + a ).html('<a href="#/refresh"><i class="feather icon-refresh-cw f-15 text-c-green"></i> </a>');
             },
             complete: function (xhr, status) {
-                $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');
+                $('#stat' + a ).html('<label class="badge badge-info">' + status + '</label>');
             },
             success: function (data) {
-                $('#stat' + a ).html(data);
-                window.location.reload();
+                 toastr.success(data);
+                 window.location.reload();
             }
         }
         );
@@ -182,8 +185,10 @@
             data: "id=" + a,
             dataType: "html",
             success: function (data) {
-                swal('success', data, 'success');
-                $('#std' + a).hide();
+                // swal('success', data, 'success');
+                // $('#std' + a).hide();
+                 toastr.success(data);
+                 window.location.reload();
             }
         });
     }
