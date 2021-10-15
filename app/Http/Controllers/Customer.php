@@ -1753,12 +1753,18 @@ class Customer extends Controller {
                    if(!empty($directors)){
                       foreach ($directors as $director) {
                               $message = 'A reminder to  ' . $schema->school_name .'.'
-                                . chr(10) . 'a deadline for making payments for ShuleSoft  has passed, '
+                                . chr(10) . 'a deadline for making payments for ShuleSoft system has passed, '
                                 . chr(10) . 'kindly make payments before the system deactivates to avoid the inconvenience  for your school system users'
                                 . chr(10) . 'Thanks.';
+
+                              $ujumbe = 'Habari  ' . $director->name .'.'
+                                . chr(10) . 'napenda kukutaarifu kwamba tarehe ya malipo ya mfumo wa ShuleSoft system umepita na unahitajika kufanya malipo kuondoa namna yeyote ya usumbufu ikiwemo system kujifunga'
+                                . chr(10) . 'Asante.';
                               $controller = new \App\Http\Controllers\Controller();
                               $controller->send_whatsapp_sms($director->phone, $message);
+                              $controller->send_whatsapp_sms($director->phone, $ujumbe);
                               $this->send_sms($director->phone, $message, 1);
+                              $this->send_sms($director->phone, $ujumbe, 1);
 
                       }
                 }
