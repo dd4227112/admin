@@ -14,13 +14,11 @@
                 if(can_access('manage_payroll')) { ?>
 				   <div class="card-header row">
                      <div class="col-sm-6">
-                        <a class="btn btn-success" href="<?php echo url('loan/loanAdd') ?>">
-                            Add New Application
-                         </a>
+                        <x-button url="loan/loanAdd" color="primary" btnsize="sm"  title="Add New Application"></x-button>
 					  </div>
 					 
-                        <div class="col-sm-6">
-                            <form style="" class="form-horizontal" role="form" method="post">  
+                        <div class="col-sm-6 offset-sm-9">
+                            <form  class="form-horizontal" role="form" method="post">  
                                 <div class="form-group">              
                                     <label class="col-sm-6">
                                         Category
@@ -104,12 +102,16 @@
                                                     ?>
                                                 </td>
                                                 <td data-title="<?= __('action') ?>">
-                                                    <?php //echo can_access('manage_payroll') ?  '<a  href="' . url("loan/edit/$application->id") . ' " class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>':'' ?>
-                                                    <?php
-                                                    echo '<a  href="' . url("loan/delete/$application->id") . ' " class="btn btn-danger btn-mini btn-round"> ' . __('delete') . ' </a>';
-                                                     if((int) $application->approval_status <> 1 && can_access('manage_payroll')){?>
-                                                    <a href="<?= url('loan/approveLoan/' . $application->id) ?>" class="btn btn-primary btn-mini btn-round" > Approve</a>
-                                                 <?php }?>
+                                                    <?php $delete_url = "loan/delete/$application->id"; $edit_url = "loan/edit/$application->id"; ?>
+                                                    <?php  if(can_access('manage_payroll')){ ?>
+                                                        {{-- <x-button :url="$edit_url" color="info" btnsize="mini" shape="round" title="Edit" toggleTitle="Edit loan"></x-button> --}}
+                                                     <?php } ?>
+                                                      
+                                                     <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete"></x-button>
+                                                    <?php  $approve_url = "loan/approveLoan/$application->id";
+                                                     if((int) $application->approval_status <> 1 && can_access('manage_payroll')){  ?>
+                                                     <x-button :url="$approve_url" color="primary" btnsize="mini"  title="Approve" shape="round" toggleTitle="Approve loan"></x-button>
+                                                   <?php }?>
                                                 </td>
                                             </tr>
                                             <?php

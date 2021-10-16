@@ -11,30 +11,27 @@
                     <div class="card">
                         
                             <div class="card-header">
-                                <a class="btn btn-success" href="<?php echo url('payroll/create') ?>">
-                                   Add Payroll
-                                </a>
+                                 <x-button url="payroll/create" color="primary" btnsize="sm"  title="Add Payroll"></x-button>
                             </div>
                             <div class="card-block">
                                 <!-- Row start -->
-                                <div class="row m-b-30">
-                                    <div class="col-lg-12 col-xl-12">
-
+                                {{-- <div class="row m-b-30">
+                                    <div class="card tab-card"> --}}
                                         <ul class="nav nav-tabs md-tabs" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"><strong>Payroll List</strong></a>
+                                                <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"  aria-expanded="true"><strong>Payroll List</strong></a>
                                                 <div class="slide"></div>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" data-toggle="tab" href="#profile7" role="tab"><strong>Summary</strong></a>
+                                                <a class="nav-link" data-toggle="tab" href="#profile7" role="tab"  aria-expanded="false"><strong>Summary</strong></a>
                                                 <div class="slide"></div>
                                             </li>
                                         </ul>
                                         
-                                        <div class="tab-content card-block">
-
-                                          <div class="tab-pane active" id="home7" role="tabpanel">
-                                            <div class="dt-responsive table-responsive">
+                                        <div class="tab-content">
+                                           <div class="tab-pane active" id="home7" role="tabpanel" aria-expanded="true">
+                                            <div class="card-block">
+                                             <div class="dt-responsive table-responsive">
                                               <table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
                                                     <tr>
@@ -71,32 +68,32 @@
                                                         <td> <?php echo money($salary->paye); ?></td>
                                                         <td> <?php echo money($salary->net_pay); ?></td>
                                                         <?php if (can_access('manage_payroll')) { ?>
-                                                        <td> <?php
-                                                            echo '<a href="' . url("payroll/show/$salary->payment_date") . '  " class="btn btn-success btn-mini btn-round mr-2"> View </a>';
-                                                            echo '<a href="' . url("payroll/delete/$salary->reference") . '  " class="btn btn-danger btn-mini btn-round"> Delete </a>';
-                                                            ?>
+                                                        <td> <?php $view_url = "payroll/show/$salary->payment_date"; $delete_url = "payroll/delete/$salary->reference"; ?>
+                                                           <x-button :url="$view_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="View payroll"></x-button>
+                                                           <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete payroll"></x-button>
                                                         </td>
                                                         <?php } ?>
                                                         </tr>
                                                       <?php $i++; } } ?>
                                                      </tbody>
                                                   </table>
-                                                 </div>
+                                                  </div>
+                                                </div>
                                              </div> 
 
-                                               <div class="tab-pane" id="profile7" role="tabpanel">
-                                                    <div class="card-body">
+                                               <div class="tab-pane" id="profile7" role="tabpanel" aria-expanded="false">
+                                                    <div class="card-block">
                                                         <figure class="highcharts-figure">
-                                                            <div id="onboardPie" style="height: 300px; width:800px;"></div>
+                                                        <div id="onboardPie" style="height: 600px;"></div>
                                                         </figure>
                                                     </div>
                                               </div> 
 
                                         </div>
-                                    </div>
+                                    
 
-                                </div>
-                            </div>
+                            
+                              </div>
                                             
 
             
@@ -109,6 +106,7 @@
 
 
 <script type="text/javascript">
+
    Highcharts.chart('onboardPie', {
     chart: {
         type: 'column'
@@ -148,8 +146,7 @@
         ]
     }]
 });
-
- 
-
 </script>
+
+
 @endsection

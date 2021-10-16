@@ -10,10 +10,8 @@
             <div class="col-sm-12">
                 <div class="card">
                 <div class="card-block">
-                    <div class="card-header">
-                        <a class="btn btn-success" href="<?php echo url('payroll/addPension') ?>">
-                            Add Pension Fund
-                        </a>
+                    <div class="m-b-15">
+                        <x-button url="payroll/addPension" color="primary" btnsize="sm"  title="Add Pension Fund"></x-button>
                     </div>
  
                         <div class="table-responsive">
@@ -53,10 +51,11 @@
                                         <td>
                                             <?php echo $pension->userPensions->count(); ?>
                                         </td>
-                                        <td data-title="<?= __('employee_percentage') ?>">
-                                            <a href="<?= url('payroll/pension/' . $pension->id) ?>" class="btn btn-info btn-sm mrg" ><i class="fa fa-users"></i> members</a>
-                                            <a href="<?= url('payroll/editPension/' . $pension->id) ?>" class="btn btn-primary btn-sm mrg" ><i class="fa fa-edit"></i> <?= __('Edit') ?></a>
-                                            <a href="<?= url('payroll/deletePension/' . $pension->id) ?>" class="btn btn-danger btn-sm mrg" ><i class="fa fa-trash-o"></i> <?= __('Delete') ?></a>
+                                        <td>
+                                             <?php $pension_url = "payroll/pension/$pension->id";$edit_url="payroll/editPension/$pension->id"; $delete_url = "payroll/deletePension/$pension->id";?>
+                                             <x-button :url="$pension_url" color="primary" btnsize="mini"  title="members" shape="round" toggleTitle="Pension members"></x-button>
+                                             <x-button :url="$edit_url" color="info" btnsize="mini"  title="Edit" shape="round" toggleTitle="Edit Pension"></x-button>
+                                             <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete Pension"></x-button>
                                         </td>
                                     </tr>
                                     <?php

@@ -55,20 +55,19 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script> 
 
        <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
-    <!-- Multi Select css -->
+        <!-- Multi Select css -->
        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css">
-
 
         {{--  alert --}}
        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 
-          <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
-    <!-- Multi Select css -->
+        {{-- <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
+         <!-- Multi Select css -->
        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
-       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css">
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css"> --}}
 
 
         {{--  alert --}}
@@ -1057,48 +1056,28 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                 </div>
             </div>
         </div>  
-        
-        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script> 
 
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-       
-        {{-- highcharts --}}
-        <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/modules/series-label.js"></script>
-        <script src="https://code.highcharts.com/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/modules/export-data.js"></script>
-        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
 
-         {{-- select 2 --}}
-        <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script> 
-
-    
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
-     
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/popper.js/js/popper.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/modernizr/js/modernizr.js"></script>
-    {{-- <!-- Chart js -->
-    <script src="<?= $root ?>/files/assets/pages/widget/amchart/amcharts.js"></script>
-    <script src="<?= $root ?>/files/assets/pages/widget/amchart/serial.js"></script>
-    <script src="<?= $root ?>/files/assets/pages/widget/amchart/light.js"></script> --}}
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+       
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
     <script src="<?= $root ?>/files/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/SmoothScroll.js"></script>
     <script src="<?= $root ?>/files/assets/js/pcoded.min.js"></script>
     <script src="<?= $root ?>/files/assets/js/vartical-layout.min.js"></script>
+
     {{-- <script type="text/javascript" src="<?= $root ?>/files/assets/pages/dashboard/custom-dashboard.js"></script> --}}
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/script.min.js"></script>
 
      {{-- select 2 --}}
-    {{-- <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script> --}}
-
-
      <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script>
 <!-- Multiselect js -->
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
@@ -1119,7 +1098,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
     <!-- i18next.min.js -->
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/i18next/i18next.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/i18next/js/i18next.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>

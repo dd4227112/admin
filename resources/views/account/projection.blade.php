@@ -8,7 +8,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
     if ((int) request('skip') == 1) {
         $return = $value;
     } else {
-        $return = '<input required class="text-muted" type="'. $type. '" schema="' . $schema_name . '" id="' . $column .$schema_name. '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><br/><span id="status_' . $column . $schema_name . '"></span>';
+        $return = '<input required class="text-muted" type="'. $type. '" schema="' . $schema_name . '" id="' . $column .$schema_name. '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/>
+        <br/><p id="status_' . $column . $schema_name . '"></p>';
     }
     return $return;
   }
@@ -112,7 +113,11 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                     echo tagEdit($schema->username, 'start_usage_date', $usage_date, 'date');
                                                                     ?>
                                                                 </td>
-                                                                <td><a href="<?= url('account/createShuleSoftInvoice/' . $schema->id) ?>" class="btn btn-sm btn-success">Create invoice</a></td>
+                                                                <td>
+                                                                    <?php $url = "account/createShuleSoftInvoice/$schema->id"; ?>
+                                                                      <x-button :url="$url" color="primary" btnsize="mini"  title="Create" shape="round" toggleTitle="Create invoice"></x-button>
+
+                                                                </td>
                                                             </tr>
                                                         <?php } ?>
                                                     </tbody>
@@ -278,7 +283,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 <script type="text/javascript">
     edit_records = function (tag, val, schema) {
         $.get('<?= url('customer/updateProfile/null') ?>', {schema: schema, table: 'setting', val: val, tag: tag, user_id: '1'}, function (data) {
-            $('#status_' + tag + schema).html(data);
+            $('#status_' + tag + schema).html('<label class="badge badge-success">'+data+'</label>');
+            toastr.success(data);
         });
     };
 

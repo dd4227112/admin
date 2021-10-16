@@ -48,7 +48,7 @@
                     <div class="form-group row col-lg-offset-6">
                         <label class="col-sm-4 col-form-label"><?= isset($schema_name) ? $schema_name. ' errors': 'Select School' ?></label>
                         <div class="col-sm-4">
-                            <select name="select" class="form-control select2" id="schema_select">
+                            <select name="select" class=" select2" id="schema_select">
                                 <option value="0">Select</option>
                                 <?php
                                 $schemas = DB::select('select distinct "schema_name" from admin.error_logs');
@@ -65,7 +65,11 @@
 
                 <div class="col-md-12 col-xl-12">
                     <div class="card tab-card">
-                        <ul class="nav nav-tabs md-tabs" role="tablist">
+
+                        
+
+
+                        {{-- <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
                                     <strong>( <?= isset($error_log_count ) ? ($error_log_count) : '' ?>)</strong> Errors
@@ -80,11 +84,10 @@
                                 <a class="nav-link" data-toggle="tab" href="#messages3" role="tab" aria-expanded="false">Summary</a>
                                 <div class="slide"></div>
                             </li>
+                        </ul> --}}
 
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
-
+                      {{--  <div class="tab-content">
+                          <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
                               <?php if(isset($schema_errors) && !empty($schema_errors)) { ?>
 
                                   <div class="card-block">
@@ -98,7 +101,6 @@
                                                     <th>Error Message</th>
                                                     <th>File</th>
                                                     <th>url</th>
-                                                    <!-- <th>Action</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -131,24 +133,19 @@
                                                     <th>Error Message</th>
                                                     <th>File</th>
                                                     <th>url</th>
-                                                    <!-- <th>Created By</th> -->
                                                     <th>Action</th> 
                                                 </tr>
                                             </thead>
-
-                                         
-
                                         </table>
                                     </div>
                                 </div>
                              <?php } ?>
+                            </div> --}}
 
-
-                            </div>
-                            <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
+                            {{-- <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
                                     <div class="dt-responsive table-responsive">
-                                        <table id="simpletable_resolved_errors" class="table table-striped table-bordered nowrap">
+                                        <table id="simpletable_resolved_errors" class="table table-striped table-bordered nowrap dataTable">
                                             <thead>
                                                 <tr>
                                                     <th>Client Name</th>
@@ -175,8 +172,10 @@
                                         </table>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane" id="messages3" role="tabpanel" aria-expanded="false">
+                            </div> --}}
+
+
+                            {{-- <div class="tab-pane" id="messages3" role="tabpanel" aria-expanded="false">
                                 <a href="#" class="btn btn-sm btn-success" id="show_summary" style="display: none">Show Summary</a>
                                 <div id="custom_logs"></div>
                                 <div class="email-card p-0" id="log_summary">
@@ -218,9 +217,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> 
+                        </div> --}}
 
-                        </div>
                     </div>
                 </div>
 
@@ -324,7 +323,7 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                  'headers': {
+                'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 'url': "<?= url('sales/show/null?page=errors_resolved') ?>"

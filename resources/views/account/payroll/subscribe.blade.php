@@ -132,8 +132,9 @@
                                                     <?php } ?>
                                                     <td class="text-center">
                                                     <?php
-                                                    if (in_array($user->id, $subscriptions)) {?>
-                                                        <a href="<?= url('payroll/deleteSubscriber/null/?user_id=' . $user->id  . '&set=' . $set . '&type=' . $type) ?>" style="font-size: 10px;" class="btn btn-round btn-mini btn-danger"> remove </a>
+                                                    if (in_array($user->id, $subscriptions)) { ?>
+                                                        <?php $remove_url = "payroll/deleteSubscriber/null/?user_id=$user->id&set=$set&type=$type"; ?>
+                                                         <x-button :url="$remove_url" color="danger" btnsize="mini"  title="remove" shape="round" toggleTitle="Remove member"></x-button>
                                                     <?php } else { ?>
                                                         <input type="checkbox" value="<?= $user->id; ?>" name="result<?= $user->id; ?>" class="subscribe" id="<?= $user->id ?>" datatype="<?= $type ?>"  class="check<?= $user->id ?>">
                                                     <?php } ?>

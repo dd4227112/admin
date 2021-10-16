@@ -10,9 +10,9 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-sm-12 col-xl-6 m-b-30">
-                                <a class="btn btn-success btn-sm" href="<?php echo url('allowance/add/'.$category) ?>">
-                                Add allowance
-                                </a>
+                                  <?php $url = "allowance/add/$category"; ?>
+                                 <x-button :url="$url" color="primary" btnsize="sm"  title="Add allowance"></x-button>
+
                             </div>
                             <div class="col-sm-12 col-xl-6 m-b-30">
                                 <form style="" class="form-horizontal" role="form" method="post">  
@@ -89,12 +89,10 @@
                                             <?php echo warp($allowance->description,20); ?>
                                         </td>
                                         <td>
-                                            <?php echo '<a  href="' . url("allowance/edit/$allowance->id") . ' " class="btn btn-info btn-sm"> ' . __('edit') . ' </a>'; ?>
-                                            <?php echo '<a  href="' . url("allowance/delete/$allowance->id") . ' " class="btn btn-danger btn-sm">' . __('delete') . ' </a>';
-                                            
-                                            $sub = $category == 1 ? 'subscribe' : 'monthlysubscribe';
-                                            ?>
-                                            <a href="<?= url('allowance/'.$sub.'/' . $allowance->id) ?>" class="btn btn-primary btn-sm mrg" ><i class="fa fa-users"></i> members</a>
+                                            <?php $sub = $category == 1 ? 'subscribe' : 'monthlysubscribe';$edit_url = "allowance/edit/$allowance->id"; $delete_url = "allowance/delete/$allowance->id"; $members_url="allowance/$sub/$allowance->id";?>
+                                             <x-button :url="$edit_url" color="info" btnsize="mini"  title="edit" shape="round" toggleTitle="Edit allowance"></x-button>
+                                             <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete allowance"></x-button>
+                                             <x-button :url="$members_url" color="primary" btnsize="mini"  title="members" shape="round" toggleTitle="Members"></x-button>
                                         </td>
                                     </tr>
                                     <?php

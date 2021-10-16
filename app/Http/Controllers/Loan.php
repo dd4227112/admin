@@ -245,7 +245,7 @@ class Loan extends Controller {
 
     public function edit() {
         if (can_access('manage_payroll')) {
-            $id = clean_htmlentities(($this->uri->segment(3)));
+            $id = request()->segment(3);
             if ((int) $id) {
                 $this->data['deduction'] = \App\Models\Deduction::find($id);
                 if ($this->data['deduction']) {
@@ -254,7 +254,7 @@ class Loan extends Controller {
                             'name' => 'required|max:255',
                             "is_percentage" => "required",
                             "description" => "required"
-                                ], $this->custom_validation_message);
+                                ]);
                         $this->data['deduction']->update(request()->except('_token'));
                         if ((int) $this->data['deduction']->employer_percent > 0 || (int) $this->data['deduction']->employer_amount > 0) {
                             $scheck = \App\Models\ReferExpense::where('name', $this->data['deduction']->name)->first();
@@ -264,23 +264,23 @@ class Loan extends Controller {
                                     'predefined' => 1]);
                             }
                         }
-                        $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                        return redirect(base_url("deduction/index/" . $this->data['deduction']->category));
+                       // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+                        return redirect(base_url("deduction/index/" . $this->data['deduction']->category))->with('success','Success');
                     } else {
                         $this->data["subview"] = "deduction/edit";
-                        $this->load->view('_layout_main', $this->data);
+                     //   $this->load->view('_layout_main', $this->data);
                     }
                 } else {
                     $this->data["subview"] = "error";
-                    $this->load->view('_layout_main', $this->data);
+                 //   $this->load->view('_layout_main', $this->data);
                 }
             } else {
                 $this->data["subview"] = "error";
-                $this->load->view('_layout_main', $this->data);
+              //  $this->load->view('_layout_main', $this->data);
             }
         } else {
             $this->data["subview"] = "error";
-            $this->load->view('_layout_main', $this->data);
+           // $this->load->view('_layout_main', $this->data);
         }
     }
 

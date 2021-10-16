@@ -89,9 +89,9 @@
                                                        <?php
                                                        if (in_array($user->id, $subscriptions)) {
                                                            ?>
-                                                           <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')"  style="font-size: 12px;" class="btn btn-round btn btn-danger"> Remove</a>
+                                                           <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')"  style="font-size: 12px;" class="btn btn-round btn-mini btn-danger"> Remove</a>
                                                        <?php } else { ?>
-                                                           <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')"  style="font-size: 12px;" class="btn btn-round btn btn-sm btn-success">Save</a>
+                                                           <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')"  style="font-size: 12px;" class="btn btn-round btn btn-mini btn-success">Save</a>
                                                        <?php } ?>
                                                             <span id="stat<?= $user->id ?>"></span>
                                                    </td>

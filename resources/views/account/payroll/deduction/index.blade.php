@@ -19,18 +19,17 @@ if($type == 2) {
               <div class="card">  
                     <div class="card-block">
                      <div class="row">
-                            <div class="col-sm-12 col-xl-4 m-b-30">
-                                 <a class="btn btn-success" href="<?php echo url('deduction/add/'.$type) ?>">
-                                         Add New Deduction
-                                    </a>
+                         <div class="col-sm-6">
+                               <?php $add_url = "deduction/add/$type"; ?>
+                               <x-button :url="$add_url" color="primary" btnsize="sm"  title="Add New Deduction"></x-button>
                             </div>
-                            <div class="col-sm-12 col-xl-6 m-b-30">
-                                <form style="" class="form-horizontal" role="form" method="post">  
+                            <div class="col-sm-6 offset-sm-9 m-b-30">
+                                <form  class="form-horizontal" role="form" method="post">  
                                     <div class="form-group">              
                                         <label for="category" class="col-sm-12 col-sm-offset-2 control-label">
                                             <?= __("Choose category") ?>
                                         </label>
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-6">
                                              <?php
                                                 $array = array("0" => __("select"));
                                                 $deduction_types = [
@@ -101,12 +100,13 @@ if($type == 2) {
                                                     <?php echo $deduction->account_number; ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo '<a  href="' . url("deduction/edit/$deduction->id") . ' " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
-                                                    <?php
-                                                    echo (int) $deduction->predefined ==1 ? "": '<a  href="' . url("deduction/delete/$deduction->id") . ' " class="btn btn-danger btn-sm"><i class="icofont icofont-star"></i> ' . __('delete') . ' </a>';
-                                                    $sub = $type == 1 ? 'subscribe' : 'monthlysubscribe';
-                                                    ?>
-                                                    <a href="<?= url('deduction/' . $sub . '/' . $deduction->id) ?>" class="btn btn-primary btn-sm mrg" ><i class="fa fa-users"></i> members</a>
+                                                     <?php $sub = $type == 1 ? 'subscribe' : 'monthlysubscribe';$members_url="deduction/$sub/$deduction->id";$edit_url="deduction/edit/$deduction->id";
+                                                           $delete_url = "deduction/delete/$deduction->id"; ?>
+                                                     <x-button :url="$edit_url" color="info" btnsize="mini"  title="edit" shape="round" toggleTitle="Edit members"></x-button>
+                                                    <?php if((int) $deduction->predefined !=1){ ?>
+                                                     <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete members"></x-button>
+                                                    <?php } ?>
+                                                     <x-button :url="$members_url" color="primary" btnsize="mini"  title="members" shape="round" toggleTitle="Deduction members"></x-button>
                                                 </td>
                                             </tr>
                                             <?php

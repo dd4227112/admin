@@ -47,15 +47,16 @@
                         </td>
 
                         <td>
-                           <?php if(isset($value->payment_date)) {  ?>  
+                           <?php $approve_url="account/approvestandingorder/$value->id";$reject_url="account/rejectstandingorder/$value->id";
+                           if(isset($value->payment_date)) {  ?>  
                             <?php if(isset($value->client)) {  ?>
                                 <?php if((int) $value->is_approved == 1) { ?>
-                                    <button type="button" class="btn btn-dark btn-sm">Approved</button>
+                                    <label class="badge badge-inverse-success">Approved</label>
                                 <?php } else { ?>
-                                <a href="<?= url('account/approvestandingorder/'.$value->id) ?>" class="waves-light waves-effect btn btn-warning btn-sm">Approve</a>
+                                  <x-button :url="$approve_url" color="primary" btnsize="mini"  title="Approve" shape="round" toggleTitle="Approve"></x-button>
                                 <?php } ?>
                                 <?php if((int) $value->is_approved != 1) { ?>
-                                <a href="<?= url('account/rejectstandingorder/'.$value->id) ?>" class="waves-light waves-effect btn btn-danger btn-sm">Reject</a> 
+                                   <x-button :url="$reject_url" color="warning" btnsize="mini"  title="Reject" shape="round" toggleTitle="Reject"></x-button>
                                 <?php } ?>
 
                             <?php } ?>

@@ -17,7 +17,7 @@
                                 <div class="col-sm-12 col-xl-4 m-b-30">
                                     <h4 class="sub-title">New Invoice</h4>
                                        <?php if(can_access('creating_invoice')) { ?>
-                                          <a href="<?= url('account/projection') ?>" class="btn btn-sm btn-primary">Create new invoice</a>
+                                          <x-button url="account/projection" color="primary" btnsize="sm"  title="Create new invoice"></x-button>
                                       <?php } ?>
                                 </div>
 
@@ -58,9 +58,7 @@
                      <div class="card tab-card">
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
-                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>INVOICE LIST</strong>
-                                </a>
+                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong>INVOICE LIST</strong></a>
                                 <div class="slide"></div>
                             </li>
 
@@ -70,7 +68,7 @@
                             </li>
 
                             <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false"> <strong> SUMMARY</a> </strong> 
+                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false"> <strong> SUMMARY</strong>  </a> 
                                 <div class="slide"></div>
                             </li>
 
@@ -242,7 +240,6 @@
                             </div>
                         </div>
                         
-
                            <div class="tab-pane" id="profile2" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
                                    <div class="dt-responsive table-responsive">
