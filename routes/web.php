@@ -72,7 +72,7 @@ Auth::routes();
 
 //All users
 Route::get('/898uuhihdsdskjdde/allusers','Customer@allusers');
-Route::get('/fhodhkjkhdfhoidf/software/{q}','Software@tasksSummary');
+Route::get('/fhodhkjkhdfhoidf/software/{q}/{z?}','Software@tasksSummary');
 
 
 
