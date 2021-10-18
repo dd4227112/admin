@@ -773,7 +773,7 @@ ORDER BY c.oid, a.attnum";
         }
         $and_where = '';
         if (isset($date_from) && strlen($date_from) > 4) {
-            $and_where = ' AND a.actual_dt_created::date>=' . date('d-M-Y', strtotime($date_from));
+            $and_where = " AND a.actual_dt_created>='" . date('Y-m-d', strtotime($date_from))."'";
         }
 
         $projects = DB::connection('project')->select("SELECT a.actual_dt_created as created_at, a.dt_created as last_updated_at,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
