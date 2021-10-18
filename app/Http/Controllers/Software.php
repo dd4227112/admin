@@ -335,8 +335,12 @@ ORDER BY c.oid, a.attnum";
 
     public function logs() {
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $this->data['error_log_count'] = \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null"))->count();
-        $this->data['schema_errors'] = strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
+
+        $this->data['all_error_logs'] = \collect(\DB::select("select count(a.*) as total from (SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null) a"))->first();
+        $this->data['error_log_count'] =  \collect(\DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException')) as errors"))->first();
+        $this->data['resolved_log_count'] = \collect(\DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and error_instance not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException')) as errors"))->first();
+        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
+
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -621,7 +625,7 @@ ORDER BY c.oid, a.attnum";
         if ($_POST) {
             $schema = request('schema_name');
 
-            //echo 3535335;
+            // echo 3535335;
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();

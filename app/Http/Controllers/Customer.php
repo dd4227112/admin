@@ -1745,6 +1745,34 @@ class Customer extends Controller {
     }
 
 
+     public function remainderMessages(){ 
+        $unpaid_clients = \DB::select("select * from admin.clients_remain_payments where payment_deadline_date::date <= '2021-10-15' and username = 'public'");
+        foreach ($unpaid_clients as $schema) {
+               //  $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' or usertype ilike '%Admin%' and schema_name = 'public'");
+                 $directors =DB::select("select * from admin.all_users where  schema_name = 'public' and username in ('0684033878','0655007457')");
+                   if(!empty($directors)){
+                      foreach ($directors as $director) {
+                              $message = 'A reminder to  ' . $schema->school_name .'.'
+                                . chr(10) . 'a deadline for making payments for ShuleSoft system has passed, '
+                                . chr(10) . 'kindly make payments before the system deactivates to avoid the inconvenience  for your school system users'
+                                . chr(10) . 'Thanks.';
+
+                              $ujumbe = 'Habari  ' . $director->name .'.'
+                                . chr(10) . 'napenda kukutaarifu kwamba tarehe ya malipo ya mfumo wa ShuleSoft system umepita na unahitajika kufanya malipo kuondoa namna yeyote ya usumbufu ikiwemo system kujifunga'
+                                . chr(10) . 'Asante.';
+                            
+                            //  $this->send_sms($director->phone, $message, 1);
+                              $this->send_sms($director->phone, $ujumbe, 1);
+                              $controller = new \App\Http\Controllers\Controller();
+                            //  $controller->send_whatsapp_sms($director->phone, $message);
+                              $controller->send_whatsapp_sms($director->phone, $ujumbe);
+
+                      }
+                }
+            }
+     }
+
+
  
 
 }

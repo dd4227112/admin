@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\Message;
+use App\Http\Controllers\Customer;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Background;
 use DB;
@@ -59,6 +60,12 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             (new Message())->sendEmail();
         })->everyMinute();
+
+
+        //   $schedule->call(function () {
+        //     (new Customer())->remainderMessages();
+        // })->everyMinute();
+
         //  $schedule->call(function () {
         //(new Message())->karibusmsEmails();
         // })->everyMinute();
@@ -76,18 +83,24 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-          //0  $this->addAttendance();
+            $this->addAttendance();
         })->everyThreeMinutes();
 
         $schedule->call(function () {
-         //0   $this->sendSORemainder();
-         //0   $this->updateCompleteItems();
-        })->dailyAt('04:40'); // Eq to 07:40 AM
+          // $this->sendSORemainder();
+           $this->updateCompleteItems();
+        })->dailyAt('04:40'); // Eq to 07:40 AM   
 
         $schedule->call(function () {
-          //0  $this->HRContractRemainders();
-          //0  $this->HRLeaveRemainders();
+            $this->HRContractRemainders();
+            $this->HRLeaveRemainders();
         })->dailyAt('04:40');
+
+
+         $schedule->call(function () {
+            $this->RefreshMaterializedView();
+        })->everyTenMinutes();
+        
 
        
 
@@ -309,7 +322,7 @@ class Kernel extends ConsoleKernel {
             "token" => $token
         );
         $push_status = 'check_invoice';
-        //$push_status = 'invoice_submission';
+        
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -368,7 +381,7 @@ class Kernel extends ConsoleKernel {
             );
 
             $push_status = 'invoice_cancel';
-            //$push_status = 'invoice_submission';
+            
             echo $push_status . $invoice->schema_name;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
@@ -429,7 +442,7 @@ class Kernel extends ConsoleKernel {
 
     public function pushStudentInvoice($fields, $invoice, $token) {
         $push_status = 'invoice_submission';
-        //$push_status = 'invoice_submission';
+        
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -444,9 +457,7 @@ class Kernel extends ConsoleKernel {
         $result = json_decode($curl);
         print_r($result);
         echo chr(10);
-        // echo $result->description;
-        //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-
+      
         if (isset($result) && !empty($result)) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
@@ -534,7 +545,7 @@ class Kernel extends ConsoleKernel {
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 0, 'updated_at' => 'now()']);
                     }
 
                     DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
@@ -1359,6 +1370,12 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
               ]);
             \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
          }
+      }
+
+
+      public function RefreshMaterializedView(){
+          DB::statement("REFRESH MATERIALIZED VIEW admin.all_users");
+          DB::statement("REFRESH MATERIALIZED VIEW admin.all_setting");
       }
 
 }

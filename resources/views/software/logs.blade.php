@@ -51,7 +51,7 @@
                                     <i class="icofont icofont-document-folder"></i>
                                 </li>
                                 <li class="text-right">
-                                    <?= $error_log_count ?>
+                                    <?= $all_error_logs->total ?>
                                 </li>
                             </ul>
                         </div>
@@ -62,13 +62,13 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks warning-border">
                         <div class="card-block">
-                            <h5>Database Errors</h5>
+                            <h5>Distinct Errors</h5>
                             <ul>
                                 <li>
                                     <i class="icofont icofont-ui-user-group text-warning"></i>
                                 </li>
                                 <li class="text-right text-warning">
-
+                                    <?= $error_log_count->total ?>
                                 </li>
                             </ul>
                         </div>
@@ -85,7 +85,6 @@
                                     <i class="icofont icofont-files text-danger"></i>
                                 </li>
                                 <li class="text-right text-danger">
-
                                 </li>
                             </ul>
                         </div>
@@ -103,7 +102,8 @@
                                     <i class="icofont icofont-ui-folder text-primary"></i>
                                 </li>
                                 <li class="text-right text-primary">
-
+                                     <?= $resolved_log_count->total ?> 
+                                       
                                 </li>
                             </ul>
                         </div>
@@ -136,7 +136,7 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>( <?= isset($error_log_count ) ? ($error_log_count) : '' ?>)</strong> Errors
+                                    <strong>( <?= isset($all_error_logs->total) ? ($all_error_logs->total) : '' ?>)</strong> Errors
                                 </a>
                                 <div class="slide"></div>
                             </li>
