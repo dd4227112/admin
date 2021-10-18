@@ -58,7 +58,7 @@ class Software extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function compareTable($schema = 'betatwo') {
-      //  dd($schema);
+        //  dd($schema);
         $this->data['data'] = $this->compareSchemaTables($schema);
         $view = 'software.database.' . strtolower('compareTable');
         if (view()->exists($view)) {
@@ -105,7 +105,6 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     public function loadSchema() {
 
         return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant', 'admin','api','app','skysat','dodoso','forum','academy','carryshop')");
-
     }
 
     /**
@@ -290,7 +289,7 @@ ORDER BY c.oid, a.attnum";
         $type = $this->data['sub'] = request()->segment(3);
         if ($type == 'CHECK') {
             $relations = DB::select('SELECT nspname as "table_schema",conname as constraint_name, replace( conrelid::regclass::text , nspname||\'.\', \'\') AS TABLE_NAME FROM   pg_constraint c JOIN   pg_namespace n ON n.oid = c.connamespace WHERE  contype IN (\'c\') ORDER  BY "nspname"');
-        } else { 
+        } else {
             $relations = DB::select('SELECT "table_schema", constraint_name,TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = \'' . $type . '\'  order by "table_schema"');
         }
         $this->data['constrains'] = array();
@@ -334,10 +333,10 @@ ORDER BY c.oid, a.attnum";
         }
     }
 
-    public function logs() { 
+    public function logs() {
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $this->data['error_log_count'] =  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null"))->count();
-        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
+        $this->data['error_log_count'] = \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null"))->count();
+        $this->data['schema_errors'] = strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -355,17 +354,17 @@ ORDER BY c.oid, a.attnum";
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
 
-        if(isset($tag->error_message)) {
-           DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
-         } 
-         echo 1;
+        if (isset($tag->error_message)) {
+            DB::table('admin.error_logs')->where('error_message', 'LIKE', '%' . $tag->error_message . '%')->orWhere('file', 'LIKE', '%' . $tag->file . '%')->orWhere('route', 'LIKE', '%' . $tag->route . '%')->update(['deleted_at' => now(), 'deleted_by' => \Auth::user()->id]);
+        }
+        echo 1;
     }
 
     public function Readlogs() {
         $id = request()->segment(3);
         $tag = \App\Models\ErrorLog::find($id);
         $this->data['schema'] = $schema = $tag->schema_name;
-        $this->data['school'] =  $schema != 'public' ? \collect(\DB::select("select * from admin.clients where username = '.$schema.' "))->first() : '';
+        $this->data['school'] = $schema != 'public' ? \collect(\DB::select("select * from admin.clients where username = '.$schema.' "))->first() : '';
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
         return view('customer.view', $this->data);
         //echo 1;   
@@ -395,12 +394,12 @@ ORDER BY c.oid, a.attnum";
     // }
 
 
-    public function loadaccounts(){
-          $schema = request('schema');
-          if (strlen($schema) > 2) {
-            $this->data['banks'] = $banks= DB::select('select b.id as account_id,b.number from ' . $schema . '.bank_accounts b');
+    public function loadaccounts() {
+        $schema = request('schema');
+        if (strlen($schema) > 2) {
+            $this->data['banks'] = $banks = DB::select('select b.id as account_id,b.number from ' . $schema . '.bank_accounts b');
         }
-          if (!empty($banks)) {
+        if (!empty($banks)) {
             echo '<option value="">select account</option>';
             foreach ($banks as $value) {
                 echo '<option value="' . $value->account_id . '">' . $value->number . '</option>';
@@ -410,46 +409,42 @@ ORDER BY c.oid, a.attnum";
         }
     }
 
-
-    public function  loadcredentials()
-    {   
+    public function loadcredentials() {
         $schema_name = request('schema_name');
         $account_id = request('account_id');
-          if (strlen($schema_name) > 2) {
-           $this->data['settings'] = DB::table('admin.all_setting')->get();
-          $this->data['details'] = \collect(\DB::select('select b.id as account_id,b.number,a.api_username,a.api_password,a.invoice_prefix,a.sandbox_api_username,a.sandbox_api_password from ' . $schema_name . '.bank_accounts_integrations a right join ' . $schema_name . '.bank_accounts b on a.bank_account_id=b.id  where b.id = ' . $account_id . '  '))->first();
-             echo ($this->data['details']);
+        if (strlen($schema_name) > 2) {
+            $this->data['settings'] = DB::table('admin.all_setting')->get();
+            $this->data['details'] = \collect(\DB::select('select b.id as account_id,b.number,a.api_username,a.api_password,a.invoice_prefix,a.sandbox_api_username,a.sandbox_api_password from ' . $schema_name . '.bank_accounts_integrations a right join ' . $schema_name . '.bank_accounts b on a.bank_account_id=b.id  where b.id = ' . $account_id . '  '))->first();
+            echo ($this->data['details']);
             // return view('software.api.bank_setup', $this->data);
         }
-        
     }
 
+    public function UpdateInt() {
+        if ($_POST) {
+            $this->setBankParameters();
+            $this->assignAndNotifications();
+            DB::statement('REFRESH MATERIALIZED VIEW admin.all_bank_accounts_integrations');
+            return redirect()->back()->with('success', 'Successfully integrated!');
+        }
+    }
 
-     public function UpdateInt(){
-           if($_POST){
-                $this->setBankParameters();
-                $this->assignAndNotifications();
-                DB::statement('REFRESH MATERIALIZED VIEW admin.all_bank_accounts_integrations');
-                return redirect()->back()->with('success','Successfully integrated!');
-          }
-     }
-
-      public function banksetup() {  
+    public function banksetup() {
         $this->data['settings'] = DB::table('admin.all_setting')->get();
-        $skip = ['beta_testing','beta','betatwo','public','constant','api'];
-        $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name',$skip)->get();
-          
+        $skip = ['beta_testing', 'beta', 'betatwo', 'public', 'constant', 'api'];
+        $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name', $skip)->get();
+
         return view('software.api.bank_setup', $this->data);
     }
 
     public function setBankParameters() {
         $check = DB::table(request('schema') . '.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
         if (!empty($check->first())) {
-            $check->update(['api_username' => request('api_username'),'invoice_prefix' => request('invoice_prefix'),'api_password' => request('api_password'),'updated_at' => now()]);
+            $check->update(['api_username' => request('api_username'), 'invoice_prefix' => request('invoice_prefix'), 'api_password' => request('api_password'), 'updated_at' => now()]);
 
             DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('invoice_prefix') . '\'||"id", prefix=\'' . request('invoice_prefix') . '\'');
             DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
-           // echo 'Records updated successfully';
+            // echo 'Records updated successfully';
         } else {
             DB::table(request('schema') . '.bank_accounts_integrations')->insert([
                 'bank_account_id' => request('bank_id'),
@@ -459,134 +454,127 @@ ORDER BY c.oid, a.attnum";
             ]);
             DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('invoice_prefix') . '\'||"id", prefix=\'' . request('invoice_prefix') . '\'');
             DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
-          //  echo 'Records added successfully';
+            //  echo 'Records added successfully';
         }
-
     }
 
+    public function assignAndNotifications() {
+        //send email to shulesoft personel
+        $bank_id = (int) request('bank_id');
+        $schema = request('schema');
+        $client = DB::table('admin.clients')->where('username', $schema)->first();
 
-    public function assignAndNotifications()
-    {
-          //send email to shulesoft personel
-          $bank_id = (int) request('bank_id'); $schema = request('schema');
-          $client = DB::table('admin.clients')->where('username',$schema)->first();
-
-          if ((int) request('bank_id') > 0) {
-                $bank = \collect(\DB::select("select a.* from $schema.bank_accounts a join constant.refer_banks b on a.refer_bank_id = b.id where a.id = '$bank_id' "))->first();
-                if($bank->refer_bank_id == '8'){  // CRDB Mr Pallangyo, for now  adding manually
-                     $bank_name = 'CRDB';
-                     $user = \App\Models\User::find(761);
-                     $this->assignTask($user,$client,$bank_name);
-                } else if($bank->refer_bank_id == '22'){ // NMB Mr Endobile, 764
-                     $bank_name = 'NMB';
-                     $user = \App\Models\User::find(764); 
-                     $this->assignTask($user,$client,$bank_name);
-                }  
-
-                if(!empty($user)) {
-                    $message = 'Habari hatua za integration katika shule ya ' . \App\Models\Client::where('id',$client->id)->first()->name  . ' na bank ya ' . $bank_name .' zimekamilika tafadhali endelea na hatua zinazofata,ASANTE.';
-                    $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-                } 
+        if ((int) request('bank_id') > 0) {
+            $bank = \collect(\DB::select("select a.* from $schema.bank_accounts a join constant.refer_banks b on a.refer_bank_id = b.id where a.id = '$bank_id' "))->first();
+            if ($bank->refer_bank_id == '8') {  // CRDB Mr Pallangyo, for now  adding manually
+                $bank_name = 'CRDB';
+                $user = \App\Models\User::find(761);
+                $this->assignTask($user, $client, $bank_name);
+            } else if ($bank->refer_bank_id == '22') { // NMB Mr Endobile, 764
+                $bank_name = 'NMB';
+                $user = \App\Models\User::find(764);
+                $this->assignTask($user, $client, $bank_name);
             }
 
-            // send to zone manager of school
-             $sales = new \App\Http\Controllers\Customer();
-             $m_user = $sales->zonemanager($client->id);
-             if(!empty($m_user)){
-                $manager = \App\Models\User::where('id',$m_user->user_id)->first();
-                $manager_message =   'habari ' . $manager->firstname . '<br/>'
-                                   . ' hatua za integration katika shule ya' 
-                                   . '<li>' . \App\Models\Client::where('id',$client->id)->first()->name  . '</li>'
-                                   . ' zimekamilika tafadhali wasiliana na bank product associate kutoka'
-                                   . ' shulesoft aweze kuwapa taarifa shule husika na kuendelea'
-                                   . ' nao katika hatua zinazofata,ASANTE.';
-                $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
-                  
-                $fullname = $manager->firstname . " " . $manager->lastname;
-                $message = "habari " . $fullname ." Hatua za integration katika shule ya " .\App\Models\Client::where('id',$client->id)->first()->name." zimekamilika Tafadhali wasiliana na bank product associate kutoka shulesoft aweze kuwapa taarifa shule husika na kuendelea nao katika hatua zinazofata,ASANTE";
-                $this->send_whatsapp_sms($manager->phone, $message);
-             }
-
-         //send sms to Admins/Directors of schools
-          $users = DB::table($schema .'.users')->where('usertype', 'ILIKE', "%Admin%")->get();
-          if(isset($users) && count($users) > 0){
-              foreach($users as $user){
-                   $message = 'Habari, ningependa kukujulisha kuwa sasa shule yako ' . \App\Models\Client::where('id',$client->id)->first()->name  . ' hatua za integration na bank ya ' . $bank_name . ' zimekamilika na  unaweza kupata control number kutoka kwenye invoice ya mwanafunzi husika kupitia system ya shulesoft.kwa maelezo zaidi namna ya kulipia na kutuma sms kwenda kwa wazazi mtaalmu toka shulesoft atakupigia akuelekeze katika hatua hizo. Asante.';
-                  $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-                  $this->send_whatsapp_sms($user->phone, $message);
-              }
-
-          }
-
-    }
-
-     public function assignTask($user,$client,$bank){
-            $user = (object) $user;
-            $section = \App\Models\TrainItem::where('status',1)->where('content', 'ILIKE', "%".$bank."%")->first();
-            $this->locateTask($section->id,$section->content,$section->time,$user->id,$client); 
+            if (!empty($user)) {
+                $message = 'Habari hatua za integration katika shule ya ' . \App\Models\Client::where('id', $client->id)->first()->name . ' na bank ya ' . $bank_name . ' zimekamilika tafadhali endelea na hatua zinazofata,ASANTE.';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            }
         }
 
-      public function locateTask($sectionid,$content,$time,$user_id,$client)
-      {    
-            $slot = \App\Models\Slot::first();
-            $start_date = date('Y-m-d');
+        // send to zone manager of school
+        $sales = new \App\Http\Controllers\Customer();
+        $m_user = $sales->zonemanager($client->id);
+        if (!empty($m_user)) {
+            $manager = \App\Models\User::where('id', $m_user->user_id)->first();
+            $manager_message = 'habari ' . $manager->firstname . '<br/>'
+                    . ' hatua za integration katika shule ya'
+                    . '<li>' . \App\Models\Client::where('id', $client->id)->first()->name . '</li>'
+                    . ' zimekamilika tafadhali wasiliana na bank product associate kutoka'
+                    . ' shulesoft aweze kuwapa taarifa shule husika na kuendelea'
+                    . ' nao katika hatua zinazofata,ASANTE.';
+            $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
 
-            $data = [
-                'activity' => $content,
-                'date' => $start_date,             
-                'user_id' => $user_id,
-                'task_type_id' => preg_match('/data/i', $content) ? 3 : 4,
-                'start_date' => date('Y-m-d H:i', strtotime($start_date)),
-                'end_date' => date('Y-m-d H:i', strtotime($start_date." + {$time} days")),
-                'slot_id' => (int) $slot->id > 0 ? $slot->id : 5
-            ]; 
+            $fullname = $manager->firstname . " " . $manager->lastname;
+            $message = "habari " . $fullname . " Hatua za integration katika shule ya " . \App\Models\Client::where('id', $client->id)->first()->name . " zimekamilika Tafadhali wasiliana na bank product associate kutoka shulesoft aweze kuwapa taarifa shule husika na kuendelea nao katika hatua zinazofata,ASANTE";
+            $this->send_whatsapp_sms($manager->phone, $message);
+        }
 
-            $task = \App\Models\Task::create($data);
-            DB::table('tasks_users')->insert([
-                'task_id' => $task->id,
-                'user_id' => (int) $user_id,
-            ]);
+        //send sms to Admins/Directors of schools
+        $users = DB::table($schema . '.users')->where('usertype', 'ILIKE', "%Admin%")->get();
+        if (isset($users) && count($users) > 0) {
+            foreach ($users as $user) {
+                $message = 'Habari, ningependa kukujulisha kuwa sasa shule yako ' . \App\Models\Client::where('id', $client->id)->first()->name . ' hatua za integration na bank ya ' . $bank_name . ' zimekamilika na  unaweza kupata control number kutoka kwenye invoice ya mwanafunzi husika kupitia system ya shulesoft.kwa maelezo zaidi namna ya kulipia na kutuma sms kwenda kwa wazazi mtaalmu toka shulesoft atakupigia akuelekeze katika hatua hizo. Asante.';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                $this->send_whatsapp_sms($user->phone, $message);
+            }
+        }
+    }
 
-            DB::table('tasks_clients')->insert([
-                'task_id' => $task->id,
-                'client_id' => (int) $client->id
-            ]);
+    public function assignTask($user, $client, $bank) {
+        $user = (object) $user;
+        $section = \App\Models\TrainItem::where('status', 1)->where('content', 'ILIKE', "%" . $bank . "%")->first();
+        $this->locateTask($section->id, $section->content, $section->time, $user->id, $client);
+    }
 
-            if($sectionid != ''){
-                \App\Models\TrainItemAllocation::create([
+    public function locateTask($sectionid, $content, $time, $user_id, $client) {
+        $slot = \App\Models\Slot::first();
+        $start_date = date('Y-m-d');
+
+        $data = [
+            'activity' => $content,
+            'date' => $start_date,
+            'user_id' => $user_id,
+            'task_type_id' => preg_match('/data/i', $content) ? 3 : 4,
+            'start_date' => date('Y-m-d H:i', strtotime($start_date)),
+            'end_date' => date('Y-m-d H:i', strtotime($start_date . " + {$time} days")),
+            'slot_id' => (int) $slot->id > 0 ? $slot->id : 5
+        ];
+
+        $task = \App\Models\Task::create($data);
+        DB::table('tasks_users')->insert([
+            'task_id' => $task->id,
+            'user_id' => (int) $user_id,
+        ]);
+
+        DB::table('tasks_clients')->insert([
+            'task_id' => $task->id,
+            'client_id' => (int) $client->id
+        ]);
+
+        if ($sectionid != '') {
+            \App\Models\TrainItemAllocation::create([
                 'task_id' => $task->id,
                 'client_id' => $client->id,
                 'user_id' => $user_id,
                 'train_item_id' => $sectionid,
                 'school_person_allocated' => '',
                 'max_time' => $time
-              ]);
-          }
-     }
+            ]);
+        }
+    }
 
-
-     public function updateintegration()
-     {
-          $schema = request()->segment(3);
-          $account_id = request()->segment(4);
-          $where = ['bank_account_id' => $account_id];
-          $this->data['school'] = DB::table('admin.clients')->where('username',$schema)->first();
-          //$bank_integration = DB::table($schema.'.bank_accounts_integrations')->where($where)->first();
-          $this->data['check'] = \collect(\DB::select('select b.id as account_id,b.name,b.number,a.api_username,a.api_password,a.invoice_prefix,a.sandbox_api_username,a.sandbox_api_password from ' . $schema . '.bank_accounts_integrations a right join ' . $schema . '.bank_accounts b on a.bank_account_id=b.id'))->first();
+    public function updateintegration() {
+        $schema = request()->segment(3);
+        $account_id = request()->segment(4);
+        $where = ['bank_account_id' => $account_id];
+        $this->data['school'] = DB::table('admin.clients')->where('username', $schema)->first();
+        //$bank_integration = DB::table($schema.'.bank_accounts_integrations')->where($where)->first();
+        $this->data['check'] = \collect(\DB::select('select b.id as account_id,b.name,b.number,a.api_username,a.api_password,a.invoice_prefix,a.sandbox_api_username,a.sandbox_api_password from ' . $schema . '.bank_accounts_integrations a right join ' . $schema . '.bank_accounts b on a.bank_account_id=b.id'))->first();
 
         if ($_POST) {
-            $update = ['api_username' => request('api_username'),'invoice_prefix' => request('invoice_prefix'),'api_password' => request('api_password'),'updated_at' => now()];
-            $bank_integration = DB::table($schema.'.bank_accounts_integrations')->where($where);
+            $update = ['api_username' => request('api_username'), 'invoice_prefix' => request('invoice_prefix'), 'api_password' => request('api_password'), 'updated_at' => now()];
+            $bank_integration = DB::table($schema . '.bank_accounts_integrations')->where($where);
             $bank_integration->update($update);
 
             DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . request('invoice_prefix') . '\'||"id", prefix=\'' . request('invoice_prefix') . '\'');
             DB::statement('UPDATE ' . $schema . '.setting SET "payment_integrated"=1');
             DB::statement('REFRESH MATERIALIZED VIEW admin.all_bank_accounts_integrations');
 
-            return redirect('software/banksetup')->with('success','Updated successfully');
-         }
+            return redirect('software/banksetup')->with('success', 'Updated successfully');
+        }
         return view('software.api.edit_setup', $this->data);
-     }
+    }
 
     public function updateProfile() {
         $schema = request('schema');
@@ -596,7 +584,7 @@ ORDER BY c.oid, a.attnum";
         $value = request('val');
         $column = $table == 'student' ? 'student_id' : $table . 'ID';
 
-      //  dd($value);
+        //  dd($value);
         if ($table == 'bank') {
             return $this->setBankParameters();
         } else {
@@ -629,7 +617,7 @@ ORDER BY c.oid, a.attnum";
 
     public function reconciliation() {
         $this->data['returns'] = [];
-        $this->data['prefix']='';
+        $this->data['prefix'] = '';
         if ($_POST) {
             $schema = request('schema_name');
 
@@ -648,7 +636,7 @@ ORDER BY c.oid, a.attnum";
                 foreach ($invoices as $invoice) {
 
                     $token = $background->getToken($invoice);
-                    $this->data['prefix']=$invoice->prefix;
+                    $this->data['prefix'] = $invoice->prefix;
                     if (strlen($token) > 4) {
                         $fields = array(
                             //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
@@ -665,7 +653,7 @@ ORDER BY c.oid, a.attnum";
                 }
             }
 
-       
+
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
@@ -747,9 +735,6 @@ ORDER BY c.oid, a.attnum";
         echo $message;
     }
 
-
-
-
     public function smsStatus() {
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
         return view('software.status_sms', $this->data);
@@ -774,19 +759,24 @@ ORDER BY c.oid, a.attnum";
      * 
      * -- our final update will come from pmp and success manager will verify if this is final work, or else vp of success will specify pending
      */
-
     public function tasksSummary() {
         $user_id = request()->segment(3);
+        $date_from = request()->segment(4);
         $and = '';
-        if ($user_id > 0) {
+        if ((int) $user_id > 0) {
             $user = \App\Models\User::findOrFail($user_id);
             $and = (int) $user_id > 0 ? " AND assign_to in (select id from users where email='" . $user->email . "')" : "";
         }
+        $and_where = '';
+        if (isset($date_from) && strlen($date_from) > 4) {
+            $and_where = ' AND a.actual_dt_created::date>=' . date('d-M-Y', strtotime($date_from));
+        }
+
         $projects = DB::connection('project')->select("SELECT a.actual_dt_created as created_at, a.dt_created as last_updated_at,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
             CASE 
             WHEN reply_type=4 THEN 'High Priority' ELSE 'Default Priority'
             END as priority, CASE WHEN status=0 then 'Pending' ELSE 'Closed' END as status FROM `easycases` a JOIN projects b on b.id=a.project_id JOIN types c on c.id=a.type_id JOIN users d on d.id=a.user_id JOIN users
-            e on e.id=a.assign_to WHERE a.istype=1 " . $and);
+            e on e.id=a.assign_to WHERE a.istype=1 " . $and . $and_where);
 
         $this->data['headers'] = \collect($projects)->first();
         $this->data['contents'] = $projects;
@@ -798,5 +788,5 @@ ORDER BY c.oid, a.attnum";
         return view('software.mylogs', $this->data);
     }
 
- //   id	error_message	file	route	url	error_instance	request	schema_name	created_by	created_by_table	created_at
+    //   id	error_message	file	route	url	error_instance	request	schema_name	created_by	created_by_table	created_at
 }
