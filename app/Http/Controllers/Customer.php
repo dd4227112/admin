@@ -1773,10 +1773,10 @@ class Customer extends Controller {
             $electronic = !empty($info_electronic) && $info_electronic->payments > 0 ? ' _Malipo kwa control namba, jumla ni_ *Tsh ' . $info_electronic->payments . ' /=* ' : '';
 
             $message_kw = 'Habari ' . chr(10) . chr(10) . 'Repoti ya leo : *' . date('d M Y') . '*  kutoka *' . ucwords(strtolower($list->sname)) . '* ' . chr(10) . chr(10) . ''
-                    . 'Jumla ya Makusanyo Leo ni : *Tsh ' . number_format($info->payments) . ' /=*' . $electronic . chr(10)
-                    . 'Jumla ya matumizi Siku ya Leo ni : *Tsh ' . number_format($expense->expense) . ' /=*' . chr(10) . chr(10) . ''
+                    . 'Jumla ya Makusanyo  ni : *Tsh ' . number_format($info->payments) . ' /=*' . $electronic . chr(10)
+                    . 'Jumla ya matumizi ni : *Tsh ' . number_format($expense->expense) . ' /=*' . chr(10) . chr(10) . ''
                     . 'Kwa taarifa kamili, ingia katika mfumo wa ShuleSoft' . chr(10) . chr(10) .
-                    '[_Hii repoti  imetengenezwa automatically kutoka https://' . $schema . '.shulesoft.com na hutumwa kila siku_]';
+                    '[_Hii repoti  imetengenezwa automatically kutoka https://' . $schema . '.shulesoft.com na hutumwa kila siku. Kubadili, kuongeza au kuondoa hii namba, nenda sehemu ya settings kwenye mfumo wako wa ShuleSoft_]';
 
 
             $phones = explode(',', $list->email_list);
