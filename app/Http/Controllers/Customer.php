@@ -1770,20 +1770,24 @@ class Customer extends Controller {
             $expense = \collect(DB::select('select sum(amount) as expense from ' . $schema . '.expense where created_at::date=current_date'))->first();
             $list = \collect(DB::select('select email_list,sname from ' . $schema . '.setting'))->first();
 
-            $electronic = !empty($info_electronic)  && $info_electronic->payments>0? ' _Malipo kwa control namba, jumla ni_ *Tsh ' . $info_electronic->payments . ' /=* ' : '';
+            $electronic = !empty($info_electronic) && $info_electronic->payments > 0 ? ' _Malipo kwa control namba, jumla ni_ *Tsh ' . $info_electronic->payments . ' /=* ' : '';
 
             $message_kw = 'Habari ' . chr(10) . chr(10) . 'Repoti ya leo : *' . date('d M Y') . '*  kutoka *' . ucwords(strtolower($list->sname)) . '* ' . chr(10) . chr(10) . ''
                     . 'Jumla ya Makusanyo Leo ni : *Tsh ' . number_format($info->payments) . ' /=*' . $electronic . chr(10)
                     . 'Jumla ya matumizi Siku ya Leo ni : *Tsh ' . number_format($expense->expense) . ' /=*' . chr(10) . chr(10) . ''
                     . 'Kwa taarifa kamili, ingia katika mfumo wa ShuleSoft' . chr(10) . chr(10) .
-                    '_Hii repoti  imetengenezwa automatically kutoka https://' . $schema . '.shulesoft.com na hutumwa kila siku_';
+                    '[_Hii repoti  imetengenezwa automatically kutoka https://' . $schema . '.shulesoft.com na hutumwa kila siku_]';
 
 
             $phones = explode(',', $list->email_list);
 
             foreach ($phones as $phone) {
-                $chat_id = ltrim(trim($phone), 0);
-                $this->send_whatsapp_sms($chat_id, $message_kw);
+                if (filter_var($phone, FILTER_VALIDATE_EMAIL)) {
+                    $this->send_email($phone, 'ShuleSoft : Repoti ya ' . date('d M Y'), preg_replace('/*/i', NULL, $message_kw));
+                } else {
+                    $chat_id = ltrim(trim($phone), 0);
+                    $this->send_whatsapp_sms($chat_id, $message_kw);
+                }
             }
         }
     }
