@@ -108,7 +108,7 @@ class Users extends Controller {
     public function show() {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
         $this->data['user'] = $user = User::findOrFail($id);
-        $this->data['breadcrumb'] = array('title' => $user->name.' profile','subtitle'=>'profile','head'=>'user');
+        $this->data['breadcrumb'] = array('title'=>$user->name ?? '','subtitle'=>'profile','head'=>'user');
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
         $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->orderBy('created_at','desc')->get();
         $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->orderBy('created_at','desc')->get();
@@ -122,7 +122,6 @@ class Users extends Controller {
         if ($_POST) { 
             //check if its attendance or not
             $ip = $_SERVER['REMOTE_ADDR'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['HTTP_CLIENT_IP']);
-            
             if ($ip == '102.69.164.2') { //192.168.2.114
                 if (strlen(request('early_leave_comment')) > 2) {
                     DB::table('attendances')->where('user_id', $id)->whereDate('created_at', date('Y-m-d'))->update([
@@ -290,6 +289,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit() {
+        $this->data['breadcrumb'] = array('title' => 'Edit user','subtitle'=>'users','head'=>'human resource');
         $id = request()->segment(3);
         $this->data['user'] = User::find($id);
        
@@ -786,7 +786,7 @@ class Users extends Controller {
 
      public function learning(){
         $learning_id = request()->segment(3);
-     
+        $this->data['breadcrumb'] = array('title' => 'User learning','subtitle'=>'courses','head'=>'operations');
          if($_POST){
              $array= [
                  'course_name' => request('course_name'),

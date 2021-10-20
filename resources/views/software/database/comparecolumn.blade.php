@@ -62,7 +62,7 @@ $d = $database->loadSchema();
                                                                             <?php foreach ($missing_columns as $column) { ?>
                                                                                 <tr>
                                                                                     <td>{{$column}}</td>
-                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-column='{{$column}}' class="sync_column btn btn-sm btn-primary">Sync </a>
+                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-column='{{$column}}' class="sync_column btn btn-mini btn-round btn-primary">Sync </a>
                                                                                         <span id="{{$table.$schema.$column}}"></span>
                                                                                     </td>
                                                                                 </tr>
@@ -110,14 +110,19 @@ $d = $database->loadSchema();
                 },
                 dataType: "html ",
                 beforeSend: function (xhr) {
-                    $('#' + table + slave + column).html('<a href="#/refresh"> <i class="ti-reload rotate-refresh"></i></a>');
+                    $('#' + table + slave + column).html('<a href="#/refresh"> <i class="feather icon-refresh-ccw"></i></a>');
                 },
                 complete: function (xhr, status) {
-                    $('#' + table + slave + column).html('<span class="label label-success label-rouded">' + status + '</span>');
+                    $('#' + table + slave + column).html('<label class="badge badge-success">' + status + '</label>');
+                        if(xhr.status == 500) {
+                         toastr.error('Error: Comparison failed check error logs')
+                    }
                 },
 
                 success: function (data) {
                     $(this).hide();
+                     toastr.success('Sync success')
+                    window.location.reload(); 
                 }
             });
 

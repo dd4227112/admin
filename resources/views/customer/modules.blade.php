@@ -367,7 +367,10 @@ function select($value, $schema, $sources) {
                                                                     echo '<label class="badge badge-inverse-warning">No Payment Recorded</label>';
                                                                 }
                                                                     ?></td>
-                                                                <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-sm waves-effect waves-light btn-primary"> View</a></td>
+                                                                <td>
+                                                                    <?php $view_url = "customer/profile/$school->schema_name"; ?>
+                                                                       <x-button :url="$view_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="School profile"></x-button>
+                                                                </td>
 
                                                             </tr>
                                                          <?php } ?> 
@@ -394,7 +397,6 @@ function select($value, $schema, $sources) {
                                 </div>
                             </div>
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
-                                <div class="email-card p-0">
                                     <div class="card-block">
                                         <h6>
                                             <b>User Allocation Summary</b>
@@ -450,8 +452,7 @@ function select($value, $schema, $sources) {
                                             </table>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                               </div>
                         </div>
                     </div>
 

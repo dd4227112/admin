@@ -12,10 +12,8 @@
           <div class="card">
             <div class="card-block">
                <div class="card-block">
-                <a class="btn btn-success btn-sm" href="<?= url('users/addMinute') ?>"> Add New Minute</a>
+                  <x-button url="users/addMinute" color="primary" btnsize="mini"  title="Add" shape="round" toggleTitle="Add New Minute"></x-button>              
               </div>
-
-              
                 <div class="card-block">
                   <div class="table-responsive dt-responsive">
                     <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
@@ -44,9 +42,11 @@
                           <td><?=$minute->end_time?></td>
                           <td><?=$minute->department->name?></td>
 
-                          <td>
-                          <a class="btn btn-info btn-sm" href="{{ url('users/showMinute/'.$minute->id) }}">Show</a>
-                          <a class="btn btn-warning btn-sm" href="{{ url('users/deleteMinute/'.$minute->id) }}">Delete</a>
+                          <td class="text-center">
+                              <?php $show_url ="users/showMinute/$minute->id"; $delete_url ="users/deleteMinute/$minute->id";?>
+                           <x-button :url="$show_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="Show Minute"></x-button>            
+                           <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete Minute"></x-button>              
+
                           </td>
                         </tr>
                         <?php } } ?>

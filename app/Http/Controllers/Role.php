@@ -52,7 +52,7 @@ public function removePermission() {
     $permission_id = request('perm_id');
     $role_id = request('role_id');
     \App\Models\PermissionRole::where(['permission_id' => $permission_id, 'role_id' => $role_id])->delete();
-    echo 'success';
+    echo 'Permission removed successfully';
 }
 
 

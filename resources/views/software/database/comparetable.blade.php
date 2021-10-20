@@ -32,14 +32,16 @@
                 },
                 dataType: "html ",
                 beforeSend: function (xhr) {
-                    $('#' + table + slave).html('<a href="#/refresh"><i class="ti-reload rotate-refresh"></i></a>');
+                    $('#' + table + slave).html('<a href="#/refresh"><i class="feather icon-refresh-ccw"></i></a>');
                 },
                 complete: function (xhr, status) {
-                    $('#' + table + slave).html('<span class="label label-success label-rouded">' + status + '</span>');
+                    $('#' + table + slave).html('<label class="badge badge-success">' + status + '</label>');
                 },
 
                 success: function (data) {
                     $(this).hide();
+                    toastr.success('Sync success')
+                    window.location.reload(); 
                 }
             });
 

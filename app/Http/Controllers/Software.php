@@ -90,10 +90,7 @@ class Software extends Controller {
      * @return type
      */
     public function getConstraint($table_name, $schema_name, $constrains) {
-        return DB::select("SELECT * 
-FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-WHERE CONSTRAINT_TYPE = '$constrains' 
-AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
+        return DB::select("SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = '$constrains' AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function getDefinedFunctions() {
@@ -249,10 +246,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function addIndex() {
-        $sql = "SELECT c.oid, c.relname, a.attname, a.attnum, i.indisprimary, i.indisunique
-FROM pg_index AS i, pg_class AS c, pg_attribute AS a
-WHERE i.indexrelid = c.oid AND i.indexrelid = a.attrelid AND i.indrelid = 'YOURSCHEMA.YOURTABLE'::regclass
-ORDER BY c.oid, a.attnum";
+        $sql = "SELECT c.oid, c.relname, a.attname, a.attnum, i.indisprimary, i.indisunique FROM pg_index AS i, pg_class AS c, pg_attribute AS aWHERE i.indexrelid = c.oid AND i.indexrelid = a.attrelid AND i.indrelid = 'YOURSCHEMA.YOURTABLE'::regclass ORDER BY c.oid, a.attnum";
     }
 
     public function upgrade() {
@@ -336,15 +330,28 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function logs() { 
-        $this->data['breadcrumb'] = array('title' => 'Error logs','subtitle'=>'software','head'=>'system errors');
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $this->data['error_log_count'] =  \collect(DB::select("select count(*) from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException')) as errors"))->count();
-        $this->data['error_log_resolved'] =  \collect(DB::select("select count(*) from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and error_instance not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException')) as resolved"))->count();
-        $this->data['error_log_resolved'] =  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is not null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is not null"))->count();
-
-        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
-        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1'))->first();
-        return view('software.logs', $this->data);
+        $this->data['breadcrumb'] = array('title' => 'Error logs','subtitle'=>'software','head'=>'system errors');
+        $year_start = date('Y-01-01'); $year_end = date('Y-12-01');
+        $notIn =  " not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') ";
+       //  dd(strlen($schema));
+        $this->data['error_log_count'] =   strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first();
+        $this->data['error_log_resolved'] = strlen($schema) > 3 ?  \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and schema_name = '$schema' and error_instance $notIn) as resolved"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and error_instance $notIn) as resolved"))->first();
+        $this->data['fatal_errors'] = strlen($schema) > 3 ?  \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_message) as a where a.total > 10"))->first() :  \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_message) as a where a.total > 10"))->first();
+        $this->data['danger_schema'] =   \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1'))->first();
+        $all_errors = strlen($schema) > 3 ?  "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn  group by error_message) as a ) e
+                           join (select * from (SELECT distinct error_message,error_instance FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_instance,error_message,created_at::date) as a) t on e.error_message = t.error_message": 
+                           "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn  group by error_message) as a ) e
+                           join (select * from (SELECT distinct error_message,error_instance FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_instance,error_message,created_at::date) as a) t on e.error_message = t.error_message";
+        $sql1 = strlen($schema) > 3 ? "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where extract(year from created_at) = extract(year from current_date) and schema_name = '$schema' and error_instance $notIn group by month ) s on mon.mon = s.month" : "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where extract(year from created_at) = extract(year from current_date) and error_instance $notIn group by month ) s on mon.mon = s.month";
+        $sql2 = strlen($schema) > 3 ? "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is not null and deleted_by is not null and extract(year from created_at)= extract(year from current_date) and schema_name = '$schema' and error_instance $notIn group by month ) s on mon.mon = s.month" : "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is not null and deleted_by is not null and extract(year from created_at)= extract(year from current_date)  and error_instance $notIn group by month ) s on mon.mon = s.month";
+        $sql3 = strlen($schema) > 3 ? "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and schema_name = '$schema' and error_instance $notIn group by month ) s on mon.mon = s.month" : "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date)  and error_instance $notIn group by month ) s on mon.mon = s.month";
+        
+        $this->data['all_errors'] = \DB::select($all_errors);
+        $this->data['monthly_errors'] = \DB::select($sql1);
+        $this->data['monthly_solved'] = \DB::select($sql2);
+        $this->data['monthly_unsolved'] = \DB::select($sql3);
+        return view('software.error_logs', $this->data);
     }
 
     public function customer_requirement() {
@@ -360,19 +367,27 @@ ORDER BY c.oid, a.attnum";
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
 
-        if(isset($tag->error_message)) {
-           DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
-         } 
-         echo 1;
+        // if(isset($tag->error_message)) {
+        //    DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
+        //  } 
+         if(isset($tag->error_message)){
+            $update = \DB::table('admin.error_logs')->where('error_message','=',$tag->error_message)->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
+            echo $update > 0 ? 1 : 0;
+         }
     }
 
+
     public function Readlogs() {
-        $id = request()->segment(3);
-        $tag = \App\Models\ErrorLog::find($id);
-        $this->data['schema'] = $schema = $tag->schema_name;
-        $this->data['school'] =  $schema != 'public' ? \collect(\DB::select("select * from admin.clients where username = '.$schema.' "))->first() : '';
+        $this->data['id'] = $id = request()->segment(3);
+        $this->data['schema'] = $schema = request()->segment(4);
+    
+        $this->data['breadcrumb'] = array('title' => 'Error log','subtitle'=>'software','head'=>'system errors');
+        $this->data['tag'] = $tag = \App\Models\ErrorLog::find($id);
+        $this->data['errors'] = $errors = strlen($schema) > 3 ? \App\Models\ErrorLog::where(['error_message'=>$tag->error_message,'schema_name'=>$tag->schema_name])->whereNull(['deleted_at','deleted_by'])->latest()->get() : \App\Models\ErrorLog::where('error_message',$tag->error_message)->whereNull(['deleted_at','deleted_by'])->latest()->get();
+        $this->data['school']  = strlen($schema) > 3 ? \collect(\DB::select("select name from admin.clients where username = '$schema' "))->first() : [];
+      
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
-        return view('customer.view', $this->data);
+        return view('software.logs', $this->data);
         //echo 1;   
     }
 
@@ -638,8 +653,8 @@ ORDER BY c.oid, a.attnum";
         $this->data['returns'] = [];
         $this->data['prefix']='';
         if ($_POST) {
-           // $schema = request('schema_name');
-            $schema = 'canossa';
+            $schema = request('schema_name');
+         //   $schema = 'canossa';
 
             //echo 3535335;
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and 

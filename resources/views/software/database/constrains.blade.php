@@ -103,7 +103,7 @@ $d = $database->loadSchema();
                                                                             <?php foreach ($missing_constrains as $constrain) { ?>
                                                                                 <tr>
                                                                                     <td>{{$constrain}}</td>
-                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-constrain='{{$constrain}}' data-relation="{{$sub}}" class="sync_relation btn btn-sm btn-info">Sync </a>
+                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-constrain='{{$constrain}}' data-relation="{{$sub}}" class="sync_relation btn btn-mini btn-round btn-info">Sync </a>
                                                                                         <span id="{{$table.$schema.$constrain}}"></span>
                                                                                     </td>
                                                                                 </tr>
@@ -161,18 +161,21 @@ $d = $database->loadSchema();
                 },
                 dataType: "html ",
                 beforeSend: function (xhr) {
-                    $('#' + table + slave + constrain).html('<a href="#/refresh"><i class="ti-reload rotate-refresh"></i> </a>');
+                    $('#' + table + slave + constrain).html('<a href="#/refresh"><i class="feather icon-refresh-ccw"></i> </a>');
                 },
                 complete: function (xhr, status) {
-                    $('#' + table + slave + constrain).html('<span class="label label-success label-rouded">' + status + '</span>');
+                    $('#' + table + slave + constrain).html('<label class="badge badge-success">' + status + '</label>');
                     if (xhr.status == 500) {
                         $('.panel_error').show();
-                        $('.error_message').html(xhr.responseText);
+                       // $('.error_message').html(xhr.responseText);
+                         toastr.error('Error: Sync failed check error logs')
                     }
                 },
 
                 success: function (data) {
                     $(this).hide();
+                    toastr.success('Sync success')
+                    window.location.reload(); 
                 }
             });
 

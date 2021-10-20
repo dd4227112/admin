@@ -1,101 +1,69 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-
-
 <div class="main-body">
     <div class="page-wrapper">
       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
-       
         <div class="page-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <!-- tab panel personal start -->
-                    <div class="tab-pane active" id="personal" role="tabpanel">
-                        <!-- personal card start -->
 
+            <div class="card">
+                <div class="card-header" style="margin-bottom: -10px;">
+                    <h6>
+                        <?php $back_url = "Customer/requirements"; $next_url = "Customer/requirements/show/$next"; ?>
+                        <x-button :url="$back_url" color="primary" btnsize="sm float-left"  title="back" shape="round" toggleTitle="Go Back"></x-button>
+                        <x-button :url="$next_url" color="info" btnsize="sm float-right"  title="next" shape="round" toggleTitle="Go next"></x-button>
 
-                        <div class="card">
-                            <div class="card-block">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                                <div class="row">
-                                                      <div class="table-responsive">
-                                                         <table class="table dataTable table-hover">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th scope="row">Added Date</th>
-                                                                    <th>{{ date('d-m-Y', strtotime($requirement->created_at)) }} </th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th scope="row">Staff Members</th>
-                                                                    <th>
-                                                                        <?php
-                                                                        if ($requirement->user_id == $requirement->to_user_id) {
-                                                                            echo $requirement->user->firstname . ' ' . $requirement->user->lastname;
-                                                                        } else {
-                                                                            echo 'By ' . $requirement->user->firstname . ' ' . $requirement->user->lastname . ' To ';
-                                                                         
-                                                                            echo $requirement->toUser->name;
-                                                                        }
-                                                                        ?>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th> Client Name</th>
-                                                                    <th><?= isset($requirement->school->name) ? $requirement->school->name : ' <label class="badge badge-inverse-success">General requirement</label>' ?>
-                                                                    <code><?= isset($requirement->school->type) ? $requirement->school->type : ''  ?></code>
-                                                                    </th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th> Client Contact</th>
-                                                                    <th><?= $requirement->contact?></th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                           </div>
-                                       </div>
-                                  </div>
-                               </div>
-
-
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="card">
-
-                                        <div class="card-block user-desc">
-                                            <div class="view-desc">
-                                                <h4>About This Requirement </h4>
-                                                <hr>
-                                                <span style="float: right;"><b>Task Excuted:</b>
-                                                    <select id="action" class="form-control">
-                                                        <option value='{{ $requirement->status }}'>{{ $requirement->status }}</option>
-                                                        <option value='On Progres'>On Progres</option>
-                                                        <option value='Completed'>Completed</option>
-                                                        <option value='Resolved'>Resolved</option>
-                                                        <option value='Canceled'>Canceled</option>
-                                                        <option value='New'>New</option>
-                                                    </select>
-                                                </span>
-                                                <p> <?= $requirement->note ?></p>
-
-                                            </div>
-                                            <?php 
-                                 
-                                            ?>
-                                        </div>
-                                    </div>
-                                    <div class="justify-content-between mb-10">
-                                        <p>  <a href="<?=url('Customer/requirements')?>" class="btn btn-success" style="float: left;"> Go Back</a> </p>
-                                        <p>  <a href="<?=url('Customer/requirements/show/'.$next)?>" class="btn btn-success" style="float: right;"> Go Next</a> </p>
-                                    </div>
-                                <br>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
+                    </h6> 
                 </div>
+                <div class="card-block">
+                        <p style="font-weight: 600;margin-bottom:0px;">Requirement &nbsp;&nbsp; <?= isset($requirement->school->name) ? '<label class="badge badge-inverse-primary">' .$requirement->school->name. '</label>' : ' <label class="badge badge-inverse-success">General requirement</label>' ?></p> 
+                        
+                        <p style="font-weight: 600"> <?= $requirement->note ?></p>
+                </div>
+          </div>
+
+          <div class="card">
+                <div class="card-block">
+                        <p style="font-weight: 600;">Added date &nbsp;&nbsp; <label class="badge badge-inverse-primary"> <?= date('d-m-Y', strtotime($requirement->created_at)) ?></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                        Staff Members &nbsp;&nbsp;&nbsp;  <?php  if ($requirement->user_id == $requirement->to_user_id) { echo $requirement->user->firstname . ' ' . $requirement->user->lastname;
+                        } else { echo 'By ' . $requirement->user->firstname . ' ' . $requirement->user->lastname . ' To ';echo $requirement->toUser->name;}?>
+                        &nbsp;&nbsp;&nbsp; Client Contact &nbsp;&nbsp;&nbsp;<label class="badge badge-inverse-primary"><?= $requirement->contact ?></label> &nbsp;&nbsp;&nbsp; Status &nbsp;&nbsp;&nbsp; <label class="badge badge-inverse-info"><?= $requirement->status ?></label>
+                       </p>
+
+
+                        <div class="form-radio m-b-30">
+                                     <?php
+                                       $check = \App\Models\Requirement::where('id', $requirement->id)->first();
+                                            !empty($check) ? $checked = 'checked' : $checked = '';
+                                        ?>
+                                <div class="radio radiofill radio-primary radio-inline">
+                                    <label>
+                                        <input type="radio" id="On Progres"  name="radio" value="On Progres" {{$checked}} >
+                                             <i class="helper"></i>On Progres
+                                    </label>
+                                </div>
+                                <div class="radio radiofill radio-primary radio-inline">
+                                    <label>
+                                        <input type="radio"  id="Completed" name="radio" value="Completed" {{$checked}} >
+                                        <i class="helper"></i>Completed
+                                    </label>
+                                </div>
+                                <div class="radio radiofill radio-primary radio-inline">
+                                    <label>
+                                        <input type="radio" id="Resolved"  name="radio" value="Resolved" {{$checked}} >
+                                        <i class="helper"></i>Resolved
+                                    </label>
+                                </div>
+                                <div class="radio radiofill radio-primary radio-inline">
+                                    <label>
+                                        <input type="radio" id="Canceled"  name="radio" value="Canceled" {{$checked}} >
+                                        <i class="helper"></i>Canceled
+                                    </label>
+                                </div>
+                          </div>
+                       </div>
+                    </div>
+
             </div>
         </div>
     </div>
@@ -104,15 +72,19 @@
 <!-- personal card end-->
 </div>
 <script>
-    $('#action').change(function () {
-        var val = $(this).val();
+  $('input[type="radio"]').click(function(){  
+        var val = $(this).val();  
         $.ajax({
             type: 'POST',
+            //  headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     },
             url: "<?= url('Customer/updateReq') ?>",
             data: "id=" + <?= $requirement->id ?> + "&action=" + val,
             dataType: "html",
             success: function (data) {
-                window.location.href = '#';
+                toastr.success(data);
+                window.location.reload();
             }
         });
     });

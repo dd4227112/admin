@@ -10,11 +10,8 @@
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">
-          <div class="card tab-card">
-            <div class="card-block">
-              <div class="steamline">
-                <div class="card-block">
-
+          <div class="card">
+              <div class="card-block">
                   <div class="table-responsive dt-responsive">
                     <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                       <thead>
@@ -48,9 +45,7 @@
 
                     </table>
                   </div>
-                </div>
               </div>
-            </div>
           </div>
         </div>
       </div>

@@ -944,6 +944,8 @@ class Customer extends Controller {
            $status = ' is now complete. Login into your shulesoft account.';
         } elseif($action == 'Resolved'){
            $status = ' is resolved. Login into your shulesoft account.';
+        }  elseif($action == 'Canceled'){
+           $status = ' is Canceled. Contact responsible person.';
         }  
         $message   = 'Hello ' .$user->name .'.'
                     . chr(10) . 'The requirement of : '.strip_tags($data->note) . '.'
@@ -980,7 +982,8 @@ class Customer extends Controller {
             ]);
             $this->send_whatsapp_sms($data->contact, $message1);
         }
-       return redirect()->back()->with('success', 'Updated successfully!');
+      // return redirect()->back()->with('success', 'Updated successfully!');
+        echo $action;
     }
 
     public function usageAnalysis() {
@@ -1261,6 +1264,7 @@ class Customer extends Controller {
     }
 
     public function resetPassword() {
+        $this->data['breadcrumb'] = array('title' => 'Reset password','subtitle'=>'Reset school password','head'=>'operations');
         $schema = request()->segment(3);
         if ($schema != '') {
             $pass = $schema . rand(5697, 33);
@@ -1588,6 +1592,7 @@ class Customer extends Controller {
     }
 
     public function viewFile() {
+        $this->data['breadcrumb'] = array('title' => 'File View','subtitle'=>'files','head'=>'operations');
         $value = request()->segment(3);
         $type = request()->segment(4);
         if ($type == 'course_certificate') {

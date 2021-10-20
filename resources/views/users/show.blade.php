@@ -17,24 +17,20 @@ foreach ($user_permission as $permis) {
             <!--profile cover start-->
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="row">
-                     
-                      <div class="col-md-6 col-xl-4">
-                         <div class="card rounded-card user-card">
+                    <div class="row"> 
+
+                       <div class="col-md-6 col-xl-4">
+                           <div class="card">
                             <div class="card-block">
-                                    <img class="img-fluid img-circle" src="<?= $user->company_file_id !='' ? $user->companyFile->path : $root . 'assets/images/user.png' ?>" alt="round-img" height="10">
-                                <div class="user-content">
-                                    <h4 class="">{{ $user->firstname }} {{ $user->lastname }}</h4>
-                                    <p class="m-b-0 text-muted"><?= $user->designation->abbreviation ? $user->designation->name.'  ' . '('.$user->designation->abbreviation.')' : '' ?></p>
-                                </div>
+                                <img class="img-circle" src="<?= $user->company_file_id !='' ? $user->companyFile->path : $root . 'assets/images/user.png' ?>" alt="round-img" width="40" height="40">
+                                <h6 class="text-left mt-2">{{ $user->firstname }} {{ $user->lastname }}</h6> 
+                                <p class="text-left text-muted"><?= $user->designation->abbreviation ? $user->designation->name.'  ' . '('.$user->designation->abbreviation.')' : '' ?></p>
+                            </div>
                             </div>
                          </div>
-                       </div>
 
-                        <?php
-                        if (Auth::user()->role_id != 7) { 
-                           
-                            ?>
+                            <?php
+                            if (Auth::user()->role_id != 7) { ?>
                             <div class="col-md-6 col-xl-4">
                                 <?php $pay = isset($user->salary) ? $user->salary : 1 ?>
                                 <x-analyticCard :value="$pay" name="Basic Salary" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue" 
@@ -122,16 +118,9 @@ foreach ($user_permission as $permis) {
                     <!-- Tab panes -->
                     <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">
                         <div class="tab-pane active" id="home5" role="tabpanel" aria-expanded="true">
-                            <!-- personal card start -->
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="card-header-text">About</h5>
-                                    <?php
-                                    if ($user->id == 2) { ?>
-                                        <a id="edit-btn" href="<?= url('users/edit/' . $user->id) ?>" class="btn btn-sm btn-primary waves-effect waves-light f-right">
-                                            <i class="icofont icofont-edit"></i>
-                                        </a>
-                                    <?php } ?>
+                                    <h5 class="card-header-text">About </h5>
                                 </div>
                                 <div class="card-block">
                                     <div class="view-info">
@@ -169,19 +158,24 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
-                                                                        <td><a  target='_break' href="<?=  $user->academic_certificates ??  '' ?>" class="btn btn-default btn-sm"> View Certificate</a></td>
+                                                                        <td><a  target='_break' href="<?=  $user->academic_certificates ??  '' ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a></td>
                                                                     </tr>
 
                                                                     <tr>
                                                                         <th scope="row">Employment Contract</th>
-                                                                        <td><a target='_break' href="<?=  $user->employment_contract ??  '' ?>" class="btn btn-info btn-sm"> View Certificate</a></td>
+                                                                        <td><a target='_break' href="<?=  $user->employment_contract ??  '' ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a></td>
                                                                     </tr>
-                                                                    <tr>
-                                                                         <?php if(can_access('upload_users')) { ?>
-                                                                          <td> <button class="btn btn-primary btn-sm text-right" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button> </td>
-                                                                        <?php } ?>
+                                                                     <tr>
+                                                                         <td> 
+                                                                          <a class="btn btn-primary btn-mini btn-round" data-toggle="modal" data-target="#exampleModalLonguu">
+                                                                            Update image 
+                                                                          </a>
+                                                                        </td>
+                                                                         <td>
+                                                                         <?php  $reset_url = "users/resetPassword/$user->id"; ?>
+                                                                         <x-button :url="$reset_url" color="warning" btnsize="mini"  title="Reset Password" shape="round" toggleTitle="Reset your password"></x-button>
 
-                                                                        {{-- <td><a href="<?= url('users/uploadprofile/' . $user->id) ?>" class="btn btn-info btn-sm">Upload profile picture</a></td> --}}
+                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -192,7 +186,7 @@ foreach ($user_permission as $permis) {
                                                                 <tbody>
                                                                     <tr>
                                                                         <th scope="row">Email</th>
-                                                                        <td><a href="#!">{{ $user->email }}</a>, <br> <a href="#!">{{ $user->personal_email }}</a></td>
+                                                                        <td style="font-size: 10px;">{{ $user->email }}, <br> {{ $user->personal_email }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Mobile Number</th>
@@ -222,28 +216,60 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Medical Report</th>
-                                                                        <td><a target='_break' href="<?= $user->medical_report ?? '' ?>" class="btn btn-info btn-sm"> View Report</a></td>
+                                                                        <td>
+                                                                            <a target='_break' href="<?= $user->medical_report ?? '' ?>" class="btn btn-default btn-mini btn-round"> View Report</a>
+                                                                        </td>
                                                                     </tr>
 
                                                                     <tr>
                                                                        <?php if(can_access('update_designation')) { ?>
                                                                         <td> 
-                                                                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                                                                          <a class="btn btn-primary btn-mini btn-round text-light" data-toggle="modal" data-target="#exampleModalLong">
                                                                             Update designation 
-                                                                         </button>
+                                                                          </a>
                                                                         </td>
                                                                       <?php } ?>
                                                      
                                                                        <?php if(can_access('remove_user')) { ?>
                                                                         <td> 
-                                                                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModaldelete">
-                                                                            Delete user
-                                                                         </button>
+                                                                          <a class="btn btn-danger btn-mini btn-round text-light" data-toggle="modal" data-target="#exampleModaldelete">
+                                                                            DELETE USER
+                                                                          </a>
                                                                         </td>
                                                                       <?php } ?>
                                                                     </tr>
                                                                     
                                                               
+
+                                                                <div class="modal fade" id="exampleModalLonguu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                                 <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLongTitle">Update profile</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form class="form-horizontal form-material" method="post" action="<?= url('users/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
+                                                                        <div class="form-group ">
+                                                                            <label for="cname" class="control-label col-lg-3">Image</label>
+                                                                            <div class="col-lg-12">
+                                                                               <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line" required>
+                                                                            </div>
+                                                                        </div>
+                                                                      
+                                                                      <div class="modal-footer">
+                                                                        <input type="hidden" value="<?=$user->id?>" name="user_id">
+                                                                        <button type="button" class="btn btn-default btn-mini btn-round" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary btn-mini btn-round">Save</button>
+                                                                      </div>
+                                                                      <?= csrf_field() ?>
+                                                                    </form>
+                                                                    </div>
+                                                                 </div>
+                                                                </div>
+                                                             </div>
                                                               
                                                               
                                                              <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -323,8 +349,8 @@ foreach ($user_permission as $permis) {
         
                                                                       <div class="modal-footer">
                                                                         <input type="hidden" value="<?=$user->id?>" name="user_id">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                                        <button type="button" class="btn btn-default btn-mini btn-round" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
                                                                       </div>
                                                                       <?= csrf_field() ?>
                                                                     </form>
@@ -471,28 +497,7 @@ foreach ($user_permission as $permis) {
                                     </div>
                                     <!-- end of edit-info -->
                                     
-                                    <?php if (Auth::user()->id != 2) {
-                                        ?>
-                                        <form class="form-horizontal form-material" method="post" action="<?= url('users/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
-                                            <div class="form-group row">
-                                                <label class="col-md-12">Photo</label>
-                                                <div class="col-md-4">
-                                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line" required>
-                                                </div>
-                                           
-                                                <div class="col-sm-6">
-                                                    <?= csrf_field() ?>
-                                                    <button class="btn btn-success">Update Photo</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    <?php } ?>
-                                   
-                                    <div class="form-group row">
-                                      <div class="col-md-5">
-                                        <a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a>
-                                      </div>
-                                    </div> 
+                                
                                 </div>
                                 <!-- end of card-block -->
                             </div>
@@ -502,9 +507,9 @@ foreach ($user_permission as $permis) {
                                     <div class="card">
                                         <div class="card-header">
                                             <h5 class="card-header-text">Description About Me</h5>
-                                            <button id="edit-info-btn" type="button" class="btn btn-sm btn-primary waves-effect waves-light f-right">
-                                                <a href="<?= url('users/edit/' . $user->id) ?>"> <i class="icofont icofont-edit"></i> Edit</a>
-                                            </button>
+                                            <?php $url_edit = "users/edit/$user->id"; ?>
+                                        <x-button :url="$url_edit" color="primary float-right" btnsize="mini"  title="Edit" shape="round" toggleTitle="Edit user data"></x-button>
+
                                         </div>
                                         <div class="card-block user-desc">
                                             <div class="view-desc">
@@ -585,7 +590,9 @@ foreach ($user_permission as $permis) {
                                     <form>
                                         <div class="form-group row">
                                             <div class="col-sm-2">
-                                                <a href="<?= url('QrCode/generate_qr_code/' . $user->email) ?>" class="form-control  btn btn-primary" id="search_report">Generate QR Code</a>
+                                                <?php $qr_code =  "QrCode/generate_qr_code/$user->email"; ?>
+                                                 <x-button :url="$qr_code" color="primary" btnsize="mini"  title="QR code" shape="round" toggleTitle="Create qr code"></x-button>
+
                                             </div>
                                             <?php if ($user->qr_code != '') { ?>
                                                 <div class="col-sm-2">
@@ -613,6 +620,7 @@ foreach ($user_permission as $permis) {
                             </div>
                             <!-- personal card end--> 
                         </div>
+
                         <div class="tab-pane" id="profile5" role="tabpanel" aria-expanded="false">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -687,8 +695,9 @@ foreach ($user_permission as $permis) {
                                         if ($user->id == Auth::user()->id) {?>
                                             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal"><i class="fa fa-plus"></i>Add Attendance</button>
                                         <?php } ?>
-                                        <div class="mt-3 table-responsive table-sm table-striped table-bordered table-hover">
-                                            <table class="table dataTable">
+                                        
+                                        <div class="table-responsive dt-responsive">
+                                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>Date</th>
@@ -718,7 +727,7 @@ foreach ($user_permission as $permis) {
                                                                     <a href="<?= url('users/leave') ?>">Leave the Office</a>
 
                                                                 <?php } else if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) < 17 && date('Y', strtotime($attendance->timeout)) > 1970) { ?>
-                                                                    <a  href="#" class="text-danger waves-effect" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
+                                                                    <a  href="#" class="text-danger waves-e" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
                                                                     <?php
                                                                 }
                                                                 ?>
@@ -733,19 +742,17 @@ foreach ($user_permission as $permis) {
                                     </div>
                                 </div></div>   </div>
 
-                        <div class="tab-pane" id="leave" role="tabpanel" aria-expanded="false">
-                            <div class="col-lg-12">
+                             <div class="tab-pane" id="leave" role="tabpanel" aria-expanded="false">
                                 <div class="card">
                                     <div class="card-header">
                                         <h5 class="card-header-text">Leave/Absent</h5>
+                                        <button type="button" class="btn btn-primary btn-mini btn-round float-right" data-toggle="modal" data-target="#leave-large-Modal">Add Leave</button>
                                     </div>
-                                    <div class="col-lg-12">
-                                        <br/>
-                                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#leave-large-Modal"><i class="fa fa-plus"></i>Add Leave</button>
 
-                                        <div class="card-block ">
-                                            <div class="table-responsive table-sm table-striped table-bordered table-hover">
-                                              <table class="table dataTable">
+                                        <div class="card-block">
+                                           
+                                           <div class="table-responsive dt-responsive">
+                                           <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>Date</th>
@@ -766,7 +773,9 @@ foreach ($user_permission as $permis) {
                                                             <td><?= date('d M Y', strtotime($absent->date)) ?></td>
                                                             <td><?= $absent->absentReason->name ?></td>
                                                             <td><?= warp($absent->note,20) ?></td>
-                                                            <td class="text-center"><a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $absent->id .'/absent') ?>">View</a></td>
+                                                            <td class="text-center">
+                                                                <a type="button" class="btn btn-primary btn-mini btn-round" target="_blank" href="<?= url('customer/viewContract/' . $absent->id .'/absent') ?>">View</a>
+                                                            </td>
                                                             <td><?= $absent->approvedBy->name ?></td>
                                                             <td><?= isset($absent->end_date) ? date('d M Y', strtotime($absent->end_date)) : '' ?></td>
                                                             <td class="text-center">
@@ -776,8 +785,10 @@ foreach ($user_permission as $permis) {
                                           
                                                                       <?php if ($absent->status == null) { ?>
                                                                          <?php if(can_access('approve_leave')) { ?>
-                                                                         <a type="button" class="btn btn-info btn-sm"  href="<?= url('users/askleave/' . $absent->id .'/approve') ?>">Approve</a>
-                                                                         <a type="button" class="btn btn-danger btn-sm"  href="<?= url('users/askleave/' . $absent->id .'/reject') ?>">Reject</a>
+                                                                         <?php $app_url = "users/askleave/$absent->id/approve"; $rej_url = "users/askleave/$absent->id/reject"; ?>
+                                                                          <x-button :url="$app_url" color="primary" btnsize="mini"  title="Approve" shape="round" toggleTitle="Approve"></x-button>
+                                                                          <x-button :url="$rej_url" color="warning" btnsize="mini"  title="Reject" shape="round" toggleTitle="Reject"></x-button>
+
                                                                          <?php } ?>
                                                                      <?php } else if($absent->status == 'Approved') { ?>
                                                                         <a  class="badge badge-info badge-sm"> <?=$absent->status?> </a>
@@ -796,8 +807,6 @@ foreach ($user_permission as $permis) {
                                         </div>
                                       </div>
                                     </div>
-                                </div>
-                               </div>  
                              </div>
 
                              <div class="tab-pane" id="legal" role="tabpanel" aria-expanded="false">
@@ -805,14 +814,16 @@ foreach ($user_permission as $permis) {
                                     <div class="card">
                                         <div class="card-header">
                                             <h5 class="card-header-text">Legal/contract</h5>
+                                            <button type="button" class="btn btn-primary btn-mini btn-round float-right" data-toggle="modal" data-target="#legal-large-Modal">Add Legal/Contract</button>
+
                                         </div>
                                         <div class="col-lg-12">
-                                            <br/>
-                                            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#legal-large-Modal"><i class="fa fa-plus"></i>Add Legal/Contract</button>
+                                        
     
                                             <div class="card-block">
-                                              <div class="table-responsive table-sm table-striped table-bordered table-hover">
-                                                <table class="table dataTable">
+                                              
+                                              <div class="table-responsive dt-responsive">
+                                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
                                                         <tr>
                                                             <th>Name</th>
@@ -832,7 +843,7 @@ foreach ($user_permission as $permis) {
                                                                 <td> {{ date('d-m-Y', strtotime($document->end_date)) ?? '' }}</td>
                                                                 <td><?= $document->description?></td>
                                                                 <td>
-                                                                    <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewcontract/' . $document->id . '/legal') ?>">View</a>
+                                                                    <a type="button" class="btn btn-primary btn-mini btn-round" target="_blank" href="<?= url('customer/viewcontract/' . $document->id . '/legal') ?>">View</a>
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>
@@ -851,14 +862,15 @@ foreach ($user_permission as $permis) {
                                         <div class="card">
                                             <div class="card-header">
                                                 <h5 class="card-header-text">Learning</h5>
+                                                <button type="button" class="btn btn-primary btn-mini btn-round float-right" data-toggle="modal" data-target="#learning-large-Modal">Learning</button>
+
                                             </div>
                                             <div class="col-lg-12">
-                                                <br/>
-                                                <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#learning-large-Modal"><i class="fa fa-plus"></i>Learning</button>
         
                                                 <div class="card-block">
-                                                  <div class="table-responsive table-md table-striped table-bordered table-hover">
-                                                    <table class="table dataTable">
+                                                   
+                                               <div class="table-responsive dt-responsive">
+                                                  <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                         <thead>
                                                             <tr>
                                                                 <th>#</th>
@@ -881,7 +893,9 @@ foreach ($user_permission as $permis) {
                                                                     <td><?= date('d-m-Y', strtotime($learning->to_date)) ?></td>
                                                                     <td> {{ $learning->source ?? '' }}</td>
                                                                     <td>
-                                                                        <a type="button" class="btn btn-primary btn-sm waves-effect" href="<?= url('users/learning/' . $learning->id) ?>">View</a>
+                                                                        <?= $v_url = "users/learning/$learning->id"; ?>
+                                                                          <x-button :url="$v_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="View"></x-button>
+
                                                                     </td>
                                                                 </tr>
                                                               <?php $i++;} ?>
@@ -895,138 +909,8 @@ foreach ($user_permission as $permis) {
                                        </div>  
                                      </div>
 
-
-                        <div class="tab-pane" id="settings5" role="tabpanel">
-                            <div class="email-card p-0">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-header-text">Permissions</h5>
-                                    </div>
-
-                                    <div class="mail-body-content">
-                                        <table class="table table-responsive">
-                                            <tbody>
-
-                                                <?php
-                                                $permissions = \App\Models\Permission::all();
-                                                foreach ($permissions as $permission) {
-                                                    ?>
-                                                    <?php
-                                                    $checked = in_array($permission->id, $arr) ? 'checked' : '';
-                                                    ?>
-                                                    <tr class="read">
-                                                        <td>
-                                                            <div class="check-star">
-                                                                <div class="checkbox-fade fade-in-primary checkbox">
-                                                                    <label>
-                                                                        <input type="checkbox" class="permission" value="<?= $permission->id ?>" <?= $checked ?>>
-                                                                        <span class="cr"><i class="cr-icon icofont icofont-verification-check txt-primary"></i></span>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td><a href="#!" class="email-name"><?= $permission->display_name ?></a></td>
-                                                        <td><?= $permission->description ?></td>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>    
-                        </div>
-
-                        <div class="tab-pane" id="school_allocations" role="tabpanel" aria-expanded="false">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-header-text">Schools Allocation</h5>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="col-lg-12 col-xl-12">
-                                            <div class="sub-title">Default</div>                                        
-                                            <!-- Nav tabs -->
-                                            <ul class="nav nav-tabs md-tabs" role="tablist">
-                                                <li class="nav-item">
-                                                    <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Add New Allocation</a>
-                                                    <div class="slide"></div>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Schools Allocation</a>
-                                                    <div class="slide"></div>
-                                                </li>
-
-                                            </ul>
-                                            <!-- Tab panes -->
-                                            <div class="tab-content card-block">
-                                                <div class="tab-pane active" id="home3" role="tabpanel">
-                                                    <div class="card-block ">
-
-                                                        <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('background/allocateSchool/null') ?>">
-                                                            <div class="modal-dialog modal-lg" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h4 class="modal-title">New Allocation  </h4>
-
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label for="cname" class="control-label col-lg-3">Region</label>
-                                                                            <div class="col-lg-12">
-                                                                                <select name="region_id"  class="form-control" id="search_regions">
-                                                                                    <option></option>
-                                                                                    <?php
-                                                                                    $regions = \App\Models\Region::all();
-                                                                                    foreach ($regions as $region) {
-                                                                                        ?>
-                                                                                        <option value="<?= $region->id ?>"><?= $region->name ?></option>
-                                                                                    <?php }
-                                                                                    ?>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group ">
-                                                                            <label for="cname" class="control-label col-lg-3">District</label>
-                                                                            <div class="col-lg-12">
-                                                                                <select name="district_id"  class="form-control" id="search_district">
-                                                                                    <option></option>
-
-                                                                                </select> </div>
-                                                                        </div>
-
-                                                                        <div class="form-group ">
-                                                                            <label for="cname" class="control-label col-lg-3">Wards Allocation</label>
-                                                                            <div class="col-lg-12">
-                                                                                <span id="search_ward"></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <?= csrf_field() ?>
-                                                                        <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
-                                                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div></div>
-                                                <div class="tab-pane" id="profile3" role="tabpanel">
-                                                    <div class="card-block ">
-
-                                                        <div class="card-block ">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                              </div>  
-                            </div>
-                        </div>
-                      </div>
+                           </div>
+                       </div>
 
 
             </div>
@@ -1122,7 +1006,7 @@ foreach ($user_permission as $permis) {
                     <div class="form-group">
                         <label for="cname" class="control-label col-lg-3">Absent Reason</label>
                         <div class="col-lg-12">
-                            <select name="absent_reason_id" class="form-control select2 category_id">
+                            <select name="absent_reason_id" class=" select2 category_id">
                                 <?php
                                 $ctypes = DB::table('admin.absent_reasons')->get();
                                 if (!empty($ctypes)) {
@@ -1181,8 +1065,8 @@ foreach ($user_permission as $permis) {
                 <div class="modal-footer">
                     <?= csrf_field() ?>
                     <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
-                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                    <button type="button" class="btn btn-default btn-mini btn-round" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-mini btn-round">Save changes</button>
                 </div>
             </div>
         </div>
@@ -1248,8 +1132,8 @@ foreach ($user_permission as $permis) {
                 <div class="modal-footer">
                     <?= csrf_field() ?>
                     <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
-                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save </button>
+                    <button type="button" class="btn btn-default btn-mini btn-round" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary  btn-mini btn-round">Save </button>
                 </div>
             </div>
         </div>
@@ -1333,8 +1217,8 @@ foreach ($user_permission as $permis) {
                 <div class="modal-footer">
                     <?= csrf_field() ?>
                     <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
-                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save </button>
+                    <button type="button" class="btn btn-default btn-mini btn-round" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-mini btn-round">Save </button>
                 </div>
             </div>
         </div>

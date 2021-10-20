@@ -188,14 +188,7 @@ class Analyse extends Controller {
      * @return type
      */
     public function getUsers($table = 'student') {
-        $this->data['user'] = \collect(DB::SELECT("with total as (
-	select count(*) as total from $table where status=1 ),
-	total_male as (
-select count(*) as male from $table where status=1 and lower(sex)='male'),
-total_female as (
-select count(*) as female from $table where status=1 and lower(sex) <>'male')
-SELECT * FROM total,total_male, total_female
-"))->first();
+        $this->data['user'] = \collect(DB::SELECT("with total as (select count(*) as total from $table where status=1 ),total_male as (select count(*) as male from $table where status=1 and lower(sex)='male'),total_female as (select count(*) as female from $table where status=1 and lower(sex) <>'male') SELECT * FROM total,total_male, total_female"))->first();
 
         $this->data['student_by_class'] = DB::SELECT('with classes AS (select count(a.*) as total,a."classesID",b.classes from student a join classes b on a."classesID"=b."classesID"  where a.status=1 group by a."classesID",b.classes ),
 class_males as (select count(a.*) as male,a."classesID",b.classes from student a join classes b on a."classesID"=b."classesID"  where a.status=1 and lower(a.sex)=\'male\' group by a."classesID",b.classes),
@@ -230,7 +223,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
          // user role 17 ie zone manager, select schools/clients based on zones
         if(($user->role_id) && ($user->role_id == 17)){  
             $zone = \App\Models\ZoneManager::where('user_id',$id)->first();
-           
             if($zone){
              $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::where('refer_zone_id',$zone->zone_id)->get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
             }else{
@@ -375,21 +367,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
           $this->data['rators'] = DB::select($sql_);
           return view('market.ratings', $this->data);
       }
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
 
 
 //    public function sendMessage() {

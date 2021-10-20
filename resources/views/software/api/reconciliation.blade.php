@@ -15,7 +15,7 @@
                              <div class="row">
                                 <div class="col-sm-12 col-xl-3 m-b-30">
                                     <h4 class="sub-title">Select School</h4>
-                                    <select name="schema_name" class="form-control form-control-info select2" id="payment_schema">
+                                    <select name="schema_name" class="select2" id="payment_schema">
                                         <option value="0">Select</option>
                                         <?php
                                         $schemas = DB::select('select distinct "schema_name" from admin.all_setting  where payment_integrated=1');

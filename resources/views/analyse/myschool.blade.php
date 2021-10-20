@@ -106,7 +106,7 @@
                                                
                                                 <?php
                                                  echo '<td>';
-                                                 echo '<a href="' . url('customer/profile/' . $school->client->username) . '" class="btn btn-success btn-sm"> View</a>';
+                                                 echo '<a href="' . url('customer/profile/' . $school->client->username) . '" class="btn btn-primary btn-mini btn-round"> View</a>';
                                                  echo '</td>';
                                                  echo '</tr>';
                                                   }

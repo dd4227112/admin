@@ -52,7 +52,7 @@
                     "data": null,
                     "render": function (data, type, row, meta) {
 
-                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
+                        return '<a href="#" id="' + row.id + '" class="btn btn-danger btn-mini btn-round dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
 
 
                     }
@@ -66,16 +66,16 @@
             }
         });
         delete_log = function (a) {
-            $.ajax({
-                url: '<?= url('software/logsDelete') ?>/null',
-                method: 'get',
-                data: {id: a},
-                success: function (data) {
-                    if (data == '1') {
-                        $('#log' + a).fadeOut();
-                    }
-                }
-            });
+            // $.ajax({
+            //     url: '<?= url('software/logsDelete') ?>/null',
+            //     method: 'get',
+            //     data: {id: a},
+            //     success: function (data) {
+            //         if (data == '1') {
+            //             $('#log' + a).fadeOut();
+            //         }
+            //     }
+            // });
         }
     }
     );

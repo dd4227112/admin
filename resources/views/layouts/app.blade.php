@@ -223,7 +223,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '$id'"))->first(); 
                                         $local = $root . 'assets/images/user.png';
                                         ?>
-                                        <img class="img-40" src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" alt="User-Profile-Image"> 
+                                        <img class="img-30 img-circle" src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" alt="User-Profile-Image"> 
                                         <span class="text-light"><?= \Auth::user()->name ?></span>
                                         <i class="feather icon-chevron-down text-light"></i>
                                     </div>
@@ -479,7 +479,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         </li>
                                         <li class="">
                                             <a href="<?= url('analyse/ratings') ?>">
-                                                <span class="pcoded-mtext">Ratings</span>
+                                                <span class="pcoded-mtext">School ratings</span>
                                             </a>
                                         </li>
 
@@ -846,17 +846,17 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                         </a>
                                                     </li>
 
-                                                    <li class="">
+                                                    {{-- <li class="">
                                                         <a href="<?= url('software/invoice/live') ?>">
                                                             <span class="pcoded-mtext">Live Invoices</span>
                                                         </a>
-                                                    </li>
+                                                    </li> --}}
 
-                                                    <li class="">
+                                                    {{-- <li class="">
                                                         <a href="<?= url('software/invoice/uat') ?>">
                                                             <span class="pcoded-mtext">Testing Invoices</span>
                                                         </a>
-                                                    </li>
+                                                    </li> --}}
 
                                                      <li class="">
                                                         <a href="<?= url('software/api') ?>">

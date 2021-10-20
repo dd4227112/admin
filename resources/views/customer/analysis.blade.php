@@ -55,9 +55,12 @@
                                   <td><?php echo $req->toUser->name;?> </td>
                                   <td><?= $req->created_at ?></td>
                                   <td><?= $req->status ?></td>
-                                  <td ><a href="<?= url('customer/requirements/show/' . $req->id) ?>" class="btn btn-sm btn-success">View</a>
+                                  <td>
+                                     <?php $view_url="customer/requirements/show/$req->id"; $edit_url="customer/requirements/edit/$req->id"; ?>
+                                     <x-button :url="$view_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="Requirement"></x-button>
                                     <?php if($req->status !== 'Completed') {  ?>
-                                   <a href="<?= url('customer/requirements/edit/' . $req->id) ?>" class="btn btn-sm btn-info">Edit</a>
+                                     <x-button :url="$view_url" color="info" btnsize="mini"  title="edit" shape="round" toggleTitle="Edit"></x-button>
+
                                     <?php } ?>
                                   </td>
                               </tr>

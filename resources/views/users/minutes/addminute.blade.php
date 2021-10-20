@@ -4,14 +4,12 @@
 <div class="main-body">
   <div class="page-wrapper">
   
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
     <div class="page-body">
       <div class="row">
         <div  class="col-sm-12">
           <div class="card">
           
-           
-
               @if (sizeof($errors) > 0)
               <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -103,9 +101,10 @@
                     </div>
                 </div>
                 <div id="savebtnWrapper" class="form-group">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" class="btn btn-primary btn-mini btn-round">
                     &emsp;Submit&emsp;
                   </button>
+
                 </div>
               </form>
 

@@ -48,7 +48,7 @@
                            <?php if(can_access('add_school')) { ?>
                              <div class="col-lg-3"> 
                                     <div class="card-body">
-                                    <a href="<?= url('sales/addSchool') ?>"  class="btn btn-success">Add new school</a>
+                                    <x-button url="sales/addSchool" color="primary" btnsize="mini"  title="Add school" shape="round" toggleTitle="Add new school"></x-button>              
                                   </div>
                              </div>
                            <?php } ?>
@@ -141,9 +141,9 @@
                     "data": null,
                     "render": function (data, type, row, meta) {
                         if (row.client_id != null) {
-                            return '<a href="<?= url('customer/profile') ?>/' + row.username + '" class="label label-warning"> Already Customer  </a>';
+                            return '<a href="<?= url('customer/profile') ?>/' + row.username + '" class="label label-inverse-warning"> Already Customer  </a>';
                         } else {
-                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">Onboard School</a>';
+                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="badge badge-primary">Onboard School</a>';
                         }
 
                     }

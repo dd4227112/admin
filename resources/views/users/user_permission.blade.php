@@ -17,7 +17,7 @@
                             <div class="col-sm-6">
                                <?php $user_roles = \App\Models\Role::get(); ?>
                                 <span>
-                                    <select class="form-control select2"  id='permission'>
+                                    <select class="select2"  id='permission'>
                                         <option></option>
                                         <?php foreach ($user_roles as $u_role) { ?>
                                         <option value="<?= $u_role->id ?>" <?= (int) request('id') > 0 && request('id') == $u_role->id ? 'selected' : '' ?> ><?= $u_role->name  ?></option>
@@ -187,7 +187,7 @@ function submit_role(permission) {
             role_id: role
         },
         success: function(data) {
-           // alert(data);
+            toastr.success(data)
         }
     });
 }

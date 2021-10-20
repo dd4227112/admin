@@ -11,11 +11,11 @@
           <div class="card">
             <div class="card-block">
                 <div class="">
-                    <a href="<?= url('users/usergroup/add') ?>" class="btn btn-sm btn-primary">Add School Group</a>
+                    <x-button url="users/usergroup/add" color="primary" btnsize="sm"  title="Add Schools" shape="round" toggleTitle="Add School Group"></x-button>              
                 </div>
                </div>
 
-            <div class="card-block">
+              <div class="card-block">
                   <div class="table-responsive">
                     <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                       <thead>
@@ -37,8 +37,10 @@
                           <td><?=$group->name?></td>
                           <td><?=$group->email?></td>
                           <td><?=$group->phone_number?></td>  
-                          <td>
-                               <a  href="<?= url('users/group_clients/' . $group->id) ?>" class="btn btn-primary btn-sm">view</a>
+                          <td class="text-center">
+                              <?php $v_url = "users/group_clients/$group->id"; ?>
+                             <x-button :url="$v_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="view schools"></x-button>              
+
                           </td>
                         </tr>
                         <?php }  ?>
