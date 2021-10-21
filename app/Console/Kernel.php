@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel {
             $this->whatsappMessage();
         })->everyMinute();
 
-          $schedule->call(function () {
+        $schedule->call(function () {
             //sync new messages 
             $this->setTaskRemainder();
         })->everyMinute();
@@ -65,7 +65,6 @@ class Kernel extends ConsoleKernel {
         //   $schedule->call(function () {
         //     (new Customer())->remainderMessages();
         // })->everyMinute();
-
         //  $schedule->call(function () {
         //(new Message())->karibusmsEmails();
         // })->everyMinute();
@@ -87,8 +86,8 @@ class Kernel extends ConsoleKernel {
         })->everyThreeMinutes();
 
         $schedule->call(function () {
-          // $this->sendSORemainder();
-           $this->updateCompleteItems();
+            // $this->sendSORemainder();
+            $this->updateCompleteItems();
         })->dailyAt('04:40'); // Eq to 07:40 AM   
 
         $schedule->call(function () {
@@ -97,13 +96,14 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('04:40');
 
 
-         $schedule->call(function () {
+        $schedule->call(function () {
             $this->RefreshMaterializedView();
         })->everyTenMinutes();
-        
 
-       
 
+        $schedule->call(function () {
+          (new Customer())->createTodayReport();
+        })->dailyAt('14:50'); // Eq to 17:50 h 
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
 //            $this->sendLoginReminder();
@@ -138,7 +138,7 @@ class Kernel extends ConsoleKernel {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 $controller->sendMessage($message->phone, $message->message);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
-             //   echo 'message sent to ' . $message->phone . '' . chr(10);
+                //   echo 'message sent to ' . $message->phone . '' . chr(10);
             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
@@ -322,7 +322,7 @@ class Kernel extends ConsoleKernel {
             "token" => $token
         );
         $push_status = 'check_invoice';
-        
+
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -381,7 +381,7 @@ class Kernel extends ConsoleKernel {
             );
 
             $push_status = 'invoice_cancel';
-            
+
             echo $push_status . $invoice->schema_name;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
@@ -442,7 +442,7 @@ class Kernel extends ConsoleKernel {
 
     public function pushStudentInvoice($fields, $invoice, $token) {
         $push_status = 'invoice_submission';
-        
+
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -457,7 +457,7 @@ class Kernel extends ConsoleKernel {
         $result = json_decode($curl);
         print_r($result);
         echo chr(10);
-      
+
         if (isset($result) && !empty($result)) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
@@ -934,7 +934,6 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                 $sql_for_teachers = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
                         . "SELECT 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher',(select id from " . $schema->table_schema . ".sms_keys limit 1 ) from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE  a.status=1 and  t.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
                 DB::statement($sql_for_teachers);
-
             }
         }
     }
@@ -1085,7 +1084,6 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     //     $users = \App\Models\User::where('role_id', 13)->get();
     //     foreach ($users as $user) {
     //         $standingorders = DB::select('select * from admin.standing_orders WHERE payment_date-CURRENT_DATE = 1 AND is_approved =1');
-
     //         $msg = '';
     //         foreach ($standingorders as $standing) {
     //             $msg .= '<tr><td>' . $this->client($standing->client_id) . '</td><td>' . $standing->occurance_amount . '</td></tr>';
@@ -1099,7 +1097,6 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     //             'body' => $message,
     //             'email' => $user->email
     //         ]);
-
     //         $sms = 'Hello kindly remember to check matured standing orders in the admin panel. Thank you';
     //         DB::table('public.sms')->insert([
     //             'body' => $sms,
@@ -1110,14 +1107,12 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     //         ]);
     //     }
     // }
-
     // public function endDeadlock() {
     //     DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
     //     FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
     //     AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
     //     return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
     // }
-
     // F(x) to send text remainder to keep phone active to school admins
     public function SMSStatusToSchoolsAdmin() {
         // select all schools not keep their app active for the past 24 hours
@@ -1127,30 +1122,28 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             $contacts = DB::table($school->schema_name . '.user')->where('usertype', 'Admin')->get();
             if (count($contacts) > 0) {
                 foreach ($contacts as $contact) {
-                     $message ='Ndugu ' . $contact->name .'.'
-                    . chr(10) .'Ili kuepusha kufeli au kutokufika kwa SMS kwa wazazi, hakikisha Simu inayotumika kutuma SMS kutoka shule kwa kutumia App ya SMS, inakuwa hewani na internet muda wote.Asante '
-                    . chr(10) . 'Asante';
-                     $controller = new \App\Http\Controllers\Controller();
-                     $controller->send_whatsapp_sms($contact->phone, $message); 
-                     DB::table('public.sms')->insert([
+                    $message = 'Ndugu ' . $contact->name . '.'
+                            . chr(10) . 'Ili kuepusha kufeli au kutokufika kwa SMS kwa wazazi, hakikisha Simu inayotumika kutuma SMS kutoka shule kwa kutumia App ya SMS, inakuwa hewani na internet muda wote.Asante '
+                            . chr(10) . 'Asante';
+                    $controller = new \App\Http\Controllers\Controller();
+                    $controller->send_whatsapp_sms($contact->phone, $message);
+                    DB::table('public.sms')->insert([
                         'body' => $message,
                         'phone_number' => $contact->phone,
                         'type' => 0,
                         'status' => 0,
                         'sent_from' => 'phonesms'
-                     ]);
+                    ]);
                 }
             }
         }
     }
 
- 
-
     public function updateCompleteItems() {
         $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
         foreach ($materialized_views as $view) {
             DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
-          }
+        }
         $checks = DB::select('select * from admin.train_items where status=1');
         foreach ($checks as $check) {
             if (preg_match('/exam/i', strtolower($check->content))) {
@@ -1252,130 +1245,125 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         $training = \App\Models\TrainItemAllocation::where('train_item_id', $item_id)->where('client_id', $client_id)->first();
         if (!empty($training)) {
             \App\Models\TrainItemAllocation::where('train_item_id', $item_id)->where('client_id', $client_id)->update(['status' => '1']);
-          }
-       }
+        }
+    }
 
-       
-       // function to remaind HR on contracts belongs to employees
-        public function HRContractRemainders(){
-           $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
-           $hr_officer = \App\Models\User::where('role_id',16)->first();
-           foreach($users as $user){
-               if($user->contract_end_date < date('Y-m-d')){ 
-                    $message = 'Hello '. $hr_officer->firstname . ' '. $hr_officer->lastname. '.'
-                    . chr(10) .'Employment contract of ' . $user->firstname . ' ' . $user->lastname . ' has arleday expired on ' . date('d-m-Y', strtotime($user->contract_end_date)) . '.'
-                    . chr(10) .'Thanks.';
-                    
-                    $controller = new \App\Http\Controllers\Controller();
-                    $controller->send_whatsapp_sms($hr_officer->phone, $message); 
-                    DB::table('public.email')->insert([
-                        'subject' =>'Employee Contract',
-                        'body' => $message,
-                        'email' => $hr_officer->email
-                   ]);
-                    DB::table('public.sms')->insert([
-                        'body' => $message,
-                        'phone_number' => $hr_officer->phone,
-                        'type' => 0,
-                        'status' => 0,
-                        'sent_from' => 'whatsapp'
-                    ]);
-               } else{ 
-                    $message ='Hello HR,'. $hr_officer->firstname . ' '. $hr_officer->lastname. '.'
-                    . chr(10) .'Employment contract of ' . $user->firstname . ' ' . $user->lastname . ' expected to expire on  ' . date('d-m-Y', strtotime($user->contract_end_date)) . '.'
-                    . chr(10) . 'Thanks.';
-                    $controller = new \App\Http\Controllers\Controller();
-                    $controller->send_whatsapp_sms($hr_officer->phone, $message); 
-                    DB::table('public.email')->insert([
-                        'subject' =>'Employee Contract',
-                        'body' => $message,
-                        'email' => $hr_officer->email
-                   ]);
-                    DB::table('public.sms')->insert([
-                        'body' => $message,
-                        'phone_number' => $hr_officer->phone,
-                        'type' => 0,
-                        'status' => 0,
-                        'sent_from' => 'whatsapp'
-                    ]);
-               }
-           }
-       }
+    // function to remaind HR on contracts belongs to employees
+    public function HRContractRemainders() {
+        $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
+        $hr_officer = \App\Models\User::where('role_id', 16)->first();
+        foreach ($users as $user) {
+            if ($user->contract_end_date < date('Y-m-d')) {
+                $message = 'Hello ' . $hr_officer->firstname . ' ' . $hr_officer->lastname . '.'
+                        . chr(10) . 'Employment contract of ' . $user->firstname . ' ' . $user->lastname . ' has arleday expired on ' . date('d-m-Y', strtotime($user->contract_end_date)) . '.'
+                        . chr(10) . 'Thanks.';
 
-
-       // function to remainder HR about annual leave of employees
-       // To do more improvement to include employemet status ie intern,probation etc
-     public function HRLeaveRemainders(){
-            $annual = DB::select("select user_id, case when (end_date is null) then joining_date + interval '1 year' else end_date + interval '1 year' end AS annual_date from admin.annual_leave");
-            $ids = array();
-                 foreach($annual as $value) {
-                     $ids[] = $value->user_id;
-                  }
-
-              foreach($annual as $value) {
-                if(!is_null($value->annual_date) && date('Y-m-d') == date('Y-m-d', strtotime($value->annual_date.' - 30 days'))){
-                $users = \App\Models\User::whereIn('id',$ids)->where('status',1)->whereNotIn('role_id',array(7,15))->get();
-                  $hr_officer = \App\Models\User::where('role_id',16)->first();
-                   foreach($users as $user){ 
-                                $message = 'Hello '
-                                . chr(10) . 'This is the remainder of : ' . $user->firstname . ' ' . $user->lastname . ' is expected to start the annual leave on' 
-                                . chr(10) . date('d-m-Y', strtotime($value->annual_date.' + 1 days'))
-                                . chr(10) . 'Thanks.';
-                                
-                                $controller = new \App\Http\Controllers\Controller();
-                                $controller->send_whatsapp_sms($hr_officer->phone, $message); 
-                                DB::table('public.email')->insert([
-                                    'subject' =>'Employee Annual leave',
-                                    'body' => $message,
-                                    'email' => $hr_officer->email
-                               ]);
-                                DB::table('public.sms')->insert([
-                                    'body' => $message,
-                                    'phone_number' => $hr_officer->phone,
-                                    'type' => 0,
-                                    'status' => 0,
-                                    'sent_from' => 'phonesms'
-                                ]);
-                        }
-                   }
-            
-              }
-         }
-
-
-       // function to remaind school tasks created by users
-     public function setTaskRemainder() {
-          $tasks = \App\Models\Task::where('remainder',0)->where('remainder_date','=',date('Y-m-d'))->get();
-          foreach($tasks as $task){
-                $message = 'Hello ' . $task->user->name .'.'
-                . chr(10) . 'This is the remainder of : '.strip_tags($task->activity) . '.'
-                . chr(10) . 'From ' . $task->client->name .''
-                . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
-                . chr(10) . 'Thanks.';
-                
                 $controller = new \App\Http\Controllers\Controller();
-                $controller->send_whatsapp_sms($task->user->phone, $message); 
+                $controller->send_whatsapp_sms($hr_officer->phone, $message);
                 DB::table('public.email')->insert([
-                    'subject' =>' A taks remainder',
+                    'subject' => 'Employee Contract',
                     'body' => $message,
-                    'email' => $task->user->email
-              ]);
-
-             DB::table('public.sms')->insert([
+                    'email' => $hr_officer->email
+                ]);
+                DB::table('public.sms')->insert([
                     'body' => $message,
-                    'phone_number' => $task->user->phone,
+                    'phone_number' => $hr_officer->phone,
                     'type' => 0,
                     'status' => 0,
-                    'sent_from' => 'phonesms'
-              ]);
-            \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
-         }
-      }
+                    'sent_from' => 'whatsapp'
+                ]);
+            } else {
+                $message = 'Hello HR,' . $hr_officer->firstname . ' ' . $hr_officer->lastname . '.'
+                        . chr(10) . 'Employment contract of ' . $user->firstname . ' ' . $user->lastname . ' expected to expire on  ' . date('d-m-Y', strtotime($user->contract_end_date)) . '.'
+                        . chr(10) . 'Thanks.';
+                $controller = new \App\Http\Controllers\Controller();
+                $controller->send_whatsapp_sms($hr_officer->phone, $message);
+                DB::table('public.email')->insert([
+                    'subject' => 'Employee Contract',
+                    'body' => $message,
+                    'email' => $hr_officer->email
+                ]);
+                DB::table('public.sms')->insert([
+                    'body' => $message,
+                    'phone_number' => $hr_officer->phone,
+                    'type' => 0,
+                    'status' => 0,
+                    'sent_from' => 'whatsapp'
+                ]);
+            }
+        }
+    }
 
+    // function to remainder HR about annual leave of employees
+    // To do more improvement to include employemet status ie intern,probation etc
+    public function HRLeaveRemainders() {
+        $annual = DB::select("select user_id, case when (end_date is null) then joining_date + interval '1 year' else end_date + interval '1 year' end AS annual_date from admin.annual_leave");
+        $ids = array();
+        foreach ($annual as $value) {
+            $ids[] = $value->user_id;
+        }
 
-      public function RefreshMaterializedView(){
-          DB::statement("REFRESH MATERIALIZED VIEW admin.all_users");
-          DB::statement("REFRESH MATERIALIZED VIEW admin.all_setting");
-      }
+        foreach ($annual as $value) {
+            if (!is_null($value->annual_date) && date('Y-m-d') == date('Y-m-d', strtotime($value->annual_date . ' - 30 days'))) {
+                $users = \App\Models\User::whereIn('id', $ids)->where('status', 1)->whereNotIn('role_id', array(7, 15))->get();
+                $hr_officer = \App\Models\User::where('role_id', 16)->first();
+                foreach ($users as $user) {
+                    $message = 'Hello '
+                            . chr(10) . 'This is the remainder of : ' . $user->firstname . ' ' . $user->lastname . ' is expected to start the annual leave on'
+                            . chr(10) . date('d-m-Y', strtotime($value->annual_date . ' + 1 days'))
+                            . chr(10) . 'Thanks.';
+
+                    $controller = new \App\Http\Controllers\Controller();
+                    $controller->send_whatsapp_sms($hr_officer->phone, $message);
+                    DB::table('public.email')->insert([
+                        'subject' => 'Employee Annual leave',
+                        'body' => $message,
+                        'email' => $hr_officer->email
+                    ]);
+                    DB::table('public.sms')->insert([
+                        'body' => $message,
+                        'phone_number' => $hr_officer->phone,
+                        'type' => 0,
+                        'status' => 0,
+                        'sent_from' => 'phonesms'
+                    ]);
+                }
+            }
+        }
+    }
+
+    // function to remaind school tasks created by users
+    public function setTaskRemainder() {
+        $tasks = \App\Models\Task::where('remainder', 0)->where('remainder_date', '=', date('Y-m-d'))->get();
+        foreach ($tasks as $task) {
+            $message = 'Hello ' . $task->user->name . '.'
+                    . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
+                    . chr(10) . 'From ' . $task->client->name . ''
+                    . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
+                    . chr(10) . 'Thanks.';
+
+            $controller = new \App\Http\Controllers\Controller();
+            $controller->send_whatsapp_sms($task->user->phone, $message);
+            DB::table('public.email')->insert([
+                'subject' => ' A taks remainder',
+                'body' => $message,
+                'email' => $task->user->email
+            ]);
+
+            DB::table('public.sms')->insert([
+                'body' => $message,
+                'phone_number' => $task->user->phone,
+                'type' => 0,
+                'status' => 0,
+                'sent_from' => 'phonesms'
+            ]);
+            \App\Models\Task::where('id', $task->id)->update(['remainder' => 1]);
+        }
+    }
+
+    public function RefreshMaterializedView() {
+        DB::statement("REFRESH MATERIALIZED VIEW admin.all_users");
+        DB::statement("REFRESH MATERIALIZED VIEW admin.all_setting");
+    }
 
 }
