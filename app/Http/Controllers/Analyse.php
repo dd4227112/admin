@@ -25,6 +25,8 @@ class Analyse extends Controller {
 
     public function index() {
         $this->data['users'] = [];
+        $year = date('Y');
+        $this->data['breadcrumb'] = array('title' => 'Dashboard','subtitle'=>'dashboard','head'=>'summary');
         if (Auth::user()->role_id == 7) {
             return redirect('sales/school');
             exit;
@@ -57,18 +59,20 @@ class Analyse extends Controller {
             $sql = "select a.id, a.end_date,f.name as school,a.activity as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id join admin.clients f on f.id = c.client_id WHERE a.user_id = $user order by a.created_at::date desc";
             $this->data['activities'] = \DB::select($sql);
             $this->data['summary'] = $this->summary();
-        
+            $this->data['new_schools'] = \DB::select("select count(*) as schools,date_trunc('month', created_at) AS month from admin.all_setting a where extract(year from a.created_at)= extract(year from current_date) group by month order by month");
             return view('analyse.index', $this->data);
         }
     }
 
     public function customers() {
         $this->data['days'] = request()->segment(3);
+        $this->data['breadcrumb'] = array('title' => 'Customer dashboard','subtitle'=>'summary','head'=>'customers');
         return view('analyse.customers', $this->data);
     }
 
     public function software() {
         $this->data['days'] = request()->segment(3);
+        $this->data['breadcrumb'] = array('title' => 'Software dashboard','subtitle'=>'summary','head'=>'software');
         return view('analyse.software', $this->data);
     }
 
@@ -79,11 +83,16 @@ class Analyse extends Controller {
 
     public function sales() {
         $this->data['days'] = request()->segment(3);
+        $this->data['breadcrumb'] = array('title' => 'Sales dashboard','subtitle'=>'summary','head'=>'sales');
         $this->data['shulesoft_schools'] = \collect(\DB::select("select count(*) as count from admin.all_classlevel where lower(name) NOT like '%nursery%' and schema_name not in ('public','accounts')"))->first()->count;
         $this->data['schools'] = \collect(\DB::select("select count(*) as count from admin.schools where lower(ownership)<>'government'"))->first()->count;
         $this->data['nmb_schools'] = \collect(\DB::select('select count(*) as count from admin.nmb_schools'))->first()->count;
         $this->data['shulesoft_nmb_schools'] = \collect(\DB::select('select count(distinct "schema_name") from admin.all_bank_accounts where refer_bank_id=22'))->first()->count;
         $this->data['clients'] = \collect(\DB::select('select count(*) as count from admin.clients'))->first()->count;
+        $sql_ = 'select count(*) as count, created_at as month from admin.all_setting a where extract(year from a.created_at)= extract(year from current_date)  group by month order by month';
+        $sql2_ = 'select count(*) as count, extract(month from created_at) as month from admin.website_join_shulesoft a where extract(year from a.created_at)= extract(year from current_date)  group by month order by month';
+        $this->data['requests'] = \DB::select($sql2_);
+        $this->data['new_schools'] = \DB::select($sql_);
         return view('analyse.sales', $this->data);
     }
 
@@ -107,12 +116,18 @@ class Analyse extends Controller {
     }
 
     public function accounts() {
+        $this->data['breadcrumb'] = array('title' => 'Account dashboard','subtitle'=>'summary','head'=>'account');
         $this->data['association'] = \App\Model\Association::first();
+        $sql_2 = "select sum(count) as count, month from (
+        select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')." group by month
+        UNION ALL select sum(amount) as count, extract(month from created_at) as month from admin.revenues a   where extract(year from created_at)=".date('Y')." group by month) a group by month order by month asc";
+        $this->data['pay_collection'] = \DB::select($sql_2);
         return view('analyse.accounts', $this->data);
     }
 
     public function marketing() {
         // $this->data['association'] = \App\Model\Association::first();
+        $this->data['breadcrumb'] = array('title' => 'Marketing dashboard','subtitle'=>'summary','head'=>'marketing');
         return view('analyse.marketing', $this->data);
     }
 
@@ -173,14 +188,7 @@ class Analyse extends Controller {
      * @return type
      */
     public function getUsers($table = 'student') {
-        $this->data['user'] = \collect(DB::SELECT("with total as (
-	select count(*) as total from $table where status=1 ),
-	total_male as (
-select count(*) as male from $table where status=1 and lower(sex)='male'),
-total_female as (
-select count(*) as female from $table where status=1 and lower(sex) <>'male')
-SELECT * FROM total,total_male, total_female
-"))->first();
+        $this->data['user'] = \collect(DB::SELECT("with total as (select count(*) as total from $table where status=1 ),total_male as (select count(*) as male from $table where status=1 and lower(sex)='male'),total_female as (select count(*) as female from $table where status=1 and lower(sex) <>'male') SELECT * FROM total,total_male, total_female"))->first();
 
         $this->data['student_by_class'] = DB::SELECT('with classes AS (select count(a.*) as total,a."classesID",b.classes from student a join classes b on a."classesID"=b."classesID"  where a.status=1 group by a."classesID",b.classes ),
 class_males as (select count(a.*) as male,a."classesID",b.classes from student a join classes b on a."classesID"=b."classesID"  where a.status=1 and lower(a.sex)=\'male\' group by a."classesID",b.classes),
@@ -198,13 +206,14 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         echo $this->createChartBySql($sql_, 'age', 'Overall Average', 'scatter', false);
         $corr = \collect(DB::SELECT('select corr(count,age) from (' . $sql_ . ' ) x '))->first();
         echo '<p>Correlation Factor : ' . round($corr->corr, 3) . '</p>';
-    }
+    } 
 
     public function charts() {
         return view('analyse.charts.logins', $this->data);
     }
 
     public function myschools() {
+        $this->data['breadcrumb'] = array('title' => 'Clients list','subtitle'=>'shulesoft schools','head'=>'operations');
         if (request()->segment(3) != '') {
             $id = request()->segment(3);
         } else {
@@ -214,13 +223,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
          // user role 17 ie zone manager, select schools/clients based on zones
         if(($user->role_id) && ($user->role_id == 17)){  
             $zone = \App\Models\ZoneManager::where('user_id',$id)->first();
-           
             if($zone){
-             //  $schools = DB::SELECT('select * from admin.client_schools where school_id in 
-             //  (select id from admin.schools where ward_id in 
-             //  (select id from admin.wards where district_id in 
-             //  (select id from admin.districts where region_id in 
-            //    (select id from admin.regions where refer_zone_id = '. $zone->zone_id . '))))');
              $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::where('refer_zone_id',$zone->zone_id)->get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
             }else{
              $schools = [];
@@ -232,18 +235,15 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
              // Else select schools/clients based on school associates
           //  $schools =  \App\Models\UserClient::where('user_id', $id)->get();
              $schools =  \App\Models\ClientSchool::latest()->get();
-            
          }
-     
         $this->data['schools'] =  $schools;
         $this->data['users'] = \App\Models\User::where('status', 1)->where('role_id','<>','7')->get();
-
         $this->data['staff'] = \App\Models\User::where('id', $id)->where('status','=','1')->first();
-        
         return view('analyse.myschool', $this->data);
     }
 
     public function myreport() {
+        $this->data['breadcrumb'] = array('title' => 'Task Reports','subtitle'=>'shuleSoft tasks reports','head'=>'operations');
         $id = [];
         if ($_POST) {
 
@@ -356,34 +356,17 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
 
        public function ratings(){
-         $this->data['nps'] = \collect(\DB::select('select  (a.promoter/c.total::float)*100 - (b.detractor/c.total::float)*100 as NPS from (select sum(rate) as promoter from admin.rating where rate > 8) a,(select sum(rate) as detractor from admin.rating where rate < 7 ) b,(select sum(rate) as total from admin.rating) c'))->first();
-        // $this->data['ratings'] = DB::select('select a.*,b.phone from admin.rating a join admin.all_users b on a.user_id = b.id');
-         $this->data['ratings'] = \App\Models\Rating::latest()->get();
-         return view('market.ratings', $this->data);
+          $this->data['breadcrumb'] = array('title' => 'Users ratings','subtitle'=>'ratings','head'=>'marketing');
+          $this->data['nps'] = \collect(\DB::select('select  (a.promoter/c.total::float)*100 - (b.detractor/c.total::float)*100 as NPS from (select sum(rate) as promoter from admin.rating where rate > 8) a,(select sum(rate) as detractor from admin.rating where rate < 7 ) b,(select sum(rate) as total from admin.rating) c'))->first();
+          $this->data['ratings'] = \App\Models\Rating::latest()->get();
+          $this->data['commentators'] = \collect(\DB::select("select distinct user_id from admin.rating"))->count();
+          $this->data['comments'] = \collect(\DB::select("select * from admin.rating where comment is not null"))->count();
+          $sql1 = "select a.module_id,b.name as module,round(avg(a.rate::integer),1) as count from admin.rating a join admin.modules b on a.module_id = b.id group by a.module_id,b.name";
+          $sql_ = "select TO_CHAR(a.created_at::date,'dd-mm-yyyy') as created_at, count(a.rate::integer) as count from admin.rating a join admin.modules b on a.module_id = b.id group by a.created_at::date";
+          $this->data['avg'] = DB::select($sql1);
+          $this->data['rators'] = DB::select($sql_);
+          return view('market.ratings', $this->data);
       }
-
-
-    public function myzoneschools(){
-        if (request()->segment(3) != '') {
-            $id = request()->segment(3);
-        } else {
-            $id = Auth::user()->id;
-        }
-
-        dd($id);
-    }
-
-
-
-    
-
-
-
-
-
-
-
-
 
 
 //    public function sendMessage() {

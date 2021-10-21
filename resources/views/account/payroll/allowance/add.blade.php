@@ -3,39 +3,22 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Allowance</span>
-            </div>
-     
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!"><?= __('allowance_title') ?></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+    
+        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    
         <div class="page-body">
             <div class="row">
 
                 <div class="col-sm-12">
                     <!-- Zero config.table start -->
                     <div class="card">
-                        <header class="panel-heading">
+                        <div class="card-header">
                            Fill all basic information correctly
-                        </header>
+                        </div>
                         <div class="card-body">
-                            <div id="error_area"></div>
+                        
                             <div class="form">
-                                <form class="form-horizontal" method="post" action="<?= url('allowance/add') ?>">
+                              <form class="form-horizontal" method="post" action="<?= url('allowance/add') ?>">
 
                                     <div class="form-group"> 
                                       <label for="grade" class="col-sm-2 control-label">
@@ -199,12 +182,12 @@
 
 
 <script type="text/javascript">
-    $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
-        $('.transaction_amount').on("keyup", function() {
-            var currentValue = $(this).val();
-            currentValue = currentValue.replace(/,/g, '');
-            $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-        });
+    // $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
+    //     $('.transaction_amount').on("keyup", function() {
+    //         var currentValue = $(this).val();
+    //         currentValue = currentValue.replace(/,/g, '');
+    //         $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+    //     });
 
     $('.allowance_type').change(function () {
         var val = $(this).val();

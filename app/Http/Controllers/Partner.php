@@ -357,6 +357,7 @@ class Partner extends Controller {
     }
 
     public function partnerStaff() {
+        $this->data['breadcrumb'] = array('title' => 'Staff Members','subtitle'=>'partners','head'=>'operations');
         $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['staffs'] = \App\Models\PartnerUser::where('branch_id', $id)->get();
@@ -398,13 +399,14 @@ class Partner extends Controller {
     }
 
     public function addPartner() {
+        $this->data['breadcrumb'] = array('title' => 'Company Partners','subtitle'=>'add partners','head'=>'operations');
         $this->data['countries'] = \App\Models\Country::all();
         $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['partner'] = $partner = \App\Models\Partner::find($id);
             $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
             if ($_POST) {
-                //dd(request()->all());
+               
                 $partner = \App\Models\PartnerBranch::create(array_merge(request()->all(), ['partner_id' => $id, 'status' => 1]));
                 $user = new User(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'firstname' => request('name'), 'phone' => request('phone_number'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id]));
                 $user->save();

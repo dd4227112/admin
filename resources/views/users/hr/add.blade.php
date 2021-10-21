@@ -2,37 +2,16 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">HR Requests  </h4>
-                <span> This Part helps you keep track of your HR processes</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="<?= url('/') ?>/users/hrrequest/1">HR status</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Create</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+        
         <div class="page-body">
             <div class="row">
-                <div id="outer" class="container">
-                    <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
-                        <div id="editorForm">
+                <div class="col-sm-12">
+
+                <div class="card">
+                 
 
                             @if (sizeof($errors) > 0)
                             <div class="alert alert-danger">
@@ -44,6 +23,7 @@
                                 </ul>
                             </div>
                             @endif
+                            <div class="card-block">
                             <form method="post" action="#" enctype='multipart/form-data'>
                                 {{ csrf_field() }}
                                 <div class="card-block">
@@ -100,14 +80,10 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong> Add More Details Here...</strong>
-
                                             <textarea name="activity" rows="5" id="content_part" placeholder="Write More details Here .." class="form-control"> </textarea>
                                         </div>
                                     </div>
 
-
-
-                                    <hr>
                                     <div id="savebtnWrapper" class="form-group">
                                         <button type="submit" class="btn btn-primary">
                                             &emsp;Submit&emsp;

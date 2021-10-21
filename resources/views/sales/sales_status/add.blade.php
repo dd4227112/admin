@@ -2,47 +2,16 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4 class="box-title">Sales Leads Definition </h4>
-        <span> This Part helps you keep track of your deal progress</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Sales/salesStatus/1">Sales Leads</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Create</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
-    <div class="page-body">
-      <div class="row">
-        <div id="outer" class="container">
-          <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
-            <div id="editorForm">
 
-              @if (sizeof($errors) > 0)
-              <div class="alert alert-danger">
-                <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                <ul>
-                  @foreach ($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                  @endforeach
-                </ul>
-              </div>
-              @endif
+   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+     
+     <div class="page-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-block">
               <form method="post" action="#" enctype='multipart/form-data'>
                 {{ csrf_field() }}
                 <div class="card-block">
@@ -51,12 +20,10 @@
                     <hr>
                       <strong>Select  School:</strong>
                       <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" >
-
                     </div>
                   </div>
 
                  <div class="col-xs-12 col-sm-12 col-md-12">
-
                     <div class="form-group">
                       <div class="row">
                         <div class="col-md-3">
@@ -70,9 +37,8 @@
                         </div>
                         
                         <div class="col-md-3">
-                          Title
-                          <select name="school_title" class="form-control">
-
+                          <strong> Title:</strong>
+                          <select name="school_title" class="form-control select2">
                             <option value="director">Director/Owner</option>
                             <option value="manager">School Manager</option>
                             <option value="head teacher">Head Teacher</option>
@@ -81,8 +47,6 @@
                             <option value="teacher">Normal Teacher</option>
                             <option value="Accountant">Accountant</option>
                             <option value="Other Staff">Other Non Teaching Staff</option>
-
-
                           </select>
                         </div>
                         <div class="col-md-3">
@@ -144,13 +108,10 @@
                   <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                       <strong> Add More Details Here...</strong>
-
                       <textarea name="activity" rows="5" id="content_part" placeholder="Write More details Here .." class="form-control"> </textarea>
                     </div>
                   </div>
-
-              
-
+            
               <hr>
               <div id="savebtnWrapper" class="form-group">
                 <button type="submit" class="btn btn-primary">
@@ -160,9 +121,9 @@
             </div>
 
           </form>
-
-        </div>
       </div>
+      </div>
+
     </div>
   </div>
 </div>

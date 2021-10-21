@@ -89,23 +89,21 @@ class Handler extends ExceptionHandler {
         parent::report($exception);
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
-     */
+  
     public function render($request, \Throwable $exception) {
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->back()->with('info', 'Your session expired, please login below to continue');
         }
         // if ($exception->getStatusCode() === 500){
-        //     return redirect()->guest(route('login'));
+        //   //  return redirect()->guest(route('login'));
+        //    // return response()->view('errors.' . '500', [], 500);
         // }
         $this->createLog($exception);
         return parent::render($request, $exception);
+    
     }
+
+   
 
     /**
      * Convert an authentication exception into an unauthenticated response.

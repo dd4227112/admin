@@ -3,36 +3,19 @@
 <div class="main-body">
     <div class="page-wrapper">
 
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Pension</h4>
-                <span>Edit Pension Fund</span>
-            </div>
-     
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!"><?= __('allowance_title') ?></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-  
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
        <div class="page-body">
          <div class="row">
             <div class="col-sm-12">
 
                 <div class="card">
-                    <header class="panel-heading">
+                    <div class="card-header">
                        Edit basic information correctly
-                    </header>
-                     <div class="card-body">
-                        <div id="error_area"></div>
-                        <div class="form">
-
+                    </div>
+                <div class="card-body">
+                        
+                <div class="form">
                 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                     <?php 
                         if(form_error($errors,'name')) 
@@ -41,7 +24,7 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="name" class="col-sm-2 control-label">
-                            <?=__("name")?>
+                            <?=__("Pension name")?>
                         </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="name" name="name" value="<?=old('name',$pension->name)?>" >
@@ -57,8 +40,8 @@
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="telephone_number" class="col-sm-2 control-label">
-                            <?=__("employer_percentage")?>
+                        <label for="telephone_number" class="col-sm-6 control-label">
+                            <?=__("Employer percentage")?>
                         </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="telephone" name="employer_percentage" value="<?=old('employer_percentage',$pension->employer_percentage)?>" >
@@ -74,8 +57,8 @@
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="seats" class="col-sm-2 control-label">
-                            <?=__("employee_percentage")?>
+                        <label for="seats" class="col-sm-6 control-label">
+                            <?=__("Employee percentage")?>
                         </label>
                         <div class="col-sm-6">
                             <input type="number" class="form-control" id="phone_number" name="employee_percentage" value="<?=old('employee_percentage',$pension->employee_percentage)?>" >
@@ -93,7 +76,7 @@
                             echo "<div class='form-group' >";
                         ?>
                         <label for="salary" class="col-sm-2 control-label">
-                        Select  <?= __("status") ?>
+                        Select  <?= __("Status") ?>
                         </label>
                         <div class="col-sm-6">
                     <?php  echo form_dropdown("status", array(1 => 'Based On Gross Salary', 0 => 'Based On Basic Salary'), old("status", $pension->status), "id='status' class='form-control'"); ?>

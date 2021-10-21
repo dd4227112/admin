@@ -18,6 +18,7 @@ class Revenue extends Controller {
 
 
     public function index() {
+        $this->data['breadcrumb'] = array('title' => 'Revenues','subtitle'=>'company revenues','head'=>'accounts');
         $id = request()->segment(3);
         $page = 'index';
        if ((int) $id) {
@@ -29,7 +30,6 @@ class Revenue extends Controller {
            }
            $page = 'revenue';
        } else { 
-            
                if($_POST) {
                      $from_date = request("from_date");
                      $to_date = request("to_date");
@@ -42,12 +42,13 @@ class Revenue extends Controller {
                 $this->data['id'] = null;
                 $this->data['revenues'] = \App\Models\Revenue::where('date', '>=', $from_date)->where('date', '<=', $to_date)->get();
                 $this->data['expenses'] = \App\Models\ReferExpense::whereIn('financial_category_id', [1])->get();
-            }
+        }
             return view('account.transaction.' . $page, $this->data);
     }
 
 
     public function add() {
+        $this->data['breadcrumb'] = array('title' => 'Create revenues','subtitle'=>'add revenues','head'=>'accounts');
         $this->data['projects'] = \App\Models\Project::all();
         $this->data["payment_types"] = \App\Models\PaymentType::all();
         $this->data['banks'] = \App\Models\BankAccount::all();

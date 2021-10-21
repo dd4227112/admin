@@ -2,28 +2,8 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Software Materials</h4>
-                <span>Use this part to get all important resources to support you in software Design and Development</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Software</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Materials</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
@@ -42,14 +22,7 @@
                                         <a class="nav-link" data-toggle="tab" href="#profile5" role="tab">Legals</a>
                                         <div class="slide"></div>
                                     </li>
-<!--                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#messages5" role="tab">Scripts</a>
-                                        <div class="slide"></div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">FAQ</a>
-                                        <div class="slide"></div>
-                                    </li>-->
+
                                 </ul>
                                 <!-- Tab panes -->
                                 <div class="tab-content tabs-left-content card-block">
@@ -59,7 +32,6 @@
                                                 <div class="badge-box">
                                                     <div class="sub-title">
                                                         Sales Manual
-
                                                     </div>
 
                                                     <p>

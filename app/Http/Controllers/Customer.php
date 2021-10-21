@@ -43,15 +43,16 @@ class Customer extends Controller {
     }
 
     function faq() {
+        $this->data['breadcrumb'] = array('title' => 'FAQ','subtitle'=>'frequent asked questions','head'=>'operations');
+
         if ((int) request('id') > 0 && request('action') == 'delete') {
             DB::table('faq')->where('id', request('id'))->delete();
-            return redirect()->back()->with('success', 'success');
+            return redirect()->back()->with('success', 'successfully');
         }
         if ($_POST) {
             $id = DB::table('faq')->insertGetId(['question' => request('question'), 'answer' => request('answer'), 'created_by' => Auth::user()->id]);
             echo $id > 0 ? 'Success' : ' Error, try again later';
         }
-
         $this->data['faqs'] = DB::table('faq')->get();
         return view('customer.faq', $this->data);
     }
@@ -126,7 +127,6 @@ class Customer extends Controller {
             echo 'updated';
         } else {
             $task = \App\Models\Task::create($data);
-
             DB::table('tasks_users')->insert([
                 'task_id' => $task->id,
                 'user_id' => Auth::user()->id,
@@ -175,6 +175,7 @@ class Customer extends Controller {
     }
 
     function types() {
+        $this->data['breadcrumb'] = array('title' => 'Schools Setup','subtitle'=>'customer service','head'=>'operations');
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -205,7 +206,6 @@ class Customer extends Controller {
 
         $train = \App\Models\TrainItemAllocation::find($ttask_id);
         $task_id = $train->task_id;
-
         if ((int) $user_id > 0 && (int) $task_id > 0) {
             $section = \App\Models\TrainItem::find($section_id);
             $obj = [
@@ -356,6 +356,7 @@ class Customer extends Controller {
     }
 
     public function guide() {
+        $this->data['breadcrumb'] = array('title' => 'ShuleSoft User Guide','subtitle'=>'guide','head'=>'operations');
         if (request()->segment(3) == 'delete') {
             \App\Model\Guide::findOrFail(request()->segment(4))->delete();
             return redirect()->back();
@@ -384,29 +385,8 @@ class Customer extends Controller {
         return view('customer.' . $page, $this->data);
     }
 
-    public function parents() {
-        
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id) {
-        
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
     public function update() {
-
         $this->data['faqs'] = DB::table('faq')->get();
         return view('customer.message.updates', $this->data);
     }
@@ -419,10 +399,8 @@ class Customer extends Controller {
                 'release_date' => 'date'
             ]);
             DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for', 'subject']), ['for' => implode(',', request('for'))]));
-
             $users = DB::table('all_users')->whereIn('usertype', request('for'))->where('table', '<>', 'setting')->where('status', 1)->get();
             foreach ($users as $user) {
-
                 $replacements = array(
                     $user->name
                 );
@@ -599,6 +577,7 @@ class Customer extends Controller {
     }
 
     public function activity() {
+       $this->data['breadcrumb'] = array('title' => 'Create activity','subtitle'=>'add new activity','head'=>'operations');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
@@ -616,7 +595,7 @@ class Customer extends Controller {
                     foreach ($users as $user_id) {
                         DB::table('tasks_users')->insert([
                             'task_id' => $task->id,
-                            'user_id' => $user_id
+                            'user_id' => $user_id 
                         ]);
                         $user = \App\Models\User::find($user_id);
                         $message = 'Hello ' . $user->firstname . '<br/>'
@@ -887,6 +866,7 @@ class Customer extends Controller {
     }
 
     public function requirements() {
+       $this->data['breadcrumb'] = array('title' => 'Requirements','subtitle'=>'customer requirements','head'=>'marketing');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
@@ -896,6 +876,7 @@ class Customer extends Controller {
         }
 
          if ($tab == 'edit' && $id > 0) {
+           $this->data['breadcrumb'] = array('title' => 'Edit requirements','subtitle'=>'customer requirements','head'=>'marketing');
             $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
             return view('customer/edit_requirement', $this->data);
         }
@@ -948,7 +929,7 @@ class Customer extends Controller {
         $data = request()->except('_token','req_id');
         \App\Models\Requirement::where('id', $id)->update($data);
        // return redirect()->back()->with('success', 'Edited successfully!');
-        return redirect('customer/requirements');
+        return redirect('customer/requirements')->with('success', 'Edited successfully!');
     }
 
     public function updateReq() {
@@ -964,6 +945,8 @@ class Customer extends Controller {
            $status = ' is now complete. Login into your shulesoft account.';
         } elseif($action == 'Resolved'){
            $status = ' is resolved. Login into your shulesoft account.';
+        }  elseif($action == 'Canceled'){
+           $status = ' is Canceled. Contact responsible person.';
         }  
         $message   = 'Hello ' .$user->name .'.'
                     . chr(10) . 'The requirement of : '.strip_tags($data->note) . '.'
@@ -1000,7 +983,8 @@ class Customer extends Controller {
             ]);
             $this->send_whatsapp_sms($data->contact, $message1);
         }
-       return redirect()->back()->with('success', 'success');
+      // return redirect()->back()->with('success', 'Updated successfully!');
+        echo $action;
     }
 
     public function usageAnalysis() {
@@ -1037,7 +1021,6 @@ class Customer extends Controller {
                             z.id = r.refer_zone_id join admin.partner_schools t on t.branch_id = p.id 
                             group by t.branch_id,p.id,d.name,r.name,z.name");
         $this->data['branches'] = $sql;
-
         return view('customer.usage.banksbranches', $this->data);
     }
 
@@ -1065,9 +1048,7 @@ class Customer extends Controller {
     public function customerslist() {
         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
         $sql = DB::table('admin.all_setting')->whereNotIn('schema_name', $skip);
-
         strlen(request('region')) > 3 ? $sql->whereIn(DB::raw('lower(region)'), explode(',', strtolower(request('region')))) : '';
-
         $this->data['customers'] = $sql->get();
         return view('customer.usage.customer_list', $this->data);
     }
@@ -1106,6 +1087,7 @@ class Customer extends Controller {
     }
 
     public function modules() {
+        $this->data['breadcrumb'] = array('title' => 'Schools Modules Usage','subtitle'=>'modules','head'=>'operations');
         $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
         $sch = [];
         foreach ($schemas as $schema) {
@@ -1163,7 +1145,8 @@ class Customer extends Controller {
         return view('customer.call.index', $this->data);
     }
 
-    public function logs() {
+    public function logs() { 
+        $this->data['breadcrumb'] = array('title' => 'ShuleSoft Customers','subtitle'=>'customers','head'=>'marketing');
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request()->segment(3);
@@ -1221,6 +1204,7 @@ class Customer extends Controller {
     }
 
     public function sequence() {
+        $this->data['breadcrumb'] = array('title' => 'Training Sequence','subtitle'=>'shuleSoft training sequence','head'=>'operations');
         $this->data['sequences'] = \App\Models\Sequence::all();
         return view('customer.training.sequence', $this->data);
     }
@@ -1281,6 +1265,7 @@ class Customer extends Controller {
     }
 
     public function resetPassword() {
+        $this->data['breadcrumb'] = array('title' => 'Reset password','subtitle'=>'Reset school password','head'=>'operations');
         $schema = request()->segment(3);
         if ($schema != '') {
             $pass = $schema . rand(5697, 33);
@@ -1608,6 +1593,7 @@ class Customer extends Controller {
     }
 
     public function viewFile() {
+        $this->data['breadcrumb'] = array('title' => 'File View','subtitle'=>'files','head'=>'operations');
         $value = request()->segment(3);
         $type = request()->segment(4);
         if ($type == 'course_certificate') {
@@ -1736,12 +1722,16 @@ class Customer extends Controller {
     }
 
 
-    public function updateSchools(){
-        $schools = DB::select("select s.id as school_id,a.id,a.username from admin.clients a join admin.client_schools b on a.id = b.client_id join admin.schools s on s.id = b.school_id");
-        foreach($schools as $value){
-             \DB::table('admin.schools')->where('id', $value->school_id)->update(['schema_name' => $value->username]);
-          }
-          echo 'Successfuuly';
+
+
+    public function remaindpayment(){
+        $year = (int) date('Y');
+        $this->data['breadcrumb'] = array('title' => 'List of unpaid invoices','subtitle'=>'payments','head'=>'accounts');
+        // $this->data['unpaidclients'] = DB::select("select * from admin.clients where id in ( select client_id from admin.invoices where extract(year from created_at::date) = extract(year from current_date)
+        //                                             and pay_status = '1' and id not in (select invoice_id from admin.payments ))");
+        $account = \collect(DB::select("select id from admin.account_years where name='{$year}' "))->first();
+        $this->data['unpaidclients'] = \App\Models\Invoice::whereIn('id', \App\Models\InvoiceFee::get(['invoice_id']))->whereNotIn('id', \App\Models\Payment::get(['invoice_id']))->where('account_year_id', $account->id)->latest()->get();
+        return view('customer.remaindpayment', $this->data);
     }
 
 

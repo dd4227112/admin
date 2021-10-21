@@ -57,6 +57,7 @@ class General extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id = null) {
+        $this->data['breadcrumb'] = array('title' => 'Whatsapp integrations','subtitle'=>'sms','head'=>'operations');
         $this->table = request()->segment(3);
         $this->data['headers'] = DB::table($this->table)->first();
         if ($_POST) {

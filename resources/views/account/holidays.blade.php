@@ -3,28 +3,7 @@
 <?php $root = url('/') . '/public/'; ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>General Holidays</h4>
-                <span>List of Holidays</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Holidays</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Account Holidays</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+           <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -34,8 +13,9 @@
                                 <button class="btn-success btn" data-toggle="modal" data-target="#group" onmousedown="$('#group_id').val('')"><span class="fa fa-plus"></span>Add holiday</button>
                             </h5>
                          
-                            <div id="hide-table">
-                                <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+                        <div class="card-block">
+                            <div class="table-responsive">
+                                <table id="example1" class="table table-bordered dataTable">
                                     <thead>
                                         <tr>
                                             <th class="col-sm-1">#</th>
@@ -76,6 +56,7 @@
                                         ?>
                                     </tbody>
                                 </table>
+                              </div>
                             </div>
 
 
@@ -94,7 +75,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    Holidays
+                    Create Holidays
                 </div>
 
                 <div class="modal-body">

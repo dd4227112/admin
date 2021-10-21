@@ -3,85 +3,64 @@
 <?php $root = url('/') . '/public/'; ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Company Revenue</h4>
-                <span>Show revenue summary</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Revenues</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  
+   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
-        <div class="page-body">
-            <div class="row">
+    <div class="page-body">
+      <div class="row">
+         <div class="col-sm-12">
+
+            <div class="card">
+                <div class="card-block">
+                    <div class="row">
+
+                    <div class="col-sm-12 col-xl-3 m-b-30">
+                        <h4 class="sub-title">CREATE REVENUES</h4>
+                        <?php if (can_access('add_revenue')) { ?>
+                            <a class="btn btn-sm btn-primary" href="<?php echo url('revenue/add/') ?>">
+                                <i class="fa fa-plus"></i> 
+                                Add Revenue
+                            </a>
+                        <?php } ?>
+                    </div>
+                   
+                    <div class="col-sm-12 col-xl-9 m-b-30">
+                      <form class="form-horizontal" role="form" method="post"> 
+                        <div class="row">
+                        <div class="col-sm-12 col-xl-4 m-b-30">
+                            <h4 class="sub-title">Start Date</h4>
+                             <input type="date"  class="form-control calendar" id="from_date" name="from_date" value="<?=$from_date?>"> 
+                        </div>
+
+                          <div class="col-sm-12 col-xl-4 m-b-30">
+                              <h4 class="sub-title">End Date</h4>
+                              <input type="date" class="form-control" id="to_date" name="to_date"  value="<?=$to_date?>">
+                         </div>
+                        
+
+                           <div class="col-sm-12 col-xl-3 m-b-30">
+                              <h4 class="sub-title">&nbsp;</h4>
+                               <input type="submit" class="form-control btn btn-success" value="Submit"  style="float: right;">
+                            </div>
+                          </div>
+                          <?= csrf_field() ?>
+
+                        </form>
+                      </div>
+
+
+                    </div>
+                </div>
+                </div>
+        
+              <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-block">
-                            <!-- form start -->
-                            <div class="box-body">
-                                <div class="row">
-                                    <div class="col-sm-12">
+                        
+                            <div class="row">
+                                <div class="col-sm-12">
                                 
-                                     <div class="row">
-                                        <div class="col-sm-4">
-                                            <h5 class="page-header">
-                                                <?php if (can_access('add_revenue')) { ?>
-                                                <a class="btn btn-success" href="<?php echo url('revenue/add/') ?>">
-                                                    <i class="fa fa-plus"></i> 
-                                                    Add Revenue
-                                                </a>
-                                                <?php } ?>
-                                            </h5>
-                                        </div>
-
-                                        <div class="col-sm-8">
-                                            <form class="form-horizontal" role="form" method="post"> 
-                                              <div class="row">
-                                                <div class="col-md-5">
-                                                    <div class="form-group row">
-                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
-                                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                                            <input type="date"  class="form-control calendar" id="from_date" name="from_date" value="<?=$from_date?>"> 
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-5">
-                                                    <div class="form-group row">
-                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
-                                                        <div class="col-md-9 col-sm-9 col-xs-12"> 
-                                                            <input type="date" class="form-control" id="to_date" name="to_date"  value="<?=$to_date?>">
-                                                        </div>
-                                                    </div>
-                                                </div>                     
-
-                                                <div class="col-md-2">
-                                                  <div class="form-group row">
-                                                    <div class="">
-                                                         <input type="submit" class="form-control btn btn-success" value="Submit"  style="float: right;">
-                                                        </div>
-                                                    </div>
-                                                </div> 
-
-                                              </div>
-                                                <?= csrf_field() ?>
-                                            </form>
-                                        </div>  
-                                     </div>     
-                                     
-                                     
                                      <div class="table-responsive dt-responsive"> 
                                         <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                             <thead>
@@ -173,7 +152,7 @@
 
                                     </div>
                                 </div>
-                            </div>
+                    
                         </div>
                     </div>
                 </div>

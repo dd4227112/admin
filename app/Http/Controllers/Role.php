@@ -12,6 +12,7 @@ class Role extends Controller
     }
 
     public function userpermission() {
+       $this->data['breadcrumb'] = array('title' => 'System roles','subtitle'=>'permissions','head'=>'operations');
         $id = request()->segment(3);
         $this->data['set']  = (int) $id;
         $this->data['roles']  = \App\Models\Role::orderBy('id', 'DESC')->paginate(12);
@@ -51,7 +52,7 @@ public function removePermission() {
     $permission_id = request('perm_id');
     $role_id = request('role_id');
     \App\Models\PermissionRole::where(['permission_id' => $permission_id, 'role_id' => $role_id])->delete();
-    echo 'success';
+    echo 'Permission removed successfully';
 }
 
 

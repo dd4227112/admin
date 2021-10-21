@@ -1,42 +1,10 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/'  ?>
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/fullcalendar/dist/fullcalendar.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/fullcalendar/dist/fullcalendar.print.css" media='print'>
-<!-- Sidebar inner chat end-->
-<!-- Main-body start -->
-
-
-<style>
-    a:hover {
-     text-decoration: underline;
-  }
-</style>
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>SCHOOL ACTIVITIES OR TASK PERFORMED</h4>
-                <span>This Part Show all added Task performed on schools</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Customer Support</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Activities</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+         <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -78,10 +46,10 @@
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#home" role="tab">All Tasks</a>
                                     </li>
-               
+{{--                
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Calender & Schedules</a>
-                                    </li>
+                                    </li> --}}
                                   
                                     <li class="nav-item" style="float:right;">
                                         <a class="nav-link" href="<?= url('customer/activity/add') ?>" role="tab"><b>  <i class="ti-pencil"> </i> Add New </b></a>
@@ -143,8 +111,9 @@
 
 
                                     <div class="tab-pane active" id="newtask" role="tabpanel">
-                                        <div class="table-responsive">
-                                            <table  class="display table dataTable table-bordered">
+                                         <div class="card-block">
+                                          <div class="table-responsive">
+                                           <table id="example1" class="display table table-bordered dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th style="display:none;">#</th>
@@ -158,13 +127,13 @@
                                                 </thead>
                                                 <tbody>
                                                     
-            <?php
-          $date = \Carbon\Carbon::today()->subDays(28);
-          if(Auth::user()->role_id == 1) {
-            $tasks = \App\Models\Task::where('status', 'new')->orderBy('updated_at', 'desc')->limit(100)->get();  
-           } else{
-            $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
-           }
+                                                        <?php
+                                                    $date = \Carbon\Carbon::today()->subDays(28);
+                                                    if(Auth::user()->role_id == 1) {
+                                                        $tasks = \App\Models\Task::where('status', 'new')->orderBy('updated_at', 'desc')->limit(100)->get();  
+                                                    } else{
+                                                        $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
+                                                    }
                                                 if (!empty($tasks)) { $i=1;
                                                         foreach ($tasks as $act) {
                                                                if ($act->priority == '1') {
@@ -222,6 +191,7 @@
                                       
                                         </table>
                                       </div>
+                                    </div>
                                     </div>
 
                                         {{-- New Progress --}}
@@ -371,11 +341,7 @@
                                     </div>
 
                 
-                                    <div class="tab-pane" id="profile" role="tabpanel">
-                                        <p class="m-0">
-                                            <div id='calendar'></div>
-                                        </p>
-                                    </div>
+                                  
 
                                 </div>
                             </div>
@@ -388,16 +354,10 @@
             </div>
         </div>
         <!-- Main-body end -->
-        @endsection
-        @section('footer')
-        <!-- data-table js -->
-
-        <!-- calender js -->
-    
-        <script type="text/javascript" src="<?= $root ?>/bower_components/moment/min/moment.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/pages/full-calender/calendar.js?v=2"></script>
+        
+     
         <div id="ajax_data_results" style="display: none"></div>
+
         <script type="text/javascript">
 
             load_tasks = function() {
@@ -407,6 +367,9 @@
                     "serverSide": true,
                     'serverMethod': 'post',
                     'ajax': {
+                         'headers': {
+                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                       },
                         'url': "<?= url('sales/show/null?page=tasks&user_id=' . request('user_id')) ?>"
                     },
                     "columns": [
@@ -540,6 +503,7 @@
             $(document).ready(load_tasks);
             $('#taskdate').change(function(event) {
                 var taskdate = $(this).val();
+        
                 if (taskdate === '') {} else {
                     window.location.href = '<?= url('customer/activity') ?>/null?user_id=' + taskdate;
                 }

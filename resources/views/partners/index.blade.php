@@ -1,35 +1,15 @@
 @extends('layouts.app')
 @section('content')
-
-<!-- Sidebar inner chat end-->
-<!-- Main-body start -->
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-      <?php if($set > 0 ){ $top = 'Branch'; }else{  $top = 'Partner'; }?>
+ 
+    <?php if($set > 0 ){ $top = 'Branch'; }else{  $top = 'Partner'; }?>
+      <?php $name_ = $set > 0 ? ' Partner Branches List' : 'Shulesoft Partners List'; 
+        $breadcrumb = array('title' => $name_,'subtitle'=>'operations','head'=>'our partners');
+      ?>
 
-        <h4><?=$set > 0 ? ' Partner Branches List' : 'Shulesoft Partners List'; ?></h4>
-        <span>The Part holds all list of partners and their branches.</span>
-
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Company partners</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">partners</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
+   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+      
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">

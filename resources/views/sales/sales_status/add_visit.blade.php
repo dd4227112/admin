@@ -2,32 +2,10 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4 class="box-title">Shulesoft Visitation Definition </h4>
-        <span> This Part helps you keep track of visited schools</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Sales/salesStatus/1">Sales Leads</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Create</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
+  <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+   
     <div class="page-body">
     <div class="card">
       <div class="row">

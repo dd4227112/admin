@@ -3,28 +3,8 @@
 <?php $root = url('/') . '/public/'; ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Account Groups</h4>
-                <span>List of account groups</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Account Groups</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+      
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -33,8 +13,6 @@
                             <h5 class="page-header">
                                 <button class="btn-success btn" data-toggle="modal" data-target="#group" onmousedown="$('#group_id').val('')"><span class="fa fa-plus"></span>Add New Group</button>
                             </h5>
-                            <div class="alert alert-info">
-                                Groups to be displayed in the balance sheet </div>
                             <div id="hide-table">
                                 <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                     <thead>

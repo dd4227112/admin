@@ -1,25 +1,20 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
+<?php $root = url('/') . '/public/';
+$breadcrumb = array('title' => 'Create Clients Group','subtitle'=>'customers','head'=>'operations');
+?>
 <div class="main-body">
     <div class="page-wrapper">
-
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+      
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="row">
+                    <div class="card">
                         <div class="card-block">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">CREATE USER GROUPS</h4>
-                                </div>
+                        
                                 <form action="#" method="post">
                                     <div class="modal-body">
-
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -65,7 +60,7 @@
                                     </div>
                                     <?= csrf_field() ?>
                                 </form>
-                            </div>
+                
                         </div>
                     </div>
                 </div>
