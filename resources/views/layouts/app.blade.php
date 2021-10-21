@@ -325,7 +325,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <span class="pcoded-mtext">Customers</span>
                                             </a>
                                         </li>
-                                         <?php } if (!can_access('view_engineering_dashboard'))  { ?>
+                                         <?php } if (can_access('view_engineering_dashboard'))  { ?>
                                           <li class=" ">
                                             <a href="<?= url('analyse/software') ?>">
                                                 <span class="pcoded-mtext">Engineering</span>
@@ -1032,9 +1032,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         </div>  
 
           
-    <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script> 
-    {{-- <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script>  --}}
+    {{-- <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>  --}}
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/popper.js/js/popper.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script> 
         <!-- classie js -->
     <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script> 
       

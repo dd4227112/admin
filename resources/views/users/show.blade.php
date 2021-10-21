@@ -1,11 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<<<<<<< HEAD
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
-
-=======
->>>>>>> admin2.0
 <?php $root = url('/') . '/public/' ?>
 
 <?php
@@ -915,145 +909,10 @@ foreach ($user_permission as $permis) {
                                        </div>  
                                      </div>
 
-<<<<<<< HEAD
-
-                        <div class="tab-pane" id="settings5" role="tabpanel">
-                            <div class="email-card p-0">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-header-text">Permissions</h5>
-                                    </div>
-
-                                    <div class="mail-body-content">
-                                        <table class="table table-responsive">
-                                            <tbody>
-
-                                                <?php
-                                                $permissions = \App\Models\Permission::all();
-                                                foreach ($permissions as $permission) {
-                                                    ?>
-                                                    <?php
-                                                    $checked = in_array($permission->id, $arr) ? 'checked' : '';
-                                                    ?>
-                                                    <tr class="read">
-                                                        <td>
-                                                            <div class="check-star">
-                                                                <div class="checkbox-fade fade-in-primary checkbox">
-                                                                    <label>
-                                                                        <input type="checkbox" class="permission" value="<?= $permission->id ?>" <?= $checked ?>>
-                                                                        <span class="cr"><i class="cr-icon icofont icofont-verification-check txt-primary"></i></span>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td><a href="#!" class="email-name"><?= $permission->display_name ?></a></td>
-                                                        <td><?= $permission->description ?></td>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>    
-                        </div>
-
-                        <div class="tab-pane" id="school_allocations" role="tabpanel" aria-expanded="false">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-header-text">Schools Allocation</h5>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="col-lg-12 col-xl-12">
-                                            <div class="sub-title">Default</div>                                        
-                                            <!-- Nav tabs -->
-                                            <ul class="nav nav-tabs md-tabs" role="tablist">
-                                                <li class="nav-item">
-                                                    <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Add New Allocation</a>
-                                                    <div class="slide"></div>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Schools Allocation</a>
-                                                    <div class="slide"></div>
-                                                </li>
-
-                                            </ul>
-                                            <!-- Tab panes -->
-                                            <div class="tab-content card-block">
-                                                <div class="tab-pane active" id="home3" role="tabpanel">
-                                                    <div class="card-block ">
-
-                                                        <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('background/allocateSchool/null') ?>">
-                                                            <div class="modal-dialog modal-lg" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h4 class="modal-title">New Allocation  </h4>
-
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label for="cname" class="control-label col-lg-3">Region</label>
-                                                                            <div class="col-lg-12">
-                                                                                <select name="region_id"  class="form-control" id="search_regions">
-                                                                                    <option></option>
-                                                                                    <?php
-                                                                                    $regions = \App\Models\Region::all();
-                                                                                    foreach ($regions as $region) {
-                                                                                        ?>
-                                                                                        <option value="<?= $region->id ?>"><?= $region->name ?></option>
-                                                                                    <?php }
-                                                                                    ?>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group ">
-                                                                            <label for="cname" class="control-label col-lg-3">District</label>
-                                                                            <div class="col-lg-12">
-                                                                                <select name="district_id"  class="form-control" id="search_district">
-                                                                                    <option></option>
-
-                                                                                </select> </div>
-                                                                        </div>
-
-                                                                        <div class="form-group ">
-                                                                            <label for="cname" class="control-label col-lg-3">Wards Allocation</label>
-                                                                            <div class="col-lg-12">
-                                                                                <span id="search_ward"></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <?= csrf_field() ?>
-                                                                        <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
-                                                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div></div>
-                                                <div class="tab-pane" id="profile3" role="tabpanel">
-                                                    <div class="card-block ">
-
-                                                        <div class="card-block ">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                              </div>  
-                            </div>
-                        </div>
-                      </div>
-=======
                            </div>
                        </div>
 
 
->>>>>>> admin2.0
             </div>
         </div>
     </div>
