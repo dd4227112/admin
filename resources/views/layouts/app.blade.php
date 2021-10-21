@@ -20,7 +20,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
         <!-- Required Fremwork -->
 
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">  
+        {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">   --}}
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css">  
 
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
 
@@ -28,6 +29,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/jquery.mCustomScrollbar.css">
+
+
+        {{-- databables --}}
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/data-table/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
  
 
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
@@ -35,14 +42,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
 
-      
-   
-
-        
-         <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script>  
-
-       
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -67,8 +68,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         {{--  alert --}}
        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> 
-
-
      </head>
     <body>
       <!-- Pre-loader start -->
@@ -123,7 +122,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <div class="pcoded-overlay-box"></div>
         <div class="pcoded-container navbar-wrapper">
 
-            <nav class="navbar header-navbar pcoded-header" style="background-color: #2C3E50;">
+            <nav class="navbar header-navbar pcoded-header" style="background-color: #2C3E50;color:white">
                 <div class="navbar-wrapper">
                     <div class="navbar-logo" style="background-color: #2C3E50;">
                         <a class="mobile-menu" id="mobile-collapse" href="#!">
@@ -156,8 +155,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                             if (strlen(request('token')) < 4) {
                                 ?>
                                   <li>
-                                    <a class="main-search morphsearch-search" href="#">
-                                        <i class="ti-search" style="color: white"></i>
+                                    <a class="main-search morphsearch-search" href="#!" style="color: white">
+                                        <i class="feather icon-search"></i>
                                     </a>
                                 </li>
                             <?php } ?>
@@ -207,7 +206,13 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <a href="<?= url('users/show/' . Auth::user()->id) ?>">
                                             <i class="feather icon-user"></i> Profile
                                         </a>
-                                    </li>
+                                    </li> 
+
+                                    <li>
+                                        <a href="<?= url('users/password/') ?>">
+                                            <i class="feather icon-user"></i> Change Password
+                                        </a>
+                                    </li> 
                                       
                                     <li>
                                         <a href="{{ route('logout') }}"
@@ -1026,7 +1031,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
             </div>
         </div>  
 
-    <script src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
           
     <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script> 
     {{-- <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script>  --}}

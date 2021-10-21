@@ -236,6 +236,8 @@ class Users extends Controller {
     }
 
     public function password() {
+        $this->data['breadcrumb'] = array('title' => 'Change password','subtitle'=>'user','head'=>'operations');
+
         $this->data['user'] = User::find(Auth::user()->id);
         return view('auth.change_password', $this->data);
     }
