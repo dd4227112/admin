@@ -19,12 +19,16 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
         <!-- Required Fremwork -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css">
+
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">  
+
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
+
+
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/jquery.mCustomScrollbar.css">
  
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
 
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
@@ -34,17 +38,23 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/pages/data-table/css/buttons.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
+
         
 
-        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script> 
+         <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script>  
+
+         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script> 
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
        
         {{-- highcharts --}}
-        <script src="https://code.highcharts.com/highcharts.js"></script>
+         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/modules/series-label.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
         <script src="https://code.highcharts.com/modules/export-data.js"></script>
@@ -59,50 +69,36 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css">
 
+
         {{--  alert --}}
        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> 
 
 
-        {{-- <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
+         <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
          <!-- Multi Select css -->
        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
-       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css"> --}}
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css"> 
 
 
         {{--  alert --}}
-       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"> 
 
-         <script type="text/javascript">
-            ajax_setup = function () {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    async: true,
-                    cache: false,
-                    beforeSend: function (xhr) {
-                        // jQuery('.theme-loader').show();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        // jQuery('.theme-loader').hide();
-                    },
-                    complete: function (xhr, status) {
-                        // jQuery('.theme-loader').hide();
-                    }
-                });
-            }
-            $(document).ready(ajax_setup);
-            function toast(message) {
-                new PNotify({
-                    title: 'Feedback',
-                    text: message,
-                    type: 'success',
-                    hide: 'false',
-                    icon: 'icofont icofont-info-circle'
-                });
-            }
-      </script>
+         {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css"> 
+        <!-- themify icon -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
+     
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
+        <!-- Horizontal-Timeline css -->
+        <!-- Style.css -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>  --}}
+
+
+
+
+        
  
      </head>
     <body>
@@ -164,9 +160,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                         <a class="mobile-menu" id="mobile-collapse" href="#!">
                             <i class="feather icon-menu"></i>
                         </a>
-                        <a href="index-1.htm">
+                        <a href="#">
                             <img width="50" height="50" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
-                        </a>
+                        </a> 
                         <a class="mobile-options">
                             <i class="feather icon-more-horizontal"></i>
                         </a>
@@ -176,18 +172,37 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                         <ul class="nav-left">
                             <li class="header-search">
                                 <div class="main-search morphsearch-search">
-                                    <div class="input-group">
-                                        <span class="input-group-addon search-close"><i class="feather icon-x text-light"></i></span>
+                                     <div class="input-group">
+
+                                       {{--   <span class="input-group-addon search-close"><i class="feather icon-x text-light"></i></span>
                                           <input type="text" class="form-control">
-                                          <span class="input-group-addon search-btn"><i class="feather icon-search text-light"></i></span>
-                                    </div>
+                                          <span class="input-group-addon search-btn"><i class="feather icon-search text-light"></i></span>   --}}
+
+                                             {{-- <a class="main-search morphsearch-search" href="#">
+                                             <i class="ti-search text-light"></i>
+                                           </a>   --}}
+                                    </div>  
+
+                                 
+
                                 </div>
                             </li>
                             <li>
                                 <a href="#!" onclick="javascript:toggleFullScreen()">
-                                    <i class="feather icon-maximize full-screen text-light"></i>
+                                    <i class="feather icon-maximize full-screen" style="color: white"></i>
                                 </a>
                             </li>
+
+                              <?php
+                            if (strlen(request('token')) < 4) {
+                                ?>
+                                  <li>
+                                    <a class="main-search morphsearch-search" href="#">
+                                        <i class="ti-search" style="color: white"></i>
+                                    </a>
+                                </li>
+                            <?php } ?>
+
                         </ul>
                         <ul class="nav-right">
                             <li class="header-notification">
@@ -220,46 +235,35 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <div class="dropdown-primary dropdown">
                                     <div class="dropdown-toggle" data-toggle="dropdown">
                                         <?php $id = Auth::user()->id;
-                                        $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '$id'"))->first(); 
+                                        $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id=f.id where a.id = '$id'"))->first(); 
                                         $local = $root . 'assets/images/user.png';
                                         ?>
-                                        <img class="img-30 img-circle" src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" alt="User-Profile-Image"> 
-                                        <span class="text-light"><?= \Auth::user()->name ?></span>
+                                        <img class="img-20 img-circle" src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" alt="User-Profile-Image" width="50" height="30"> 
+                                        <span class="text-light" style="color: white"><?= \Auth::user()->name ?></span>
                                         <i class="feather icon-chevron-down text-light"></i>
                                     </div>
                                     <ul class="show-notification profile-notification dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                        <li>
-                                            <a href="#!">
-                                                <i class="feather icon-settings"></i> Settings
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="<?= url('users/show/' . Auth::user()->id) ?>">
-                                                <i class="feather icon-user"></i> Profile
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="email-inbox.htm">
-                                                <i class="feather icon-mail"></i> My Messages
-                                            </a>
-                                        </li>
-                                     
-                                        <li>
-                                            <a href="{{ route('logout') }}"
-                                               onclick="event.preventDefault();
-                                               document.getElementById('logout-form').submit();"><i class="feather icon-log-out"></i> Logout</a>
-                                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                   {{ csrf_field() }}
-                                              </form>
-                                        </li>
+                                        
+                                    <li>
+                                        <a href="<?= url('users/show/' . Auth::user()->id) ?>">
+                                            <i class="feather icon-user"></i> Profile
+                                        </a>
+                                    </li>
+                                      
+                                    <li>
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();"><i class="feather icon-log-out"></i> Logout</a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                {{ csrf_field() }}
+                                            </form>
+                                    </li>
                                     </ul>
 
                                 </div>
                             </li>
                         </ul>
-
-                        
-
+ 
                         <script>
                             search_inputs = function () {
                                 $('#search_inputs').keyup(function () {
@@ -280,7 +284,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                             }
                             $(document).ready(search_inputs);
                         </script>
-                        {{-- <div id="morphsearch" class="morphsearch">
+                        
+
+
+                         <div id="morphsearch" class="morphsearch">
                             <form class="morphsearch-form">
                                 <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
                                 <button class="morphsearch-submit" type="submit">Search</button>
@@ -300,7 +307,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </div>
                             </div>
                             <span class="morphsearch-close"><i class="icofont icofont-search-alt-1"></i></span>
-                        </div> --}}
+                        </div>  
 
 
                     </div>
@@ -1058,11 +1065,21 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         </div>  
 
 
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script> 
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/popper.js/js/popper.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script>
+        <!-- classie js -->
+    <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script> 
+      
+        <!-- Custom js -->
+    <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=3"></script>  
+
+   
+    {{-- 
+    <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script> 
+    <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script>  --}}
+    
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/modernizr/js/modernizr.js"></script>
-
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
@@ -1074,12 +1091,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script src="<?= $root ?>/files/assets/js/pcoded.min.js"></script>
     <script src="<?= $root ?>/files/assets/js/vartical-layout.min.js"></script>
 
-    {{-- <script type="text/javascript" src="<?= $root ?>/files/assets/pages/dashboard/custom-dashboard.js"></script> --}}
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/script.min.js"></script>
 
-     {{-- select 2 --}}
-     <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script>
-<!-- Multiselect js -->
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js"></script>
+
+    {{-- Multiselect js --}}
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/multiselect/js/jquery.multi-select.js"></script>
   
@@ -1097,15 +1113,14 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script  type="text/javascript"  src="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
-    <!-- i18next.min.js -->
+    {{-- i18next.min.js --}}
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/i18next/js/i18next.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
 
-    <!-- Custom js -->
     <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
-    <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
+    <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script> 
       
  </body>
     <?php
