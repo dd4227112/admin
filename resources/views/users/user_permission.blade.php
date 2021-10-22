@@ -1,37 +1,13 @@
 @extends('layouts.app')
 @section('content')
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">User permissions </h4>
-                <span>This part will assign permissions to user</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!"></a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!"></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+     <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
      <?php if (can_access('manage_users')) { ?>
-
         <div class="page-body">
-
             <div class="row">
-
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header row">
@@ -41,7 +17,7 @@
                             <div class="col-sm-6">
                                <?php $user_roles = \App\Models\Role::get(); ?>
                                 <span>
-                                    <select class="form-control select2"  id='permission'>
+                                    <select class="select2"  id='permission'>
                                         <option></option>
                                         <?php foreach ($user_roles as $u_role) { ?>
                                         <option value="<?= $u_role->id ?>" <?= (int) request('id') > 0 && request('id') == $u_role->id ? 'selected' : '' ?> ><?= $u_role->name  ?></option>
@@ -65,6 +41,7 @@
                                             </a>
                                         </h3>
                                     </div>
+                               
 
                                     <div id="collapseTwo_{{ $group->id }}" class="panel-collapse collapse"
                                         role="tabpanel" aria-labelledby="headingTwo">
@@ -76,7 +53,7 @@
                                         <label class="container">
                                             <input type="checkbox" {{ $checked }} value="{{ $sub->id }}"
                                                 id="permission_{{ $sub->id }}" onclick="submit_role(this)">
-                                            <span class="checkmark"></span>
+                                            <span class="cr"></span>
                                             {{ $sub->display_name }}
                                         </label>
                                         @endforeach
@@ -100,10 +77,9 @@
                                 <?php }?>
                             </h5>
                         </div>
-                        <div class="card-block accordion-block">
-
-
-                            <table class="table table-bordered">
+                        <div class="card-block">
+                           <div class="table-responsive">
+                            <table  id="dt-ajax-array" class="table dataTable table-bordered">
                                 <tr>
                                     <th>No</th>
                                     <th>Name</th>
@@ -116,7 +92,7 @@
                                 </tr>
                                 @endforeach
                             </table>
-
+                           </div>
                         </div>
                     </div>
                 </div>
@@ -211,7 +187,7 @@ function submit_role(permission) {
             role_id: role
         },
         success: function(data) {
-           // alert(data);
+            toastr.success(data)
         }
     });
 }

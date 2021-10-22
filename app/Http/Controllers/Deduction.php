@@ -14,6 +14,8 @@ class Deduction extends Controller {
     }
 
     public function index() {
+        $this->data['breadcrumb'] = array('title' => 'Subscription-Allowance','subtitle'=>'accounts','head'=>'payroll');
+
             $this->data['type'] = $id = request()->segment(3);
             if ((int) $id > 0) {
                 $this->data['deductions'] = \App\Models\Deduction::where('category', $id)->get();
@@ -38,16 +40,10 @@ class Deduction extends Controller {
 
 
     public function add() {
+        $this->data['breadcrumb'] = array('title' => 'Add deductions','subtitle'=>'accounts','head'=>'payroll');
             $this->data['type'] = $id = request()->segment(3);
-            if ($_POST) {
-                //  $request->validate([
-                //     'name' => 'required',
-                //     'is_percentage' => 'required',
-                //     'description' => 'required'
-                // ]);
-                  
+            if ($_POST) { 
                 $deduction = \App\Models\Deduction::create(request()->except('_token'));
-
                 if ((int) $deduction->percent > 0 || (int) $deduction->amount > 0) {
                     $code = strtoupper(substr(0, 2));
                     \App\Models\ReferExpense::create(['name' => $deduction->name, 'financial_category_id' => 2, 'note' => 'Deductions', 'code' => 3232, 'code' => $code . '-OPEX-' . rand(1900, 582222),
@@ -56,32 +52,22 @@ class Deduction extends Controller {
 
                return redirect('deduction/index/'.$id)->with('success', 'Successfully!');
             } else {
-    
                 $this->data['subview'] = 'account.payroll.deduction.add';
                 return view($this->data['subview'], $this->data);
             }
-        // } else {
-        //     $this->data['type'] = null;
-       
-        //     return view('account/payroll/deduction/index',$this->data);
-        // }
+     
     }
 
 
 
 
     public function edit() {
+           $this->data['breadcrumb'] = array('title' => 'Edit deductions','subtitle'=>'accounts','head'=>'payroll');
             $id = request()->segment(3);
             if ((int) $id) {
                 $this->data['deduction'] = \App\Models\Deduction::find($id);
                 if ($this->data['deduction']) {
                     if ($_POST) {
-                        // $this->validate(request(), [
-                        //     'name' => 'required|max:255',
-                        //     "is_percentage" => "required",
-                        //     "description" => "required"
-                        //         ], $this->custom_validation_message);
-                       
                         $this->data['deduction']->update(request()->except('_token'));
                         if ((int) $this->data['deduction']->employer_percent > 0 || (int) $this->data['deduction']->employer_amount > 0) {
                             $scheck = \App\Models\ReferExpense::where('name', $this->data['deduction']->name)->first();
@@ -95,30 +81,26 @@ class Deduction extends Controller {
                     } else {
                         $this->data["subview"] = "account/payroll/deduction/edit";
                        return view($this->data['subview'], $this->data);
-                     //   $this->load->view('_layout_main', $this->data);
+            
                     }
                 } else {
                     $this->data["subview"] = "error";
-                  //  $this->load->view('_layout_main', $this->data);
+    
                 }
             } else {
                 $this->data["subview"] = "error";
-               // $this->load->view('_layout_main', $this->data);
             }
     }
 
     public function delete() {
         $id = request()->segment(3);
-    
             if ((int) $id) {
                 $user_deductions = UserDeduction::where('deduction_id', $id)->first();
                 $salary_deductions = \App\Models\SalaryDeduction::where('deduction_id', $id)->first();
                 if (!empty($user_deductions) || !empty($salary_deductions)) {
-                    //you cannot delete this
                     return redirect()->back()->with('error', 'You cannot delete this deduction because some users are already allocated on this deduction!');
                 } else {
                     \App\Models\Deduction::destroy($id);
-                  //  $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                     return redirect()->back()->with('success', 'Deleted successfully!');
 
                 }
@@ -129,6 +111,7 @@ class Deduction extends Controller {
     }
 
     public function subscribe() {
+        $this->data['breadcrumb'] = array('title' => 'Subscription-Allowance','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;
@@ -144,10 +127,7 @@ class Deduction extends Controller {
        
             $this->data['view'] = 'account.payroll.subscribe';
             return view($this->data['view'], $this->data);
-        } else {
-            $this->data["subview"] = "error";
-          //  $this->load->view('_layout_main', $this->data);
-        }
+        } 
     }
 
     public function monthlysubscribe() {
@@ -155,7 +135,7 @@ class Deduction extends Controller {
         if ((int) $id) {
             $this->data['set'] = $id;
             $this->data['type'] = 'deduction';
-            $this->data['allowance'] = \App\Models\Deduction::find($id);
+            $this->data['udeduction'] = \App\Models\Deduction::find($id);
             $subscriptions = \App\Models\UserDeduction::where('deduction_id', $id)->get();
             $data = [];
             foreach ($subscriptions as $value) {
@@ -165,10 +145,7 @@ class Deduction extends Controller {
             $this->data['subscriptions'] = $data;
             $this->data['view'] = 'account.payroll.deduction.monthlysubscribe';
             return view($this->data['view'], $this->data);
-        } else {
-            $this->data["subview"] = "error";
-           // $this->load->view('_layout_main', $this->data);
-        }
+        } 
     }
 
     function monthlyAddSubscriber() {
@@ -179,7 +156,7 @@ class Deduction extends Controller {
         } else {
             UserDeduction::create($obj);
         }
-        echo 'success';
+        echo 'successful subscribed';
     }
 
     function excel() {

@@ -3,28 +3,8 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title">Change Password </h4>
-                <span>Password is case sentitive</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Users</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Change Password</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
         <div class="page-body">
             <div class="row">
                 <div id="outer" class="container">
@@ -65,7 +45,7 @@
                         
                               
                                 <div id="savebtnWrapper" class="form-group">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary btn-mini btn-round">
                                         &emsp;Submit&emsp;
                                     </button>
                                 </div>

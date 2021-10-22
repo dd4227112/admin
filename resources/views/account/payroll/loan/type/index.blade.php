@@ -3,49 +3,24 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Loan</h4>
-                <span>Loan types </span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
-                    </li>
-                
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-		
-							
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+			
         <div class="page-body">
           <div class="row">
             <div class="col-sm-12">
              <div class="card">
                 <?php
                // $usertype = session("usertype");
-                if(can_access('manage_payroll')) { ?>
-				   <div class="card-header">
-                    <h5 class="page-header">
-                        <a class="btn btn-success btn-xs" href="<?php echo url('loan/add') ?>">
-                            <i class="fa fa-plus"></i> 
-                            Add New Loan Type
-                        </a>
-                     </h5>
+                if(!can_access('manage_loans')) { ?>
+				     <div class="card-header">
+                         <x-button url="loan/add" color="primary" btnsize="sm" title="Add new loan type"></x-button> 
 					</div>
                    <?php } ?>
-				         <div id="hide-table"  class="card-block">
-					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
+
+				         <div class="card-block">
+					      <div class="table-responsive">
 						    <?php if(isset($types) && count($types) > 0) { ?>
-								<table class="table dataTable">
+								<table class="table dataTable table-sm table-striped table-bordered table-hover">
 									<thead>
 									   <tr>
 											<th> <?= __('#')?>           </th>
@@ -97,11 +72,15 @@
                                               <td data-title="<?= __('description') ?>">
                                                 <?php echo $loan_type->description; ?>
                                             </td>
-                                            <td data-title="<?= __('action') ?>">
-                                             <?php echo '<a  href="' . url("loan/type/edit/$loan_type->id") . ' " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
-                                             <?php
+                                            <td class="text-center">
+                                                 <?php $edit_url = "loan/type/edit/$loan_type->id"; $delete_url = "loan/type/delete/$loan_type->id"; ?>
+                                                <x-button :url="$edit_url" color="primary"  shape="round"  title="Edit"></x-button>
+                                                <x-button :url="$delete_url"  color="danger"  shape="round" title="Delete"></x-button> 
+                                             {{-- <?php echo '<a  href="' . url("loan/type/edit/$loan_type->id") . ' " class="btn btn-info btn-sm"> ' . __('edit') . ' </a>' ?> --}}
+                                             {{-- <?php
                                                 echo '<a  href="' . url("loan/type/delete/$loan_type->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>';
-                                               ?>
+                                               ?> --}}
+                                
                                             </td>
                                         </tr>
                                         <?php $i++;} ?>

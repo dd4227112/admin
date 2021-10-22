@@ -3,49 +3,25 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Loan</h4>
-                <span>New loan </span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li><a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a></li>
-                    <li class="active"><?= __('borrowers') ?></li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-		
-							
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    		
         <div class="page-body">
           <div class="row">
             <div class="col-sm-12">
              <div class="card">
                 <?php
-               // $usertype = session("usertype");
+        
                 if(can_access('manage_payroll')) { ?>
 				   <div class="card-header row">
                      <div class="col-sm-6">
-                         <div>&nbsp;</div>
-                        <a class="btn btn-success" href="<?php echo url('loan/loanAdd') ?>">
-                            <i class="fa fa-plus"></i> 
-                            Add New Application
-                         </a>
+                        <x-button url="loan/loanAdd" color="primary" btnsize="sm"  title="Add New Application"></x-button>
 					  </div>
 					 
-                        <div class="col-sm-6">
-                            <form style="" class="form-horizontal" role="form" method="post">  
+                        <div class="col-sm-6 offset-sm-9">
+                            <form  class="form-horizontal" role="form" method="post">  
                                 <div class="form-group">              
-                                    <label for="deduction_type" class="col-sm-2 col-sm-offset-2 control-label">
-                                        <?= __("category") ?>
+                                    <label class="col-sm-6">
+                                        Category
                                     </label>
                                     <div class="col-sm-6">
                                         <?php
@@ -68,22 +44,22 @@
                    <?php } ?>
 
                       
-				         <div id="hide-table"  class="card-block">
-					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
+				         <div class="card-block">
+					      <div class="table-responsive">
 						  <?php if (isset($applications) && count($applications) > 0) { ?>
-								<table class="table dataTable">
+								<table class="table dataTable  table-sm table-striped table-bordered table-hover">
 									<thead>
                                         <tr>
-                                            <th class="col-lg-1"><?= __('#') ?></th>
-                                            <th class="col-lg-2"><?= __('Name') ?></th>
-                                            <th class="col-lg-2"><?= __('Loan type') ?></th>
-                                            <th class="col-lg-1"><?= __('Amount') ?></th>
-                                            <th class="col-lg-1"><?= __('Date requested') ?></th>
-                                            <th class="col-lg-1"><?= __('Date approved') ?></th>
-                                            <th class="col-lg-1"><?= __('Paid amount') ?></th>
-                                            <th class="col-lg-1"><?= __('Remain amount') ?></th>
-                                            <th class="col-lg-1"><?= __('Interest') ?></th>
-                                            <th class="col-lg-2"><?= __('Action') ?></th>
+                                            <th><?= __('#') ?></th>
+                                            <th><?= __('Name') ?></th>
+                                            <th><?= __('Loan type') ?></th>
+                                            <th><?= __('Amount') ?></th>
+                                            <th><?= __('Date requested') ?></th>
+                                            <th><?= __('Date approved') ?></th>
+                                            <th><?= __('Paid amount') ?></th>
+                                            <th><?= __('Remain amount') ?></th>
+                                            <th><?= __('Interest') ?></th>
+                                            <th><?= __('Action') ?></th>
                                         </tr>
 									</thead>
                                     <tbody>
@@ -109,8 +85,8 @@
                                                 </td>
                                                 <td data-title="<?= __('date_approved') ?>">
                                                     <?php echo (int) $application->approval_status==1 ?
-                                                            '<b class="badge badge-success">Approved</b>':
-                                                            '<b class="badge badge-warning">Pending</b>' ?>
+                                                            '<label class="badge badge-inverse-success">Approved</label>':
+                                                            '<label class="badge badge-inverse-warning">Pending</label>' ?>
                                                 </td>
                                                 <td data-title="<?= __('paid_amount') ?>">
                                                     <?php //calculated from salary ?>
@@ -126,14 +102,16 @@
                                                     ?>
                                                 </td>
                                                 <td data-title="<?= __('action') ?>">
+                                                    <?php $delete_url = "loan/delete/$application->id"; $edit_url = "loan/edit/$application->id"; ?>
+                                                    <?php  if(can_access('manage_payroll')){ ?>
+                                                        {{-- <x-button :url="$edit_url" color="info" btnsize="mini" shape="round" title="Edit" toggleTitle="Edit loan"></x-button> --}}
+                                                     <?php } ?>
                                                       
-                                                    <?php //echo can_access('manage_payroll') ?  '<a  href="' . url("loan/edit/$application->id") . ' " class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>':'' ?>
-                                                    <?php
-                                                    echo '<a  href="' . url("loan/delete/$application->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>';
-                                                 if((int) $application->approval_status <>1 && can_access('manage_payroll')){
-                                                    ?>
-                                                    <a href="<?= url('loan/approveLoan/' . $application->id) ?>" class="btn btn-primary btn-sm mrg" > Approve</a>
-                                                 <?php }?>
+                                                     <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete"></x-button>
+                                                    <?php  $approve_url = "loan/approveLoan/$application->id";
+                                                     if((int) $application->approval_status <> 1 && can_access('manage_payroll')){  ?>
+                                                     <x-button :url="$approve_url" color="primary" btnsize="mini"  title="Approve" shape="round" toggleTitle="Approve loan"></x-button>
+                                                   <?php }?>
                                                 </td>
                                             </tr>
                                             <?php

@@ -1,46 +1,27 @@
 @extends('layouts.app')
 @section('content')
-
-<script type="text/javascript" src="<?= url('/public') ?>/assets/select2/select2.js"></script> 
-
+<?php 
+//    function getUser($schema,$id){
+//       return \DB::table('admin.all_users')->select('name','usertype')->where(['schema_name'=>$schema,'id'=>$id])->first();
+// }
+?>
 <div class="main-body">
-    <div class="page-wrapper">
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>System Errors</h4>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Error Logs</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+ <div class="page-wrapper">
+     <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
         <div class="page-body">
-            <div class="row">
-                <div class="col-lg-6"></div>
-                <div class="card table-card widget-danger-card col-lg-6">
-                    <div class="card-footer">
-                        <div class="task-list-table">
-                            <p class="task-due"><strong>School with highest Error Logs : </strong><strong class="label label-danger"><?= !empty($danger_schema)? $danger_schema->schema_name : '' ?></strong></p>
-                        </div>
-                        <div class="task-board m-0">
-                            <a href="#" class="btn btn-info btn-mini b-none" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>
-
-                        </div>
-                        <!-- end of pull-right class -->
-                    </div>
+               
+            <div class="card">
+                <div class="card-header" style="margin-bottom: -20px;">
+                    <h6 ><strong><?= isset($school->name) ? $school->name. ' errors' :  'Errors' ?></strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?= $errors->count() >= 10 ? '<label class="badge badge-inverse-danger">' . $errors->count() . '</label>' : '<label class="badge badge-inverse-info">'  .$errors->count().  '</label>'?>
+                        <a onmousedown="delete_log('<?= $id ?>')" onclick="return false" href="" class="float-right btn btn-mini btn-round btn-danger">delete</a>
+                    </h6> 
                 </div>
-            </div>
-            <div class="row">
+                <div class="card-block">
+                        <p style="font-weight: 500;margin-bottom:-15px;">Error  Message</p> <br>
+                        <p style="font-weight: 600"> <?= $tag->error_message ?></p>
 
+<<<<<<< HEAD
                 <!-- Documents card start -->
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks dark-primary-border">
@@ -72,8 +53,44 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
+=======
+                        <p style="font-weight: 500;margin-bottom:-15px;">Error  Instance</p> <br>
+                        <p style="font-weight: 600"> <?= $tag->error_instance ?></p>
                 </div>
+          </div>
+         
+        <div class="card"> 
+            <div class="card-block">
+                <div class="table-responsive">
+                    <table id="example"  class="table dataTable table-sm table-striped table-bordered nowrap">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Files</th>
+                                <th>Urls</th>
+                                <th>Schema name</th>
+                                <th>Created by</th>
+                                <th>Created date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $i = 1; foreach($errors as $error) { ?>
+                                <tr>
+                                    <td><?= $i ?></td>
+                                    <td><?= warp($error->file,15)?></td>
+                                    <td><?= warp($error->url,10)?></td>
+                                    <td><?= $error->schema_name?></td>
+                                    <td><?= !is_null($error->created_by) ? $error->created_by : '' ?></td>
+                                    <td><?= date('d-m-Y H:i:s',strtotime($error->created_at))?></td>
+                                </tr>
+                            <?php $i++;} ?>
+                         </tbody>
+                      </table>
+>>>>>>> admin2.0
+                    </div>
+                   </div>
+                </div>
+<<<<<<< HEAD
                 <!-- New clients card end -->
                 <!-- New files card start -->
                 <div class="col-md-6 col-xl-3">
@@ -211,153 +228,49 @@
                                 </div>
                              <?php } ?>
 
+=======
 
-                            </div>
-                            <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
-                                <div class="card-block">
-                                    <div class="dt-responsive table-responsive">
-                                        <table id="simpletable_resolved_errors" class="table table-striped table-bordered nowrap">
-                                            <thead>
-                                                <tr>
-                                                    <th>Client Name</th>
-                                                    <th>Error Message</th>
-                                                    <th>File</th>
-                                                    <th>url</th>
-                                                    <th>Created By</th>
-                                                    <th>Resolved Date</th>
-                                                    <th>Resolved By</th>
-                                                </tr>
-                                            </thead>
+                
+>>>>>>> admin2.0
 
-                                            <tfoot>
-                                                <tr>
-                                                    <th>Client Name</th>
-                                                    <th>Error Message</th>
-                                                    <th>File</th>
-                                                    <th>url</th>
-                                                    <th>Created By</th>
-                                                    <th>Resolved Date</th>
-                                                    <th>Resolved By</th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="messages3" role="tabpanel" aria-expanded="false">
-                                <a href="#" class="btn btn-sm btn-success" id="show_summary" style="display: none">Show Summary</a>
-                                <div id="custom_logs"></div>
-                                <div class="email-card p-0" id="log_summary">
-                                    <div class="card-block">
+                   
 
-                                        <div class="mail-body-content">
-                                            <div class="card">
+             
 
+        
 
-                                                <div class="card-block table-border-style">
-                                                    <div class="table-responsive analytic-table">
-                                                        <table class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Error Instance Name</th>
-                                                                    <th>Count</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                $sql = 'select error_instance,count(*) from admin.error_logs group by error_instance';
-                                                                $logs = DB::select($sql);
-                                                                foreach ($logs as $log) {
-                                                                    ?>
-                                                                    <tr>
-                                                                        <td>
-
-                                                                            <span class="table-msg"><?= $log->error_instance ?></span>
-                                                                        </td>
-                                                                        <td><?= $log->count ?></td>
-                                                                        <td> <a href="#" onmousedown='getErrorPage("<?= $log->count ?>")' onclick="return false" class="btn btn-sm btn-warning btn-outline-warning waves-effect md-trigger">View</a></td>
-                                                                    </tr>
-                                                                <?php }
-                                                                ?>
-
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
         </div>
     </div>
 </div>
 
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        var table = $('#error_log_table').DataTable({
-            "processing": true,
-            "serverSide": true,
-            'serverMethod': 'post',
-            'ajax': {
-                'url': "<?= url('sales/show/null?page=errors') ?>"
-            },
-            "columns": [
-                {"data": "id"},
-                {"data": "created_at"},
-                {"data": "schema_name"},
-                {"data": "error_message"},
-                {"data": "file"},
-                {"data": "url"},
-              //  {"data": "created_by"},
-             //   {"data": ""}
-            ],
-            "columnDefs": [
-                {
-                    "targets": 6,
-                    "data": null,
-                    "render": function (data, type, row, meta) {
-                         return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
-                    }
-                }
-            ],
 
-            rowCallback: function (row, data) {
-                //$(row).addClass('selectRow');
-                $(row).attr('id', 'log' + data.id);
+    $(document).ready(function() {
+       $('#example').DataTable();
+    });
+
+   
+    $(document).ready(function() {
+      delete_log = function (a) {
+        $.ajax({
+            url: '<?= url('software/logsDelete') ?>/null',
+            method: 'get',
+            data: {id: a},
+            success: function (data) {
+                if (data == '1') {
+                    window.location.href='<?= url('software/logs') ?>';
+                    toastr.success('Error deleted successfully!');
+                } else{
+                    toastr.error('No Error deleted!');
+                }
             }
         });
+     }
+});
 
 
-          View_log = function (a) {
-            window.location.href = "<?= url('software/Readlogs') ?>/" + a;
-            },
-
-        delete_log = function (a) {
-            $.ajax({
-                url: '<?= url('software/logsDelete') ?>/null',
-                method: 'get',
-                data: {id: a},
-                success: function (data) {
-                    if (data == '1') {
-                        //$('#log' + a).fadeOut();
-                        window.location.reload();
-                    }
-                }
-            });
-        }
-
-
-    }
-    );
+    
     $('#schema_select').change(function () {
         var schema = $(this).val();
         if (schema == 0) {
@@ -386,29 +299,32 @@
         $('#custom_logs').hide();
     });
 
-    $(document).ready(function () {
-        var table = $('#simpletable_resolved_errors').DataTable({
-            "processing": true,
-            "serverSide": true,
-            'serverMethod': 'post',
-            'ajax': {
-                'url': "<?= url('sales/show/null?page=errors_resolved') ?>"
-            },
-            "columns": [
-                {"data": "schema_name"},
-                {"data": "error_message"},
-                {"data": "file"},
-                {"data": "url"},
-              //  {"data": "created_by"},
-                {"data": "deleted_at"},
-                {"data": "resolved_by"}
-            ],
+    // $(document).ready(function () {
+    //     var table = $('#simpletable_resolved_errors').DataTable({
+    //         "processing": true,
+    //         "serverSide": true,
+    //         'serverMethod': 'post',
+    //         'ajax': {
+    //             'headers': {
+    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //             },
+    //             'url': "<?= url('sales/show/null?page=errors_resolved') ?>"
+    //         },
+    //         "columns": [
+    //             {"data": "schema_name"},
+    //             {"data": "error_message"},
+    //             {"data": "file"},
+    //             {"data": "url"},
+    //           //  {"data": "created_by"},
+    //             {"data": "deleted_at"},
+    //             {"data": "resolved_by"}
+    //         ],
 
-            rowCallback: function (row, data) {
-                $(row).attr('id', 'log' + data.id);
-            }
-        });
-    });
+    //         rowCallback: function (row, data) {
+    //             $(row).attr('id', 'log' + data.id);
+    //         }
+    //     });
+    // });
 
 
     $('#schema_select').select2({

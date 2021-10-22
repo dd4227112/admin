@@ -422,3 +422,8 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
          $string = str_replace(' ', '', $string); // Replaces all spaces with empty.
          return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
     }
+
+
+    function fullName($schema,$table,$user_id){
+        return \collect(\DB::select("select * from admin.all_users where id = $user_id and 'table' = '$table' and schema_name = '$schema' "))->first();
+    }

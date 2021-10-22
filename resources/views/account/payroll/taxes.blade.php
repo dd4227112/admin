@@ -2,70 +2,55 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Tax Status</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Payroll</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
     
      <div class="page-body">
         <div class="row">
-          <div class="card">
-            <div class="col-sm-12">
-              <div id="hide-table" class="card-block">
-                 <div class="table-responsive table-sm table-striped table-bordered table-hover">
+        <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>All taxes</h5>
+           </div>
+             
+              <div class="card-block">
+                <div class="table-responsive">
 		          <?php if(isset($taxes) && !empty($taxes)) { ?>
-                    <table id="example1" class="table dataTable">
+                    <table class="table dataTable table-sm table-striped table-bordered nowrap">
                         <thead>
                             <tr>
-                                <th class="col-lg-1">#</th>
-                                <th class="col-lg-2">Name</th>
-                                <th class="col-lg-1">From Amount</th>
-                                <th class="col-lg-1">To Amount</th>
-                                <th class="col-lg-1">Tax Rate</th>
-                                <th class="col-lg-1">Excess Amount</th>
-				                <th class="col-lg-2">Description</th>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>From Amount</th>
+                                <th>To Amount</th>
+                                <th>Tax Rate</th>
+                                <th>Excess Amount</th>
+				                <th>Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php $i = 1; foreach($taxes as $tax) { ?>
                                 <tr>
-                                    <td data-title="<?=__('slno')?>">
+                                    <td>
                                         <?php echo $i; ?>
                                     </td>
-                                     <td data-title="<?=__('payroll_name')?>">
+                                     <td>
                                         <?php echo $tax->name; ?>
                                     </td>
-                                    <td data-title="<?=__('payroll_from')?>">
-                                        <?php echo $tax->from; ?>
+                                    <td>
+                                        <?php echo money($tax->from); ?>
                                     </td>
-                                    <td data-title="<?=__('payroll_to')?>">
-                                        <?php echo $tax->to; ?>
+                                    <td>
+                                        <?php echo money($tax->to); ?>
                                     </td>
-                                    <td data-title="<?=__('tax_rate')?>">
+                                    <td>
                                         <?php echo $tax->tax_rate; ?>
                                     </td>
-                                    <td data-title="<?=__('excess_amount')?>">
-                                        <?php echo $tax->tax_plus_amount; ?>
+                                    <td>
+                                        <?php echo money($tax->tax_plus_amount); ?>
                                     </td>
                                    
-				                     <td data-title="<?=__('description')?>">
-                                        <?php echo $tax->description; ?>
+				                     <td>
+                                        <?php echo warp($tax->description,18); ?>
                                     </td>
                                     
                                 </tr>
@@ -75,8 +60,10 @@
                     </div>
 		            <?php } ?>
                 </div>
+                
             </div> 
-             </div>
+          </div> 
+             
         </div>
     </div>
 

@@ -63,31 +63,11 @@ return $result;
 <!-- Main-body start -->
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Schools Setup</h4>
-                <span>Once school is registered in the system, all mandatory parts must be specified</span>
-
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Customer Support</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Basic Setup</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+       
+       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+          
         <div class="page-body">
-                          <div class="row">
+            <div class="row">
             <div class="col-lg-4">
             </div>
             <div class="col-lg-4"></div>
@@ -118,7 +98,7 @@ return $result;
                     <!-- Ajax data source (Arrays) table start -->
                     <div class="card">
                         <div class="card-header">
-                            <h5>School Basic Information</h5>
+                         
                             <span>This part shows areas to be defined in specific school. Your task is to ensure all parameters are defined effectively on each school</span>
                             <b>Please Observe</b>
                             <p class="alert alert-info">If you allocate status to Any School, that task will be assigned to your account, not to someone else</p>

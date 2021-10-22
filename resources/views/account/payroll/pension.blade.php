@@ -1,105 +1,87 @@
 @extends('layouts.app')
 @section('content')
-
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Pension Fund Status</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Payroll</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-        <div class="page-body">
-            <div class="row">
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
-                <div class="col-lg-12">
-                    <div class="card">
-                        <?php
-                        $usertype = session("usertype");
-                        //if(can_access('add_payroll')) {
-                        ?>
-                        <div class="card-header">
-                            <h5 class="page-header">
-                                <a class="btn btn-success btn-sm" href="<?php echo url('payroll/addPension') ?>">
-                                    <i class="fa fa-plus"></i> 
-                                    Add Pension Fund
-                                </a>
-                            </h5>
-                        </div>
-                        <?php //} ?>
-                        <div id="hide-table"  class="card-block">
-                          <div class="table-responsive table-sm table-striped table-bordered table-hover">
-                            <?php if (isset($pensions) && !empty($pensions)) { ?>
-                                <table id="example1" class="table dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th class="col-lg-1">#</th>
-                                            <th class="col-lg-1">Name</th>
-                                            <th class="col-lg-1">Employer Percentage</th>
-                                            <th class="col-lg-1">Employee Percentage</th>
-                                            <th class="col-lg-2">Address</th>
-                                            <th class="col-lg-1">Members</th>
-                                            <th class="col-lg-2 text-center">Actions</th>
-                                        </tr>
-                                    </thead>
+        <div class="page-body">
+          <div class="row">
+
+            <div class="col-sm-12">
+                <div class="card">
+                <div class="card-block">
+                    <div class="m-b-15">
+                        <x-button url="payroll/addPension" color="primary" btnsize="sm"  title="Add Pension Fund"></x-button>
+                    </div>
+ 
+                        <div class="table-responsive">
+                            <table class="table dataTable table-sm table-striped table-bordered nowrap">
+                                <thead>
+                                    <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Employer Percentage</th>
+                                    <th>Employee Percentage</th>
+                                    <th>Address</th>
+                                    <th>Members</th>
+                                    <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
                                     <tbody>
-                                        <?php
-                                        $i = 1;
-                                        foreach ($pensions as $pension) {
-                                            ?>
-                                            <tr>
-                                                <td data-title="<?= __('slno') ?>">
-                                                    <?php echo $i; ?>
-                                                </td>
-                                                <td data-title="<?= __('payroll_name') ?>">
-                                                    <?php echo $pension->name; ?>
-                                                </td>
-                                                <td data-title="<?= __('employer_percentage') ?>">
-                                                    <?php echo $pension->employer_percentage; ?> %
-                                                </td>
-                                                <td data-title="<?= __('employee_percentage') ?>">
-                                                    <?php echo $pension->employee_percentage; ?>%
-                                                </td>
-                                                <td data-title="<?= __('employee_percentage') ?>">
-                                                    <?php echo $pension->address; ?>
-                                                </td>
-                                                <td data-title="<?= __('members') ?>">
-                                                    <?php echo $pension->userPensions->count(); ?>
-                                                </td>
-                                                <td data-title="<?= __('employee_percentage') ?>">
-                                                    <a href="<?= url('payroll/pension/' . $pension->id) ?>" class="btn btn-info btn-sm mrg" ><i class="fa fa-users"></i> members</a>
-                                                    <a href="<?= url('payroll/editPension/' . $pension->id) ?>" class="btn btn-primary btn-sm mrg" ><i class="fa fa-edit"></i> <?= __('Edit') ?></a>
-                                                    <a href="<?= url('payroll/deletePension/' . $pension->id) ?>" class="btn btn-danger btn-sm mrg" ><i class="fa fa-trash-o"></i> <?= __('Delete') ?></a>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                            $i++;
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                               </div>
-                            <?php } ?>
+                                <?php
+                                $i = 1;
+                                foreach ($pensions as $pension) {
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo $i; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $pension->name; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $pension->employer_percentage; ?> %
+                                        </td>
+                                        <td>
+                                            <?php echo $pension->employee_percentage; ?>%
+                                        </td>
+                                        <td>
+                                            <?php echo $pension->address; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $pension->userPensions->count(); ?>
+                                        </td>
+                                        <td>
+                                             <?php $pension_url = "payroll/pension/$pension->id";$edit_url="payroll/editPension/$pension->id"; $delete_url = "payroll/deletePension/$pension->id";?>
+                                             <x-button :url="$pension_url" color="primary" btnsize="mini"  title="members" shape="round" toggleTitle="Pension members"></x-button>
+                                             <x-button :url="$edit_url" color="info" btnsize="mini"  title="Edit" shape="round" toggleTitle="Edit Pension"></x-button>
+                                             <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete Pension"></x-button>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    $i++;
+                                }
+                                ?>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Employer Percentage</th>
+                                    <th>Employee Percentage</th>
+                                    <th>Address</th>
+                                    <th>Members</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                            </div>
+                            
                         </div>
                     </div>
 
-                </div> <!-- col-sm-12 -->
+
             </div><!-- row -->
         </div><!-- Body -->
     </div><!-- /.box -->

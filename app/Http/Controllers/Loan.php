@@ -15,6 +15,8 @@ class Loan extends Controller {
 
     public function index() {
         if (can_access('manage_payroll')) {
+           $this->data['breadcrumb'] = array('title' => 'Loan types','subtitle'=>'loans','head'=>'payroll');
+
           $this->data['type'] = $id = (request()->segment(3));
             if ((int) $id > 0) {
                 $this->data['applications'] = \App\Models\LoanApplication::where('approval_status', $id)->latest()->get();
@@ -37,11 +39,13 @@ class Loan extends Controller {
         }
     }
 
-    public function type() {
+      public function type() {
+        $this->data['breadcrumb'] = array('title' => 'Loan types','subtitle'=>'loans','head'=>'payroll');
                $id = request()->segment(3);
                $loan_id = request()->segment(4);
 
             if ($id == 'edit' && (int) $loan_id > 0) {
+                $this->data['breadcrumb'] = array('title' => 'Edit  types','subtitle'=>'loans','head'=>'payroll');
                 $this->data['type'] = \App\Models\LoanType::find($loan_id);
                 if ($_POST) {
                     $this->data['type']->update(request()->all());
@@ -55,13 +59,12 @@ class Loan extends Controller {
                 $this->data['types'] = \App\Models\LoanType::latest()->get();
                 return view('account.payroll.loan.type.index',$this->data);
             }
-        
     }
 
     private function saveLoanApplication() {
         //get all loan parameters
         //insert in application table
-           $user_id = request('user_id') == null ? Auth::user()->id : request('user_id');
+            $user_id = request('user_id') == null ? Auth::user()->id : request('user_id');
              $data=[
             'user_id' => $user_id, 
             'created_by' => Auth::user()->id,
@@ -80,6 +83,7 @@ class Loan extends Controller {
      }
 
     public function loanAdd() {
+        $this->data['breadcrumb'] = array('title' => 'Add loan','subtitle'=>'loans','head'=>'payroll');
         $this->data['type'] = 0;
         $this->data['loan_types'] = \App\Models\LoanType::all();
         if (can_access('manage_payroll')) {
@@ -145,27 +149,26 @@ class Loan extends Controller {
 
     public function getDetails() {
         $loan_id = request('id');
-        $loan = \App\Model\LoanType::find($loan_id);
+        $loan = \App\Models\LoanType::find($loan_id);
         echo json_encode($loan);
+        
     }
 
     public function getNetPayment() {
-        $user_id = request('user_id') == null ? session('id') : request('user_id');
-        $table = request('table') == null ? session('table') : request('table');
-        $usalary = \App\Model\Salary::where('user_id', $user_id)->where('table', $table)->orderBy('id', 'desc')->first();
+        $user_id = request('user_id') == null ? \Auth::user()->id : request('user_id');
+    
+        $usalary = \App\Models\Salary::where('user_id', $user_id)->orderBy('id', 'desc')->first();
         if (empty($usalary)) {
-            $user_salary = \collect(DB::select('select salary from ' . $table . ' where "' . $table . 'ID"=' . $user_id))->first();
-            $pensions = \App\Model\UserPension::where('user_id', $user_id)->where('table', $table)->get();
+            $user_salary = \collect(DB::select('select salary from admin.users where id =' . $user_id))->first();
+            $pensions = \App\Models\UserPension::where('user_id', $user_id)->get();
             $pension_employee_contribution = 0;
             $gross_pay = $user_salary->salary;
             foreach ($pensions as $pension) {
                 $pension_employee_contribution += $pension->pension->employee_percentage * ($gross_pay) / 100;
             }
             $taxable_amount = $gross_pay - $pension_employee_contribution;
-            $tax = \App\Model\Paye::where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
-            $paye = (!empty($tax)) ?
-                    ($taxable_amount - $tax->from) * $tax->tax_rate / 100 + $tax->tax_plus_amount : 0;
-
+            $tax = \App\Models\Paye::where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
+            $paye = (!empty($tax)) ? ($taxable_amount - $tax->from) * $tax->tax_rate / 100 + $tax->tax_plus_amount : 0;
             $salary = ['salary' => $gross_pay - $paye];
         } else {
             $salary = ['salary' => $usalary->net_pay];
@@ -208,6 +211,8 @@ class Loan extends Controller {
 
     
     public function add() {
+        $this->data['breadcrumb'] = array('title' => 'Add loan type','subtitle'=>'loans','head'=>'payroll');
+
             $this->data['type'] = $id = request()->segment(3);
             if ($_POST) {
                 request()->validate([
@@ -229,7 +234,7 @@ class Loan extends Controller {
                 'interest_rate'  => request('interest_rate'),
                 'credit_ratio'   => request('credit_ratio'),
                 'description'    => request('description'),
-                'created_by'     => Auth::user()->id
+                'created_by'     => \Auth::user()->id
                ]); 
                 return redirect('loan/type')->with('success','Successfully!');
             } else {
@@ -240,42 +245,42 @@ class Loan extends Controller {
 
     public function edit() {
         if (can_access('manage_payroll')) {
-            $id = clean_htmlentities(($this->uri->segment(3)));
+            $id = request()->segment(3);
             if ((int) $id) {
-                $this->data['deduction'] = \App\Model\Deduction::find($id);
+                $this->data['deduction'] = \App\Models\Deduction::find($id);
                 if ($this->data['deduction']) {
                     if ($_POST) {
                         $this->validate(request(), [
                             'name' => 'required|max:255',
                             "is_percentage" => "required",
                             "description" => "required"
-                                ], $this->custom_validation_message);
+                                ]);
                         $this->data['deduction']->update(request()->except('_token'));
                         if ((int) $this->data['deduction']->employer_percent > 0 || (int) $this->data['deduction']->employer_amount > 0) {
-                            $scheck = \App\Model\ReferExpense::where('name', $this->data['deduction']->name)->first();
+                            $scheck = \App\Models\ReferExpense::where('name', $this->data['deduction']->name)->first();
                             if (empty($scheck)) {
                                 $code = strtoupper(substr(set_schema_name(), 0, 2));
-                                \App\Model\ReferExpense::create(['name' => $this->data['deduction']->name, 'financial_category_id' => 2, 'note' => 'Deductions', 'code' => 3232, 'code' => $code . '-OPEX-' . rand(1900, 582222),
+                                \App\Models\ReferExpense::create(['name' => $this->data['deduction']->name, 'financial_category_id' => 2, 'note' => 'Deductions', 'code' => 3232, 'code' => $code . '-OPEX-' . rand(1900, 582222),
                                     'predefined' => 1]);
                             }
                         }
-                        $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                        return redirect(base_url("deduction/index/" . $this->data['deduction']->category));
+                       // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+                        return redirect(base_url("deduction/index/" . $this->data['deduction']->category))->with('success','Success');
                     } else {
                         $this->data["subview"] = "deduction/edit";
-                        $this->load->view('_layout_main', $this->data);
+                     //   $this->load->view('_layout_main', $this->data);
                     }
                 } else {
                     $this->data["subview"] = "error";
-                    $this->load->view('_layout_main', $this->data);
+                 //   $this->load->view('_layout_main', $this->data);
                 }
             } else {
                 $this->data["subview"] = "error";
-                $this->load->view('_layout_main', $this->data);
+              //  $this->load->view('_layout_main', $this->data);
             }
         } else {
             $this->data["subview"] = "error";
-            $this->load->view('_layout_main', $this->data);
+           // $this->load->view('_layout_main', $this->data);
         }
     }
 
@@ -287,7 +292,7 @@ class Loan extends Controller {
                 //check if there are any payments, and reject
                 if (!can_access('manage_payroll')) {
                     //we prevent normal user to delete other people application
-                    $loan_applications = \App\Models\LoanApplication::where('id', $id)->where('user_id', Auth::user()->id)->get();
+                    $loan_applications = \App\Models\LoanApplication::where('id', $id)->where('user_id', \Auth::user()->id)->get();
                     if (empty($loan_applications)) {
                         return redirect()->back()->with('warning', 'Sorry, you can only delete your own application');
                     }
@@ -307,7 +312,6 @@ class Loan extends Controller {
                     DB::table('user_deductions')->where('loan_application_id', $id)->delete();
                     DB::table('revenues')->where('loan_application_id', $id)->delete();
                     DB::table('loan_applications')->where('id', $id)->delete();
-                 //   $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                    return redirect()->back()->with('success','Loan deleted successfull!');
                 }
                 return redirect()->back();
@@ -322,8 +326,8 @@ class Loan extends Controller {
         if ((int) $id) {
             $this->data['set'] = $id;
             $this->data['type'] = 'deduction';
-            $this->data['allowance'] = \App\Model\Deduction::find($id);
-            $subscriptions = \App\Model\UserDeduction::where('deduction_id', $id)->get();
+            $this->data['allowance'] = \App\Models\Deduction::find($id);
+            $subscriptions = \App\Models\UserDeduction::where('deduction_id', $id)->get();
             $data = [];
             foreach ($subscriptions as $value) {
                 $data = array_merge($data, array($value->user_id . $value->table));

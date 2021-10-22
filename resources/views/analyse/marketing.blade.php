@@ -19,7 +19,8 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <div class="page-header">
+
+        {{-- <div class="page-header">
             <div class="page-header-title">
                 <h4><?= isset($start_date) && isset($end_date) ? 'Analytic Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/', strtotime($end_date)) : ' Analytic Dashboard' ?></h4>
             </div>
@@ -36,380 +37,326 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> --}}
+
+        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+       
         <div class="row">
-            <div class="col-lg-8"></div>
-            <div class="col-lg-4 text-right">
-                <select class="form-control" id="check_custom_date">
-                    <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
-                    <option value="custom"  <?= $today == 0 ? 'selected' : '' ?>>Custom</option>
-                </select>
-
+             <div class="col-sm-12 col-lg-3 m-b-20">
+                <h6>Pick date </h6>
+                <input type="text" name="dates" id="rangeDate" class="form-control">
+            </div>
+            <div class="col-sm-12 col-lg-3 m-b-20">
+                <h6> &nbsp; </h6>
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
             </div>
         </div>
-         <div class="row" style="display: none" id="show_date">
-            <div class="col-lg-4"></div>
-             <div class="col-lg-8 text-right">
-                <h4 class="sub-title">Date Time Picker</h4>
-                <div class="input-daterange input-group" id="datepicker">
-                    <input type="date" class="input-sm form-control calendar" name="start" id="start_date">
-                    <span class="input-group-addon">to</span>
-                    <input type="date" class="input-sm form-control" name="end" id="end_date">
-                    <input type="submit" class="input-sm btn btn-sm btn-success" id="search_custom"/>
-                </div>
-            </div>
-         </div>
+  
 
-        <br/>
         <div class="page-body">
             <div class="row">
+                 <div class="col-xl-3 col-md-6">
+                    <?php $unique_visitors = \collect(DB::select('select count(*) from (select distinct platform,user_agent from admin.website_logs a where ' . $where . '  ) x '))->first()->count; ?>
+                     <x-smallCard title="Website Visits"
+                                :value="$unique_visitors"
+                                icon="feather icon-users f-50 text-c-light"
+                                cardcolor="bg-c-green text-white"
+                                >
+                     </x-smallCard>
+                  </div>
 
-                <!-- Facebook card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card social-widget-card">
-                        <div class="card-block-big bg-facebook">
-                            <?php
-                            $unique_visitors = \collect(DB::select('select count(*) from (select distinct platform,user_agent from admin.website_logs a where ' . $where . '  ) x '))->first()->count;
-                            ?>
-                            <h3><?= $unique_visitors ?></h3>
-                            <span class="m-t-10">Website Visits</span>
-                            <i class="icofont icofont-ui-user-group"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- Facebook card end -->
-                <!-- Twitter card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card social-widget-card">
-                        <div class="card-block-big bg-twitter">
-                            <?php
-                            $total_sms_sent = \collect(DB::select('select count(*) from public.sms a where ' . $where))->first()->count;
-                            ?>
-                            <h3><?= $total_sms_sent ?></h3>
-                            <span class="m-t-10">SMS Sent</span>
-                            <i class="icofont icofont-email"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- Twitter card end -->
-                <!-- Linked in card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card social-widget-card">
-                        <div class="card-block-big bg-linkein">
-                                <?php
-                                $email_total_reacherd = \collect(DB::select('select count(*) from public.email a where ' . $where))->first()->count;
-                                ?>
-                            <h3><?= $email_total_reacherd ?></h3>
-                            <span class="m-t-10">Email Sent</span>
-                            <i class="icofont icofont-email"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- Linked in card end -->
-
-
-                <!-- Google-plus card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card social-widget-card">
-                        <div class="card-block-big bg-google-plus">
-                            <h3>1</h3>
-                            <span class="m-t-10">Upcoming Events</span>
-                            <i class="icofont icofont-code-alt"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- Google-plus card end -->
-                <div class="col-md-12 col-xl-4">
-                    <div class="card counter-card-1">
-                        <div class="card-block-big">
-                            <div>
-                                <?php
-                                $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ")"))->first()->count;
-                                ?>
-                                <h3><?= $total_reacherd ?></h3>
-                                <p>Total School Reached
-<!--                                    <span class="f-right text-primary">
-                                        <i class="icofont icofont-arrow-up"></i>
-                                        37.89%
-                                    </span>-->
-                                </p>
-                                <div class="progress ">
-                                    <!--<div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>-->
-                                </div>
-                            </div>
-                            <i class="icofont icofont-comment"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- counter-card-1 end-->
-                <!-- counter-card-2 start -->
-                <div class="col-md-6 col-xl-4">
-                    <div class="card counter-card-2">
-                        <div class="card-block-big">
-                            <div>
-                            <?php
-                            $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count;
-                            ?>
-                                <h3><?= $total_schools ?></h3>
-                                <p>Total Contacts Reached
-<!--                                    <span class="f-right text-success">
-                                        <i class="icofont icofont-arrow-up"></i>
-                                        34.52%
-                                    </span>-->
-                                </p>
-                                <div class="progress ">
-                                    <!--<div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>-->
-                                </div>
-                            </div>
-                            <i class="icofont icofont-coffee-mug"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- counter-card-2 end -->
-                <!-- counter-card-3 start -->
-                <div class="col-md-6 col-xl-4">
-                    <div class="card counter-card-3">
-                        <div class="card-block-big">
-                            <div>
-                            <?php
-                            $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.task_type_id in (select id from admin.task_types where department=2) and ' . $where))->first()->count;
-                            ?>
-                                <h3><?= $total_activity ?></h3>
-                                <p>Total Marketing Activities
-<!--                                    <span class="f-right text-default">
-                                        <i class="icofont icofont-arrow-down"></i>
-                                        22.34%
-                                    </span>-->
-                                </p>
-                                <div class="progress ">
-                                    <!--<div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>-->
-                                </div>
-                            </div>
-                            <i class="icofont icofont-upload"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- NVD3 chart start -->
-                <div class="col-md-6 col-xl-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Website Visitor</h5>
-                        </div>
-                        <div class="card-block">
-                            <div id="linechart" class="nvd-chart">
-
-                                <?php
-                                $sql_ = "select count(*),created_at::date from (select distinct platform,user_agent,created_at::date from admin.website_logs a where " . $where . "  ) x  group by created_at::date ";
-                                echo $insight->createChartBySql($sql_, 'created_at', 'Total Users Login', 'bar', false);
-                                ?>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-          
-                <!-- Table end -->
-
-
-                <div class="col-md-12 col-xl-12">
-                    <div class="page-header-title">
-                        <h4>ShuleSoft Statistics</h4>
-                    </div>
-                    <br/>
-                </div>
-                <div class="col-md-12 col-xl-4">
-                    <div class="card counter-card-1">
-                        <div class="card-block-big">
-                            <div>
-                                <h3>4000</h3>
-                                <p>SMS sent
-                                    <span class="f-right text-primary">
-                                        <i class="icofont icofont-arrow-up"></i>
-                                        37.89%
-                                    </span></p>
-                                <div class="progress ">
-                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <i class="icofont icofont-comment"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-4">
-                    <div class="card counter-card-2">
-                        <div class="card-block-big">
-                            <div>
-                                <h3>2500</h3>
-                                <p>Email Sent
-                                    <span class="f-right text-success">
-                                        <i class="icofont icofont-arrow-up"></i>
-                                        34.52%
-                                    </span>
-                                </p>
-                                <div class="progress ">
-                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <i class="icofont icofont-coffee-mug"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-4">
-                    <div class="card counter-card-3">
-                        <div class="card-block-big">
-                            <div>
-                                <h3>24</h3>
-                                <p>Schools with No Activities
-                                    <span class="f-right text-default">
-                                        <i class="icofont icofont-arrow-down"></i>
-                                        22.34%
-                                    </span></p>
-                                <div class="progress ">
-                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <i class="icofont icofont-upload"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 col-xl-8">
-                    <div class="card">
-
-                        <div class="card-block">
-                            <div id="login_graph"></div>
-                            <?php
-                            $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
-                         //   $sql_2 = 'SELECT count(id) as count, "table" as date from admin.all_login_locations a where '.$where.' group by created_at::date,"table"';
-                            echo $insight->createChartBySql($sql_, 'date', 'Total Users Login', 'bar', false);
-                            ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Morris chart end -->
-                <!-- Todo card start -->
-                <div class="col-md-12 col-xl-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Module Usage</h5>
-                            <!--<label class="label label-success">Today</label>-->
-                        </div>
-                        <div class="card-block">
-
-                                <?php
-                                 $sql1 = "select count(id) as count, controller as date from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
-                                 echo $insight->createChartBySql($sql1 , 'date', 'Module Usage', 'bar', false);
-                            ?>
-                            </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Todo card end -->
-                <!-- Social user card end -->
-                <!-- Live-chart start -->
-                <div class="col-xl-12 dashbored-live-left col-lg-6">
-                    <div class="card widget">
-                        <div class="section section-graph">
-                            <div class="graph-info">
-                                Task Types Done
-                            </div>
-                            <div id="graph"></div>
-                        </div>
-                        <div class="section section-info">
-
-
-
-                        </div>
-                    </div>
-                    <div class="section"></div>
-                </div>
-                <!-- Live-chart end -->
-                <!-- Last activity start -->
-
-
+                  <div class="col-xl-3 col-md-6">
+                    <?php $total_sms_sent = \collect(DB::select('select count(*) from public.sms a where ' . $where))->first()->count; ?>
+                     <x-smallCard title="SMS sent"
+                                :value="$total_sms_sent"
+                                icon="feather icon-message-square f-50 text-c-light"
+                                cardcolor="bg-c-green text-white"
+                                >
+                     </x-smallCard>
+                  </div>
 
                 
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Marketing Activities</h5>
-                            <div class="f-right">
-                                <label class="label label-success">Today</label>
-                                <label class="label label-danger">Month</label>
-                            </div>
-                        </div>
-                        <div class="card-block table-border-style">
-                            <div class="table-responsive analytic-table">
-                                <table id="res-config" class="table table-bordered w-100 dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Task Type</th>
-                                            <th>Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=4) and " . $where);
-                                        foreach ($activities as $activity) {
-                                            ?>                    
-                                            <tr>
-                                                <td class="img-pro">
-                                              <?= $activity->user_name ?>
-                                                </td>
-                                            <!--    <td class="pro-name"><?= $activity->activity ?>
-                                                </td>-->
-                                                <td>  <?= $activity->task_name ?></td> 
-                                                <td>
-                                                    <label class="text-danger">  <?= $activity->created_at ?></label>
-                                                </td>
+                  <div class="col-xl-3 col-md-6">
+                      <?php  $email_total_reacherd = \collect(DB::select('select count(*) from public.email a where ' . $where))->first()->count; ?>
+                     <x-smallCard title="Email sent"
+                                :value="$email_total_reacherd"
+                                icon="feather icon-mail f-50 text-c-light"
+                                cardcolor="bg-c-blue text-white"
+                                >
+                     </x-smallCard>
+                  </div>
+                <!-- Linked in card end -->
 
-                                            </tr>
-                                                  <?php } ?>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-
-                    </div>
+                 <div class="col-xl-3 col-md-6">
+                      <?php  $email_total_reacherd = \collect(DB::select('select count(*) from admin.events  a where ' . $where))->first()->count; ?>
+                       <x-smallCard title="Events"
+                                :value="$email_total_reacherd"
+                                icon="feather icon-clipboard f-50 text-c-light"
+                                cardcolor="bg-c-yellow text-white"
+                                >
+                      </x-smallCard>
+                  </div>
                 </div>
-                <!-- Last activity end -->
+
+             
+                <!-- Google-plus card end -->
+            <div class="row">
+                <div class="col-md-12 col-xl-4">
+                     <?php
+                       $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ")"))->first()->count;
+                     ?>
+                     <x-analyticCard :value="$total_reacherd" name="Total School Reached"  icon="feather icon-trending-up text-white f-16" color="bg-c-yellow" topicon="feather icon-bar-chart f-40" subtitle="new schools"></x-analyticCard>
+                </div>
+
+              
+                <div class="col-md-12 col-xl-4">
+                    <?php $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count; ?>
+                    <x-analyticCard :value="$total_schools" name="Total Contacts Reached"  icon="feather icon-trending-up text-white f-16" color="bg-c-green" topicon="feather icon-file f-40" subtitle="reached schools"></x-analyticCard>
+                </div>
+               
+                <div class="col-md-12 col-xl-4">
+                    <?php $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.task_type_id in (select id from admin.task_types where department=2) and ' . $where))->first()->count; ?>
+                    <x-analyticCard :value="$total_activity" name="Marketing Activities"  icon="feather icon-activity text-white f-16" color="bg-c-blue" topicon="feather icon-activity f-40" subtitle="activities"></x-analyticCard>
+                </div>
+             </div>
+
+    
+            <div class="row">
+                <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-block">
+                        <div id="websitevisitors" style="height:300px;" ></div>
+                    </div>
+                </div> 
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-block">
+                        <div id="loginlocations" style="height:330px;" ></div>
+                    </div>
+                 </div> 
+                </div>
+
+                <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-block">
+                        <div id="moduleusage" style="height:330px;" ></div>
+                    </div>
+                 </div> 
+                </div>
+            </div>
+
+               
+       
+
+      <div class="row">
+        <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Marketing Activities</h5>
+           </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <table class="table dataTable table-striped table-bordered nowrap">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Task Type</th>
+                                <th>Activity</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $j = 1;
+                            $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id
+                                  WHERE  a.task_type_id in (select id from admin.task_types where department=4) and " . $where . " order by a.created_at desc");
+                            foreach ($activities as $activity) {
+                                ?>                    
+                                <tr>
+                                    <td><?= $j ?> </td>
+                                    <td><?= $activity->user_name ?> </td>
+                                    <td><?= warp($activity->activity,40) ?> </td>
+                                    <td><?= $activity->task_name ?></td> 
+                                    <td>
+                                        <label class="text-info">  <?= $activity->created_at ?></label>
+                                    </td>
+                                 </tr>
+                              <?php $j++; } ?>
+                        </tbody>
+                     </table>
+                  </div>
+                  </div>
+                </div>
+               </div>
+            </div>
 
 
             </div>
         </div>
     </div>
-</div>
-
-<script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
 
 <script type="text/javascript">
-    check = function () {
-        $('#check_custom_date').change(function () {
-            var val = $(this).val();
-            if (val == 'today') {
-                window.location.href = '<?= url('analyse/marketing/') ?>/1';
-            } else {
-                $('#show_date').show();
+
+
+<?php 
+ $sql1 = "select count(*),created_at::date from (select distinct platform,user_agent,created_at::date from admin.website_logs a where " . $where . "  ) x  group by created_at::date ";
+ $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
+ $sql2 = "select count(id) as count, controller as date from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
+
+ $visitors = \DB::select($sql1);
+ $logins = \DB::select($sql_);
+ $modules = \DB::select($sql2);
+ ?>
+
+Highcharts.chart('websitevisitors', {
+    title: {
+        text: 'Daily website visitors'
+    },
+
+    subtitle: {
+        text: 'Based on number of people visits the website'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Visitors'
+        }
+    },
+
+    xAxis: {
+         title: {
+            text: 'Dates'
+        },
+        categories: [
+            <?php foreach($visitors as $value){  ?> '<?=date("d-m-Y", strtotime($value->created_at))?>',
+            <?php } ?>
+        ]
+    },
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    series: [{
+        name: 'Visitors',
+        data: [<?php foreach($visitors as $valuet){ echo $valuet->count.','; }?>]
+    }],
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
             }
-        });
+        }]
     }
+});
+
+Highcharts.chart('loginlocations', {
+ chart: {
+    type: 'column',
+  },
+  title: {
+    text: 'Daily user logins'
+  },
+  subtitle: {
+    text: 'Relationship between user logins and dates'
+  },
+    yAxis: {
+        title: {
+            text: 'Users'
+        }
+    },
+
+  xAxis: { 
+    title: {
+            text: 'Dates'
+    },
+    categories: [
+        <?php foreach($logins as $value){  ?> '<?= date("d-m-Y", strtotime($value->date)) ?>',
+        <?php } ?>
+     ]
+    },
+    series: [{
+        name: 'User logins',
+        colorByPoint: true,
+        data: [<?php foreach($logins as $valuet){ echo $valuet->count.','; }?>]
+    }]
+ });
+
+
+ 
+Highcharts.chart('moduleusage', {
+ chart: {
+    type: 'bar',
+  },
+  title: {
+    text: 'Module Usage'
+  },
+  subtitle: {
+    text: 'Relationship between module usage and dates'
+  },
+    yAxis: {
+        title: {
+            text: 'Modules'
+        }
+    },
+
+  xAxis: { 
+    title: {
+            text: 'Dates'
+    },
+    categories: [
+        <?php foreach($modules as $value){  ?> '<?= $value->date ?>',
+        <?php } ?>
+     ]
+    },
+    series: [{
+        name: 'Module usage',
+        colorByPoint: true,
+        data: [<?php foreach($modules as $value){ echo $value->count.','; }?>]
+    }]
+ });
+
+
+
     submit_search = function () {
         $('#search_custom').mousedown(function () {
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
+            var alldates = $('#rangeDate').val();
+            alldates = alldates.trim();
+            alldates = alldates.split("-");
+            start_date = formatDate(alldates[0]);
+            end_date = formatDate(alldates[1]);
             window.location.href = '<?= url('analyse/marketing/') ?>/5?start=' + start_date + '&end=' + end_date;
         });
     }
-    $(document).ready(check);
+
+     $('input[name="dates"]').daterangepicker();
+
+    formatDate = function (date) {
+        date = new Date(date);
+        var day = ('0' + date.getDate()).slice(-2);
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        return year + '-' + month + '-' + day;
+    }
+
     $(document).ready(submit_search);
+    $(document).ready(formatDate);
+
+
 </script>
+
 @endsection

@@ -1,14 +1,10 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
 <div class="main-body">
     <div class="page-wrapper">
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
-        <!-- Page-header end -->
-        <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">

@@ -1,29 +1,10 @@
 @extends('layouts.app')
 @section('content')
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>Attendance</h4>
-        <span>The Part holds all list of users on their attendance.</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Company Employee</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Attendance</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
    
     <div class="page-body">
       <div class="row">

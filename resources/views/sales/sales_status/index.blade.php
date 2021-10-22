@@ -2,52 +2,24 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
+<div class="main-body">
 <div class="page-wrapper">
-    <div class="page-header">
-        <div class="page-header-title">
-            <h4>Dashboard</h4>
-        </div>
-        <div class="page-header-breadcrumb">
-            <ul class="breadcrumb-title">
-                <li class="breadcrumb-item">
-                    <a href="index-2.html">
-                        <i class="icofont icofont-home"></i>
-                    </a>
-                </li>
-                <li class="breadcrumb-item"><a href="#!">Summary</a>
-                </li>
-                <li class="breadcrumb-item"><a href="#!">Dashboard</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="page-body">
+   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+       <div class="card">
+       
             <div class="row">
-                <div class="col-sm-12">
-
-                    <!-- Ajax data source (Arrays) table start -->
-                    <div class="card">
-                        <div class="card-header">
-                        <div class="row">
-                <div class="col-lg-4">
-                    <select class="form-control" id="check_custom_date">
-                        <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
-                        <option value="custom"  <?= $today == 0 ? 'selected' : '' ?>>Custom</option>
-                    </select>
+                <div class="col-sm-12 col-lg-3 m-b-20">
+                    <h6>Pick date </h6>
+                    <input type="text" name="dates" id="rangeDate" class="form-control">
                 </div>
-                <div class="col-lg-8 text-right">
-                    <div  style="display: none" id="show_date">
-                        <div class="input-daterange input-group" id="datepicker">
-                            <input type="date" class="input-sm form-control" name="start" id="start_date">
-                            <span class="input-group-addon">to</span>
-                            <input type="date" class="input-sm form-control" name="end" id="end_date">
-                            <input type="submit" Value="Submit" class="input-sm btn btn-sm btn-success" id="search_custom"/>
-                        </div>
-                    </div>
-                    </div>
-                    </div>
+                <div class="col-sm-12 col-lg-3 m-b-20">
+                    <h6> &nbsp; </h6>
+                    <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
                 </div>
-                        <div class="col-lg-12 col-xl-12">
+            </div>
+                        
+                
+                <div class="col-lg-12 col-xl-12">
 
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs  tabs" role="tablist">
@@ -431,37 +403,35 @@
 
                     </div>
 
-                </div>
-            </div>
-            <!-- Page-body end -->
-        </div>
+       </div>
     </div>
     <!-- Main-body end -->
-    @endsection
-    @section('footer')
-    <!-- data-table js -->
-    
+
+     
 <script type="text/javascript">
 
-check = function () {
-
-    $('#check_custom_date').change(function () {
-        var val = $(this).val();
-        if (val == 'today') {
-            window.location.href = '<?= url('Sales/salesStatus/') ?>/1';
-        } else {
-            $('#show_date').show();
-        }
-    });
-}
 submit_search = function () {
     $('#search_custom').mousedown(function () {
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
-        window.location.href = '<?= url('Sales/salesStatus/') ?>/5?start=' + start_date + '&end=' + end_date;
+        var alldates = $('#rangeDate').val();
+            alldates = alldates.trim();
+            alldates = alldates.split("-");
+            start_date = formatDate(alldates[0]);
+            end_date = formatDate(alldates[1]);
+        window.location.href = '<?= url('sales/salesStatus/') ?>/5?start=' + start_date + '&end=' + end_date;
     });
 }
-$(document).ready(check);
+
+   formatDate = function (date) {
+            date = new Date(date);
+            var day = ('0' + date.getDate()).slice(-2);
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            return year + '-' + month + '-' + day;
+    }
+
 $(document).ready(submit_search);
+$(document).ready(formatDate);
+
+$('input[name="dates"]').daterangepicker();
 </script>
-    @endsection
+ @endsection
