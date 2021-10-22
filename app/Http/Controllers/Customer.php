@@ -1784,7 +1784,8 @@ class Customer extends Controller {
             foreach ($phones as $phone) {
                 if (filter_var($phone, FILTER_VALIDATE_EMAIL)) {
                     $this->send_email($phone, 'ShuleSoft : Repoti ya ' . date('d M Y'), preg_replace('/*/i', NULL, $message_kw));
-                } else {
+                }
+                if (!filter_var($phone, FILTER_VALIDATE_EMAIL)) {
                     $chat_id = ltrim(trim($phone), 0);
                     $this->send_whatsapp_sms($chat_id, $message_kw);
                 }
