@@ -4,28 +4,27 @@
 <div class="main-body">
  <div class="page-wrapper">
 
-         <div class="page-header">
-            <div class="page-header-title">
-                <h4><?='SMS Status' ?></h4>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                    <a href="<?= url('/') ?>">
-                        <i class="feather icon-home"></i>
-                    </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">loans</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">payroll</a>
-                    </li>
-                </ul>
-            </div>
-        </div> 
+        <div class="page-header">
+        <div class="page-header-title">
+            <h4><?='SMS Status' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">loans</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">payroll</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
 
 
         <div class="page-body">
-               
             <div class="card">
                 <div class="card-header" style="margin-bottom: -20px;">
                     <h6 ><strong><?= isset($school->name) ? $school->name. ' errors' :  'Errors' ?></strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

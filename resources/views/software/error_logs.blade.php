@@ -19,9 +19,9 @@
                         <i class="feather icon-home"></i>
                     </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">loans</a>
+                    <li class="breadcrumb-item"><a href="#!">errors</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    <li class="breadcrumb-item"><a href="#!">system errors</a>
                     </li>
                 </ul>
             </div>
