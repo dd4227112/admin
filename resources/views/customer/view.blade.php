@@ -30,7 +30,7 @@
                     <div class="card-header"> 
                        <h5>School Login Information</h5>
                        <?php $profile_url = "Customer/profile/$schema"; ?>
-                       <x-button :url="$profile_url" color="primary" btnsize="sm float-right"  title="Go back" shape="round" toggleTitle="Profile"></x-button>
+                       <a href="<?= url($profile_url)?>" class="btn btn-primary btn-mini btn-round float-right"> Go back </a>
                     </div>
                 <?php } ?>
 
@@ -70,7 +70,7 @@
                                 
                                 <tr>
                                     <td>Click to Login at <a href="https://<?=$schema?>.shulesoft.com/"> https://<?=$schema?>.shulesoft.com/ </a></td>
-                                    <td> <a href="https://<?=$schema?>.shulesoft.com/" class="btn btn-info btn-sm btn-round" target="_blank"> Visit Here </a>
+                                    <td> <a href="https://<?=$schema?>.shulesoft.com/" class="btn btn-primary btn-mini btn-round" target="_blank"> Visit Here </a>
 
                                 </tr>
                                     <?php } ?>

@@ -76,9 +76,6 @@
                                     <td>
                                         <?php echo date('d-m-Y H:i:s', strtotime($value->created_at)); ?>
                                     </td>
-                                   
-				                   
-                                    
                                 </tr>
                             <?php $i++; } ?>
                          </tbody>
