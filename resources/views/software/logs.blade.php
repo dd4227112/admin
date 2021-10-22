@@ -44,7 +44,7 @@
                <div class="card-block">
                 <div class="table-responsive">
 		          <?php if(isset($errors) && !empty($errors)) { ?>
-                    <table class="table dataTable table-sm table-striped table-bordered nowrap">
+                    <table id="example" class="table dataTable table-sm table-striped table-bordered nowrap">
                         <thead>
                             <tr>
                                 <th>#</th>
