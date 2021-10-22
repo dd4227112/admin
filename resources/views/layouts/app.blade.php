@@ -543,7 +543,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li> --}}
 
-                                                 <?php if(!can_access('create_user_group')) { ?>
+                                                 <?php if(can_access('create_user_group')) { ?>
                                                  <li class="">
                                                     <a href="<?= url('users/usergroup') ?>">
                                                         <span class="pcoded-mtext">School Groups</span>
