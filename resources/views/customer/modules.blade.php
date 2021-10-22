@@ -242,9 +242,9 @@ function select($value, $schema, $sources) {
                                                                 <td><?= $school->schema_name ?></td>
                                                                 <td><?php
                                                                     if (isset($invoice_issued[$school->schema_name])) {
-                                                                        echo '<label class="label label-inverse-primary">'.$invoice_issued[$school->schema_name].'</label>';
+                                                                        echo '<label class="label label-primary">'.$invoice_issued[$school->schema_name].'</label>';
                                                                     } else {
-                                                                        echo '<label class="badge badge-inverse-warning">No</label>';
+                                                                        echo '<label class="badge badge-danger">No</label>';
                                                                     }
                                                                     ?></td>
 
@@ -330,7 +330,7 @@ function select($value, $schema, $sources) {
                                                                     
                                                                 <?php 
                                                                 if (isset($mark_status[$school->schema_name])) {
-                                                                    echo '<label class="label label-inverse-primary">' . date('d M Y', strtotime($mark_status[$school->schema_name])) . '</label>';
+                                                                    echo '<label class="label label-primary">' . date('d M Y', strtotime($mark_status[$school->schema_name])) . '</label>';
                                                                 } else {
                                                                     $no_marks++;
                                                                     echo '<label class="badge badge-inverse-warning">Not Defined</label>';
@@ -342,7 +342,7 @@ function select($value, $schema, $sources) {
                                                                     //classlevel
 
                                                                     if (isset($exam_report_status[$school->schema_name])) {
-                                                                        echo '<label class="label label-inverse-primary">' . date('d M Y', strtotime($exam_report_status[$school->schema_name])) . '</label>';
+                                                                        echo '<label class="label label-primary">' . date('d M Y', strtotime($exam_report_status[$school->schema_name])) . '</label>';
                                                                     } else {
                                                                         $no_exams_published++;
                                                                         echo '<label class="badge badge-inverse-warning">Not Defined</label>';
@@ -354,8 +354,8 @@ function select($value, $schema, $sources) {
                                                                     //classlevel
                                                                     if (isset($invoice_status[$school->schema_name])) {
 
-                                                                        echo '<label class="label label-inverse-primary">' . $invoice_status_count[$school->schema_name] . ' out of ' . $students . '</label><br/>
-                                                                        <label  class="label label-inverse-primary">Last created: ' . date('d M Y', strtotime($invoice_status[$school->schema_name])) . '</label>';
+                                                                        echo '<label class="label label-primary">' . $invoice_status_count[$school->schema_name] . ' out of ' . $students . '</label><br/>
+                                                                        <label  class="label label-primary">Last created: ' . date('d M Y', strtotime($invoice_status[$school->schema_name])) . '</label>';
                                                                     } else {
                                                                         $no_invoice++;
                                                                         echo '<label class="badge badge-inverse-warning">No Invoice Created</label>';
@@ -367,8 +367,8 @@ function select($value, $schema, $sources) {
                                                                 //classlevel
                                                                 if (isset($expense_status[$school->schema_name])) {
 
-                                                                    echo '<label class="label label-inverse-primary">' . $expense_status_count[$school->schema_name] . ' trans</label><br/>
-                                                                    <label  class="label label-inverse-primary">Last created: ' . date('d M Y', strtotime($expense_status[$school->schema_name])) . '</label>';
+                                                                    echo '<label class="label label-primary">' . $expense_status_count[$school->schema_name] . ' trans</label><br/>
+                                                                    <label  class="label label-primary">Last created: ' . date('d M Y', strtotime($expense_status[$school->schema_name])) . '</label>';
                                                                 } else {
                                                                     $no_expense++;
                                                                     echo '<label class="badge badge-inverse-warning">No Expense Recorded</label>';
@@ -378,8 +378,8 @@ function select($value, $schema, $sources) {
                                                                 //classlevel
                                                                 if (isset($payment_status[$school->schema_name])) {
 
-                                                                    echo '<label class="label label-inverse-primary">' . $payment_count[$school->schema_name] . ' trans</label><br/>
-                                                                    <label  class="label label-inverse-primary">Last created: ' . date('d M Y', strtotime($payment_status[$school->schema_name])) . '</label>';
+                                                                    echo '<label class="label label-primary">' . $payment_count[$school->schema_name] . ' trans</label><br/>
+                                                                    <label  class="label label-primary">Last created: ' . date('d M Y', strtotime($payment_status[$school->schema_name])) . '</label>';
                                                                 } else {
                                                                     $no_payment++;
                                                                     echo '<label class="badge badge-inverse-warning">No Payment Recorded</label>';

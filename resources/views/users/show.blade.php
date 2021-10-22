@@ -309,7 +309,7 @@ foreach ($user_permission as $permis) {
 
                                                                     <tr>
                                                                         <th scope="row"> Designation</th>
-                                                                        <td><?= $user->designation->abbreviation ? $user->designation->name.'  ' . '('.$user->designation->abbreviation.')' : '' ?></td> 
+                                                                        <td style="font-size:10px;"><?= $user->designation->abbreviation ? $user->designation->name.'  ' . '('.$user->designation->abbreviation.')' : '' ?></td> 
                                                                     </tr>
 
                                                                     <tr>
