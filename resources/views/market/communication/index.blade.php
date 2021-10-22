@@ -7,41 +7,30 @@
 ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Shulesoft Workshop Event Post</h4>
-                <span>The Part holds all Upcomming Events</span>
 
+           <div class="page-header">
+            <div class="page-header-title">
+                <h4><?=' Communication' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Company Workshop</a>
+                    <li class="breadcrumb-item"><a href="#!">communication</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">posts</a>
+                    <li class="breadcrumb-item"><a href="#!">sales</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
         <div class="page-body">
 
             <div class="card">
                 <div class="col-sm-12">
-                   <?php
-                   // $client = DB::connection('karibusms')->table('client')->first();
-                  //  if (empty($client)) {  
-                 //   } else {
-                   //     $quick_sms = DB::connection('karibusms')->table('sms_status')->where('client_id', empty($client) ? $client_id : $client->client_id)->first();
-                   //     $message_left = !empty($quick_sms) ? $quick_sms->message_left : 0;
-                  //  }
-                    ?>  
+   
                     <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
                         <div class="form-group">
                             <div class="form-group">

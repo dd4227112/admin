@@ -3,15 +3,35 @@
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+      
+      <div class="page-header">
+        <div class="page-header-title">
+            <h4>Requirements</h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">user requirements</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
+
         <div class="page-body">
 
             <div class="card">
                 <div class="card-header" style="margin-bottom: -10px;">
                     <h6>
                         <?php $back_url = "Customer/requirements"; $next_url = "Customer/requirements/show/$next"; ?>
-                        <x-button :url="$back_url" color="primary" btnsize="sm float-left"  title="back" shape="round" toggleTitle="Go Back"></x-button>
-                        <x-button :url="$next_url" color="info" btnsize="sm float-right"  title="next" shape="round" toggleTitle="Go next"></x-button>
+                     <a href="<?= url($back_url) ?>" class="btn btn-primary btn-mini btn-round float-left" data-placement="top"  data-toggle="tooltip" data-original-title="Go Back"> back </a>
+                     <a href="<?= url($next_url) ?>" class="btn btn-info btn-mini  btn-round float-right" data-placement="top"  data-toggle="tooltip" data-original-title="Go next"> next </a>
+
 
                     </h6> 
                 </div>
@@ -76,9 +96,9 @@
         var val = $(this).val();  
         $.ajax({
             type: 'POST',
-            //  headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     },
+             headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
             url: "<?= url('Customer/updateReq') ?>",
             data: "id=" + <?= $requirement->id ?> + "&action=" + val,
             dataType: "html",

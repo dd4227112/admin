@@ -3,7 +3,25 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+       <div class="page-header">
+            <div class="page-header-title">
+                <h4><?=' loan types' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">loans</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 			
         <div class="page-body">
           <div class="row">
@@ -13,7 +31,7 @@
                // $usertype = session("usertype");
                 if(!can_access('manage_loans')) { ?>
 				     <div class="card-header">
-                         <x-button url="loan/add" color="primary" btnsize="sm" title="Add new loan type"></x-button> 
+                          <a href="<?= url("loan/add") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add new loan type"> Add loan type </a>
 					</div>
                    <?php } ?>
 
@@ -74,12 +92,11 @@
                                             </td>
                                             <td class="text-center">
                                                  <?php $edit_url = "loan/type/edit/$loan_type->id"; $delete_url = "loan/type/delete/$loan_type->id"; ?>
-                                                <x-button :url="$edit_url" color="primary"  shape="round"  title="Edit"></x-button>
-                                                <x-button :url="$delete_url"  color="danger"  shape="round" title="Delete"></x-button> 
-                                             {{-- <?php echo '<a  href="' . url("loan/type/edit/$loan_type->id") . ' " class="btn btn-info btn-sm"> ' . __('edit') . ' </a>' ?> --}}
-                                             {{-- <?php
-                                                echo '<a  href="' . url("loan/type/delete/$loan_type->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>';
-                                               ?> --}}
+                                               
+                                              <?php echo '<a  href="' . url("loan/type/edit/$loan_type->id") . ' " class="btn btn-primary btn-mini btn-round"> ' . __('edit') . ' </a>' ?>
+                                              <?php
+                                                echo '<a  href="' . url("loan/type/delete/$loan_type->id") . ' " class="btn btn-danger btn-sm btn-mini btn-round"> ' . __('delete') . ' </a>';
+                                               ?> 
                                 
                                             </td>
                                         </tr>

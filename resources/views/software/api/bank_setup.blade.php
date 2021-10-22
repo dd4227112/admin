@@ -9,7 +9,25 @@ function bank_data($schema){
 
 <div class="main-body">
   <div class="page-wrapper">
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+     <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Bank setup' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Bank setup</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Engineering</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     
     <div class="page-body">
       <div class="row">
@@ -98,7 +116,7 @@ function bank_data($schema){
 
                               <div class="col-md-6">
                                 <strong>  Select School</strong>
-                                 <select name="schema" class="form-control select2" required id="check_account">
+                                 <select name="schema" class="form-controlk select2" required id="check_account">
                                   <?php
                                   foreach ($settings as $setting) {
                                     ?>
@@ -109,7 +127,7 @@ function bank_data($schema){
 
                               <div class="col-md-6">
                                 <strong>Account number</strong>
-                                  <select name="bank_id" id="account_id" class="form-control select2" required>
+                                  <select name="bank_id" id="account_id" class="form-controlk select2" required>
 
                                   </select>
                               </div>
@@ -140,7 +158,7 @@ function bank_data($schema){
 
                         </div>
                         <div class="modal-footer">
-                          <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit Here</button>
+                          <button type="submit" class="btn btn-primary btn-round btn-sm ">Submit Here</button>
                         </div>
                         <?= csrf_field() ?>
                       </form>

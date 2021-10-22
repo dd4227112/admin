@@ -2,7 +2,25 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+     
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='FAQ' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">faq</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
         
         <div class="page-body">
             <div class="row">
@@ -13,7 +31,7 @@
                         <div class="card-block">
                           <?php if(can_access('add_faq')) { ?>
                             <div class="card-header">
-                                <p align='left'><button class="btn btn-success"  data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add New FAQ</button></p>
+                                <p align='left'><button class="btn btn-success btn-mini btn-round"  data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add New FAQ</button></p>
                             </div>
                           <?php } ?>
 

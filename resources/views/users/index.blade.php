@@ -3,7 +3,25 @@
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+        
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4> Users</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">users</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
         <?php if (can_access('manage_users')) { ?>
             <div class="page-body">
@@ -11,7 +29,8 @@
                     <div class="col-lg-12">
                         <div  class="card">
                                 <div class="card-block">
-                                        <x-button url="users/create" color="primary float-left" btnsize="sm"  title="new user" shape="round" toggleTitle="Create New User"></x-button>
+                                        {{-- <x-button url="users/create" color="primary float-left" btnsize="sm"  title="new user" shape="round" toggleTitle="Create New User"></x-button> --}}
+                                        <a class="btn btn-primary btn-round btn-sm float-left"  href="<?= url('users/create') ?>">Create New User</a>                   
                                         <a class="btn btn-primary btn-round btn-sm float-right" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                   
                                 </div>
                                   
@@ -53,8 +72,11 @@
                                                          <td>{{ date('d M Y',strtotime($user->created_at)) }}</td>
                                                         <td class="text-center">
                                                             <?php $view_url = "users/show/$user->id"; $edit_url = "users/edit/$user->id"; ?>
-                                                            <x-button :url="$view_url" color="primary" btnsize="sm"  title="Show" shape="round" toggleTitle="View employee"></x-button>
-                                                            <x-button :url="$edit_url" color="info" btnsize="sm"  title="Edit" shape="round" toggleTitle="Edit employee"></x-button>              
+                                                            
+                                                            
+                                                        <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View employee">view  </a>
+                                                        <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit employee">Edit  </a>
+                                                            
                                                         </td>
                                                     </tr>
                                                     <?php $i++; ?>

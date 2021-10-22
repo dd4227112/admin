@@ -7,7 +7,26 @@
  ?>
 <div class="main-body">
   <div class="page-wrapper">
-     <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+          <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Error logs' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">loans</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
         <div class="page-body">
             <div class="">
                 <div class="row">
@@ -16,30 +35,54 @@
 
                <div class="row">
                     <div class="col-md-6 col-xl-4">
-                        <x-smallCard title="All errors"
-                                    :value="sizeof($all_errors)"
-                                    icon="feather icon-layers f-50 text-c-red"
-                                    cardcolor="bg-c-yellow text-white"
-                                    >
-                        </x-smallCard>
+                      
+                         <div class="card bg-c-yellow text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">All errors</p>
+                                                <h4 class="m-b-0">{{ number_format(sizeof($all_errors)) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-layers f-50 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                
                     <div class="col-md-6 col-xl-4">
-                        <x-smallCard title="Fatal errors"
-                                    :value="$fatal_errors->total"
-                                    icon="feather icon-book f-50 text-c-red"
-                                    cardcolor="bg-c-pink text-white"
-                                    >
-                        </x-smallCard>
+                       
+                         <div class="card bg-c-pink text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5"> Fatal errors </p>
+                                                <h4 class="m-b-0">{{ number_format($fatal_errors->total) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
 
                     <div class="col-md-6 col-xl-4">
-                        <x-smallCard title="Resolved errors"
-                                    :value="$error_log_resolved->total"
-                                    icon="feather icon-check-circle f-50 text-c-red"
-                                    cardcolor="bg-c-green text-white"
-                                    >
-                        </x-smallCard>
+                       
+                         <div class="card bg-c-green text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Resolved errors</p>
+                                                <h4 class="m-b-0">{{ number_format($error_log_resolved->total) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-check-circle f-50 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                </div>
             
@@ -92,7 +135,8 @@
                                     </td> 
                                     <td>
                                         <?php $view_url =  isset($schema_name) ? "software/readlogs/$error->max_id/$schema_name" : "software/readlogs/$error->max_id"; ?>
-                                        <x-button :url="$view_url" color="primary" btnsize="sm"  title="view" shape="round" toggleTitle="View error"></x-button>
+                                         <a href="<?= url($view_url) ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View error">view </a>
+
                                        <a href="#" class="btn btn-sm btn-round btn-danger" data-placement="top" data-toggle="tooltip" data-original-title="Delete error"
                                        onmousedown="delete_log('<?= $error->max_id ?>')" onclick="return false">delete</a>
                                     </td>
@@ -164,7 +208,6 @@
             }
         });
        }
-
 
 
         $('#schema_select').change(function () {

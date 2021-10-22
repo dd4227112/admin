@@ -3,8 +3,26 @@
 
 <div class="main-body">
   <div class="page-wrapper">
-   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
      
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Social media' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">updates</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Marketing</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
     <!-- Page-header end -->
     <?php
       $medias = \App\Models\SocialMediaPost::where('post_id', $post->id)->get();
@@ -53,7 +71,7 @@
            
                      <div class="view-info">
                        <h5 class="card-header-text">Social Media Engagement</h4>
-                      <a href="<?= url('/Marketing/socialMedia/show/' . $post->id.'/0')?>" class="btn btn-info  f-right"> <i class="icofont icofont-edit"></i> Update </a>
+                      <a href="<?= url('/Marketing/socialMedia/show/' . $post->id.'/0')?>" class="btn btn-primary btn-mini btn-round"> Update </a>
                      </div>
                       
                           

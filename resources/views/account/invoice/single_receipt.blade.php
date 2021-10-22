@@ -73,11 +73,11 @@
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6">
                     <p class="text-right" align="right">
-                        <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"> Edit </a>
-                        <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
+                        {{-- <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"> Edit </a> --}}
+                        <a href="#" id="printInvoice" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print </a>
 
                        
-                        <a href="whatsapp://send?text=<?=$message?>" data-action="share/whatsapp/share" 
+                        {{-- <a href="whatsapp://send?text=<?=$message?>" data-action="share/whatsapp/share" 
                             onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on whatsapp">
                             <img width="50" src="https://web.whatsapp.com/favicon-64x64.ico">
                         </a>
@@ -86,7 +86,7 @@
                         <a href="mailto:?subject=Invoice kwa ajili ya malipo ya shulesoft &amp;body=Open this Link:<?= $link ?>"
                            title="Share by Email">
                               <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
-                        </a>
+                        </a> --}}
                     </p>
                 </div>
                 <div class="clearfix"></div>

@@ -5,8 +5,26 @@
 <!-- Main-body start -->
 <div class="main-body">
   <div class="page-wrapper">
-   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
-     
+   
+      <div class="page-header">
+            <div class="page-header-title">
+                <h4> <?= 'Digital marketing' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">digital</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">marketing</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">
@@ -15,7 +33,7 @@
             <div class="card-block">
               <div class="m-10">
                 <?php if(can_access('manage_marketing')) { ?>
-                    <a class="btn btn-success btn-sm" href="<?= url('Marketing/socialMedia/add') ?>"> Add New Post </a>
+                    <a class="btn btn-primary btn-sm btn-round" href="<?= url('Marketing/socialMedia/add') ?>"> Add New Post </a>
                 <?php } ?>
               </div>
            
@@ -45,9 +63,9 @@
                           <td><?=$post->user->name?></td>
 
                           <td>
-                          <a class="btn btn-info btn-sm" href="{{ url('Marketing/socialMedia/show/'.$post->id.'/1') }}">Show</a>
+                          <a class="btn btn-info btn-mini btn-round" href="{{ url('Marketing/socialMedia/show/'.$post->id.'/1') }}">Show</a>
                           <?php if(can_access('manage_marketing')) { ?>
-                            <a class="btn btn-warning btn-sm" href="{{ url('Marketing/DeleteMedia/'.$post->id) }}">Delete</a>
+                            <a class="btn btn-warning btn-mini btn-round" href="{{ url('Marketing/DeleteMedia/'.$post->id) }}">Delete</a>
                           <?php } ?>
                           </td>
                         </tr>

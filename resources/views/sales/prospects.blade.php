@@ -2,40 +2,33 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
       
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Demo requests' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">new school</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">marketing</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-block">
 
-                            <div class="row">
-
-                                <div class="col-md-12 col-xl-4">
-                                    <div class="card counter-card-1">
-                                        <a href="<?= url('sales/prospect/demo') ?>">
-                                            <x-analyticCard :value="sizeof($demo_requests)" name="Demo Requests" icon="feather icon-trending-up text-white f-16"  
-                                            color="bg-c-green"  topicon="feather icon-book f-30" subtitle="School clients"></x-analyticCard>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xl-4">
-                                    <div class="card counter-card-1">
-                                        <a href="<?= url('sales/prospect/join') ?>">
-                                            <x-analyticCard :value="sizeof($join_requests)" name="Join Requests" icon="feather icon-trending-up text-white f-16"  
-                                            color="bg-c-blue"  topicon="feather icon-users f-30" subtitle="School clients"></x-analyticCard>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 col-xl-4">
-                                    <div class="card counter-card-3">
-                                         <x-analyticCard value="0" name="Over Due Tasks" icon="feather icon-trending-up text-white f-16"  
-                                            color="bg-c-yellow"  topicon="feather icon-users f-30" subtitle="Over Due Tasks"></x-analyticCard>
-                                    </div>
-                                </div>
-                            </div>
+                          
                         </div>
 
 
@@ -83,8 +76,8 @@
                                                                 <td><?= $request->message ?></td>
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
                                                                 <td>
-                                                                    <a href="<?= url('sales/request/attend/demo/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
-                                                                    <a href="<?= url('sales/request/delete/demo/' . $request->id) ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                                    <a href="<?= url('sales/request/attend/demo/' . $request->id) ?>" class="btn btn-success btn-mini btn-round">Attended Already</a>
+                                                                    <a href="<?= url('sales/request/delete/demo/' . $request->id) ?>" class="btn btn-danger btn-mini btn-round">Delete</a>
                                                                 </td>
                                                             </tr>
                                                             <?php $i++;

@@ -3,7 +3,25 @@
 <div class="main-body">
   <div class="page-wrapper">
 
-   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+ 
+   <div class="page-header">
+        <div class="page-header-title">
+            <h4><?='Learning details' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">learning</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
    
     <div class="page-body">
       <div class="row">
@@ -40,7 +58,7 @@
                           <?php if($learning->company_file_id > 0) { ?>
                             <th scope="row">
                               <?php $viw_url = "customer/viewFile/$learning->id/course_certificate"; ?>
-                               <x-button :url="$viw_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="View certificate"></x-button>
+                               <a href="<?= url($viw_url)?>" class="btn btn-primary btn-mini btn-round">View</a>
                             </th>
                           <?php } else { ?>
                             <th scope="row">   
@@ -52,7 +70,7 @@
                                       </div>
                                       <div class="col-sm-6">
                                           <?= csrf_field() ?>
-                                        <x-button color="primary" btnsize="mini"  title="Upload" shape="round" toggleTitle="Upload certificate"></x-button>
+                                        <button color="primary" class="btn btn-primary btn-mini btn-round"> Upload</button>
                                       </div>
                                   </div>
                               </form>

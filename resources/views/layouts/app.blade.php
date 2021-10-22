@@ -325,7 +325,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <span class="pcoded-mtext">Customers</span>
                                             </a>
                                         </li>
-                                         <?php } if (can_access('view_engineering_dashboard'))  { ?>
+                                         <?php } if (!can_access('view_engineering_dashboard'))  { ?>
                                           <li class=" ">
                                             <a href="<?= url('analyse/software') ?>">
                                                 <span class="pcoded-mtext">Engineering</span>
@@ -393,17 +393,17 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
 
-                                                <li class=" ">
+                                                {{-- <li class=" ">
                                                     <a href="<?= url('customer/karibu') ?>">
                                                         <span class="pcoded-mtext">karibuSMS</span>
                                                     </a>
-                                                </li>
+                                                </li> --}}
 
-                                                <li class=" ">
+                                                {{-- <li class=" ">
                                                     <a href="<?= url('customer/epayments') ?>">
                                                         <span class="pcoded-mtext">e-payments</span>
                                                     </a>
-                                                </li>
+                                                </li> --}}
                                             </ul>
                                         </li>
 
@@ -419,11 +419,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
                                              
-                                                <li class="">
+                                                {{-- <li class="">
                                                     <a href="<?= url('customer/calls') ?>">
                                                         <span class="pcoded-mtext">Call logs</span>
                                                     </a>
-                                                </li>
+                                                </li> --}}
 
                                                  <li class="">
                                                     <a href="<?= url('customer/emailsms') ?>">

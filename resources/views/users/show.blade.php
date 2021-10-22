@@ -11,7 +11,24 @@ foreach ($user_permission as $permis) {
 <div class="main-body">
     <div class="page-wrapper">
    
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+          <div class="page-header">
+            <div class="page-header-title">
+                <h4> <?= $user->name ?? '' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">user</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
         <div class="page-body">
             <!--profile cover start-->
@@ -33,30 +50,120 @@ foreach ($user_permission as $permis) {
                             if (Auth::user()->role_id != 7) { ?>
                             <div class="col-md-6 col-xl-4">
                                 <?php $pay = isset($user->salary) ? $user->salary : 1 ?>
-                                <x-analyticCard :value="$pay" name="Basic Salary" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue" 
-                                 topicon="feather icon-user f-30" subtitle="Monthly basic salary"></x-analyticCard>
+                           
+                                  <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <h4 class="text-c-green f-w-700">{{ number_format($pay)}} </h4>
+                                                <h6 class="text-muted m-b-0">Basic Salary</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="feather icon-user f-30"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-c-blue">
+                                        <div class="row align-items-center">
+                                            <div class="col-9">
+                                                <p class="text-white m-b-0">Monthly basic salary</p>
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <i class="feather icon-trending-up text-white f-16"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="col-md-6 col-xl-4">
                                  <?php $month_bonus = 0 ?>
-                                <x-analyticCard :value="$month_bonus" name="This Month Bonus" icon="feather icon-trending-up text-white f-16"  color="bg-c-green" 
-                                 topicon="feather icon-user f-30" subtitle="Based on performance"></x-analyticCard>
+                               
+                                    <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <h4 class="text-c-green f-w-700">{{ number_format($month_bonus)}} </h4>
+                                                <h6 class="text-muted m-b-0">This Month Bonus</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="feather icon-user f-30"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-c-green">
+                                        <div class="row align-items-center">
+                                            <div class="col-9">
+                                                <p class="text-white m-b-0">Based on performance</p>
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <i class="feather icon-trending-up text-white f-16"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
 
                         <?php } else { ?>
                             <div class="col-md-6 col-xl-4">
                 
                                   <?php $nmb_schools = \DB::table('admin.nmb_schools')->count(); ?>
-                                <x-analyticCard :value="$nmb_schools" name="NMB Schools" icon="feather icon-trending-up text-white f-16"  color="bg-c-yellow" 
-                                    topicon="feather icon-user f-30" subtitle="Total Schools with NMB">
-                                </x-analyticCard>
+                               
+                                   <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <h4 class="text-c-green f-w-700">{{ number_format($nmb_schools)}} </h4>
+                                                <h6 class="text-muted m-b-0">NMB Schools</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="feather icon-user f-30"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-c-yellow">
+                                        <div class="row align-items-center">
+                                            <div class="col-9">
+                                                <p class="text-white m-b-0">Total Schools with NMB</p>
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <i class="feather icon-trending-up text-white f-16"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-6 col-xl-4">
                                  <?php $b = \collect(\DB::select('select count(distinct branch) as count from admin.nmb_schools'))->first(); ?>
-                                <x-analyticCard :value="$b->count" name="Branches" icon="feather icon-trending-up text-white f-16"  color="bg-c-pink" 
-                                    topicon="feather icon-user f-30" subtitle="Branches with Schools">
-                                </x-analyticCard>
+                            
+                                   <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <h4 class="text-c-green f-w-700">{{ number_format($b->count)}} </h4>
+                                                <h6 class="text-muted m-b-0">Branches</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="feather icon-user f-30"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-c-pink">
+                                        <div class="row align-items-center">
+                                            <div class="col-9">
+                                                <p class="text-white m-b-0">Branches with Schools</p>
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <i class="feather icon-trending-up text-white f-16"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         <?php } ?>
                     </div>
@@ -173,8 +280,7 @@ foreach ($user_permission as $permis) {
                                                                         </td>
                                                                          <td>
                                                                          <?php  $reset_url = "users/resetPassword/$user->id"; ?>
-                                                                         <x-button :url="$reset_url" color="warning" btnsize="mini"  title="Reset Password" shape="round" toggleTitle="Reset your password"></x-button>
-
+                                                                        <a href="<?= url($reset_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reset your password">Reset Password  </a>
                                                                          </td>
                                                                     </tr>
                                                                 </tbody>
@@ -508,7 +614,9 @@ foreach ($user_permission as $permis) {
                                         <div class="card-header">
                                             <h5 class="card-header-text">Description About Me</h5>
                                             <?php $url_edit = "users/edit/$user->id"; ?>
-                                        <x-button :url="$url_edit" color="primary float-right" btnsize="mini"  title="Edit" shape="round" toggleTitle="Edit user data"></x-button>
+                        
+                                        <a href="<?= url($url_edit) ?>" class="btn btn-info btn-mini  btn-round float-right" data-placement="top"  data-toggle="tooltip" data-original-title="Edit user data">Edit  </a>
+                                         
 
                                         </div>
                                         <div class="card-block user-desc">
@@ -591,7 +699,8 @@ foreach ($user_permission as $permis) {
                                         <div class="form-group row">
                                             <div class="col-sm-2">
                                                 <?php $qr_code =  "QrCode/generate_qr_code/$user->email"; ?>
-                                                 <x-button :url="$qr_code" color="primary" btnsize="mini"  title="QR code" shape="round" toggleTitle="Create qr code"></x-button>
+                                                <a href="<?= url($qr_code) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Generate qr code">qr code  </a>
+                                                 
 
                                             </div>
                                             <?php if ($user->qr_code != '') { ?>
@@ -786,8 +895,11 @@ foreach ($user_permission as $permis) {
                                                                       <?php if ($absent->status == null) { ?>
                                                                          <?php if(can_access('approve_leave')) { ?>
                                                                          <?php $app_url = "users/askleave/$absent->id/approve"; $rej_url = "users/askleave/$absent->id/reject"; ?>
-                                                                          <x-button :url="$app_url" color="primary" btnsize="mini"  title="Approve" shape="round" toggleTitle="Approve"></x-button>
-                                                                          <x-button :url="$rej_url" color="warning" btnsize="mini"  title="Reject" shape="round" toggleTitle="Reject"></x-button>
+                                                                          
+
+                                                                          <a href="<?= url($app_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Approve">Approve  </a>
+                                                                          <a href="<?= url($rej_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reject">Reject  </a>
+
 
                                                                          <?php } ?>
                                                                      <?php } else if($absent->status == 'Approved') { ?>
@@ -894,8 +1006,7 @@ foreach ($user_permission as $permis) {
                                                                     <td> {{ $learning->source ?? '' }}</td>
                                                                     <td>
                                                                         <?= $v_url = "users/learning/$learning->id"; ?>
-                                                                          <x-button :url="$v_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="View"></x-button>
-
+                                                                          <a href="<?= url($v_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View">View  </a>
                                                                     </td>
                                                                 </tr>
                                                               <?php $i++;} ?>

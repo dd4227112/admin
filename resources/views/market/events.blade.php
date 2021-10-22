@@ -5,8 +5,25 @@
 <!-- Main-body start -->
 <div class="main-body">
   <div class="page-wrapper">
-    
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+      <div class="page-header">
+        <div class="page-header-title">
+            <h4><?=' Add event' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">new events</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
       
     <div class="page-body">
       <div class="row">
@@ -16,7 +33,7 @@
             <div class="card-block">
                 <span>
                   <?php if(can_access('add_event')) { ?>
-                  <a class="btn btn-success btn-sm" href="<?= url('Marketing/addEvent') ?>"> Add New Event </a>
+                  <a class="btn btn-primary btn-sm btn-round" href="<?= url('Marketing/addEvent') ?>"> Add New Event </a>
                   <?php } ?>
               </span>
            </div>
@@ -49,8 +66,8 @@
                           <td><?=$event->end_time?></td>
 
                           <td>
-                          <a class="btn btn-info btn-sm" href="{{ url('Marketing/events/'.$event->id.'/1') }}">Show</a>
-                          <a class="btn btn-warning btn-sm" href="{{ url('Marketing/DeleteMedia/'.$event->id) }}">Delete</a>
+                          <a class="btn btn-info btn-mini btn-round" href="{{ url('Marketing/events/'.$event->id.'/1') }}">Show</a>
+                          <a class="btn btn-warning btn-mini btn-round" href="{{ url('Marketing/DeleteMedia/'.$event->id) }}">Delete</a>
                           </td>
                         </tr>
                         <?php } } ?>

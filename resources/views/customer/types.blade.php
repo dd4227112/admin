@@ -63,7 +63,26 @@ function getStatus($user, $status = 'New') {
 <!-- Main-body start -->
 <div class="main-body">
     <div class="page-wrapper">
-       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+       
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4> Setup</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">setup</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
       
         <div class="page-body">
             <div class="row">
@@ -114,7 +133,7 @@ function getStatus($user, $status = 'New') {
                                                         $a = 0;
                                                     } else {
                                                         $a = 0;
-                                                        echo '<b class="label label-warning">No Person Allocated</b>';
+                                                        echo '<label class="badge badge-inverse-warning">No Person Allocated</label>';
                                                     }
                                                     ?></td>
                                             
@@ -151,7 +170,7 @@ function getStatus($user, $status = 'New') {
 
 
 
-                                                <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
+                                                <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini btn-round btn-primary"> View</a></td>
                                             </tr>
                                         <?php $x++; } ?>
                                     </tbody>

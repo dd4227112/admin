@@ -28,9 +28,25 @@ return $echo;
 <?php $school_name = isset($school->sname) ? $school->sname : '';
       $numbers=isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '';
       $s_address = isset($school->address) ? $school->address : '';
-      $breadcrumb = array('title' =>$school_name,'subtitle'=>$numbers,'head'=>$s_address);
  ?>
-<x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= $school_name ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!"><?=$numbers?></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!"><?=$s_address?></a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
 <div class="page-body">
 <div class="row">
@@ -1229,7 +1245,8 @@ name="client_id" />
 
 <p class="float-right">
 <?php $i_url = "customer/download/$client_id"; ?>
-<x-button :url="$i_url" color="primary" btnsize="sm"  title="Implementation plan" shape="round" toggleTitle="Initial Implementation Plan"></x-button>
+ <a href="<?= url($i_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Initial Implementation Plan">Implementation plan  </a>
+
 </p>
 </div>
 <div class="card-block">
@@ -2059,8 +2076,8 @@ style="z-index: 1050; display: none;">
 
 </div>
 <div class="modal-footer">
-<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-<button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+<button type="button" class="btn btn-default btn-mini btn-round " data-dismiss="modal">Close</button>
+<button type="submit" class="btn btn-primary btn-mini btn-round ">Save changes</button>
 </div>
 <?= csrf_field() ?>
 </form>

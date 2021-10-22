@@ -3,7 +3,25 @@
 
 <div class="main-body">
   <div class="page-wrapper">
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+  
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Minutes' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">meeting</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
     <div class="page-body">
       <div class="row">
@@ -12,7 +30,8 @@
           <div class="card">
             <div class="card-block">
                <div class="card-block">
-                  <x-button url="users/addMinute" color="primary" btnsize="mini"  title="Add" shape="round" toggleTitle="Add New Minute"></x-button>              
+                  <a href="<?= url("users/addminute") ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title=" Add New Minute">  Add Minute </a>
+
               </div>
                 <div class="card-block">
                   <div class="table-responsive dt-responsive">
@@ -43,10 +62,9 @@
                           <td><?=$minute->department->name?></td>
 
                           <td class="text-center">
-                              <?php $show_url ="users/showMinute/$minute->id"; $delete_url ="users/deleteMinute/$minute->id";?>
-                           <x-button :url="$show_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="Show Minute"></x-button>            
-                           <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete Minute"></x-button>              
-
+                              <?php $show_url ="users/showMinute/$minute->id"; $delete_url ="users/deleteMinute/$minute->id";?>            
+                                   <a href="<?= url($show_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Show Minute">  view </a>
+                                   <a href="<?= url($delete_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete Minute">  delete</a>
                           </td>
                         </tr>
                         <?php } } ?>

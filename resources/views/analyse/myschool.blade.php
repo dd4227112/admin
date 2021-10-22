@@ -4,7 +4,25 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Clients' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">client schools</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
         <div class="page-body">
             <div class="row">
@@ -15,33 +33,56 @@
                             <div class="row">
 
                                     <div class="col-md-12 col-xl-4">
-                                          <x-smallCard title="Private Schools"
-                                            :value="count($schools)"
-                                            icon="feather icon-book f-50 text-c-red"
-                                            cardcolor="bg-c-pink text-white"
-                                            >
-                                         </x-smallCard>
+                                    
+                                      <div class="card bg-c-pink text-white">
+                                      <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5"> "Private Schools</p>
+                                                <h4 class="m-b-0">{{ number_format(count($schools)) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                            </div>
+                                       </div>
+                                     </div>
+                                    </div>
+
                                     </div>
 
                                     <div class="col-md-12 col-xl-4">
-                                           <?php $value = count($schools)*407*10000; ?>
-                                          <x-smallCard title="Estimated Value"
-                                            :value="$value"
-                                            icon="feather icon-book f-50 text-c-red"
-                                            cardcolor="bg-c-green text-white"
-                                            >
-                                         </x-smallCard>
-                                    </div>
 
-                                    <div class="col-md-12 col-xl-4">
-                                           <?php $value_ = sizeof($schools)*407*10000*0.03 + sizeof($schools)*100000; ?>
-                                          <x-smallCard title="Your Revenue Estimate"
-                                            :value="$value_"
-                                            icon="feather icon-book f-50 text-c-red"
-                                            cardcolor="bg-c-blue text-white"
-                                            >
-                                         </x-smallCard>
+                                    <div class="card bg-c-green text-white">
+                                      <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5"> Estimated Value</p>
+                                                <h4 class="m-b-0">{{ number_format(count($schools)*407*10000 ) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                            </div>
+                                       </div>
+                                     </div>
                                     </div>
+                                </div>
+
+                                <div class="col-md-12 col-xl-4">
+                                        
+                                    <div class="card bg-c-blue text-white">
+                                      <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5"> Your Revenue Estimate</p>
+                                                <h4 class="m-b-0">{{ number_format(sizeof($schools)*407*10000*0.03 + sizeof($schools)*100000 ) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                            </div>
+                                       </div>
+                                     </div>
+                                 </div>
+                                </div>
                             </div>
                         <?php } ?>
                     </div>

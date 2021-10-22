@@ -19,7 +19,25 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
 <div class="main-body">
   <div class="page-wrapper">
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+     <div class="page-header">
+            <div class="page-header-title">
+                <h4>Create Invoices</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
     <div class="page-body">
         <div class="row">
@@ -115,8 +133,9 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                 </td>
                                                                 <td>
                                                                     <?php $url = "account/createShuleSoftInvoice/$schema->id"; ?>
-                                                                      <x-button :url="$url" color="primary" btnsize="mini"  title="Create" shape="round" toggleTitle="Create invoice"></x-button>
 
+                                                                    <a href="<?= url($url) ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Create invoice"> Create </a>
+                                                                
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>

@@ -384,7 +384,7 @@ class Software extends Controller {
         $this->data['tag'] = $tag = \App\Models\ErrorLog::find($id);
         $this->data['errors'] = $errors = strlen($schema) > 3 ? \App\Models\ErrorLog::where(['error_message'=>$tag->error_message,'schema_name'=>$tag->schema_name])->whereNull(['deleted_at','deleted_by'])->latest()->get() : \App\Models\ErrorLog::where('error_message',$tag->error_message)->whereNull(['deleted_at','deleted_by'])->latest()->get();
         $this->data['school']  = strlen($schema) > 3 ? \collect(\DB::select("select name from admin.clients where username = '$schema' "))->first() : [];
-      
+        
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
         return view('software.logs', $this->data);
         //echo 1;   

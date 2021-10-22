@@ -4,7 +4,26 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    
+
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4>Invoices</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <div class="page-body">
             <div class="row">
@@ -17,7 +36,7 @@
                                 <div class="col-sm-12 col-xl-4 m-b-30">
                                     <h4 class="sub-title">New Invoice</h4>
                                        <?php if(can_access('creating_invoice')) { ?>
-                                          <x-button url="account/projection" color="primary" btnsize="sm"  title="Create new invoice"></x-button>
+                                           <a href="<?= url("account/projection") ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Create new invoice">New invoice  </a>
                                       <?php } ?>
                                 </div>
 
@@ -67,10 +86,10 @@
                                 <div class="slide"></div>
                             </li>
 
-                            <li class="nav-item complete">
+                            {{-- <li class="nav-item complete">
                                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false"> <strong> SUMMARY</strong>  </a> 
                                 <div class="slide"></div>
-                            </li>
+                            </li> --}}
 
                             @if(isset($project_id) && isset($account_year_id)) 
                             <li class="nav-item complete">

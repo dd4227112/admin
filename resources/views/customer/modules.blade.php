@@ -110,7 +110,25 @@ function select($value, $schema, $sources) {
 <!-- Main-body start -->
 <div class="main-body">
     <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+      <div class="page-header">
+        <div class="page-header-title">
+            <h4>Modules</h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Customer modules</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
       
         <div class="page-body">
             <div class="row">
@@ -369,7 +387,8 @@ function select($value, $schema, $sources) {
                                                                     ?></td>
                                                                 <td>
                                                                     <?php $view_url = "customer/profile/$school->schema_name"; ?>
-                                                                       <x-button :url="$view_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="School profile"></x-button>
+                                                                     <a href="<?= url($view_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="School profile"> view </a>
+
                                                                 </td>
 
                                                             </tr>

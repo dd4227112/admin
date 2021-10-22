@@ -2,7 +2,25 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4><?=' Pensions' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">pensions</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <div class="page-body">
           <div class="row">
@@ -11,7 +29,7 @@
                 <div class="card">
                 <div class="card-block">
                     <div class="m-b-15">
-                        <x-button url="payroll/addPension" color="primary" btnsize="sm"  title="Add Pension Fund"></x-button>
+                          <a href="<?= url("payroll/addPension") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add Pension Fund"> Add pension </a> 
                     </div>
  
                         <div class="table-responsive">
@@ -52,10 +70,10 @@
                                             <?php echo $pension->userPensions->count(); ?>
                                         </td>
                                         <td>
-                                             <?php $pension_url = "payroll/pension/$pension->id";$edit_url="payroll/editPension/$pension->id"; $delete_url = "payroll/deletePension/$pension->id";?>
-                                             <x-button :url="$pension_url" color="primary" btnsize="mini"  title="members" shape="round" toggleTitle="Pension members"></x-button>
-                                             <x-button :url="$edit_url" color="info" btnsize="mini"  title="Edit" shape="round" toggleTitle="Edit Pension"></x-button>
-                                             <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete Pension"></x-button>
+                                            <?php $pension_url = "payroll/pension/$pension->id";$edit_url="payroll/editPension/$pension->id"; $delete_url = "payroll/deletePension/$pension->id";?>
+                                            <a href="<?= url($pension_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Pension members"> members </a> 
+                                            <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit Pension"> edit </a> 
+                                            <a href="<?= url($delete_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete Pension"> delete </a> 
                                         </td>
                                     </tr>
                                     <?php

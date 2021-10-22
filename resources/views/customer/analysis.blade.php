@@ -4,7 +4,24 @@
 <div class="main-body">
   <div class="page-wrapper">
     
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+      <div class="page-header">
+        <div class="page-header-title">
+            <h4>Requirements</h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">user requirements</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
 
     <div class="page-body">
       <div class="row">
@@ -57,10 +74,9 @@
                                   <td><?= $req->status ?></td>
                                   <td>
                                      <?php $view_url="customer/requirements/show/$req->id"; $edit_url="customer/requirements/edit/$req->id"; ?>
-                                     <x-button :url="$view_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="Requirement"></x-button>
-                                    <?php if($req->status !== 'Completed') {  ?>
-                                     <x-button :url="$view_url" color="info" btnsize="mini"  title="edit" shape="round" toggleTitle="Edit"></x-button>
-
+                                     <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Requirement"> view </a>
+                                    <?php if($req->status != 'Completed') {  ?>
+                                        <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit"> Edit </a>
                                     <?php } ?>
                                   </td>
                               </tr>

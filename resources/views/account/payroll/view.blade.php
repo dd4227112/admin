@@ -3,11 +3,29 @@
 <div class="main-body">
     <div class="page-wrapper">
         <?php $month = date('F,Y',strtotime($set)) .' - monthly payroll'; 
-        $breadcrumb= array('title' => $month,'subtitle'=>'accounts','head'=>'payroll');
           
         ?>
     
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= $month ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">salaries</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -136,7 +154,8 @@
                                                           
                                                             <td class="text-center">
                                                               <?php $month =date('m'); $_url = "payroll/payslip/null/?id=$salary->user_id&month=$month&set=$set";?>
-                                                              <x-button :url="$_url" color="primary" btnsize="sm"  title="Preview" shape="round" toggleTitle="Show payslip"></x-button>
+                                                     <a href="<?= url($_url) ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Show payslip"> Preview </a>
+
                                                             </td>                 
                                                         </tr>
                                                         <?php

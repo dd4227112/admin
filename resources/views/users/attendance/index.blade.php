@@ -4,7 +4,25 @@
 <div class="main-body">
   <div class="page-wrapper">
 
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+          <div class="page-header">
+            <div class="page-header-title">
+                <h4>School group</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Attendance</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
    
     <div class="page-body">
       <div class="row">
@@ -14,7 +32,7 @@
                
               <div class="row">
                 <div class="card-header float-left">
-                  <a href="<?= url('attendance/add') ?>" class="btn btn-sm btn-primary">Create</a>
+                  <a href="<?= url('attendance/add') ?>" class="btn btn-mini btn-primary btn-round">Create</a>
                </div> 
                <div class="card-header float-right">
                   <a href="<?= url('attendance/report') ?>" class="btn btn-sm btn-primary">View Report</a>

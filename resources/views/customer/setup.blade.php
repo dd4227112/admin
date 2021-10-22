@@ -64,7 +64,25 @@ return $result;
 <div class="main-body">
     <div class="page-wrapper">
        
-       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+   
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4> Setup</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">setup</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
           
         <div class="page-body">
             <div class="row">
@@ -160,7 +178,7 @@ return $result;
 
                                                 <?php } ?>
 
-                                                <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
+                                                <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini btn-round btn-primary"> View</a></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
@@ -247,7 +265,7 @@ return $result;
                                                     <td><?= $user->firstname ?></td>
                                                     <td><?=getStatus($user,'New')?></td>
                                                     <td><?=getStatus($user,'Complete')?></td>
-                                                    <td><?=getStatus($user,'Pending')?>                       </td>
+                                                    <td><?=getStatus($user,'Pending')?> </td>
 
                                                 </tr>
                                                 <?php

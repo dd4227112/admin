@@ -6,8 +6,25 @@
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
-       
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4><?=' Communication' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">communication</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">sales</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
@@ -27,7 +44,7 @@
                                                     $array[$schema_name->table_schema] = $schema_name->table_schema;
                                                 }
 
-                                                echo form_dropdown("refer_bank_id", $array, old("refer_bank_id"), "id='refer_bank_id' class='form-control select2' ");
+                                                echo form_dropdown("refer_bank_id", $array, old("refer_bank_id"), "id='refer_bank_id' class=' select2' ");
                                                 ?>
                                             </div>
                                             <div class="col-lg-4"></div>
@@ -123,7 +140,7 @@
                                                                     <?php
                                                                     if (preg_match('/not implemented/i', $status)) {
                                                                         ?>
-                                                                        <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-success btn-sm task_allocated_id">Save</button>
+                                                                        <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-primary btn-mini btn-round btn-sm task_allocated_id">Save</button>
                                                                     <?php } ?>
                                                                 </td>
                                                             </tr>

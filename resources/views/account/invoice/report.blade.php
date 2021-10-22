@@ -3,8 +3,25 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
-     
+      
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Reports' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payments</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
          <div class="page-body">
             <!-- form start -->
@@ -62,7 +79,7 @@
                                                     <td><?= money($invoice->amount) ?></td>
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                                     <td>
-                                                        <a class="btn btn-success btn-sm" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
+                                                        <a class="btn btn-success btn-mini btn-round" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                    </td>
                                                </tr>
                                          <?php $i++; } ?>

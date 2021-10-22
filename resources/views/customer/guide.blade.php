@@ -2,8 +2,25 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
-       
+
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Guide' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">user manual</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -17,7 +34,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                       <p align='left'>
-                                        <a class="btn btn-success" href="<?= url('customer/guide/null?pg=add') ?>">Add New Guide</a>
+                                        <a class="btn btn-primary btn-mini btn-round" href="<?= url('customer/guide/null?pg=add') ?>">Add New Guide</a>
                                       </p>
                                     <br/>
                                 </div>
