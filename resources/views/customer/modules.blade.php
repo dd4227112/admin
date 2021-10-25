@@ -387,7 +387,8 @@ function select($value, $schema, $sources) {
                                                                     ?></td>
                                                                 <td>
                                                                     <?php $view_url = "customer/profile/$school->schema_name"; ?>
-                                                                     <a href="<?= url($view_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="School profile"> view </a>
+                                                                     <a href="<?= url($view_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" 
+                                                                        data-original-title="School profile"> view </a>
 
                                                                 </td>
 

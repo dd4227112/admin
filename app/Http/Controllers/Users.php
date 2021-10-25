@@ -744,7 +744,6 @@ class Users extends Controller {
 
 
     public function usergroup(){
-        $this->data['breadcrumb'] = array('title' => 'Clients Group','subtitle'=>'customers','head'=>'operations');
         $tab = request()->segment(3);
         $this->data['groups'] = \App\Models\Group::get();
         if($tab == 'add'){

@@ -44,19 +44,19 @@
                             <table class="table dataTable table-sm table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th ><?= __('#') ?></th>
-                                    <th><?= __('Employee name') ?></th>
+                                    <th>#</th>
+                                    <th>Employee name</th>
                                     <th>User designation</th>
-                                    <th >Bank</th>
-                                    <th><?= __('Bank Account') ?></th>
-                                    <th><?= __('Basic Pay') ?></th>
-                                    <th><?= __('Allowance') ?></th>
-                                    <th ><?= __('Gross pay') ?></th>
-                                    <th ><?= __('Pension') ?></th>
-                                    <th ><?= __('deduction') ?></th>
-                                    <th ><?= __('Taxable Amount') ?></th>
-                                    <th ><?= __('Paye') ?></th>
-                                    <th ><?= __('Net Pay') ?></th>
+                                    <th>Bank Account</th>
+                                    <th>Account </th>
+                                    <th>Basic Pay </th>
+                                    <th>Allowance </th>
+                                    <th>Gross pay </th>
+                                    <th>Pension </th>
+                                    <th>deduction </th>
+                                    <th>Taxable Amount </th>
+                                    <th>Paye </th>
+                                    <th>Net Pay </th>
                                     <?php
                                     if (can_access('manage_payroll')) {?>   
                                             {{-- <th ><?= __('Action') ?></th>                                                                                                                                        <!--<th class="col-sm-4"><?= __('action') ?></th>--> --}}
@@ -78,7 +78,6 @@
                                 $bank_name = '';
                                 $users =  \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,5,15))->get();
                                 foreach ($users as $user) {
-                                   // $user_info = $user->userInfo(DB::table($user->table));
                                     $basic_salary = $special == 0 ? $user->salary : 0;
                                     $total_basic_pay += $basic_salary;
                                     ?>
@@ -99,7 +98,7 @@
                                             <span id="stat<?= $user->id . 'bank_account' ?>"></span>
                                         </td>
                                         <td>
-                                            <span style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" 
+                                            <span style="text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" 
                                             onblur="save('<?= $user->id . 'salary' ?>', '<?= $user->id ?>', 'salary')" 
                                             id="<?= $user->id . 'salary' ?>"><?= (int) $basic_salary == 0 ? 0 : $basic_salary ?></span>
                                             <span id="stat<?= $user->id . 'salary' ?>"></span>
@@ -107,7 +106,7 @@
                                         <td>
                                             <?php  
                                             //calculate user allowances
-                                            $allowances = \App\Models\UserAllowance::where('user_id', (int)$user->id)->get();
+                                            $allowances = \App\Models\UserAllowance::where('user_id', (int) $user->id)->get();
                                             $allowance_ids = array();
                                             $total_allowance = 0;
                                             $taxable_allowances = 0;
@@ -218,11 +217,14 @@
                                             $ededuction_ids = array();
                                             $total_deductions = 0;
                                             $total_employer_deduction = 0;
+                                            $exclude_deduction_amount = 0;
+                                            $deduction_employee_contribution = 0;
                                             if (!empty($deductions)) {
                                                 foreach ($deductions as $value) {
                                                     $cut_amount = (int) $value->deduction->gross_pay == 1 ? $gross_pay : $basic_salary;
                                                     $employer_deduction = (bool) $value->deduction->is_percentage == 1 ? (float) $cut_amount * $value->employer_percent / 100 : (float) $value->employer_amount;
                                                     $employee_deduction = (bool) $value->deduction->is_percentage == 1 ? (float) $cut_amount * $value->percent / 100 : (float) $value->amount;
+
                                                     $total_employer_deduction += $employer_deduction;
                                                     $ded_amount = (float) $value->amount > 0 ? $value->amount : $value->deduction->amount;
                                                     $ded_percent = (float) $value->percent > 0 ? $value->percent : $value->deduction->percent;
@@ -230,13 +232,18 @@
                                                     $now = date_create(date('Y-m-d'));
                                                     $diffi = date_diff($now, $end_date);
                                                     $time_diff = $diffi->format("%R%a");
+                                                    //Check if Deduction is Non Taxable Deduction        
+                                                    if ($value->deduction->type <> 0) {
+                                                        $deduction_employee_contribution += (bool) $value->deduction->is_percentage == 1 ? (float) $cut_amount * $ded_percent / 100 : (float) $ded_amount;
+                                                    }
+                                                    
                                                     if ($value->type == 0 && (int) $time_diff > 0) {
                                                         $tded_amount = $employer_deduction + $ded_amount;
                                                         // $total_deductions += $tded_amount;
                                                         $total_deductions += $ded_amount;
                                                         array_push($deduction_ids, [$employee_deduction => $value->deduction_id]);
                                                         array_push($ededuction_ids, [$employer_deduction => $value->deduction_id]);
-                                                    }
+                                                       }
                                                     if ($value->type <> 0) {
                                                         $deduction_amount = (bool) $value->deduction->is_percentage == 1 ? $cut_amount * $ded_percent / 100 : $ded_amount;
                                                         $tdeduction_amount = $employer_deduction + $deduction_amount;
@@ -253,9 +260,8 @@
                                                             'payment_type_id'=>1,
                                                             'date' => date('Y-m-d', strtotime(request('payroll_date'))),
                                                             'transaction_id' => time(),
-                                                            'bank_account_id'=>DB::table('bank_accounts')->first()->id,
-                                                            'created_by' => Auth::user()->id,
-                                                         
+                                                            'bank_account_id'=>\DB::table('bank_accounts')->first()->id,
+                                                            'created_by' => \Auth::user()->id,
                                                         ]);
                                                     }
                                                 }
@@ -274,16 +280,25 @@
                                             ?>  
                                         </td>
                                         <td>
-                                            <?php
+                                           
+
+                                             <?php
                                             //calculate PAYEE
-                                            $tax = \App\Models\Paye::where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
+                                            if ($create == 1 && $tax_status->payes()->count() > 2) {
+
+                                                $tax = $tax_status->payes()->where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
+                                            }else{ 
+                                                $tax = $income_status->payes()->where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
+                                            }
+                                            
                                             if (!empty($tax) ) {
                                                 $paye = ($taxable_amount - $tax->from) * $tax->tax_rate / 100 + $tax->tax_plus_amount;
                                             } else {
                                                 $paye = 0;
                                             }
+
+                                            echo round($paye, 0);
                                             $total_paye += $paye;
-                                            echo money($paye);
                                             ?> 
                                         </td>
                                         <td>

@@ -10,7 +10,7 @@ class UserDeduction extends Model {
 
     protected $table = 'user_deductions';
     protected $fillable = ['id', 'user_id', 'deduction_id', 'created_by', 'deadline', 'type', 'amount', 'percent', 'index_number',
-    'loan_application_id','created_at','updated_at','employer_percent','employer_amount'];
+    'loan_application_id','created_at','updated_at','employer_percent','employer_amount','member_id'];
 
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');

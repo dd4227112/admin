@@ -11,8 +11,14 @@ class Payroll extends Controller {
     }
 
     public function taxes() {
-        $this->data['breadcrumb'] = array('title' => 'Taxes','subtitle'=>'accounts','head'=>'payroll');
-        $this->data['taxes'] = DB::table('constant.paye')->get();
+        $id = request()->segment(3);
+         if ((int) $id > 0) {
+            $this->data['taxes'] = DB::table('constant.paye')->where('tax_status_id', $id)->get();
+            $this->data['status'] = DB::table('constant.tax_status')->where('id', $id)->first();
+        }else{
+            $this->data['taxes'] = [];
+        }
+        $this->data['tables'] = DB::table('constant.tax_status')->get();
         $this->data['subview'] = 'account.payroll.taxes';
         return view($this->data['subview'], $this->data);
     }
@@ -234,14 +240,15 @@ class Payroll extends Controller {
     }
 
     public function create() {
-        $this->data['breadcrumb'] = array('title' => 'Create payroll','subtitle'=>'accounts','head'=>'payroll');
             $this->data['create'] = 0;
             $this->data['special'] = (int) request()->segment(3) > 0 ? 1 : 0;
+            $this->data['income_status'] = \App\Models\TaxTable::where('start_date', '<=', date("Y-m-d"))->where('end_date', '>=', date("Y-m-d"))->first();
             if ($_POST) {
                 $payroll_date = request('payroll_date');
                 $refer_expense_id = $this->getSalaryCategory();
                 if ((int) $refer_expense_id > 0) {
                     $this->data['create'] = 1;
+                     $this->data['tax_status'] = $tax_status = \App\Models\TaxTable::where('start_date', '<=', date("Y-m-d", strtotime($payroll_date)))->where('end_date', '>=', date("Y-m-d", strtotime($payroll_date)))->first();
                     $this->data['refer_expense_id'] = $refer_expense_id;  
                     $this->data['users'] = $this->getUsers();
                     $this->data['view'] = 'account/payroll/create';

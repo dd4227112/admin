@@ -809,7 +809,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <?php } ?>
 
                                          <?php if (can_access('manage_database')) { ?>
-                                            <li class=" pcoded-hasmenu">
+                                            <li class="pcoded-hasmenu">
                                                 <a href="javascript:void(0)">
                                                     <span class="pcoded-mtext">Payment Integration</span>
                                                 </a>

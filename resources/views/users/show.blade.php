@@ -263,14 +263,25 @@ foreach ($user_permission as $permis) {
                                                                         <th scope="row">Bank name</th>
                                                                         <td> {{ $user->bank_name }}</td>
                                                                     </tr>
+
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
-                                                                        <td><a  target='_break' href="<?=  $user->academic_certificates ??  '' ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a></td>
+                                                                      <?php if($user->academic_certificates == '') { ?>
+                                                                       <td>   <label class="btn btn-warning btn-mini btn-round"> No report</label>
+                                                                      <?php } else { ?> 
+                                                                        <a target='_break' href="<?=  $user->academic_certificates ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a>
+                                                                      <?php } ?>
+                                                                       </td>
                                                                     </tr>
 
                                                                     <tr>
                                                                         <th scope="row">Employment Contract</th>
-                                                                        <td><a target='_break' href="<?=  $user->employment_contract ??  '' ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a></td>
+                                                                          <?php if($user->employment_contract == '') { ?>
+                                                                       <td>  <label class="btn btn-warning btn-mini btn-round"> No report</label>
+                                                                      <?php } else { ?> 
+                                                                        <a target='_break' href="<?=  $user->employment_contract ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a>
+                                                                      <?php } ?>
+                                                                       </td>
                                                                     </tr>
                                                                      <tr>
                                                                          <td> 
@@ -280,7 +291,7 @@ foreach ($user_permission as $permis) {
                                                                         </td>
                                                                          <td>
                                                                          <?php  $reset_url = "users/resetPassword/$user->id"; ?>
-                                                                        <a href="<?= url($reset_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reset your password">Reset Password  </a>
+                                                                    <a href="<?= url($reset_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reset your password">Reset Password  </a>
                                                                          </td>
                                                                     </tr>
                                                                 </tbody>
@@ -322,8 +333,11 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Medical Report</th>
-                                                                        <td>
-                                                                            <a target='_break' href="<?= $user->medical_report ?? '' ?>" class="btn btn-default btn-mini btn-round"> View Report</a>
+                                                                        <td> <?php if($user->medical_report == ''){ ?>
+                                                                            <label class="btn btn-warning btn-mini btn-round"> No report</label>
+                                                                             <?php } else { ?>
+                                                                            <a target='_break' href="<?= $user->medical_report?>" class="btn btn-default btn-mini btn-round"> View Report</a>
+                                                                             <?php } ?>
                                                                         </td>
                                                                     </tr>
 

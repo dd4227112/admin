@@ -29,9 +29,9 @@
                     <div class="col-lg-12">
                         <div  class="card">
                                 <div class="card-block">
-                                        {{-- <x-button url="users/create" color="primary float-left" btnsize="sm"  title="new user" shape="round" toggleTitle="Create New User"></x-button> --}}
-                                        <a class="btn btn-primary btn-round btn-sm float-left"  href="<?= url('users/create') ?>">Create New User</a>                   
-                                        <a class="btn btn-primary btn-round btn-sm float-right" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                   
+                                      
+                                        <a class="btn btn-primary btn-round btn-sm float-left text-light"  href="<?= url('users/create') ?>">Create New User</a>                   
+                                        <a class="btn btn-primary btn-round btn-sm float-right text-light" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                   
                                 </div>
                                   
                                 <div  class="card">
@@ -45,7 +45,7 @@
                                                         <th>Name</th>
                                                         <th>Phone</th>
                                                         <th>Email</th>
-                                                        <th>Joining Date</th>
+                                                
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -69,15 +69,12 @@
                                                         <td>{{ $user->firstname }} {{ $user->lastname }}</td>
                                                         <td>{{ $user->phone }}</td>
                                                         <td>{{ $user->email }}</td>
-                                                         <td>{{ date('d M Y',strtotime($user->created_at)) }}</td>
+                                                  
                                                         <td class="text-center">
-                                                            <?php $view_url = "users/show/$user->id"; $edit_url = "users/edit/$user->id"; ?>
-                                                            
-                                                            
+                                                        <?php $view_url = "users/show/$user->id"; $edit_url = "users/edit/$user->id"; ?>
                                                         <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View employee">view  </a>
                                                         <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit employee">Edit  </a>
-                                                            
-                                                        </td>
+                                                      </td>
                                                     </tr>
                                                     <?php $i++; ?>
                                                     @endforeach
