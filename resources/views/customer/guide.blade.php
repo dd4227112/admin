@@ -30,7 +30,7 @@
                             <h5>Guide</h5>
                             <span>You can view and edit user manual contents</span>
 
-                            <?php if (can_access('create_guide')) { ?>
+                          
                             <div class="row">
                                 <div class="col-md-12">
                                       <p align='left'>
@@ -39,7 +39,7 @@
                                     <br/>
                                 </div>
                             </div>
-                            <?php } ?>
+                          
                         </div>
 
                         <div class="card-block">

@@ -355,7 +355,6 @@ class Customer extends Controller {
     }
 
     public function guide() {
-        $this->data['breadcrumb'] = array('title' => 'ShuleSoft User Guide','subtitle'=>'guide','head'=>'operations');
         if (request()->segment(3) == 'delete') {
             \App\Model\Guide::findOrFail(request()->segment(4))->delete();
             return redirect()->back();

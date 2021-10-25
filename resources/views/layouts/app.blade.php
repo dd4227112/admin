@@ -589,7 +589,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         </li>
                                      <?php } ?>
 
-                                    <?php  if (can_access('training') ){ ?>
+                                 
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
                                                 <span class="pcoded-mtext">Training</span>
@@ -614,7 +614,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 </li>
                                             </ul>
                                         </li>
-                                     <?php } ?>
+                                   
 
                                    
                                       <?php  if (can_access('my_schools')) { ?>
