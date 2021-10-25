@@ -154,8 +154,7 @@
                                                           
                                                             <td class="text-center">
                                                               <?php $month =date('m'); $_url = "payroll/payslip/null/?id=$salary->user_id&month=$month&set=$set";?>
-                                                     <a href="<?= url($_url) ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Show payslip"> Preview </a>
-
+                                                              <a href="<?= url($_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Show payslip"> Preview </a>
                                                             </td>                 
                                                         </tr>
                                                         <?php
@@ -178,7 +177,8 @@
                                                         <td data-title="<?= __('taxable_amount') ?>"><?= money($total_paye) ?></td>
                                                         <td data-title="<?= __('net_pay') ?>"><?= money($total_net_pay) ?></td>
                                                         <td> 
-                                                        {{-- <a href="<?= url('payroll/summary/null/?set=' . $set . '&month=' . date('M') . '&month=' . date('m')) . '&' . http_build_query(array('basic_pay' => $total_basic_pay, 'allowance' => $sum_of_total_allowances, 'gross_pay' => $total_gross_pay, 'pension' => $total_pension, 'deduction' => $sum_of_total_deductions, 'tax' => $total_taxable_amount, 'paye' => $total_paye, 'net_pay' => $total_net_pay)) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip">Summary</a> --}}
+                                                        <a href="<?= url('payroll/summary/null/?set=' . $set . '&month=' . date('M') . '&month=' . date('m')) . '&' . http_build_query(array('basic_pay' => $total_basic_pay, 'allowance' => $sum_of_total_allowances, 'gross_pay' => $total_gross_pay, 'pension' => $total_pension, 'deduction' => $sum_of_total_deductions, 'tax' => $total_taxable_amount, 'paye' => $total_paye, 'net_pay' => $total_net_pay)) ?>" 
+                                                        class="btn btn-primary btn-mini btn-round" data-placement="top" data-toggle="tooltip" data-original-title="Show Summary">Summary</a>
                                                       </td>
                                                     </tr>
                                                 </tfoot>

@@ -267,7 +267,7 @@ foreach ($user_permission as $permis) {
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
                                                                       <?php if($user->academic_certificates == '') { ?>
-                                                                       <td>   <label class="btn btn-warning btn-mini btn-round"> No report</label>
+                                                                       <td>   <label class="btn btn-warning btn-mini btn-round"> No Certificates</label>
                                                                       <?php } else { ?> 
                                                                         <a target='_break' href="<?=  $user->academic_certificates ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a>
                                                                       <?php } ?>
@@ -276,12 +276,13 @@ foreach ($user_permission as $permis) {
 
                                                                     <tr>
                                                                         <th scope="row">Employment Contract</th>
-                                                                          <?php if($user->employment_contract == '') { ?>
-                                                                       <td>  <label class="btn btn-warning btn-mini btn-round"> No report</label>
+                                                                        <td> <?php if($user->employment_contract == '') { ?>
+                                                                         <label class="btn btn-warning btn-mini btn-round"> No Contract</label>
                                                                       <?php } else { ?> 
-                                                                        <a target='_break' href="<?=  $user->employment_contract ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a>
+                                                                        <a target='_break' href="<?=  $user->employment_contract ?>" class="btn btn-default btn-mini btn-round"> View Contract</a>
                                                                       <?php } ?>
                                                                        </td>
+
                                                                     </tr>
                                                                      <tr>
                                                                          <td> 

@@ -280,8 +280,6 @@
                                             ?>  
                                         </td>
                                         <td>
-                                           
-
                                              <?php
                                             //calculate PAYEE
                                             if ($create == 1 && $tax_status->payes()->count() > 2) {
@@ -334,15 +332,7 @@
                                                 'reference' => date('Ymd')
                                             ));
 
-                                        // $min = \App\Models\Uattendance::where('user_id',$user->id)->whereMonth('date', '=', date('m',strtotime(request('payroll_date'))))->get();
-                                        // $office_time = '08:00:00';
-                                        // $all_minutes = [];
-                                        // foreach($min as $key => $m){
-                                        //     $time = date("H:s:i",strtotime($m->timein));
-                                        //     $mnts = strtotime($time) - strtotime($office_time)/60;
-                                        //     array_push($all_minutes, $mnts);
-                                        // }
-                                        // print_r(array_sum($all_minutes));
+                                      
 
                                         } else {
                                             $salary_id = $check->id;
@@ -465,7 +455,7 @@
                                                         'pension_id' => $pension->pension_id,
                                                         'amount' => $pension_employee_contribution,
                                                         'employer_amount' => $pension_employer_contribution,
-                                                        'created_by' => Auth::user()->id
+                                                        'created_by' => \Auth::user()->id
                                                     ));
                                                 }
                                             }
@@ -494,9 +484,9 @@
                                     <td><?= money($total_paye) ?></td>
                                     <td><?= money($total_net_pay) ?></td>
 
-                                    <!--  <td>
+                                      <td>
                                         <a href="<?= url('payroll/summary/null/?month=' . date('M') . '&month=' . date('m')) . '&' . http_build_query(array('basic_pay' => $total_basic_pay, 'allowance' => $sum_of_total_allowances, 'gross_pay' => $total_gross_pay, 'pension' => $total_pension, 'deduction' => $sum_of_total_deductions, 'tax' => $total_taxable_amount, 'paye' => $total_paye, 'net_pay' => $total_net_pay)) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Summary</a>
-                                    </td>-->
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>

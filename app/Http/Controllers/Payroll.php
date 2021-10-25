@@ -304,13 +304,13 @@ class Payroll extends Controller {
     }
 
     public function summary() {
-        if (request('set') != '' && strlen(request('set') > 8)) {
-            $this->data['basic_payments'] = DB::select('select count(*), sum(basic_pay)  as amount from admin.salaries where payment_date=\'' . request('set') . '\' ');
-            $this->data['allowances'] = DB::select('select  sum(a.amount), a.allowance_id, b.name from salary_allowances a join admin.allowances b on b.id=a.allowance_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . request('set') . '\')group by a.allowance_id,b.name');
-            $this->data['deductions'] = DB::select('select  sum(a.amount), sum(a.employer_amount::integer) as employer_amount,a.deduction_id, b.name from admin.salary_deductions a join admin.deductions b on b.id=a.deduction_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . request('set') . '\')group by a.deduction_id,b.name');
-            $this->data['pensions'] = DB::select('select a.pension_id, sum(a.amount) as employee_contribution, sum(a.employer_amount) as employer_contribution, b.name from salary_pensions a join pensions b on b.id=a.pension_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . request('set') . '\')group by a.pension_id,b.name');
-            $this->data["subview"] = "account.payroll.summary";
-            return view($this->data["subview"],$this->data);
+           dd(request()->all());
+        if (!empty(request('set'))  && strlen(request('set') > 8)) {
+            $this->data['basic_payments'] = \DB::select('select count(*), sum(basic_pay)  as amount from admin.salaries where payment_date=\'' . request('set') . '\' ');
+            $this->data['allowances'] = \DB::select('select  sum(a.amount), a.allowance_id, b.name from admin.salary_allowances a join admin.allowances b on b.id=a.allowance_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . request('set') . '\')group by a.allowance_id,b.name');
+            $this->data['deductions'] = \DB::select('select  sum(a.amount), sum(a.employer_amount::integer) as employer_amount,a.deduction_id, b.name from admin.salary_deductions a join admin.deductions b on b.id=a.deduction_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . request('set') . '\')group by a.deduction_id,b.name');
+            $this->data['pensions'] = \DB::select('select a.pension_id, sum(a.amount) as employee_contribution, sum(a.employer_amount) as employer_contribution, b.name from salary_pensions a join pensions b on b.id=a.pension_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . request('set') . '\')group by a.pension_id,b.name');
+            return view("account.payroll.summary",$this->data);
         } else {
             return redirect(url("payroll/index"));
         }
