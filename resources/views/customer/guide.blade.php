@@ -92,11 +92,11 @@
                                                             </div>
                                                         </div>
                                                         <?php if(can_access('edit_guide')) { ?>
-                                                        <?php echo '<a  href="' . url("/customer/guide/edit/$value->id") . ' " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
+                                                        <?php echo '<a  href="' . url("/customer/guide/edit/$value->id") . ' " class="btn btn-info btn-mini btn-round">' . __('edit') . ' </a>' ?>
                                                         <?php } ?>
 
                                                         <?php if(can_access('delete_guide')) { ?>
-                                                        <?php echo '<a  href="' . url("customer/guide/delete/$value->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>' ?>
+                                                        <?php echo '<a  href="' . url("customer/guide/delete/$value->id") . ' " class="btn btn-danger btn-mini btn-round">' . __('delete') . ' </a>' ?>
                                                         <?php } ?>
                                                     </td>
                                                 </tr>
