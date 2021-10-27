@@ -35,7 +35,7 @@
                               <div class="row">
                                   <div class="col-sm-12 col-xl-4 m-b-30">
                                       <h4 class="sub-title">Select School</h4>
-                                       <input type="number" class="form-control" id="get_schools" name="school_id">
+                                       <input type="number" class="form-" id="get_schools" name="school_id">
                                   </div>
                                   <div class="col-sm-12 col-xl-4 m-b-30">
                                       <h4 class="sub-title">School Contact</h4>
@@ -43,7 +43,7 @@
                                   </div>
                                   <div class="col-sm-12 col-xl-4 m-b-30">
                                       <h4 class="sub-title">Allocated person</h4>
-                                        <select name="to_user_id" class="form-control select2" required>
+                                        <select name="to_user_id" class="form- select2" required>
                                           <?php
                                           $staffs = DB::table('users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
                                           foreach ($staffs as $staff) {
@@ -63,7 +63,7 @@
 
                                    <div class="col-sm-3 m-10">
                                         <input type="hidden" name="req_id" value="<?= $requirement->id ?>">
-                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit Here</button>
+                                        <button type="submit" class="btn btn-primary btn-mini btn-round ">Submit Here</button>
                                   </div>
                                   <?= csrf_field() ?>
                                 

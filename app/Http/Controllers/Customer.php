@@ -858,17 +858,17 @@ class Customer extends Controller {
     }
 
     public function requirements() {
-       $this->data['breadcrumb'] = array('title' => 'Requirements','subtitle'=>'customer requirements','head'=>'marketing');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
-            $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
-            $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
+            $this->data['requirement'] = \App\Models\Requirement::where('id', (int) $id)->first();
+            $next_id = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first();
+            $this->data['next'] = is_null($next_id) ? '' : $next_id->id;
+           // $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
 
          if ($tab == 'edit' && $id > 0) {
-           $this->data['breadcrumb'] = array('title' => 'Edit requirements','subtitle'=>'customer requirements','head'=>'marketing');
             $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
             return view('customer/edit_requirement', $this->data);
         }
@@ -882,7 +882,7 @@ class Customer extends Controller {
                 'note' => request('note'),
             ];
 
-            $data = array_merge($requirement, ['user_id' => Auth::user()->id]);
+            $data = array_merge($requirement, ['user_id' => \Auth::user()->id]);
 
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
@@ -900,15 +900,7 @@ class Customer extends Controller {
                         . chr(10) . 'By: ' . $req->user->name . '.'
                         . chr(10) . 'Thanks and regards.';
                 $this->send_whatsapp_sms($user->phone, $sms);
-
-                DB::table('public.sms')->insert([
-                    'body' => $sms,
-                    'user_id' => 1,
-                    'type' => 0,
-                    'priority' => 1,
-                    'sent_from' => 'whatsapp',
-                    'phone_number' => $user->phone
-                ]);
+                $this->send_sms($user->phone, $sms, 1);
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest()->get();
@@ -920,7 +912,6 @@ class Customer extends Controller {
         $id = request('req_id');
         $data = request()->except('_token', 'req_id');
         \App\Models\Requirement::where('id', $id)->update($data);
-       // return redirect()->back()->with('success', 'Edited successfully!');
         return redirect('customer/requirements')->with('success', 'Edited successfully!');
     }
 
@@ -946,16 +937,10 @@ class Customer extends Controller {
                     . chr(10) . 'Thanks and regards,'
                     . chr(10) . 'Technical Team.';
        $this->send_whatsapp_sms($user->phone, $message);
+       $this->send_sms($user->phone, $message, 1);
 
-       DB::table('public.sms')->insert([
-                'body'=>$message,
-                'user_id'=>1,
-                'type'=>0,
-                'priority' => 1,
-                'sent_from' => 'whatsapp',
-                'phone_number'=> $user->phone
-            ]);
 
+     
         if (preg_match('/[0-9]/', $data->contact) && $action == 'Completed') {
             $message1 = 'Hello '
                     . chr(10) . 'Thanks for using Shulesoft Services'
@@ -964,16 +949,8 @@ class Customer extends Controller {
                     . chr(10) . 'Thanks and regards,'
                     . chr(10) . 'Shulesoft Team'
                     . chr(10) . 'Call: +255 655 406 004';
-
-            DB::table('public.sms')->insert([
-                'body' => $message1,
-                'user_id' => 1,
-                'type' => 0,
-                'priority' => 1,
-                'sent_from' => 'whatsapp',
-                'phone_number' => $data->contact
-            ]);
             $this->send_whatsapp_sms($data->contact, $message1);
+            $this->send_sms($data->contact, $message1, 1);
         }
       
         echo $action;
@@ -1138,7 +1115,6 @@ class Customer extends Controller {
     }
 
     public function logs() { 
-        $this->data['breadcrumb'] = array('title' => 'ShuleSoft Customers','subtitle'=>'customers','head'=>'marketing');
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request()->segment(3);
@@ -1717,7 +1693,6 @@ class Customer extends Controller {
 
     public function remaindpayment(){
         $year = (int) date('Y');
-        $this->data['breadcrumb'] = array('title' => 'List of unpaid invoices','subtitle'=>'payments','head'=>'accounts');
         // $this->data['unpaidclients'] = DB::select("select * from admin.clients where id in ( select client_id from admin.invoices where extract(year from created_at::date) = extract(year from current_date)
         //                                             and pay_status = '1' and id not in (select invoice_id from admin.payments ))");
         $account = \collect(DB::select("select id from admin.account_years where name='{$year}' "))->first();

@@ -163,7 +163,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                         </ul>
                         <ul class="nav-right">
-                            <li class="header-notification">
+                            {{-- <li class="header-notification">
                                 <div class="dropdown-primary dropdown">
                                     <div class="dropdown-toggle" data-toggle="dropdown">
                                         <i class="feather icon-bell text-light"></i>
@@ -187,7 +187,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     
                                     </ul>
                                 </div>
-                            </li>
+                            </li> --}}
                           
                             <li class="user-profile header-notification">
                                 <div class="dropdown-primary dropdown">
@@ -251,9 +251,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                             }
                             $(document).ready(search_inputs);
                         </script>
-                        
-
-
                          <div id="morphsearch" class="morphsearch">
                             <form class="morphsearch-form">
                                 <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
@@ -275,8 +272,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                             </div>
                             <span class="morphsearch-close"><i class="icofont icofont-search-alt-1"></i></span>
                         </div>  
-
-
                     </div>
                 </div>
             </nav>
@@ -288,7 +283,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                             <div class="pcoded-navigatio-lavel">menu</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-hasmenu">
-                                  <?php if (can_access('view_home_dashboard')) { ?>
+                                  <?php if (can_access('view_dashboard')) { ?>
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-home"></i></span>
                                         <span class="pcoded-mtext">DASHBOARD</span>
@@ -301,31 +296,59 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <span class="pcoded-mtext">Home</span>
                                             </a>
                                         </li>
-                                        <?php } if ((can_access('view_marketing_dashboard') || Auth::user()->department == 2) && Auth::user()->role_id <> 3) { ?>
-                                        <li class="">
-                                            <a href="<?= url('analyse/marketing') ?>">
-                                                <span class="pcoded-mtext">Marketing</span>
-                                            </a>
+                                        <?php } ?>
+
+                                    <?php if (can_access('cro_dashboard')) { ?>
+                                      <li class="pcoded-hasmenu">
+                                        <a href="javascript:void(0)">
+                                            <span class="pcoded-mtext text-bold">CRO</span>
+                                        </a>
+                                        <ul class="pcoded-submenu">
+                                            <li class="">
+                                                <a href="<?= url('analyse/marketing') ?>">
+                                                    <span class="pcoded-mtext">Marketing</span>
+                                                </a>
+                                                </li>
+                                            
+                                                <li class="">
+                                                <a href="<?= url('analyse/sales') ?>">
+                                                    <span class="pcoded-mtext">Sales</span>
+                                                </a>
+                                                </li>
+
+                                                <li class="">
+                                                <a href="<?= url('sales/salesStatus') ?>">
+                                                    <span class="pcoded-mtext">customers</span>
+                                                </a>
+                                                </li>
+                                            </ul>
                                         </li>
-                                         <?php } if (can_access('view_sales_dashboard') || Auth::user()->department == 2) { ?>
-                                        <li class=" ">
-                                            <a  href="<?= url('analyse/sales') ?>">
-                                                <span class="pcoded-mtext">Sales</span>
+                                        <?php } ?>
+
+
+                                      <?php if (can_access('operations_dashboard')) { ?>
+                                         <li class="pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext text-bold">Operations</span>
                                             </a>
-                                        </li>
-                                        <?php } if (can_access('view_accounts_dashboard') || Auth::user()->department == 4) { ?>
-                                         <li class=" ">
-                                            <a href="<?= url('analyse/accounts') ?>">
-                                                <span class="pcoded-mtext">Accounts</span>
-                                            </a>
-                                        </li>
-                                         <?php } if (can_access('view_customer_dashboard') || Auth::user()->department == 1) { ?>
-                                        <li class=" ">
-                                            <a href="<?= url('analyse/customers') ?>">
-                                                <span class="pcoded-mtext">Customers</span>
-                                            </a>
-                                        </li>
-                                         <?php } if (!can_access('view_engineering_dashboard'))  { ?>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('analyse/accounts') ?>">
+                                                       <span class="pcoded-mtext">Accounts</span>
+                                                    </a>
+                                                 </li>
+                                             
+                                                 <li class="">
+                                                    <a href="<?= url('#') ?>">
+                                                        <span class="pcoded-mtext">HR reports</span>
+                                                    </a>
+                                                  </li>
+                                             </ul>
+                                          </li>
+                                        <?php } ?>
+                                        
+                                                            
+                                         <?php if (can_access('engineering_dashboard'))  { ?>
                                           <li class=" ">
                                             <a href="<?= url('analyse/software') ?>">
                                                 <span class="pcoded-mtext">Engineering</span>
@@ -336,11 +359,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </li>
 
                             
-                              <?php if (can_access('manage_marketing')) { ?>
+                              <?php if (can_access('manage_revenue')) { ?>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
-                                        <span class="pcoded-mtext">MARKETING</span>
+                                        <span class="pcoded-mtext">REVENUE</span>
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class=" pcoded-hasmenu">
@@ -362,14 +385,223 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                   </li>
                                                 <?php } ?>
 
+                                                <?php if (can_access('sales_plan')) { ?>
                                                 <li class="">
                                                     <a href="<?= url('sales/salesStatus') ?>">
-                                                       <span class="pcoded-mtext">Sales Status</span>
+                                                       <span class="pcoded-mtext">Sales Plan</span>
                                                     </a>
                                                  </li>
+                                                <?php } ?>
                                             </ul>
                                         </li>
 
+
+                                         <li class="pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Marketing</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <?php if (can_access('digital_marketing')) { ?>
+                                                 <li class=" ">
+                                                    <a href="<?= url('marketing/socialmedia') ?>">
+                                                        <span class="pcoded-mtext">Digital marketing</span>
+                                                    </a>
+                                                </li>
+                                                <?php } ?>
+                                             
+                                                <?php if (can_access('event_seminar')) { ?>
+                                                <li class="">
+                                                  <a href="<?= url('marketing/events') ?>">
+                                                        <span class="pcoded-mtext">Events and seminars</span>
+                                                  </a>
+                                                </li>
+                                                <?php } ?>
+
+                                                <?php if (can_access('communication')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('marketing/communication') ?>">
+                                                        <span class="pcoded-mtext">Communication</span>
+                                                    </a>
+                                                </li>
+                                                <?php } ?>
+
+                                                <?php if (can_access('manage_sequence')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('customer/sequence') ?>">
+                                                        <span class="pcoded-mtext">Sequence</span>
+                                                    </a>
+                                                </li>
+                                                <?php } ?>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <?php if (can_access('customer_success')) { ?>
+                                          <li class="pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext text-bold">Customer Success</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                  <li class=" ">
+                                                    <a href="<?= url('customer/modules') ?>">
+                                                        <span class="pcoded-mtext">Modules</span>
+                                                    </a>
+                                                </li>
+                                             
+                                               <li class="">
+                                                    <a href="<?= url('analyse/ratings') ?>">
+                                                        <span class="pcoded-mtext">User ratings</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="">
+                                                    <a href="<?= url('customer/feedbacks/null') ?>">
+                                                        <span class="pcoded-mtext">Customer feedbacks</span>
+                                                    </a>
+                                                </li>
+
+                                              <?php if (can_access('comm_logs')) { ?>
+                                                <li class="">
+                                                    <a href="<?= url('Phone_call/index') ?>">
+                                                        <span class="pcoded-mtext">Communication Logs</span>
+                                                    </a>
+                                                </li>
+
+                                               <li class="">
+                                                    <a href="<?= url('customer/emailsms') ?>">
+                                                        <span class="pcoded-mtext">SMS & Email logs</span>
+                                                    </a>
+                                                </li> 
+                                              <?php } ?>
+
+                                              <?php if (can_access('create_update')) { ?>
+                                                  <li class="">
+                                                    <a href="<?= url('customer/update') ?>">
+                                                        <span class="pcoded-mtext">Updates</span>
+                                                    </a>
+                                                </li> 
+                                              <?php } ?>
+
+                                            
+                                            </ul>
+                                        </li>
+                                        <?php } ?>
+
+                                        <?php if (can_access('manage_partnership')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Partnerships</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('Partner/index') ?>">
+                                                        <span class="pcoded-mtext">List of Partners</span>
+                                                    </a>
+                                                </li>
+
+                                               <?php if(can_access('integration_requests')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('users/usergroup') ?>">
+                                                        <span class="pcoded-mtext"> Integration Requests </span>
+                                                    </a>
+                                                </li>
+                                                <?php } ?>
+
+                                               <?php if(can_access('view_epayments')) { ?>
+                                                 <li class=" ">
+                                                    <a href="<?= url('customer/epayments') ?>">
+                                                        <span class="pcoded-mtext">e-payments</span>
+                                                    </a>
+                                                </li>
+                                                <?php } ?>
+
+                                                 <?php if(can_access('nmb_integration')) { ?>
+                                                   <li class=" ">
+                                                    <a href="<?= url('software/banksetup') ?>">
+                                                        <span class="pcoded-mtext">Nmb integration</span>
+                                                    </a>
+                                                  </li>
+                                                <?php } ?>
+
+                                            </ul>
+                                        </li>
+                                      <?php } ?>
+
+                                      
+                                        <?php if (can_access('manage_products')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Products</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                
+                                               <?php if(can_access('task_allocation')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('customer/logs') ?>">
+                                                        <span class="pcoded-mtext">Tasks Allocation</span>
+                                                    </a>
+                                                </li>
+                                            <?php } ?>
+
+                                               <?php if(can_access('manage_Karibusms')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('customer/karibu') ?>">
+                                                        <span class="pcoded-mtext"> Karibusms </span>
+                                                    </a>
+                                                </li>
+                                                <?php } ?>
+
+                                               <?php if(can_access('whatsapp_integrations')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('general/show/whatsapp_integrations') ?>">
+                                                        <span class="pcoded-mtext">WhatsApp Integration</span>
+                                                    </a>
+                                                 </li>
+                                                <?php } ?>
+
+                                                <li class="">
+                                                    <a href="<?= url('customer/requirements') ?>">
+                                                            <span class="pcoded-mtext">Customer Requirements</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="">
+                                                    <a href="<?= url('customer/guide') ?>">
+                                                        <span class="pcoded-mtext">User Guide</span>
+                                                    </a>
+                                                </li> 
+
+                                               <?php if(can_access('manage_joina')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('users/usergroup') ?>">
+                                                        <span class="pcoded-mtext"> ShuleSoft Joina</span>
+                                                    </a>
+                                                </li>
+                                              <?php } ?>
+
+                                               <?php if(can_access('view_sms_status')) { ?>
+                                                <li class=" ">
+                                                    <a href="<?= url('software/smsstatus') ?>">
+                                                        <span class="pcoded-mtext">SMS Status</span>
+                                                    </a>
+                                                </li>
+                                            <?php } ?>
+
+                                             <?php if(can_access('reconciliation')) { ?>
+                                               <li class="">
+                                                <a href="<?= url('software/reconciliation') ?>">
+                                                    <span class="pcoded-mtext">Reconciliation</span>
+                                                </a>
+                                               </li>
+                                            <?php } ?>
+
+
+                                            </ul>
+                                        </li>
+                                      <?php } ?>
+                                    
+{{-- 
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
                                                 <span class="pcoded-mtext">Usage and analysis</span>
@@ -381,106 +613,22 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
                                              
-                                                <li class=" ">
-                                                    <a href="<?= url('customer/modules') ?>">
-                                                        <span class="pcoded-mtext">Modules</span>
-                                                    </a>
-                                                </li>
 
-                                                 <li class=" ">
-                                                    <a href="<?= url('customer/logs') ?>">
-                                                        <span class="pcoded-mtext">Task logs</span>
-                                                    </a>
-                                                </li>
-
-                                                {{-- <li class=" ">
-                                                    <a href="<?= url('customer/karibu') ?>">
-                                                        <span class="pcoded-mtext">karibuSMS</span>
-                                                    </a>
-                                                </li> --}}
-
-                                                {{-- <li class=" ">
-                                                    <a href="<?= url('customer/epayments') ?>">
-                                                        <span class="pcoded-mtext">e-payments</span>
-                                                    </a>
-                                                </li> --}}
+                                               
                                             </ul>
-                                        </li>
+                                        </li> --}}
 
-                                       <?php if (can_access('manage_communications')) { ?>
-                                        <li class=" pcoded-hasmenu">
-                                            <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Communications</span>
-                                            </a>
-                                            <ul class="pcoded-submenu">
-                                                <li class="">
-                                                    <a href="<?= url('marketing/communication') ?>">
-                                                        <span class="pcoded-mtext">Communication</span>
-                                                    </a>
-                                                </li>
+                                         {{--   <ul class="pcoded-submenu">
                                              
-                                                {{-- <li class="">
+                                             
+                                                 <li class="">
                                                     <a href="<?= url('customer/calls') ?>">
                                                         <span class="pcoded-mtext">Call logs</span>
                                                     </a>
-                                                </li> --}}
-
-                                                 <li class="">
-                                                    <a href="<?= url('customer/emailsms') ?>">
-                                                        <span class="pcoded-mtext">SMS & Email logs</span>
-                                                    </a>
-                                                </li>
-
-                                                 <li class="">
-                                                    <a href="<?= url('customer/feedbacks/null') ?>">
-                                                        <span class="pcoded-mtext">Customer feedbacks</span>
-                                                    </a>
-                                                </li>
-
-                                                  <li class="">
-                                                    <a href="<?= url('customer/update') ?>">
-                                                        <span class="pcoded-mtext">Updates</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                     <?php } ?>
-
-                                        <li class=" ">
-                                            <a href="<?= url('marketing/socialmedia') ?>">
-                                                <span class="pcoded-mtext">Digital marketing</span>
-                                            </a>
-                                        </li>
-                                        <li class="">
-                                            <a href="<?= url('analyse/ratings') ?>">
-                                                <span class="pcoded-mtext">School ratings</span>
-                                            </a>
-                                        </li>
-
-                                          <li class="">
-                                            <a href="#">
-                                                <span class="pcoded-mtext">Parental experience</span>
-                                            </a>
-                                        </li>
-
-                                        <li class="">
-                                           <a href="<?= url('sales/salesstatus') ?>">
-                                                <span class="pcoded-mtext">Sales status</span>
-                                           </a>
-                                        </li>
-
-                                        <li class="">
-                                           <a href="<?= url('customer/requirements') ?>">
-                                                <span class="pcoded-mtext">Customer Requirements</span>
-                                           </a>
-                                        </li>
-
-                                       <li class="">
-                                           <a href="<?= url('marketing/events') ?>">
-                                                <span class="pcoded-mtext">Events and seminars</span>
-                                           </a>
-                                        </li>
-                                      
+                                                </li> 
+                                                
+                                            </ul>  --}}
+                                
                                     </ul>
                                 </li>
                                 <?php }  ?>
@@ -490,17 +638,16 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                 <?php if (can_access('manage_operations')) { ?>
                                    <li class="pcoded-hasmenu">
-                                   
                                       <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
                                         <span class="pcoded-mtext">OPERATIONS</span>
                                     </a>
                                     <ul class="pcoded-submenu">
                                        
-                                       <?php if (can_access('manage_users')) { ?>
+                                       <?php if (can_access('manage_talents')) { ?>
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Human resource</span>
+                                                <span class="pcoded-mtext">Talents</span>
                                             </a>
                                             <ul class="pcoded-submenu">
                                                 <li class="">
@@ -517,107 +664,106 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                                 <li class="">
                                                     <a href="<?= url('users/applicant') ?>">
-                                                        <span class="pcoded-mtext">Applicants</span>
+                                                        <span class="pcoded-mtext">Partners</span>
                                                     </a>
                                                 </li>
 
-                                                 {{-- <li class="">
+                                                 <li class="">
+                                                    <a href="<?= url('users/applicant') ?>">
+                                                        <span class="pcoded-mtext">Applicants</span>
+                                                    </a>
+                                                 </li>
+
+
+                                                 <li class="">
                                                     <a href="<?= url('users/template') ?>">
                                                         <span class="pcoded-mtext">Forms & Templates</span>
                                                     </a>
-                                                </li> --}}
+                                                </li>
+
+                                                
+                                                   <?php if (Auth::user()->role_id == 1) { ?>
+                                                    <li class=" ">
+                                                        <a href="<?= url('role/userpermission') ?>">
+                                                            <span class="pcoded-mtext">Permissions</span>
+                                                        </a>
+                                                    </li>
+                                                <?php } ?>
+
                                             </ul>
                                         </li>
                                      <?php } ?>
 
                                               
-                                       <?php if (can_access('manage_payroll')) { ?>
-                                        <li class=" pcoded-hasmenu">
-                                            <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Partnerships</span>
-                                            </a>
-                                            <ul class="pcoded-submenu">
-                                                {{-- <li class="">
-                                                    <a href="<?= url('Partner/index') ?>">
-                                                        <span class="pcoded-mtext">Onboard Requests</span>
-                                                    </a>
-                                                </li> --}}
+                                   
 
-                                                 <?php if(can_access('create_user_group')) { ?>
-                                                 <li class="">
-                                                    <a href="<?= url('users/usergroup') ?>">
-                                                        <span class="pcoded-mtext">School Groups</span>
-                                                    </a>
-                                                </li>
-                                                <?php } ?>
-
-                                                 <li class="">
-                                                    <a href="<?= url('Partner/partners') ?>">
-                                                        <span class="pcoded-mtext">Partners</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                     <?php } ?>
-
-                                          <?php if (can_access('manage_customers')) { ?>
+                                          {{-- <?php if (can_access('manage_customers')) { ?>
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
                                                 <span class="pcoded-mtext">Customer service</span>
                                             </a>
                                             <ul class="pcoded-submenu">
-                        
-                                                 <li class="">
-                                                    <a href="<?= url('general/show/whatsapp_integrations') ?>">
-                                                        <span class="pcoded-mtext">WhatsApp Integration</span>
-                                                    </a>
-                                                </li>
-
-                                                 <li class="">
+                                                <li class="">
                                                     <a href="<?= url('customer/setup') ?>">
                                                         <span class="pcoded-mtext">System Setup</span>
                                                     </a>
                                                 </li>
-
-                                                <li class="">
-                                                    <a href="<?= url('Phone_call/index') ?>">
-                                                        <span class="pcoded-mtext">Phone Calls</span>
-                                                    </a>
-                                                </li>
-
                                             </ul>
                                         </li>
-                                     <?php } ?>
+                                     <?php } ?> --}}
 
                                  
-                                        <li class=" pcoded-hasmenu">
+                                          <li class="pcoded-hasmenu">
                                             <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Training</span>
+                                                <span class="pcoded-mtext">Administration</span>
                                             </a>
                                             <ul class="pcoded-submenu">
-                                                 <li class="">
-                                                    <a href="<?= url('customer/guide') ?>">
-                                                        <span class="pcoded-mtext">User Guide</span>
-                                                    </a>
-                                                </li> 
+                                
+                                            <li class=" ">
+                                                <a href="<?= url('users/minutes') ?>">
+                                                <span class="pcoded-mtext">Meetings</span>
+                                                </a>
+                                            </li>
+                                        
+                                            <?php if (can_access('hr_request')) { ?>
+                                            <li class=" ">
+                                                <a href="<?= url('users/hrrequest') ?>">
+                                                <span class="pcoded-mtext">HR Requests</span>
+                                                </a>
+                                            </li>
+                                            <?php } ?>
+                                            </li>
+                                          </ul>
 
-                                                 <li class="">
-                                                    <a href="<?= url('customer/faq') ?>">
-                                                        <span class="pcoded-mtext">FAQ</span>
-                                                    </a>
-                                                </li>
-                                            
-                                                 <li class="">
-                                                    <a href="<?= url('customer/sequence') ?>">
-                                                        <span class="pcoded-mtext">Sequence</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
+                                     <?php if (Auth::user()->role_id != 7 ) { ?>
+                                       <li class=" ">
+                                         <a href="<?= url('#') ?>">
+                                            <span class="pcoded-mtext">Legals</span>
+                                         </a>
+                                       </li>
+                                     <?php } ?>
+
+                                   
+
+                                     <?php if (Auth::user()->role_id != 7 ) { ?>
+                                      <li class=" ">
+                                         <a href="<?= url('#') ?>">
+                                            <span class="pcoded-mtext">Compliances</span>
+                                         </a>
+                                       </li>
+                                     <?php } ?>
+
+                                      <?php if (Auth::user()->role_id != 7 ) { ?>
+                                      <li class=" ">
+                                         <a href="<?= url('#') ?>">
+                                            <span class="pcoded-mtext">Processes</span>
+                                         </a>
+                                       </li>
+                                     <?php } ?>
                                    
 
                                    
-                                      <?php  if (can_access('my_schools')) { ?>
+                                      {{-- <?php  if (can_access('my_schools')) { ?>
                                         <li class="pcoded-hasmenu">
                                             <a href="javascript:void(0)">
                                                 <span class="pcoded-mtext">Schools</span>
@@ -642,124 +788,37 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 </li>
                                             </ul>
                                         </li>
-                                     <?php } ?>
+                                     <?php } ?> --}}
 
-                                    <?php if(!can_access('settings')) { ?>
-                                        <li class=" pcoded-hasmenu">
-                                            <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Settings</span>
-                                            </a>
-                                            <ul class="pcoded-submenu">
-                                                 <li class="">
-                                                    <a href="<?= url('account/client') ?>">
-                                                        <span class="pcoded-mtext">Clients </span>
-                                                    </a>
-                                                </li> 
+                                 
 
-                                                 <li class="">
-                                                    <a href="<?= url('account/bank') ?>">
-                                                        <span class="pcoded-mtext">Banking</span>
-                                                    </a>
-                                                </li>
-                                                
-                                                 <li class="">
-                                                    <a href="<?= url('account/groups') ?>">
-                                                        <span class="pcoded-mtext">Account Groups</span>
-                                                    </a>
-                                                </li>
-
-                                                <li class="">
-                                                    <a href="<?= url('account/chart') ?>">
-                                                        <span class="pcoded-mtext">Charts of Account</span>
-                                                    </a>
-                                                </li>
-
-                                                 <li class="">
-                                                    <a href="<?= url('account/project') ?>">
-                                                        <span class="pcoded-mtext">Company projects</span>
-                                                    </a>
-                                                </li>
-
-                                                 <li class="">
-                                                    <a href="<?= url('account/holidays') ?>">
-                                                        <span class="pcoded-mtext">Holidays</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                     <?php } ?>
-
-                                      <?php if (Auth::user()->role_id != 7 ) { ?>
-                                       <li class=" ">
-                                         <a href="<?= url('customer/activity') ?>">
-                                            <span class="pcoded-mtext">Task allocation</span>
-                                         </a>
-                                       </li>
-                                     <?php } ?>
-
-                                     <?php if (can_access('meeting_minutes')) { ?>
-                                      <li class=" ">
-                                         <a href="<?= url('users/minutes') ?>">
-                                            <span class="pcoded-mtext">Meetings</span>
-                                         </a>
-                                       </li>
-                                     <?php } ?>
                                     
-                                     <?php if (can_access('meeting_minutes')) { ?>
-                                        <li class=" ">
-                                         <a href="<?= url('users/hrrequest') ?>">
-                                            <span class="pcoded-mtext">HR Requests</span>
-                                         </a>
-                                       </li>
-                                     <?php } ?>
-
-                                     <?php if (can_access('customer_module')) { ?>
-                                      <li class=" ">
-                                         <a href="<?= url('customer/modules') ?>">
-                                            <span class="pcoded-mtext">Customer Modules</span>
-                                         </a>
-                                       </li>
-                                     <?php } ?>
-                                    
-                                       
-                                        <li class=" ">
-                                         <a href="<?= url('customer/requirements') ?>">
-                                            <span class="pcoded-mtext">Customer requirements</span>
-                                         </a>
-                                       </li>
-
-                                    <?php if (Auth::user()->role_id == 1) { ?>
-                                      <li class=" ">
-                                         <a href="<?= url('role/userpermission') ?>">
-                                            <span class="pcoded-mtext">Permissions</span>
-                                         </a>
-                                       </li>
-                                   <?php } ?>
-                                    
-
+                                
+{{-- 
                                      <?php if (Auth::user()->department == 9 || Auth::user()->department == 10) { ?>
                                        <li class=" ">
                                          <a href="<?= url('partner/index') ?>">
                                             <span class="pcoded-mtext">Onboarded Schools</span>
                                          </a>
                                        </li>
-                                   <?php } ?>
+                                   <?php } ?> --}}
 
 
                                     </ul>
                                 </li>
                                <?php } ?>
 
-                                 <li class="pcoded-hasmenu">
+                                 <?php if(can_access('engineering')) { ?>
+                                    <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-settings"></i></span>
                                         <span class="pcoded-mtext">ENGINEERING</span>
-                                    </a>        
+                                     </a>        
                                  
                                         <ul class="pcoded-submenu">
                                             <li class=" ">
                                                 <a href="<?= url('software/template') ?>">
-                                                    <span class="pcoded-mtext">Templates & Policies</span>
+                                                    <span class="pcoded-mtext">Manuals</span>
                                                 </a>
                                             </li>
 
@@ -787,18 +846,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                         </a>
                                                     </li>
 
-                                                     {{-- <li class="">
-                                                        <a href="<?= url('software/backup') ?>">
-                                                            <span class="pcoded-mtext">Backup</span>
-                                                        </a>
-                                                    </li> --}}
-
-                                                      {{-- <li class="">
-                                                        <a href="<?= url('software/analysis') ?>">
-                                                            <span class="pcoded-mtext">Reports</span>
-                                                        </a>
-                                                    </li> --}}
-
                                                       <li class="">
                                                         <a href="<?= url('software/upgrade') ?>">
                                                             <span class="pcoded-mtext">Create Script</span>
@@ -807,63 +854,25 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 </ul>
                                             </li>
                                         <?php } ?>
-
-                                         <?php if (can_access('manage_database')) { ?>
-                                            <li class="pcoded-hasmenu">
-                                                <a href="javascript:void(0)">
-                                                    <span class="pcoded-mtext">Payment Integration</span>
-                                                </a>
-                                                <ul class="pcoded-submenu">
-                                                    <li class="">
-                                                        <a href="<?= url('software/banksetup') ?>">
-                                                            <span class="pcoded-mtext">banksetup</span>
-                                                        </a>
-                                                    </li>
-
-                                                    {{-- <li class="">
-                                                        <a href="<?= url('software/invoice/live') ?>">
-                                                            <span class="pcoded-mtext">Live Invoices</span>
-                                                        </a>
-                                                    </li> --}}
-
-                                                    {{-- <li class="">
-                                                        <a href="<?= url('software/invoice/uat') ?>">
-                                                            <span class="pcoded-mtext">Testing Invoices</span>
-                                                        </a>
-                                                    </li> --}}
-
-                                                     <li class="">
-                                                        <a href="<?= url('software/api') ?>">
-                                                            <span class="pcoded-mtext">API Requests</span>
-                                                        </a>
-                                                    </li>
-
-                                                    
-                                                     <li class="">
-                                                        <a href="<?= url('software/reconciliation') ?>">
-                                                            <span class="pcoded-mtext">Reconciliation</span>
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </li>
-                                        <?php } ?>
-
-                                            <li class=" ">
+                                           
+                                           <?php if(can_access('manage_errors')) { ?>
+                                            <li class="">
                                                 <a href="<?= url('software/logs') ?>">
                                                     <span class="pcoded-mtext">Error Logs</span>
                                                 </a>
                                             </li>
+                                            <?php } ?>
 
-                                            <?php if(can_access('view_sms_status')) { ?>
-                                            <li class=" ">
-                                                <a href="<?= url('software/smsstatus') ?>">
-                                                    <span class="pcoded-mtext">SMS Status</span>
+
+                                            <li class="">
+                                                <a href="<?= url('software/api') ?>">
+                                                    <span class="pcoded-mtext">API Requests</span>
                                                 </a>
                                             </li>
-                                          <?php } ?>
-                                        </ul>
+                                     </ul>
                                 </li>
+                             <?php } ?>
+
 
                                  
                               <?php if (can_access('manage_finance')) { ?>
@@ -873,31 +882,29 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <span class="pcoded-mtext">ACCOUNTING</span>
                                     </a>
                                     <ul class="pcoded-submenu">
-                                        <li class=" ">
-                                            <a href="<?= url('account/invoice') ?>">
-                                                <span class="pcoded-mtext">Invoice</span>
-                                            </a>
-                                        </li>
+                                         <?php if(can_access('manage_invoice')) { ?>
+                                            <li class=" ">
+                                                <a href="<?= url('account/invoice') ?>">
+                                                    <span class="pcoded-mtext">Invoice</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+
                                           
+                                         <?php if(can_access('add_si')) { ?>
                                           <li class=" ">
                                             <a href="<?= url('account/standingOrders') ?>">
                                                 <span class="pcoded-mtext">Standing order</span>
                                             </a>
                                         </li>
+                                        <?php } ?>
 
-                                         {{-- <?php if (!can_access('payment_remainder')) { ?>
-                                        <li class=" ">
-                                            <a href="<?= url('customer/remaindpayment') ?>">
-                                                <span class="pcoded-mtext">Remaind payment</span>
-                                            </a>
-                                        </li>
-                                        <?php } ?> --}}
 
                                         
-                                       <?php if (!can_access('manage_transactions')) { ?>
+                                       <?php if (can_access('manage_transactions')) { ?>
                                         <li class="pcoded-hasmenu">
                                             <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Transactions</span>
+                                                <span class="pcoded-mtext text-bold">Transactions</span>
                                             </a>
                                             <ul class="pcoded-submenu">
                                                 <li class="">
@@ -949,7 +956,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                        <?php if (can_access('manage_payroll')) { ?>
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Payroll</span>
+                                                <span class="pcoded-mtext text-bold">Payroll</span>
                                             </a>
                                             <ul class="pcoded-submenu">
                                                 <li class="">
@@ -975,18 +982,21 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                         <span class="pcoded-mtext"> Deductions </span>
                                                     </a>
                                                 </li>
-
+ 
+                                               <?php if(can_access('manage_salaries')) { ?>
                                                   <li class="">
                                                     <a href="<?= url('Payroll/index') ?>">
                                                         <span class="pcoded-mtext">Salaries</span>
                                                     </a>
-                                                </li>
+                                                   </li>
+                                                <?php } ?>
+
                                             </ul>
                                         </li>
                                      <?php } ?>
 
 
-                                           <?php if(!can_access('manage_loans')) { ?>
+                                           <?php if(can_access('manage_loans')) { ?>
                                               <li class=" pcoded-hasmenu">
                                                <a href="javascript:void(0)">
                                                  <span class="pcoded-mtext text-bold">Loans</span>
@@ -1006,6 +1016,51 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                </ul>
                                             </li> 
                                          <?php } ?>
+
+                                        <?php if(can_access('settings')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext text-bold">Settings</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                 <li class="">
+                                                    <a href="<?= url('account/client') ?>">
+                                                        <span class="pcoded-mtext">Clients </span>
+                                                    </a>
+                                                </li> 
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/bank') ?>">
+                                                        <span class="pcoded-mtext">Banking</span>
+                                                    </a>
+                                                </li>
+                                                
+                                                 <li class="">
+                                                    <a href="<?= url('account/groups') ?>">
+                                                        <span class="pcoded-mtext">Account Groups</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="">
+                                                    <a href="<?= url('account/chart') ?>">
+                                                        <span class="pcoded-mtext">Charts of Account</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/project') ?>">
+                                                        <span class="pcoded-mtext">Company projects</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/holidays') ?>">
+                                                        <span class="pcoded-mtext">Holidays</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                     <?php } ?> 
 
                                       
                                     </ul>

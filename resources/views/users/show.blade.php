@@ -7,6 +7,19 @@ $arr = [];
 foreach ($user_permission as $permis) {
     array_push($arr, $permis->id);
 }
+
+function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
+      $type = null ? $type = '"text"' : $type = $type;
+    if ((int) request('skip') == 1) {
+        $return = $value;
+    } else {
+        $return = '<input required class="text-muted" type="'. $type. '" date="' . $value . '" id="' . $column .$value. '" value="' . date('Y-m-d',strtotime($value)) . '" 
+        onblur="edit_records(\'' . $user_id . '\', this.value, \'' .$absent_id . '\')"/>
+        <br/>';
+    }
+    return $return;
+  }
+
 ?>
 <div class="main-body">
     <div class="page-wrapper">
@@ -890,7 +903,6 @@ foreach ($user_permission as $permis) {
                                                 </thead>
                                                 <tbody>
                                                  
-                                                  
                                                       <?php if(count ($absents) > 0) 
                                                              foreach($absents as $absent) { ?>
                                                         <tr>
@@ -901,22 +913,29 @@ foreach ($user_permission as $permis) {
                                                                 <a type="button" class="btn btn-primary btn-mini btn-round" target="_blank" href="<?= url('customer/viewContract/' . $absent->id .'/absent') ?>">View</a>
                                                             </td>
                                                             <td><?= $absent->approvedBy->name ?></td>
-                                                            <td><?= isset($absent->end_date) ? date('d M Y', strtotime($absent->end_date)) : '' ?></td>
-                                                            <td class="text-center">
+                                                            <td>
+                                                                {{-- <?= isset($absent->end_date) ? date('d M Y', strtotime($absent->end_date)) : '' ?> --}}
+
+                                                                <?php if(can_access('edit_leave_dates'))  { ?>
+                                                                      <?= tagEdit($absent->end_date, 'end_date', $user->id,$absent->id); ?>
+                                                                 <?php } else { ?>
+                                                                      <?= date('d-m-Y', strtotime($absent->end_date)) ?>
+                                                                 <?php } ?>
+                                                            </td>
+                                                            <td>
                                                                 <div class="dropdown-secondary dropdown f-right">
                                                                     <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
                                                                     <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                          
+                                                                     {{-- <a class="dropdown-item waves-light waves-effect" href="<?= url('users/askleave/'.$absent->id.'/edit') ?>"><span class="point-marker"></span>Edit</a> --}}
+
                                                                       <?php if ($absent->status == null) { ?>
                                                                          <?php if(can_access('approve_leave')) { ?>
                                                                          <?php $app_url = "users/askleave/$absent->id/approve"; $rej_url = "users/askleave/$absent->id/reject"; ?>
                                                                           
-
                                                                           <a href="<?= url($app_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Approve">Approve  </a>
                                                                           <a href="<?= url($rej_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reject">Reject  </a>
 
-
-                                                                         <?php } ?>
+                                                                        <?php } ?>
                                                                      <?php } else if($absent->status == 'Approved') { ?>
                                                                         <a  class="badge badge-info badge-sm"> <?=$absent->status?> </a>
                                                                      <?php } else { ?>
@@ -1372,6 +1391,15 @@ $(".select2").select2({
     allowClear: false,
     debug: true
   });
+
+
+  edit_records = function (tag, val, absent_id) {
+        $.get('<?= url('users/editLeaveDates/null') ?>', {absent_id: absent_id, val: val, tag: tag}, function (data) {
+            $('#status_' + tag + val).html('<label class="badge badge-success">'+data+'</label>');
+            toastr.success(data);
+        });
+    };
+
 
 
 $(function() {

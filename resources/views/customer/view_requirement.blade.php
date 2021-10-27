@@ -28,16 +28,15 @@
             <div class="card">
                 <div class="card-header" style="margin-bottom: -10px;">
                     <h6>
-                        <?php $back_url = "Customer/requirements"; $next_url = "Customer/requirements/show/$next"; ?>
+                    <?php $back_url = "Customer/requirements"; $next_url = "Customer/requirements/show/$next"; ?>
                      <a href="<?= url($back_url) ?>" class="btn btn-primary btn-mini btn-round float-left" data-placement="top"  data-toggle="tooltip" data-original-title="Go Back"> back </a>
-                     <a href="<?= url($next_url) ?>" class="btn btn-info btn-mini  btn-round float-right" data-placement="top"  data-toggle="tooltip" data-original-title="Go next"> next </a>
-
-
+                     <?php if(!is_null($next)) { ?>
+                       <a href="<?= url($next_url) ?>" class="btn btn-info btn-mini  btn-round float-right" data-placement="top"  data-toggle="tooltip" data-original-title="Go next"> next </a>
+                     <?php } ?>
                     </h6> 
                 </div>
                 <div class="card-block">
                         <p style="font-weight: 600;margin-bottom:0px;">Requirement &nbsp;&nbsp; <?= isset($requirement->school->name) ? '<label class="badge badge-inverse-primary">' .$requirement->school->name. '</label>' : ' <label class="badge badge-inverse-success">General requirement</label>' ?></p> 
-                        
                         <p style="font-weight: 600"> <?= $requirement->note ?></p>
                 </div>
           </div>

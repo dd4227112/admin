@@ -8,7 +8,7 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4><?=' Communication' ?></h4>
+                <h4><?=' Tasks Allocation' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -17,9 +17,9 @@
                         <i class="feather icon-home"></i>
                     </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">communication</a>
+                    <li class="breadcrumb-item"><a href="#!">tasks</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">sales</a>
+                    <li class="breadcrumb-item"><a href="#!">product</a>
                     </li>
                 </ul>
             </div>

@@ -213,6 +213,7 @@ class Users extends Controller {
     public function askleave(){
         $id = (int) request()->segment(3);
         $request = request()->segment(4);
+       
      
         if($request == 'approve'){
             $approved = \App\Models\Absent::where('id',$id)->update(['approved_by' =>Auth::user()->id,'status'=>'Approved']);
@@ -225,6 +226,8 @@ class Users extends Controller {
                     . ' which has to end at '. date('d-m-Y', strtotime($end_date)). '';
                     
             $this->send_email($user->email, 'Success: Absent leave granted', $message);
+             $this->send_sms($user->phone, $message, 1);
+
             return redirect()->back()->with('success','Approved successfully');
         }
         //If leave request rejected, Dont give paid leave
@@ -232,7 +235,15 @@ class Users extends Controller {
             \App\Models\Absent::where('id',$id)->update(['status'=>'Rejected']);
             return redirect()->back()->with('success','Rejected successfully');
         }
-       
+    }
+
+
+    public function editLeaveDates(){
+         $absent_id = request('absent_id');
+         $user_id = request('tag');
+         $end_date = request('val');
+         $updat =  \App\Models\Absent::where(['id' => $absent_id, 'user_id'=>$user_id])->update(['end_date'=> $end_date]);
+         echo $updat > 0 ? 'success' : 'error';
     }
 
     public function password() {
