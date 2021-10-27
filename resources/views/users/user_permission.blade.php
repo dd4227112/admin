@@ -182,7 +182,6 @@
     debug: true
   });
   
-  
 $('#permission').change(function(event) {
     var id = $(this).val();
     if (id === '') {} else {
@@ -200,6 +199,9 @@ function submit_role(permission) {
     }
     $.ajax({
         url: url_obj,
+        headers: {
+             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
         method: 'post',
         data: {
             perm_id: perm_id,
