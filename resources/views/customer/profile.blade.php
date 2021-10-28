@@ -2283,6 +2283,9 @@ if (!empty($profile)) {
             var task_id = $('#task_id' + id).val();
             $.ajax({
                 type: 'POST',
+                 headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
                 url: "<?= url('customer/taskComment/null') ?>",
                 data: {
                     content: content,

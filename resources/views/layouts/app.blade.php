@@ -878,7 +878,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                               <?php if (can_access('manage_finance')) { ?>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
-                                        <span class="pcoded-micon"><i class="feather icon-book"></i></span>
+                                        <span class="pcoded-micon"><i class="feather icon-clipboard"></i></span>
                                         <span class="pcoded-mtext">ACCOUNTING</span>
                                     </a>
                                     <ul class="pcoded-submenu">

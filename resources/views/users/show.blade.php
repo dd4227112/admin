@@ -63,7 +63,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                             if (Auth::user()->role_id != 7) { ?>
                             <div class="col-md-6 col-xl-4">
                                 <?php $pay = isset($user->salary) ? $user->salary : 1 ?>
-                           
+                                  <a href="<?= url('payroll/payroll_summary/'.$user->id) ?>">
                                   <div class="card">
                                     <div class="card-block">
                                         <div class="row align-items-center">
@@ -88,6 +88,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
 
                                     </div>
                                 </div>
+                                </a>
                             </div>
                             
                             <div class="col-md-6 col-xl-4">
@@ -123,7 +124,6 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                             <div class="col-md-6 col-xl-4">
                 
                                   <?php $nmb_schools = \DB::table('admin.nmb_schools')->count(); ?>
-                               
                                    <div class="card">
                                     <div class="card-block">
                                         <div class="row align-items-center">
@@ -279,8 +279,8 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
 
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
-                                                                      <?php if($user->academic_certificates == '') { ?>
-                                                                       <td>   <label class="btn btn-warning btn-mini btn-round"> No Certificates</label>
+                                                                        <td> <?php if($user->academic_certificates == '') { ?>
+                                                                          <label class="btn btn-warning btn-mini btn-round"> No Certificates</label>
                                                                       <?php } else { ?> 
                                                                         <a target='_break' href="<?=  $user->academic_certificates ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a>
                                                                       <?php } ?>
