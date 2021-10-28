@@ -1,10 +1,11 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="main-body">
     <div class="page-wrapper">
          <div class="page-header">
             <div class="page-header-title">
-                <h4><?= 'Payroll summary' ?></h4>
+                <h4><?= $user->firstname.' '.$user->lastname. ' Payroll summary' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -32,9 +33,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="col-sm-1"><?= __('#') ?></th>
+                                                        <th class="col-sm-1"><?= __('Month') ?></th>
                                                         <th class="col-sm-1"><?= __('Basic pay') ?></th>
-                                                        <th class="col-sm-1">Bank</th>
-                                                        <th class="col-sm-2"><?= __('Bank account') ?></th>
                                                         <th class="col-sm-1"><?= __('Allowance') ?></th>
                                                         <th class="col-sm-1"><?= __('Gross pay') ?></th>
                                                         <th class="col-sm-1"><?= __('Pension') ?></th>
@@ -62,51 +62,37 @@
                                                     foreach ($salaries as $salary) {
                                                         $basic_salary = $salary->basic_pay;
                                                         $total_basic_pay += $basic_salary;
-                                                        $user = \App\Models\User::where('id', $salary->user_id)->first();
-                                                        if (!empty($user)) {
-                                                            $name = $user->firstname. ' '. $user->lastname;
-                                                            $id = $user->id;
-                                                        } 
-                                                      
-                                                        $user_info_bank = \App\Models\User::where('id', $salary->user_id)->first();
-                                                        if (!empty($user_info_bank)) {
-                                                            $bank_name = $user_info_bank->bank_name;
-                                                            $bank_account = $user_info_bank->bank_account;
-                                                        } else {
-                                                            $bank_name = '';
-                                                            $bank_account = '';
-                                                        }
+                                    
                                                         ?>
                                                         <tr>
                                                             <td  data-title="<?= __('#') ?>"><?= $i ?></td>
-                                                            <td  data-title="<?= __('basic_pay') ?>"><?= money($basic_salary) ?></td>
-                                                            <td  data-title="<?= __('Bank') ?>"><?= $bank_name == '' ? '' : $bank_name ?></td>
-                                                            <td  data-title="<?= __('bank_account') ?>"><?= $bank_account == '' ? '' : $bank_account ?></td>
+                                                            <td  data-title="<?= __('#') ?>"><?= date('d/m/Y', strtotime($salary->payment_date)) ?></td>
+                                                            <td  data-title="<?= __('basic_pay') ?>"><?= number_format($basic_salary) ?></td>
                                                             <td  data-title="<?= __('allowance') ?>">
                                                                 <?php
                                                                 //calculate user allowances
-                                                                echo money($salary->allowance);
+                                                                echo number_format($salary->allowance);
                                                                 $sum_of_total_allowances += $salary->allowance;
                                                                 ?>
                                                             </td>
                                                             <td  data-title="<?= __('gross_pay') ?>">
                                                                 <?php
                                                                 $gross_pay = $basic_salary + $salary->allowance;
-                                                                echo money($gross_pay);
+                                                                echo number_format($gross_pay);
                                                                 $total_gross_pay += $gross_pay;
                                                                 ?> 
                                                             </td>
                                                             <td  data-title="<?= __('pension') ?>">  
                                                                 <?php
                                                                 //calculate user pension amount
-                                                                echo money($salary->pension_fund);
+                                                                echo number_format($salary->pension_fund);
                                                                 $total_pension += $salary->pension_fund;
                                                                 ?>
                                                             </td>
                                                             <td  data-title="<?= __('deduction') ?>">
                                                                 <?php
                                                                 //calculate user deductions
-                                                                echo money($salary->deduction);
+                                                                echo number_format($salary->deduction);
                                                                 $sum_of_total_deductions += $salary->deduction;
                                                                 ?> 
                                                             </td>
@@ -114,7 +100,7 @@
                                                                 <?php
                                                                 //calculate user taxable amount
                                                                 $taxable_amount = $gross_pay - $salary->pension_fund;
-                                                                echo money($taxable_amount);
+                                                                echo number_format($taxable_amount);
                                                                 $total_taxable_amount += $taxable_amount;
                                                                 ?>  
                                                             </td>
@@ -122,21 +108,22 @@
                                                                 <?php
                                                                 //calculate PAYEE
                         
-                                                                echo money($salary->paye);
+                                                                echo number_format($salary->paye);
                                                                 $total_paye += $salary->paye;
                                                                 ?> 
                                                             </td>
                                                             <td  data-title="<?= __('net_pay') ?>">
                                                                 <?php
                                                                 $net_pay = $gross_pay - $salary->pension_fund - $salary->deduction - $salary->paye;
-                                                                echo money($net_pay);
+                                                                echo number_format($net_pay);
                                                                 $total_net_pay += $net_pay;
                                                                 ?>
                                                             </td>
                                                           
                                                             <td class="text-center">
-                                                              <?php $month =date('m'); $_url = "payroll/payslip/null/?id=$salary->user_id&month=$month&set=$set";?>
-                                                              <a href="<?= url($_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Show payslip"> Preview </a>
+                                                              <?php $month = date('m', strtotime($salary->payment_date)); $_url = "payroll/payslip/null/?id=$salary->user_id&month=$month&set=$salary->payment_date";
+                                                               $url_sig = "users/usersignature/null/?user_id=$salary->user_id&payment_date=$salary->payment_date"; ?>
+                                                              <a href="<?= !is_null($user->signature) ? url($_url) : url($url_sig) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Show payslip"> Preview </a>
                                                             </td>                 
                                                         </tr>
                                                         <?php
@@ -146,22 +133,19 @@
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td data-title="<?= __('total') ?>">Total</td>
-                                                        <td data-title=""></td>
-                                                        <td data-title="<?= __('basic_pay') ?>"><?= money($total_basic_pay) ?></td>
-                                                        <td data-title=""></td>
-                                                        <td data-title=""></td>
-                                                        <td data-title="<?= __('allowances') ?>"><?= money($sum_of_total_allowances) ?></td>
-                                                        <td data-title="<?= __('gross_pay') ?>"><?= money($total_gross_pay) ?></td>
-                                                        <td data-title="<?= __('pension') ?>"><?= money($total_pension) ?></td>
-                                                        <td data-title="<?= __('deduction') ?>"><?= money($sum_of_total_deductions) ?></td>
-                                                        <td data-title="<?= __('slno') ?>"><?= money($total_taxable_amount) ?></td>
-                                                        <td data-title="<?= __('taxable_amount') ?>"><?= money($total_paye) ?></td>
-                                                        <td data-title="<?= __('net_pay') ?>"><?= money($total_net_pay) ?></td>
-                                                        <td> 
-                                                        <a href="<?= url('payroll/summary/null/?set=' . $set . '&month=' . date('M') . '&month=' . date('m')) . '&' . http_build_query(array('basic_pay' => $total_basic_pay, 'allowance' => $sum_of_total_allowances, 'gross_pay' => $total_gross_pay, 'pension' => $total_pension, 'deduction' => $sum_of_total_deductions, 'tax' => $total_taxable_amount, 'paye' => $total_paye, 'net_pay' => $total_net_pay)) ?>" 
-                                                        class="btn btn-primary btn-mini btn-round" data-placement="top" data-toggle="tooltip" data-original-title="Show Summary">Summary</a>
-                                                      </td>
+                                                        <th data-title="<?= __('') ?>"></th>
+                                                        <th data-title="<?= __('total') ?>">Total</th>
+                                                        <th data-title="<?= __('basic_pay') ?>"><?= number_format($total_basic_pay) ?></th>
+                                                        <th data-title="<?= __('allowances') ?>"><?= number_format($sum_of_total_allowances) ?></th>
+                                                        <th data-title="<?= __('gross_pay') ?>"><?= number_format($total_gross_pay) ?></th>
+                                                        <th data-title="<?= __('pension') ?>"><?= number_format($total_pension) ?></th>
+                                                        <th data-title="<?= __('deduction') ?>"><?= number_format($sum_of_total_deductions) ?></th>
+                                                        <th data-title="<?= __('slno') ?>"><?= number_format($total_taxable_amount) ?></th>
+                                                        <th data-title="<?= __('taxable_amount') ?>"><?= number_format($total_paye) ?></th>
+                                                        <th data-title="<?= __('net_pay') ?>"><?= number_format($total_net_pay) ?></th>
+                                                        <th> 
+                                                      
+                                                       </th>
                                                     </tr>
                                                 </tfoot>
                                             </table>  
@@ -171,7 +155,8 @@
                         </div> 
                     </div>
                 </div>
-        </div>
+             </div>
+
 @endsection
 
 

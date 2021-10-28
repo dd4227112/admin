@@ -81,15 +81,14 @@ if (empty($payslip_settings)) {
                                                                 a.company_file_id = f.id where a.id = '$user->id'"))->first(); 
                                                                 $local = $root . 'assets/images/user.png';
                                                                 ?>
-                                                                <img class="img-rounded" style="margin-left:2em" height="72em" width="72em" 
+                                                                <img class="img-50 img-circle" style="margin-left:2em" height="60em" width="72em" 
                                                                 src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" 
                                                                 alt="User-Profile-Image"> 
                                                             </th>
 
-                                                        
-                                                              
+                                                    
                                                              <th style="font-size: 17px; font-size: 100%; max-width: 100%;">
-                                                                <b>Name:</b> <?= $salary->user->name ?>
+                                                                <b>Name:</b> <?= $salary->user->firstname. ' '.$salary->user->lastname ?>
                                                                 <br>
                                                                 {{-- <b>Address:</b> <?= $user->address ?? ''?>
                                                                 <br> --}}
@@ -278,8 +277,8 @@ if (empty($payslip_settings)) {
                                                                           </td>
                                                                        </tr>
                                                                        <tr>
-                                                                        <td colspan="2">NET PAYMENT</td>
-                                                                        <td align='center'><?= money($salary->net_pay) ?></td>
+                                                                        <th colspan="2">NET PAYMENT</th>
+                                                                        <th align='center'><?= money($salary->net_pay) ?></th>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -295,24 +294,36 @@ if (empty($payslip_settings)) {
                                                                 <tbody>
 
                                                                     <tr>
-                                                                        <?php if ($payslip_settings->show_employee_signature == 1) { ?>
-                                                                            <td  style="width: 80%">....<?php if ($payslip_settings->show_employee_digital_signature == 1) { ?>
-                                                                             <img src="<?= isset($user_info->signature)?$user_info->signature:'' ?>" width="75" height="54"/> <?php } ?>.......</td>
-                                                                        <?php } ?>
+                                                                        <td style="width: 80%;font-weight:800">
+                                                                        <img src="<?= isset($user->signature)?$user->signature:'' ?>" width="75" height="54"/> </td>
                                                                         <td></td>
+                                                                        <td ></td>
+                                                                        <td ></td>
+                                                                        <td ></td>
                                                                         <td ></td>
                                                                         <?php
                                                                         if ($payslip_settings->show_employer_signature == 1) {
                                                                             $setting = \App\Models\Setting::first();
                                                                             ?>
-                                                                            <td  style="width: 80%">.....<?php if ($payslip_settings->show_employer_digital_signature == 1) { ?> 
-                                                                                <img src="<?= isset($setting->signature)?$setting->signature:'' ?>" width="75"                                                                                                      height="54"> <?php } ?>........</td>
-                                                                            <?php } ?>
+                                                                            <td  style="width: 80%;font-weight:800;">
+
+                                                                                 <div style="padding-left:15%;">
+                                                                                    <div style="z-index: 5000">
+                                                                                        <img src="<?= url('public/images/company_seal.png') ?>"
+                                                                                            width="100" height="100"
+                                                                                            style="position:relative; margin-left: 3px; float:right;">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                         <?php } ?>
                                                                     </tr> 
                                                                     <tr>
                                                                         <?php if ($payslip_settings->show_employee_signature == 1) { ?>
                                                                             <td style="">Employee Signature</td>
                                                                         <?php } ?>
+                                                                        <td ></td>
+                                                                        <td ></td>
+                                                                        <td ></td>
                                                                         <td ></td>
                                                                         <td ></td>
                                                                         <?php if ($payslip_settings->show_employer_signature == 1) { ?>

@@ -632,112 +632,6 @@ class Users extends Controller {
     }
 
 
-    // //Creating KPI
-    // public function kpi() {
-    //     $id = request()->segment(3);
-    //     $option = request()->segment(4);
-    
-    //     if ($_POST) {
-    //         $array = [
-    //             'name' => request('kpi_title'),
-    //             'value' => request('kpi_value'),
-    //             'query' => request('kpi_query')
-    //         ];
-    //       preg_match_all('/(?<!\w)#\w+/',request('kpi_query'), $matches);
-    //       $kpi = \App\Models\KeyPerfomanceIndicator::create($array);
-    //       if (!empty($kpi->id) && ($matches)) {
-    //           foreach ($matches[0] as $key => $value) {
-    //               if ($matches[0][$key] != '') {
-    //                   $array = ['parameter' => $matches[0][$key], 'kpi_id' => $kpi->id];
-    //                      \App\Models\QueryParameter::create($array);
-    //                }
-    //            } 
-    //        }
-    //         return redirect('users/kpi_list')->with('success', 'KPI created successfully');
-    //     }
-
-    //     if($option == 'edit'){
-    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-    //         return view('users.kpi.edit', $this->data);
-    //     }
-    //     if($option == 'assign'){
-    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-    //         return view('users.kpi.assign', $this->data);
-    //     }
-
-    //     if($option == 'show'){
-    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-    //         return view('users.kpi.show', $this->data);
-    //     }
-    //     $this->data['users'] = \App\Models\User::all();
-    //     return view('users.kpi.add', $this->data);
-    // }
-
-    // public function kpi_list(){
-    //     $this->data['kpis'] = \App\Models\KeyPerfomanceIndicator::all();
-    //     return view('users.kpi.kpi_list', $this->data);
-    // }
-
-    // public function  editkpi(){
-    //     $id = request()->segment(3);
-    //     if ($_POST) {
-    //         $this->validate(request(), [
-    //             'kpi_title' => 'required|max:255',
-    //             'kpi_value' => 'required|max:255',
-    //             'kpi_query' => 'required|max:255',
-    //         ]);
-    //         $array = [
-    //             'name' => request('kpi_title'),
-    //             'value' => request('kpi_value'),
-    //             'query' => request('kpi_query')
-    //         ];
-    //         $kpi = \App\Models\KeyPerfomanceIndicator::find($id)->update($array);
-    //         return redirect('users/kpi_list')->with('success', 'KPI Updated successfully');
-    //      }
-    //   }
-
-    //   public function assignKpi(){
-    //     $id = request()->segment(3);
-    //     if (request('user_id')) {
-    //         $modules = request('user_id');
-    //         foreach ($modules as $key => $value) {
-    //             if (request('user_id')[$key] != '') {
-    //                 $array = ['user_id' => request('user_id')[$key], 'kpi_id' => $id];
-    //                 $check_unique = \App\Models\KPIUser::where($array);
-    //                if (empty($check_unique->first())) {
-    //                     \App\Models\KPIUser::create($array);
-    //                }
-    //             }
-    //         }
-    //      }
-    //     return redirect('users/kpi_list')->with('success', 'Assigned successfully');
-    //   }
-     
-
-
-    //   public function evaluateKpi(){
-    //     $this->data['id'] = $id = request()->segment(3);
-    //     $this->data['userid'] = $userid = request()->segment(4);
-    //     $query = \App\Models\KeyPerfomanceIndicator::where('id', $id)->first()->query;
-     
-    //     $qy = preg_replace('/(?<!\w)#\w+/', $userid, $query);
-
-    //     if($_POST){
-    //         $start_date = request('start_date');
-    //         $end_date = request('end_date');
-    //         if($start_date != '' && $end_date != ''){
-    //             $end = "and created_at::date >= '$start_date' AND created_at::date < '$end_date'";
-    //         }
-    //         $qy = $qy .' '. $end;
-    //     }
-    //     $this->data['userdata'] = DB::SELECT($qy);
-    //     $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-    //     $this->data['info'] = \App\Models\User::findOrFail($userid);
-
-    //     $this->data['value'] = $this->data['userdata'][0]->value;
-      
-    //     return view('users.kpi.evaluation', $this->data);
-    //   }
 
 
 
@@ -875,7 +769,6 @@ class Users extends Controller {
 
     
      public function addLead() {
-        $this->data['breadcrumb'] = array('title' => 'HR Requests','subtitle'=>'customers','head'=>'operations');
         if ($_POST) {
 
             $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);
@@ -918,5 +811,29 @@ class Users extends Controller {
         }
         return view('users.hr.add', $this->data);
     }
+
+    public function usersignature(){ 
+         $this->data['user_id'] = $user_id = request('user_id');
+         $this->data['payment_date'] = $payment_date = request('payment_date');
+         return view('users.signature', $this->data);
+      }
+
+       public function updatesignature(){ 
+              $signature = str_replace(' ', '+', request('signed'));
+              $file_name = time() . ".png";
+              $this->data['user_id'] = $user_id = request('user_id');
+               $this->data['payment_date'] = $payment_date = request('payment_date');
+              $update = !empty($signature) ? \App\Models\User::where('id',(int) $user_id)->update(['signature'=>$signature,'signature_path' => $file_name]) : '';
+
+              $month = date('m', strtotime($payment_date));
+              $_url = "payroll/payslip/null/?id=$user_id&month=$month&set=$payment_date";
+
+              if($update > 0){
+                 return redirect($_url);
+              }else{
+                 return view('users.signature', $this->data); 
+              }
+             
+      }
 
 }

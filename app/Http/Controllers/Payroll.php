@@ -200,7 +200,6 @@ class Payroll extends Controller {
 
     
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'Salaries','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         $this->data['set'] = $id;
         $this->data['salaries'] = DB::select('select count(*) as total_users, sum(basic_pay) as basic_pay, sum(allowance) as allowance, sum(gross_pay)
@@ -433,11 +432,9 @@ class Payroll extends Controller {
 
     public function payroll_summary(){
          $id = request()->segment(3);
-         $this->data['user'] = \App\Models\User::find($id);
-         $this->data['salaries'] = \App\Models\Salary::where('user_id',(int) $id)->get();
-         dd($this->data['salaries']);
+         $this->data['user'] = $user = \App\Models\User::find($id);
+         $this->data['salaries'] = \App\Models\Salary::where('user_id', (int)$id)->latest()->get();
          return view('account.payroll.payroll_summary', $this->data);
-
     }
 
 
