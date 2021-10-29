@@ -32,12 +32,7 @@
             <?php if (can_access('manage_users')) { ?>
                     
                   <div class="col-xl-3 col-md-6">
-                        {{-- <x-smallCard title="Users"
-                                :value="$summary['users']"
-                                icon="feather icon-users f-50 text-c-red"
-                                cardcolor="bg-c-yellow text-white"
-                                >
-                        </x-smallCard> --}}
+                      
 
                         
                              <div class="card bg-c-yellow text-white">
@@ -45,7 +40,7 @@
                                         <div class="row align-items-center">
                                             <div class="col">
                                                 <p class="m-b-5">Users</p>
-                                                <h4 class="m-b-0">{{ number_format($summary['users']) }}</h4>
+                                                <h4 class="m-b-0"></h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="feather icon-users f-50 text-c-red"></i>
@@ -112,7 +107,7 @@
                                         <div class="row align-items-center">
                                             <div class="col">
                                                 <p class="m-b-5">Active Users</p>
-                                                <h4 class="m-b-0">{{ number_format($summary['active_users']) }}</h4>
+                                                <h4 class="m-b-0"></h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="feather icon-users f-50 text-c-red"></i>

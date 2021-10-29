@@ -26,7 +26,6 @@ class Analyse extends Controller {
     public function index() {
         $this->data['users'] = [];
         $year = date('Y');
-        $this->data['breadcrumb'] = array('title' => 'Dashboard','subtitle'=>'dashboard','head'=>'summary');
         if (Auth::user()->role_id == 7) {
             return redirect('sales/school');
             exit;
@@ -66,13 +65,11 @@ class Analyse extends Controller {
 
     public function customers() {
         $this->data['days'] = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'Customer dashboard','subtitle'=>'summary','head'=>'customers');
         return view('analyse.customers', $this->data);
     }
 
     public function software() {
         $this->data['days'] = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'Software dashboard','subtitle'=>'summary','head'=>'software');
         return view('analyse.software', $this->data);
     }
 
@@ -83,7 +80,6 @@ class Analyse extends Controller {
 
     public function sales() {
         $this->data['days'] = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'Sales dashboard','subtitle'=>'summary','head'=>'sales');
         $this->data['shulesoft_schools'] = \collect(\DB::select("select count(*) as count from admin.all_classlevel where lower(name) NOT like '%nursery%' and schema_name not in ('public','accounts')"))->first()->count;
         $this->data['schools'] = \collect(\DB::select("select count(*) as count from admin.schools where lower(ownership)<>'government'"))->first()->count;
         $this->data['nmb_schools'] = \collect(\DB::select('select count(*) as count from admin.nmb_schools'))->first()->count;
@@ -100,13 +96,13 @@ class Analyse extends Controller {
         $this->data['parents'] = \collect(\DB::select('select count(*) as count from admin.all_parent'))->first()->count;
         $this->data['students'] = \collect(\DB::select('select count(*) as count from admin.all_student'))->first()->count;
         $this->data['teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
-        $this->data['users'] = \collect(\DB::select('select count(*) as count from admin.all_users'))->first()->count;
+      //  $this->data['users'] = \collect(\DB::select('select count(*) as count from admin.all_users'))->first()->count;
         $this->data['total_schools'] = \collect(\DB::select("select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema','pg_catalog')"))->first()->aggregate;
         $this->data['schools_with_students'] =  \collect(\DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
         $this->data['active_parents'] = \collect(\DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
         $this->data['active_students'] = \collect(\DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
         $this->data['active_teachers'] = \collect(\DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
-        $this->data['active_users'] = \collect(\DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
+      //  $this->data['active_users'] = \collect(\DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
         return $this->data;
     }
 
