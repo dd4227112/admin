@@ -602,14 +602,14 @@ class Sales extends Controller {
                 . chr(10) .'School :' . $school->name . ' has been onboarded succesfully'
                 . chr(10) .'And invoice for this school has been created'
                 . chr(10) .'Kindly verify INVOICE  created and STANDING ORDER documents before proceeding'
-                . chr(10) .'Thanks you.';
+                . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($user->phone, $message); 
 
                 $finance = \App\Models\User::where('designation_id',2)->first();
                 $sms = 'Hello '.$finance->firstname .' '. $finance->lastname 
                 . chr(10) .'New school :' . $school->name . ' has been onboarded in the shulesoft system'
                 . chr(10) .'You are remainded to verify the invoice document'
-                . chr(10) .'Thanks you.';
+                . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($finance->phone, $sms); 
 
                 $this->scheduleActivities($client_id);  

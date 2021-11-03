@@ -377,13 +377,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                  </li>
                                              
-                                                <?php if (can_access('onboard_school')) { ?>
                                                  <li class="">
                                                     <a href="<?= url('sales/school') ?>">
                                                         <span class="pcoded-mtext">List of Schools</span>
                                                     </a>
                                                   </li>
-                                                <?php } ?>
 
                                                 <?php if (can_access('sales_plan')) { ?>
                                                 <li class="">

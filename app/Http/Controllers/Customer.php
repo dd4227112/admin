@@ -261,7 +261,7 @@ class Customer extends Controller {
                         . chr(10) . 'A task of ' . $train->trainItem->content . 'at ' . $train->client->name
                         . chr(10) . 'Has been allocated to ' . $user->firstname . ' ' . $user->lastname
                         . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . '.'
-                        . chr(10) . 'Thanks You.';
+                        . chr(10) . 'Thank You.';
                 $this->send_whatsapp_sms($manager->phone, $wmessage);
             }
 
@@ -318,10 +318,14 @@ class Customer extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function createGuide() {
+        $request = request()->all();
+         dd($request);
+        $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+
         $obj = [
             'permission_id' => request()->permission_id,
             'content' => str_replace('src="../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
-            'created_by' => Auth::user()->id,
+            'created_by' => \Auth::user()->id,
             'language' => 'eng'
         ];
         DB::table('constant.guides')->insert($obj);
@@ -365,8 +369,7 @@ class Customer extends Controller {
             $this->data['guide'] = \App\Model\Guide::find(request()->segment(4));
             $page = 'edit_guide';
             if ($_POST) {
-                $request = request()->all();
-
+                
                 $obj = [
                     'permission_id' => request()->permission_id,
                     'content' => str_replace('src="../../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),

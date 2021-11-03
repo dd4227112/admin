@@ -8,7 +8,6 @@ if (request()->ajax() == FALSE) {
 <div class="card">
     <div class="card-header">
         <h5>Customer Onboarding</h5>
-
     </div>
     <div class="card-block">
         <h4 class="sub-title">Basic Inputs</h4>
@@ -23,9 +22,7 @@ if (request()->ajax() == FALSE) {
                 <label class="col-sm-2 col-form-label">Sales Person</label>
                 <div class="col-sm-10">
                     <select name="sales_user_id" class="form-control">
-                        <?php
-                        foreach ($staffs as $staff) {
-                            ?>
+                        <?php foreach ($staffs as $staff) { ?>
                             <option user_id="<?= $staff->id ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
                         <?php } ?>
                     </select>
@@ -49,13 +46,12 @@ if (request()->ajax() == FALSE) {
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Price Per Student</label>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" value="10000" name="price" required="">
+                    <input type="text" class="form-control transaction_amount" value="10000" name="price" required="">
                 </div>
             </div>
             <?php
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school->id)->first();
-            if (empty($school_contact)) {
-                ?>
+            if (empty($school_contact)) { ?>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Customer Official Email</label>
                     <div class="col-sm-10">
@@ -68,9 +64,7 @@ if (request()->ajax() == FALSE) {
                         <input type="text" class="form-control" value="" name="phone" required="">
                     </div>
                 </div>
-                <?php
-            }
-            ?>
+                <?php } ?>
             <div class="form-group row" style="border: 1px dashed; ">
                 <label class="col-sm-2 col-form-label">Account Name</label>
                 <div class="row">
@@ -114,7 +108,6 @@ if (request()->ajax() == FALSE) {
                 <div class="col-sm-12">
                     <div class="table-responsive">
                         <table class="table table-bordered">
-                       
                             <thead>
                                 <tr>
                                     <th class="col-sm-2">#</th>
@@ -137,6 +130,8 @@ if (request()->ajax() == FALSE) {
                             </tbody>
                         </table>
                     </div>
+
+                    
                     <div class="card-block table-border-style">
                         <div class="table-responsive">
                             <table class="table table-bordered">

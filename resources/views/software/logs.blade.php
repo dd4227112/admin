@@ -6,7 +6,7 @@
 
         <div class="page-header">
         <div class="page-header-title">
-            <h4><?='SMS Status' ?></h4>
+            <h4><?='Error details' ?></h4>
         </div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
@@ -15,9 +15,9 @@
                     <i class="feather icon-home"></i>
                 </a>
                 </li>
-                <li class="breadcrumb-item"><a href="#!">loans</a>
+                <li class="breadcrumb-item"><a href="#!">errors</a>
                 </li>
-                <li class="breadcrumb-item"><a href="#!">payroll</a>
+                <li class="breadcrumb-item"><a href="#!">software</a>
                 </li>
             </ul>
         </div>

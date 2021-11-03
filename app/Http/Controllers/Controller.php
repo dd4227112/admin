@@ -406,6 +406,60 @@ class Controller extends BaseController {
     //     }
     //  }
 
+
+      public function syncMissingPayments(){
+        $this->data['prefix'] = '';
+        $returns = array();
+        $allschemas = DB::select('select * from admin.all_setting');
+
+            foreach($allschemas as $schema) {
+                    $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema->schema_name . '\'');
+                    $background = new \App\Http\Controllers\Background();
+                   
+                    //Iterate through invoices
+                        foreach ($invoices as $invoice) {
+                            $token = $background->getToken($invoice);
+                            $prefix = $invoice->prefix;
+                            if (strlen($token) > 4) {
+                                $fields = array(
+                                    "reconcile_date" => date('d-m-Y'),
+                                   // "reconcile_date" => $value->format('d-m-Y'),
+                                    "token" => $token
+                                );
+                                $push_status = 'reconcilliation';
+                                $url = $invoice->schema_name == 'beta_testing' ?
+                                        'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                                $curl = $background->curlServer($fields, $url);
+                                array_push($returns, json_decode($curl));
+                            } 
+
+                            foreach($returns as $return){
+                               $this->syncMissingInv($return->transactions,$prefix,$invoice->schema_name);
+                           }
+
+                        }
+                   }
+              }
+
+
+           public function syncMissingInv($data,$prefix,$schema_name){
+                   $trans = (object) $data;
+
+                    foreach ($trans as $tran) {
+                        if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
+                             $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
+                             if(empty($check)){
+                                    $data= urlencode(json_encode($tran));
+                                    $background = new \App\Http\Controllers\Background();
+                                    $url = 'http://75.119.140.177:8081/api/init';
+                                    $fields = json_decode(urldecode($data));
+                                    $curl = $background->curlServer($fields, $url, 'row');
+                                    return $curl;
+                             }
+                         }
+                    }
+                }
+
 }
 
 

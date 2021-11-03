@@ -34,7 +34,6 @@
                         <div class="card-block">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     <h4 class="modal-title" id="exampleModalLabel1">Add New Guide</h4> </div>
                                 <form method="post" action="<?= url('customer/createGuide') ?>">
                                     <div class="modal-body" id="message_result">
@@ -52,9 +51,15 @@
                                             </select>
                                         </div>
 
+                                         
+                                        <div class="form-group">
+                                            <input type="file" class="form-control col-sm-4" name="guide_file">
+                                        </div>
+
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Content For :</label>
-                                            <span id="content_for"></span> </div>
+                                            <span id="content_for"></span> 
+                                        </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">Content:</label>
                                             <textarea class="form-control" id="message-text1" id="mymce" name="content"></textarea>
