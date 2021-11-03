@@ -133,7 +133,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             (new Controller())->syncMissingPayments();
-        })->everyFiveMinutes;
+        })->everyFiveMinutes();
     }
 
     public function whatsappMessage() {
