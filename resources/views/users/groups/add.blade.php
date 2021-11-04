@@ -52,7 +52,6 @@
                                                     <strong> Group clients</strong> 
                                                     <select multiple="" name="to_client_id[]" class="form-control select2" required>
                                                         <?php
-                                                      //  $clients = DB::table('admin.clients')->get();
                                                       $clients = \DB::select('select A.*,B.client_id from admin.clients A left join admin.client_groups B on A.id = B.client_id where B.client_id is  null');
                                                         foreach ($clients as $client) { ?>
                                                             <option value="<?= $client->id ?>"><?= $client->name ?></option>

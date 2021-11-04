@@ -187,8 +187,8 @@
                                                     <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
                                         
                                                   </td>
-                                                    <td class="text-center"><?= isset($invoice->school->students) ? $invoice->school->students : ''  ?></td>
-                                                    <td class="text-center"><?= isset($invoice->unit_price) ? $invoice->unit_price : ''  ?></td>
+                                                    <td class="text-center"><?= isset($invoice->school->students) ? $invoice->school->students : '310'  ?></td>
+                                                    <td class="text-center"><?= isset($invoice->unit_price) ? $invoice->unit_price : '1,000'  ?></td>
                                                     <td class="text-center"><?= money($invoice->amount) ?></td>
                                                 </tr>
                                             </tbody>

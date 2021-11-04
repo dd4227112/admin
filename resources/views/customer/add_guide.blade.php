@@ -51,10 +51,7 @@
                                             </select>
                                         </div>
 
-                                         
-                                        <div class="form-group">
-                                            <input type="file" class="form-control col-sm-4" name="guide_file">
-                                        </div>
+                    
 
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Content For :</label>
@@ -96,15 +93,16 @@
                 "save table contextmenu directionality emoticons template paste textcolor"
             ],
             toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
-              images_upload_url: '<?=url('upload.php')?>',
+        images_upload_url: '<?=url('upload.php')?>',
   //images_upload_credentials: true,
   images_upload_base_path: '/storage/images/',
   images_upload_handler: function (blobInfo, success, failure, progress) {
     var xhr, formData;
+    var token = document.getElementsByName("csrfToken").value;
 
     xhr = new XMLHttpRequest();
     xhr.withCredentials = false;
-    xhr.open('POST', '<?=url('upload.php')?>');
+    xhr.open('POST', '<?=url('upload.php')?>',token);
 
     xhr.upload.onprogress = function (e) {
       progress(e.loaded / e.total * 100);

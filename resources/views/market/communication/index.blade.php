@@ -1,16 +1,14 @@
 @extends('layouts.app')
 @section('content')
-
-<?php
-// $email = session('email');
-// $usertype = session('usertype');
+<?php $root = url('/') . '/public/';
 ?>
+
 <div class="main-body">
     <div class="page-wrapper">
 
            <div class="page-header">
             <div class="page-header-title">
-                <h4><?=' Communication' ?></h4>
+                <h4><?=' Compose message' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -21,34 +19,35 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">communication</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">sales</a>
+                    <li class="breadcrumb-item"><a href="#!">messages</a>
                     </li>
                 </ul>
             </div>
         </div> 
         <div class="page-body">
-
-            <div class="card">
                 <div class="col-sm-12">
+                  <div class="card">
+                    <div class="card-block">
+                       <div class="row">
    
                     <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
                         <div class="form-group">
                             <div class="form-group">
                                 <div class="col-sm-2">
                                     <label for="form-field-select-0">
-                                        From <a><i class="fa fa-question-circle" data-container="body"
-                                                data-toggle="popover" data-placement="right" data-trigger="hover"
-                                                title="You can change this is SMS settings in main system settings by linking other phone or use internet message"></i></a>
+                                        From 
                                     </label>
                                 </div>
                                 <div class="col-sm-9">
-                                    <select id="sms_keys_id" class="form-control" name="sms_keys_id">
-                                        <option value="quick">Quick SMS</option>
-                                        <option value="quick">Phone SMS</option>
+                                    <select multiple="" id="sms_keys_id" class="form-control select2"  name ="sms_keys_id[]" required>
+                                        <option value="quick-sms">Quick SMS</option>
+                                        <option value="whatsapp">WhatsApp</option>
+                                        <option value="telegram">Telegram</option>
+                                        <option value="phone-sms">Phone SMS</option>
+                                        <option value="email">Email</option>
                                     </select>
                                 </div>
-                                <div class="has-error">
-                                </div>
+                             
                             </div>
 
                             <div class="form-group">
@@ -63,7 +62,9 @@
                                         <option value="">&nbsp;</option>
                                         <option value="00">Customers</option>
                                         <option value="01">Prospects</option>
-                                        <option value="02">Others</option>
+                                        <option value="02">Leads</option>
+                                        <option value="02">All</option>
+                                        <option value="02">Custom selection</option>
                                     </select>
                                 </div>
                                 <div class="has-error">
@@ -89,22 +90,48 @@
                                     <?php endif ?>
                                 </div>
                             </div>
+
                             <div class="form-group" id="parents_selection" style="display: none;">
-                                <div class="col-sm-2">
-                                    <label for="form-field-select-3">
+                                 <div class="col-sm-2">
+                                    <label for="form-field-select-0">
                                         Select Criteria
                                     </label>
                                 </div>
+
                                 <div class="col-sm-9">
                                     <select id="form-field-select-3" class="form-control" name="criteria"
                                         onchange="setCriteria(this.value);">
-                                        <option value="0">All Schools</option>
-                                        <option value="1">Active Schools</option>
-                                        <option value="2">Not Active Schools</option>
-                                        <option value="3">Partially Active Schools</option>
-                                        <option value="4">Specific Role</option>
+                                        <option value="0">All Customers </option>
+                                        <option value="1">Active & Full paid customers</option>
+                                        <option value="2">Active & partial paid customers</option>
+                                        <option value="3">Active but not paid customers</option>
+                                        <option value="4">Not active & paid customers</option>
+                                        <option value="5">By customer segment</option>
                                     </select>
-                                </DIV>
+                                </div>
+                                <div class="has-error">
+                                    <?php if (form_error($errors, 'criteria')) { ?>
+                                    <?php echo form_error($errors, 'criteria'); ?>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+                             <div class="form-group" id="customer_segment" style="display: none;">
+                                 <div class="col-sm-2">
+                                    <label for="form-field-select-0">
+                                        By customer segment
+                                    </label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <select id="form-field-select-3" class="form-control" name="customer_segment"
+                                        onchange="setCriteria(this.value);">
+                                        <option value="0">Secondary schools </option>
+                                        <option value="1">Primary schools</option>
+                                        <option value="2">College only</option>
+                                        <option value="3">Nursey schools only</option>
+                                        <option value="4">Schools with student (greater than or less than)</option>
+                                    </select>
+                                </div>
                                 <div class="has-error">
                                     <?php if (form_error($errors, 'criteria')) { ?>
                                     <?php echo form_error($errors, 'criteria'); ?>
@@ -136,11 +163,10 @@
                             </div>
 
 
-                            <div class="select2-wrapper" id="load_classes" style="display: none">
+                            <div class="select2-wrapper" id="load_classes#" style="display: none">
                                 <div class="form-group">
-                                    <div class="col-sm-2">
-                                        <label>
-                                            Select Class Module
+                                    <div class="">
+                                        <label> Select Class Module </label>
                                     </div>
                                     <div class="col-sm-9">
                                         <?php
@@ -158,17 +184,7 @@
                                 </div>
                             </div>
 
-                            <!--                            <div id="load_section" class="form-group" style="display: none">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-2">
-                                                                    <label>
-                                                                        Select End Date
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <input type="date" name="end_date" class="form-control" id="end_date"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>-->
+                           
                             <div id="load_student_types" class="form-group" style="display: none">
                                 <div class="form-group">
                                     <div class="col-sm-2">
@@ -378,8 +394,8 @@
                             </div>
                         </div>
                         <div class='form-group'>
-                            <div class="col-sm-2">
-                                <label for="sms_template" class="col-sm-3">
+                            <div class="">
+                                <label for="sms_template">
                                     <?= __("Template") ?>
                                 </label>
                             </div>
@@ -438,12 +454,12 @@
                             </p>
                         </div>
                         <div class="pull-right col-sm-2">
-                            <button type="submit" class="btn btn-primary btn-block "><i class="fa fa-envelope-o"></i>
-                                <?= __('send') ?></button>
+                           <button type="submit" class="btn btn-primary btn-mini btn-round"> Submit </button>
                         </div>
                         <?= csrf_field() ?>
                     </form>
-                    <!--</div><!-- /.box-body -->
+                    </div>
+                   </div>
                     <div class="col-sm-2"></div>
                 </div>
                 <!--</div>-->
@@ -639,7 +655,6 @@ function setTeachersCriteria(value) {
 }
 
 function setCriteria(value1) {
-
     switch (value1) {
 
         case '':
@@ -695,6 +710,9 @@ function setCriteria(value1) {
             $('#load_classes,#load_section,#load_student_types,#load_payment_status,#load_types').hide();
             $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel').hide();
             $('#category8').hide();
+
+            $('#customer_segment').show();
+
             break;
 
         case '6':
@@ -755,13 +773,8 @@ function setCriteria(value1) {
             $('#category5').hide();
             $('#category8').show();
             $('#category7').hide();
-
-
-
             break;
-
         default:
-
             //document.getElementById('category').style.display = "block";
             break;
     }

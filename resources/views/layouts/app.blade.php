@@ -416,12 +416,25 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <?php } ?>
 
                                                 <?php if (can_access('communication')) { ?>
-                                                 <li class="">
-                                                    <a href="<?= url('marketing/communication') ?>">
-                                                        <span class="pcoded-mtext">Communication</span>
+                                                    <li class=" pcoded-hasmenu">
+                                                        <a href="javascript:void(0)">
+                                                        <span class="pcoded-mtext text-bold">Communications</span>
                                                     </a>
-                                                </li>
-                                                <?php } ?>
+                                                        <ul class="pcoded-submenu">
+                                                        <li class="">
+                                                            <a href="<?= url('marketing/communication') ?>">
+                                                                <span class="pcoded-mtext">Compose</span>
+                                                            </a>
+                                                            </li>
+                                                        
+                                                            <li class="">
+                                                            <a href="<?= url('marketing/templates') ?>">
+                                                                <span class="pcoded-mtext">Template</span>
+                                                            </a>
+                                                            </li>
+                                                        </ul>
+                                                        </li>
+                                                  <?php } ?>
 
                                                 <?php if (can_access('manage_sequence')) { ?>
                                                  <li class="">

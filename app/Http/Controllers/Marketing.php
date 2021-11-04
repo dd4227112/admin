@@ -605,8 +605,6 @@ group by ownership');
     }
 
     public function sendCustomSmsToTeachers($patterns, $section_id = 0, $class_id = null, $message = null) {
-
-
         $teachersCriteria = request('teachersCriteria');
         $success_message = [];
 
@@ -667,6 +665,11 @@ group by ownership');
 
             return redirect()->back()->with('error', $this->lang->line('no_teachers_error'));
         }
+    }
+
+
+    public function templates(){
+        dd('a templates');
     }
 
 
