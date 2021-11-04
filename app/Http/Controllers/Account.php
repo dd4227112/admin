@@ -394,7 +394,8 @@ class Account extends Controller {
             DB::table('admin.temp_clients')->insert([
                 'name' => $school->name, 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school->id, 'user_id' => \Auth::user()->id,
                 'reference' => $reference, 'date' => $start_date, 'due_date' => $due_date, 'account_year_id' => $year->id,
-                'amount' => remove_comma(request('amount')), 'project_id' => request('type')
+                'amount' => remove_comma(request('amount'))*request('students'), 'project_id' => request('type'),
+                'students' => request('students'), 'unit_amount'=> request('amount')
             ]);
          } else { 
         $client = \App\Models\Client::find($client->client_id);

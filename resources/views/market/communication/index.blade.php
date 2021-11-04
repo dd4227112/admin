@@ -34,12 +34,12 @@
                         <div class="form-group">
                             <div class="form-group">
                                 <div class="col-sm-2">
-                                    <label for="form-field-select-0">
+                                    <strong for="form-field-select-0">
                                         From 
-                                    </label>
+                                    </strong>
                                 </div>
                                 <div class="col-sm-9">
-                                    <select multiple="" id="sms_keys_id" class="form-control select2"  name ="sms_keys_id[]" required>
+                                    <select multiple="" id="sms_keys_id" class="select2"  name ="sms_keys_id[]" required>
                                         <option value="quick-sms">Quick SMS</option>
                                         <option value="whatsapp">WhatsApp</option>
                                         <option value="telegram">Telegram</option>
@@ -52,12 +52,12 @@
 
                             <div class="form-group">
                                 <div class="col-sm-2">
-                                    <label for="form-field-select-0">
+                                    <strong for="form-field-select-0">
                                         Send To:
-                                    </label>
+                                    </strong>
                                 </div>
                                 <div class="col-sm-9">
-                                    <select id="form-field-select-0" class="form-control" name="firstCriteria"
+                                    <select style="30px;" id="form-field-select-0" class="select2" name="firstCriteria"
                                         onchange="setFirstCriteria(this.value);">
                                         <option value="">&nbsp;</option>
                                         <option value="00">Customers</option>
@@ -99,7 +99,7 @@
                                 </div>
 
                                 <div class="col-sm-9">
-                                    <select id="form-field-select-3" class="form-control" name="criteria"
+                                    <select id="form-field-select-3" class="select2" name="criteria"
                                         onchange="setCriteria(this.value);">
                                         <option value="0">All Customers </option>
                                         <option value="1">Active & Full paid customers</option>
@@ -123,7 +123,7 @@
                                     </label>
                                 </div>
                                 <div class="col-sm-9">
-                                    <select id="form-field-select-3" class="form-control" name="customer_segment"
+                                    <select id="form-field-select-3" class="select2" name="customer_segment"
                                         onchange="setCriteria(this.value);">
                                         <option value="0">Secondary schools </option>
                                         <option value="1">Primary schools</option>
@@ -147,7 +147,7 @@
                                     </label>
                                 </div>
                                 <div class="col-sm-9">
-                                    <select id="form-field-select-4" class="form-control" name="teachersCriteria"
+                                    <select id="form-field-select-4" class="select2" name="teachersCriteria"
                                         onchange="setTeachersCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
                                         <option value="001"><?= trans('mailandsms_lang.all_teachers') ?></option>
@@ -178,7 +178,7 @@
                                                 $c_array[$module->id] = $module->name;
                                             }
                                         }
-                                        echo form_dropdown("module_id", $c_array, old("module_id"), "id='module_id' class='form-control'");
+                                        echo form_dropdown("module_id", $c_array, old("module_id"), "id='module_id' class='select2'");
                                         ?>
                                     </div>
                                 </div>
@@ -201,7 +201,7 @@
                                                 $array[$types->column_name] = ucwords(str_replace('_', ' ', str_replace('_id', null, $types->column_name)));
                                             }
                                         }
-                                        echo form_dropdown("student_type", $array, old("student_type"), "id='student_type' class='form-control select2 col-sm-12'");
+                                        echo form_dropdown("student_type", $array, old("student_type"), "id='student_type' class='form-controli select2 col-sm-12'");
                                         ?>
                                     </div>
                                 </div>
@@ -224,7 +224,7 @@
                                                 $array[$key] = $types;
                                             }
                                         }
-                                        echo form_dropdown("payment_status", $array, old("payment_status"), "id='payment_status' class='form-control select2 col-sm-12'");
+                                        echo form_dropdown("payment_status", $array, old("payment_status"), "id='payment_status' class='form-controli select2 col-sm-12'");
                                         ?>
                                     </div>
                                 </div>
@@ -288,7 +288,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-9">
-                                <select id="form-field-select-2" class="form-control"
+                                <select id="form-field-select-2" class="form-controli select2"
                                     onchange="setCriteria(this.value);">
                                     <option value="0">Select an Option</option>
                                     <option value="9"><?= __('based_on_names') ?></option>
@@ -313,7 +313,7 @@
                                         $array[$parent->parentID] = $parent->name;
                                     }
                                 }
-                                echo form_dropdown("parents[]", $array, old("parents"), "id='parents_name' class='form-control select2_multiple col-sm-12' multiple='multiple'");
+                                echo form_dropdown("parents[]", $array, old("parents"), "id='parents_name' class='form-controli select2 select2_multiple col-sm-12' multiple='multiple'");
                                 ?>
                             </div>
                         </div>
@@ -333,7 +333,7 @@
                                         $array[$parent->parentID] = $parent->phone;
                                     }
                                 }
-                                echo form_dropdown("parents[]", $array, old("parents"), "id='parents_phone' class='form-control select2_multiple col-sm-12' multiple='multiple'");
+                                echo form_dropdown("parents[]", $array, old("parents"), "id='parents_phone' class='form-controliselect2 select2_multiple col-sm-12' multiple='multiple'");
                                 ?>
                             </div>
                         </div>
@@ -346,7 +346,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-9">
-                                <select id="form-field-select-5" class="form-control"
+                                <select id="form-field-select-5" class="form-controly select2"
                                     onchange="setTeachersCriteria(this.value);">
                                     <option value="">Select an Option</option>
                                     <option value="09"><?= __('based_on_teachers_names') ?></option>
@@ -370,7 +370,7 @@
                                         $array[$teacher->teacherID] = $teacher->name;
                                     }
                                 }
-                                echo form_dropdown("teachers[]", $array, old("teachers"), "id='teachers_name' class='form-control select2_multiple col-sm-12' multiple='multiple'");
+                                echo form_dropdown("teachers[]", $array, old("teachers"), "id='teachers_name' class='form-control select2 select2_multiple col-sm-12' multiple='multiple'");
                                 ?>
                             </div>
                         </div>
@@ -389,7 +389,7 @@
                                         $array[$teacher->teacherID] = $teacher->phone;
                                     }
                                 }
-                                echo form_dropdown("teachers[]", $array, old("teachers"), "id='teachers_phone' class='form-control select2_multiple col-sm-12' multiple='multiple'");
+                                echo form_dropdown("teachers[]", $array, old("teachers"), "id='teachers_phone' class='form-control select2 select2_multiple col-sm-12' multiple='multiple'");
                                 ?>
                             </div>
                         </div>
@@ -410,7 +410,7 @@
                                 foreach ($templates as $etemplate) {
                                     strtolower($etemplate->type) == 'sms' ? $array[$etemplate->id] = $etemplate->name : '';
                                 }
-                                echo form_dropdown("template", $array, old("email_template"), "id='sms_template' data-type='content_area' class='form-control'");
+                                echo form_dropdown("template", $array, old("email_template"), "id='sms_template' data-type='content_area' class='form-controli select2'");
                                 ?>
 
                             </div>
@@ -516,6 +516,14 @@
     </div>
 </div>
 <script>
+
+     $(".select2").select2({
+      theme: "bootstrap",
+      dropdownAutoWidth: false,
+      allowClear: false,
+      debug: true
+  }); 
+
 //    $('#tags_1').tagsinput({
 //  tagClass: 'big',confirmKeys: [13, 32, 44]
 //});

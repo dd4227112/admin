@@ -169,7 +169,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                 <div class="col-md-4">
                                                     <strong> Invoice Type</strong>
-                                                     <select type="text" name="type" style="text-transform:uppercase" class="js-example-basic-single form-control" required>
+                                                     <select type="text" name="type"  class="select2" required>
                                                     <option value="">Select here...</option>
                                                     <?php
                                                         $types = \App\Models\InvoiceType::get();
@@ -183,7 +183,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                  
                                                  <div class="col-md-4">
                                                     <strong> Choose school </strong>
-                                                    <select type="text"  name="school_id" class="form-control js-example-basic-single" required>
+                                                    <select type="text"  name="school_id" class="select2" required>
                                                        <?php \App\Models\School::chunk(50, function ($schools) {  ?>
                                                         <?php  foreach($schools as $value) { ?>
                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
@@ -194,7 +194,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                  <div class="col-md-4">
                                                     <strong> Number of students </strong>
-                                                      <input type="text" name="students"  class="form-control" placeholder="" autofocus>
+                                                      <input type="number" name="students"  class="form-control" placeholder="" autofocus>
                                                   </div> 
 
                                                </div>
@@ -203,7 +203,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                           <div class="form-group">
                                             <div class="row">
                                              <div class="col-md-3">
-                                                <strong>  Amount</strong>
+                                                <strong>  Unit price</strong>
                                                   <input type="text" name="amount"  class="form-control" placeholder="Enter required  Amount.." autofocus required>
                                                </div>
 
@@ -300,6 +300,13 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 </div>
 
 <script type="text/javascript">
+ $(".select2").select2({
+      theme: "bootstrap",
+      dropdownAutoWidth: false,
+      allowClear: false,
+      debug: true
+  }); 
+
     edit_records = function (tag, val, schema) {
         $.get('<?= url('customer/updateProfile/null') ?>', {schema: schema, table: 'setting', val: val, tag: tag, user_id: '1'}, function (data) {
             $('#status_' + tag + schema).html('<label class="badge badge-success">'+data+'</label>');
@@ -315,9 +322,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
         }
     })
 
-  $(".js-example-basic-single").select2({
-     templateResult: formatState
-});
+
 </script>
 @endsection
 
