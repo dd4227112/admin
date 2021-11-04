@@ -340,9 +340,18 @@ class Account extends Controller {
 
     public function createShuleSoftInvoice() {
         $client_id = request()->segment(3);
+        $school = \App\Models\ClientSchool::where('client_id',(int)$client_id)->first();
+        if(!empty($school)){
+           $temp_client = collect(\DB::select("select * from admin.temp_clients where school_id ='$school->school_id'"))->first();
+            // use reference number from temp_clients if client has proforma invoice
+           $reference = $temp_client->reference;
+        } else {
+           $reference = time(); // to be changed for selcom ID
+        }
+
         $client = \App\Models\Client::find($client_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
-        $reference = time(); // to be changed for selcom ID
+      //  $reference = time(); // to be changed for selcom ID
         if (empty($client->start_usage_date)) {
             //If start usage date 
             return redirect()->back()->with('error', 'You must specify '.$client->username.' start usage date !');
