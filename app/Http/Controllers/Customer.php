@@ -1703,7 +1703,7 @@ class Customer extends Controller {
         return view('customer.remaindpayment', $this->data);
     }
 
-    public function remainderMessages() {
+    public function paymendRemainderMessages() {
         $unpaid_clients = \DB::select("select * from admin.clients_remain_payments where payment_deadline_date::date <= '2021-10-15' and username = 'public'");
         foreach ($unpaid_clients as $schema) {
             //  $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' or usertype ilike '%Admin%' and schema_name = 'public'");

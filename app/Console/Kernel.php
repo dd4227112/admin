@@ -54,18 +54,19 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
-            //sync new messages 
+            //remaind tasks to users and allocated users
             $this->setTaskRemainder();
-        })->everyMinute();
+        })->everyTenMinutes();
 
         $schedule->call(function () {
             (new Message())->sendEmail();
         })->everyMinute();
 
 
-        //   $schedule->call(function () {
-        //     (new Customer())->remainderMessages();
+        //  $schedule->call(function () {
+        //     (new Customer())->paymendRemainderMessages();
         // })->everyMinute();
+
         //  $schedule->call(function () {
         //(new Message())->karibusmsEmails();
         // })->everyMinute();
@@ -105,6 +106,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
           (new Customer())->createTodayReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
+
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
 //            $this->sendLoginReminder();
@@ -1118,6 +1120,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     //     AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
     //     return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
     // }
+
+
     // F(x) to send text remainder to keep phone active to school admins
     public function SMSStatusToSchoolsAdmin() {
         // select all schools not keep their app active for the past 24 hours
@@ -1132,13 +1136,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             . chr(10) . 'Asante';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($contact->phone, $message);
-                    DB::table('public.sms')->insert([
-                        'body' => $message,
-                        'phone_number' => $contact->phone,
-                        'type' => 0,
-                        'status' => 0,
-                        'sent_from' => 'phonesms'
-                    ]);
+                    $controller->send_sms($contact->phone,$message,1);
                 }
             }
         }
@@ -1308,27 +1306,44 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     // function to remaind school tasks created by users
-    public function setTaskRemainder() {
+   public function setTaskRemainder() {
         $tasks = \App\Models\Task::where('remainder', 0)->where('remainder_date', '=', date('Y-m-d'))->get();
-        foreach ($tasks as $task) {
-            $message = 'Hello ' . $task->user->name . '.'
-                    . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
-                    . chr(10) . 'From ' . $task->client->name . ''
-                    . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
-                    . chr(10) . 'Thanks.';
-            $controller = new \App\Http\Controllers\Controller();
-            $controller->send_whatsapp_sms($task->user->phone,$message);
-            $controller->send_sms($task->user->phone,$message,1);
-            $controller->send_email($task->user->email,'A taks remainder',$message);
-            \App\Models\Task::where('id', $task->id)->update(['remainder' => 1]);
+        $controller = new \App\Http\Controllers\Controller();
+
+        if(!empty($tasks)){
+            foreach ($tasks as $task) {
+                    $message = 'Hello ' . $task->user->name . '.'
+                                . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
+                                . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                                . chr(10) . 'From ' . $task->client->name . '' 
+                                . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
+                                . chr(10) . 'Thanks.';
+                    $controller->send_whatsapp_sms($task->user->phone,$message);
+                    $controller->send_sms($task->user->phone,$message,1);
+                    $controller->send_email($task->user->email,'A taks remainder',$message);
+
+                if($task->to_user_id != ''){
+                    $user = \App\Models\User::find($task->to_user_id);
+                    $msg = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
+                            . chr(10) . 'This is the remainder of a task allocated to you'
+                            . chr(10) . 'Task: ' . strip_tags($task->activity) . '.'
+                            . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                            . chr(10) . 'Deadline: ' . date('d-m-Y', strtotime($task->start_date)) . '.'
+                            . chr(10) . 'By: ' . $task->user->name . '.'
+                            . chr(10) . 'Thanks.';
+                    $controller->send_whatsapp_sms($user->phone,$msg);
+                    $controller->send_sms($user->phone,$msg,1);
+                }
+                \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
+            }
         }
     }
 
-    // function to refresh materialized views
+    // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
         $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
            foreach ($materialized_views as $view) {
-            DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
+            \DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
         }
     }
 
