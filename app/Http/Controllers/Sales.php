@@ -723,7 +723,7 @@ class Sales extends Controller {
              $sales = new \App\Http\Controllers\Customer();
              $zm = $sales->zonemanager($client_id);
              if(isset($zm->user_id) && !empty((int) $zm->user_id)){
-                      $manager = \App\Models\User::where('id',$zm->user_id)->first();
+                      $manager = \App\Models\User::where(['id' => $zm->user_id,'status'=>1])->first();
                         $manager_message = 'Hello ' . $manager->firstname . '<br/>'
                         . 'A task ' . $section->content .' been scheduled to'
                         . '<li>' . \App\Models\Client::where('id',$client_id)->first()->name  . '</li>'

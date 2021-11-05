@@ -370,8 +370,10 @@ class Users extends Controller {
         
          DB::table("admin.users")->where('id', $user_id)->update(['status' => 0,'deleted_at'=>'now()']);
          $email = \App\Models\User::where('id',$user_id)->first()->email;
-         DB::table("admin.user_turnover")->insert(['user_id' => $user_id,'reason_id' => $reason_id ]);
-  
+         DB::table("admin.user_turnover")->insert(['user_id' => $user_id,'reason_id' => $reason_id]);
+
+         DB::table("admin.zone_managers")->where('user_id',$user_id)->delete();
+       
         if($email){
            DB::table("public.user")->where('email', $email)->delete();
         }
