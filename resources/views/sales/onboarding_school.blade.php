@@ -89,7 +89,7 @@ if (request()->ajax() == FALSE) {
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Data Format Available</label>
                 <div class="col-sm-10">
-                    <select name="data_type_id" class="form-control">
+                    <select name="data_type_id" class="form-control" required>
                         <option value="1">Excel With Parent Phone Numbers</option>
                         <option value="2">Physical Files Format</option>
                         <option value="3">Softcopy but without parents phone numbers</option>
@@ -132,7 +132,7 @@ if (request()->ajax() == FALSE) {
                     </div>
 
                     
-                    <div class="card-block table-border-style">
+                    {{-- <div class="card-block table-border-style">
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -187,7 +187,7 @@ if (request()->ajax() == FALSE) {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 
@@ -230,21 +230,88 @@ if (request()->ajax() == FALSE) {
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Payment Option</label>
                 <div class="col-sm-10">
-                    <select name="payment_option" class="form-control">
-                        <option value="cash">Cash</option>
-                        <option value="standing order">Standing order</option>
-                        <option value="bank transfer">Bank transfer </option>
+                    <select name="payment_option" class="form-control" id="_payment_option" required="">
+                        <option value="Cash">Cash</option>
+                        <option value="Standing Order">Standing Order</option>
+                        <option value="Bank Transfer">Bank Transfer </option>
+                        <option value="Bank Deposit">Bank Deposit</option>
                     </select>
                 </div>
             </div>  
 
-            <div class="row">
+            {{-- <div class="row" id="standing_order_form"  style="display: none;">
                 <label class="col-sm-2 col-form-label">Upload document Form</label>
                 <div class="col-sm-10">
                     <input type="file" class="form-control" accept=".pdf" name="agree_document" required="">
                     <span class="messages">Client MUST sign a standing order to specify which date he/she will start to pay. <a href="#">Click Here to download </a> Standing Order Template</span>
                 </div>
-            </div>
+            </div> --}}
+
+               <div class="col-sm-12 m-t-20"  id="standing_order_form"  style="display: none;">
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                            <strong> Branch name </strong>
+                            <input type="text" placeholder="Bank branch name"  class="form-control"  name="branch_name">
+                    </div>
+                    <div class="col-sm-4">
+                            <strong for="">Contact person</strong>
+                            <input type="text" placeholder="Contact person"  class="form-control"  name="contact_person">
+                    </div>
+                        <div class="col-sm-4">
+                            <strong for="">Number of Occurance</strong>
+                            <input type="number" placeholder="must be number eg 2, 3, 12 etc"  class="form-control" id="box1" name="number_of_occurrence">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                            <strong>Payment Basis</strong>
+                            <select name="which_basis"  class="form-control">
+                                <option value=""></option>
+                                <option value="Annually">Annually</option>
+                                <option value="Semiannually">Semi Annually</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Monthly">Monthly</option>
+                            </select>
+                    </div>
+                    <div class="col-sm-4">
+                            <strong>Amount for Every Occurrence </strong>
+                            <input type="text"  class="form-control transaction_amount"  name="occurance_amount" id="box2">
+                    </div>
+                        <div class="col-sm-4">
+                            <strong>Total Amount</strong>
+                            <input type="text" class="form-control" name="total_amount" >
+                    </div>
+                </div>
+
+                    <div class="form-group row">
+                    <div class="col-sm-4">
+                            <strong>Maturity Date</strong>
+                            <input type="date"class="form-control" name="maturity_date">
+                    </div>
+                    <div class="col-sm-4">
+                            <strong> Standing order file </strong>
+                            <input type="file" class="form-control" name="standing_order_file">
+                    </div>
+                        <div class="col-sm-4">
+                            <strong> Refer bank</strong>
+                            <select name="refer_bank_id"  class="form-control">
+                            <?php
+                            $banks = DB::table('constant.refer_banks')->get();
+                            if (!empty($banks)) {
+                                foreach ($banks as $bank) {
+                                    ?>
+                            <option
+                                value="<?= $bank->id ?>">
+                                    <?= $bank->name ?>
+                            </option>
+                            <?php
+                            }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+        </div>
 
             <br/><br/>
             <div class="form-group row">
@@ -267,6 +334,16 @@ if (request()->ajax() == FALSE) {
     </div>
 </div>
 <script type="text/javascript">
+
+     $('#_payment_option').change(function () {
+        var val = $(this).val();
+        if (val != 'Standing Order') {
+            $('#standing_order_form').hide();
+        } else {
+            $('#standing_order_form').show();
+        }
+       
+    });
 
     notify = function (title, message, type) {
         new PNotify({

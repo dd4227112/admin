@@ -56,7 +56,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             //remaind tasks to users and allocated users
             $this->setTaskRemainder();
-        })->everyTenMinutes();
+        })->hourly();
 
         $schedule->call(function () {
             (new Message())->sendEmail();
@@ -135,7 +135,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             (new Controller())->syncMissingPayments();
-        })->everyFiveMinutes();
+        })->hourly();
     }
 
     public function whatsappMessage() {

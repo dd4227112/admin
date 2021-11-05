@@ -457,7 +457,7 @@ class Sales extends Controller {
              $this->validate(request(), 
                    ['name' => 'required',
                     'sales_user_id' => 'required',
-                    'price' => 'required|numeric',
+                    'price' => 'required',
                     'username' => 'required',
                     'students' => 'required|numeric',
                     'implementation_date' => 'required',
@@ -535,29 +535,24 @@ class Sales extends Controller {
               }
  
                 // if document is standing order,Upload standing order files
-             if (!empty(request('agree_document')) && request('payment_option') == 'standing order') {
-                $file = request()->file('agree_document');
+             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))) {
+                $file = request()->file('standing_order_file');
                 $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
+
                 $contract_id = DB::table('admin.standing_orders')->insertGetId(array(
-                    'type' => 'Yearly','created_by' => \Auth::user()->id, 
+                    'type' => request('which_basis'),'created_by' => \Auth::user()->id, 
                     'client_id' => $client_id,'contract_type_id' => 8,
-                    'is_approved' => '0','company_file_id' => $company_file_id
+                    'is_approved' => '0','company_file_id' => $company_file_id,
+                    'payment_date' => request('maturity_date'), 'occurance_amount' => remove_comma(request('occurance_amount')),
+                    'contact_person' => request('contact_person'), 'branch_name' => request('branch_name'),
+                    'occurrence' => request('number_of_occurrence'), 'total_amount' => remove_comma($total_amount), 
                 ));
                 //client contracts
                 DB::table('admin.client_contracts')->insert([
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
-            } else {
-                $file = request()->file('agree_document');
-                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
-                $contract_id = DB::table('admin.contracts')->insertGetId([
-                'name' => 'Shulesoft', 'company_file_id' => $company_file_id, 'start_date' => date('Y-m-d'), 'contract_type_id' => 2, 'user_id' => \Auth::user()->id
-                ]);
-                //client contracts
-                DB::table('admin.client_contracts')->insert([
-                    'contract_id' => $contract_id, 'client_id' => $client_id
-                ]);
-             }
+            } 
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             // if (request('payment_status') == 1) {
@@ -577,8 +572,8 @@ class Sales extends Controller {
                 // $unit_price = $months_remains * $client->price_per_student / 12;
                 // $amount = $unit_price * $client->estimated_students;
 
-                 $unit_price = request('price');
-                 $estimated_students = request('students');
+                 $unit_price = remove_comma(request('price'));
+                 $estimated_students = remove_comma(request('students'));
                  $amount = $unit_price * $estimated_students;
 
                 \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 
@@ -720,6 +715,8 @@ class Sales extends Controller {
                 . chr(10) . 'By :'. \Auth::user()->name
                 . chr(10) . 'Thank you';
              $this->send_whatsapp_sms($user->phone, $sms);
+            $this->send_sms($user->phone,$sms,1);
+
 
 
             //email to zonal manager
@@ -740,6 +737,8 @@ class Sales extends Controller {
                     . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' up to '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
                     . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($manager->phone, $message);
+                    $this->send_sms($manager->phone,$message,1);
+
                }
             //sms to school personel
               if(request("train_item{$section->id}") != ''){
@@ -750,6 +749,8 @@ class Sales extends Controller {
                     . chr(10) . 'A task is expected to start at ' .date('F,d Y', strtotime($start_date)).' up to '. date('F,d Y', strtotime($start_date . " + {$section->time} days"))
                     . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($phonenumber, $sms);
+                    $this->send_sms($phonenumber,$sms,1);
+
               }
         }  
     }

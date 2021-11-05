@@ -1441,7 +1441,6 @@ class Account extends Controller {
 
     // List of standing orders
     public function standingOrders() {   
-        $this->data['breadcrumb'] = array('title' => 'Standing orders','subtitle'=>'standing orders','head'=>'accounts');
          $this->data['standingorders'] = \App\Models\StandingOrder::latest()->get();
          $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing', $this->data);
