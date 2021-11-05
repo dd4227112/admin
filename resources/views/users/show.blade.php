@@ -68,7 +68,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col-8">
-                                                <h4 class="text-c-green f-w-700">{{ number_format($pay)}} </h4>
+                                                <h4 class="text-c-green f-w-700">{{ $user->id == \Auth::user()->id  ? number_format($pay) : 0 }} </h4>
                                                 <h6 class="text-muted m-b-0">Basic Salary</h6>
                                             </div>
                                             <div class="col-4 text-right">

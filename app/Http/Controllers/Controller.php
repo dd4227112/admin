@@ -444,7 +444,6 @@ class Controller extends BaseController {
 
            public function syncMissingInv($data,$prefix,$schema_name){
                    $trans = (object) $data;
-
                     foreach ($trans as $tran) {
                         if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
                              $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
@@ -459,6 +458,10 @@ class Controller extends BaseController {
                          }
                     }
          }
+
+
+
+   
 
 
 

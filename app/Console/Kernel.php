@@ -88,9 +88,9 @@ class Kernel extends ConsoleKernel {
         })->everyThreeMinutes();
 
         $schedule->call(function () {
-            // $this->sendSORemainder();
+             $this->standingOrderRemainder();
            // $this->updateCompleteItems();
-        })->dailyAt('04:40'); // Eq to 07:40 AM   
+        })->dailyAt('03:40'); // Eq to 06:40 AM   
 
         $schedule->call(function () {
             $this->HRContractRemainders();
@@ -1082,38 +1082,26 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    private function client($client_id) {
-        return \App\Models\Client::where('id', $client_id)->first()->name;
+  
+
+     //Send notification remainder on matured standing orders, ie designation_id = 2  C.O.O
+    public function standingOrderRemainder() {
+        $controller = new \App\Http\Controllers\Controller();
+        $users = \App\Models\User::where('designation_id', 2)->where('status', 1)->get();
+        foreach ($users as $user) {
+            $standingorders = \App\Models\StandingOrder::whereDate('payment_date', \Carbon\Carbon::today())->get();
+          if(!empty($standingorders)) {
+              foreach ($standingorders as $standing) {
+               $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
+                          . chr(10) .'Remember to check matured standing order from ' . $standing->client->name 
+                          . chr(10) . 'Thanks.';
+               $controller->send_sms($user->phone,$message,1);
+               $controller->send_whatsapp_sms($user->phone, $message);
+             }
+          }
+        }
     }
 
-//Send email remainder to accountant, ie role_id 13 = Financial accountant
-    // public function sendSORemainder() {
-    //     $users = \App\Models\User::where('role_id', 13)->where('status', 1)->get();
-    //     foreach ($users as $user) {
-    //         $standingorders = DB::select('select * from admin.standing_orders WHERE payment_date-CURRENT_DATE = 1 AND is_approved =1');
-    //         $msg = '';
-    //         foreach ($standingorders as $standing) {
-    //             $msg .= '<tr><td>' . $this->client($standing->client_id) . '</td><td>' . $standing->occurance_amount . '</td></tr>';
-    //         }
-    //         $message = ''
-    //                 . '<h2>Standing orders</h2>'
-    //                 . '<p>This is the list of matured standing orders </p>'
-    //                 . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
-    //         DB::table('public.email')->insert([
-    //             'subject' => date('Y M d') . ' Standing order remainder',
-    //             'body' => $message,
-    //             'email' => $user->email
-    //         ]);
-    //         $sms = 'Hello kindly remember to check matured standing orders in the admin panel. Thank you';
-    //         DB::table('public.sms')->insert([
-    //             'body' => $sms,
-    //             'phone_number' => $user->phone,
-    //             'type' => 0,
-    //             'status' => 0,
-    //             'sent_from' => 'phonesms'
-    //         ]);
-    //     }
-    // }
     // public function endDeadlock() {
     //     DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
     //     FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 

@@ -6,7 +6,7 @@
 
     <div class="page-header">
             <div class="page-header-title">
-                <h4>Standing order</h4>
+                <h4>Standing orders</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    <li class="breadcrumb-item"><a href="#!">documents</a>
                     </li>
                 </ul>
             </div>
@@ -54,7 +54,7 @@
                         foreach($standingorders as $value){ ?>
                        <tr>
                         <td><?=$i ?></td>
-                        <td><?= isset($value->client->name) ? $value->client->name : ''?></td>
+                        <td><?= isset($value->client->name) ? warp($value->client->name,18) : ''?></td>
                         <td><?= isset($value->contact_person) ? $value->contact_person : ''?></td>
                         <td><?=$value->type?></td>
                         <td><?=money($value->occurance_amount)?></td>
