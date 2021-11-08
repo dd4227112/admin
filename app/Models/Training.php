@@ -8,7 +8,7 @@ class Training extends Model {
      * Generated
      */
 
-    protected $table = 'trainings';
+    protected $table = 'admin.trainings';
     protected $fillable = ['id', 'title', 'module','created_at','updated_at'];
 
     public function trainItems() {

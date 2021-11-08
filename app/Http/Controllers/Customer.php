@@ -1205,7 +1205,7 @@ class Customer extends Controller {
 
     public function training() {
         $type = request()->segment(3);
-        $this->data['trainings'] = \App\Models\Training::all();
+        $this->data['trainings'] = \App\Models\Training::latest()->all();
         return view('customer.training.guide.' . $type, $this->data);
     }
 
@@ -1216,7 +1216,6 @@ class Customer extends Controller {
             $schools = DB::select('select * from admin.schools where lower("name") like \'%' . strtolower($val) . '%\'');
             if (!empty($schools)) {
                 foreach ($schools as $school) {
-
                     echo '<p><a href="' . url('customer/map/' . $schema . '/' . $school->id) . '">' . $school->name . '( ' . $school->region . ' )</a></p>';
                 }
             }

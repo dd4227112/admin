@@ -1316,6 +1316,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             . chr(10) . 'This is the remainder of a task allocated to you'
                             . chr(10) . 'Task: ' . strip_tags($task->activity) . '.'
                             . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                            . chr(10) . 'From ' . $task->client->name . '' 
                             . chr(10) . 'Deadline: ' . date('d-m-Y', strtotime($task->start_date)) . '.'
                             . chr(10) . 'By: ' . $task->user->name . '.'
                             . chr(10) . 'Thanks.';
