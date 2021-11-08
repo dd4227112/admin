@@ -598,6 +598,12 @@ class Account extends Controller {
             'date' => date('Y-m-d', strtotime($date)),
         );
 
+        // $transaction = DB::table('admin.payments')->where('transaction_id',$receipt)->first();
+        // if(!empty($transactions->transaction_id)){
+        //     return redirect()->back()->with('error', $transactions->transaction_id.' used');
+        // }
+         
+
         $payment_id = DB::table('admin.payments')->insertGetId($payment_array);
         $client = DB::table('admin.clients')->where('id', $client_id)->first();
 

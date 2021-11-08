@@ -252,7 +252,6 @@ class Users extends Controller {
     }
 
     public function storePassword(Request $request) {
-       // dd($request->all());
         $user = User::find(Auth::user()->id);
         if (Auth::attempt(['email' => $user->email, 'password' => request('password')])) {
             $new1 = request('new');
