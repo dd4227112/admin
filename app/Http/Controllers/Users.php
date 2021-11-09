@@ -307,7 +307,6 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit() {
-        $this->data['breadcrumb'] = array('title' => 'Edit user','subtitle'=>'users','head'=>'human resource');
         $id = request()->segment(3);
         $this->data['user'] = User::find($id);
        

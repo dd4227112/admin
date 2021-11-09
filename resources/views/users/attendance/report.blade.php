@@ -39,28 +39,28 @@ table td {
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+       
+
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>ShuleSoft Attendances</h4>
-                <span>Show employee attendance summary</span>
+                <h4>Attendances</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Home</a>
+                    <li class="breadcrumb-item"><a href="#!">Report</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Attendance</a>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+
+
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -144,12 +144,12 @@ table td {
                                                 <tr>
                                                     <th style="width: 25%;"><?= img($array); ?></th>
                                                     <th style="width: 50%;">
-                                                        <h style="margin-top: 0px;">
+                                                        <h6 style="margin-top: 0px;">
                                                            
                                                             <br> Email: support@shulesoft.com<br>
                                                             Phone Number: +255 655/754 406004
                                                             <br> Website: <a href="https://www.shulesoft.com/">www.shulesoft.com/ </a>
-                                                            </h>
+                                                            </h6>
                                                     </th>
                                                     <th style="width: 25%;">
                                                         <span class="img_right"><?= img($array); ?></span>
@@ -164,58 +164,61 @@ table td {
                                                 <?php echo $type == 'week' ?  ' from '.date('Y-m-d', $dd[1]). ' to '.date('Y-m-d', $dd[1]) : '' ;?>
                                             </h5>
                                             
-                                            <div id="hide-table">
-                                                <table class="table table-striped table-bordered">
+                                            <div id="hide-table" class="table-responsive">
+                                                <table class="table table-sm table-bordered">
                                                     <thead>
-                                                        <tr style="background-color: #cccc;">
-                                                        <td class="col-sm-1">#</td>
+                                                        <tr>
+                                                        <td>#</td>
                                                          <?php
                                                         echo "<td class='col-sm-2'><strong>Staff Name</strong></td>";
-                                                        echo "<td class='col-sm-2'><strong>Phone  Number</strong></td>";
                                                         echo $type == 'date' ? "<td class='col-sm-1'><strong>Role</strong></td>" : '';
                                                         if($type == 'month'){
-                                                        
                                                         for ($i = 1; $i <= 30; $i++) {
-                                                            echo "<td class='col-sm-1'>" . ($i) . "</td>";
+                                                            echo "<td>" . ($i) . "</td>";
                                                         }
                                                     }elseif($type == 'week'){
                                                         foreach ($period as $key => $value) {
-                                                            echo "<td  style='text-align: center;' class='col-sm-1'><strong>" . $value->format('D') . "</strong></td>";
+                                                            echo "<td  style='text-align: center;'><strong>" . $value->format('D') . "</strong></td>";
                                                         }
                                                     }else{
-                                                        echo "<td class='col-sm-1'><strong>Status</strong></td>";
+                                                        echo "<td><strong>Status</strong></td>";
                                                     }
                                                     if($type == 'week' || $type == 'month'){
 
-                                                        echo "<td class='col-sm-1'>Att</td>";
-                                                        echo "<td class='col-sm-1'>Abs</td>";
-                                                        echo "<td class='col-sm-1'>Per</td>";
+                                                        echo "<td>Att</td>";
+                                                        echo "<td>Abs</td>";
+                                                        echo "<td>Per</td>";
+                                                        echo "<td>Lates</td>";
+                                                        echo "<td>Early leaves</td>";
                                                     } 
-                                                 echo !isset($export) ? "<td class='col-sm-1'>Action</td>" : '';
+                                                    //    echo !isset($export) ? "<td>Action</td>" : '';
                                                     ?>
                                                         </tr>
                                                 </thead>
                                                         <tbody>
                                                         <?php 
                                                             $fi=1;
+                                                            $the_timein = '08:00:00';
+                                                            $the_timeout = '17:00:00';
                                                             foreach($users as $user){
                                                             $total_abs = 0;
                                                             $total_press = 0;
                                                             $total_per = 0;
                                                         ?>
                                                         <tr>
-                                                            <td style="text-align: center;"><?=$fi++?></td>
-                                                            <td><?=$user->name()?></td>
-                                                            <td><?=$user->phone?></td>
-                                                            <?php echo $type == 'date' ? '<td>'.$user->role->name.'</td>' : ''; ?>
-                                                            <?php
+                                                        <td><?=$fi++?></td>
+                                                        <td><?=$user->name()?></td>
+                                                        <?php echo $type == 'date' ? '<td>'.$user->role->name.'</td>' : ''; ?>
+                                                        <?php
                                         
                                                if($type == 'month'){
                                                   $m = $set;
                                                   for ($i = 1; $i <= 31; $i++) {
                                                   $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
+                                                  $late_coms = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->first();
+                                                  $early_leaves = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->first();
                                                    if (!empty($att) && $att->present == 1) {
-                                                     $att = "P";
+                                                     $att = date("H:i:s",strtotime($att->timein)) < '08:00:00' ? '<strong>P</strong>' : '<strong>*P</strong>';
                                                      $total_press++;
                                                 } elseif(!empty($att->absent_reason_id)) {
                                                     $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
@@ -233,11 +236,15 @@ table td {
                                             }
                                         }elseif($type == 'week'){
                                             $dats = 1;
+                                            $late_commings = 0;
                                             foreach ($period as $key => $value) {                                       
                                             $dats++;
                                             $att = $user->uattendance()->where('date', $value->format('Y-m-d'))->first();
+                                            $late_coms = $user->uattendance()->where('date', $value->format('Y-m-d'))->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->first();
+                                            $early_leaves = $user->uattendance()->where('date', $value->format('Y-m-d'))->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->first();
+
                                             if (!empty($att) && $att->present == 1) {
-                                                $att = "P";
+                                                $att = date("H:i:s",strtotime($att->timein)) < '08:00:00' ? '<strong>P</strong>' : '<strong>*P</strong>';
                                                 $total_press++;
                                             } elseif(!empty($att->absent_reason_id)) {
                                                 $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
@@ -253,11 +260,10 @@ table td {
                                             }
                                             echo "<td style='text-align: center'>" . $att . "</td>";
                                         }
-                                      // dd($dats);
                                         }else{
                                             $att = $user->uattendance()->where('date', $set)->first();
                                             if (!empty($att) && $att->present == 1) {
-                                                $att = "PRESENT";
+                                                $att = date('H:s:i', strtotime($att->timein)) > '08:00:00' ? "Present(Late)" : "Present";
                                                 $total_press++;
                                             } elseif(!empty($att->absent_reason_id)) {
                                                 $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
@@ -265,21 +271,23 @@ table td {
                                                     $att = $reason->reason;
                                                     $total_per++;
                                                   }else{
-                                                    $att = 'ABS';
+                                                    $att = 'Abs';
                                                   }
                                                    }else {
-                                                $att = 'ABSENT';
-                                                $total_abs++;
+                                                   $att = 'Absent';
+                                                   $total_abs++;
                                                  }
-                                                      echo "<td style='text-align: center'>" . $att . "</td>";
-                                                       }
+                                                 echo "<td style='text-align: center'>" . $att . "</td>";
+                                                  }
                                                    if($type == 'week' || $type == 'month'){
                                                                 ?>
                                                             <td style='text-align: center'><?=$total_press?></td>
                                                             <td style='text-align: center'><?=$total_abs?></td>
                                                             <td style='text-align: center'><?=$total_per?></td>
+                                                            <td style='text-align: center'><?=$late_coms?></td>
+                                                            <td style='text-align: center'><?=$early_leaves?></td>
                                                             <?php } ?>
-                                                            <?php echo !isset($export) ? "<td> <a href='<?=url('attendance/index/'.$user->id) ?>view</a> </td>" : ''; ?>
+                                                            {{-- <?php echo !isset($export) ? "<td> <a class='btn btn-primary btn-mini btn-round' href=<?= url('attendance/index/'.$user->id) ?> view</a> </td>" : ''; ?> --}}
                                                         </tr>
                                                         <?php } ?>
                                                     </tbody>

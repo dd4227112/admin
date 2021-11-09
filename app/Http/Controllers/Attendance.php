@@ -13,7 +13,6 @@ class Attendance extends Controller {
 
 
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'Attendance','subtitle'=>'profile','head'=>'user');
         $this->data['id'] = $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['user'] = \App\Models\User::where('id', $id)->first();
@@ -26,7 +25,6 @@ class Attendance extends Controller {
 
 
     public function add(){
-        $this->data['breadcrumb'] = array('title' => 'Create attendance','subtitle'=>'add attendance','head'=>'user');
         $this->data['date'] = date("Y-m-d");
         $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
         return view('users.attendance.create', $this->data);

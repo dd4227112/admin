@@ -79,9 +79,8 @@
     </div>
 </div>
 
-  <script src="https://cdn.tiny.cloud/1/invalid-origin/tinymce/5.4.2-90/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/invalid-origin/tinymce/5.4.2-90/tinymce.min.js" referrerpolicy="origin"></script>
 <script type="text/javascript">
-
     wywg = function () {
         tinymce.init({
             selector: "textarea",
@@ -98,25 +97,24 @@
   images_upload_base_path: '/storage/images/',
   images_upload_handler: function (blobInfo, success, failure, progress) {
     var xhr, formData;
-    var token = document.getElementsByName("csrfToken").value;
+    //var token = document.getElementsByName("csrfToken").value;
 
     xhr = new XMLHttpRequest();
     xhr.withCredentials = false;
-    xhr.open('POST', '<?=url('upload.php')?>',token);
+    xhr.open('POST', '<?=url('upload.php')?>');
 
     xhr.upload.onprogress = function (e) {
       progress(e.loaded / e.total * 100);
     };
 
     xhr.onload = function() {
-      var json;
-
       if (xhr.status < 200 || xhr.status >= 300) {
         failure('HTTP Error: ' + xhr.status);
         return;
       }
-console.log(xhr);
-     json = JSON.parse(xhr.responseText);
+     // console.log(xhr);
+      var json = JSON.parse(xhr.responseText);
+      console.log(json);
 
       if (!json || typeof json.location != 'string') {
         failure('Invalid JSON: ' + xhr.responseText);

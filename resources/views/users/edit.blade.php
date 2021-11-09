@@ -187,8 +187,8 @@
                                     <?php if(can_access('edit_user_info')) { ?>
                                         <div class="col-xs-12 col-sm-4 col-md-4">
                                             <div class="form-group">
-                                                <strong>Joining Date:*</strong>
-                                                <input id="location" placeholder="Date of Joining" type="date" class="form-control" name="joining_date" value="<?=$user->joining_date?>" >
+                                                <strong>Contract start date:*</strong>
+                                                <input  placeholder="Date of Joining" type="date" class="form-control" name="contract_start_date" value="<?= $user->contract_start_date ?>" required>
                                             </div>
                                         </div>
                                     </div>
@@ -197,7 +197,7 @@
                                     <div class="col-xs-12 col-sm-4 col-md-4">
                                         <div class="form-group">
                                             <strong>Contract End date:*</strong>
-                                            <input id="location" placeholder="Contract End date" type="date" class="form-control" name="contract_end_date" value="<?=$user->contract_end_date?>" >
+                                            <input id="location" placeholder="Contract End date" type="date" class="form-control" name="contract_end_date" value="<?=$user->contract_end_date?>" required>
                                         </div>
                                     </div>
 
