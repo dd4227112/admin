@@ -1312,7 +1312,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                     $controller->send_sms($task->user->phone,$message,1);
                     $controller->send_email($task->user->email,'A taks remainder',$message);
 
-                if($task->to_user_id != ''){
+                if($task->to_user_id != '' && $task->to_user_id != $task->user->id){
                     $user = \App\Models\User::find($task->to_user_id);
                     $msg = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
                             . chr(10) . 'This is the remainder of a task allocated to you'
@@ -1337,5 +1337,63 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             \DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
         }
     }
+
+
+
+    
+    public function weeklyAccountsReports(){
+        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
+        foreach ($schemas as $schema) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
+                $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
+                $weekly_amount = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema  . " . total_revenues where date_trunc('week', date) = date_trunc('week', current_date)"))->first();
+                $weekly_expenditure = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema  . " . expense where date_trunc('week', date) = date_trunc('week', current_date)"))->first();
+                $total_revenues = $weekly_amount->sum;
+                $total_expenditure = $weekly_expenditure->sum;
+
+                if(!empty($directors)){
+                      foreach ($directors as $director) {
+                              $message = 'Dear sir/madam'
+                                . chr(10) . 'The following is account report for your school this week starts at ' .date( 'F, d Y', strtotime( 'monday this week' ))
+                                . chr(10) . 'Total collection Tsh ' . money($total_revenues) .''
+                                . chr(10) . 'Total expenditure Tsh ' . money($total_expenditure) .''
+                                . chr(10) . 'Thanks.';
+                              $controller = new \App\Http\Controllers\Controller();
+                              $controller->send_whatsapp_sms($director->phone, $message);
+                              $controller->send_sms($director->phone,$message,1);
+                      }
+                }
+            }
+        }
+     }
+
+
+       public function monthlyAccountsReports(){
+        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
+        foreach ($schemas as $schema) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
+                $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
+                  
+               $monthly_amount= \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema . " . total_revenues where date_trunc('month', date) = date_trunc('month', current_date)"))->first();
+               $monthly_expenditure = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema . " . expense where date_trunc('month', date) = date_trunc('month', current_date)"))->first();
+               $total_revenues = $monthly_amount->sum;
+               $total_expenditure = $monthly_expenditure->sum;
+
+                if(!empty($directors)){
+                      foreach ($directors as $director) {
+                              $message = 'Dear sir/madam'
+                                . chr(10) . 'Kindly find the reports on the fees for your school this month starts at ' .date('m-01-Y')
+                                . chr(10) . 'Total collection Tsh ' . money($total_revenues) .''
+                                . chr(10) . 'Total expenditure Tsh ' . money($total_expenditure) .''
+                                . chr(10) . 'Thanks.';
+                              $controller = new \App\Http\Controllers\Controller();
+                              $controller->send_whatsapp_sms($director->phone, $message);
+                              $controller->send_sms($director->phone,$message,1);
+
+                      }
+                }
+            }
+        }
+     }
 
 }

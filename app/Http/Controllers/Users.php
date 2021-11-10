@@ -257,15 +257,14 @@ class Users extends Controller {
             $new1 = request('new');
             $new2 = request('retype');
             if ($new1 != $new2) {
-                return redirect()->back()->with('error', 'New password and confirmed one  do not matchs');
+                return redirect()->back()->with('error', 'New password and confirmed one  do not match');
             }
             $this->validate(request(), [
-                'new2' => 'required|string|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'
-                    ], ['Password must be 8–30 characters, and include a number, a symbol, a lower and a upper case letter']);
-            $user->update(['password' => Hash::make($new1)]);
+                'retype' => 'required|string|min:6'
+                    ], ['Password must be 6–30 characters, and include a number, a symbol, a lower and a upper case letter']);
+            $user->update(['password' => \Hash::make($new1)]);
             return redirect()->back()->with('success', 'Password changed successfully');
         } else {
-
             return redirect()->back()->with('error', 'Current Password is not valid');
         }
         return redirect()->back()->with('success', 'Password Updated successfully');

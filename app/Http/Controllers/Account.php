@@ -385,7 +385,6 @@ class Account extends Controller {
         $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
         $client = \App\Models\ClientSchool::where('school_id',(int) $school_id)->first();
         
-      //  dd($client);
         $school = \App\Models\School::find($school_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 

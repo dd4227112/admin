@@ -161,7 +161,7 @@ table td {
                                          <?php } if(isset($type) && isset($set)){    ?>
                                             <h5 style="text-align: center">Staffs Attendance Report  
                                                 <?php echo $type == 'date' ? ' on '. $set : '' ?>
-                                                <?php echo $type == 'week' ?  ' from '.date('Y-m-d', $dd[1]). ' to '.date('Y-m-d', $dd[1]) : '' ;?>
+                                                <?php echo $type == 'week' ?  ' from '.date('Y-m-d', $dd[1]). ' to '.date('Y-m-d', $dd[0]) : '' ;?>
                                             </h5>
                                             
                                             <div id="hide-table" class="table-responsive">
@@ -204,6 +204,8 @@ table td {
                                                             $total_abs = 0;
                                                             $total_press = 0;
                                                             $total_per = 0;
+                                                            $total_lates = 0;
+                                                            $total_early_leaves = 0;
                                                         ?>
                                                         <tr>
                                                         <td><?=$fi++?></td>
@@ -215,10 +217,16 @@ table td {
                                                   $m = $set;
                                                   for ($i = 1; $i <= 31; $i++) {
                                                   $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
-                                                  $late_coms = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->first();
-                                                  $early_leaves = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->first();
                                                    if (!empty($att) && $att->present == 1) {
-                                                     $att = date("H:i:s",strtotime($att->timein)) < '08:00:00' ? '<strong>P</strong>' : '<strong>*P</strong>';
+                                                       if(date('H:i:s',strtotime($att->timein)) > $the_timein){
+                                                        $att = '<strong>*P</strong>';
+                                                           $total_lates++;
+                                                        } elseif(date('H:i:s',strtotime($att->timeout)) < $the_timeout){
+                                                           $att = '<strong>**P</strong>';
+                                                           $total_early_leaves++;
+                                                        } else{
+                                                           $att = '<strong>P</strong>';
+                                                        }
                                                      $total_press++;
                                                 } elseif(!empty($att->absent_reason_id)) {
                                                     $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
@@ -236,16 +244,22 @@ table td {
                                             }
                                         }elseif($type == 'week'){
                                             $dats = 1;
-                                            $late_commings = 0;
                                             foreach ($period as $key => $value) {                                       
                                             $dats++;
                                             $att = $user->uattendance()->where('date', $value->format('Y-m-d'))->first();
-                                            $late_coms = $user->uattendance()->where('date', $value->format('Y-m-d'))->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->first();
-                                            $early_leaves = $user->uattendance()->where('date', $value->format('Y-m-d'))->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->first();
-
+                                           // $early_leaves = $user->uattendance()->where('date', $value->format('Y-m-d'))->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->first();
                                             if (!empty($att) && $att->present == 1) {
-                                                $att = date("H:i:s",strtotime($att->timein)) < '08:00:00' ? '<strong>P</strong>' : '<strong>*P</strong>';
+                                                if(date('H:i:s',strtotime($att->timein)) > $the_timein){
+                                                  $att = '<strong>*P</strong>';
+                                                  $total_lates++;
+                                                } elseif(date('H:i:s',strtotime($att->timeout)) < $the_timeout){
+                                                  $att = '<strong>**P</strong>';
+                                                  $total_early_leaves++;
+                                                } else{
+                                                  $att = '<strong>P</strong>';
+                                                }
                                                 $total_press++;
+                                          
                                             } elseif(!empty($att->absent_reason_id)) {
                                                 $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
                                                 if (!empty($reason)) {
@@ -284,8 +298,8 @@ table td {
                                                             <td style='text-align: center'><?=$total_press?></td>
                                                             <td style='text-align: center'><?=$total_abs?></td>
                                                             <td style='text-align: center'><?=$total_per?></td>
-                                                            <td style='text-align: center'><?=$late_coms?></td>
-                                                            <td style='text-align: center'><?=$early_leaves?></td>
+                                                            <td style='text-align: center'><?=$total_lates?></td>
+                                                            <td style='text-align: center'><?=$total_early_leaves ?></td>
                                                             <?php } ?>
                                                             {{-- <?php echo !isset($export) ? "<td> <a class='btn btn-primary btn-mini btn-round' href=<?= url('attendance/index/'.$user->id) ?> view</a> </td>" : ''; ?> --}}
                                                         </tr>

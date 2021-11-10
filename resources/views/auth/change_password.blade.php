@@ -25,10 +25,10 @@
 
         <div class="page-body">
             <div class="row">
-                <div id="outer" class="container">
-                    <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
+                <div class="col-sm-12">
+                  <div id="outer" class="card">
+                    <div id="wrapper" class="card-body" style="background-color: #fff; margin-bottom: 40px;">
                         <div id="editorForm">
-
                             @if (sizeof($errors) > 0)
                             <div class="alert alert-danger">
                                 <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -60,8 +60,6 @@
                                     </div>
                                 </div>
                              
-                        
-                              
                                 <div id="savebtnWrapper" class="form-group">
                                     <button type="submit" class="btn btn-primary btn-mini btn-round">
                                         &emsp;Submit&emsp;
@@ -72,6 +70,7 @@
 
                         </div>
                     </div>
+                  </div>
                 </div>
             </div>
         </div>
