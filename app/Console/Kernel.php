@@ -352,7 +352,7 @@ class Kernel extends ConsoleKernel {
 
                     //all is well, so just update status to be okay
                     DB::table($invoice->schema_name . '.invoices')
-                            ->where('reference', $invoice->reference)->update(['sync' => 1, 'status' => 1, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
+                            ->where('id', $invoice->id)->update(['sync' => 1, 'status' => 1, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
                 } else {
                     //update the whole invoice
                     $new_token = $this->getToken($invoice);
@@ -373,7 +373,7 @@ class Kernel extends ConsoleKernel {
             } else {
                 //invoice is not found, so update for it to be sync
                 DB::table($invoice->schema_name . '.invoices')
-                        ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
+                        ->where('id', $invoice->id)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
             }
         }
 
@@ -404,7 +404,7 @@ class Kernel extends ConsoleKernel {
             if (isset($result) && !empty($result)) {
                 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
-                        ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
+                        ->where('id', $invoice->id)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
 
             DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
@@ -468,7 +468,7 @@ class Kernel extends ConsoleKernel {
         if (isset($result) && !empty($result)) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
-                    ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+                    ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
 
             $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
             foreach ($users as $user) {
@@ -552,7 +552,7 @@ class Kernel extends ConsoleKernel {
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 0, 'updated_at' => 'now()']);
+                                ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 0, 'updated_at' => 'now()']);
                     }
 
                     DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
