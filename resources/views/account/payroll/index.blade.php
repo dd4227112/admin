@@ -2,253 +2,171 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+       
+           <div class="page-header">
             <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Salaries</span>
+                <h4><?= 'Payroll' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">salaries</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Payroll</a>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-        <div class="page-body">
 
+        <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
-
-                        <?php
-                        // $usertype = session("usertype");
-                        ?>
-                        <div class="m-10">
-                           <h5 class="page-header">
-                            <a class="btn btn-success" href="<?php echo url('payroll/create') ?>"><i class="fa fa-plus"></i>
-                                Add Payroll</a>&nbsp; 
-                          </h5>
-                        </div>
-
-                        <div class="col-lg-12 col-xl-12">                                      
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs md-tabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Payroll List</a>
-                                    <div class="slide"></div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Summary</a>
-                                    <div class="slide"></div>
-                                </li>
-                            </ul>
-
-                            <!-- Tab panes -->
-                            <div class="tab-content card-block">
-                                <div class="tab-pane active" id="home3" role="tabpanel">
-                                  <div id="hide-table">
-                                            <a
-                                                class="right"><i class="fa fa-question-circle" data-container="body"
-                                                             data-toggle="popover" data-placement="right" data-trigger="hover"
-                                                             data-content="Use the buttons below to either copy or download the information on the table below. "
-                                                             title="Export Buttons"></i></a>
-
-                                         <div class="table-responsive table-sm table-striped table-bordered table-hover">          
-                                            <table id="example1" class="table dataTable">
+                        
+                        <div class="card-header">
+                           <a href="<?= url("payroll/create") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add Payroll">Add Payroll </a>
+                
+                            </div>
+                            <div class="card-block">
+                                <!-- Row start -->
+                                {{-- <div class="row m-b-30">
+                                    <div class="card tab-card"> --}}
+                                        <ul class="nav nav-tabs md-tabs" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"  aria-expanded="true"><strong>Payroll List</strong></a>
+                                                <div class="slide"></div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#profile7" role="tab"  aria-expanded="false"><strong>Summary</strong></a>
+                                                <div class="slide"></div>
+                                            </li>
+                                        </ul>
+                                        
+                                        <div class="tab-content">
+                                           <div class="tab-pane active" id="home7" role="tabpanel" aria-expanded="true">
+                                            <div class="card-block">
+                                             <div class="dt-responsive table-responsive">
+                                              <table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
                                                     <tr>
-                                                        <th class="col-sm-1"><?= __('#') ?></th>
-                                                        <th class="col-sm-2"><?= __('Payment date') ?></th>
-                                                        <th class="col-sm-2"><?= __('Total users') ?></th>
-                                                        <th class="col-sm-2"><?= __('Basic pay') ?></th>
-                                                        <th class="col-sm-1"><?= __('Allowance') ?></th>
-                                                        <th class="col-sm-1"><?= __('Gross pay') ?></th>
-                                                        <th class="col-sm-1"><?= __('Pension') ?></th>
-                                                        <th class="col-sm-1"><?= __('Deduction') ?></th>
-                                                        <th class="col-sm-1"><?= __('Tax') ?></th>
-                                                        <th class="col-sm-1"><?= __('Paye') ?></th>
-                                                        <th class="col-sm-1"><?= __('Net pay') ?></th>
-
-                                                        <?php
-                                                        if (can_access('manage_payroll')) {
-                                                            ?>
-                                                            <th class="col-sm-4"><?= __('action') ?></th>
+                                                        <th>#</th>
+                                                        <th>Payment date</th>
+                                                        <th>Total users</th>
+                                                        <th>Basic pay</th>
+                                                        <th>Allowance</th>
+                                                        <th>Gross pay</th>
+                                                        <th>Pension</th>
+                                                        <th>Deduction</th>
+                                                        <th>Tax</th>
+                                                        <th>Paye</th>
+                                                        <th>Net pay</th>
+                                                        <?php if (can_access('manage_payroll')) {?>
+                                                        <th>Action</th>
                                                         <?php } ?>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php
+                                                    <?php $i = 1;
                                                     if (isset($salaries) && !empty($salaries)) {
-                                                        $i = 1;
-                                                        foreach ($salaries as $salary) {
-                                                            ?>
-                                                            <tr>
-                                                                <td data-title="<?= __('#') ?>">
-                                                                    <?php echo $i; ?>
-                                                                </td>
-                                                                <td data-title="<?= __('payment_date') ?>">
-                                                                    <?php
-                                                                    echo date('d M Y', strtotime($salary->payment_date));
-                                                                    ?>
-                                                                </td>
-                                                                <td data-title="<?= __('total_users') ?>">
-                                                                    <?php echo $salary->total_users; ?>
-                                                                </td>
-                                                                <td data-title="<?= __('basic_pay') ?>">
-                                                                    <?php echo money($salary->basic_pay); ?>
-                                                                </td>
-                                                                <td data-title="<?= __('allowance') ?>">
-                                                                    <?php
-                                                                    echo money($salary->allowance);
-                                                                    ?>
+                                                        foreach ($salaries as $salary) { ?>
+                                                        <tr>
+                                                        <td> <?php echo $i; ?> </td>
+                                                        <td> <?php echo date('d M Y', strtotime($salary->payment_date)); ?></td>
+                                                        <td> <?php echo $salary->total_users; ?></td>
+                                                        <td> <?php echo money($salary->basic_pay); ?></td>
+                                                        <td> <?php echo money($salary->allowance); ?> </td>
+                                                        <td> <?php echo money($salary->gross_pay); ?>  </td>
+                                                        <td> <?php echo money($salary->pension); ?> </td>
+                                                        <td> <?php echo money($salary->deduction); ?> </td>
+                                                        <td> <?php echo money($salary->tax); ?></td> 
+                                                        <td> <?php echo money($salary->paye); ?></td>
+                                                        <td> <?php echo money($salary->net_pay); ?></td>
+                                                        <?php if (can_access('manage_payroll')) { ?>
+                                                        <td> <?php $view_url = "payroll/show/$salary->payment_date"; $delete_url = "payroll/delete/$salary->reference"; ?>
+                                
+                                                        <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View Payroll">view  </a>
+                                                        <a href="<?= url($delete_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete Payroll">delete </a>
 
-                                                                <td data-title="<?= __('gross_pay') ?>">
-                                                                    <?php echo money($salary->gross_pay); ?>
-                                                                </td>
-                                                                <td data-title="<?= __('paye') ?>">
-                                                                    <?php echo money($salary->pension); ?></td>
-                                                                <td data-title="<?= __('deduction') ?>">
-                                                                    <?php echo money($salary->deduction); ?></td>
-                                                                <td data-title="<?= __('tax') ?>">
-                                                                    <?php echo money($salary->tax); ?></td>
-                                                                <td data-title="<?= __('paye') ?>">
-                                                                    <?php echo money($salary->paye); ?></td>
-                                                                <td data-title="<?= __('net_pay') ?>">
-                                                                    <?php echo money($salary->net_pay); ?></td>
-                                                                    <?php
-                                                                if (can_access('manage_payroll')) {
-                                                                    ?>
-                                                                    <td data-title="<?= __('action') ?>">
-                                                                        <?php
-                                                                        echo '<a  href="' . url("payroll/show/$salary->payment_date") . '  " class="btn btn-success btn-sm"><i class="fa fa-folder-o"></i> View </a>';
+                                                        </td>
+                                                        <?php } ?>
+                                                        </tr>
+                                                      <?php $i++; } } ?>
+                                                     </tbody>
+                                                  </table>
+                                                  </div>
+                                                </div>
+                                             </div> 
 
-                                                                        echo '<a href="' . url("payroll/delete/$salary->reference") . '  " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Delete </a>';
-                                                                        ?>
-                                                                    </td>
-                                                                <?php } ?>
+                                               <div class="tab-pane" id="profile7" role="tabpanel" aria-expanded="false">
+                                                    <div class="card-block">
+                                                        <figure class="highcharts-figure">
+                                                        <div id="onboardPie" style="height: 600px;"></div>
+                                                        </figure>
+                                                    </div>
+                                              </div> 
 
-                                                            </tr>
-                                                            <?php
-                                                            $i++;
-                                                        }
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                         </div>
                                         </div>
-                                </div>
-                                <div class="tab-pane" id="profile3" role="tabpanel">
-                                  <div class="row">
+                                    
 
+                            
+                              </div>
+                                            
 
-                                            <script type="text/javascript">
-                                                $(function () {
-                                                    $('#container').highcharts({
-                                                        title: { 
-                                                            text: 'Payrol Summary'
-                                                        },
-                                                        xAxis: {
-                                                            categories: [<?php
-                                                    foreach ($salaries as $salary) {
-                                                        echo '"' . date('M Y', strtotime($salary->payment_date)) . '",';
-                                                    }
-                                                    ?>]
-                                                        },
-                                                        labels: {
-                                                            items: [{
-                                                                    html: 'Payroll Summary for Basic and net payments',
-                                                                    style: {
-                                                                        left: '50px',
-                                                                        top: '18px',
-                                                                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                                                                    }
-                                                                }]
-                                                        },
-                                                        series: [
-                                                            {
-                                                                type: 'column',
-                                                                name: 'Basic Payments',
-                                                                data: [
-                                                                        <?php
-                                                                        foreach ($salaries as $salary) {
-                                                                            echo $salary->basic_pay . ',';
-                                                                        }
-                                                                        ?>
-                                                                ]
-                                                            }, {
-                                                                type: 'column',
-                                                                name: 'Net Payments',
-                                                                data: [
-                                                                    <?php
-                                                                    foreach ($salaries as $salary) {
-                                                                        echo $salary->net_pay . ',';
-                                                                    }
-                                                                    ?>
-                                                                ]
-                                                            }, {
-                                                                type: 'spline',
-                                                                name: 'Total Users',
-                                                                data: [<?php
-                                                                        foreach ($salaries as $salary) {
-                                                                            echo $salary->total_users . ',';
-                                                                        }
-                                                                        ?>],
-                                                                marker: {
-                                                                    lineWidth: 2,
-                                                                    lineColor: Highcharts.getOptions().colors[3],
-                                                                    fillColor: 'white'
-                                                                }
-                                                            },
-                                                                    //                {
-                                                                    //            type: 'pie',
-                                                                    //            name: 'Total consumption',
-                                                                    //            data: [{
-                                                                    //                name: 'Jane',
-                                                                    //                y: 13,
-                                                                    //                color: Highcharts.getOptions().colors[0] // Jane's color
-                                                                    //            }, {
-                                                                    //                name: 'John',
-                                                                    //                y: 23,
-                                                                    //                color: Highcharts.getOptions().colors[1] // John's color
-                                                                    //            }, {
-                                                                    //                name: 'Joe',
-                                                                    //                y: 19,
-                                                                    //                color: Highcharts.getOptions().colors[2] // Joe's color
-                                                                    //            }],
-                                                                    //            center: [100, 80],
-                                                                    //            size: 100,
-                                                                    //            showInLegend: false,
-                                                                    //            dataLabels: {
-                                                                    //                enabled: false
-                                                                    //            }
-                                                                    //        }
-                                                        ]
-                                                    });
-                                                });
-
-
-                                            </script>
-                                            <script src="https://code.highcharts.com/highcharts.js"></script>
-                                            <script src="https://code.highcharts.com/modules/exporting.js"></script>
-                                            <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                                  </div>
-                                </div>
-                            </div>
+            
                          </div>
                      </div>
                 </div> 
             </div>
         </div>
-</div>
+   </div>
+
+
+<script type="text/javascript">
+
+   Highcharts.chart('onboardPie', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Payrol Summary'
+    },
+    subtitle: {
+        text: 'Payroll Summary for Net payments'
+    },
+    xAxis: {
+        type: 'Months',
+       
+        categories: [
+        <?php foreach($salaries as $value){  ?> "<?= date('F Y', strtotime($value->payment_date)) ?>",
+        <?php } ?>
+      ]
+    },
+    yAxis: {
+        title: {
+            text: 'Payments'
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: 'Months',
+        colorByPoint: true,
+        data: [
+            <?php foreach($salaries as $value){ ?> {
+                name: "<?= date('F Y', strtotime($value->payment_date)) ?>",
+                y: <?=$value->net_pay?>,
+                drilldown: <?=$value->net_pay ?>
+            },
+            <?php } ?>
+        ]
+    }]
+});
+</script>
+
+
 @endsection

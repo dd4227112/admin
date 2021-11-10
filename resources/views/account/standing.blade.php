@@ -3,29 +3,26 @@
 
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>School standing orders</h4>
-        <span>The Part holds will show all the standing orders.</span>
 
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Account</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Standing orders </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4>Standing orders</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">documents</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+   
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">
@@ -57,26 +54,29 @@
                         foreach($standingorders as $value){ ?>
                        <tr>
                         <td><?=$i ?></td>
-                        <td><?= isset($value->client->name) ? $value->client->name : ''?></td>
+                        <td><?= isset($value->client->name) ? warp($value->client->name,18) : ''?></td>
                         <td><?= isset($value->contact_person) ? $value->contact_person : ''?></td>
                         <td><?=$value->type?></td>
                         <td><?=money($value->occurance_amount)?></td>
                         <td><?=money($value->total_amount)?></td>
                         <td><?=isset($value->payment_date) ? date('d M Y', strtotime($value->payment_date)) : ''?></td>
                         <td class="text-center">
-                          <a  target="_break" href="<?= url('customer/viewContract/' . $value->id .'/standing') ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> 
+                          <a  target="_break" href="<?= url('customer/viewContract/' . $value->id .'/standing') ?>" class="btn btn-primary btn-mini btn-round">View</a> 
                         </td>
 
                         <td>
-                           <?php if(isset($value->payment_date)) {  ?>  
+                           <?php $approve_url="account/approvestandingorder/$value->id";$reject_url="account/rejectstandingorder/$value->id";
+                           if(isset($value->payment_date)) {  ?>  
                             <?php if(isset($value->client)) {  ?>
                                 <?php if((int) $value->is_approved == 1) { ?>
-                                    <button type="button" class="btn btn-dark btn-sm">Approved</button>
+                                    <label class="badge badge-inverse-success">Approved</label>
                                 <?php } else { ?>
-                                <a href="<?= url('account/approvestandingorder/'.$value->id) ?>" class="waves-light waves-effect btn btn-warning btn-sm">Approve</a>
+                                  <a href="<?= url($approve_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Approve standing order">Approve  </a>
+
                                 <?php } ?>
                                 <?php if((int) $value->is_approved != 1) { ?>
-                                <a href="<?= url('account/rejectstandingorder/'.$value->id) ?>" class="waves-light waves-effect btn btn-danger btn-sm">Reject</a> 
+                                    <a href="<?= url($reject_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reject standing order">reject  </a>
+
                                 <?php } ?>
 
                             <?php } ?>

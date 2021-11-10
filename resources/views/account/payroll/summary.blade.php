@@ -59,14 +59,14 @@ if (!empty($basic_payments)) {
                         <tr>
                             <th>#</th>
                             <th>Summary </th>
-                            <th>Action</th>
+                            {{-- <th>Action</th> --}}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>1</td>
                             <td>All Staff & Deductions</td>
-                            <td><a href="<?= url('payroll/bankSubmission/null/?set=' . request('set') . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg"><i class="fa fa-file"></i> View</a></td>
+                            {{-- <td><a href="<?= url('payroll/bankSubmission/null/?set=' . request('set') . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg"><i class="fa fa-file"></i> View</a></td> --}}
                         </tr>
 <!--                         <tr>
                             <td>2</td>
@@ -82,7 +82,7 @@ if (!empty($basic_payments)) {
     <div class="col-md-6 col-sm-6 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Bank Total Amount</h2>
+                <h5>Bank Total Amount</h5>
 
                 <div class="clearfix"></div>
             </div>
@@ -95,7 +95,6 @@ if (!empty($basic_payments)) {
                     $pension = \collect(DB::select('select sum(a.employer_amount) as employer_contribution from salary_pensions a join constant.pensions b on b.id=a.pension_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . $set . '\')'))->first();
                     ?>
                     <div class="" style="font-size:32px">Tsh <?= money($salary->sum('gross_pay') + $pension->employer_contribution) ?>/=</div>
-                    <!--<span class="count_bottom"><i class="green">4% </i> From last Week</span>-->
                 </div>
             </div>
         </div>

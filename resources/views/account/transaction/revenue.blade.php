@@ -2,26 +2,9 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Company Revenues</h4>
-                <span>Show revenue summary</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Revenues</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+
+
+
         <div class="page-body">
             <div class="row">
 

@@ -78,11 +78,11 @@
     'normal' => $rootDir . '/lib/fonts/DejaVuSerif',
   ),
   'open sans' => array(
-    '300' => $fontDir . '/open_sans_300_c72556b4878a3738e7a1d028982aaf15',
-    'normal' => $fontDir . '/open_sans_normal_383d1f3b08bfd30a2b6a067e8d22770e',
-    '600' => $fontDir . '/open_sans_600_75a408bfea2315eaa4a3bdbdfdd4a35a',
-    'bold' => $fontDir . '/open_sans_bold_16b800755e0e0b12dcfcdcf31b6fae98',
-    '800' => $fontDir . '/open_sans_800_5ccae1571416740212daa88e1e29e9f7',
+    '300' => $fontDir . '/open_sans_300_89cc7c620a0fc06c636a78901bc3d90c',
+    'normal' => $fontDir . '/open_sans_normal_d5c8574b9bdb2edd2b2d6153763d908a',
+    '600' => $fontDir . '/open_sans_600_50bb364a7fe911a2a48a6f505613df8b',
+    'bold' => $fontDir . '/open_sans_bold_2b29b70e8fdb444eafdbe10ae3ef325f',
+    '800' => $fontDir . '/open_sans_800_8d648359e5f3ba35434a219f01caa460',
   ),
   'themify' => array(
     'normal' => $fontDir . '/themify_normal_a6d57b003325821b29f7d0dcaab19875',

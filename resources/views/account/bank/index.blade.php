@@ -3,28 +3,26 @@
 <?php $root = url('/') . '/public/'; ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>Our Banks</h4>
-                <span>List of bank Accounts</span>
+                <h4><?='Bank' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?=url('/')?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">banks</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Banking</a>
+                    <li class="breadcrumb-item"><a href="#!">setting</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div>   
+        
         <div class="page-body">
             <div class="row">
                   <div class="col-sm-12">
@@ -89,7 +87,7 @@
                                                     </td>
 
                                                     <td data-title="<?= __('bankaccount_note') ?>">
-                                                        <?php echo warp($account->note); ?>
+                                                        <?php echo warp($account->note,20); ?>
                                                     </td>
 <!--                                                    <td data-title="<?= __('action') ?>">
                                                         <?php // echo can_access('edit_bankaccount') ? btn_edit('bankaccount/edit/' . $account->id, __('edit')) : '' ?>

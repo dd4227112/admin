@@ -23,6 +23,7 @@ class Phone_call extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $this->data['breadcrumb'] = array('title' => 'Phone Calls','subtitle'=>'customer service','head'=>'operations');
         $this->data['phone_calls'] = PhoneCall::latest()->get();
 
         if($_POST){
@@ -41,7 +42,6 @@ class Phone_call extends Controller {
 
        $this->data['outgoing_calls'] =  \collect(DB::SELECT("select count(*),to_char(created_at::date,'Month') as month,extract(year from created_at::date) as year from admin.phone_calls where call_type = 'Outgoing' group by created_at::date"))->first();
        $this->data['Incoming_calls']  = \App\Models\PhoneCall::where(DB::raw('EXTRACT(MONTH FROM created_at) '), '7')->where('call_type', 'Incoming')->count();
-      // dd($this->data['Incoming_calls']);
       
         return view('phonecalls.index', $this->data);
     }
@@ -55,7 +55,8 @@ class Phone_call extends Controller {
     }
 
     public function create() {
-        return view('phonecalls.create');
+        $this->data['breadcrumb'] = array('title' => 'Create phone Calls','subtitle'=>'customer service','head'=>'operations');
+        return view('phonecalls.create',$this->data);
     }
 
     /**

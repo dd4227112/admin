@@ -33,35 +33,36 @@
                         <div class="">
                             <div class="row-table">
                             <?php
-                            if(sizeof($users)){
-                                foreach($users as $user){
-                                    $active_users =  \collect(DB::SELECT('SELECT  count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .' and "table"=\''.$user->table.'\' group by "table",user_id)'))->first()->count;
-                                    if($active_users ==''){
-                                        $active_users = 0;
-                                    }
-                                    ?>
-                                    <div class="col-sm-3 card-block-big br">
-                                    <div class="row">
-                                    <div class="col-sm-4 text-center">
-                                        <h5 id="all_users"><?=$user->count?></h5>
-                                            <span><?=ucfirst($user->table)?></span>
-                                            <small>Total</small>
-                                            </div>
-                                        <div class="col-sm-4 text-center">
-                                            <h5 id="all_users"><?=$active_users?></h5>
-                                            <span><?=ucfirst($user->table)?></span>
-                                            <small> Active </small>
-                                        </div>
-                                        <div class="col-sm-4 text-center">
-                                            <h5 id="all_users"><?=$user->count - $active_users?></h5>
-                                            <span><?=ucfirst($user->table)?></span>
-                                            <small>Not Active</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php 
-                                     } 
-                                   }    
+                            // if(sizeof($users)){
+                            //     foreach($users as $user){
+                            //         $active_users =  \collect(DB::SELECT('SELECT  count(*) as count from admin.all_users where status=1 and ("table",id) in 
+                            //         (select "table" from admin.all_log a where ' . $where .' and "table"=\''.$user->table.'\' group by "table")'))->first()->count;
+                            //         if($active_users ==''){
+                            //             $active_users = 0;
+                            //         }
+                            //         ?>
+                            //         <div class="col-sm-3 card-block-big br">
+                            //         <div class="row">
+                            //         <div class="col-sm-4 text-center">
+                            //             <h5 id="all_users"></h5>
+                            //                 <span></span>
+                            //                 <small>Total</small>
+                            //                 </div>
+                            //             <div class="col-sm-4 text-center">
+                            //                 <h5 id="all_users"><?= ' '?></h5>
+                            //                 <span></span>
+                            //                 <small> Active </small>
+                            //             </div>
+                            //             <div class="col-sm-4 text-center">
+                            //                 <h5 id="all_users"><?='0'?></h5>
+                            //                 <span></span>
+                            //                 <small>Not Active</small>
+                            //             </div>
+                            //         </div>
+                            //     </div>
+                            //     <?php 
+                            //          } 
+                            //        }    
                                 ?>
                                 
                                 </div>

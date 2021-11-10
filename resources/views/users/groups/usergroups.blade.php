@@ -2,40 +2,41 @@
 @section('content')
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
+
+
     <div class="page-header">
-      <div class="page-header-title">
-        <h4>User group List</h4>
-        <span>The Part holds all written record of user groups.</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">User groups</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">groups</a>
-          </li>
-        </ul>
-      </div>
-    </div>
- 
+            <div class="page-header-title">
+                <h4>School group</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">school list</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">
-          <div class="card tab-card">
+          <div class="card">
             <div class="card-block">
-              <div class="steamline">
-                <div class="card-block">
+                <div class="">
+                    <?php $url="users/usergroup/add"; ?>  
+                     <a href="<?= url($url) ?>" class="btn btn-primary btn-mini btn-round"> Add group </a>         
 
-                <div class="m-10">
-                    <a href="<?= url('users/usergroup/add') ?>" class="btn btn-sm btn-primary">Add user group</a>
                 </div>
+               </div>
 
-                  <div class="table-responsive dt-responsive">
+              <div class="card-block">
+                  <div class="table-responsive">
                     <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                       <thead>
                         <tr>
@@ -56,18 +57,18 @@
                           <td><?=$group->name?></td>
                           <td><?=$group->email?></td>
                           <td><?=$group->phone_number?></td>  
-                          <td>
-                               <a  href="<?= url('users/group_clients/' . $group->id) ?>" class="btn btn-warning btn-sm">view</a>
+                          <td class="text-center">
+                              <?php $v_url = "users/group_clients/$group->id"; ?>
+                             <a href="<?= url($v_url) ?>" class="btn btn-primary btn-mini btn-round"> View </a>         
+
                           </td>
                         </tr>
                         <?php }  ?>
-                    <?php }  ?>
+                       <?php }  ?>
                       </tbody>
-
                     </table>
                   </div>
-                </div>
-              </div>
+  
             </div>
           </div>
         </div>

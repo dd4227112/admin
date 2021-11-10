@@ -2,30 +2,27 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<!-- Sidebar inner chat end-->
-<!-- Main-body start -->
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>Shulesoft Workshop Event Post</h4>
-        <span> Event Date <u><?=$event->event_date?> </u></span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Workshop Post</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">posts</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+     
+      <div class="page-header">
+            <div class="page-header-title">
+                <h4><?=' View event' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">new events</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     <!-- Page-header end -->
     <?php
     $medias = \App\Models\EventAttendee::where('event_id', $event->id)->get();
@@ -58,22 +55,20 @@
                         </table>
                       </div>
                       <div class="card-block">
-                        <div class="view-info">
-
+                        
                           <h4 class="card-header-text">Event Registered Attendees</h4>
-                          <?php if(can_access('send_message'))  { ?>
-                          <a data-toggle="modal" data-target="#sendMessage" class="btn btn-primary btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
+                            <?php if(can_access('send_message'))  { ?>
+                            <a data-toggle="modal" data-target="#sendMessage" class="btn btn-primary btn-mini btn-round float-right">  Send Message </a>
                           <?php } ?>
                           </div>
-                          <div class="card-block user-desc">
 
+                          <div class="card-block">
                             <div class="col-lg-12 col-xl-12">
-
-                            <div class="table-responsive dt-responsive ">
-                                    <table class="table table-bordered dataTable">
+                            <div class="table-responsive">
+                                  <table class="table table-bordered dataTable">
                                     <thead>
                                     <tr>
-                                    <th>Icon </th>
+                                    <th># </th>
                                     <th>Name</th>
                                     <th>Position</th>
                                     <th>School Name</th>
@@ -91,7 +86,7 @@
                                       $school = (int)($media->school_id) > 0 ? $media->school->name : $media->school_id;
                                       ?>
                                       <tr>
-                                        <td><strong> <i class="ti-user"> </i> </strong></td>
+                                        <td><strong> <?= $i ?></strong></td>
                                         <td><?=$media->name?></td>
                                         <td><?=$media->position?></td>
                                         <td> <?=$school?></td>

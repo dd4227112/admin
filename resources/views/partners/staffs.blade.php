@@ -4,28 +4,8 @@
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title"> <?=$branch->name?> Branch  Staff Members </h4>
-                <span>This Part show allActive  Staff Members</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Branches</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Schools</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
         <?php if (can_access('manage_users')) { ?>
             <div class="page-body">
                 <div class="row">

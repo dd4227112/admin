@@ -1,33 +1,29 @@
 @extends('layouts.app')
 @section('content')
-<?php
-?>
-<!-- Sidebar inner chat end-->
-<!-- Main-body start -->
+
+
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
+
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Human Resource</h4>
-                <span>Management page</span>
+                <h4><?='Whatsapp Integration' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">General</a>
+                    <li class="breadcrumb-item"><a href="#!">integration</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Attendance</a>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+       
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -37,19 +33,11 @@
                         <div class="tab-content">
                             <div class="card-block">
                                 <h2>
-                                    <a href="#model"  onclick="$('#edit_hidden').val('')" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive">Add New</a></h2>
-
-                                <span>This part shows which modules are actively used by school and which areas we need to focus to help schools.</span>
-                                <div class="steamline">
-
-
+                                    <a href="#model"  onclick="$('#edit_hidden').val('')" class="btn btn-primary btn-mini btn-round" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive">Add New</a></h2>
                                     <div class="card-block">
-
                                         <div class="table-responsive dt-responsive">
                                             <?php
-                                            if (!empty($headers)) {
-                                                ?>
-
+                                            if (!empty($headers)) { ?>
                                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
                                                         <tr>
@@ -94,9 +82,6 @@
                                                                         } else {
                                                                             ?> 
                                                                             <td><?= $content->{$key} ?></td>
-
-
-
                                                                             <?php
                                                                         }
                                                                     }
@@ -104,7 +89,7 @@
                                                                 ?>
                                                                 <td>
                                                                     <a class="btn btn-info btn-sm" onclick="edits(<?= $content->id ?>)" href="#model" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive" tag="{{$content->id}}">Edit</a>
-                                                                    <a class="btn btn-warning btn-sm" href="{{ url('general/deletep/'.$content->id) }}">Delete</a>
+                                                                    {{-- <a class="btn btn-warning btn-sm" href="{{ url('general/delete/'.$content->id) }}">Delete</a> --}}
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>
@@ -114,7 +99,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
 
                         </div>

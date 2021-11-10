@@ -17,61 +17,47 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
 $sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
-                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
-                                                UNION ALL
-                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
-                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
+        WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
+        UNION ALL
+        select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
+        WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
 $taskss = DB::select($sqls1);
-
-$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;?>
+$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
+$allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . ' order by created_at desc');
+?>
 <div class="main-body">
     <div class="page-wrapper">
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>Sales Dashboard</h4>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Sales Report</a>
-                    </li>
-                </ul>
 
+     <div class="page-header">
+        <div class="page-header-title">
+             <h4><?= isset($start_date) && isset($end_date) ? 'Sales Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Sales Dashboard' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                 <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">summary</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">sales</a>
+                </li>
+            </ul>
+        </div>
+      </div> 
+        
+          <div class="row">
+             <div class="col-sm-12 col-lg-3 m-b-20">
+                <h6>Pick date </h6>
+                <input type="text" name="dates" id="rangeDate" class="form-control">
+            </div>
+            <div class="col-sm-12 col-lg-3 m-b-20">
+                <h6> &nbsp; </h6>
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-4">
-            </div>
-            <div class="col-lg-4"></div>
-            <div class="col-lg-4 text-right">
-                <select class="form-control" id="check_custom_date">
-                    <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
-                    <option value="custom"  <?= $today == 0 ? 'selected' : '' ?>>Custom</option>
-                </select>
-
-            </div>
-        </div>
-        <div class="row" style="display: none" id="show_date">
-
-            <div class="col-lg-4"></div>
-            <div class="col-lg-8 text-right">
-                <h4 class="sub-title">Date Time Picker</h4>
-                <div class="input-daterange input-group" id="datepicker">
-                    <input type="date" class="input-sm form-control calendar" name="start" id="start_date">
-                    <span class="input-group-addon">to</span>
-                    <input type="date" class="input-sm form-control" name="end" id="end_date">
-                    <input type="submit" class="input-sm btn btn-sm btn-success" id="search_custom"/>
-                </div>
-            </div>
-
-        </div>
 
 
         <?php
@@ -92,251 +78,260 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
         }
         ?>
 
-        <div class="page-body">
-            <div class="row">
-                <!-- Documents card start -->
+           <div class="page-body">
+             <div class="row">
                 <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks dark-primary-border">
-                        <div class="card-block">
-                            <h5> Schools in ShuleSoft</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-list"></i>
-                                </li>
-                                <li class="text-right">
-                                    <?php echo $shulesoft_schools; ?>
-                                </li>
-                                <span class="small"><?= round($shulesoft_schools * 100 / $schools, 1) ?>% Coverage</span>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Documents card end -->
-                <!-- New clients card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks warning-border">
-                        <div class="card-block">
-                            <h5>NMB Schools</h5>
-                            <ul>
-                                <li>
-                                    <i class="ti-layout text-warning"></i>
-                                </li>
-                                <li class="text-right text-warning">
-                                    <?php echo $nmb_schools; ?>
-                                </li>
-                                <span class="small"><?= $shulesoft_nmb_schools . ' in ShuleSoft (' . round($shulesoft_nmb_schools * 100 / ((int) $nmb_schools == 0 ? 1 : $nmb_schools), 1) ?>%)</span>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- New clients card end -->
-                <!-- New files card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks success-border">
-                        <div class="card-block">
-                            <h5>Our Clients</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-users text-success"></i>
-                                </li>
-                                <li class="text-right text-success">
-                                    <?php echo $clients; ?>
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- New files card end -->
-                <!-- Open Project card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks">
-                        <div class="card-block">
-                            <h5>All Schools</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-ui-folder text-primary"></i>
-                                </li>
-                                <li class="text-right text-primary">
-                                    <?php echo $schools; ?>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Open Project card end -->
-            </div>
-            <div class="row">
-                <!-- counter-card-1 start-->
-                <div class="col-md-12 col-xl-4">
-                    <div class="card counter-card-1">
-                        <div class="card-block-big">
-                            <div>
-                                <?php
-                               // $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ")"))->first()->count;
-                                ?>
-                                <h3><?php echo count($taskss); ?></h3>
-                                <p>Total School Reached
-                                    <!--<span class="f-right text-primary">
-                                        <i class="icofont icofont-arrow-up"></i>
-                                        37.89%
-                                    </span>-->
-                                </p>
-                                <div class="progress ">
-                                    <!--<div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>-->
-                                </div>
-                            </div>
-                        </div>
-                        <i class="icofont icofont-comment"></i>
-                    </div>
-                </div>
-
-                <!-- counter-card-1 end-->
-                <!-- counter-card-2 start -->
-                <div class="col-md-6 col-xl-4">
-                    <div class="card counter-card-2">
-                        <div class="card-block-big">
-                            <div>
-                                <?php
-                                $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count;
-                                ?>
-                                <h3><?= $total_schools ?></h3>
-                                <p>New Schools Onboarded
-<!--                                    <span class="f-right text-success">
-                                        <i class="icofont icofont-arrow-up"></i>
-                                        34.52%
-                                    </span>-->
-                                </p>
-                                <div class="progress ">
-                                    <!--<div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>-->
-                                </div>
-                            </div>
-                            <i class="icofont icofont-coffee-mug"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- counter-card-2 end -->
-
-                <div class="col-md-6 col-xl-4">
-                    <div class="card counter-card-3">
-                        <div class="card-block-big">
-                            <div>
-
-                                <h3><?= $total_activity ?></h3>
-                                <p>Total Sales Activities
-<!--                                    <span class="f-right text-default">
-                                        <i class="icofont icofont-arrow-down"></i>
-                                        22.34%
-                                    </span>-->
-                                </p>
-                                <div class="progress ">
-                                    <!--<div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>-->
-                                </div>
-                            </div>
-                        </div>
-                        <i class="icofont icofont-upload"></i>
-                    </div>
-                </div>
-            </div>
-            <!-- counter-card-3 end -->
-            <div class="row">
-                <div class="col-xl-12">
+                  <?php $percent = round($shulesoft_schools * 100 / $schools, 1). '% Coverage ' ?>
+                
                     <div class="card">
-                        <div class="card-header">
-                        <h5>Monthly On Boarded Schools</h5>
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($shulesoft_schools)}} </h4>
+                                    <h6 class="text-muted m-b-0">Schools</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-map-pin f-30"></i>
+                                </div>
+                            </div>
                         </div>
-                          <div class="card-block">
-                            <div class="table-responsive analytic-table">
-                                <table id="res-config" class="table table-bordered w-100 dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>No.</th>
-                                            <th>Client</th>
-                                            <th>Address</th>
-                                            <th>Added Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                      <tbody>
+                        <div class="card-footer bg-c-green">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">{{$percent}}</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                     <?php  
+                    $percent =  $shulesoft_nmb_schools . ' in ShuleSoft (' . round($shulesoft_nmb_schools * 100 / ((int) $nmb_schools == 0 ? 1 : $nmb_schools), 1) .'%' ?>
+                 
+                     <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($nmb_schools)}} </h4>
+                                    <h6 class="text-muted m-b-0">NMB Schools</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-home f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-blue">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">{{$percent}}</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+             
+                <div class="col-md-6 col-xl-3">
+                     <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($clients)}} </h4>
+                                    <h6 class="text-muted m-b-0">Our clients</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-users f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-yellow">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">clients</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="col-md-6 col-xl-3">
+                      <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($schools)}} </h4>
+                                    <h6 class="text-muted m-b-0">All Schools</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-users f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-green">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">Registered schools</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12 col-xl-4">
+                     <div class="card bg-c-green text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total School Reached</p>
+                                                <h4 class="m-b-0">{{ number_format(count($taskss)) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
+                </div>
+
+
+                <div class="col-md-6 col-xl-4">
+                    <?php  $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count;  ?>
+                     <div class="card bg-c-blue text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">New schools onboarded</p>
+                                                <h4 class="m-b-0">{{ number_format($total_schools) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-user-plus f-50 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
+                </div>
+            
+                <div class="col-md-6 col-xl-4">
+                     <div class="card bg-c-yellow text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Sales Activities</p>
+                                                <h4 class="m-b-0">{{ number_format($total_activity) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-activity f-50 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
+                </div>
+            </div>
+        
+             <div class="row">
+                  <div class="col-sm-12">
+                   <div class="card">
+                    <div class="card-header">
+                        <h5>My User Activities</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="table-responsive">
+                            <table class="table dataTable">
+                                <thead>
+                                     <tr>
+                                        <th>No.</th>
+                                        <th>Client</th>
+                                        <th>Address</th>
+                                        <th>Added Date</th>
+                                        <th>Action</th>
+                                     </tr>
+                                </thead>
+                                  <tbody>
                                         <?php
                                              $i = 1;
-                                            $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where);
                                              if(count($allschools)){
                                               foreach($allschools as $school){ 
                                                 ?>
                                                 <tr>
-                                                <td><?=$i++?></td>
+                                                <td><?=$i?></td>
                                                 <td><?=ucfirst($school->sname)?></td>
                                                 <td><?=ucfirst($school->address)?></td>
                                                 <td><?= date('F,d Y', strtotime($school->created_at))?></td>
                                                 <td>
-                                                <?php
-                                                echo '<a class="btn btn-info" href="'. url('customer/profile/'.$school->schema_name) .'">View</a>';
-                                                ?>
+                                                 <a class="btn btn-info btn-min btn-round" href="<?= url('customer/profile/' . $school->schema_name) ?>">View</a>
                                                 </td>
                                                 </tr>
                                             <?php
-                                            }
-                                        }
+                                            $i++; }
+                                          }
                                         ?>
                                     </tbody>
-                                </table>
+                              </table>
                         </div>
                     </div>
+                  </div>
                 </div>
-                <!-- Monthly Growth Chart end-->
-            <!-- Monthly Growth Chart start-->
+            </div> 
+
+       
             <div class="row">
                 <div class="col-xl-6">
                     <div class="card">
+                        <div class="card-block">
+                             <figure class="highcharts-figure">
+                                 <div id="new_school" style="height: 300px; width:350px;"></div>
+                             </figure> 
+                        </div>
+                    </div>
+                </div>
+  
+                <div class="col-xl-6">
+                 <div class="card">
+                    <div class="card-block">
+                      <figure class="highcharts-figure">
+                           <div id="Requests" style="height: 300px; width:350px;"></div>
+                       </figure> 
+                    </div>
+                  </div>
+                </div>
+            </div>
+     
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    <div class="card">
                         <div class="card-header">
-                            <h5>Monthly Success</h5>
+                            <h5>Sales Person Activity Ratio</h5>
                         </div>
                         <div class="card-block">
                             <?php
-                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting a where extract(year from a.created_at)=' . $year . '  group by month order by month';
-                            echo $insight->createChartBySql($new_schools, 'month', 'Onboarded Schools', 'line', false);
+                            $sales_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where . " group by user_name";
+                            echo $insight->createChartBySql($sales_distribution, 'user_name', 'Sales Activity', 'bar', false);
                             ?>
                         </div>
                     </div>
                 </div>
-                <!-- Monthly Growth Chart end-->
-                <!-- Google Chart start-->
-                <div class="col-xl-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Website Join Requests</h5>
-                    </div>
-                    <div class="card-block">
-                        <?php
-                        $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
-                            where extract(year from a.created_at)=' . $year . '  group by month order by month';
-                        echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
-                        ?>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <!-- Recent Order table start -->
 
-
-            <!-- Recent Order table end -->
-            <div class="row">
-                    <div class="col-lg-6 col-sm-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Sales Person Activity Ratio</h5>
-                            </div>
-                            <div class="card-block">
-                                <?php
-                                $sales_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where . " group by user_name";
-                                echo $insight->createChartBySql($sales_distribution, 'user_name', 'Sales Activity', 'bar', false);
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
+                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-header">
                             <h5>Sales Distribution Activities</h5>
@@ -355,28 +350,30 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
 
 
                  <div class="row">
-                    <div class="col-lg-6 col-sm-12">
+                    <div class="col-lg-8 col-sm-12">
                         <div class="card">
                             <div class="card-block">
                               <div class="table-responsive analytic-table">
                                 <table id="res-config" class="table table-bordered w-100 dataTable">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Name</th>
                                             <th>Task Type</th>
                                             <th>Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name,a.user_id, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
+                                        <?php $t= 1; $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name,a.user_id, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
                                         foreach ($activities as $activity) {
                                             ?>
                                             <tr>
+                                                <td> <?= $t ?> </td>
                                                 <td> <a href="<?=url('customer/taskGroup/user/'.$activity->user_id)?>"><?= $activity->user_name ?></a></td>
                                                 <td> <a href="<?= url('customer/activity/show/'.$activity->id) ?>"> <?= $activity->task_name ?></a> </td>
                                                 <td><label class="text-info">  <?= date('d/m/Y',strtotime($activity->created_at)) ?></label> </td>
                                             </tr>
-                                        <?php } ?>
+                                        <?php $t++; } ?>
                                     </tbody>
                                 </table>
                                </div>
@@ -385,72 +382,128 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                     </div>
 
 
-                    <div class="col-xl-6">
-                       <div class="card">
-                          <div class="card analytic-user">
-                            <div class="card-block-big text-center">
-                                <i class="icofont icofont-wallet"></i>
-                                <?php
-                                $student_sum = \collect(DB::select('select sum(students) from admin.schools WHERE id in (select school_id from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where . ')'))->first()->sum;
-                                ?>
-                                <h3>Tsh <?= number_format($student_sum * 10000) ?> /=</h3>
-                                <h4>Projected Income</h4>
-                            </div>
-                            <div class="card-footer p-t-25 p-b-25">
-                                <p class="m-b-0"></p>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+                   
                                              
                 </div>
 
 
 
+                    </div>
+                </div>
+                </div>
             </div>
-        </div>
-        </div>
-    </div>
              
-                    <!-- .events-content -->
-                    <!-- Todo card start -->
-
-
-
-                   
-
           
         </div>
     </div>
 </div>
-
-<script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
-
-<script src="<?= url('/public') ?>/code/highcharts.js"></script>
-<script src="<?= url('/public') ?>/code/modules/exporting.js"></script>
-<script src="<?= url('/public') ?>/code/modules/export-data.js"></script>
-<script src="<?= url('/public') ?>/code/modules/series-label.js"></script>
-<script src="<?= url('/public') ?>/code/modules/data.js"></script>
-
 <script>
-    check = function () {
-        $('#check_custom_date').change(function () {
-            var val = $(this).val();
-            if (val == 'today') {
-                window.location.href = '<?= url('analyse/sales/') ?>/1';
-            } else {
-                $('#show_date').show();
-            }
-        });
-    }
+    
+Highcharts.chart('new_school', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Schools Vs Months'
+    },
+    subtitle: {
+        text: 'Overall schools onboarded'
+    },
+    xAxis: {
+        type: 'Months',
+       
+        categories: [
+        <?php foreach($new_schools as $value){  ?> '<?=date("M", strtotime($value->month))?>',
+        <?php } ?>
+      ]
+    },
+    yAxis: {
+        title: {
+            text: 'Schools'
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: 'Schools',
+        colorByPoint: true,
+        data: [
+            <?php foreach($new_schools as $value){ ?> {
+                name: '<?=date("M", strtotime($value->month))?>',
+                y: <?=$value->count?>,
+                drilldown: <?=$value->count ?>
+            },
+            <?php } ?>
+        ]
+    }]
+});
+
+Highcharts.chart('Requests', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'Website requests'
+    },
+    subtitle: {
+        text: 'Website Join Requests'
+    },
+    xAxis: {
+        type: 'Months',
+       
+        categories: [
+        <?php foreach($requests as $value){  ?> '<?= $value->month ?>',
+        <?php } ?>
+      ]
+    },
+    yAxis: {
+        title: {
+            text: 'Schools'
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: 'Schools',
+        colorByPoint: true,
+        data: [
+            <?php foreach($requests as $value){ ?> {
+                name: '<?=date("M", strtotime($value->month))?>',
+                y: <?=$value->count?>,
+                drilldown: <?=$value->count ?>
+            },
+            <?php } ?>
+        ]
+    }]
+});
+
+ 
+  
     submit_search = function () {
         $('#search_custom').mousedown(function () {
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
+            var alldates = $('#rangeDate').val();
+            alldates = alldates.trim();
+            alldates = alldates.split("-");
+            start_date = formatDate(alldates[0]);
+            end_date = formatDate(alldates[1]);
             window.location.href = '<?= url('analyse/sales/') ?>/5?start=' + start_date + '&end=' + end_date;
         });
     }
-    $(document).ready(check);
+
+       formatDate = function (date) {
+            date = new Date(date);
+            var day = ('0' + date.getDate()).slice(-2);
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            return year + '-' + month + '-' + day;
+    }
+    
     $(document).ready(submit_search);
+    $(document).ready(formatDate);
+
+    $('input[name="dates"]').daterangepicker();
+
 </script>
 @endsection

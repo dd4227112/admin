@@ -3,28 +3,25 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+           <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Create Client</h4>
-                <span>Add New Client</span>
+                <h4><?='Edit client' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">client</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Clients</a>
+                    <li class="breadcrumb-item"><a href="#!">setting</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+
         <div class="page-body">
             <div class="row">
 
@@ -33,11 +30,11 @@
 
                     <div class="card-block">
 
-                        <header class="panel-heading">
+                        <div class="card-header">
                            Fill all basic information correctly
 
-                        </header>
-                        <div class="panel-body">
+                        </div>
+                        <div class="card-body">
                             <div id="error_area"></div>
                             <div class=" form">
                                 <form class="cmxform form-horizontal " method="post" action="<?= url('account/client/edit/'.$client->id) ?>">

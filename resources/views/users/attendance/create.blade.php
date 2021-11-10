@@ -2,37 +2,36 @@
 @section('content')
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>Attendance</h4>
-        <span>The Part holds all list of users on their attendance.</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Company Employee</a>
-          </li>
-          <li class="breadcrumb-item"><a href="<?= url("tattendance/index") ?>">Attendance</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-   
+  
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4>Create attendance</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">attendance</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
     <div class="page-body">
       <div class="row">
+
         <div class="col-sm-12">
           <div class="card tab-card">
             <div class="card-block">
-              <div class="steamline">
-                <div class="card-block">
+             
 
                   <div class="col-md-12 col-xl-12">
-                    <div class="form-group row col-lg-offset-6">
+                    <div class="row">
                         <form class="col-sm-6 form-horizontal" role="form" method="post">
                             <?php
                             $date_ = date("m/d/Y", strtotime($date));
@@ -57,12 +56,15 @@
                          <?= csrf_field() ?>
                        </form>
                      </div>
-                    </div>
+                    </div> 
 
 
-                  <div class="table-responsive table-sm table-striped table-bordered table-hover">
+                 
+ 
                     <?php if (!empty($users)) { ?>
-                    <table id="dt-ajax-array" class="table dataTable">
+                     <div class="card-block">
+                      <div class="dt-responsive table-responsive">
+                       <table id="simpletable" class="table dataTable table-striped table-bordered nowrap">
                       <thead>
                         <tr>
                           <th># </th>
@@ -118,10 +120,11 @@
                         <?php } } ?>
                       </tbody>
                     </table>
+                      </div>
                   <?php } ?>
                   </div>
-                </div>
-              </div>
+              
+          
             </div>
           </div>
         </div>

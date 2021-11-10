@@ -2,36 +2,37 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <div class="page-header">
+    
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>Charts of Accounts </h4>
+                <h4><?='Charts of accounts' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Charts of Account</a>
+                    <li class="breadcrumb-item"><a href="#!">setting</a>
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> 
+
         <div class="page-body">
             <!-- form start -->
             <div class="page-body">
                 <div class="card">
-                    <p></p>
-                    <p></p>
+                   
                     <div class="col-sm-12">
 
                         &nbsp;  <h5 class="page-header">
 
-                            <a class="btn btn-success" href="#" type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">
-                                <i class="fa fa-plus"></i> 
+                            <a href="#" type="button" class="btn btn-primary btn-mini btn-round" data-toggle="modal" data-target="#large-Modal">
+                        
                                 Add New Account
                             </a>
                         </h5>
@@ -70,25 +71,25 @@
                                                 </td>
                                                 <td data-title="<?= __('account_type') ?>">
                                                     <?php
-                                                      echo warp($expense->financialCategory->name);
+                                                      echo warp($expense->financialCategory->name,20);
 
                                                     ?>
                                                 </td>
                                                 <td data-title="<?= __('account_group') ?>">
                                                     <?php
-                                                      echo warp($expense->accountGroup->name);
+                                                      echo warp($expense->accountGroup->name,20);
                                                     ?>
                                                 </td>
 
                                                 <td data-title="<?= __('expense_note') ?>">
-                                                    <p id="note<?=$expense->id?>"><?php echo warp($expense->note); ?></p>
+                                                    <p id="note<?=$expense->id?>"><?php echo warp($expense->note,20); ?></p>
                                                 </td>
 
                                                 <td data-title="<?= __('action') ?>">
 
                                                     <?php
                                                     if ($expense->predefined == 0) {
-                                                        echo '<a class="btn btn-info btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"  onmousedown="fill_form('.$expense->id.')">edit</a>';
+                                                        echo '<a class="btn btn-info btn-sm btn-round" href="#" data-toggle="modal" data-target="#large-Modal"  onmousedown="fill_form('.$expense->id.')">edit</a>';
                                                         ?>
                                                         <?php
                                                       //  echo '<a class="btn btn-danger btn-sm" href="' . url('account/chart/delete/' . $expense->id . '/' . $id) . '">delete</a>';

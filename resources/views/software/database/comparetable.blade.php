@@ -2,33 +2,34 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+
+
+         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Database</h4>
-                <span></span>
+                <h4><?='Compare tables' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Database</a>
+                    <li class="breadcrumb-item"><a href="#!">database tables</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Tables</a>
+                    <li class="breadcrumb-item"><a href="#!">Engineering</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+        
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
+                      <div class="card-block">
                         <div class="white-box"><?= $data ?></div>
+                     </div>
                     </div>
                 </div>
             </div>
@@ -50,14 +51,16 @@
                 },
                 dataType: "html ",
                 beforeSend: function (xhr) {
-                    $('#' + table + slave).html('<a href="#/refresh"><i class="ti-reload rotate-refresh"></i></a>');
+                    $('#' + table + slave).html('<a href="#/refresh"><i class="feather icon-refresh-ccw"></i></a>');
                 },
                 complete: function (xhr, status) {
-                    $('#' + table + slave).html('<span class="label label-success label-rouded">' + status + '</span>');
+                    $('#' + table + slave).html('<label class="badge badge-success">' + status + '</label>');
                 },
 
                 success: function (data) {
                     $(this).hide();
+                    toastr.success('Sync success')
+                    window.location.reload(); 
                 }
             });
 

@@ -1,54 +1,42 @@
 @extends('layouts.app')
-
 @section('content') 
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
+        
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Company Staff Members </h4>
-                <span>This Part show all Active Company Staff Members</span>
+                <h4> Users</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Exams</a>
+                    <li class="breadcrumb-item"><a href="#!">users</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Listing</a>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+
         <?php if (can_access('manage_users')) { ?>
             <div class="page-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div id="wrapper" class="card">
-                            <div id="editorForm">
-                            <br>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <button class="btn btn-primary" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button>                   
-                                    </div>
-                                    {{-- @if ($message = Session::get('success'))
-                                    <div class="alert alert-success">
-                                        <p>{{ $message }}</p>
-                                    </div>
-                                    @endif --}}
-                                    <hr>
+                        <div  class="card">
+                                <div class="card-block">
+                                      
+                                        <a class="btn btn-primary btn-round btn-sm float-left text-light"  href="<?= url('users/create') ?>">Create New User</a>                   
+                                        <a class="btn btn-primary btn-round btn-sm float-right text-light" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                   
+                                </div>
+                                  
+                                <div  class="card">
                                     <div class="card-block">
-
-                                        <div class="table-responsive dt-responsive ">
+                                        <div class="table-responsive">
                                             <table class="table table-bordered dataTable">
                                                 <thead>
                                                     <tr>
@@ -57,7 +45,7 @@
                                                         <th>Name</th>
                                                         <th>Phone</th>
                                                         <th>Email</th>
-                                                        <th>Joining Date</th>
+                                                
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -67,21 +55,26 @@
                                                     @foreach ($users as $key => $user)
                                                     <tr>
                                                         <td><?= $i ?></td>
-                                                        <td><img src="{{$root.'images/'.$user->dp }}" class="img-circle" style="position: relative;
+                                                        <td>
+                                                           <?php
+                                                            $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '$user->id'"))->first(); 
+                                                            $local = $root . 'assets/images/user.png';
+                                                           ?>
+                                                          <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
                                                                  width: 30px;
                                                                  height: 30px;
                                                                  border-radius: 50%;
-                                                                 overflow: hidden;"></td>
+                                                                 overflow: hidden;">
+                                                        </td>
                                                         <td>{{ $user->firstname }} {{ $user->lastname }}</td>
                                                         <td>{{ $user->phone }}</td>
                                                         <td>{{ $user->email }}</td>
-                                                         <td>{{ date('d M Y',strtotime($user->created_at)) }}</td>
+                                                  
                                                         <td class="text-center">
-                                                            <a class="btn btn-info btn-sm" href="{{ url('users/show/'.$user->id) }}">Show</a>
-
-                                                            <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a> 
-                                                                            
-                                                        </td>
+                                                        <?php $view_url = "users/show/$user->id"; $edit_url = "users/edit/$user->id"; ?>
+                                                        <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View employee">view  </a>
+                                                        <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit employee">Edit  </a>
+                                                      </td>
                                                     </tr>
                                                     <?php $i++; ?>
                                                     @endforeach
@@ -89,12 +82,14 @@
                                             </table>
                                         </div>
                                     </div>
-                                <?php } ?>
-                            </div>
+                                  </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
+           <?php } ?>
+
         </div>
     </div>
 
