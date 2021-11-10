@@ -133,6 +133,10 @@ class Kernel extends ConsoleKernel {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
 
+         $schedule->call(function () {
+            $this->schoolMonthlyReport();
+        })->monthlyOn(28, '06:36');
+
         $schedule->call(function () {
             (new Controller())->syncMissingPayments();
         })->hourly();

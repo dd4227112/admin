@@ -128,8 +128,8 @@
                                 $dateObj = DateTime::createFromFormat('!m', $m);
                                 $monthName = $dateObj->format('F');
                                 $att = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present', 1)->count();
-                                $permissions = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present','=', 1)->whereNotNull('absent_reason')->count();
-                                $absents = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNull('absent_reason')->where('present',0)->count();
+                                $permissions = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present','=', 1)->whereNotNull('absent_reason_id')->count();
+                                $absents = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNull('absent_reason_id')->where('present',0)->count();
                                 $late_comming = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->count();
                                 $early_leave = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->count();
 
@@ -140,8 +140,8 @@
                                     <td><?= $att ?></td>
                                     <td><?= $permissions ?></td>
                                     <td><?= $absents ?></td>
-                                    <td><?= $late_comming ?></td>
-                                    <td><?= $early_leave ?></td>
+                                    <td class="text-center"><?= $late_comming > 0 ? '<label class="badge badge-warning">' .$late_comming .'</label>' : 0 ?></td>
+                                    <td class="text-center"><?= $early_leave > 0 ? '<label class="badge badge-warning">' .$early_leave .'</label>' : 0 ?></td>
                                 </tr>
                                 <?php
                             }
@@ -157,7 +157,7 @@
                 <div class="card">
                    <div class="card-block">
                         <h5 style="font-weight: 800"> Attendance information</h5> 
-                           <p style="font-weight:700"> Present (P), Present late (*P), weekends (S) </p>
+                           <p style="font-weight:700"> Present   <label class="badge badge-primary">P</label>, Present late  <label class="badge badge-warning">P</label>, Present early leave  <label class="badge badge-danger">P</label>, weekends <label class="badge badge-default">S</label> </p>
                            <div class="row">
                               <?php
                               for ($m = 1; $m <= (int) date('m'); $m++) {
@@ -180,15 +180,19 @@
                                           <tbody>
       
                                               <tr>
-                                                  <?php
+                                                  <?php  $the_timein = "08:00:00";$the_timeout = "17:00:00";
                                                   for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) { 
                                                       $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
-                                                      if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat')){
-                                                          $att = "<strong style='color:green'>S</strong>";
-                                                      } elseif((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
-                                                          $att = "<strong style='color:green'>S</strong>";
+                                                      if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat') || (date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
+                                                          $att = '<label class="badge badge-default">S</label>';
                                                       } elseif (!empty($att) && $att->present == 1) {
-                                                          $att = date("H:i:s",strtotime($att->timein)) < '08:00:00' ? '<strong>P</strong>' : '<strong>*P</strong>';
+                                                          if(date("H:i:s",strtotime($att->timein)) > $the_timein){
+                                                             $att = '<label class="badge badge-warning">P</label>';
+                                                          }elseif(date("H:i:s",strtotime($att->timeout)) < $the_timeout){
+                                                             $att = '<label class="badge badge-danger">P</label>';
+                                                          }else{
+                                                             $att = '<label class="badge badge-primary">P</label>';
+                                                          }
                                                       } elseif(!empty($att->absent_reason_id)) {
                                                           $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
                                                           if (!empty($reason)) {
@@ -239,16 +243,6 @@
             location.reload();
         }
 
-        function check_email(email) {
-            var status = false;
-            var emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-            if (email.search(emailRegEx) == -1) {
-                $("#to_error").html('');
-                $("#to_error").html("<?= ('mail_valid') ?>").css("text-align", "left").css("color", 'red');
-            } else {
-                status = true;
-            }
-            return status;
-        }
+      
 </script>
 @endsection
