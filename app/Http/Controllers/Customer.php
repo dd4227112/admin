@@ -318,23 +318,21 @@ class Customer extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function createGuide() {
-        $request = request()->all();
-         dd($request);
-        $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+        $file = request()->file('image_file');
+        $company_file_id = $this->saveFile($file, 'company/contracts', TRUE);
 
         $obj = [
             'permission_id' => request()->permission_id,
             'content' => str_replace('src="../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
             'created_by' => \Auth::user()->id,
-            'language' => 'eng'
+            'language' => 'eng',
+            'company_file_id' => $company_file_id
         ];
         DB::table('constant.guides')->insert($obj);
         return redirect('customer/guide');
     }
 
-    public function psms($param) {
-        
-    }
+  
 
     /**
      * Display the specified resource.
@@ -366,22 +364,27 @@ class Customer extends Controller {
             $this->data['guides'] = [];
             $page = 'add_guide';
         } else if (request()->segment(3) == 'edit') {
-            $this->data['guide'] = \App\Model\Guide::find(request()->segment(4));
+            $this->data['guide'] = $guide =  \App\Model\Guide::find(request()->segment(4));
             $page = 'edit_guide';
             if ($_POST) {
-                
+                $file = request()->file('image_file');
+                $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : $guide->company_file_id;
+
                 $obj = [
                     'permission_id' => request()->permission_id,
                     'content' => str_replace('src="../../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
                     "is_edit" => request()->is_edit,
-                    'language' => 'eng'
+                    'language' => 'eng',
+                    'company_file_id' => $company_file_id
                 ];
+
                 \App\Model\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
         } else {
             $page = 'guide';
-            $this->data['guides'] = \App\Model\Guide::all();
+            $this->data['guides'] = \App\Model\Guide::latest()->get();
+           // $this->data['guides'] = \App\Model\Guide::orderBy('id', 'desc')->get();
         }
         return view('customer.' . $page, $this->data);
     }
