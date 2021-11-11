@@ -110,7 +110,7 @@
                                     $array_[$absent->id] = $absent->reason;
                                 }
                             }
-                            echo form_dropdown("absent_id", $array_, old("absent_id", $absent_id), "id='absent_id' user_id='" . $user->id . "' class='form-control absent' style='width:120px;height:20px;'");
+                            echo form_dropdown("absent_id", $array_, old("absent_id", $absent_id), "id='absent_id' user_id='" . $user->id . "' class='form-control absent' style='width:140px;height:18px;'");
                             ?>
                           </td>
 
