@@ -40,7 +40,7 @@
 
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Main Module:</label>
-                                            <select class="form-control select2" id="permission_group">
+                                            <select class="form-control select2" id="permission_group" required>
                                                 <option value=""></option>
                                                 <?php
                                                 $permission_groups = \DB::table('constant.permission_group')->get();

@@ -128,9 +128,7 @@
                                                             </div>
                                                         </div> --}}
 
-                                                        <?php if(can_access('edit_guide')) { ?>
                                                         <?php echo '<a  href="' . url("/customer/guide/edit/$value->id") . ' " class="btn btn-info btn-mini btn-round">' . __('edit') . ' </a>' ?>
-                                                        <?php } ?>
 
                                                         <?php if(can_access('delete_guide')) { ?>
                                                         <?php echo '<a  href="' . url("customer/guide/delete/$value->id") . ' " class="btn btn-danger btn-mini btn-round">' . __('delete') . ' </a>' ?>
