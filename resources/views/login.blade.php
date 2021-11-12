@@ -30,26 +30,131 @@
         <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css?v=2">
 
+        <style>
+            .brand-wrapper {
+  padding-top: 7px;
+  padding-bottom: 8px; }
+  .brand-wrapper .logo {
+    height: 25px; }
+
+.login-section-wrapper {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  padding: 68px 100px;
+  background-color: #fff; }
+  @media (max-width: 991px) {
+    .login-section-wrapper {
+      padding-left: 50px;
+      padding-right: 50px; } }
+  @media (max-width: 575px) {
+    .login-section-wrapper {
+      padding-top: 20px;
+      padding-bottom: 20px;
+      min-height: 100vh; } }
+
+.login-wrapper {
+  width: 300px;
+  max-width: 100%;
+  padding-top: 24px;
+  padding-bottom: 24px; }
+  @media (max-width: 575px) {
+    .login-wrapper {
+      width: 100%; } }
+  .login-wrapper label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #b0adad; }
+  .login-wrapper .form-control {
+    border: none;
+    border-bottom: 1px solid #e7e7e7;
+    border-radius: 0;
+    padding: 9px 5px;
+    min-height: 40px;
+    font-size: 18px;
+    font-weight: normal; }
+    .login-wrapper .form-control::-webkit-input-placeholder {
+      color: #b0adad; }
+    .login-wrapper .form-control::-moz-placeholder {
+      color: #b0adad; }
+    .login-wrapper .form-control:-ms-input-placeholder {
+      color: #b0adad; }
+    .login-wrapper .form-control::-ms-input-placeholder {
+      color: #b0adad; }
+    .login-wrapper .form-control::placeholder {
+      color: #b0adad; }
+  .login-wrapper .login-btn {
+    padding: 13px 20px;
+    background-color: #fdbb28;
+    border-radius: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 14px; }
+    .login-wrapper .login-btn:hover {
+      border: 1px solid #fdbb28;
+      background-color: #fff;
+      color: #fdbb28; }
+  .login-wrapper a.forgot-password-link {
+    color: #080808;
+    font-size: 14px;
+    text-decoration: underline;
+    display: inline-block;
+    margin-bottom: 54px; }
+    @media (max-width: 575px) {
+      .login-wrapper a.forgot-password-link {
+        margin-bottom: 16px; } }
+  .login-wrapper-footer-text {
+    font-size: 16px;
+    color: #000;
+    margin-bottom: 0; }
+
+.login-title {
+  font-size: 30px;
+  color: #000;
+  font-weight: bold;
+  margin-bottom: 25px; }
+
+.login-img {
+  width: 100%;
+  height: 100vh;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: left;
+     object-position: left; }
+        </style>
     </head>
 
     <body class="fix-menu">
-        <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
-            <!-- Container-fluid starts -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <!-- Authentication card start -->
-                        <div class="login-card card-block auth-body">
-                            @include('layouts.notifications')
+        <main>
+    <div class="container-fluid">
+      <div class="row">
 
-                            <?php if (preg_match('/reset/i', url()->current())) { ?>
+      <div class="col-sm-6 px-0 d-none d-sm-block ">
+          <img src="assets/images/login.jpg" alt="login image" class="login-img">
+        </div>
 
-                                <form class="md-float-material" role="form" method="POST" action="{{ route('password.email') }}">
+        <div class="col-sm-6 login-section-wrapper">
+          <div class="brand-wrapper">
+          <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
+          </div>
+          <div class="login-wrapper my-auto">
+          <div class="row m-b-20">
+                                            <div class="col-md-12">
+                                                <small style="color:black; text-align: center">ShuleSoft Administration Panel</small>
+                                                <h3 class="text-left txt-primary login-title">Sign In</h3>
+                                            </div>
+                                        </div>
+            @include('layouts.notifications')
+            
+<?php if (preg_match('/reset/i', url()->current())) { ?>
+    
+            <form class="md-float-material" role="form" method="POST" action="{{ route('password.email') }}">
                                     {{ csrf_field() }}
 
-                                    <div class="text-center">
-                                        <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
-                                    </div>
+                                  
                                     <div class="auth-box">
                                         <div class="row m-b-20">
                                             <div class="col-md-12">
@@ -88,19 +193,12 @@
                                     </div>
                                 </form>
                             <?php } else { ?>  
-                                <form class="md-float-material" id="loginform" method="POST" action="{{ route('login') }}" >
+                                <form class="" id="loginform" method="POST" action="{{ route('login') }}" >
                                     {{ csrf_field() }}
 
-                                    <div class="text-center">
-                                        <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
-                                    </div>
-                                    <div class="auth-box">
-                                        <div class="row m-b-20">
-                                            <div class="col-md-12">
-                                                <small style="color:black; text-align: center">ShuleSoft Administration Panel</small>
-                                                <h3 class="text-left txt-primary">Sign In</h3>
-                                            </div>
-                                        </div>
+                                    
+                                    <div class="">
+                                        
                                         @if ($errors->has('password'))
                                         <span class="help-block">
                                             <strong class="alert alert-danger">{{ $errors->first('password') }}</strong>
@@ -112,7 +210,8 @@
                                         </span>
                                         @endif
                                         <hr/>
-                                        <div class="input-group ">
+                                        <div class="form-group ">
+                                        <label for="email">Email</label>
                                             <input type="email" name="email" class="form-control" placeholder="Your Email Address" value="{{ old('email') }}">
                                             <span class="md-line"></span>
 
@@ -158,16 +257,14 @@
                                 </form>
                                 <!-- end of form -->
                             <?php } ?>
-
-                        </div>
-                        <!-- Authentication card end -->
-                    </div>
-                    <!-- end of col-sm-12 -->
-                </div>
-                <!-- end of row -->
-            </div>
-            <!-- end of container-fluid -->
-        </section>
+            <a href="#!" class="forgot-password-link">Forgot password?</a>
+            <p class="login-wrapper-footer-text">Don't have an account? <a href="#!" class="text-reset">Register here</a></p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </main>
         <!-- Warning Section Starts -->
         <!-- Older IE warning message -->
         <!--[if lt IE 9]>
