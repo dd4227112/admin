@@ -85,8 +85,8 @@ function account_no($schema,$bank_id){
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $value->schema_name ?></td>
-                                    <td><?= account_name($value->schema_name,$value->bank_account_id) ?></td>
-                                    <td><?= account_no($value->schema_name,$value->bank_account_id) ?></td>
+                                    <td><?= account_name($value->schema_name,$value->bank_account_id) ? account_name($value->schema_name,$value->bank_account_id) : '' ?></td>
+                                    <td><?= account_no($value->schema_name,$value->bank_account_id) ? account_no($value->schema_name,$value->bank_account_id) : '' ?></td>
                                     <td><?= $value->invoice_prefix ?></td>
                                     <td><?= $value->api_username ?></td>
                                     <td><?= $value->api_password ?></td>
