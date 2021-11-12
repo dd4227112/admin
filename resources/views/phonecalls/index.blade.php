@@ -1,50 +1,62 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 
+<div class="main-body">
 <div class="page-wrapper">
+
   <div class="page-header">
-    <div class="page-header-title">
-      <h4>Phone calls</h4>
-    </div>
-    <div class="page-header-breadcrumb">
-  </div>
-</div>
+            <div class="page-header-title">
+                <h4> Phone calls</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">calls</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
 <div class="page-body">
   <div class="row">
       <div class="col-md-12 col-xl-12">
-          <div class="card" > 
+          <div class="card"> 
+              <div class="card-block">
+                 <a  class="btn btn-primary btn-mini btn-round" href="<?= url('Phone_call/create') ?>"> Add calls </a>
+              </div> 
+              
               <div class="card-block tab-icon">                               
                 <ul class="nav nav-tabs md-tabs " role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#profile7" role="tab"> <h6 class="text-center">Phone calls </h6></a>
+                        <a class="nav-link active" data-toggle="tab" href="#profile7" role="tab"> <h6 class="text-center text-subtitle">Phone calls </h6></a>
                         <div class="slide"></div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#home7" role="tab"> <h6 class="text-center">Incoming calls </h6></a>
+                        <a class="nav-link" data-toggle="tab" href="#home7" role="tab"> <h6 class="text-center text-subtitle">Incoming calls </h6></a>
                         <div class="slide"></div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#missedCall" role="tab"> <h6 class="text-center">Missed calls </h6></a>
+                        <a class="nav-link" data-toggle="tab" href="#missedCall" role="tab"> <h6 class="text-center text-subtitle">Missed calls </h6></a>
                         <div class="slide"></div>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#OutgoingCall" role="tab"> <h6 class="text-center">Outgoing calls </h6></a>
+                        <a class="nav-link" data-toggle="tab" href="#OutgoingCall" role="tab"> <h6 class="text-center text-subtitle">Outgoing calls </h6></a>
                         <div class="slide"></div>
-                    </li>
-
-                     <li class="nav-item">
-                        <a href="<?= url('Phone_call/create') ?>" style="margin: 16px 8px" > Add calls </a>
                     </li>
                 </ul> 
                         
-                   <div class="tab-content card-block">
+                   <div class="tab-content">
                     
                       <div class="tab-pane active" id="profile7" role="tabpanel">
-                          <div class="col-sm-12">
+                          <div class="col-sm-12 m-10">
                              <form class="form-horizontal" role="form" method="post"> 
                                   <div class="form-group row">
                                     <div class="col-sm-3">
@@ -66,8 +78,8 @@
                             </div> 
                                
                              <div class="card-block">
-                                <div class="table-responsive ">
-                                    <table id="list_of_calls" class="display nowrap table">
+                                     <div class="dt-responsive table-responsive">
+                                        <table id="list_of_calls" class="table table-striped table-bordered nowrap">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -76,16 +88,13 @@
                                                 <th>Time</th>
                                                 <th>Next Follow up</th>
                                                 <th>Call Duration</th>
-                                                <th colspan="1">Action</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
-
-
                                         </tbody>
                                     </table>
-                                    
+
                                 </div>
                               </div>
                              </div>
@@ -93,9 +102,7 @@
                             <div class="tab-pane" id="home7" role="tabpanel">               
                                <div class="col-sm-12">
                                 <div class="row"> 
-                                   <div class="col-sm-6">
-                                          <script src="https://code.highcharts.com/highcharts.js"></script>
-                                        <script src="https://code.highcharts.com/modules/data.js"></script>
+                                   <div class="col-sm-9">
                                         <script type="text/javascript">
                                                     $(function () {
                                                         $('#container').highcharts({
@@ -139,13 +146,13 @@
                                                         });
                                                     });
                                                 </script>
-                                        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                        <div id="container" style="min-width: 310px; height: 600px; margin: 10 auto"></div>
                                    </div> 
                                 
-                                    <div class="col-sm-6">
-                                        <div class="car">
-                                          <div class="card-heade">
-                                                  <table id="datatables" style="margin:5px;font-size:10px;" class="table">
+                                    <div class="col-sm-3">
+                                        <div class="card">
+                                          <div class="card-block">
+                                                  <table id="datatables" style="margin:5px;font-size:10px;" class="table table-striped table-bordered nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>Month</th>
@@ -180,7 +187,7 @@
                             <div class="tab-pane" id="missedCall" role="tabpanel">               
                                <div class="col-sm-12">
                                   <div class="row"> 
-                                   <div class="col-sm-6">
+                                   <div class="col-sm-9">
                                       <script src="https://code.highcharts.com/highcharts.js"></script>
                                         <script src="https://code.highcharts.com/modules/data.js"></script>
                                            <script type="text/javascript">
@@ -226,13 +233,13 @@
                                                         });
                                                     });
                                                 </script>
-                                        <div id="missed" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                        <div id="missed" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
                                    </div> 
                                 
-                                    <div class="col-sm-6">
-                                        <div class="cardi">
-                                          <div class="card-headeri">
-                                                  <table id="datatables_missed" style="margin:5px;font-size:10px;" class="table">
+                                    <div class="col-sm-3">
+                                        <div class="card">
+                                          <div class="card-block">
+                                                  <table id="datatables_missed" style="margin:5px;font-size:10px;" class="table table-striped table-bordered nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>Month</th>
@@ -266,9 +273,8 @@
                             <div class="tab-pane" id="OutgoingCall" role="tabpanel">               
                                <div class="col-sm-12">
                                   <div class="row"> 
-                                   <div class="col-sm-6">
-                                      <script src="https://code.highcharts.com/highcharts.js"></script>
-                                        <script src="https://code.highcharts.com/modules/data.js"></script>
+                                   <div class="col-sm-9">
+                                    
                                            <script type="text/javascript">
                                                     $(function () {
                                                         $('#outgoings').highcharts({
@@ -312,13 +318,13 @@
                                                         });
                                                     });
                                                 </script>
-                                        <div id="outgoings" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                        <div id="outgoings" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
                                    </div> 
                                 
-                                    <div class="col-sm-6">
-                                        <div class="cardi">
-                                          <div class="card-headeri">
-                                                  <table id="datatabless" style="margin:5px;font-size:10px;" class="table">
+                                    <div class="col-sm-3">
+                                        <div class="card">
+                                          <div class="card-block">
+                                                  <table id="datatabless" style="margin:5px;font-size:10px;" class="table table-striped table-bordered nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>Month</th>
@@ -359,7 +365,7 @@
       </div>
   </div>
 </div>
-</div>
+
 
 
 
@@ -372,7 +378,10 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                'url': "<?= url('phone_call/calls/null') ?>"
+                'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+             'url': "<?= url('phone_call/calls/null') ?>"
             },
             "columns": [
                 {"data": "id"},
@@ -389,13 +398,10 @@
                     "data": null,
                     "render": function (data, type, row, meta) 
                         {
-                        
-                              return '<a href="<?= url('Phone_call/edit') ?>/' + row.id + '" class="label label-warning">Edit</a>';
+                          return '<a href="<?= url('Phone_call/edit') ?>/' + row.id + '" class="label label-warning">Edit</a>';
                         }
 
                     }
-
-                
             ]
         });
     }

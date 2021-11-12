@@ -1,37 +1,37 @@
 @extends('layouts.app')
 @section('content')
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script> 
+
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+       
+          <div class="page-header">
             <div class="page-header-title">
-                <h4>Pension</h4>
-                <span>Add Pension Fund</span>
+                <h4><?='Add Pensions' ?></h4>
             </div>
-     
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!"><?= __('allowance_title') ?></a>
+                    <li class="breadcrumb-item"><a href="#!">pensions</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <!-- Page-header end -->
-        <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
 
                 <div class="col-sm-12">
                     <!-- Zero config.table start -->
                     <div class="card">
-                        <header class="panel-heading">
+                        <div class="card-header">
                            Fill all basic information correctly
-                        </header>
+                        </div>
                         <div class="card-body">
                             <div id="error_area"></div>
                             <div class="form">
@@ -62,7 +62,7 @@
                                         ?>
                                         <label for="select class level" class="col-sm-2 control-label"><?= __('Select pension') ?> <span class="red">*</span></label>
                                         <div class="col-sm-6">
-                                            <select class="select2 form-control" required="true"  name="refer_pension_id" id="refer_pension_id">
+                                            <select class="js-example-basic-single form-control" required="true"  name="refer_pension_id" id="refer_pension_id">
                                                 <option value="0"><?= __('Select pension') ?></option>
                                                 <?php
                                                 $pensions = DB::SELECT('SELECT * FROM constant.pensions');
@@ -83,7 +83,7 @@
                                         else     
                                             echo "<div class='form-group' >";
                                     ?>
-                                        <label for="telephone_number" class="col-sm-2 control-label">
+                                        <label for="telephone_number" class="col-sm-6 control-label">
                                             <?=__("Employer percentage Contribution")?>
                                         </label>
                                         <div class="col-sm-6">
@@ -100,7 +100,7 @@
                                         else     
                                             echo "<div class='form-group' >";
                                     ?>
-                                        <label for="seats" class="col-sm-2 control-label">
+                                        <label for="seats" class="col-sm-6 control-label">
                                             <?=__("Employee Percentage Contribution")?>
                                         </label>
                                         <div class="col-sm-6">

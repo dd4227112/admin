@@ -1,7 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
 
 <?php
 $root = url('/') . '/public/';
@@ -17,37 +15,39 @@ $report = \collect(DB::select('select date::date as created_at from ' . $schema 
 $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 }
 if (!empty($report)) {
-$echo = '<b class="label label-success">' . date('d M Y', strtotime($report->created_at)) . '</b>';
+$echo = '<label class="badge badge-success">' . date('d M Y', strtotime($report->created_at)) . '</label>';
 } else {
-$echo = '<b class="label label-warning">Not Defined</b>';
+$echo = '<label class="badge badge-inverse-warning">Not Defined</label>';
 }
 return $echo;
 }
 // ?>
-
 <div class="main-body">
 <div class="page-wrapper">
-<!-- Page-header start -->
-<div class="page-header">
-<div class="page-header-title">
-<h4><?= isset($school->sname) ? $school->sname : '' ?> &nbsp;&nbsp; <?= isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '' ?></h4>
-</div>
-<div class="page-header-breadcrumb">
-<ul class="breadcrumb-title">
-<li class="breadcrumb-item">
-<a href="#">
-<i class="icofont icofont-home"></i>
-</a>
-</li>
-<li class="breadcrumb-item"><a href="#!"><?= isset($school->sname) ? substr($school->sname, 0, 20) : '' ?> </a>
-</li>
-<li class="breadcrumb-item"><a href="#!">Profile</a>
-</li>
-</ul>
-</div>
-</div>
-<!-- Page-header end -->
-<!-- Page-body start -->
+
+<?php $school_name = isset($school->sname) ? $school->sname : '';
+      $numbers=isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '';
+      $s_address = isset($school->address) ? $school->address : '';
+ ?>
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= $school_name ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!"><?=$numbers?></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!"><?=$s_address?></a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
 <div class="page-body">
 <div class="row">
 <div class="col-sm-12">
@@ -86,29 +86,19 @@ width: 100%;
 }
 </style>
 </div>
-<div class="profile-hvr">
-<i class="icofont icofont-ui-edit p-r-10"></i>
-<i class="icofont icofont-ui-delete"></i>
-</div>
-</div>
-<!-- Social wallpaper end -->
-<!-- Timeline button start -->
-<div class="timeline-btn">
 
+</div>
+
+{{-- <div class="timeline-btn">
 <a href="#" class="btn btn-primary waves-effect waves-light">Send
 Message</a>
-</div>
-<!-- Timeline button end -->
+</div> --}}
 </div>
 </div>
 
-<!-- Row end -->
-<!-- Row Starts -->
 <div class="row">
 <div class="col-xl-3 col-lg-4 col-md-4 col-xs-12">
-<!-- Social timeline left start -->
-<div class="social-timeline-left">
-<!-- social-profile card start -->
+
 <div class="card">
 <div class="social-profile">
 <?php
@@ -121,76 +111,74 @@ src="https://demo.shulesoft.com/<?= $image ?>" alt="">
 <i class="icofont icofont-ui-delete"></i>
 </div>
 </div>
-<div class="card-block social-follower">
-<h4><?= $school->sname ?? '' ?></h4>
-<h5><?= $school->address ?? '' ?></h5>
+
+<div class="card-block">
 <?php
 if ($is_client == 1) {
 ?>
-<div class="row follower-counter">
-<div class="col-md-12 col-lg-3">
-<div class="txt-primary">
-<?= \DB::table($schema . '.student')->where('status', 1)->count() ?>
-</div>
-<div>Students</div>
-</div>
-<div class="col-md-12 col-lg-3">
-<div class="txt-primary">
-<?= \DB::table($schema . '.parent')->where('status', 1)->count() ?>
-</div>
-<div>Parents</div>
+<div class="">
+<div class="row m-2">
+<label class="badge badge-inverse-primary">
+      <?= \DB::table($schema . '.student')->where('status', 1)->count() ?>
+</label>
+<label>Students</label>
 </div>
 
-<div class="col-md-12 col-lg-3">
-<div class="txt-primary">
+<div class="row m-2">
+<label class="badge badge-inverse-primary">
+    <?= \DB::table($schema . '.parent')->where('status', 1)->count() ?>
+</label>
+<label>Parents</label>
+</div>
+
+<div class="row m-2">
+<label class="badge badge-inverse-primary">
 <?= \DB::table($schema . '.user')->where('status', 1)->count() ?>
-</div>
-<div>Staff</div>
+</label>
+<label>Staff</label>
 </div>
 
-<div class="col-md-12 col-lg-3">
-<div class="txt-primary">
-<?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?>
-</div>
-<div>Teacher</div>
-</div>
+<div class="row m-1">
+<label class="badge badge-inverse-primary">
+   <?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?>
+</label>
+<label>Teacher</label>
+</div> 
 
 
 
 <div class="col-md-12 col-lg-12">
 <hr>
-<h5 class="txt-primary5">School Status</h5>
+ <h6 class="">School Status</h6>
 <?php
 $st = DB::table($schema . '.setting')->first();
 if (!empty($st)) {
 echo '<a data-toggle="modal" data-target="#status-Modal">';
 if ($st->school_status == 1) {
-echo '<div class="btn btn-primary">Active Paid</div>';
+echo '<div class="btn btn-sm btn-round btn-primary">Active Paid</div>';
 } elseif ($st->school_status == 2) {
 echo '<div class="btn btn-success">Active</div>';
 } elseif ($st->school_status == 3) {
 echo '<div class="btn btn-warning">Resale</div>';
 } elseif ($st->school_status == 4) {
-echo '<div class="btn btn-warning"> Inactive </div>';
+echo '<label class="badge badge-inverse-default"> Inactive </label>';
 } else {
-echo '<div>Not defined</div>';
+echo '<label class="badge badge-inverse-warning">Not defined</div>';
 }
 echo '</a>';
 }
-?>
+?> 
 </div>
 </div>
 <?php } ?>
 </div>
-</div>
-<!-- social-profile card end -->
-<!-- Who to follow card start -->
+
 <?php
 if ($is_client == 1) {
 ?>
 <div class="card">
 <div class="card-header">
-<h5 class="card-header-text">Top USER Logins</h5>
+    <h6 class="card-header-text">Top user Logins</h6>
 </div>
 <div class="card-block user-box">
 <?php
@@ -204,12 +192,11 @@ foreach ($top_users as $log) {
 <img class="media-object img-circle"
 src="https://demo.shulesoft.com/<?= $user_image ?>"
 alt="Image">
-<div class="live-status bg-danger"></div>
 </a>
 <div class="media-body">
-<div class="chat-header"><?= $log->name ?></div>
-<div class="text-muted social-designation">
-<?= $log->usertype ?></div>
+  <div class="text-info social-designation"><?= $log->name ?></div>
+  <div class="text-muted social-designation">
+  <?= $log->usertype ?></div>
 </div>
 </div>
 <?php
@@ -218,15 +205,10 @@ alt="Image">
 ?>
 
 </div>
-</div>
+</div> 
 
 <div class="card">
-<!--                                                    <div class="card-header contact-user">
-<img class="img-circle" src="assets/images/user-profile/contact-user.jpg" alt="support manager">
-<h4>Angelica Ramos</h4>
-</div>-->
-
-<div class="card-block groups-contact">
+<div class="card-block">
 <h4>Training Reports</h4>
 <ul class="list-group">
 <li class="list-group-item justify-content-between">
@@ -246,56 +228,52 @@ target="_blank"> Accounts</a>
 target="_blank"> Exams</a>
 <span class="badge badge-default badge-pill">&></span>
 </li>
-<!--                                                            <li class="list-group-item justify-content-between">
-Other Modules
-<span class="badge badge-default badge-pill">50</span>
-</li>-->
+
 </ul>
 </div>
 </div>
-<!-- Who to follow card end -->
 <?php } ?>
 </div>
-<!-- Social timeline left end -->
 </div>
-<div class="col-xl-9 col-lg-8 col-md-8 col-xs-12 ">
+
+<div class="col-lg-9">
 <!-- Nav tabs -->
-<div class="card social-tabs">
-<ul class="nav nav-tabs md-tabs tab-timeline" role="tablist">
-<li class="nav-item">
-<a class="nav-link active" data-toggle="tab" href="#timeline"
-role="tab" aria-expanded="false">Activities</a>
-<div class="slide"></div>
-</li>
-<li class="nav-item">
-<a class="nav-link" data-toggle="tab" href="#about" role="tab"
-aria-expanded="false">About</a>
-<div class="slide"></div>
-</li>
-<li class="nav-item">
-<a class="nav-link" data-toggle="tab" href="#implementation"
-role="tab" aria-expanded="false"> Implementation</a>
-<div class="slide"></div>
-</li>
-<li class="nav-item">
-<a class="nav-link" data-toggle="tab" href="#photos" role="tab"
-aria-expanded="false"> Usage</a>
-<div class="slide"></div>
-</li>
-<li class="nav-item">
-<a class="nav-link " data-toggle="tab" href="#friends" role="tab"
-aria-expanded="true">Staff Members</a>
-<div class="slide"></div>
-</li>
-<?php if (can_access('add_si')) { ?>
-<li class="nav-item">
-<a class="nav-link " data-toggle="tab" href="#payments" role="tab"
-aria-expanded="true">Invoice</a>
-<div class="slide"></div>
-</li>
-<?php } ?>
-</ul>
-</div>
+        <div class="card">
+        <ul class="nav nav-tabs md-tabs tab-timeline" role="tablist">
+        <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#timeline"
+        role="tab" aria-expanded="false">Activities</a>
+        <div class="slide"></div>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#about" role="tab"
+        aria-expanded="false">About</a>
+        <div class="slide"></div>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#implementation"
+        role="tab" aria-expanded="false"> Implementation</a>
+        <div class="slide"></div>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#photos" role="tab"
+        aria-expanded="false"> Usage</a>
+        <div class="slide"></div>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link " data-toggle="tab" href="#friends" role="tab"
+        aria-expanded="true">Staff Members</a>
+        <div class="slide"></div>
+        </li>
+        <?php if (can_access('add_si')) { ?>
+        <li class="nav-item">
+        <a class="nav-link " data-toggle="tab" href="#payments" role="tab"
+        aria-expanded="true">Invoice</a>
+        <div class="slide"></div>
+        </li>
+        <?php } ?>
+        </ul>
+        </div>
 
 <!-- Tab panes -->
 <div class="tab-content">
@@ -491,7 +469,6 @@ id="removetag<?= $task->id ?>">
 <div class="row">
 <div class="col-xs-2 col-sm-1">
 <div class="social-timelines-left">
-<!--<img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">-->
 </div>
 </div>
 <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
@@ -578,7 +555,7 @@ class="new_comment<?= $task->id ?>">
 <div class="media">
 <a href="#"
 class="btn btn-success btn-sm right"
-onclick="return                                                                                       false"
+onclick="return false"
 onmousedown="$('#comment_area<?= $task->id ?>').toggle()"><i
 class="ti-comment"></i>
 Comment </a>
@@ -601,7 +578,7 @@ class="input-group-btn">
 type="button"
 class="btn btn-primary"
 onmousedown="save_comment(<?= $task->id ?>)">Send</button>
-<                                                                                                        /span>
+</span>
 
 <span
 class="fs1 text-info"
@@ -623,22 +600,19 @@ data-icon=""></span>
 ?>
 </div>
 </div>
-
 </div>
-<!-- Timeline tab end -->
-<!-- About tab start -->
-<div class="tab-pane " id="about" aria-expanded="true">
+
+
+<div class="tab-pane" id="about" aria-expanded="true">
 <div class="row">
 <div class="col-sm-12">
 <div class="card">
 <div class="card-header">
-<h5 class="card-header-text">Basic Information</h5>
-<?php if(can_access('update_school_data'))  { ?>                                                                                                                 
-<button id="edit-btn" type="button"
-class="btn btn-primary waves-effect waves-light f-right"
+<h5 class="card-header-text h5">Basic Information</h5>
+<?php if(can_access('update_school_data')) { ?>                                                                                                                 
+<button id="edit-btn" type="button" class="btn btn-primary btn-round btn-sm float-right"
 data-toggle="modal" data-target="#school_details">
-<i class="icofont icofont-edit"></i> Change school
-Details
+ Update
 </button>
 <?php }  ?>
 </div>
@@ -654,14 +628,14 @@ class="social-label b-none p-t-0">
 School Name
 </th>
 <td
-class="social-user-name b-none p-t-0 text-muted">
+class="social-user-name b-none p-t-0">
 <?= $school->sname ?? '' ?></td>
 </tr>
 <tr>
 <th class="social-label b-none">
 Location</th>
 <td
-class="social-user-name b-none text-muted">
+class="social-user-name b-none">
 <?= $school->address ?? '' ?></td>
 </tr>
 <?php if ($is_client == 1) { ?>
@@ -669,7 +643,7 @@ class="social-user-name b-none text-muted">
 <th class="social-label b-none">
 Date On boarded</th>
 <td
-class="social-user-name b-none text-muted">
+class="social-user-name b-none">
     <?= isset($school->created_at) ? date('d M Y h:i', strtotime($school->created_at)) : '' ?>
 </td>
 </tr>
@@ -677,30 +651,28 @@ class="social-user-name b-none text-muted">
 <th class="social-label b-none">
 Contact Details</th>
 <td
-class="social-user-name b-none text-muted">
+class="social-user-name b-none">
 <?= $school->phone ?? '' ?></td>
 </tr>
 <tr>
-<th
-class="social-label b-none p-b-0">
-School Level</th>
-<td
-class="social-user-name b-none p-b-0 text-muted"><?php
+<th class="social-label b-none p-b-0">School Level</th>
+<td class="social-user-name b-none p-b-0"><?php
     if (!empty($levels)) {
         foreach ($levels as $level) {
             echo $level->name . ' - ' . $level->result_format . '<br/>';
         }
     }
-    ?></td>
+    ?>
+</td>
 
 <?php if(can_access('reset_school_password') && !preg_match('/stfrancisgirlssecondaryschool/i', strtolower($school->username))) { ?>
 <tr>
 <th class="social-label b-none p-b-0">School Access</th>
-<td
-    class="social-user-name b-none p-b-0 text-muted">
+<td class="social-user-name b-none p-t-10">
         <?php
         if (isset($school->username)) {
-            echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
+            echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-primary btn-sm btn-round">
+                 Reset Password</a>';
         }
         ?>
 </td>
@@ -725,14 +697,14 @@ class="social-label b-none p-t-0">
 Zone Manager
 </th>
 <td
-class="social-user-name b-none p-t-0 text-muted">
+class="social-user-name b-none p-t-0">
 <?= isset($manager->name) ? $manager->name  : ''  ?></td>
 </tr>
 <tr>
 <th class="social-label b-none">
 Zone Manager phone</th>
 <td
-class="social-user-name b-none text-muted">
+class="social-user-name b-none">
 <?= isset($manager->phone) ? $manager->phone :'' ?></td>
 </tr>
 
@@ -740,12 +712,9 @@ class="social-user-name b-none text-muted">
 <th class="social-label b-none">
 Email</th>
 <td
-class="social-user-name b-none text-muted">
+class="social-user-name b-none">
 <?= isset($manager->email) ? $manager->email : '' ?></td>
 </tr>
-
-
-
 
 </tbody>
 </table>
@@ -819,6 +788,10 @@ class="btn btn-default waves-effect waves-light">Cancel</a>
 </div>
 </div>
 </div>
+
+
+
+{{-- 
 <div class="col-sm-12">
 <div class="card">
 <div class="card-header">
@@ -841,7 +814,7 @@ if (isset($school->school_id) && $school->school_id == null) {
 <th class="social-label b-none">
 School Mapping </th>
 <td
-class="social-user-name b-none text-muted">
+class="social-user-name b-none">
 <input class="form-control"
     id="school_id"
     name="school_id" type="text"
@@ -974,29 +947,24 @@ class="btn btn-default waves-effect waves-light">Cancel</a>
 </div>
 </div>
 </div>
-</div>
+</div> --}}
+
+
+
 <div class="col-sm-12">
 <div class="card">
-<div class="card-header">
-<h5 class="card-header-text">Customer Contracts</h5>
 
-<button id="edit-Contact" type="button"
-class="btn btn-primary waves-effect waves-light f-right"
-data-toggle="modal"
-data-target="#customer_contracts_model">
-Add New Contract
-</button>
+<div class="card-header">
+   <h5 class="card-header-text">Customer Contracts</h5>
+   <button id="edit-Contact" type="button"class="btn btn-primary btn-round btn-sm float-right" data-toggle="modal" data-target="#customer_contracts_model">Add Contract </button>
 </div>
+
 <div class="card-block">
 <div class="card">
-<div class="card-header">
-<h5>About</h5>
-<span>All customer legal documents are included
-in this part
-</div>
-<div class="card-block table-border-style">
+   <span class="text-primary">All customer legal documents are included in this part </span>
+<div class="card-block">
 <div class="table-responsive">
-<table class="table">
+<table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
 <thead>
 <tr>
 <th>#</th>
@@ -1028,12 +996,12 @@ foreach ($client_contracts as $client_contract) {
 <td><?= isset($client_contract->username) ? $client_contract->username : '' ?>
 </td>
 <td>
-    <a type="button"
-        class="btn btn-primary btn-sm waves-effect"
+ <a type="button"
+        class="btn btn-primary btn-sm btn-round"
         target="_blank"
         href="<?= isset($client_contract->contract_id) ? url('customer/viewContract/' . $client_contract->contract_id) : '' ?>">View</a>
 <?php if(can_access('delete_contract')) { ?>
- <a type="button" class="btn btn-danger btn-sm waves-effect"
+ <a type="button" class="btn btn-danger btn-sm btn-round"
         href="<?= isset($client_contract->contract_id) ? url('customer/deleteContract/' . $client_contract->contract_id) : '' ?>">Delete</a>
 <?php }  ?>
 </td>
@@ -1053,7 +1021,6 @@ $i++;
 </div>
 </div>
 </div>
-
 </div>
 </div>
 
@@ -1062,22 +1029,11 @@ $i++;
 
 <div class="card">
 <div class="card-header">
-<h5 class="mb-5">Job Card</h5>
+   <h5 class="h3 m-b-3">JOB CARD</h5>
 
-<div class="row justify-content-between">
-<p class="float-left">
-<button type="button" class="user_dialog btn btn-primary waves-effect"
-data-toggle="modal" data-target="#uploadjobcard-Modal">
-Upload Job card
-</button>
-</p>
-
-<p class="float-right">
-<button type="button" class="btn btn-primary waves-effect"
-data-toggle="modal" data-target="#jobcard-Modal">Create
-Job card
-</button>
-</p>
+<div class="card-block d-flex justify-content-between">
+   <button type="button" class="float-right btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#jobcard-Modal">Create Job card </button>
+   <button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#uploadjobcard-Modal">Upload Job card</button>
 </div>
 
 <div class="modal fade" id="jobcard-Modal" tabindex="-1"
@@ -1132,11 +1088,9 @@ value="{{$module->id}}"
 
 <div class="modal-footer">
 <button type="button"
-class="btn btn-default waves-effect "
+class="btn btn-default btn-mini btn-round"
 data-dismiss="modal">Close</button>
-<button type="submit"
-class="btn btn-primary waves-effect waves-light ">Save
-changes</button>
+   <button type="submit" class="btn btn-primary btn-mini btn-round">Save changes</button>
 </div>
 <input type="hidden" value="<?= $client_id ?>"
 name="client_id" />
@@ -1170,7 +1124,7 @@ foreach ($jobcards as $jobcard) {
 <td><?= date('d-m-Y', strtotime($jobcard->date)) ?></td>
 <td><?= $jobcard->name ?? '' ?></td>
 <td class="text-center">
- <a  target="_break" href="<?= url('customer/viewContract/' . $jobcard->id . '/jobcard') ?>" class="btn btn-sm btn-success">View </a> 
+ <a  target="_break" href="<?= url('customer/viewContract/' . $jobcard->id . '/jobcard') ?>" class="btn btn-sm btn-primary btn-round">View </a> 
 </td>
 </tr>
 <?php
@@ -1289,10 +1243,10 @@ name="client_id" />
 <h5>Project Implementation Schedule</h5>
 <span>This part have to be followed effectively </span>
 
-<p align="right">
-<a href="<?= url('customer/download/' . $client_id) ?>"
-class="btn btn-warning btn-sx">Initial Implementation
-Plan</a>
+<p class="float-right">
+<?php $i_url = "customer/download/$client_id"; ?>
+ <a href="<?= url($i_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Initial Implementation Plan">Implementation plan  </a>
+
 </p>
 </div>
 <div class="card-block">
@@ -1362,7 +1316,7 @@ echo $status;
 <?php
 if(preg_match('/not implemented/i', $status)){
 ?>
-<button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-sucess btn-sm btn-xs task_allocated_id">Save</button>
+<button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-primary btn-sm btn-round task_allocated_id">Save</button>
 <?php } ?>
 </td>
 </tr>
@@ -1417,27 +1371,25 @@ guidance for account manager to guide properly a school to
 reach the highest stage. </span>
 
 </div>
-<div class="card-block table-border-style">
+<div class="card-block">
 <div class="table-responsive">
-<table class="table table-bordered">
+ <table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
+
 <thead>
 <tr>
 <th>#</th>
 <th>Module</th>
 <th>Status</th>
-<th>Action</th>
 </tr>
+
 </thead>
 <tbody>
 <tr>
 <th scope="row" colspan="3">
-<div class="label-main">
-<label class="label label-primary">Stage
-1</label>
-</div>
+<label class="label label-inverse-primary">Stage 1</label>
 </th>
-
 </tr>
+
 <tr>
 <th scope="row">1</th>
 <td>Basic Configuration</td>
@@ -1446,7 +1398,7 @@ reach the highest stage. </span>
 //classlevel
 $levels = DB::table($schema . '.classlevel')->get();
 if (empty($levels)) {
-echo '<b class="label label-warning">Class Level Not Defined</b>';
+echo '<label class="badge badge-warning">Class Level Not Defined</label>';
 }
 /**
 * --Check if Academic Years defined
@@ -1456,11 +1408,11 @@ foreach ($levels as $level) {
 
 $academic_year = DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
 if (empty($academic_year)) {
-echo '<b class="label label-warning">Academic Year Not Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>';
+echo '<label class="badge badge-inverse-warning">Academic Year Not Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
 }
 }
 } else {
-echo '<b class="label label-warning">Academic Year Not Defined</b><br/>';
+echo '<label class="badge badge-inverse-warning">Academic Year Not Defined</label><br/>';
 }
 /**
 *
@@ -1471,16 +1423,16 @@ foreach ($levels as $level) {
 
 $academic_year = DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
 if (empty($academic_year)) {
-echo '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>';
+echo '<label class="badge badge-inverse-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
 } else {
 //check terms for this defined year
 $terms = DB::table($schema . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
 
-echo $terms == 0 ? '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>' : '<label class="label label-success">' . $level->name . ' (' . $academic_year->name . ') at ' . date('d M Y', strtotime($academic_year->created_at)) . '</label>';
+echo $terms == 0 ? '<label class="badge badge-inverse-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>' : '<label class="badge badge-inverse-success">' . $level->name . ' (' . $academic_year->name . ') at ' . date('d M Y', strtotime($academic_year->created_at)) . '</label>';
 }
 }
 } else {
-echo '<b class="label label-warning">Not Defined</b><br/>';
+echo '<label class="badge badge-inverse-warning">Not Defined</label><br/>';
 }
 /**
 *
@@ -1490,17 +1442,15 @@ echo '<b class="label label-warning">Not Defined</b><br/>';
 if (!empty($levels)) {
 foreach ($levels as $level) {
 if (strlen($level->stamp) < 3) {
-echo '<b class="label label-warning">No Stamp for ' . $level->name . '</b><br/>';
+echo '<label class="badge badge-inverse-warning">No Stamp for ' . $level->name . '</label><br/>';
 }
 }
 }
 ?>
 
 </td>
-<td>
-
-</td>
 </tr>
+
 <tr>
 <th scope="row">2</th>
 <td>Marking</td>
@@ -1581,14 +1531,10 @@ Last Seen <label class="label label-info">
 <td> <?= check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id in (2,3)) '); ?>
 <br />
 </td>
-<td></td>
 </tr>
 <tr>
 <th scope="row" colspan="3">
-<div class="label-main">
-<label class="label label-info">Stage
-2</label>
-</div>
+<label class="label label-inverse-primary">Stage 2</label>
 </th>
 
 </tr>
@@ -1607,7 +1553,6 @@ Integration Date:
 Last Online Transaction Date:
 <?= check_status('payments', ' WHERE token is not null'); ?>
 </td>
-<td></td>
 </tr>
 <tr>
 <th scope="row">3</th>
@@ -1639,10 +1584,7 @@ Liabilities :
 </tr>
 <tr>
 <th scope="row" colspan="3">
-<div class="label-main">
-<label class="label label-success">Stage
-3</label>
-</div>
+<label class="label label-inverse-primary">Stage 3</label>
 </th>
 
 </tr>
@@ -1653,9 +1595,8 @@ Liabilities :
 Books Added:
 <?= check_status('book'); ?><br />
 Book Issue: <?= check_status('issue'); ?>
-
 </td>
-<td></td>
+
 </tr>
 <tr>
 <th scope="row">2</th>
@@ -1684,7 +1625,6 @@ Teacher on Duty:
 <td>General Character assessment</td>
      <td> <?=  check_status('general_character_assessment');  ?> 
      </td>
-<td></td>
 </tr>
 <tr>
 <th scope="row">5</th>
@@ -1697,7 +1637,6 @@ Teacher on Duty:
 <th scope="row">6</th>
 <td>Transport</td>
 <td> <?= check_status('tmembers'); ?> </td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -1707,8 +1646,18 @@ Teacher on Duty:
 
 
 
+
+
+
+
+
+
+
+
+
+{{-- 
+
 <div class="card">
-<!-- Row start -->
 <br>
 <br>                                                
 <div id="container_log" style="min-width: 80%;  height: 480px; margin: 0 auto">
@@ -1718,43 +1667,44 @@ Teacher on Duty:
 <hr/>
 <div id="contain" style="min-width: 70%;  height: 480px; margin: 0 auto">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 </div>
-</div>
+</div> --}}
+
 </div>
 
-<!-- Photos tab end -->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-{{-- {{-- <!-- Friends tab start                                                                                                                                                                                                                                             --                                                                                                                                > --}}
-<div class="tab-pane" id="friends" aria-expanded="fa                                                                                                                                                                                                                          ls                                                                                                                                                                                                                                                    e"                                                                                                                                    >
-<div class="ro                                                                                                                                                                                                                                                            w"                                                                                                                                        >
-<div                                                                                                                                class="card table-r                                                                                                                                            esponsive">
-<table class="table dataTable">
-<thead>
-<tr>
-<th>#</th>
-<th>Name</th>
-<th>Phone</th>
-<th>Email</th>
-<th>Title</th>
-</tr>
-</thead>
-<tbody> 
-<?php $i = 1;
-$users = DB::table($schema . '.user')->where('status', 1)->get();
-if (!empty($users)) {
-foreach ($users as $user) {
-?>
-<tr>
-<td><?= $i ?></td>
-<td><?= $user->name ?></td>
-<td><?= $user->phone ?></td>
-<td><?= $user->email ?></td>
-<td><?= $user->usertype ?></td>
-</tr>
-<?php
-$i++;  }
-}
-?>
-</tbody>
-</table>
+<div class="tab-pane" id="friends" aria-expanded="false">
+<div class="card"> 
+  <div class="card-block">
+    <div class="table-responsive">
+        <table id="example"  class="table dataTable table-mini table-striped table-bordered nowrap">
+        <thead>
+        <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Title</th>
+        </tr>
+        </thead>
+        <tbody> 
+        <?php $i = 1;
+        $users = DB::table($schema . '.user')->where('status', 1)->get();
+        if (!empty($users)) {
+        foreach ($users as $user) {
+        ?>
+        <tr>
+        <td><?= $i ?></td>
+        <td><?= $user->name ?></td>
+        <td><?= $user->phone ?></td>
+        <td><?= $user->email ?></td>
+        <td><?= $user->usertype ?></td>
+        </tr>
+        <?php
+        $i++;  }
+        }
+        ?>
+        </tbody>
+        </table>
+</div>
 </div>
 </div>
 </div>
@@ -1802,7 +1752,7 @@ class="form-control" id="box1" name="number_of_occurrence" required>
 </div>
 <div class="col-md-6">
 <strong> Basis </strong>
-<select name="which_basis"  class="form-control select2" required>
+<select name="which_basis"  class=" select2" required>
 <option value=""></option>
 <option value="Annually">Annually</option>
 <option value="Semiannually">Semi Annually</option>
@@ -1852,7 +1802,7 @@ required>
 <div class="col-md-6">
 <strong> Refer bank</strong>
 <select name="refer_bank_id"  required
-class="form-control select2">
+class="f select2">
 <?php
 $banks = DB::table('constant.refer_banks')->get();
 if (!empty($banks)) {
@@ -1908,18 +1858,16 @@ name="client_id" />
 
 <div class="card">
 <div class="card-header">
-<div class="table-responsive dt-responsive">
-<div class="table-responsive">
+
 <div class="col-sm-4 my-2">
 <?php if (can_access('add_si')) { ?>
-<button type="button" class="btn btn-primary waves-effect"
-        data-toggle="modal" data-target="#standing-order-Modal">
+<a class="btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#standing-order-Modal">
     Add Standing Orders
-</button>
+</a>
 <?php } ?>
 </div>
-<table id="invoice_table"
-class="table table-striped table-bordered nowrap dataTable">
+ <div class="table-responsive">
+ <table id="example"  class="table dataTable table-sm table-striped table-bordered nowrap">
 <thead>
 <tr>
     <th>#</th>
@@ -1946,25 +1894,24 @@ class="table table-striped table-bordered nowrap dataTable">
             <td><?= date('d/m/Y', strtotime($order->payment_date)) ?? '' ?></td>
             <td><?= $order->schoolcontact->name ?? '' ?></td>
 
-               <td><a  target="_break" href="<?= url('customer/viewContract/' . $order->id . '/standing') ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> 
-            {{-- <td><a  target="_break" href="<?= url('storage/uploads/file/'.$order->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> --}}
+            <td><a target="_break" href="<?= url('customer/viewContract/' . $order->id . '/standing') ?>" class="btn btn-mini btn-round btn-primary btn-sm">View</a> 
 
-                <?php if (!isset($order->payment_date) || !isset($order->type)) { ?>
-                    <a  href="<?= url('account/editStandingOrder/' . $order->id) ?>" class="waves-light waves-effect btn btn-info btn-sm">edit</a>
-                <?php } ?>
+            <?php if (!isset($order->payment_date) || !isset($order->type)) { ?>
+                <a  href="<?= url('account/editStandingOrder/' . $order->id) ?>" class="btn btn-mini btn-round btn-info btn-sm">edit</a>
+            <?php } ?>
             </td>
         </tr>
         <?php
         $i++;
     }
     ?>
-<?php } ?>
+ <?php } ?>
 </tbody>
 
 </table>
 </div>
 
-</div>
+
 </div>
 </div>
 
@@ -1977,8 +1924,7 @@ class="table table-striped table-bordered nowrap dataTable">
 <div class="table-responsive dt-responsive">
 <div class="table-responsive">
 <h5>Invoices </h5>
-<table id="invoice_table"
-class="table table-striped table-bordered nowrap dataTable">
+<table id="example" class="table table-striped table-bordered nowrap dataTable">
 <thead>
 <tr>
     <th>Client Name</th>
@@ -2119,7 +2065,7 @@ style="z-index: 1050; display: none;">
 </div>
 <div class="form-group">
     School <?= ucfirst($schema) ?> status
-    <select name="status" class="form-control select2">
+    <select name="status" class="form-controll select2">
         <option value="">Select status</option>
         <option value="1">Active Paid</option>
         <option value="2">Active</option>
@@ -2130,8 +2076,8 @@ style="z-index: 1050; display: none;">
 
 </div>
 <div class="modal-footer">
-<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-<button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+<button type="button" class="btn btn-default btn-mini btn-round " data-dismiss="modal">Close</button>
+<button type="submit" class="btn btn-primary btn-mini btn-round ">Save changes</button>
 </div>
 <?= csrf_field() ?>
 </form>
@@ -2230,59 +2176,53 @@ enctype="multipart/form-data">
 </div>
 </div>
 
-<?php $root = url('/') . '/public/' ?>
 <?php
 if (!empty($profile)) {  
 ?>
-<div class="modal fade" id="school_details" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"
-aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="school_details" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"aria-hidden="true">
+<div class="modal-dialog" role="document">
 <div class="modal-content">
-<div class="modal-header">
-<div class="card-block">
+ <div class="modal-header">
+  <div class="card-block">
+    
 
-<div id="view-info" class="row">
-    <div class="col-lg-12 col-md-12">
-        <form action="<?= url('customer/editdetails/' . $client_id) ?>" method="POST">
+<div class="row">
+    <form action="<?= url('customer/editdetails/' . $client_id) ?>" method="POST">
         <div class="form-group row">
-            <label class="col-sm-2 col-form-label">School Name</label>
-            <div class="col-sm-10">
+            <label class="col-sm-6">School Name</label>
+            <div class="col-sm-6">
                 <input type="text" class="form-control" name="name" value="<?= $profile->name ?>">
             </div>
         </div>
 
-            <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Estimated students</label>
-            <div class="col-sm-10">
+         <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Estimated students</label>
+            <div class="col-sm-6">
                 <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">
             </div>
         </div>
 
 
-            <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Address</label>
-            <div class="col-sm-10">
+         <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Address</label>
+            <div class="col-sm-6">
                 <input type="text" class="form-control" name="address" value="<?= $profile->address ?>">
             </div>
         </div>
 
-            <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Email</label>
-            <div class="col-sm-10">
+        <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Email</label>
+            <div class="col-sm-6">
                 <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
             </div>
-            </div>
         </div>
-    </div>
 
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-default btn-sm">Submit</button>
-    </div>
-</form>
-
-
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+        </div>
+   </form>
 </div>
-<br />
+</div>
 </div>
 </div>
 
@@ -2312,6 +2252,10 @@ aria-hidden="true">
 
       <script>
 
+          $(document).ready(function() {
+           $('#example').DataTable();
+          });
+
        $(".select2").select2({
             theme: "bootstrap",
             dropdownAutoWidth: false,
@@ -2339,6 +2283,9 @@ aria-hidden="true">
             var task_id = $('#task_id' + id).val();
             $.ajax({
                 type: 'POST',
+                 headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
                 url: "<?= url('customer/taskComment/null') ?>",
                 data: {
                     content: content,
@@ -2511,7 +2458,7 @@ aria-hidden="true">
                 .bind("geocode:multiple", function (event, results) {
                     console.log("Multiple: " + results.length + " results found");
                 });
-                     </script>
+        </script>
 
 
                                                                                                                                             @endsection

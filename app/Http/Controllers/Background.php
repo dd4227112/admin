@@ -583,14 +583,7 @@ class Background extends Controller {
     }
 
     public function insertIntoLive($schema_table_schema, $table) {
-//        $table_sql = "SELECT column_default,data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema_table_schema . "' AND table_name='" . $table . "' AND column_name='created_at' limit 1";
-//        $local = \collect(DB::select($table_sql))->first();
-//        if (empty($local)) {
-//            DB::statement('alter table ' . $schema_table_schema . '.' . $table . ' add column if not exists created_at timestamp without time zone default now()');
-//            DB::connection('live')->statement('alter table ' . $schema_table_schema . '.' . $table . ' add column if not exists created_at timestamp without time zone default now()');
-//        }
-//        $check = DB::connection('live')->table($schema_table_schema . '.' . $table)->orderBy('created_at', 'desc')->first();
-//        if (!empty($check)) {
+
         if (!in_array($table, ['log', 'requests'])) {
             $object_data = DB::table($schema_table_schema . '.' . $table)->get();
             if (count($object_data) > 0) {

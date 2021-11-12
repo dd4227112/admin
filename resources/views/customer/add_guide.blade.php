@@ -2,28 +2,25 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
+        
         <div class="page-header">
             <div class="page-header-title">
-                <h4>ShuleSoft User Guide</h4>
-                <span>This specify instructions on how to use ShuleSoft system</span>
+                <h4> Add guide</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Customer Support</a>
+                    <li class="breadcrumb-item"><a href="#!">guide</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">ShuleSoft Guide</a>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -37,14 +34,13 @@
                         <div class="card-block">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     <h4 class="modal-title" id="exampleModalLabel1">Add New Guide</h4> </div>
-                                <form method="post" action="<?= url('customer/createGuide') ?>">
+                                <form method="post" action="<?= url('customer/createGuide') ?>"  enctype="multipart/form-data">
                                     <div class="modal-body" id="message_result">
 
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Main Module:</label>
-                                            <select class="form-control" id="permission_group">
+                                            <select class="form-control select2" id="permission_group" required>
                                                 <option value=""></option>
                                                 <?php
                                                 $permission_groups = \DB::table('constant.permission_group')->get();
@@ -57,7 +53,14 @@
 
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Content For :</label>
-                                            <span id="content_for"></span> </div>
+                                            <span id="content_for"></span> 
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label">Image :</label>
+                                            <input type="file" name="image_file" class="form-control col-sm-4"/>
+                                        </div>
+
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">Content:</label>
                                             <textarea class="form-control" id="message-text1" id="mymce" name="content"></textarea>
@@ -80,9 +83,8 @@
     </div>
 </div>
 
-  <script src="https://cdn.tiny.cloud/1/invalid-origin/tinymce/5.4.2-90/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/invalid-origin/tinymce/5.4.2-90/tinymce.min.js" referrerpolicy="origin"></script>
 <script type="text/javascript">
-
     wywg = function () {
         tinymce.init({
             selector: "textarea",
@@ -94,11 +96,12 @@
                 "save table contextmenu directionality emoticons template paste textcolor"
             ],
             toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
-              images_upload_url: '<?=url('upload.php')?>',
+        images_upload_url: '<?=url('upload.php')?>',
   //images_upload_credentials: true,
   images_upload_base_path: '/storage/images/',
   images_upload_handler: function (blobInfo, success, failure, progress) {
     var xhr, formData;
+    //var token = document.getElementsByName("csrfToken").value;
 
     xhr = new XMLHttpRequest();
     xhr.withCredentials = false;
@@ -109,14 +112,13 @@
     };
 
     xhr.onload = function() {
-      var json;
-
       if (xhr.status < 200 || xhr.status >= 300) {
         failure('HTTP Error: ' + xhr.status);
         return;
       }
-console.log(xhr);
-     json = JSON.parse(xhr.responseText);
+     // console.log(xhr);
+      var json = JSON.parse(xhr.responseText);
+      console.log(json);
 
       if (!json || typeof json.location != 'string') {
         failure('Invalid JSON: ' + xhr.responseText);

@@ -6,25 +6,22 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Invoices</h4>
-                <span>Show payments summary</span>
+                <h4>Invoices</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Invoices</a>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
 

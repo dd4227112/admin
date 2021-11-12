@@ -2,103 +2,50 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
+      
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Sales Prospect Reports</h4>
-                <span>This shows list of prospects that needs to be attended to be converted into Leads</span>
+                <h4><?='Demo requests' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Sales</a>
+                    <li class="breadcrumb-item"><a href="#!">new school</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Prospects</a>
+                    <li class="breadcrumb-item"><a href="#!">marketing</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-block">
 
-                            <div class="row">
-
-                                <div class="col-md-12 col-xl-4">
-                                    <div class="card counter-card-1">
-                                        <a href="<?= url('sales/prospect/demo') ?>">
-                                            <div class="card-block-big">
-                                                <div>
-                                                    <h3><?= sizeof($demo_requests) ?></h3>
-                                                    <p>Demo Requests</p>
-                                                    <div class="progress ">
-                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <i class="icofont icofont-comment"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xl-4">
-                                    <div class="card counter-card-1">
-                                        <a href="<?= url('sales/prospect/join') ?>">
-                                            <div class="card-block-big">
-                                                <div>
-                                                    <h3><?= sizeof($join_requests) ?></h3>
-                                                    <p>Join Requests</p>
-                                                    <div class="progress ">
-                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <i class="icofont icofont-comment"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 col-xl-4">
-                                    <div class="card counter-card-3">
-                                        <div class="card-block-big">
-                                            <div>
-                                                <h3>0</h3>
-                                                <p>Over Due Tasks</p>
-                                                <div class="progress ">
-                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <i class="icofont icofont-upload"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                          
                         </div>
-                        <div class="card-block">
 
+
+                    
                             <div class="row">
                                 <div class="col-lg-12">
+                                 <div class="card">
                                     <?php
                                     if ($page == 'demo') {
                                         ?>
-                                        <div class="white-box">
-                                            <h3 class="box-title">Demo Requests Report</h3>
-                                            <div class="row">
-                                                <div class="col-lg-4"></div>
-                                                <div class="col-lg-4">
-
-                                                </div>
-                                                <div class="col-lg-4"></div>
+                                             <div class="card-header">
+                                                <h5>Demo Requests Report</h5>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table id="list_of_leads"  class="display nowrap table">
+                                         
+                                              <div class="card-block">
+                                                <div class="table-responsive">
+                                                    <table class="table dataTable table-striped table-bordered nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -129,8 +76,8 @@
                                                                 <td><?= $request->message ?></td>
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
                                                                 <td>
-                                                                    <a href="<?= url('sales/request/attend/demo/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
-                                                                    <a href="<?= url('sales/request/delete/demo/' . $request->id) ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                                    <a href="<?= url('sales/request/attend/demo/' . $request->id) ?>" class="btn btn-success btn-mini btn-round">Attended Already</a>
+                                                                    <a href="<?= url('sales/request/delete/demo/' . $request->id) ?>" class="btn btn-danger btn-mini btn-round">Delete</a>
                                                                 </td>
                                                             </tr>
                                                             <?php $i++;
@@ -144,20 +91,17 @@
                                                     });
                                                 </script>
                                             </div>
-                                        </div> 
+                                         </div>
+                                        
                                     <?php } else if ($page == 'join') {
                                         ?>
-                                        <div class="white-box">
-                                            <h3 class="box-title">Prospects Report</h3>
-                                            <div class="row">
-                                                <div class="col-lg-4"></div>
-                                                <div class="col-lg-4">
-
-                                                </div>
-                                                <div class="col-lg-4"></div>
+                                    
+                                           <div class="card-header">
+                                                <h5>Prosperity Report</h5>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table id="list_of_leads"  class="display nowrap table dataTable">
+                                              <div class="card-block">
+                                                <div class="table-responsive">
+                                                    <table class="table dataTable table-striped table-bordered nowrap"> 
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -183,7 +127,7 @@
                                                                 <td><?= $request->contact_name ?></td>
                                                                 <td><?= $request->contact_phone ?></td>
                                                                 <td><?= $request->contact_email ?></td>
-                                                                <td><?= $request->message ?></td>
+                                                                <td><?= warp($request->message,5) ?></td>
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
                                                                 <td>            <a href="<?= url('sales/request/attend/join/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
                                                                     <a href="<?= url('sales/request/delete/join/' . $request->id) ?>" class="btn btn-danger btn-sm">Delete</a></td>
@@ -200,19 +144,14 @@
                                                 $('.dataTable').DataTable();
                                             });
                                         </script>
-<?php } else {
-    ?>
-                                        <div class="white-box">
-                                            <h3 class="box-title">Prospects Report</h3>
-                                            <div class="row">
-                                                <div class="col-lg-4"></div>
-                                                <div class="col-lg-4">
-
-                                                </div>
-                                                <div class="col-lg-4"></div>
+                                          <?php } else {
+                                           ?>
+                                          <div class="card-header">
+                                                <h5>Prosperity Report</h5>
                                             </div>
-                                            <div class="table-responsive">
-                                                <table id="list_of_leads"  class="display nowrap table">
+                                              <div class="card-block">
+                                                <div class="table-responsive">
+                                                    <table class="table dataTable table-striped table-bordered nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -270,10 +209,11 @@
                                             }
                                             );
                                         </script>
-<?php } ?>
+                                    <?php } ?>
+                                  </div>
                                 </div>
                             </div>
-                        </div>
+                
                     </div>
                 </div>
             </div>

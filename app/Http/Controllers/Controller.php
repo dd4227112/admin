@@ -357,47 +357,70 @@ class Controller extends BaseController {
         return $this;
     }
 
-    //    public function whatsappMessage() {
-    //     $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
-    //     $controller = new \App\Http\Controllers\Controller();
-    //     foreach ($messages as $message) {
-    //         if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-    //             $controller->sendMessage($message->phone, $message->message);
-    //             DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
-    //             echo 'message sent to ' . $message->name . '' . chr(10);
-    //         } else {
-    //             //this is invalid number, so update in db to show wrong return
-    //             DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
-    //         }
-    //     }
-    // }
+ 
 
-    public function AccountsReports(){
-        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
-        foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
-                $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
-                $revenue = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
-                $expenses = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
-                $fees = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
 
-                if(!empty($directors)){
-                      foreach ($directors as $director) {
-                              $message = 'Hello ' . $schema->table_schema .'.'
-                                . chr(10) . 'The following is account report for your school this week starts at ' .date( 'F, d Y', strtotime( 'monday this week' ))
-                                . chr(10) . 'Total revenues Tsh ' . money($revenue->amount) .''
-                                . chr(10) . 'Total expenses Tsh ' . money($expenses->amount) .''
-                                . chr(10) . 'Balance Tsh ' . money($fees->amount) .''
-                                . chr(10) . 'Fees collected Tsh ' . money($fees->amount) .''
-                                . chr(10) . 'Thanks.';
-                              $controller = new \App\Http\Controllers\Controller();
-                              $controller->send_whatsapp_sms($director->phone, $message);
-                      }
-                }
-            }
-        }
-     }
 
+      public function syncMissingPayments(){
+        $this->data['prefix'] = '';
+        $returns = array();
+        $allschemas = DB::select('select * from admin.all_setting');
+
+            foreach($allschemas as $schema) {
+                    $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema->schema_name . '\'');
+                    $background = new \App\Http\Controllers\Background();
+                   
+                    //Iterate through invoices
+                        foreach ($invoices as $invoice) {
+                            $token = $background->getToken($invoice);
+                            $prefix = $invoice->prefix;
+                            if (strlen($token) > 4) {
+                                $fields = array(
+                                    "reconcile_date" => date('d-m-Y'),
+                                   // "reconcile_date" => $value->format('d-m-Y'),
+                                    "token" => $token
+                                );
+                                $push_status = 'reconcilliation';
+                                $url = $invoice->schema_name == 'beta_testing' ?
+                                        'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                                $curl = $background->curlServer($fields, $url);
+                                array_push($returns, json_decode($curl));
+                            } 
+
+                            foreach($returns as $return){
+                               $this->syncMissingInv($return->transactions,$prefix,$invoice->schema_name);
+                           }
+
+                        }
+                   }
+              }
+
+
+           public function syncMissingInv($data,$prefix,$schema_name){
+                   $trans = (object) $data;
+                    foreach ($trans as $tran) {
+                        if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
+                             $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
+                             if(empty($check)){
+                                    $data= urlencode(json_encode($tran));
+                                    $background = new \App\Http\Controllers\Background();
+                                    $url = 'http://75.119.140.177:8081/api/init';
+                                    $fields = json_decode(urldecode($data));
+                                    $curl = $background->curlServer($fields, $url, 'row');
+                                    return $curl;
+                             }
+                         }
+                    }
+         }
+
+
+
+
+
+
+
+
+   
 }
 
 

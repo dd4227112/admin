@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<?php $root = url('/') . '/public/'; ?>
 
 
 <div class="main-body">
@@ -7,25 +8,23 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">ShuleSoft Customers</h4>
-                <span>These are active customers using ShuleSoft</span>
+                <h4><?=' Tasks Allocation' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Sales</a>
+                    <li class="breadcrumb-item"><a href="#!">tasks</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Customers</a>
+                    <li class="breadcrumb-item"><a href="#!">product</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
@@ -36,27 +35,26 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="white-box">
-                                        <!--<h3 class="box-title">Customers Report</h3>-->
                                         <div class="row">
                                             <div class="col-lg-4"></div>
                                             <div class="col-lg-4">
                                                 <?php
-                                                $root = url('/') . '/public/';
                                                 $array = array('0' => trans('select school'));
                                                 foreach ($schemas as $schema_name) {
                                                     $array[$schema_name->table_schema] = $schema_name->table_schema;
                                                 }
 
-                                                echo form_dropdown("refer_bank_id", $array, old("refer_bank_id"), "id='refer_bank_id' class='form-control select2' ");
+                                                echo form_dropdown("refer_bank_id", $array, old("refer_bank_id"), "id='refer_bank_id' class=' select2' ");
                                                 ?>
                                             </div>
                                             <div class="col-lg-4"></div>
                                         </div>
                                         <br/>
                                         <br/>
+
                                         <?php if (strlen($schema) > 2) { ?>
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered dataTable">
+                                               <div class="table-responsive">
+                                                  <table class="table dataTable table-sm table-striped table-bordered nowrap">
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -73,7 +71,6 @@
                                                         <?php
                                                         $x = 1;
                                                         $customer = new \App\Http\Controllers\Customer();
-
                                                         $trainings = \App\Models\TrainItemAllocation::where('client_id', $client->id)->orderBy('id', 'asc')->get();
                                                         foreach ($trainings as $training) {
                                                             $status = check_implementation($training->trainItem->content, $schema);
@@ -141,10 +138,10 @@
                                                                 </td>
                                                                 <td>
                                                                     <?php
-                                                                    if (preg_match('/not implemented/i', $status)) {
+                                                                  if (preg_match('/not implemented/i', $status)) {
                                                                         ?>
-                                                                        <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-sucess btn-sm btn-xs task_allocated_id">Save</button>
-                                                                    <?php } ?>
+                                                                        <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-primary btn-mini btn-round btn-sm task_allocated_id">Save</button>
+                                                                      <?php } ?>  
                                                                 </td>
                                                             </tr>
                                                             <?php
@@ -226,13 +223,14 @@
     }
     $(document).ready(task_group);
 
-
     $(".select2").select2({
-        theme: "bootstrap",
-        dropdownAutoWidth: false,
-        allowClear: false,
-        debug: true
-    });
+      theme: "bootstrap",
+      dropdownAutoWidth: false,
+      allowClear: false,
+      debug: true
+  }); 
+
+  
 </script>
 
 

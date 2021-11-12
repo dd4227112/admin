@@ -1,32 +1,30 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
   
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4 class="box-title">Add Partner School </h4>
-        <span>Register school Information here</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Users/minutes">Company Partners</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Create</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
+       
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Add Partner School' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">updates</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Marketing</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
     
     <!-- Page-body start -->
     <div class="page-body">
@@ -75,7 +73,7 @@
                   <div class="row">
                   <div class="col-md-6">
                     <strong>Select Region Branch:</strong>
-                    <select name=''  id="region" class="form-control select2" required>
+                    <select name=''  id="region" class="form select2" required>
                      
                      <option value="">Select Region Here... </option>
                      @foreach($regions as $value)
@@ -87,7 +85,7 @@
                     </div>
                       <div class="col-md-6">
                     <strong>Select Branches:</strong>
-                    <select name='branch_id'  id="branch_id" class="form-control select2" required>
+                    <select name='branch_id'  id="branch_id" class="form-conttrol select2" required>
                      <option value="">Select Branch Here... </option>
                     
                    </select>
@@ -100,7 +98,7 @@
                 
                           <hr>
                 <div id="savebtnWrapper" class="form-group">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" class="btn btn-primary btn-sm btn-round">
                     &emsp;Submit&emsp;
                   </button>
                 </div>

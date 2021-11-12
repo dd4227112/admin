@@ -11,34 +11,34 @@ $d = $database->loadSchema();
 ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+    
+
+         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Database</h4>
-                <span></span>
+                <h4><?='Compare column' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Database</a>
+                    <li class="breadcrumb-item"><a href="#!">table columns</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Columns</a>
+                    <li class="breadcrumb-item"><a href="#!">Engineering</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+       
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
+                    <div class="card-block">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table dataTable table-bordered nowrap">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -81,7 +81,7 @@ $d = $database->loadSchema();
                                                                             <?php foreach ($missing_columns as $column) { ?>
                                                                                 <tr>
                                                                                     <td>{{$column}}</td>
-                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-column='{{$column}}' class="sync_column">Sync </a>
+                                                                                    <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-column='{{$column}}' class="sync_column btn btn-mini btn-round btn-primary">Sync </a>
                                                                                         <span id="{{$table.$schema.$column}}"></span>
                                                                                     </td>
                                                                                 </tr>
@@ -103,6 +103,7 @@ $d = $database->loadSchema();
                                     ?>
                                 </tbody>
                             </table>
+                          </div>
                         </div>
                     </div>
                 </div>
@@ -128,14 +129,19 @@ $d = $database->loadSchema();
                 },
                 dataType: "html ",
                 beforeSend: function (xhr) {
-                    $('#' + table + slave + column).html('<a href="#/refresh"> <i class="ti-reload rotate-refresh"></i></a>');
+                    $('#' + table + slave + column).html('<a href="#/refresh"> <i class="feather icon-refresh-ccw"></i></a>');
                 },
                 complete: function (xhr, status) {
-                    $('#' + table + slave + column).html('<span class="label label-success label-rouded">' + status + '</span>');
+                    $('#' + table + slave + column).html('<label class="badge badge-success">' + status + '</label>');
+                        if(xhr.status == 500) {
+                         toastr.error('Error: Comparison failed check error logs')
+                    }
                 },
 
                 success: function (data) {
                     $(this).hide();
+                     toastr.success('Sync success')
+                    window.location.reload(); 
                 }
             });
 

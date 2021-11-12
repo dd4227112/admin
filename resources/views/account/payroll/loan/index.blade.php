@@ -3,49 +3,43 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>Loan</h4>
-                <span>New loan </span>
+                <h4><?='Loan types' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="index-2.html">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li><a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a></li>
-                    <li class="active"><?= __('borrowers') ?></li>
+                    <li class="breadcrumb-item"><a href="#!">loans</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-		
-							
+        </div> 
+    		
         <div class="page-body">
           <div class="row">
             <div class="col-sm-12">
              <div class="card">
                 <?php
-               // $usertype = session("usertype");
+        
                 if(can_access('manage_payroll')) { ?>
 				   <div class="card-header row">
                      <div class="col-sm-6">
-                         <div>&nbsp;</div>
-                        <a class="btn btn-success" href="<?php echo url('loan/loanAdd') ?>">
-                            <i class="fa fa-plus"></i> 
-                            Add New Application
-                         </a>
+                        <a href="<?= url("loan/loanAdd") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add New Application"> Add application </a>
 					  </div>
 					 
-                        <div class="col-sm-6">
-                            <form style="" class="form-horizontal" role="form" method="post">  
+                        <div class="col-sm-6 offset-sm-9">
+                            <form  class="form-horizontal" role="form" method="post">  
                                 <div class="form-group">              
-                                    <label for="deduction_type" class="col-sm-2 col-sm-offset-2 control-label">
-                                        <?= __("category") ?>
+                                    <label class="col-sm-6">
+                                        Category
                                     </label>
                                     <div class="col-sm-6">
                                         <?php
@@ -68,22 +62,22 @@
                    <?php } ?>
 
                       
-				         <div id="hide-table"  class="card-block">
-					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
+				         <div class="card-block">
+					      <div class="table-responsive">
 						  <?php if (isset($applications) && count($applications) > 0) { ?>
-								<table class="table dataTable">
+								<table class="table dataTable  table-sm table-striped table-bordered table-hover">
 									<thead>
                                         <tr>
-                                            <th class="col-lg-1"><?= __('#') ?></th>
-                                            <th class="col-lg-2"><?= __('Name') ?></th>
-                                            <th class="col-lg-2"><?= __('Loan type') ?></th>
-                                            <th class="col-lg-1"><?= __('Amount') ?></th>
-                                            <th class="col-lg-1"><?= __('Date requested') ?></th>
-                                            <th class="col-lg-1"><?= __('Date approved') ?></th>
-                                            <th class="col-lg-1"><?= __('Paid amount') ?></th>
-                                            <th class="col-lg-1"><?= __('Remain amount') ?></th>
-                                            <th class="col-lg-1"><?= __('Interest') ?></th>
-                                            <th class="col-lg-2"><?= __('Action') ?></th>
+                                            <th><?= __('#') ?></th>
+                                            <th><?= __('Name') ?></th>
+                                            <th><?= __('Loan type') ?></th>
+                                            <th><?= __('Amount') ?></th>
+                                            <th><?= __('Date requested') ?></th>
+                                            <th><?= __('Date approved') ?></th>
+                                            <th><?= __('Paid amount') ?></th>
+                                            <th><?= __('Remain amount') ?></th>
+                                            <th><?= __('Interest') ?></th>
+                                            <th><?= __('Action') ?></th>
                                         </tr>
 									</thead>
                                     <tbody>
@@ -109,8 +103,8 @@
                                                 </td>
                                                 <td data-title="<?= __('date_approved') ?>">
                                                     <?php echo (int) $application->approval_status==1 ?
-                                                            '<b class="badge badge-success">Approved</b>':
-                                                            '<b class="badge badge-warning">Pending</b>' ?>
+                                                            '<label class="badge badge-inverse-success">Approved</label>':
+                                                            '<label class="badge badge-inverse-warning">Pending</label>' ?>
                                                 </td>
                                                 <td data-title="<?= __('paid_amount') ?>">
                                                     <?php //calculated from salary ?>
@@ -126,14 +120,17 @@
                                                     ?>
                                                 </td>
                                                 <td data-title="<?= __('action') ?>">
+                                                    <?php $delete_url = "loan/delete/$application->id"; $edit_url = "loan/edit/$application->id"; ?>
+                                                    <?php  if(can_access('manage_payroll')){ ?>
+                                                     <?php } ?>
                                                       
-                                                    <?php //echo can_access('manage_payroll') ?  '<a  href="' . url("loan/edit/$application->id") . ' " class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>':'' ?>
-                                                    <?php
-                                                    echo '<a  href="' . url("loan/delete/$application->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>';
-                                                 if((int) $application->approval_status <>1 && can_access('manage_payroll')){
-                                                    ?>
-                                                    <a href="<?= url('loan/approveLoan/' . $application->id) ?>" class="btn btn-primary btn-sm mrg" > Approve</a>
-                                                 <?php }?>
+                                                     <a href="<?= url($delete_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete loan type"> delete </a>
+
+                                                    <?php  $approve_url = "loan/approveLoan/$application->id";
+                                                     if((int) $application->approval_status <> 1 && can_access('manage_payroll')){  ?>
+                                                     <a href="<?= url($approve_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Approve loan"> Approve </a>
+
+                                                   <?php }?>
                                                 </td>
                                             </tr>
                                             <?php

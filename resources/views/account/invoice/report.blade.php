@@ -3,40 +3,38 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+      
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company</h4>
-                <span>Show Invoices summary</span>
+                <h4><?='Reports' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>"> 
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">payments</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Invoices</a>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> 
 
          <div class="page-body">
             <!-- form start -->
                   <div class="card">
-
-                       <div class="col-sm-12">
-                          <br>
-                            <form class="form-horizontal" role="form" method="post"> 
+                     <div class="card-block">
+                           <div class="col-sm-12">
+                               <form class="form-horizontal" role="form" method="post"> 
                                     <div class="form-group row">
-                                        <div class="col-md-5 col-sm-6">
+                                        <div class="col-md-4 col-sm-12">
                                             <input type="date" class="form-control" id="from_date" name="from_date" value="<?= old('from_date',$from) ?>" >
                                         </div>
                                   
-                                        <div class="col-md-5 col-sm-6">
+                                        <div class="col-md-4 col-sm-12">
                                             <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to) ?>" >
                                         </div>
                                     
@@ -44,15 +42,13 @@
                                             <input type="submit" class="btn btn-success" value="Submit"  style="float: right;">
                                         </div>
                                     </div>
-                                <?= csrf_field() ?>
-                            </form>
-                            </div>            
-                        </div> 
-                                   
-                        <div class="card">
-                            <div class="table-responsive dt-responsive "> 
-                                <hr>
-                                   <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
+                                   <?= csrf_field() ?>
+                                 </form>
+                               </div>  
+                                  
+                  
+                                <div class="dt-responsive table-responsive">
+                                    <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -72,12 +68,6 @@
                                             $i = 1;
                                             foreach ($invoices as $invoice) {
 
-                                                // $amount = $invoice->invoiceFees()->sum('amount');
-                                                // $paid = $invoice->payments()->sum('amount');
-                                                // $unpaid = $amount - $paid;
-                                                // $total_paid += $paid;
-                                                // $total_amount += $amount;
-                                                // $total_unpaid += $unpaid;
                                                 ?>
 
 
@@ -89,10 +79,10 @@
                                                     <td><?= money($invoice->amount) ?></td>
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                                     <td>
-                                                        <a class="btn btn-success btn-sm" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
+                                                        <a class="btn btn-success btn-mini btn-round" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                    </td>
-                                        </tr>
-                                    <?php $i++; } ?>
+                                               </tr>
+                                         <?php $i++; } ?>
                                         </tbody>
                                         <tfoot>
                                             {{-- <tr>
@@ -104,46 +94,21 @@
                                             </tr> --}}
                                         </tfoot>
                                     </table>
-                        </div>
-                        <div class="col-lg-12">
+                               </div>
+                            </div>
+                         </div>
+
+
+                        <div class="row">
+                          <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-block">
-                                    <div id="container"></div>
+                                    <div id="contain" style="height:350px;width:900px;" ></div>
                                 </div>
-                            </div>
+                            </div> 
+                          </div>
                         </div>
-                        <script type="text/javascript" src="<?= url('/') . '/public/' ?>bower_components/jquery/dist/jquery.min.js"></script>
-
-                        <script src="<?= url('/public') ?>/code/highcharts.js"></script>
-                        <script src="<?= url('/public') ?>/code/modules/exporting.js"></script>
-                        <script src="<?= url('/public') ?>/code/modules/export-data.js"></script>
-                        <script src="<?= url('/public') ?>/code/modules/series-label.js"></script>
-                        <script src="<?= url('/public') ?>/code/modules/data.js"></script>
-                        <table id="users_table" style="display:none">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Amount (Tsh)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $sql = 'SELECT sum(a.amount) as total,extract(month from b.date) as month from admin.invoices b, admin.invoice_fees a where a.invoice_id=b.id AND extract(year from date)=' . date('Y', strtotime($to)) . ' group by month order by month';
-                                //dd($sql);
-                                $logs = DB::select($sql);
-                                foreach ($logs as $log) {
-                                    $monthNum = $log->month;
-                                    $dateObj = DateTime::createFromFormat('!m', $monthNum);
-                                    $monthName = $dateObj->format('F'); // March
-                                    ?>
-                                    <tr>
-                                        <th><?= $monthName ?></th>
-                                        <td><?= $log->total ?></td>
-                                    </tr>
-                                <?php }
-                                ?> 
-                            </tbody>
-                        </table>
+                        
                     </div>
                 </div>
             </div>
@@ -151,29 +116,46 @@
     </div>
 </div>
 <script type="text/javascript">
-    Highcharts.chart('container', {
-        data: {
-            table: 'users_table'
-        },
-        chart: {
-            type: 'column'
-        },
+Highcharts.chart('contain', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Monthly Payments'
+    },
+    subtitle: {
+        text: 'Payments received every month'
+    },
+    xAxis: {
+        type: 'Months',
+       
+        categories: [
+        <?php foreach($invoice_reports as $value){  ?> "<?php $dateObj = DateTime::createFromFormat('!m', $value->month); $monthName = $dateObj->format('F'); echo $monthName ?>",
+        <?php } ?>
+      ]
+    },
+    yAxis: {
         title: {
-            text: 'Invoices Total Amount Per Month in <?=date('Y', strtotime($to)) ?>'
-        },
-        yAxis: {
-            allowDecimals: false,
-            title: {
-                text: 'Amounts (Tsh)'
-            }
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.series.name + '</b><br/>' +
-                        this.point.y + ' ' + this.point.name.toLowerCase();
-            }
+            text: 'Payments'
         }
-    });
+    },
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: 'Amount',
+        colorByPoint: true,
+        data: [
+            <?php foreach($invoice_reports as $value){ ?> {
+                name:"<?php $dateObj = DateTime::createFromFormat('!m', $value->month); $monthName = $dateObj->format('F'); echo $monthName ?>",
+                y: <?=$value->sum?>,
+                drilldown: <?=$value->sum ?>
+            },
+            <?php } ?>
+        ]
+    }]
+});
+
     $('.calendar').on('click', function (e) {
         e.preventDefault();
         $(this).attr("autocomplete", "off");

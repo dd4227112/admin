@@ -2,39 +2,35 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-  
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4 class="box-title">Company Partners </h4>
-        <span>Register all partners who are supposed to be in the system</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Users/minutes">Company Minute</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Create</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
+    
+      <div class="page-header">
+        <div class="page-header-title">
+            <h4><?='Add partners' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">partners</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Marketing</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
+
     <div class="page-body">
       <div class="row">
-        <div id="outer" class="container">
-          <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
-            <div id="editorForm">
+        <div class="col-sm-12">
 
-              @if (sizeof($errors) > 0)
+          <div class="card">
+           
+              {{-- @if (sizeof($errors) > 0)
               <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.<br><br>
                 <ul>
@@ -43,10 +39,12 @@
                   @endforeach
                 </ul>
               </div>
-              @endif
-              <form method="post" action="#" enctype='multipart/form-data'>
+              @endif --}}
+                
+           
+            <div class="card-block">
+             <form method="post" action="#" enctype='multipart/form-data'>
               {{ csrf_field() }}
-              <div class="card-block">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <strong>Company Name:</strong>
@@ -110,12 +108,13 @@
                     &emsp;Submit&emsp;
                   </button>
                 </div>
+              </form> 
+              </div>
               </div>
 
-              </form>
 
-            </div>
-          </div>
+          
+        
         </div>
       </div>
     </div>

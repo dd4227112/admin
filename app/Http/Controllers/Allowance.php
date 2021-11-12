@@ -8,46 +8,33 @@ use App\Models\SalaryAllowance;
 
 class Allowance extends Controller {
 
-    /**
-     * -----------------------------------------
-     * 
-     * ******* Address****************
-     * INETS COMPANY LIMITED
-     * P.O BOX 32258, DAR ES SALAAM
-     * TANZANIA
-     * 
-     * 
-     * *******Office Location *********
-     * 11th block, Bima Road, Mikocheni B, Kinondoni, Dar es salaam
-     * 
-     * 
-     * ********Contacts***************
-     * Email: <info@inetstz.com>
-     * Website: <www.inetstz.com>
-     * Mobile: <+255 655 406 004>
-     * Tel:    <+255 22 278 0228>
-     * -----------------------------------------
-     */
+ 
     function __construct() {
          $this->middleware('auth');
         $this->data['insight'] = $this;
-        // parent::__construct();
-        // $this->lang->load('email');
-        // $this->lang->load('payroll');
     }
 
     public function index() {
            $this->data['category'] = $id = request()->segment(3);
             if ((int) $id > 0) {
+                if($id == 1){
+                  $this->data['allowance_type'] = 'Fixed Allowances';
+                }elseif($id == 2){
+                   $this->data['allowance_type'] = 'Monthly Allowances';  
+                }else{
+                   $this->data['allowance_type'] = 'Allowances';  
+                }
                 $this->data['allowances'] = \App\Models\Allowance::where('category', $id)->get();
             } else {
-                $this->data['allowances'] = [];
+                  $this->data['allowances'] = [];
             }
             $this->data['view'] = 'account.payroll.allowance.index';
             return view($this->data['view'], $this->data);
        }
 
     public function add() {
+        $this->data['breadcrumb'] = array('title' => 'Add allowances','subtitle'=>'accounts','head'=>'payroll');
+
             if ($_POST) {
                 // $this->validate(request(), [
                 //     'name' => 'required|max:255',
@@ -64,38 +51,32 @@ class Allowance extends Controller {
                 }
 
                 $allowance = \App\Models\Allowance::create($data);
-                return redirect('allowance/index/'.$allowance->category)->with('success', 'Successfully!');
+                return redirect('allowance/index/'.$allowance->category)->with('success', '👍Allowance successfully created!');
             } else {
-                $this->data['view'] = 'account.payroll.allowance.add';
-                //$this->load->view('_layout_main', $this->data);
-                return view($this->data['view'], $this->data);
+               // $this->data['view'] = 'account.payroll.allowance.add';
+                return view('account.payroll.allowance.add', $this->data);
             }
     }
 
     public function edit() {
+        $this->data['breadcrumb'] = array('title' => 'Edit allowances','subtitle'=>'accounts','head'=>'payroll');
          $id = request()->segment(3);
             if ((int) $id) {
          $this->data['allowance'] = \App\Models\Allowance::find($id);
                 if ($this->data['allowance']) {
                     if ($_POST) {
-                        // $this->validate(request(), [
-                        //     'name' => 'required|max:255',
-                        //     "is_percentage" => "required",
-                        //     "description" => "required"
-                        //    ]);
+                      
                      $this->data['allowance']->update(request()->except('_token'));
-                     return redirect('allowance/index/'.$this->data['allowance']->category)->with('success', 'Allowance Updated Successfully!');
+                     return redirect('allowance/index/'.$this->data['allowance']->category)->with('success', '👍 Updated Successfully!');
                     } else {
                         $this->data['view'] = 'account.payroll.allowance.edit';
                         return view($this->data['view'], $this->data);
                   }
                 } else {
                     $this->data["subview"] = "error";
-                   // $this->load->view('_layout_main', $this->data);
                 }
             } else {
                 $this->data["subview"] = "error";
-              //  $this->load->view('_layout_main', $this->data);
             }
       }
 
@@ -105,10 +86,9 @@ class Allowance extends Controller {
                 $user_allowances = UserAllowance::where('allowance_id', $id)->first();
                 $salary_allowance = SalaryAllowance::where('allowance_id', $id)->first();
                 if (!empty($user_allowances) || !empty($salary_allowance)) {
-                    return redirect()->back()->with('error', 'You cannot delete this allowance because some users are already allocated on this allowance!');
+                    return redirect()->back()->with('error', '🤦  You cannot delete this allowance because some users are already allocated on this allowance!');
                 } else {
                     \App\Models\Allowance::destroy($id);
-                 //   $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                     return redirect()->back()->with('success','Deleted successfull');
                 }
                 return redirect()->back();
@@ -123,7 +103,7 @@ class Allowance extends Controller {
             $this->data['set'] = $id;
             $this->data['type'] = 'allowance';
             $this->data['allowance'] = \App\Models\Allowance::find($id);
-            //dd($this->data['allowance']);
+    
             $subscriptions = UserAllowance::where('allowance_id', $id)->get();
             $data = [];
             foreach ($subscriptions as $value) {
@@ -141,6 +121,7 @@ class Allowance extends Controller {
     }
 
      public function monthlysubscribe() {
+        $this->data['breadcrumb'] = array('title' => 'Subscription-Allowance','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;
@@ -168,8 +149,6 @@ class Allowance extends Controller {
         } else {
             UserAllowance::create(request()->all());
         }
-      //  print_r(request()->all());
-        echo 'success';
-        return request()->ajax() == TRUE ? 'success' : redirect()->back()->with('success', 'Successfully subscribed');
+        return request()->ajax() == TRUE ? 'Successfully subscribed' : redirect()->back()->with('success', 'Successfully subscribed');
     }
 }

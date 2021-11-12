@@ -3,38 +3,33 @@
 <?php $root = url('/') . '/public/'; ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+       
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>Account Groups</h4>
-                <span>List of account groups</span>
+                <h4><?='Account group' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">account</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Account Groups</a>
+                    <li class="breadcrumb-item"><a href="#!">setting</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div>       
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="page-header">
-                                <button class="btn-success btn" data-toggle="modal" data-target="#group" onmousedown="$('#group_id').val('')"><span class="fa fa-plus"></span>Add New Group</button>
+                                <button class="btn btn-primary btn-mini btn-round" data-toggle="modal" data-target="#group" onmousedown="$('#group_id').val('')"><span class="fa fa-plus"></span>Add New Group</button>
                             </h5>
-                            <div class="alert alert-info">
-                                Groups to be displayed in the balance sheet </div>
                             <div id="hide-table">
                                 <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                     <thead>
@@ -71,10 +66,10 @@
 
                                                     <td data-title="<?= __('action') ?>">
                                                     <?php
-                                                      echo '<a class="btn btn-info btn-sm" data-toggle="modal" data-target="#group" href="#" onmousedown="fill_form('.$group->id.')">edit</a>';
+                                                      echo '<a class="btn btn-info btn-sm btn-round" data-toggle="modal" data-target="#group" href="#" onmousedown="fill_form('.$group->id.')">edit</a>';
                                                       ?>
                                                       <?php
-                                                       echo '<a  class="btn btn-danger btn-sm" href="'.url('account/groups/delete/' . $group->id . '/').'">delete</a>';
+                                                       echo '<a  class="btn btn-danger btn-sm btn-round" href="'.url('account/groups/delete/' . $group->id . '/').'">delete</a>';
                                                        ?>
                                                      </td>
                                                 </tr>

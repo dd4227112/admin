@@ -3,35 +3,34 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
+       
+
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Loan</h4>
-                <span>Edit Loan type</span>
+                <h4><?=' Edit loan type' ?></h4>
             </div>
-     
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url("loan/type") ?>"><i class="fa fa-laptop"></i> <?= __('loan_type') ?></a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!"><?= __('allowance_title') ?></a>
+                    <li class="breadcrumb-item"><a href="#!">loans</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> 
 
-        <!-- Page-header end -->
-        <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
 
                 <div class="col-sm-12">
                     <!-- Zero config.table start -->
                     <div class="card">
-                        <header class="panel-heading">
-                           Edit
-                        </header>
+                      
                         <div class="card-body">
                             <div id="error_area"></div>
                             <div class="form">
@@ -191,7 +190,7 @@
                 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-4">
-                        <input type="submit" class="btn btn-primary btn-block" value="Save" >
+                        <button type="submit" class="btn btn-primary btn-mini btn-block">Submit </button>
                     </div>
                 </div>
                 <?= csrf_field() ?>

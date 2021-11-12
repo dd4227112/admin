@@ -6,26 +6,24 @@
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
-        <div class="page-header">
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>Shulesoft Schools Onboarding</h4>
-                <span>The Part holds all list of partner schools onboarded and request integration</span>
-
+                <h4> Partners</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Schools Onboarding</a>
+                    <li class="breadcrumb-item"><a href="#!">request</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">index</a>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> 
         <!-- Page-header end -->
         <!-- Page-body start -->
         <div class="page-body">
@@ -34,7 +32,7 @@
                     <div class="card">
                         <p align="left">
                             <br/>
-                            &nbsp; &nbsp; &nbsp; <a class="btn btn-success btn-sm" href="<?= url('partner/school') ?>">  <i class="ti-plus"> </i> Onboard New School</a>
+                            &nbsp; &nbsp; &nbsp; <a class="btn btn-primary btn-mini btn-round" href="<?= url('partner/school') ?>">  Onboard New School</a>
                             
                         </p>
                         <div class="card-header">

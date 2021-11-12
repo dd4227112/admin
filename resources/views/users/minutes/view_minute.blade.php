@@ -1,32 +1,26 @@
 @extends('layouts.app')
 @section('content')
 
-<!-- Sidebar inner chat end-->
-<!-- Main-body start -->
 <div class="main-body">
   <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>Shulesoft Meeting Minutes</h4>
-        <span>The Part holds all written record of everything that's happened during a meeting.</span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Company Minutes</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">minutes</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
+     <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='View minutes' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">meeting</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     <div class="page-body">
       <div class="row">
         <div class="col-lg-12">
@@ -62,22 +56,25 @@
                                         <th scope="row">Department</th>
                                         <td> <?=$minute->department->name?></td>
                                       </tr>
+
                                       <tr>
                                       <th>Attendee's</th>
                                       <td>
+                                        <p>
                                       <?php
                                       $users = $minute->minuteuser()->get();
                                         if (sizeof($users) > 0) {
                                           foreach ($users as $user) {
-                                             echo '<u>'.$user->user->name.'</u>'; ?>  &nbsp;|
+                                             echo '<h6>'.$user->user->name.'</h6>'; ?>  &nbsp;|
                                               <?php
                                           }
                                         }else{
                                             echo "Meeting Attendee no Added.";
                                         }
                                         ?>
+                                        </p>
                                       </td>
-                                      <tr>
+                                    </tr>
                                     </tbody>
                                   </table>
                                 </div>
@@ -98,7 +95,7 @@
                         <div class="card">
                           <div class="card-header">
                             <h5 class="card-header-text">Description of this Meeting</h5>
-                            <a href="<?= url('/storage/uploads/images/' . $minute->attached)?>" class="btn btn-info  f-right"> <i class="icofont icofont-cloud"></i> Document</a>
+                            {{-- <a href="<?= url('/storage/uploads/images/' . $minute->attached)?>" class="btn btn-info  f-right"> <i class="icofont icofont-cloud"></i> Document</a> --}}
                           </div>
                           <div class="card-block user-desc">
                             <div class="view-desc">

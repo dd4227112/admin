@@ -3,30 +3,26 @@
 <div class="main-body">
   <div class="page-wrapper">
 
-    <div class="page-header">
-      <div class="page-header-title">
-      <h4>Course details </h4>
-      <span>  </u></span>
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Learning</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Courses</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- Page-header end -->
-            <?php
-              //  $medias = \App\Models\SocialMediaPost::where('post_id', $post->id)->get();
-                  ?>
-    <!-- Page-body start -->
+ 
+   <div class="page-header">
+        <div class="page-header-title">
+            <h4><?='Learning details' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">learning</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
+   
     <div class="page-body">
       <div class="row">
         <div class="col-lg-12">
@@ -61,7 +57,8 @@
                         <tr>
                           <?php if($learning->company_file_id > 0) { ?>
                             <th scope="row">
-                              <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewFile/' . $learning->id . '/course_certificate') ?>">View certificate</a>
+                              <?php $viw_url = "customer/viewFile/$learning->id/course_certificate"; ?>
+                               <a href="<?= url($viw_url)?>" class="btn btn-primary btn-mini btn-round">View</a>
                             </th>
                           <?php } else { ?>
                             <th scope="row">   
@@ -73,7 +70,7 @@
                                       </div>
                                       <div class="col-sm-6">
                                           <?= csrf_field() ?>
-                                          <button class="btn btn-success">Upload</button>
+                                        <button color="primary" class="btn btn-primary btn-mini btn-round"> Upload</button>
                                       </div>
                                   </div>
                               </form>

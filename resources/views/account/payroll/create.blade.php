@@ -3,72 +3,63 @@
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+
+            <div class="page-header">
             <div class="page-header-title">
-                <h4>Payroll</h4>
-                <span>Salaries</span>
+                <h4><?= 'Create Payroll' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item"><a href="<?= url("dashboard/index") ?>"><i
-                        class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a></li>
-                    <li class="breadcrumb-item"><a href="<?= url("payroll/index") ?>"><?= __('Payroll') ?></a>
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">salaries</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
                     </li>
                 </ul>
             </div>
         </div>
-        
+
         <div class="page-body">
 
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="card">
-                        <div class="col-lg-12 col-xl-12">                                      
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs md-tabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Payroll List</a>
-                                    <div class="slide"></div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Summary</a>
-                                    <div class="slide"></div>
-                                </li>
-                            </ul>
+        <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="col-lg-12 col-xl-12">                                      
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs md-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#home3" role="tab"> <strong>PAYROLL LIST</strong></a>
+                            <div class="slide"></div>
+                        </li>
+                    </ul>
 
                             <!-- Tab panes -->
-                            <div class="tab-content card-block">
-                                <div class="tab-pane active" id="home3" role="tabpanel">
-                                  <div id="hide-table">
-
-        <div class="row">
-            <div class="col-sm-12">
-                <form class="form-horizontal" role="form" method="post">
-
-           
-                 <div class="col-sm-12">
-                    <div class="table-responsive table-striped table-bordered ">
-                        <table id="example1" class="table dataTable">
+                    <div class="card-block">
+                     <form class="form-horizontal" role="form" method="post">
+                        <div class="table-responsive">
+                            <table class="table dataTable table-sm table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="col-sm-1"><?= __('#') ?></th>
-                                    <th class="col-sm-2"><?= __('Employee name') ?></th>
-                                    <th class="col-sm-2">User designation</th>
-                                    <!--<th class="col-sm-2"><?= __('Employee Number') ?></th>-->
-                                    <th class="col-sm-1">Bank</th>
-                                    <th class="col-sm-2"><?= __('Bank Account') ?></th>
-                                    <th class="col-sm-2"><?= __('Basic Pay') ?></th>
-                                    <th class="col-sm-1"><?= __('Allowance') ?></th>
-                                    <th class="col-sm-1"><?= __('Gross pay') ?></th>
-                                    <th class="col-sm-1"><?= __('Pension') ?></th>
-                                    <th class="col-sm-1"><?= __('deduction') ?></th>
-                                    <th class="col-sm-1"><?= __('Taxable Amount') ?></th>
-                                    <th class="col-sm-1"><?= __('Paye') ?></th>
-                                    <th class="col-sm-1"><?= __('Net Pay') ?></th>
+                                    <th>#</th>
+                                    <th>Employee name</th>
+                                    <th>User designation</th>
+                                    <th>Bank Account</th>
+                                    <th>Account </th>
+                                    <th>Basic Pay </th>
+                                    <th>Allowance </th>
+                                    <th>Gross pay </th>
+                                    <th>Pension </th>
+                                    <th>deduction </th>
+                                    <th>Taxable Amount </th>
+                                    <th>Paye </th>
+                                    <th>Net Pay </th>
                                     <?php
                                     if (can_access('manage_payroll')) {?>   
-                                            {{-- <th class="col-sm-1"><?= __('Action') ?></th>                                                                                                                                        <!--<th class="col-sm-4"><?= __('action') ?></th>--> --}}
+                                            {{-- <th ><?= __('Action') ?></th>                                                                                                                                        <!--<th class="col-sm-4"><?= __('action') ?></th>--> --}}
                                     <?php } ?>
                                 </tr>
                             </thead>
@@ -87,7 +78,6 @@
                                 $bank_name = '';
                                 $users =  \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,5,15))->get();
                                 foreach ($users as $user) {
-                                   // $user_info = $user->userInfo(DB::table($user->table));
                                     $basic_salary = $special == 0 ? $user->salary : 0;
                                     $total_basic_pay += $basic_salary;
                                     ?>
@@ -95,24 +85,35 @@
                                         <td><?= $i ?></td>
                                         <td><?= ucwords($user->firstname. ' ' .$user->lastname) ?></td>
                                         <td><?= $user->designation->name ?></td>
-                                        <td><?= $user->bank_name ?> </td>
                                         <td>
-                                           <?= $user->bank_account ?>
+                                            <span style="text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" 
+                                            onblur="save('<?= $user->id . 'bank_name' ?>', '<?= $user->id ?>', 'bank_name')" 
+                                            id="<?= $user->id . 'bank_name' ?>"><?= $user->bank_name == '' ? 'null' : $user->bank_name ?></span>
+                                            <span id="stat<?= $user->id .  'bank_name' ?>"></span>
                                         </td>
                                         <td>
-                                            <?= (int) $basic_salary == 0 ? 0 : money($basic_salary) ?>
+                                            <span style="text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" 
+                                            onblur="save('<?= $user->id . 'bank_account' ?>', '<?= $user->id ?>', 'bank_account')" 
+                                            id="<?= $user->id . 'bank_account' ?>"><?= $user->bank_account == '' ? 'null' : $user->bank_account ?></span>
+                                            <span id="stat<?= $user->id . 'bank_account' ?>"></span>
+                                        </td>
+                                        <td>
+                                            <span style="text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" 
+                                            onblur="save('<?= $user->id . 'salary' ?>', '<?= $user->id ?>', 'salary')" 
+                                            id="<?= $user->id . 'salary' ?>"><?= (int) $basic_salary == 0 ? 0 : $basic_salary ?></span>
+                                            <span id="stat<?= $user->id . 'salary' ?>"></span>
                                          </td>
                                         <td>
-                                            <?php
+                                            <?php  
                                             //calculate user allowances
-                                            $allowances = \App\Models\UserAllowance::where('user_id', $user->id)->get();
+                                            $allowances = \App\Models\UserAllowance::where('user_id', (int) $user->id)->get();
                                             $allowance_ids = array();
                                             $total_allowance = 0;
                                             $taxable_allowances = 0;
                                             $non_taxable_allowances = 0;
                                             $no_pension_allowances = 0;
                                             if (!empty($allowances) ) {
-                                                foreach ($allowances as $value) {
+                                                foreach ($allowances as $value) { 
                                                     $all_amount = (float) $value->amount > 0 ? $value->amount : $value->allowance->amount;
                                                     $all_percent = (float) $value->percent > 0 ? $value->percent : $value->allowance->percent;
 
@@ -120,7 +121,7 @@
                                                     $all_now = date_create(date('Y-m-d'));
                                                     $all_diffi = date_diff($all_now, $all_end_date);
                                                     $all_time_diff = $all_diffi->format("%R%a");
-                                                    if ($value->allowance->type == 0) {
+                                                    if ($value->allowance->type == 0) { 
                                                         //taxable allowances
                                                         if ($value->allowance->category == 2 && (int) $all_time_diff > 0) {
                                                             $allowance_tax_amount = $value->allowance->is_percentage == 1 ? $basic_salary * $all_percent / 100 : $all_amount;
@@ -172,7 +173,8 @@
                                                 $total_allowance = 0;
                                                 $taxable_allowances = 0;
                                             }
-                                            echo money($total_allowance);
+                                            
+                                             echo money($total_allowance);
                                             $sum_of_total_allowances += $total_allowance;
                                             ?>
                                         </td>
@@ -215,11 +217,14 @@
                                             $ededuction_ids = array();
                                             $total_deductions = 0;
                                             $total_employer_deduction = 0;
+                                            $exclude_deduction_amount = 0;
+                                            $deduction_employee_contribution = 0;
                                             if (!empty($deductions)) {
                                                 foreach ($deductions as $value) {
                                                     $cut_amount = (int) $value->deduction->gross_pay == 1 ? $gross_pay : $basic_salary;
                                                     $employer_deduction = (bool) $value->deduction->is_percentage == 1 ? (float) $cut_amount * $value->employer_percent / 100 : (float) $value->employer_amount;
                                                     $employee_deduction = (bool) $value->deduction->is_percentage == 1 ? (float) $cut_amount * $value->percent / 100 : (float) $value->amount;
+
                                                     $total_employer_deduction += $employer_deduction;
                                                     $ded_amount = (float) $value->amount > 0 ? $value->amount : $value->deduction->amount;
                                                     $ded_percent = (float) $value->percent > 0 ? $value->percent : $value->deduction->percent;
@@ -227,13 +232,18 @@
                                                     $now = date_create(date('Y-m-d'));
                                                     $diffi = date_diff($now, $end_date);
                                                     $time_diff = $diffi->format("%R%a");
+                                                    //Check if Deduction is Non Taxable Deduction        
+                                                    if ($value->deduction->type <> 0) {
+                                                        $deduction_employee_contribution += (bool) $value->deduction->is_percentage == 1 ? (float) $cut_amount * $ded_percent / 100 : (float) $ded_amount;
+                                                    }
+                                                    
                                                     if ($value->type == 0 && (int) $time_diff > 0) {
                                                         $tded_amount = $employer_deduction + $ded_amount;
                                                         // $total_deductions += $tded_amount;
                                                         $total_deductions += $ded_amount;
                                                         array_push($deduction_ids, [$employee_deduction => $value->deduction_id]);
                                                         array_push($ededuction_ids, [$employer_deduction => $value->deduction_id]);
-                                                    }
+                                                       }
                                                     if ($value->type <> 0) {
                                                         $deduction_amount = (bool) $value->deduction->is_percentage == 1 ? $cut_amount * $ded_percent / 100 : $ded_amount;
                                                         $tdeduction_amount = $employer_deduction + $deduction_amount;
@@ -250,9 +260,8 @@
                                                             'payment_type_id'=>1,
                                                             'date' => date('Y-m-d', strtotime(request('payroll_date'))),
                                                             'transaction_id' => time(),
-                                                            'bank_account_id'=>DB::table('bank_accounts')->first()->id,
-                                                            'created_by' => Auth::user()->id,
-                                                         
+                                                            'bank_account_id'=>\DB::table('bank_accounts')->first()->id,
+                                                            'created_by' => \Auth::user()->id,
                                                         ]);
                                                     }
                                                 }
@@ -271,16 +280,23 @@
                                             ?>  
                                         </td>
                                         <td>
-                                            <?php
+                                             <?php
                                             //calculate PAYEE
-                                            $tax = \App\Models\Paye::where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
+                                            if ($create == 1 && $tax_status->payes()->count() > 2) {
+
+                                                $tax = $tax_status->payes()->where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
+                                            }else{ 
+                                                $tax = $income_status->payes()->where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
+                                            }
+                                            
                                             if (!empty($tax) ) {
                                                 $paye = ($taxable_amount - $tax->from) * $tax->tax_rate / 100 + $tax->tax_plus_amount;
                                             } else {
                                                 $paye = 0;
                                             }
+
+                                            echo round($paye, 0);
                                             $total_paye += $paye;
-                                            echo money($paye);
                                             ?> 
                                         </td>
                                         <td>
@@ -316,15 +332,7 @@
                                                 'reference' => date('Ymd')
                                             ));
 
-                                        // $min = \App\Models\Uattendance::where('user_id',$user->id)->whereMonth('date', '=', date('m',strtotime(request('payroll_date'))))->get();
-                                        // $office_time = '08:00:00';
-                                        // $all_minutes = [];
-                                        // foreach($min as $key => $m){
-                                        //     $time = date("H:s:i",strtotime($m->timein));
-                                        //     $mnts = strtotime($time) - strtotime($office_time)/60;
-                                        //     array_push($all_minutes, $mnts);
-                                        // }
-                                        // print_r(array_sum($all_minutes));
+                                      
 
                                         } else {
                                             $salary_id = $check->id;
@@ -408,7 +416,7 @@
                                             }
                                         }
 
-                                        //total deductions which are expense to schools
+                                        //total deductions which are expense to company
                                         $totals = \DB::select('SELECT sum(employer_amount::integer) as employer_amount, name, expense_id from (
                                       select a.employer_amount, b.name, c.id as expense_id from salary_deductions a join deductions b on a.deduction_id=b.id join refer_expense c on b.name=c.name where a.salary_id=' . $salary_id . ' and a.employer_amount is not null and a.employer_amount::integer >= 0 group by a.employer_amount,b.name,c.id ) b group by name,expense_id');
                                        
@@ -447,7 +455,7 @@
                                                         'pension_id' => $pension->pension_id,
                                                         'amount' => $pension_employee_contribution,
                                                         'employer_amount' => $pension_employer_contribution,
-                                                        'created_by' => Auth::user()->id
+                                                        'created_by' => \Auth::user()->id
                                                     ));
                                                 }
                                             }
@@ -476,49 +484,41 @@
                                     <td><?= money($total_paye) ?></td>
                                     <td><?= money($total_net_pay) ?></td>
 
-                                    <!--  <td>
+                                      <td>
                                         <a href="<?= url('payroll/summary/null/?month=' . date('M') . '&month=' . date('m')) . '&' . http_build_query(array('basic_pay' => $total_basic_pay, 'allowance' => $sum_of_total_allowances, 'gross_pay' => $total_gross_pay, 'pension' => $total_pension, 'deduction' => $sum_of_total_deductions, 'tax' => $total_taxable_amount, 'paye' => $total_paye, 'net_pay' => $total_net_pay)) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Summary</a>
-                                    </td>-->
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>
                       </div>
                      </div>
-                    <div class="col-sm-12">
-
-                    </div>
+                    
                     <?php if ($create == 0) { ?>
-
-                        <div class='form-group center col-sm-12'>
-
-                            <label for="title" class="col-sm-5 control-label">
+                       
+                     <div class="row">
+                        <div class='form-group  col-sm-4'>
+                            <label class="col-sm-12 control-label">
                                 Payroll Date
                             </label>
-                            <div class="col-sm-3">
-                                <input type="date" class="form-control calendar" required="" name="payroll_date" value="<?= date('Y-m-d') ?>" >
+                            <div class="col-sm-12">
+                                <input type="date" class="form-control" required="" name="payroll_date" value="<?= date('Y-m-d') ?>" >
                             </div>
-                            <span class="col-sm-4 control-label">
-                                <?php echo form_error($errors, 'email_sms'); ?>
-                            </span>
                         </div>
-
-                        <div class='form-group center col-sm-12'>
-                            <label for="email_sms" class="col-sm-5 control-label">
-                                Notify users By SMS & Emails
+  
+                
+                        <div class='form-group col-sm-4'>
+                            <label class="col-sm-12 control-label">
+                                Notify company employees
                             </label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <input type="checkbox" id="check_message_to_send" onclick="$('#message_to_send').toggle()" class="form-control" name="send_sms_email" value="1" >
                             </div>
-                            <div class="col-sm-4">
-                                <textarea style="display:none" id="message_to_send" class="form-control" name="message_body">Hello #name Salary for this #salary_date has been issued. Your Net payment amount is #net_payment. For More information, login into your account</textarea>
+                            <div class="col-sm-12">
+                                <textarea style="display:none" id="message_to_send" class="form-control" name="message_body">Hello #name Salary for this #salary_date has been issued. Your Net payment amount is #net_payment.</textarea>
                             </div>
-                            <span class="col-sm-4 control-label">
-                                <?php echo form_error($errors, 'email_sms'); ?>
-                            </span>
                         </div>
-                        <div class='form-group center' >
-                            <label for="title" class="col-sm-1 control-label">
-                            </label>
+
+                        <div class='form-group  col-sm-4'>
                             <div class="col-sm-6">
                                 <input type="submit" class="btn btn-success" value="Create Payroll">
                             </div>
@@ -543,9 +543,7 @@
                             "payment_type_id"=>1,
                             'bank_account_id'=>$bank_account->id,
                             'user_id' => Auth::user()->id,
-                            // 'uname' => session('username'),
-                            // 'usertype' => session('usertype'),
-                           // 'created_by' => '{' . session('id') . ',' . session('table') . '}'
+                          
                         );
                         $insert_id = \DB::table('expenses')->insertGetId($array, "id");
                         //specify all expenses accomplished by 
@@ -555,13 +553,6 @@
                     <?= csrf_field() ?>
                   </form>
                  </div> 
-               </div>
-
-
-                                        
-                </div>
-              </div>      
-             </div>
            </div>
          </div>
         </div> 
@@ -569,28 +560,30 @@
    </div>
 </div>
 
-
 <script>
-    function save(a, b, column, table) {
+  function save(a, b, column) {
         var val = $('#' + a).text();
         if (val !== '') {
             $.ajax({
                 type: 'POST',
-                url: "<?= url('profile/editProfile/null') ?>",
-                data: {"id": b, newvalue: val, column: column, table: table},
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
+                url: "<?= base_url('account/editProfile/null') ?>",
+                data: {"id": b, newvalue: val, column: column},
                 dataType: "html",
                 beforeSend: function (xhr) {
-                    $('#stat' + a).html('<a href="#/refresh"<i class="fa fa-spinner"></i> </a>');
+                    $('#stat' + a).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
                 },
-                complete: function (xhr, status) {
-                    $('#stat' + a).html('<span class="label label-success">' + status + '</span>');
+                complete: function (xhr, status)  {
+                    $('#stat' + a).html('<label class="badge badge-info ">' + status + '</label>');
                 },
                 success: function (data) {
-                    toast(data);
+                     toastr.success(data);
+                   //  window.location.reload();
                 }
             });
         }
     }
-
 </script>
 @endsection

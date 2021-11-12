@@ -78,7 +78,7 @@
                                 <?php if (Auth::user()->department == 9) {
                   echo '<a href="'.url('Partner/add/'. $school->id).'" class="btn btn-danger btn-block" >Onboard School</button>';
                   }else{
-                    echo '<button class="btn btn-danger btn-block" id="onboard_school">Onboard School</button>';
+                    echo '<a href="'.url('sales/onboard/'. $school->id).'" class="btn btn-primary btn-sm btn-round" id="onboard_school">Onboard School</a>';
                   }
                   ?>
                             </div>

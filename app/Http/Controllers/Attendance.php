@@ -56,7 +56,6 @@ class Attendance extends Controller {
                 'present' => $present]);
             $found->update($data);
         } else {
-
             \App\Models\Uattendance::create(array_merge($where, [
             'timein' => date("Y-m-d h:i:s"),
             'created_by' => Auth::user()->id,

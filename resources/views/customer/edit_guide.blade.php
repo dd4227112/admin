@@ -5,28 +5,26 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>Schools Guide</h4>
-                <span></span>
+                <h4><?='Edit guide' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Customer Support</a>
+                    <li class="breadcrumb-item"><a href="#!">user manual</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Edit Guide</a>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -46,7 +44,7 @@
     <div class="modal-header">
        
     </div>
-    <form method="post" action="<?= url('customer/guide/edit/'.$guide->id) ?>">
+    <form method="post" action="<?= url('customer/guide/edit/'.$guide->id) ?>"  enctype="multipart/form-data">
         <div class="modal-body" id="message_result">
 
             <div class="form-group">
@@ -63,15 +61,21 @@
             </div>
 
             <div class="form-group">
+                <label class="control-label">Image :</label>
+                <input type="file" name="image_file" class="form-control col-sm-4"/>
+            </div>
+
+            <div class="form-group">
                 <label for="recipient-name" class="control-label">Content For :</label>
                 <span id="content_for">
                     <?php
                     $permissions = \DB::table('constant.permission')->where('permission_group_id', $guide->permission->permissionGroup->id)->get();
                     foreach ($permissions as $value) { ?>
                        <input type="radio" name="permission_id" value="<?= $value->id ?>" <?= $guide->permission_id == $value->id ? 'checked' : '' ?>/><?=$value->display_name;?>
-             <?php       }
+                 <?php       }
                     ?>
-                </span> </div>
+                </span> 
+            </div>
             <div class="form-group">
                 <label for="message-text" class="control-label">Content:</label>
                 <textarea class="form-control" id="message-text1" id="mymce" name="content"><?= $guide->content ?></textarea>

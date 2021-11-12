@@ -1,25 +1,37 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
+<?php $root = url('/') . '/public/';
+?>
 <div class="main-body">
     <div class="page-wrapper">
 
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+      <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Add Group' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">groups</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+      
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="row">
+                    <div class="card">
                         <div class="card-block">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">CREATE USER GROUPS</h4>
-                                </div>
+                        
                                 <form action="#" method="post">
                                     <div class="modal-body">
-
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -40,7 +52,6 @@
                                                     <strong> Group clients</strong> 
                                                     <select multiple="" name="to_client_id[]" class="form-control select2" required>
                                                         <?php
-                                                      //  $clients = DB::table('admin.clients')->get();
                                                       $clients = \DB::select('select A.*,B.client_id from admin.clients A left join admin.client_groups B on A.id = B.client_id where B.client_id is  null');
                                                         foreach ($clients as $client) { ?>
                                                             <option value="<?= $client->id ?>"><?= $client->name ?></option>
@@ -61,11 +72,11 @@
                                       
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                                        <button type="submit" class="btn btn-primary btn-sm btn-round">Save changes</button>
                                     </div>
                                     <?= csrf_field() ?>
                                 </form>
-                            </div>
+                
                         </div>
                     </div>
                 </div>
