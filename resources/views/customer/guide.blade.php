@@ -85,7 +85,7 @@
                                                        <?php } ?>
 
                                                          <div class="modal fade modal-flex" id="exampleModal<?= $i ?>" tabindex="-1" role="dialog">
-                                                            <div class="modal-dialog" role="document">
+                                                            <div class="modal-dialog modal-lg" role="document">
                                                               <div class="modal-content">
                                                                 <div class="modal-body model-container">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

@@ -1,10 +1,18 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/';
-function bank_data($schema){
-     return \collect(\DB::select("select a.name,a.number,b.* from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id
-      where b.schema_name ='{$schema}' "))->first();   
-}
+
+function account_no($schema,$bank_id){
+   $bank =  \collect(\DB::select("select a.number from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id
+      where b.schema_name ='{$schema}' and b.bank_account_id = '{$bank_id}' "))->first(); 
+       return $bank->number;
+ }
+
+ function account_name($schema,$bank_id){
+   $bank =  \collect(\DB::select("select a.name from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id
+      where b.schema_name ='{$schema}' and b.bank_account_id = '{$bank_id}' "))->first(); 
+       return $bank->name;
+ }
 ?>                         
 
 <div class="main-body">
@@ -77,8 +85,8 @@ function bank_data($schema){
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $value->schema_name ?></td>
-                                    <td><?= isset(bank_data($value->schema_name)->name) ? bank_data($value->schema_name)->name : ''?></td>
-                                    <td><?= isset(bank_data($value->schema_name)->number) ? bank_data($value->schema_name)->number : '' ?></td>
+                                    <td><?= account_name($value->schema_name,$value->bank_account_id) ?></td>
+                                    <td><?= account_no($value->schema_name,$value->bank_account_id) ?></td>
                                     <td><?= $value->invoice_prefix ?></td>
                                     <td><?= $value->api_username ?></td>
                                     <td><?= $value->api_password ?></td>

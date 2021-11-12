@@ -311,15 +311,9 @@ class Customer extends Controller {
         return view('message.create', compact('script', 'usertypes', 'message_success'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function createGuide() {
         $file = request()->file('image_file');
-        $company_file_id = $this->saveFile($file, 'company/contracts', TRUE);
+        $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
 
         $obj = [
             'permission_id' => request()->permission_id,
