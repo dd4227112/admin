@@ -44,7 +44,6 @@ class Account extends Controller {
 
 
     public function invoice() {
-        $this->data['breadcrumb'] = array('title' => 'Shulesoft invoices','subtitle'=>'invoices','head'=>'accounts');
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
@@ -87,7 +86,6 @@ class Account extends Controller {
     }
 
     public function invoiceReport() {
-        $this->data['breadcrumb'] = array('title' => 'Invoices report','subtitle'=>'reports','head'=>'accounts');
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
         if((int) $project_id == 1) {

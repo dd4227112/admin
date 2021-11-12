@@ -502,7 +502,7 @@ class Sales extends Controller {
                     'created_by' => \Auth::user()->id,
                     'username' => clean($schema_name),
                     'payment_option' => request('payment_option'),
-                  
+                    'start_usage_date' => date('Y-m-d')
                 ]); 
 
                 //client school
