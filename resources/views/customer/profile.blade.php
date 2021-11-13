@@ -1036,6 +1036,9 @@ $i++;
    <button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#uploadjobcard-Modal">Upload Job card</button>
 </div>
 
+
+
+
 <div class="modal fade" id="jobcard-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
 style="z-index: 1050; display: none;">

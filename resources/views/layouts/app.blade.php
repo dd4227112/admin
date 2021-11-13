@@ -674,6 +674,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 </li>
 
                                                 <li class="">
+                                                    <a href="<?= url('users/courses') ?>">
+                                                        <span class="pcoded-mtext">Learning/Courses</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="">
                                                     <a href="<?= url('users/applicant') ?>">
                                                         <span class="pcoded-mtext">Partners</span>
                                                     </a>
