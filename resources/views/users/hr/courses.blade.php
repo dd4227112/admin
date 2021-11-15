@@ -54,7 +54,7 @@
                                                         <td>{{ $value->course_name }}</td>
                                                         <td>{{ date('d-m-Y', strtotime($value->from_date)) }}</td>
                                                         <td>{{ date('d-m-Y', strtotime($value->to_date)) }}</td>
-                                                        <td>{{ $value->source }}</td>
+                                                        <td>{{ warp($value->source,10) }}</td>
                                                   
                                                         <td class="text-center">
                                                         <?php $delete_url = "users/learningDelete/$value->id"; $view_url = "users/learning/$value->id";?>
@@ -156,12 +156,18 @@ foreach ($users as $user) {
 </div>
 
 <div class="row">
+  <div class="col-md-12">
+    <strong> Course link</strong>
+     <input class="form-control" type="url" name="url" id="url" placeholder="https://example.com" pattern="https://.*" size="30">
+  </div>
+</div>
+<br>
+
+<div class="row">
 <div class="col-md-12">
 <strong> Description</strong>
-
 <textarea name="description" rows="2" class="form-control">
 </textarea>
-
 </div>
 </div>
 

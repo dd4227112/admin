@@ -850,26 +850,27 @@ class Users extends Controller {
          $this->data['courses'] = \App\Models\Course::latest()->get();
          if($_POST){
             $user_ids = request('user_ids');
-
             $course_id = \App\Models\Course::insertGetId([
                 'course_name' =>request('course_name'),
                 'created_by' => Auth::user()->id,
                 'from_date' => request('from_date'),
                 'to_date' => request('to_date'),
                 'source' => request('source'),
-                'descriptions' => request('description')
-             ]);
+                'descriptions' => request('description'),
+                'course_link' => request('url')
+              ]);
         
              foreach ($user_ids as $user_id) {
                 \App\Models\UserCourse::create(['user_id' => $user_id, 'course_id' => $course_id]);
                  $user = \App\Models\User::where(['id' => $user_id])->first();
                   if(!empty($user)){
                     $message = 'Hello '. $user->name()                              
-                                . chr(10) . 'A new course'
-                                . chr(10) . 'Title ' . request('course_name') .''
+                                . chr(10) . 'You have been assigned new course'
+                                . chr(10) . 'Title:' . request('course_name') .''
                                 . chr(10) .  request('description')  .''
+                                . chr(10) .  request('url')  .''
                                 . chr(10) . 'Deadline '. date('d-m-Y',strtotime(request('to_date')));
-                     $this->send_whatsapp_sms($user->phone, $message);
+                     $this->send_whatsapp_sms($user->phone, $message); 
                      $this->send_sms($user->phone,$message,1);
                 }
               }

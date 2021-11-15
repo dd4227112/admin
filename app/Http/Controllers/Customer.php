@@ -1233,7 +1233,6 @@ class Customer extends Controller {
     }
 
     public function resetPassword() {
-        $this->data['breadcrumb'] = array('title' => 'Reset password','subtitle'=>'Reset school password','head'=>'operations');
         $schema = request()->segment(3);
         if ($schema != '') {
             $pass = $schema . rand(5697, 33);
