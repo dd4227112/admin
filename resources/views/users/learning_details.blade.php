@@ -6,7 +6,7 @@
  
    <div class="page-header">
         <div class="page-header-title">
-            <h4><?='Learning details' ?></h4>
+            <h4><?='Course details' ?></h4>
         </div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
@@ -22,6 +22,33 @@
             </ul>
         </div>
     </div> 
+
+
+     <div class="page-body">
+            <div class="card">
+                <div class="card-header" style="margin-bottom: -20px;">
+                      <p style="font-weight: 500;margin-bottom:-15px;">Title</p> <br>
+                      <p style="font-weight: 600"> <?= $learning->course_name  ?></p>
+                </div>
+                <div class="card-block">
+                        <p style="font-weight: 500;margin-bottom:-15px;">Descriptions</p> <br>
+                        <p style="font-weight: 600"> <?= $learning->descriptions  ?></p>
+                        <p style="font-weight: 600;margin-bottom:-15px;">Source: <?= $learning->source ?></p> <br>
+                        <p style="font-weight: 500;margin-bottom:-15px;">From: <?= date('F j, Y', strtotime($learning->from_date)) ?> To: <?= date('F j, Y', strtotime($learning->to_date)) ?></p> <br>
+
+                        <?php if(can_access('course_participants')) { ?>
+                          <p style="font-weight: 600;margin-bottom:-15px;">Participants: </p>  <br> 
+
+                            <ul>
+                              @foreach($users as $user)
+                                <li style="display:inline;margin:5px;"><?= $user->name() ?></li>
+                               @endforeach
+                            </ul>
+                           
+                        <?php } ?>
+                </div>
+            </div>
+      </div>
    
     <div class="page-body">
       <div class="row">
@@ -33,19 +60,7 @@
               <div class="card-header">
                 <table class="table m-0">
                      <tbody>
-                         <tr>
-                           <th scope="row">Course name: &nbsp;&nbsp; <?= $learning->course_name ?></th>
-                          </tr>
-                          <tr>
-                            <th scope="row">Learning Source: &nbsp;&nbsp;<?= $learning->source ?></th>
-                          </tr>
-                           <tr>
-                            <th scope="row"> Details: &nbsp;&nbsp;<?= $learning->descriptions ?></th>
-                          </tr>
-                         <tr>
-                           <th scope="row"> Start date: &nbsp;&nbsp;&nbsp;&nbsp;<?= date('F j, Y', strtotime($learning->from_date)) ?></th>
-                           <th scope="row"> End date: &nbsp;&nbsp;&nbsp;&nbsp;<?= date('F j, Y', strtotime($learning->to_date)) ?></th>
-                        </tr>
+                       
  
                         <?php if(isset($learning->course_link)) { ?>
                         <tr>

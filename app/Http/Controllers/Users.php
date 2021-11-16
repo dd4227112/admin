@@ -108,12 +108,11 @@ class Users extends Controller {
     public function show() {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
         $this->data['user'] = $user = User::findOrFail($id);
-        $this->data['breadcrumb'] = array('title'=>$user->name ?? '','subtitle'=>'profile','head'=>'user');
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
-        $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->orderBy('created_at','desc')->get();
-        $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->orderBy('created_at','desc')->get();
-        $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->orderBy('created_at','desc')->get();
-        $this->data['learnings'] = \App\Models\Learning::where('user_id', $id)->orderBy('created_at','desc')->get();
+        $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->latest()->get();
+        $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->latest()->get();
+        $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->latest()->get();
+        $this->data['learnings'] = \App\Models\Course::whereIn('id', \App\Models\UserCourse::where('user_id',$id)->get(['course_id']))->latest()->get();
 
         //default number of days 22 to minutes
         $this->data['minutes'] = 22*24*60;
@@ -697,26 +696,38 @@ class Users extends Controller {
 
      public function learning(){
         $learning_id = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'User learning','subtitle'=>'courses','head'=>'operations');
+        
          if($_POST){
              $array= [
                  'course_name' => request('course_name'),
                  'source' => request('source'),
                  'from_date' => request('from_date'),
                  'to_date' => request('to_date'),
-                 'user_id' => request('user_id'),
+                 'created_by' => request('user_id'),
                  'has_certificate' => request('has_certificate'),
                  'descriptions' => request('description'),
                  'course_link' => request('link')
              ];
-            \App\Models\Learning::create($array);
+           $course_id = \App\Models\Course::insertGetId($array);
+
+           \App\Models\UserCourse::create(['user_id' => request('user_id'), 'course_id' => $course_id]);
+            return redirect()->back()->with('success','success');
          }
        
          if($learning_id > 0){
-            $this->data['learning'] = \App\Models\Learning::where('id',$learning_id)->first();
-               return view('users.learning_details', $this->data);
+            $this->data['learning'] = \App\Models\Course::where('id',$learning_id)->first();                 
+            $this->data['users'] = \App\Models\User::whereIn('id',\App\Models\UserCourse::where('course_id',$learning_id)->get(['user_id']))->get();
+            return view('users.learning_details', $this->data);
         }
+
+        
         return redirect()->back()->with('success', 'success');
+     }
+
+     public function learningDelete(){
+        $learning_id = request()->segment(3);
+         \App\Models\Course::where('id',$learning_id)->delete();
+       return redirect()->back()->with('success', 'deleted successful!');
      }
 
      
@@ -725,7 +736,7 @@ class Users extends Controller {
         if ($_POST) {
             $file = request()->file('certificate');
             $file_id = $this->saveFile($file, 'company/employees',TRUE); 
-           \App\Models\Learning::where('id',$learning_id)->update(['company_file_id' => $file_id]);
+           \App\Models\Course::where('id',$learning_id)->update(['company_file_id' => $file_id]);
        }
        return redirect()->back()->with('success', 'updated successful!');
    }
@@ -831,6 +842,41 @@ class Users extends Controller {
                  return view('users.signature', $this->data); 
               }
              
+      }
+
+
+      public function courses(){
+         $this->data['users'] = \App\Models\User::where('status',1)->whereNotIn('role_id',[7,15])->get();
+         $this->data['courses'] = \App\Models\Course::latest()->get();
+         if($_POST){
+            $user_ids = request('user_ids');
+            $course_id = \App\Models\Course::insertGetId([
+                'course_name' =>request('course_name'),
+                'created_by' => Auth::user()->id,
+                'from_date' => request('from_date'),
+                'to_date' => request('to_date'),
+                'source' => request('source'),
+                'descriptions' => request('description'),
+                'course_link' => request('url')
+              ]);
+        
+             foreach ($user_ids as $user_id) {
+                \App\Models\UserCourse::create(['user_id' => $user_id, 'course_id' => $course_id]);
+                 $user = \App\Models\User::where(['id' => $user_id])->first();
+                  if(!empty($user)){
+                    $message = 'Hello '. $user->name()                              
+                                . chr(10) . 'You have been assigned new course'
+                                . chr(10) . 'Title:' . request('course_name') .''
+                                . chr(10) .  request('description')  .''
+                                . chr(10) .  request('url')  .''
+                                . chr(10) . 'Deadline '. date('d-m-Y',strtotime(request('to_date')));
+                     $this->send_whatsapp_sms($user->phone, $message); 
+                     $this->send_sms($user->phone,$message,1);
+                }
+              }
+            return redirect()->back()->with('success','Course created successfull!');
+         }
+         return view('users.hr.courses', $this->data);
       }
 
 }

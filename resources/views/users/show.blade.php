@@ -218,7 +218,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link " data-toggle="tab" href="#learning" role="tab" aria-expanded="false">Learning</a>
+                            <a class="nav-link " data-toggle="tab" href="#learning" role="tab" aria-expanded="false">Courses</a>
                             <div class="slide"></div>
                         </li>
                  
@@ -779,24 +779,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php  $kpi_ids = \App\Models\KPIUser::where('user_id',$user->id)->get(['kpi_id']);
-                                                 $kpis = \App\Models\KeyPerfomanceIndicator::whereIn('id',$kpi_ids)->get();
-                                               
-                                            if(sizeof($kpis) > 0){ 
-                                                $i = 1; foreach($kpis as $kpi){
-                                                ?>
-                                            <tr>
-                                                <td><?=$i++?> </td>
-                                                <td><?=$kpi->name?></td>
-                                                <td><?=$kpi->created_at ?></td>
-                                                <td><?=$kpi->value?></td>
-                                                <td>
-                                                <a class="btn btn-warning btn-sm" href="{{ url('users/evaluatekpi/'.$kpi->id .'/'.$user->id) }}">Evaluate</a>
-                                                </td>
-                                            </tr>
-                                            <?php } 
-                                               } 
-                                               ?>
+                                          
                                             </tbody>
 
                                         </table>
@@ -964,8 +947,6 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
 
                                         </div>
                                         <div class="col-lg-12">
-                                        
-    
                                             <div class="card-block">
                                               
                                               <div class="table-responsive dt-responsive">
@@ -1007,9 +988,8 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                     <div class="col-lg-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5 class="card-header-text">Learning</h5>
+                                                <h5 class="card-header-text">Courses</h5>
                                                 <button type="button" class="btn btn-primary btn-mini btn-round float-right" data-toggle="modal" data-target="#learning-large-Modal">Learning</button>
-
                                             </div>
                                             <div class="col-lg-12">
         
@@ -1039,7 +1019,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                                                     <td><?= date('d-m-Y', strtotime($learning->to_date)) ?></td>
                                                                     <td> {{ $learning->source ?? '' }}</td>
                                                                     <td>
-                                                                        <?= $v_url = "users/learning/$learning->id"; ?>
+                                                                        <?php $v_url = "users/learning/$learning->id"; ?>
                                                                           <a href="<?= url($v_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View">View  </a>
                                                                     </td>
                                                                 </tr>
@@ -1301,7 +1281,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"> Learning </h4>
+                    <h4 class="modal-title"> Course </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
