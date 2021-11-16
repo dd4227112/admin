@@ -35,7 +35,7 @@
                       
 
                         
-                             <div class="card bg-c-yellow text-white">
+                             <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -43,7 +43,8 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['users']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30"></i>
+                                   
                                             </div>
                                     </div>
                                 </div>
@@ -53,7 +54,7 @@
 
                 
                     <div class="col-xl-3 col-md-6">
-                         <div class="card bg-c-green text-white">
+                         <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -70,7 +71,7 @@
 
                     <div class="col-xl-3 col-md-6">
                       
-                        <div class="card bg-c-blue text-white">
+                        <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -86,7 +87,7 @@
                     </div>
 
                    <div class="col-xl-3 col-md-6">
-                        <div class="card bg-c-blue text-white">
+                        <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -102,7 +103,7 @@
                    </div>
 
                     <div class="col-xl-3 col-md-6">
-                         <div class="card bg-c-yellow text-white">
+                         <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -120,7 +121,7 @@
                    
 
                       <div class="col-xl-3 col-md-6">
-                         <div class="card bg-c-green text-white">
+                         <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -136,7 +137,7 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                         <div class="card bg-c-pink text-white">
+                         <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -152,7 +153,7 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                            <div class="card bg-c-blue text-white">
+                            <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -180,7 +181,7 @@
         
                     <div class="row">
                         <div class="col-xl-6">
-                            <div class="card shadow mb-2">
+                            <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
                                         <div id="onboardPie" style="height: 300px; width:350px;"></div>
@@ -190,7 +191,7 @@
                         </div>
 
                         <div class="col-xl-6">
-                            <div class="card shadow mb-2">
+                            <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
                                         <div id="onboardBar" style="height: 300px; width:350px;"></div>

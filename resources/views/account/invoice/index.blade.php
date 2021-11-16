@@ -1,12 +1,9 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/'; ?>
-
 <div class="main-body">
     <div class="page-wrapper">
-    
-
-        <div class="page-header">
+    <div class="page-header">
             <div class="page-header-title">
                 <h4>Invoices</h4>
             </div>
@@ -19,28 +16,29 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    <li class="breadcrumb-item"><a href="#!">invoice</a>
                     </li>
                 </ul>
             </div>
         </div>
-
         <div class="page-body">
-            <div class="row">
-                <div class="col-sm-12">
 
-                    <div class="card">
+
+<div class="row">
+                                            <div class="col-sm-12">
+                                            <div class="card">
                         <div class="card-block">
-                            <div class="row">
-
-                                <div class="col-sm-12 col-xl-4 m-b-30">
-                                    <h4 class="sub-title">&nbsp;</h4>
+                            <div class="col-sm-12 col-xl-4 m-b-30">
+                           
                                        <?php if(can_access('creating_invoice')) { ?>
-                                           <a href="<?= url("account/projection") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Create new invoice">New invoice  </a>
+                                           <a href="<?= url("account/projection") ?>" class="btn btn-primary" data-placement="top"  data-toggle="tooltip" data-original-title="Create new invoice">New invoice  </a>
                                       <?php } ?>
                                 </div>
+                            <div class="row d-flex justify-content-center">
 
-                                <div class="col-sm-12 col-xl-4 m-b-30">
+                                
+
+                                <div class="col-sm-10 col-xl-4 m-b-30">
                                     <h4 class="sub-title">Select project</h4>
                                     <select name="select" class="form-control form-control-primary"  id="schema_project">
                                        <option value="0">Select</option>
@@ -72,42 +70,34 @@
                             </div>
                         </div>
 
-                    <!-- Zero config.table start -->
-                    <div class="card">
-                     <div class="card tab-card">
-                        <ul class="nav nav-tabs md-tabs" role="tablist">
-                            <li class="nav-item complete">
-                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong>INVOICE LIST</strong></a>
-                                <div class="slide"></div>
-                            </li>
-
-                             <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile2" role="tab" aria-expanded="false">  <strong> PRO FORMA INVOICE</strong> </a>
-                                <div class="slide"></div>
-                            </li>
-
-                             <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#reports" role="tab" aria-expanded="false">  <strong> VIEW REPORT</strong> </a>
-                                <div class="slide"></div>
-                            </li>
-
-                             {{-- <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false"> <strong> VIEW REPORT </strong>  </a> 
-                                <div class="slide"></div>
-                            </li>  --}}
-
-                            @if(isset($project_id) && isset($account_year_id)) 
-                            <li class="nav-item complete">
-                                <a class="nav-link" style="color: blue;" href="{{ url('account/invoiceReport/'.$project_id.'/'.$account_year_id) }}"> <b>VIEW REPORT</b> </a>
-                                <div class="slide"></div>
-                            </li>
-                            @endif
-                        </ul>
-
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
-                                <div class="card-block">
-                                   <div class="dt-responsive table-responsive">
+                                                <!-- Material tab card start -->
+                                                <div class="card">
+                                                   
+                                                    <div class="card-block">
+                                                        <!-- Row start -->
+                                                        <div class="row m-b-30">
+                                                            <div class="col-lg-12 col-xl-12">
+                                                                
+                                                                <!-- Nav tabs -->
+                                                                <ul class="nav nav-tabs md-tabs" role="tablist">
+                                                                    <li class="nav-item">
+                                                                        <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong>INVOICE LIST</strong></a>
+                                                                        <div class="slide"></div>
+                                                                    </li>
+                                                                    <li class="nav-item">
+                                                                        <a class="nav-link" data-toggle="tab" href="#profile2" role="tab" aria-expanded="false"><strong>PRO FORMA INVOICE</strong></a>
+                                                                        <div class="slide"></div>
+                                                                    </li>
+                                                                    <li class="nav-item">
+                                                                        <a class="nav-link" data-toggle="tab" href="#messages3" role="tab" aria-expanded="false"><strong>VIEW REPORT</strong></a>
+                                                                        <div class="slide"></div>
+                                                                    </li>
+                                                                   
+                                                                </ul>
+                                                                <!-- Tab panes -->
+                                                                <div class="tab-content card-block">
+                                                                    <div class="tab-pane active" id="home3" role="tabpanel">
+                                                                    <div class="dt-responsive table-responsive">
                                    <?php if ($project_id == 4) { ?>
                                       <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
@@ -261,12 +251,9 @@
                                     </table>
                                 <?php } ?>
                                </div>
-                            </div>
-                        </div>
-                        
-                           <div class="tab-pane" id="profile2" role="tabpanel" aria-expanded="false">
-                                <div class="card-block">
-                                   <div class="dt-responsive table-responsive">
+                                                                    </div>
+                                                                    <div class="tab-pane" id="profile2" role="tabpanel">
+                                                                    <div class="dt-responsive table-responsive">
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
                                             <tr>
@@ -315,71 +302,79 @@
                                         </tfoot> 
                                        </table>
                                             
+                                    </div> 
+                                                                    </div>
+                                                                    <div class="tab-pane" id="messages3" role="tabpanel">
+                                                                    <div class="dt-responsive table-responsive">
+                                <div class="col-sm-12">
+                               <form class="form-horizontal" role="form" method="post"> 
+                                    <div class="form-group row">
+                                        <div class="col-md-4 col-sm-12">
+                                            <input type="date" class="form-control" id="from_date" name="from_date" value="<?= old('from_date',$from) ?>" >
+                                        </div>
+                                  
+                                        <div class="col-md-4 col-sm-12">
+                                            <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to) ?>" >
+                                        </div>
+                                    
+                                        <div class="col-md-2 col-sm-2 col-xs-6">
+                                            <input type="submit" class="btn btn-success" value="Submit"  style="float: right;">
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-
-
-                         <div class="tab-pane" id="reports" role="tabpanel" aria-expanded="false">
-                                <div class="card-block">
-                                   <div class="dt-responsive table-responsive">
+                                   <?= csrf_field() ?>
+                                 </form>
+                               </div>
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
+                                   
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>EWTERGRTG Name</th>
+                                                <th>Client Name</th>
                                                 <th>Reference #</th>
-                                                <th>Amoun FGFGFt</th>
+                                                <th>Paid date</th>
+                                                <th>Amount</th>
                                                 <th>Due Date</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        
                                         <tbody>
-                                            <?php 
-                                              $f = 1; $total_amount = 0;
-                                             $temp_clients = \App\Models\TempClients::latest()->get();
-                                            foreach ($temp_clients as $value) {
-                                                ?>
-                                                <tr>
-                                                    <td><?= $f ?></td>
-                                                    <td><?= isset($value->school->name) ? warp(strtoupper($value->school->name),15) : '' ?></td>
-                                                    <td><?= $value->reference ?></td>
-                                                    <td><?php $total_amount+= $value->amount; echo money($value->amount) ?></td>
-                                                    <td><?= date('d M Y', strtotime($value->due_date)) ?></td>
-                                                    <td>
-                                                     
-                                                     <div class="dropdown-secondary dropdown f-right">
-                                                        <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                                         <a class="dropdown-item waves-light waves-effect" href="<?= url('account/proinvoiceView/' . $value->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
-                                                         {{-- <a class="dropdown-item waves-light waves-effect" href="<?= url('account/proinvoiceView/edit/' . $value->id) ?>"><span class="point-marker bg-warning"></span>Edit</a> --}}
-                                                        </div>
-                                                    </div>
-                                                  
-                                                  </td>
-                                              </tr>
-                                   
-                                         <?php $f++; } ?>
-                                        </tbody>
-                                         <tfoot>
-                                            <tr>
-                                                <td colspan="3"><strong> Total Amount</strong></td>
-                                                <td><strong><?= isset($total_amount) ? money($total_amount) : '' ?></strong></td>
-                                                <td colspan="1"></td>
-                                            </tr>
-                                        </tfoot> 
-                                       </table>
-                                            
-                                    </div>
-                                </div>
-                            </div>
-                        
+                                            <?php
+                                            $total_amount = 0;
+                                            $total_paid = 0;
+                                            $total_unpaid = 0;
+                                            $i = 1;
+                                            foreach ($invoices as $invoice) {
 
-                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
-                                 <div class="card-block">
-                                   <div class="dt-responsive table-responsive">
+                                                ?>
+
+
+                                                <tr>
+                                                    <td><?= $i?></td>
+                                                    <td><?= $invoice->name ?></td>
+                                                    <td><?= $invoice->reference ?></td>
+                                                    <td><?= date('d M Y', strtotime($invoice->created_at)) ?></td>
+                                                    <td><?= money($invoice->amount) ?></td>
+                                                    <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
+                                                    <td>
+                                                        <a class="btn btn-success btn-mini btn-round" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
+                                                   </td>
+                                               </tr>
+                                         <?php $i++; } ?>
+                                        </tbody>
+                                        <tfoot>
+                                            {{-- <tr>
+                                                <td colspan="2">Total</td>
+                                                <td><?= money($total_amount) ?></td>
+                                                <td><?= money($total_paid) ?></td>
+                                                <td><?= money($total_unpaid) ?></td>
+                                                <td colspan="2"></td>
+                                            </tr> --}}
+                                        </tfoot>
+                                    </table>
+                               </div> 
+                                                                    </div>
+                                                                    <div class="tab-pane" id="profile3" role="tabpanel">
+                                                                    <div class="dt-responsive table-responsive">
                                      <?php if(isset($invoices) && !empty($invoices)){ ?>
                                         <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
@@ -417,23 +412,19 @@
                                                 </table>
                                               <?php }?>
                                             </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                           
+                                                        </div>
+                                                        <!-- Row end -->
+                                                       
+                                                    </div>
+                                                </div>
+                                                <!-- Material tab card end -->
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                              </div> 
-                          </div>
-
-
-                      
-                    </div>
-
-                </div>
-            </div>
-          </div>
-        <!-- Page-body end -->
-    </div>
-
+</div>
 
 
 <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
@@ -487,7 +478,20 @@
     </div>
 </div>
 
+</div>
+</div>
 <script type="text/javascript">
+
+
+
+    $('.calendar').on('click', function (e) {
+        e.preventDefault();
+        $(this).attr("autocomplete", "off");
+    });
+
+
+
+
     $('#schema_project').change(function () {
         var schema = $(this).val();
         if (schema > 0) {
@@ -507,4 +511,5 @@
         }
     });
 </script>
+
 @endsection

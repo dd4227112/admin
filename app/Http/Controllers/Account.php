@@ -67,6 +67,8 @@ class Account extends Controller {
             return redirect()->back()->with('success', 'deleted successfully');
           }
 
+          
+
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
@@ -83,12 +85,8 @@ class Account extends Controller {
             }
             return view('account.invoice.index', $this->data);
         }
-    }
 
-    public function invoiceReport() {
-        $project_id = $this->data['project_id'] = request()->segment(3);
-        $this->data['account_year_id'] = $account_year_id = request()->segment(4);
-        if((int) $project_id == 1) {
+        if($project_id == 1) {
             $from = !empty(request('from_date')) ? request('from_date') : date('Y-01-01');
             $this->data['from'] = $from;
             $this->data['id'] = 4;
@@ -97,11 +95,33 @@ class Account extends Controller {
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
              $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
-             $this->data['invoice_reports'] = \DB::select("select extract(month from p.created_at) as month , sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
-            return view('account.invoice.report', $this->data);
-        }  
+             $this->data['invoice_reports'] = DB::select("select extract(month from p.created_at) as month ,
+              sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on 
+              c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}'
+               and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
+               dd($this->data['invoice_reports']);
+        } 
+        return view('account.invoice.index', $this->data);
 
     }
+
+    // public function invoiceReport() {
+    //     $project_id = $this->data['project_id'] = request()->segment(3);
+    //     $this->data['account_year_id'] = $account_year_id = request()->segment(4);
+    //     if((int) $project_id == 1) {
+    //         $from = !empty(request('from_date')) ? request('from_date') : date('Y-01-01');
+    //         $this->data['from'] = $from;
+    //         $this->data['id'] = 4;
+    //         $to = !empty(request('to_date')) ? request('to_date') : date('Y-m-d');
+    //         $this->data['to'] = $to;
+    //         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
+    //         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
+    //          $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
+    //          $this->data['invoice_reports'] = \DB::select("select extract(month from p.created_at) as month , sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
+    //         return view('account.invoice.index', $this->data);
+    //     }  
+
+    // }
 
 
     

@@ -8760,7 +8760,7 @@ table.footable-paging-center > tfoot > tr.footable-paging > td {
  ========================================= */
 .common-img-bg {
   background-size: cover;
-  background: url(../images/shulesoft-watoto.jpg) repeat center center fixed;
+  background: url(../images/admin.png)  center center fixed;
   height: 100%; }
 
 .auth-body {
