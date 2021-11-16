@@ -391,7 +391,9 @@ class Account extends Controller {
         $unit_price = $client->price_per_student;
         $amount = $unit_price * $client->estimated_students;
         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
-        return redirect()->back()->with('success', 'Invoice Created Successfully');
+       // return redirect()->back()->with('success', 'Invoice Created Successfully');
+         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+        
     }
 
 
@@ -433,7 +435,8 @@ class Account extends Controller {
         $amount = remove_comma(request('amount'));
          \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
         }
-        return redirect()->back()->with('success', 'Invoice Created Successfully');
+         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+
     }
 
 

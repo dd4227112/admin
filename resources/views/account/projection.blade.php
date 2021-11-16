@@ -33,7 +33,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                     </li>
                     <li class="breadcrumb-item"><a href="#!">accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    <li class="breadcrumb-item"><a href="#!">invoice</a>
                     </li>
                 </ul>
             </div>
@@ -68,7 +68,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="profile7" role="tabpanel">
                                         <div class="card-block">
-                                            <input type="checkbox" <?=(int) request('skip')==1 ?'checked':''?> id="skip_field" onmousedown="skip_field()"/> Hide Inputs Fields
                                             <div class="table-responsive dt-responsive">
                                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
@@ -172,7 +171,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                      <select type="text" name="type"  class="select2" required>
                                                     <option value="">Select here...</option>
                                                     <?php
-                                                        $types = \App\Models\InvoiceType::get();
+                                                        $types = \App\Models\InvoiceType::whereNotIn('id',[1])->get();
                                                         foreach($types as $type){
                                                            echo  '<option value="'.$type->id.'">'.$type->name.'</option>';
                                                         }
