@@ -5,6 +5,26 @@
     <div class="page-wrapper">
   
 
+      <div class="page-header">
+            <div class="page-header-title">
+                <h4>Revenues</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">transactions</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
     <div class="page-body">
       <div class="row">
          <div class="col-sm-12">
@@ -14,7 +34,7 @@
                     <div class="row">
 
                     <div class="col-sm-12 col-xl-3 m-b-30">
-                        <h4 class="sub-title">CREATE REVENUES</h4>
+                        <h4 class="sub-title"></h4>
                         <?php if (can_access('add_revenue')) { ?>
                             <a class="btn btn-sm btn-primary" href="<?php echo url('revenue/add/') ?>">
                                 <i class="fa fa-plus"></i> 
@@ -53,18 +73,15 @@
                 </div>
         
               <div class="row">
-                <div class="col-lg-12">
+                <div class="col-sm-12">
                     <div class="card">
                         <div class="card-block">
-                        
-                            <div class="row">
-                                <div class="col-sm-12">
-                                
-                                     <div class="table-responsive dt-responsive"> 
-                                        <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+                            <div class="table-responsive"> 
+                                       <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
+
                                             <thead>
                                                 <tr>
-                                                    <th class="col-sm-1"><?= ('##') ?></th>
+                                                    <th class="col-sm-1"><?= ('#') ?></th>
                                                     <th class="col-sm-2"><?= ('Name') ?></th>
                                                     <th class="col-sm-2">Payer name</th>
                                                     <th class="col-sm-1">Payer phone</th>
@@ -145,11 +162,8 @@
                                             <?php } ?>
                                         </table>
 
-                                       
                                     </div>
                 
-
-                                    </div>
                                 </div>
                     
                         </div>
