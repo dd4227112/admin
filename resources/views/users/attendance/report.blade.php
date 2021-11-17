@@ -140,7 +140,7 @@ table td {
                                     <div class="row">
                                         <div class="col-sm-12">
                                         <h2 style="text-align: center; ">  </h2>
-                                            <table class="table">
+                                            <table class="table table">
                                                 <tr>
                                                     <th style="width: 25%;"><?= img($array); ?></th>
                                                     <th style="width: 50%;">
