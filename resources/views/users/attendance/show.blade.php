@@ -153,22 +153,24 @@
                    </div>
                 </div>
 
-
-                <div class="card">
-                   <div class="card-block">
-                        <h5 style="font-weight: 800"> Attendance information</h5> 
+                <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-title mt-4 mr-2 px-4">
+                                <h5 style="font-weight: 800"> Attendance information</h5> 
                            <p style="font-weight:700"> Present   <label class="badge badge-primary">P</label>, Present late  <label class="badge badge-warning">P</label>, Present early leave  <label class="badge badge-danger">P</label>, weekends <label class="badge badge-default">S</label> </p>
-                           <div class="row">
-                              <?php
+                                </div>
+                           
+                                <div class="card-body">
+                                    <div class="table-responsive attendance-table">
+                                    <?php
                               for ($m = 1; $m <= (int) date('m'); $m++) {
                                   $dateObj = DateTime::createFromFormat('!m', $m);
                                   $monthName = $dateObj->format('F');
                                   ?>
                                   <h6 class="text-left"><?= $monthName ?></h6>
-                                  <div class="container-fluid">
-                                    <div id="table-sm table-striped" >
-                                      <table class="table table-responsive" style="width: 1000px">
-                                          <thead>
+                                        <table class="table table-bordered mb-0 table-centered">
+                                        <thead>
                                               <tr>
                                                   <?php 
                                                   for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) {
@@ -208,17 +210,16 @@
                                                   ?> 
                                               </tr>
                                           </tbody>
-      
-                                      </table>
-                              <?php } ?>
-                          </div>
-                                  </div>
-                                  
-                        </div>
-                       </div>
-                    </div>
+                                        </table><!--end /table-->
+                                        <?php } ?>
+                                    </div><!--end /tableresponsive-->
+                                </div><!--end card-body-->
+                            </div><!--end card-->
+                        </div><!--end col-->
+                    </div><!--end row-->
 
-             </div>
+              
+             
           </div>
         </div>
     </div>

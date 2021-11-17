@@ -62,7 +62,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['parents']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -79,7 +79,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['students']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -95,7 +95,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['teachers']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red" style="color:#19b99a"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
                    </div>
 
                     <div class="col-xl-3 col-md-6">
-                         <div class="card shadow">
+                         <div class="card shadow bg-primary">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -111,7 +111,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['active_users']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@
                    
 
                       <div class="col-xl-3 col-md-6">
-                         <div class="card shadow">
+                         <div class="card shadow bg-primary">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -129,7 +129,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['active_parents']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                         <div class="card shadow">
+                         <div class="card shadow bg-primary">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -145,7 +145,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['active_students']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                            <div class="card shadow">
+                            <div class="card shadow bg-primary">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -161,7 +161,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['active_teachers']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>

@@ -48,7 +48,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             </div>
             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6> &nbsp; </h6>
-                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
             </div>
         </div>
   
@@ -57,7 +57,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             <div class="row">
                  <div class="col-xl-3 col-md-6">
                     <?php $unique_visitors = \collect(DB::select('select count(*) from (select distinct platform,user_agent from admin.website_logs a where ' . $where . '  ) x '))->first()->count; ?>
-                       <div class="card bg-c-green text-white">
+                       <div class="card bg-c-blue text-white shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -65,7 +65,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                                 <h4 class="m-b-0">{{ number_format($unique_visitors) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-50" style="color:#19b99a"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -74,7 +74,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
                   <div class="col-xl-3 col-md-6">
                     <?php $total_sms_sent = \collect(DB::select('select count(*) from public.sms a where ' . $where))->first()->count; ?>
-                     <div class="card bg-c-green text-white">
+                     <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -92,7 +92,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 
                   <div class="col-xl-3 col-md-6">
                       <?php  $email_total_reacherd = \collect(DB::select('select count(*) from public.email a where ' . $where))->first()->count; ?>
-                     <div class="card bg-c-blue text-white">
+                     <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -110,7 +110,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
                  <div class="col-xl-3 col-md-6">
                       <?php  $events = \collect(DB::select('select count(*) from admin.events  a where ' . $where))->first()->count; ?>
-                       <div class="card bg-c-yellow text-white">
+                       <div class="card bg-c-yellow text-white shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
