@@ -920,7 +920,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
 
                                         
-                                       <?php if (can_access('manage_transactions')) { ?>
+                                       <?php if (!can_access('manage_transactions')) { ?>
                                         <li class="pcoded-hasmenu">
                                             <a href="javascript:void(0)">
                                                 <span class="pcoded-mtext text-bold">Transactions</span>

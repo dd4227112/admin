@@ -31,7 +31,7 @@
                             <div class="col-sm-12 col-xl-4 m-b-30">
                            
                                        <?php if(can_access('creating_invoice')) { ?>
-                                           <a href="<?= url("account/projection") ?>" class="btn btn-primary" data-placement="top"  data-toggle="tooltip" data-original-title="Create new invoice">New invoice  </a>
+                                           <a href="<?= url("account/projection") ?>" class="btn btn-primary" data-placement="top"  data-toggle="tooltip" data-original-title="">Create new invoice  </a>
                                       <?php } ?>
                                 </div>
                             <div class="row d-flex justify-content-center">
@@ -43,7 +43,7 @@
                                     <select name="select" class="form-control form-control-primary"  id="schema_project">
                                        <option value="0">Select</option>
                                         <?php
-                                       $projects = \App\Models\InvoiceType::all();
+                                       $projects = \App\Models\InvoiceType::whereNotIn('id',[4])->get();
                                        foreach ($projects as $project) {
                                             ?>
                                             <option value="<?= $project->id ?>" selected><?= $project->name ?></option>
@@ -372,9 +372,10 @@
                                         </tfoot>
                                     </table>
                                </div> 
-                                                                    </div>
-                                                                    <div class="tab-pane" id="profile3" role="tabpanel">
-                                                                    <div class="dt-responsive table-responsive">
+                               
+                                </div>
+                                <div class="tab-pane" id="profile3" role="tabpanel">
+                                <div class="dt-responsive table-responsive">
                                      <?php if(isset($invoices) && !empty($invoices)){ ?>
                                         <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
@@ -459,7 +460,8 @@
                                     <textarea name="message" required="" class="form-control" >Hello #name,
                                     Thank you for choosing ShuleSoft in your school. We really appreciate working with your school.
                                     To help us continue offering this service to your school, kindly find our invoice for Tsh #amount. You can also pay electronically via masterpass with reference number #invoice
-                                    Thank you</textarea> 
+                                    Thank you
+                                    </textarea> 
                                 </div>
                             </div>
                         </div>
