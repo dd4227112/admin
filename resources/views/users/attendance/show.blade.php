@@ -158,7 +158,8 @@
                             <div class="card">
                                 <div class="card-title mt-4 mr-2 px-4">
                                 <h5 style="font-weight: 800"> Attendance information</h5> 
-                           <p style="font-weight:700"> Present   <label class="badge badge-primary">P</label>, Present late  <label class="badge badge-warning">P</label>, Present early leave  <label class="badge badge-danger">P</label>, weekends <label class="badge badge-default">S</label> </p>
+                           <p style="font-weight:700"> Present   <label class="badge badge-info">P</label>, Present late  <label class="badge badge-warning">P</label>, Present early leave  <label class="badge badge-danger">P</label>,
+                             weekends <label class="badge badge-default">S</label>, Sick  <label class="badge badge-danger">S</label>, Permission  <label class="badge badge-info">PM</label> </p>
                                 </div>
                            
                                 <div class="card-body">
@@ -190,15 +191,22 @@
                                                       } elseif (!empty($att) && $att->present == 1) {
                                                           if(date("H:i:s",strtotime($att->timein)) > $the_timein){
                                                              $att = '<label class="badge badge-warning">P</label>';
-                                                          }elseif(date("H:i:s",strtotime($att->timeout)) < $the_timeout){
+                                                          }elseif(!empty($att->timeout) && date("H:i:s",strtotime($att->timeout)) < $the_timeout){
                                                              $att = '<label class="badge badge-danger">P</label>';
                                                           }else{
-                                                             $att = '<label class="badge badge-primary">P</label>';
+                                                             $att = '<label class="badge badge-info">P</label>';
                                                           }
                                                       } elseif(!empty($att->absent_reason_id)) {
                                                           $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
                                                           if (!empty($reason)) {
-                                                              $att = $reason->reason;
+                                                            //   $att = $reason->reason;
+                                                               if(preg_match('/Sick/', $reason->reason)){
+                                                                    $att = '<label class="badge badge-danger">S</label>';
+                                                               }elseif(preg_match('/Permission/', $reason->reason)){
+                                                                    $att = '<label class="badge badge-info">PM</label>';
+                                                               }elseif(preg_match('/other reasons/', $reason->reason)) {
+                                                                    $att = '<label class="badge badge-info">O</label>';
+                                                               }
                                                           }else{
                                                               $att = '<strong>ABS</strong>';
                                                           }
