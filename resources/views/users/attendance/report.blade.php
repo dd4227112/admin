@@ -68,7 +68,7 @@ table td {
                 <div class="">
                <div class="col-md-12 col-xl-12">
                            
-                <div class="card-header">
+                <div >
                 <form style="" class="form-horizontal" role="form" method="post">
                     <br>
                     <div class="form-group row">
@@ -111,9 +111,9 @@ table td {
                              <a class="nav-link active" href="#home3" id="home-tab" role="tab"  aria-expanded="true"
                                 data-toggle="tab" aria-expanded="true">Staff Attendance</a>
                            </li>
-                           <li class="nav-link">
+                           <!-- <li class="nav-link">
                                <a  class="nav-link" target="_blank" href="<?php echo $_SERVER['REQUEST_URI']; ?>/export"> <b>Print Report</b> </a>
-                          </li>
+                          </li> -->
                         </ul>
 
                         <div class="tab-content">
@@ -165,7 +165,7 @@ table td {
                                             </h5>
                                             
                                             <div id="hide-table" class="table-responsive">
-                                                <table class="table table-sm table-bordered">
+                                                <table  id="dt-ajax-array" class="table dataTable table-mini table-striped table-bordered table-hover">
                                                     <thead>
                                                         <tr>
                                                         <td>#</td>
