@@ -163,7 +163,7 @@
                                    </div>
 
                                   <div class="row">
-                                    <div class="col-xs-12 col-sm-4 col-md-4">
+                                    <div class="col-xs-12 col-sm-3 col-md-3">
                                         <div class="form-group">
                                             <strong>Employment Category*:</strong>  <br/>
                                             <select name='employment_category' class="form-control">
@@ -177,7 +177,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-4 col-md-4">
+                                    <div class="col-xs-12 col-sm-3 col-md-3">
                                         <div class="form-group">
                                             <strong>Basic Salary:</strong>
                                             <input id="location" placeholder="basic salary" type="text" class="form-control  transaction_amount" name="salary" value="<?=$user->salary?>">
@@ -185,7 +185,14 @@
                                     </div>
 
                                     <?php if(can_access('edit_user_info')) { ?>
-                                        <div class="col-xs-12 col-sm-4 col-md-4">
+                                        <div class="col-xs-12 col-sm-3 col-md-3">
+                                            <div class="form-group">
+                                                <strong>Joining date:*</strong>
+                                                <input type="date" class="form-control" name="joining_date" value="<?= $user->joining_date ?>" required>
+                                            </div>
+                                        </div>
+
+                                         <div class="col-xs-12 col-sm-3 col-md-3">
                                             <div class="form-group">
                                                 <strong>Contract start date:*</strong>
                                                 <input  placeholder="Date of Joining" type="date" class="form-control" name="contract_start_date" value="<?= $user->contract_start_date ?>" required>

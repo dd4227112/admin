@@ -962,11 +962,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
 
-                                                  <li class="">
-                                                    <a href="<?= url('account/reconciliation') ?>">
-                                                        <span class="pcoded-mtext">Reconciliation</span>
-                                                    </a>
-                                                </li>
+                                                 
                                             </ul>
                                         </li>
                                      <?php } ?>

@@ -778,7 +778,6 @@ class Users extends Controller {
     
      public function addLead() {
         if ($_POST) {
-
             $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);
             $task = \App\Models\Task::create($data);
 

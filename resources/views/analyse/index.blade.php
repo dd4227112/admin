@@ -4,7 +4,6 @@
 <?php $root = url('/') . '/public/';  ?>
 
 <div class="page-wrapper">
-  {{-- <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb> --}}
 
   <div>
     <div class="page-header">
@@ -28,13 +27,10 @@
   </div>
 
     <div class="page-body">
-        <div class="row">
-            <?php if (can_access('manage_users')) { ?>
-                    
-                  <div class="col-xl-3 col-md-6">
-                      
+        <?php if (can_access('manage_users')) { ?>
 
-                        
+           <div class="row">
+                  <div class="col-xl-3 col-md-6">
                              <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
@@ -49,7 +45,6 @@
                                     </div>
                                 </div>
                             </div>
-                    
                     </div>
 
                 
@@ -70,7 +65,6 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                      
                         <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
@@ -203,8 +197,6 @@
                        
               <?php } ?>
 
-              <div class="row">
-                  <div class="col-sm-12">
                    <div class="card">
                     <div class="card-header">
                         <h5>My User Activities</h5>
@@ -244,8 +236,6 @@
                         </div>
                     </div>
                   </div>
-                </div>
-            </div> 
 
         </div>
     </div>
