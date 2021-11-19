@@ -27,7 +27,6 @@ class Account extends Controller {
     }
 
     public function projection() {
-        $this->data['breadcrumb'] = array('title' => 'Create invoices','subtitle'=>'invoices','head'=>'accounts');
         $this->data['budget'] = [];
         return view('account.projection', $this->data);
     }
