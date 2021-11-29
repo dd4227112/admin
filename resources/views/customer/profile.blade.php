@@ -48,6 +48,11 @@ return $echo;
             </div>
         </div> 
 
+ <?php if(isset($client->trial) && $client->trial == 1) { ?>
+    <label class="badge badge-warning"> School on trial period  <?= isset($trial->end_date) ? 'Until '. date("d-m-Y", strtotime($trial->end_date)) : ''  ?></label>
+<?php } ?>
+    
+
 <div class="page-body">
 <div class="row">
 <div class="col-sm-12">

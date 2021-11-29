@@ -132,7 +132,7 @@ class Controller extends BaseController {
         } 
     }
 
-    public function uploadFileLocal($file) {
+    private function uploadFileLocal($file) {
        //Move Uploaded File
         $destinationPath = 'storage/uploads/images';
         !is_dir($destinationPath) ? mkdir($destinationPath) : '';
