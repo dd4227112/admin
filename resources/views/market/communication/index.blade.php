@@ -400,13 +400,10 @@
                                 </label>
                             </div>
                             <div class="col-sm-9">
-
                                 <?php
-                                $array = array(
-                                    'select' => __('select Template'),
-                                );
-                                //$templates = DB::table('public.mailandsmstemplates')->get();
-                                $templates = [];
+                               
+                                 $templates = DB::table('admin.mailandsmstemplates')->where('status', '1')->get();
+
                                 foreach ($templates as $etemplate) {
                                     strtolower($etemplate->type) == 'sms' ? $array[$etemplate->id] = $etemplate->name : '';
                                 }

@@ -119,7 +119,6 @@ class Attendance extends Controller {
             $where = date("Y-m-d", strtotime($day));
             $this->data['attendances']  = DB::select("select s.date,s.timein,s.timeout,u.firstname || ' '|| u.lastname as name from admin.uattendances s join admin.users u on s.user_id = u.id where u.status = 1 and u.role_id not in (7,15) and s.date::date = '".$where."' ");
             return view("users.attendance.hr_report", $this->data);
-
       }
 
 

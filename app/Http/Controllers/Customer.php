@@ -464,7 +464,9 @@ class Customer extends Controller {
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
-            $client = \App\Models\Client::where('username', $school)->first();
+            $this->data['client'] = $client = \App\Models\Client::where('username', $school)->first();
+            $this->data['trial'] = DB::table('admin.client_trials')->where('client_id',$client->id)->first();
+
             if (empty($client)) {
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
@@ -958,16 +960,14 @@ class Customer extends Controller {
     }
 
     public function usageAnalysis() {
-        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum', 'betatwo', 'jifunze', 'beta_testing'];
+        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum',
+                 'betatwo', 'jifunze', 'beta_testing'];
         $sql = DB::table('admin.all_setting')
                 ->whereNotIn('schema_name', $skip);
-
         strlen(request('schools')) > 3 ? $sql->whereIn('schema_name', explode(',', request('schools'))) : '';
         strlen(request('regions')) > 3 ? $sql->whereIn('regions', explode(',', request('regions'))) : '';
         (int) request('is_client') == 1 ? $sql->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', 2021)->get(['client_id']))->get(['username'])) : '';
-
         $this->data['schools'] = $sql->get();
-
         return view('customer.usage.modules', $this->data);
     }
 
@@ -1672,10 +1672,10 @@ class Customer extends Controller {
     }
 
     private function createChurnSql($table, $year, $customer_other_sql = '') {
-
         return DB::select("select case when count is null then 0 else count end as count, extract(month from default_month)  as months  from ( SELECT count(distinct schema_name) as count,extract(month from created_at) as months from"
-                        . " admin." . $table . " where extract(year from created_at)=$year   "
-                        . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months) a right JOIN admin.default_months b on months=extract(month from default_month)");
+            . " admin." . $table . " where extract(year from created_at)=$year   "
+    . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months) a 
+    right JOIN admin.default_months b on months=extract(month from default_month)");
     }
 
     public function getNewCustomers($table, $year, $customer_other_sql = '') {

@@ -669,7 +669,39 @@ group by ownership');
 
 
     public function templates(){
-        dd('a templates');
+        $type = request()->segment(3);
+        $id = request()->segment(4);
+        $this->data['mailandsmstemplates'] =  DB::table('admin.mailandsmstemplates')->orderBy('created_at', 'desc')->get();
+        if($type == 'delete'){
+             DB::table('admin.mailandsmstemplates')->where('id',$id)->delete();
+             return redirect(base_url('marketing/templates'))->with('success','Successful deleted!');
+        }elseif($type == 'edit'){
+             $this->data['temp'] = DB::table('admin.mailandsmstemplates')->where('id',(int) $id)->first();
+             if($_POST){
+                $data = request()->except('_token');
+                DB::table('admin.mailandsmstemplates')->where('id',$id)->update($data);
+                  return redirect(base_url('marketing/templates'))->with('success','Successful Edited!');
+             }
+              return view('market.communication.edittemplate',$this->data);
+        }elseif($type == 'view'){
+             $this->data['temp'] = DB::table('admin.mailandsmstemplates')->where('id',(int) $id)->first();
+             return view('market.communication.viewtemplate',$this->data);
+        }
+        return view('market.communication.templates',$this->data);
+    }
+
+    public function addtemplate(){
+          if ($_POST) {
+                $validated = request()->validate([
+                   'name' => 'required|max:255',
+                   'message' => 'required',
+                   ]);
+                DB::table('admin.mailandsmstemplates')->insert(request()->except('_token'));
+                return redirect(base_url('marketing/templates'))->with('success','Successfully!');;
+            } else {
+                return view('market.communication.addtemplate');
+            }
+
     }
 
 
