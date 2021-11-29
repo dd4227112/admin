@@ -165,7 +165,7 @@ table td {
                                             </h5>
                                             
                                             <div id="hide-table" class="table-responsive">
-                                                <table  id="dt-ajax-array" class="table dataTable table-mini table-striped table-bordered table-hover">
+                                                <table   class="table dataTable table-mini table-striped table-bordered table-hover">
                                                     <thead>
                                                         <tr>
                                                         <td>#</td>
