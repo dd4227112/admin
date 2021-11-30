@@ -101,6 +101,14 @@ group by ownership');
         return view('market.objective');
     }
 
+     
+    public function DeleteMedia(){
+        $id = request()->segment(3);
+        if($id){
+         \App\Models\Events::where('id', $id)->delete();
+           return redirect()->back()->with('success', 'Deleted Successfully');
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -184,7 +192,6 @@ group by ownership');
      * @return \Illuminate\Http\Response
      */
     public function socialMedia() {
-       $this->data['breadcrumb'] = array('title' => 'Digital marketing','subtitle'=>'social media','head'=>'marketing');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
@@ -277,7 +284,6 @@ group by ownership');
     }
 
     public function Events() {
-       $this->data['breadcrumb'] = array('title' => 'ShuleSoft Events','subtitle'=>'events','head'=>'marketing');
         $id = request()->segment(3);
         if ((int) $id > 0) {
              

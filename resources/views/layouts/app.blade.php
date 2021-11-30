@@ -456,8 +456,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
                                                 <?php } ?>
-
-
                                             </ul>
                                         </li>
 
