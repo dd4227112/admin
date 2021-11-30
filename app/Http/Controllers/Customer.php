@@ -1062,8 +1062,8 @@ class Customer extends Controller {
     }
 
     public function modules() {
-        $this->data['breadcrumb'] = array('title' => 'Schools Modules Usage','subtitle'=>'modules','head'=>'operations');
-        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN 
+                                                        ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);

@@ -242,7 +242,7 @@ group by ownership');
         if ($number == '') {
             $number = 0;
         }
-        $now = date('Y=m-d H:i:s');
+        $now = date('Y-m-d H:i:s');
         if ((float) request("inputs") >= 0 && request("post_id") != '' && request("socialmedia_id") != '') {
             \App\Models\SocialMediaPost::where('post_id', $post)->where('socialmedia_id', $media)->update([$type => $number, 'updated_at' => $now]);
             echo "success";
