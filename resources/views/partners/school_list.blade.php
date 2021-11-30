@@ -108,6 +108,9 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
+                   'headers': {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  },
                 'url': "<?= url('sales/show/null?page=list_of_schools&type=' . request()->segment(3)) ?>"
             },
             "columns": [
