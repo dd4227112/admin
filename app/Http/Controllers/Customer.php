@@ -224,6 +224,7 @@ class Customer extends Controller {
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
 
+
             $user = \App\Models\User::where('id', $user_id)->first();
             $start_date = date('d-m-Y', strtotime($start_date)) == '01-01-1970' ? date('Y-m-d') : date('d-m-Y', strtotime($start_date));
             // email to shulesoft personel
@@ -243,6 +244,8 @@ class Customer extends Controller {
                     . chr(10) . 'By :' . \Auth::user()->name
                     . chr(10) . 'Thank You.';
             $this->send_whatsapp_sms($user->phone, $message);
+            $this->send_sms($user->phone,$message,1);
+
 
             //email to zone manager
             // findOrFail zone manager based on school location
@@ -263,6 +266,8 @@ class Customer extends Controller {
                         . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . '.'
                         . chr(10) . 'Thank You.';
                 $this->send_whatsapp_sms($manager->phone, $wmessage);
+                $this->send_sms($manager->phone,$wmessage,1);
+
             }
 
 
