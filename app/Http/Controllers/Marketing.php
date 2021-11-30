@@ -252,16 +252,15 @@ group by ownership');
     }
 
     public function addEvent() {
-        $this->data['breadcrumb'] = array('title' => 'Add event','subtitle'=>'events','head'=>'marketing');
         if ($_POST) {
             $file_id = null;
             $attach_id = null;
             if (!empty(request('attached'))) {
-                $file_id = $this->saveFile(request('attached'), 'company/contracts');
+                $file_id = $this->saveFile(request('attached'), 'company/contracts',TRUE);
             }
 
             if (!empty(request('image'))) {
-                $attach_id = $this->saveFile(request('image'), 'company/contracts');
+                $attach_id = $this->saveFile(request('image'), 'company/contracts',TRUE);
             }
             $array = [
                 'title' => request('title'),
