@@ -1302,7 +1302,7 @@ name="client_id" />
 <h5>Project Implementation Schedule</h5>
 <span>This part have to be followed effectively </span>
 
-<?php if(date('Y-m-d', strtotime($client->created_at. " + 7 days")) < date('Y-m-d')) { ?>
+<?php if(date('Y-m-d', strtotime($client->created_at. " + 7 days")) > date('Y-m-d')) { ?>
 <p class="float-left">
    <button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#Update-trial">Update trial</button>
 </p>

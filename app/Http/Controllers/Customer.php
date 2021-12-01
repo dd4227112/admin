@@ -1541,7 +1541,6 @@ class Customer extends Controller {
         foreach ($module_ids as $module_id) {
             \App\Models\JobCard::create(['module_id' => $module_id, 'client_id' => $client_id, 'user_id' => $user_id, 'date' => $date]);
         }
-        // return redirect()->back()->with('success', 'Job card modules uploaded succesfully!');
         return redirect('customer/Jobcard/' . $client_id . '/' . $date);
     }
 
