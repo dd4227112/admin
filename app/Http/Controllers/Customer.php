@@ -1050,7 +1050,11 @@ class Customer extends Controller {
 //where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and a.user_id=' . $user_id;
 
         $where_user = (int) $user_id == 0 ? ' ' : ' user_id=' . $user_id . ' and ';
-        $sql = 'select distinct b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where a.is_allocated=1 and f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and  a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id)';
+        $sql = 'select distinct b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, 
+        a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id 
+        JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where a.is_allocated=1 and f.status=1 and
+         (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) OR a.client_id in (select client_id from admin.client_trials)) and 
+          a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id)';
         // $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) )';
 //        $view = 'implementation_report_' . $user_id;
 //        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
@@ -1565,7 +1569,6 @@ class Customer extends Controller {
     }
 
     public function viewFile() {
-        $this->data['breadcrumb'] = array('title' => 'File View','subtitle'=>'files','head'=>'operations');
         $value = request()->segment(3);
         $type = request()->segment(4);
         if ($type == 'course_certificate') {
@@ -1760,6 +1763,20 @@ class Customer extends Controller {
                 }
             }
         }
+    }
+
+
+
+    public function updateSchoolTrialPeriod(){
+        $client_id = request('client_id');
+        $period = request('period');
+        $start_date = request('start_date');
+        $end_date = date('Y-m-d', strtotime($start_date. " + $period days"));
+        $exist = \App\Models\ClientTrial::where('client_id',$client_id)->first();
+        $data = ['client_id'=> $client_id,'period'=>$period,'start_date' => $start_date,'end_date'=>$end_date,'status'=> 1];
+        empty($exist) ? \App\Models\ClientTrial::create($data) : \App\Models\ClientTrial::where('client_id',$client_id)->update($data);
+        \App\Models\Client::where('id',$client_id)->update(['trial'=> 1]);
+         return redirect()->back()->with('success','Trial period updated successfull');
     }
 
 }

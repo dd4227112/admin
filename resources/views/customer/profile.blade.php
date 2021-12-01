@@ -150,8 +150,6 @@ if ($is_client == 1) {
 <label>Teacher</label>
 </div> 
 
-
-
 <div class="col-md-12 col-lg-12">
 <hr>
  <h6 class="">School Status</h6>
@@ -1201,6 +1199,59 @@ name="client_id" />
 
 
 
+<div class="modal fade" id="Update-trial" tabindex="-1"
+role="dialog" aria-hidden="true"
+style="z-index: 1050; display: none;">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title"> Update trial period
+</h4>
+<button type="button" class="close"
+data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+</div>
+
+<form action="<?= url('customer/updateSchoolTrialPeriod') ?>" method="post">
+<div class="modal-body">
+<div class="form-group">
+<div class="row">
+
+<div class="col-md-6">
+<strong>Start date</strong>
+<input type="date" class="form-control"  name="start_date" value="<?= old('start_date')?>"  required>
+</div>
+
+<div class="col-md-6">
+<strong> Period (Days)</strong>
+<input type="number" class="form-control"  name="period" value="<?= old('period')?>"  required>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="modal-footer">
+<button type="button"
+class="btn btn-default waves-effect "
+data-dismiss="modal">Close</button>
+<button type="submit"
+class="btn btn-primary waves-effect waves-light ">Save
+changes</button>
+</div>
+<input type="hidden" value="<?= $client_id ?>"
+name="client_id" />
+<?= csrf_field() ?>
+</form>
+</div>
+</div>
+</div>
+
+
+
+
+
 <div class="modal fade" id="edit-Modal-task" tabindex="-1"
 role="dialog">
 <div class="modal-dialog modal-lg" role="document">
@@ -1250,6 +1301,12 @@ name="client_id" />
 <div class="card-header">
 <h5>Project Implementation Schedule</h5>
 <span>This part have to be followed effectively </span>
+
+<?php if(date('Y-m-d', strtotime($client->created_at. " + 7 days")) < date('Y-m-d')) { ?>
+<p class="float-left">
+   <button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#Update-trial">Update trial</button>
+</p>
+<?php } ?>
 
 <p class="float-right">
 <?php $i_url = "customer/download/$client_id"; ?>
