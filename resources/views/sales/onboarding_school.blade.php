@@ -87,16 +87,17 @@ if (request()->ajax() == FALSE) {
                     </div>
                 </div>
                 <?php } ?>
-            <div class="form-group row" style="border: 1px dashed; ">
+            <div class="form-group row" style="border: 1px dashed4;">
                 <label class="col-sm-2 col-form-label">Account Name</label>
                 <div class="row">
-                    <div class="col-lg-2">  <b style="font-size: 1.4em;"> https://</b> </div>
-                    <div id="col-lg-6">
-                        <input style="max-width: 17em;
-                               resize: none" class="form-control " id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($school->name) ?>" required="" onkeyup="validateForm()"> 
+                    <div id="col-sm-4">  
+                        <b style="font-size: 1.2em;"> https://</b>
+                     </div>
+                    <div id="col-sm-4">
+                        <input style="max-width: 17em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($school->name) ?>" required="" onkeyup="validateForm()"> 
                     </div>
-                    <div id="col-lg-4">
-                        <b style="font-size: 1.4em;">.shulesoft.com</b>
+                    <div id="col-sm-4">
+                        <b style="font-size: 1.2em;">.shulesoft.com</b>
                     </div>
                 </div>
                 <small style="max-width: 13em;" id="username_message_reply"></small>

@@ -65,11 +65,12 @@
 
                             </ul>
                             <!-- Tab panes -->
-                            <div class="tab-content tabs">
-                                <div class="tab-pane active" id="home1" role="tabpanel">
+                            <div class="tab-content">
+                                <div class="" id="home1" role="tabpanel">
 
                                     <div class="table-responsive dt-responsive">
-                                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                                         <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+
                                             <thead>
                                                 <tr>
                                                     <th>No.</th>

@@ -67,7 +67,7 @@
 
                           <td>
                           <a class="btn btn-info btn-mini btn-round" href="{{ url('Marketing/events/'.$event->id.'/1') }}">Show</a>
-                          <a class="btn btn-warning btn-mini btn-round" href="{{ url('Marketing/DeleteMedia/'.$event->id) }}">Delete</a>
+                          <a class="btn btn-danger btn-mini btn-round" href="{{ url('Marketing/DeleteMedia/'.$event->id) }}">Delete</a>
                           </td>
                         </tr>
                         <?php } } ?>

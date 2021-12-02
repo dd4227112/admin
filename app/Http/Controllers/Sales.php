@@ -442,8 +442,6 @@ class Sales extends Controller {
     }
 
     public function onboard() {
-        // dd(request()->all());
-
         $school_id = (int) request()->segment(3);
         //Redirects Partners to Onboarding Views
         if(Auth::user()->department == 9 || Auth::user()->department == 10){
@@ -552,7 +550,7 @@ class Sales extends Controller {
               }
  
                 // if document is standing order,Upload standing order files
-             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))) {
+             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))  && request('check_trial') != 1 ) {
                 $file = request()->file('standing_order_file');
                 $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
                 $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');

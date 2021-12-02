@@ -373,6 +373,14 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <span class="pcoded-mtext text-bold">Sales</span>
                                             </a>
                                             <ul class="pcoded-submenu">
+
+                                             <?php if(\Auth::user()->role_id == 15) { ?>
+                                                <li class="">
+                                                <a href="<?= url('partner/index') ?>">
+                                                    <span class="pcoded-mtext">Partner request</span>
+                                                </a>
+                                                </li>
+                                                <?php } else { ?>
                                                 <li class="">
                                                     <a href="<?= url('sales/index') ?>">
                                                        <span class="pcoded-mtext">Sales materials</span>
@@ -392,7 +400,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                  </li>
                                                 <?php } ?>
+                                               <?php } ?>
+
                                             </ul>
+
                                         </li>
 
 
@@ -445,8 +456,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
                                                 <?php } ?>
-
-
                                             </ul>
                                         </li>
 

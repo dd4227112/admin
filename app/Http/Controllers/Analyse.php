@@ -127,6 +127,7 @@ class Analyse extends Controller {
         return view('analyse.marketing', $this->data);
     }
 
+
     public function search() {
         $q = strtolower(request('q'));
         $users = DB::select("select a.reference,a.id,b.name,b.username from admin.invoices a join admin.clients b on b.id=a.client_id where (lower(a.reference) like  '%" . $q . "%'  or lower(b.name) like  '%" . $q . "%' )");
@@ -139,7 +140,8 @@ class Analyse extends Controller {
         }
 
         $school_list = '';
-        $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%' union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 10");
+        // $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%'  union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 10");
+        $schools = DB::select("select * from (select name as sname,username as schema_name,'default.png' as photo, 1 as is_schema from admin.clients where lower(username) like '%" . $q ."%' union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 5");
         foreach ($schools as $school) {
             $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) : url('sales/profile/' . $school->is_schema);
             $type = $school->is_schema == 1 ? ' (Already Client)' : '';

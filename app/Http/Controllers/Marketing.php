@@ -101,6 +101,14 @@ group by ownership');
         return view('market.objective');
     }
 
+     
+    public function DeleteMedia(){
+        $id = request()->segment(3);
+        if($id){
+         \App\Models\Events::where('id', $id)->delete();
+           return redirect()->back()->with('success', 'Deleted Successfully');
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -184,7 +192,6 @@ group by ownership');
      * @return \Illuminate\Http\Response
      */
     public function socialMedia() {
-       $this->data['breadcrumb'] = array('title' => 'Digital marketing','subtitle'=>'social media','head'=>'marketing');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
@@ -235,7 +242,7 @@ group by ownership');
         if ($number == '') {
             $number = 0;
         }
-        $now = date('Y=m-d H:i:s');
+        $now = date('Y-m-d H:i:s');
         if ((float) request("inputs") >= 0 && request("post_id") != '' && request("socialmedia_id") != '') {
             \App\Models\SocialMediaPost::where('post_id', $post)->where('socialmedia_id', $media)->update([$type => $number, 'updated_at' => $now]);
             echo "success";
@@ -245,16 +252,15 @@ group by ownership');
     }
 
     public function addEvent() {
-        $this->data['breadcrumb'] = array('title' => 'Add event','subtitle'=>'events','head'=>'marketing');
         if ($_POST) {
             $file_id = null;
             $attach_id = null;
             if (!empty(request('attached'))) {
-                $file_id = $this->saveFile(request('attached'), 'company/contracts');
+                $file_id = $this->saveFile(request('attached'), 'company/contracts',TRUE);
             }
 
             if (!empty(request('image'))) {
-                $attach_id = $this->saveFile(request('image'), 'company/contracts');
+                $attach_id = $this->saveFile(request('image'), 'company/contracts',TRUE);
             }
             $array = [
                 'title' => request('title'),
@@ -277,7 +283,6 @@ group by ownership');
     }
 
     public function Events() {
-       $this->data['breadcrumb'] = array('title' => 'ShuleSoft Events','subtitle'=>'events','head'=>'marketing');
         $id = request()->segment(3);
         if ((int) $id > 0) {
              
@@ -379,7 +384,6 @@ group by ownership');
     }
 
     public function moduleUsage() {
-        $this->data['breadcrumb'] = array('title' => 'School','subtitle'=>'Sales','head'=>'report');
         $end_date = date('Y-m-01');
         $where = "a.created_at::date >='" . $end_date . "'";
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
@@ -437,28 +441,34 @@ group by ownership');
         echo json_call($this->data);
     }
 
-    public function Communication() {
+    
+     function getTemplateContent() {
+        $id = (int) request('templateID');
+        $template = DB::table('admin.mailandsmstemplates')->where('id', $id)->first();
+        return $template->message;
+    }
+
+
+    public function communication() {
         $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
-        if ($_POST) {
+        if ($_POST) { 
+             dd(request()->all());
             $this->validate(request(), [
                 'message' => 'required'
             ]);
             $fee_id = request("fee_id");
             $message = request("message");
-            $module_id = request("module_id");
-            $section_id = 0;
             $criteria = request('criteria');
             $firstCriteria = request('firstCriteria');
             $student_type = request('student_type');
-            $student_type_value = request('student_type_value');
             $payment_status = request('payment_status');
 
 
 
-            /* --- --- --- firstCriteria is parents - Send SMS to parents --- --- */
+            /* --- --- --- firstCriteria is Customers - Send SMS to Customers --- --- */
             if ($firstCriteria == 00) {
                 //customers First
-                return $this->sendCustomSmsToCustomers($criteria, $section_id, $module_id, $fee_id, $student_type_value, $payment_status, $message);
+                return $this->sendCustomSmsToCustomers($criteria, $fee_id, $payment_status, $message);
             } else if ($firstCriteria == '02') {
                 $custom_numbers = request('custom_numbers');
                 $sms = request('message');
