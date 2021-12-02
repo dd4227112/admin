@@ -36,6 +36,13 @@
                 <div class="card-header float-right">
                     <a href="<?= url('attendance/report') ?>" class="btn btn-sm btn-primary">View Report</a>
                 </div> 
+
+                <?php if(can_access('attendance_hr_report')) { ?>
+                 <div class="card-header float-right">
+                    <a href="<?= url('attendance/hr_report') ?>" class="btn btn-sm btn-primary">HR Report</a>
+                </div> 
+                <?php } ?>
+
                </div>  
               </div>  
     

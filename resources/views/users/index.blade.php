@@ -28,11 +28,10 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div  class="card">
-                                <div class="card-block">
-                                      
-                                        <a class="btn btn-primary btn-round btn-sm float-left text-light"  href="<?= url('users/create') ?>">Create New User</a>                   
-                                        <a class="btn btn-primary btn-round btn-sm float-right text-light" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                   
-                                </div>
+                              <div class="card-block">
+                                  <a class="btn btn-primary btn-round btn-sm float-left text-light"  href="<?= url('users/create') ?>">Create New User</a>                   
+                                  <a class="btn btn-primary btn-round btn-sm float-right text-light" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                   
+                              </div>
                                   
                                 <div  class="card">
                                     <div class="card-block">
@@ -45,7 +44,6 @@
                                                         <th>Name</th>
                                                         <th>Phone</th>
                                                         <th>Email</th>
-                                                
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>

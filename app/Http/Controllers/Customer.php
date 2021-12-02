@@ -224,6 +224,7 @@ class Customer extends Controller {
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
 
+
             $user = \App\Models\User::where('id', $user_id)->first();
             $start_date = date('d-m-Y', strtotime($start_date)) == '01-01-1970' ? date('Y-m-d') : date('d-m-Y', strtotime($start_date));
             // email to shulesoft personel
@@ -243,6 +244,8 @@ class Customer extends Controller {
                     . chr(10) . 'By :' . \Auth::user()->name
                     . chr(10) . 'Thank You.';
             $this->send_whatsapp_sms($user->phone, $message);
+            $this->send_sms($user->phone,$message,1);
+
 
             //email to zone manager
             // findOrFail zone manager based on school location
@@ -263,6 +266,8 @@ class Customer extends Controller {
                         . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . '.'
                         . chr(10) . 'Thank You.';
                 $this->send_whatsapp_sms($manager->phone, $wmessage);
+                $this->send_sms($manager->phone,$wmessage,1);
+
             }
 
 
@@ -311,30 +316,22 @@ class Customer extends Controller {
         return view('message.create', compact('script', 'usertypes', 'message_success'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function createGuide() {
-        $request = request()->all();
-         dd($request);
+        $file = request()->file('image_file');
         $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
 
         $obj = [
             'permission_id' => request()->permission_id,
             'content' => str_replace('src="../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
             'created_by' => \Auth::user()->id,
-            'language' => 'eng'
+            'language' => 'eng',
+            'company_file_id' => $company_file_id
         ];
         DB::table('constant.guides')->insert($obj);
         return redirect('customer/guide');
     }
 
-    public function psms($param) {
-        
-    }
+  
 
     /**
      * Display the specified resource.
@@ -366,22 +363,27 @@ class Customer extends Controller {
             $this->data['guides'] = [];
             $page = 'add_guide';
         } else if (request()->segment(3) == 'edit') {
-            $this->data['guide'] = \App\Model\Guide::find(request()->segment(4));
+            $this->data['guide'] = $guide =  \App\Model\Guide::find(request()->segment(4));
             $page = 'edit_guide';
             if ($_POST) {
-                
+                $file = request()->file('image_file');
+                $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : $guide->company_file_id;
+
                 $obj = [
                     'permission_id' => request()->permission_id,
                     'content' => str_replace('src="../../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
                     "is_edit" => request()->is_edit,
-                    'language' => 'eng'
+                    'language' => 'eng',
+                    'company_file_id' => $company_file_id
                 ];
+
                 \App\Model\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
         } else {
             $page = 'guide';
-            $this->data['guides'] = \App\Model\Guide::all();
+            $this->data['guides'] = \App\Model\Guide::latest()->get();
+           // $this->data['guides'] = \App\Model\Guide::orderBy('id', 'desc')->get();
         }
         return view('customer.' . $page, $this->data);
     }
@@ -467,7 +469,9 @@ class Customer extends Controller {
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
-            $client = \App\Models\Client::where('username', $school)->first();
+            $this->data['client'] = $client = \App\Models\Client::where('username', $school)->first();
+            $this->data['trial'] = DB::table('admin.client_trials')->where('client_id',$client->id)->first();
+
             if (empty($client)) {
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
@@ -961,16 +965,14 @@ class Customer extends Controller {
     }
 
     public function usageAnalysis() {
-        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum', 'betatwo', 'jifunze', 'beta_testing'];
+        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum',
+                 'betatwo', 'jifunze', 'beta_testing'];
         $sql = DB::table('admin.all_setting')
                 ->whereNotIn('schema_name', $skip);
-
         strlen(request('schools')) > 3 ? $sql->whereIn('schema_name', explode(',', request('schools'))) : '';
         strlen(request('regions')) > 3 ? $sql->whereIn('regions', explode(',', request('regions'))) : '';
         (int) request('is_client') == 1 ? $sql->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', 2021)->get(['client_id']))->get(['username'])) : '';
-
         $this->data['schools'] = $sql->get();
-
         return view('customer.usage.modules', $this->data);
     }
 
@@ -1048,7 +1050,11 @@ class Customer extends Controller {
 //where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and a.user_id=' . $user_id;
 
         $where_user = (int) $user_id == 0 ? ' ' : ' user_id=' . $user_id . ' and ';
-        $sql = 'select distinct b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where a.is_allocated=1 and f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and  a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id)';
+        $sql = 'select distinct b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, 
+        a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id 
+        JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where a.is_allocated=1 and f.status=1 and
+         (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) OR a.client_id in (select client_id from admin.client_trials)) and 
+          a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id)';
         // $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) )';
 //        $view = 'implementation_report_' . $user_id;
 //        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
@@ -1060,8 +1066,8 @@ class Customer extends Controller {
     }
 
     public function modules() {
-        $this->data['breadcrumb'] = array('title' => 'Schools Modules Usage','subtitle'=>'modules','head'=>'operations');
-        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN 
+                                                        ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);
@@ -1123,7 +1129,8 @@ class Customer extends Controller {
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request()->segment(3);
         $this->data['client'] = strlen($this->data['schema']) > 2 ? DB::table('clients')->where('username', $this->data['schema'])->first() : '';
-        $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)');
+        // $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders) or id in (select client_id from admin.client_trials)');
+        $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients');
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->whereNotIn('role_id', array(7, 15))->get();
         //check allocation of trainings
         if (strlen($this->data['schema']) > 2) {
@@ -1236,7 +1243,6 @@ class Customer extends Controller {
     }
 
     public function resetPassword() {
-        $this->data['breadcrumb'] = array('title' => 'Reset password','subtitle'=>'Reset school password','head'=>'operations');
         $schema = request()->segment(3);
         if ($schema != '') {
             $pass = $schema . rand(5697, 33);
@@ -1535,7 +1541,6 @@ class Customer extends Controller {
         foreach ($module_ids as $module_id) {
             \App\Models\JobCard::create(['module_id' => $module_id, 'client_id' => $client_id, 'user_id' => $user_id, 'date' => $date]);
         }
-        // return redirect()->back()->with('success', 'Job card modules uploaded succesfully!');
         return redirect('customer/Jobcard/' . $client_id . '/' . $date);
     }
 
@@ -1563,7 +1568,6 @@ class Customer extends Controller {
     }
 
     public function viewFile() {
-        $this->data['breadcrumb'] = array('title' => 'File View','subtitle'=>'files','head'=>'operations');
         $value = request()->segment(3);
         $type = request()->segment(4);
         if ($type == 'course_certificate') {
@@ -1676,10 +1680,10 @@ class Customer extends Controller {
     }
 
     private function createChurnSql($table, $year, $customer_other_sql = '') {
-
         return DB::select("select case when count is null then 0 else count end as count, extract(month from default_month)  as months  from ( SELECT count(distinct schema_name) as count,extract(month from created_at) as months from"
-                        . " admin." . $table . " where extract(year from created_at)=$year   "
-                        . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months) a right JOIN admin.default_months b on months=extract(month from default_month)");
+            . " admin." . $table . " where extract(year from created_at)=$year   "
+    . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months) a 
+    right JOIN admin.default_months b on months=extract(month from default_month)");
     }
 
     public function getNewCustomers($table, $year, $customer_other_sql = '') {
@@ -1758,6 +1762,20 @@ class Customer extends Controller {
                 }
             }
         }
+    }
+
+
+
+    public function updateSchoolTrialPeriod(){
+        $client_id = request('client_id');
+        $period = request('period');
+        $start_date = request('start_date');
+        $end_date = date('Y-m-d', strtotime($start_date. " + $period days"));
+        $exist = \App\Models\ClientTrial::where('client_id',$client_id)->first();
+        $data = ['client_id'=> $client_id,'period'=>$period,'start_date' => $start_date,'end_date'=>$end_date,'status'=> 1];
+        empty($exist) ? \App\Models\ClientTrial::create($data) : \App\Models\ClientTrial::where('client_id',$client_id)->update($data);
+        \App\Models\Client::where('id',$client_id)->update(['trial'=> 1]);
+         return redirect()->back()->with('success','Trial period updated successfull');
     }
 
 }

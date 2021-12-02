@@ -3,8 +3,30 @@ if (request()->ajax() == FALSE) {
     ?>
     @extends('layouts.app')
     @section('content')
-
 <?php } ?>
+<div class="main-body">
+  <div class="page-wrapper">
+
+  <div class="page-header">
+      <div class="page-header-title">
+        <h4><?='Onboard new school' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">new school</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">sales</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
+
+
 <div class="card">
     <div class="card-header">
         <h5>Customer Onboarding</h5>
@@ -65,16 +87,17 @@ if (request()->ajax() == FALSE) {
                     </div>
                 </div>
                 <?php } ?>
-            <div class="form-group row" style="border: 1px dashed; ">
+            <div class="form-group row" style="border: 1px dashed4;">
                 <label class="col-sm-2 col-form-label">Account Name</label>
                 <div class="row">
-                    <div class="col-lg-2">  <b style="font-size: 1.4em;"> https://</b> </div>
-                    <div id="col-lg-6">
-                        <input style="max-width: 17em;
-                               resize: none" class="form-control " id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($school->name) ?>" required="" onkeyup="validateForm()"> 
+                    <div id="col-sm-4">  
+                        <b style="font-size: 1.2em;"> https://</b>
+                     </div>
+                    <div id="col-sm-4">
+                        <input style="max-width: 17em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($school->name) ?>" required="" onkeyup="validateForm()"> 
                     </div>
-                    <div id="col-lg-4">
-                        <b style="font-size: 1.4em;">.shulesoft.com</b>
+                    <div id="col-sm-4">
+                        <b style="font-size: 1.2em;">.shulesoft.com</b>
                     </div>
                 </div>
                 <small style="max-width: 13em;" id="username_message_reply"></small>
@@ -100,6 +123,24 @@ if (request()->ajax() == FALSE) {
                 <label class="col-sm-2 col-form-label">Implementation Start Date</label>
                 <div class="col-sm-10">
                     <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
+                </div>
+            </div>
+
+              <br>
+             <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Trial Period</label>
+                <div class="col-sm-5">
+                    <input type="radio" name="check_trial" id="trial_no" value="0" checked>
+                    <label for="Trial">NO</label> &nbsp; &nbsp; &nbsp;
+                    <input type="radio" name="check_trial" id="trial_yes" value="1">
+                    <label for="Trial">YES</label>
+                </div>
+            </div>
+
+            <div class="form-group row" id="period"  style="display: none;">
+                 <label class="col-sm-3 col-form-label">Trial period (Days)</label>
+                 <div>
+                    <input type="number" name="trial_period" class="form-control">
                 </div>
             </div>
             
@@ -132,62 +173,6 @@ if (request()->ajax() == FALSE) {
                     </div>
 
                     
-                    {{-- <div class="card-block table-border-style">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th style="width:20%">Task</th>
-                                        <th>ShuleSoft Person Allocated</th>
-                                        <th>School Person/Role Allocated</th>
-                                        <th>Start Date : Time</th>
-                                        <th>End Date : Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $x = 1;
-
-                                    $trainings = \App\Models\trainItem::orderBy('id', 'asc')->get();
-                                    $trainings = [];
-                                    foreach ($trainings as $training) {
-                                        ?>
-                                        <tr>
-                                            <th scope="row"><?= $x ?></th>
-                                            <td><?= $training->content ?></td>
-                                            <td> 
-                                                <?php ?>   
-                                                <select class="task_allocated_id"  name="person<?= $training->id ?>" id="<?= $training->id ?>" >
-                                                    <?php
-                                                    foreach ($staffs as $staff) {
-                                                        ?>
-                                                        <option value="<?= $staff->id ?>">
-                                                            <?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                                        <?php
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </td>
-                                            <td> 
-                                                <input type="text" class="form-control" value="" name="train_item<?= $training->id ?>" required="">
-                                            </td>
-                                            <td>
-                                                <select class="task_group" name="slot_date<?= $training->id ?>" id="slot_for<?= $training->id ?>" data-task-id="<?= $training->id ?>"><?= $customer->getDate($staff->id) ?></select>
-                                                <select type="text" data-attr="start_date" class="slot" id="start_slot<?= $training->id ?>"  name="slot_id<?= $training->id ?>"></select>
-                                            </td>
-                                            <td>
-                                                <b data-attr="end_date" id="task_end_date_id<?= $training->id ?>"> </b>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                        $x++;
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div> --}}
                 </div>
             </div>
 
@@ -227,10 +212,11 @@ if (request()->ajax() == FALSE) {
             </div>
 
             
-            <div class="form-group row">
+            <div class="form-group row" id="paymentption">
                 <label class="col-sm-2 col-form-label">Payment Option</label>
                 <div class="col-sm-10">
-                    <select name="payment_option" class="form-control" id="_payment_option" required="">
+                    <select name="payment_option" class="form-control" id="_payment_option">
+                        <option value="">select</option>
                         <option value="Cash">Cash</option>
                         <option value="Standing Order">Standing Order</option>
                         <option value="Bank Transfer">Bank Transfer </option>
@@ -333,7 +319,24 @@ if (request()->ajax() == FALSE) {
 
     </div>
 </div>
+
+</div>
+</div>
 <script type="text/javascript">
+
+   $(document).ready(function(){
+        $("input[type='radio']").click(function(){
+            var radioValue = $("input[name='check_trial']:checked").val();             
+             if(radioValue == 0){
+                $('#period').hide();
+                $('#paymentption').show();
+             } else {
+               $('#period').show();
+               $('#paymentption').hide();
+            }
+        });
+    });
+
 
      $('#_payment_option').change(function () {
         var val = $(this).val();
@@ -342,7 +345,6 @@ if (request()->ajax() == FALSE) {
         } else {
             $('#standing_order_form').show();
         }
-       
     });
 
     notify = function (title, message, type) {

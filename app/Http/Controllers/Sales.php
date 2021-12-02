@@ -364,11 +364,7 @@ class Sales extends Controller {
     public function profile() {
         $id = (int) request()->segment(3);
 
-        if (!is_int($id)) {
-           return redirect()->back();
-        }
-
-        if ((int) $id == 0) {  
+        if ((int) $id == 0 || !is_int($id)) {  
             return false;
         }
 
@@ -502,8 +498,22 @@ class Sales extends Controller {
                     'created_by' => \Auth::user()->id,
                     'username' => clean($schema_name),
                     'payment_option' => request('payment_option'),
-                  
+                    'start_usage_date' => date('Y-m-d'),
+                    'trial' => request('check_trial')
                 ]); 
+
+                // trial period
+                if(request('check_trial') == 1 && !is_null(request('trial_period')) ) {
+                      $start = date('Y-m-d', strtotime(request('implementation_date')));
+                      $period  = request('trial_period');
+                    DB::table('admin.client_trials')->insert([
+                        'client_id' => $client_id,
+                        'period' => $period,
+                        'start_date' => $start,
+                        'end_date' => date('Y-m-d', strtotime($start. " + $period days")),
+                        'status' =>  1
+                     ]); 
+                }
 
                 //client school
                 DB::table('admin.client_schools')->insert([
@@ -540,7 +550,7 @@ class Sales extends Controller {
               }
  
                 // if document is standing order,Upload standing order files
-             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))) {
+             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))  && request('check_trial') != 1 ) {
                 $file = request()->file('standing_order_file');
                 $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
                 $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
@@ -581,8 +591,8 @@ class Sales extends Controller {
                  $estimated_students = remove_comma(request('students'));
                  $amount = $unit_price * $estimated_students;
 
-                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 
-                'quantity' => $estimated_students, 'unit_price' => $unit_price]);
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $estimated_students, 'unit_price' => $unit_price]);
+
             //     }
             //     $this->scheduleActivities($client_id);
             //     return redirect('sales/customerSuccess/1/' . $client_id);
@@ -729,7 +739,7 @@ class Sales extends Controller {
              $zm = $sales->zonemanager($client_id);
              if(isset($zm->user_id) && !empty((int) $zm->user_id)){
                       $manager = \App\Models\User::where(['id' => $zm->user_id,'status'=>1])->first();
-                        $manager_message = 'Hello ' . $manager->firstname . '<br/>'
+                        $manager_message = 'Hello ' . $manager->firstname ?? ''. '<br/>'
                         . 'A task ' . $section->content .' been scheduled to'
                         . '<li>' . \App\Models\Client::where('id',$client_id)->first()->name  . '</li>'
                         . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
@@ -894,7 +904,6 @@ class Sales extends Controller {
     }
 
     public function addLead() {
-       $this->data['breadcrumb'] = array('title' => 'Sales leads','subtitle'=>'new','head'=>'sales');
         //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
         if ($_POST) {
              $task_data = ['school_id'=>request('school_id'),'school_name'=>request('school_name'),'school_phone'=>request('school_phone'),'school_title'=>request('school_title'),

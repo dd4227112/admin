@@ -22,14 +22,7 @@ if (empty($payslip_settings)) {
     }
 
     @media print {
-      margin: 2cm 2cm 2cm 2cm;
-        }
-        .invoice-header{
-            margin-right:30% !important;
-        }
-        .invoice-title{
-            float: right !important;
-        }
+     
 
     }
 </style>
@@ -62,7 +55,7 @@ if (empty($payslip_settings)) {
                                                     <!-- title row -->
                                                     <div class="row">
                                                         <div class="col-xs-12 invoice-header">
-                                                            <h1 style="text-align:center; font-size: 29px;">
+                                                            <h1  style="text-align:center; font-size: 29px;">
                                                                 PAYSLIP
                                                                 <br/>
                                                             </h1>

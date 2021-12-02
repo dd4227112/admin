@@ -4,7 +4,6 @@
 <?php $root = url('/') . '/public/';  ?>
 
 <div class="page-wrapper">
-  {{-- <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb> --}}
 
   <div>
     <div class="page-header">
@@ -28,14 +27,11 @@
   </div>
 
     <div class="page-body">
-        <div class="row">
-            <?php if (can_access('manage_users')) { ?>
-                    
-                  <div class="col-xl-3 col-md-6">
-                      
+        <?php if (can_access('manage_users')) { ?>
 
-                        
-                             <div class="card bg-c-yellow text-white">
+           <div class="row">
+                  <div class="col-xl-3 col-md-6">
+                             <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -43,17 +39,17 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['users']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30"></i>
+                                   
                                             </div>
                                     </div>
                                 </div>
                             </div>
-                    
                     </div>
 
                 
                     <div class="col-xl-3 col-md-6">
-                         <div class="card bg-c-green text-white">
+                         <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -61,7 +57,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['parents']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -69,8 +65,7 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                      
-                        <div class="card bg-c-blue text-white">
+                        <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -78,7 +73,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['students']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -86,7 +81,7 @@
                     </div>
 
                    <div class="col-xl-3 col-md-6">
-                        <div class="card bg-c-blue text-white">
+                        <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -94,7 +89,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['teachers']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red" style="color:#19b99a"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -102,7 +97,7 @@
                    </div>
 
                     <div class="col-xl-3 col-md-6">
-                         <div class="card bg-c-yellow text-white">
+                         <div class="card shadow bg-primary">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -110,7 +105,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['active_users']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -120,7 +115,7 @@
                    
 
                       <div class="col-xl-3 col-md-6">
-                         <div class="card bg-c-green text-white">
+                         <div class="card shadow bg-primary">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -128,7 +123,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['active_parents']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -136,7 +131,7 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                         <div class="card bg-c-pink text-white">
+                         <div class="card shadow bg-primary">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -144,7 +139,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['active_students']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -152,7 +147,7 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                            <div class="card bg-c-blue text-white">
+                            <div class="card shadow bg-primary">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -160,7 +155,7 @@
                                                 <h4 class="m-b-0">{{ number_format($summary['active_teachers']) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50 text-c-red"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -180,7 +175,7 @@
         
                     <div class="row">
                         <div class="col-xl-6">
-                            <div class="card shadow mb-2">
+                            <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
                                         <div id="onboardPie" style="height: 300px; width:350px;"></div>
@@ -190,7 +185,7 @@
                         </div>
 
                         <div class="col-xl-6">
-                            <div class="card shadow mb-2">
+                            <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
                                         <div id="onboardBar" style="height: 300px; width:350px;"></div>
@@ -202,8 +197,6 @@
                        
               <?php } ?>
 
-              <div class="row">
-                  <div class="col-sm-12">
                    <div class="card">
                     <div class="card-header">
                         <h5>My User Activities</h5>
@@ -243,8 +236,6 @@
                         </div>
                     </div>
                   </div>
-                </div>
-            </div> 
 
         </div>
     </div>

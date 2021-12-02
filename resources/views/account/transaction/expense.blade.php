@@ -4,10 +4,10 @@
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
-        <div class="page-header">
+
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>   
-                <?php
+                <h4> <?php
                     $global_id = $id;
                     $name = '';
                     if ($id == 4) {
@@ -26,31 +26,31 @@
                         echo 'Current Assets';
                         $name = 'Current Assets';
                     }
-                    ?>
-                            </h4>
-                <span>Show {{ $name }} summary</span>
+                    ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>"> 
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">Show {{ $name }} summary</a>
                     </li>
                     <li class="breadcrumb-item"><a href="#!">{{ $name }}</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="page-body">
+
+
             <!-- form start -->
             <div class="page-body">
-                <div class="card">
+              <div class="row">
 
                     <div class="col-sm-12">
-                            <div class="row m-10">
+                        <div class="card">
+                            <div class="card-block">
                                 <div class="col-sm-4">
                                     <h5 class="page-header">
                                         <?php if (can_access('add_expense')) { ?>
@@ -62,7 +62,6 @@
                                        </h5>
                                  </div>
 
-                                <div class="col-sm-8">
                                     <form class="form-horizontal" role="form" method="post"> 
                                       <div class="row">
                                         <div class="col-md-5">
@@ -96,13 +95,13 @@
                                       </div>
                                         <?= csrf_field() ?>
                                     </form>
-                                </div>  
                              </div>     
                         
 
 
-                        <div class="table-responsive dt-responsive "> 
-                            <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+                        <div class="card-block"> 
+                        <div class="table-responsive"> 
+                            <table id="example1" class="table table-striped table-bordered table-hover dataTable">
                                 <thead>
                                     <tr>
                                         <th class="col-sm-1">#</th>
@@ -207,9 +206,9 @@
                                                 <td data-title="<?= __('action') ?>">
                                                     <?php
                                                     if ($id == 2 && $expense->name == 'Unearned Revenue') {
-                                                        echo '<a href="' . url('invoices/wallet') . '">view</a>';
+                                                        echo '<a class="btn btn-primary btn-round btn-mini" href="' . url('invoices/wallet') . '">view</a>';
                                                     } else {
-                                                        echo '<a href="' . url('account/view_expense/' . $expense->id . '/' . $id . '/' . $expense->predefined) . '">View</a>';
+                                                        echo '<a class="btn btn-primary btn-round btn-mini" href="' . url('account/view_expense/' . $expense->id . '/' . $id . '/' . $expense->predefined) . '">View</a>';
                                                     }
                                                     ?>
                                                 </td>

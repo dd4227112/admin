@@ -35,12 +35,12 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="exampleModalLabel1">Add New Guide</h4> </div>
-                                <form method="post" action="<?= url('customer/createGuide') ?>">
+                                <form method="post" action="<?= url('customer/createGuide') ?>"  enctype="multipart/form-data">
                                     <div class="modal-body" id="message_result">
 
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Main Module:</label>
-                                            <select class="form-control select2" id="permission_group">
+                                            <select class="form-control select2" id="permission_group" required>
                                                 <option value=""></option>
                                                 <?php
                                                 $permission_groups = \DB::table('constant.permission_group')->get();
@@ -51,12 +51,16 @@
                                             </select>
                                         </div>
 
-                    
-
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Content For :</label>
                                             <span id="content_for"></span> 
                                         </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label">Image :</label>
+                                            <input type="file" name="image_file" class="form-control col-sm-4"/>
+                                        </div>
+
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">Content:</label>
                                             <textarea class="form-control" id="message-text1" id="mymce" name="content"></textarea>

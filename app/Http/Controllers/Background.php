@@ -410,7 +410,7 @@ class Background extends Controller {
 
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
-        //DB::select('REFRESH MATERIALIZED VIEW CONCURRENTLY public.all_users');
+        DB::select('REFRESH MATERIALIZED VIEW  admin.all_users');
         $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {

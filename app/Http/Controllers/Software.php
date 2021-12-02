@@ -452,9 +452,8 @@ class Software extends Controller {
 
 
       public function banksetup() {  
-        $this->data['breadcrumb'] = array('title' => 'Bank integrations','subtitle'=>'software','head'=>'credentials');
         $this->data['settings'] = DB::table('admin.all_setting')->get();
-        $skip = ['beta_testing','beta','betatwo','public','constant','api'];
+        $skip = ['beta_testing','betatwo','public','constant','api'];
         $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name',$skip)->get();
         return view('software.api.bank_setup', $this->data);
     }
@@ -463,7 +462,6 @@ class Software extends Controller {
         $check = DB::table(request('schema') . '.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
         if (!empty($check->first())) {
             $check->update(['api_username' => request('api_username'), 'invoice_prefix' => request('invoice_prefix'), 'api_password' => request('api_password'), 'updated_at' => now()]);
-
             DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('invoice_prefix') . '\'||"id", prefix=\'' . request('invoice_prefix') . '\'');
             DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
             // echo 'Records updated successfully';

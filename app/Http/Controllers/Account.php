@@ -27,7 +27,6 @@ class Account extends Controller {
     }
 
     public function projection() {
-        $this->data['breadcrumb'] = array('title' => 'Create invoices','subtitle'=>'invoices','head'=>'accounts');
         $this->data['budget'] = [];
         return view('account.projection', $this->data);
     }
@@ -44,7 +43,6 @@ class Account extends Controller {
 
 
     public function invoice() {
-        $this->data['breadcrumb'] = array('title' => 'Shulesoft invoices','subtitle'=>'invoices','head'=>'accounts');
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
@@ -68,6 +66,8 @@ class Account extends Controller {
             return redirect()->back()->with('success', 'deleted successfully');
           }
 
+          
+
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
@@ -84,13 +84,8 @@ class Account extends Controller {
             }
             return view('account.invoice.index', $this->data);
         }
-    }
 
-    public function invoiceReport() {
-        $this->data['breadcrumb'] = array('title' => 'Invoices report','subtitle'=>'reports','head'=>'accounts');
-        $project_id = $this->data['project_id'] = request()->segment(3);
-        $this->data['account_year_id'] = $account_year_id = request()->segment(4);
-        if((int) $project_id == 1) {
+        if($project_id == 1) {
             $from = !empty(request('from_date')) ? request('from_date') : date('Y-01-01');
             $this->data['from'] = $from;
             $this->data['id'] = 4;
@@ -99,11 +94,33 @@ class Account extends Controller {
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
              $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
-             $this->data['invoice_reports'] = \DB::select("select extract(month from p.created_at) as month , sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
-            return view('account.invoice.report', $this->data);
-        }  
+             $this->data['invoice_reports'] = DB::select("select extract(month from p.created_at) as month ,
+              sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on 
+              c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}'
+               and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
+               dd($this->data['invoice_reports']);
+        } 
+        return view('account.invoice.index', $this->data);
 
     }
+
+    // public function invoiceReport() {
+    //     $project_id = $this->data['project_id'] = request()->segment(3);
+    //     $this->data['account_year_id'] = $account_year_id = request()->segment(4);
+    //     if((int) $project_id == 1) {
+    //         $from = !empty(request('from_date')) ? request('from_date') : date('Y-01-01');
+    //         $this->data['from'] = $from;
+    //         $this->data['id'] = 4;
+    //         $to = !empty(request('to_date')) ? request('to_date') : date('Y-m-d');
+    //         $this->data['to'] = $to;
+    //         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
+    //         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
+    //          $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
+    //          $this->data['invoice_reports'] = \DB::select("select extract(month from p.created_at) as month , sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
+    //         return view('account.invoice.index', $this->data);
+    //     }  
+
+    // }
 
 
     
@@ -373,7 +390,9 @@ class Account extends Controller {
         $unit_price = $client->price_per_student;
         $amount = $unit_price * $client->estimated_students;
         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
-        return redirect()->back()->with('success', 'Invoice Created Successfully');
+       // return redirect()->back()->with('success', 'Invoice Created Successfully');
+         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+        
     }
 
 
@@ -415,7 +434,8 @@ class Account extends Controller {
         $amount = remove_comma(request('amount'));
          \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
         }
-        return redirect()->back()->with('success', 'Invoice Created Successfully');
+         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+
     }
 
 
@@ -874,7 +894,7 @@ class Account extends Controller {
                
                 $total_amount = 0;
                 if ((int) $refer_expense->predefined && $refer_expense->predefined > 0) {
-                    $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from admin. bank_transactions WHERE bank_account_id=' . $refer_expense->predefined . ' and payment_type_id <> 1 '))->first();
+                    $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from admin.bank_transactions WHERE bank_account_id=' . $refer_expense->predefined . ' and payment_type_id <> 1 '))->first();
 
                     $total_current_assets = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_current from admin. current_asset_transactions WHERE refer_expense_id=' . $refer_expense->predefined . ''))->first();
                     $total_amount = $total_bank->total_bank + $total_current_assets->total_current;
@@ -1005,7 +1025,6 @@ class Account extends Controller {
     }
 
     public function chart() {
-       $this->data['breadcrumb'] = array('title' => 'Charts of Account','subtitle'=>'accounts','head'=>'settings');
         $this->data['set'] = 0;
         $this->data['id'] = 0;
         $this->data['expenses'] = ReferExpense::all();

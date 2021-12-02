@@ -27,8 +27,8 @@
             <!-- form start -->
                   <div class="card">
                      <div class="card-block">
-                           <div class="col-sm-12">
-                            <form class="form-horizontal" role="form" method="post"> 
+                           <!-- <div class="col-sm-12">
+                               <form class="form-horizontal" role="form" method="post"> 
                                     <div class="form-group row">
                                         <div class="col-md-4 col-sm-12">
                                             <input type="date" class="form-control" id="from_date" name="from_date" value="<?= old('from_date',$from) ?>" >
@@ -43,12 +43,30 @@
                                         </div>
                                     </div>
                                    <?= csrf_field() ?>
-                               </form>
-                            </div>  
-                            <br>          
+                                 </form>
+                               </div>   -->
+                                  
                   
                                 <div class="dt-responsive table-responsive">
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
+                                    <div class="col-sm-12">
+                               <form class="form-horizontal" role="form" method="post"> 
+                                    <div class="form-group row">
+                                        <div class="col-md-4 col-sm-12">
+                                            <input type="date" class="form-control" id="from_date" name="from_date" value="<?= old('from_date',$from) ?>" >
+                                        </div>
+                                  
+                                        <div class="col-md-4 col-sm-12">
+                                            <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to) ?>" >
+                                        </div>
+                                    
+                                        <div class="col-md-2 col-sm-2 col-xs-6">
+                                            <input type="submit" class="btn btn-success" value="Submit"  style="float: right;">
+                                        </div>
+                                    </div>
+                                   <?= csrf_field() ?>
+                                 </form>
+                               </div>
                                         <thead>
                                             <tr>
                                                 <th>#</th>

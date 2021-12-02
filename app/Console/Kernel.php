@@ -83,9 +83,9 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('04:40'); // Eq to 07:40 AM    
 
 
-        $schedule->call(function () {
-            $this->addAttendance();
-        })->everyThreeMinutes();
+       // $schedule->call(function () {
+          //  $this->addAttendance();
+      //  })->everyThreeMinutes();
 
         $schedule->call(function () {
              $this->standingOrderRemainder();
@@ -131,6 +131,10 @@ class Kernel extends ConsoleKernel {
         // })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
+        })->monthlyOn(28, '06:36');
+
+         $schedule->call(function () {
+            $this->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
 
         $schedule->call(function () {
@@ -287,10 +291,7 @@ class Kernel extends ConsoleKernel {
         DB::statement('refresh materialized view admin.all_bank_accounts_integrations');
         DB::statement('refresh materialized view admin.all_bank_accounts');
 
-        $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on 
-                 (a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 
-                 and a.schema_name not in ('public') ");
-
+        $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on (a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 and a.schema_name not in ('public') ");
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }

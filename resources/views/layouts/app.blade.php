@@ -27,6 +27,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
 
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/icofont/css/icofont.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/jquery.mCustomScrollbar.css">
 
@@ -126,7 +127,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                 <div class="navbar-wrapper">
                     <div class="navbar-logo" style="background-color: #2C3E50;">
                         <a class="mobile-menu" id="mobile-collapse" href="#!">
-                            <i class="feather icon-menu"></i>
+                        <i class="icofont icofont-navigation-menu"></i>
+                            
                         </a>
                         <a href="#">
                             <img width="50" height="50" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
@@ -136,7 +138,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                         </a>
                     </div>
 
-                    <div class="navbar-container container-fluid">
+                    <div class="navbar-container container-fluid mobile-menu">
                         <ul class="nav-left">
                             <li class="header-search">
                                 <div class="main-search morphsearch-search">
@@ -285,7 +287,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <li class="pcoded-hasmenu">
                                   <?php if (can_access('view_dashboard')) { ?>
                                     <a href="javascript:void(0)">
-                                        <span class="pcoded-micon"><i class="feather icon-home"></i></span>
+                                        <span class="pcoded-micon"><i class="icofont icofont-ui-home"></i></span>
                                         <span class="pcoded-mtext">DASHBOARD</span>
                                     </a>
                                    <?php } ?>
@@ -362,7 +364,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                               <?php if (can_access('manage_revenue')) { ?>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
-                                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
+                                        <span class="pcoded-micon"><i class="icofont icofont-bank"></i></span>
                                         <span class="pcoded-mtext">REVENUE</span>
                                     </a>
                                     <ul class="pcoded-submenu">
@@ -371,6 +373,14 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <span class="pcoded-mtext text-bold">Sales</span>
                                             </a>
                                             <ul class="pcoded-submenu">
+
+                                             <?php if(\Auth::user()->role_id == 15) { ?>
+                                                <li class="">
+                                                <a href="<?= url('partner/index') ?>">
+                                                    <span class="pcoded-mtext">Partner request</span>
+                                                </a>
+                                                </li>
+                                                <?php } else { ?>
                                                 <li class="">
                                                     <a href="<?= url('sales/index') ?>">
                                                        <span class="pcoded-mtext">Sales materials</span>
@@ -390,7 +400,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                  </li>
                                                 <?php } ?>
+                                               <?php } ?>
+
                                             </ul>
+
                                         </li>
 
 
@@ -443,8 +456,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
                                                 <?php } ?>
-
-
                                             </ul>
                                         </li>
 
@@ -674,6 +685,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 </li>
 
                                                 <li class="">
+                                                    <a href="<?= url('users/courses') ?>">
+                                                        <span class="pcoded-mtext">Learning/Courses</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="">
                                                     <a href="<?= url('users/applicant') ?>">
                                                         <span class="pcoded-mtext">Partners</span>
                                                     </a>
@@ -822,7 +839,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                  <?php if(can_access('engineering')) { ?>
                                     <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
-                                        <span class="pcoded-micon"><i class="feather icon-settings"></i></span>
+                                        <span class="pcoded-micon"><i class="icofont icofont-code-alt"></i></span>
                                         <span class="pcoded-mtext">ENGINEERING</span>
                                      </a>        
                                  
@@ -889,7 +906,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                               <?php if (can_access('manage_finance')) { ?>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
-                                        <span class="pcoded-micon"><i class="feather icon-clipboard"></i></span>
+                                        <span class="pcoded-micon"><i class="icofont icofont-coins"></i></span>
                                         <span class="pcoded-mtext">ACCOUNTING</span>
                                     </a>
                                     <ul class="pcoded-submenu">
@@ -912,7 +929,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
 
                                         
-                                       <?php if (can_access('manage_transactions')) { ?>
+                                       <?php if (!can_access('manage_transactions')) { ?>
                                         <li class="pcoded-hasmenu">
                                             <a href="javascript:void(0)">
                                                 <span class="pcoded-mtext text-bold">Transactions</span>
@@ -954,11 +971,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                     </a>
                                                 </li>
 
-                                                  <li class="">
-                                                    <a href="<?= url('account/reconciliation') ?>">
-                                                        <span class="pcoded-mtext">Reconciliation</span>
-                                                    </a>
-                                                </li>
+                                                 
                                             </ul>
                                         </li>
                                      <?php } ?>

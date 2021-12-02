@@ -56,7 +56,6 @@ class Attendance extends Controller {
                 'present' => $present]);
             $found->update($data);
         } else {
-
             \App\Models\Uattendance::create(array_merge($where, [
             'timein' => date("Y-m-d h:i:s"),
             'created_by' => Auth::user()->id,
@@ -113,6 +112,14 @@ class Attendance extends Controller {
         return $exam_name;
     }
 
+
+      public function hr_report(){
+            $day = request()->segment(3);
+            $this->data['day'] = $day = !isset($day) ? date('Y-m-d') : $day;
+            $where = date("Y-m-d", strtotime($day));
+            $this->data['attendances']  = DB::select("select s.date,s.timein,s.timeout,u.firstname || ' '|| u.lastname as name from admin.uattendances s join admin.users u on s.user_id = u.id where u.status = 1 and u.role_id not in (7,15) and s.date::date = '".$where."' ");
+            return view("users.attendance.hr_report", $this->data);
+      }
 
 
 

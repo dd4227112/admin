@@ -29,7 +29,7 @@
           <div class="card tab-card">
             <div class="card-block">
              
-
+{{-- 
                   <div class="col-md-12 col-xl-12">
                     <div class="row">
                         <form class="col-sm-6 form-horizontal" role="form" method="post">
@@ -56,23 +56,22 @@
                          <?= csrf_field() ?>
                        </form>
                      </div>
-                    </div> 
+                    </div>  --}}
 
 
                  
  
                     <?php if (!empty($users)) { ?>
                      <div class="card-block">
-                      <div class="dt-responsive table-responsive">
-                       <table id="simpletable" class="table dataTable table-striped table-bordered nowrap">
+                      <div class="table-responsive">
+                       <table id="simpletable" class="table dataTable table-striped table-bordered">
                       <thead>
                         <tr>
                           <th># </th>
                           <th>Name</th>
-                          <th>Type</th>
+                          <th>Role</th>
                           <th>Phone</th>
-                          <th>Email </th>
-                          <th>Action </th>
+                          <th style="display:none">Action </th>
                           <th class="text-center">Absent reason</th>
                         </tr>
                       </thead>
@@ -87,8 +86,7 @@
                           <td><?=$user->firstname. ' '.$user->lastname ?></td>
                           <td><?=$user->role->display_name ?></td>
                           <td><?=$user->phone ?></td>
-                          <td><?=$user->email ?></td>
-                          <td class="text-center">
+                          <td class="text-center" style="display:none">
                             <?php
                             $method = '';
                             $att = $user->uattendance()->where('date', date("Y-m-d", strtotime($date)))->first();
@@ -112,7 +110,7 @@
                                     $array_[$absent->id] = $absent->reason;
                                 }
                             }
-                            echo form_dropdown("absent_id", $array_, old("absent_id", $absent_id), "id='absent_id' user_id='" . $user->id . "' class='form-control absent'");
+                            echo form_dropdown("absent_id", $array_, old("absent_id", $absent_id), "id='absent_id' user_id='" . $user->id . "' class='form-control absent' style='width:140px;height:18px;'");
                             ?>
                           </td>
 
@@ -124,7 +122,6 @@
                   <?php } ?>
                   </div>
               
-          
             </div>
           </div>
         </div>
@@ -140,11 +137,14 @@
       var status = $(this).is(':checked');
       $.ajax({
           type: 'POST',
+           headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
           url: "<?= url('attendance/singl_add') ?>",
           data: {"id": id, "day": day, status: status},
           dataType: "html",
           success: function (data) {
-              toast(data);
+             toastr.success(data);
               window.location.reload();
           }
       });
@@ -163,11 +163,15 @@
       }
       $.ajax({
           type: 'POST',
+           headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
           url: "<?= url('attendance/all_add') ?>",
           data: {"day": day, "status": status},
           dataType: "html",
           success: function (data) {
-              toast(data);
+              toastr.success(data);
+
           }
       });
 
@@ -177,10 +181,13 @@ function addAttendance(id, day, status, absent_id = 0) {
 $.ajax({
   type: 'POST',
   url: "<?= url('attendance/singl_add') ?>",
+   headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
   data: {"id": id, "day": day, status: status, absent_id: absent_id},
   dataType: "html",
   success: function (data) {
-      toast(data);
+      toastr.success(data);
       window.location.reload();
    }
   });
