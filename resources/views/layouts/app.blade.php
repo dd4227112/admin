@@ -1319,9 +1319,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                     </html>
                     <?php
 ///echo url()->current();
-// if (preg_match('/localhost/', url()->current())) {?>
-    {{-- <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
-  <?php } ?> --}}
+ if (preg_match('/localhost/', url()->current())) {?>
+     <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
+  <?php } ?> 
 
             
             
