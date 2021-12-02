@@ -442,8 +442,6 @@ class Sales extends Controller {
     }
 
     public function onboard() {
-        // dd(request()->all());
-
         $school_id = (int) request()->segment(3);
         //Redirects Partners to Onboarding Views
         if(Auth::user()->department == 9 || Auth::user()->department == 10){
