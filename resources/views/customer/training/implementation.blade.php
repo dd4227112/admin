@@ -37,7 +37,7 @@ $root = url('/') . '/public/'
         <!-- Pre-loader start -->
 
         <div class="main-body" >
-            <div class="page-wrapper">
+            
                 <!-- Page header start -->
 
                 <!-- Page header end -->

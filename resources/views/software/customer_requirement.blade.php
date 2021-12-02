@@ -4,8 +4,8 @@
 
 <script type="text/javascript" src="<?=url('/public') ?>/assets/select2/select2.js"></script> 
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <div class="page-header">
             <div class="page-header-title">
                 <h4>Customer service Reported issues</h4>

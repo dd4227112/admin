@@ -2,7 +2,7 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<div class="page-wrapper">
+
     <div class="page-header">
         <div class="page-header-title">
             <h4>Dashboard</h4>

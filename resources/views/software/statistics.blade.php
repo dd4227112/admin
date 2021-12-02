@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="{{ url('public/assets2\pages/chart/radial/css/radial.css') }}" type="text/css" media="all">
 <!-- Style.css -->
 <link rel="stylesheet" type="text/css" href="{{ url('public/assets2/css/style.css') }}">
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">

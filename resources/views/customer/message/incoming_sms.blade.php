@@ -2,8 +2,8 @@
 @section('content')
 
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <div class="page-header">
             <div class="page-header-title">
                 <h4>SMS received</h4>

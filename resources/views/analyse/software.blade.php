@@ -20,8 +20,8 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
     $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and action=(\'No\') and ' . $where))->first()->count;
 ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
            <div class="page-header">
             <div class="page-header-title">
                 <h4><?= isset($start_date) && isset($end_date) ? 'Software Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Software Dashboard' ?></h4>

@@ -37,8 +37,8 @@ table td {
   
  if(!isset($export)){  ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
        
 
          <div class="page-header">

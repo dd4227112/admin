@@ -2,8 +2,8 @@
 
 @section('content') 
 <?php $root = url('/') . '/public/' ?>
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
         <?php if (can_access('manage_users')) { ?>

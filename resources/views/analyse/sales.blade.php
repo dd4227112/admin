@@ -25,8 +25,8 @@ $taskss = DB::select($sqls1);
 $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
 $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . ' order by created_at desc');
 ?>
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
 
      <div class="page-header">
         <div class="page-header-title">

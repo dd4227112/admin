@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<div class="main-body">
-  <div class="page-wrapper">
+
+  
  
     <?php if($set > 0 ){ $top = 'Branch'; }else{  $top = 'Partner'; }?>
       <?php $name_ = $set > 0 ? ' Partner Branches List' : 'Shulesoft Partners List'; 

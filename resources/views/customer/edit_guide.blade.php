@@ -3,8 +3,8 @@
 <?php $root = url('/') . '/public/' ?>
 <link rel="stylesheet" href="<?= $root ?>plugins/bower_components/html5-editor/bootstrap-wysihtml5.css" />
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
 
          <div class="page-header">
             <div class="page-header-title">
