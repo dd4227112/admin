@@ -54,7 +54,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
             </div>
             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6> &nbsp; </h6>
-                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
             </div>
         </div>
 
@@ -198,7 +198,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
 
             <div class="row">
                 <div class="col-md-12 col-xl-4">
-                     <div class="card bg-c-green text-white">
+                     <div class="card">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -206,7 +206,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                                                 <h4 class="m-b-0">{{ number_format(count($taskss)) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                                <i class="feather icon-book f-50" style="color: #19b99a;"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
 
                 <div class="col-md-6 col-xl-4">
                     <?php  $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count;  ?>
-                     <div class="card bg-c-blue text-white">
+                     <div class="card">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -224,7 +224,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                                                 <h4 class="m-b-0">{{ number_format($total_schools) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-user-plus f-50 text-c-red"></i>
+                                                <i class="feather icon-user-plus f-50" style="color: #ADD8E6;"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -232,7 +232,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                 </div>
             
                 <div class="col-md-6 col-xl-4">
-                     <div class="card bg-c-yellow text-white">
+                     <div class="card">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -240,7 +240,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                                                 <h4 class="m-b-0">{{ number_format($total_activity) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-activity f-50 text-c-red"></i>
+                                                <i class="feather icon-activity f-50" style="color: gray;"></i>
                                             </div>
                                     </div>
                                 </div>

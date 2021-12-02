@@ -46,7 +46,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             </div>
             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6> &nbsp; </h6>
-                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
             </div>
         </div>
 
@@ -193,7 +193,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     $total_sms_payments=0;
                     $total = $total_revenue + $total_payments+$total_sms_payments;
                     ?>
-                       <div class="card bg-c-green text-white">
+                       <div class="card">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -201,7 +201,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                                 <h4 class="m-b-0">{{ number_format($total) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                                <i class="feather icon-book f-50" style="color: #19b99a;"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -214,7 +214,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     $day = date('Y-m-d');
                     $trans_revenue = \collect(DB::select('select count(*)*152.54 as total from admin.all_payments where extract(year from created_at)=' . date('Y') . '  and token is not null '))->first();
                     ?>
-                      <div class="card bg-c-blue text-white">
+                      <div class="card">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -222,7 +222,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                                 <h4 class="m-b-0">{{ number_format($trans_revenue->total) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                                <i class="feather icon-book f-50" style="color: #ADD8E6;"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -234,7 +234,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     <?php
                     $total_expense = DB::table('expenses')->whereYear('created_at', date('Y'))->sum('amount');
                     ?>
-                     <div class="card bg-c-yellow text-white">
+                     <div class="card">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -242,7 +242,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                                 <h4 class="m-b-0">{{ number_format($total_expense) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-book f-50 text-c-red"></i>
+                                                <i class="feather icon-book f-50" style="color: gray;"></i>
                                             </div>
                                     </div>
                                 </div>

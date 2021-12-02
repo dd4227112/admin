@@ -37,9 +37,9 @@
                                     ?>
                                     <div class="col-lg-3 col-xl-3 col-sm-12">
                                 
-                                 <?php $opt =  $i == 1 ? 'yellow' : 'green' ?>
+                                 <?php $opt =  $i == 1 ? 'white' : 'gray' ?>
                                          
-                                <div class="card bg-c-{{$opt}} text-white">
+                                <div class="card bg-c-{{$opt}} shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -47,7 +47,7 @@
                                                 <h4 class="m-b-0">{{ number_format($type->count) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-book f-40 text-c-red"></i>
+                                                <i class="feather icon-book f-40" style="color: #19b99a;"></i>
                                             </div>
                                     </div>
                                      </div>
