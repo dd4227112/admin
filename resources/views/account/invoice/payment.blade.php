@@ -5,8 +5,8 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
   // dd($previous_amount->last_balance);                                                  
 ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">

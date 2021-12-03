@@ -5,8 +5,8 @@
      return date('d-m-Y H:i:s',strtotime($date->created_at));
 }
  ?>
-<div class="main-body">
-  <div class="page-wrapper">
+
+  
 
           <div class="page-header">
             <div class="page-header-title">

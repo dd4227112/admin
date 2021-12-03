@@ -27,8 +27,8 @@ if (empty($payslip_settings)) {
     }
 </style>
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <!-- Page-header start -->
           <div class="col-sm-12 m-10">
                 <?php if (can_access('manage_payroll')) { ?>

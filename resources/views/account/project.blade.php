@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/'; ?>
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
       
           <div class="page-header">
             <div class="page-header-title">

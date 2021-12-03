@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <?php $title = isset($allowance_type) ? $allowance_type : 'Allowances';  ?>
 
            <div class="page-header">

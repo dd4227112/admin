@@ -18,8 +18,8 @@
 $page = request()->segment(3);
 $today = 0;
 ?>
-<div class="main-body">
- <div class="page-wrapper">
+
+ 
 
     <div class="page-header">
             <div class="page-header-title">

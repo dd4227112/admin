@@ -22,8 +22,8 @@ $echo = '<label class="badge badge-inverse-warning">Not Defined</label>';
 return $echo;
 }
 // ?>
-<div class="main-body">
-<div class="page-wrapper">
+
+
 
 <?php $school_name = isset($school->sname) ? $school->sname : '';
       $numbers=isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '';
@@ -241,8 +241,8 @@ target="_blank"> Exams</a>
 
 <div class="col-lg-9">
 <!-- Nav tabs -->
-        <div class="card">
-        <ul class="nav nav-tabs md-tabs tab-timeline" role="tablist">
+        <div class="card mt-4">
+        <ul class="nav nav-tabs md-tabs nav-justified tab-timeline" role="tablist">
         <li class="nav-item">
         <a class="nav-link active" data-toggle="tab" href="#timeline"
         role="tab" aria-expanded="false">Activities</a>
@@ -2260,7 +2260,7 @@ if (!empty($profile)) {
             </div>
         </div>
 
-         <div class="form-group row">
+         <div class="form-group row justify-content-center">
             <label class="col-sm-6 col-form-label">Estimated students</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">

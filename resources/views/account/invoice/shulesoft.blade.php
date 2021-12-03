@@ -41,8 +41,8 @@
     }
 
 </style>
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">

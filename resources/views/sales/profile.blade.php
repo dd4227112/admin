@@ -12,7 +12,7 @@
     }
 </style>
 
-<div class="page-wrapper">
+
     <!-- Page-header start -->
     <div class="page-header">
         <div class="page-header-title">
@@ -96,23 +96,23 @@
                                     class="btn btn-warning btn-sx">Download Implentation Plan</a>
                             </div>
                             <?php } ?>
-                            <ul class="page-list">
-                                <li class="active">
+                            <ul class="list-group">
+                                <li class="list-group-item active">
                                     <div class="mail-section" onclick="show_tabs('activities')">
                                         <a href="#">
                                             <i class="icofont icofont-inbox"></i> Activities
                                         </a>
-                                        <label class="label label-primary f-right" id="task_count_"></label>
+                                        <label class="label label-secondary f-right" id="task_count_"></label>
                                     </div>
                                 </li>
-                                <li>
+                                <li class="list-group-item">
                                     <div class="mail-section" onclick="show_tabs('contacts')">
                                         <a href="#">
                                             <i class="icofont icofont-star"></i> Contacts
                                         </a>
                                     </div>
                                 </li>
-                                <li>
+                                <li class="list-group-item">
                                     <div class="mail-section" onclick="show_tabs('school_details')">
                                         <a href="#">
                                             <i class="icofont icofont-file-text"></i> School Details
@@ -148,10 +148,10 @@
                             <div class="col-md-4">
                                 <div class="row follower-counter">
                                     <div class="col-md-12 col-lg-12">
-                                        <div class="txt-primary" contenteditable="true" onblur="$.get('<?= url('sales/updateStudent/null/') ?>', {no: $(this).text(), school_id:<?= $school->id ?>}, function (data) {
+                                        <div class="text-white " contenteditable="true" onblur="$.get('<?= url('sales/updateStudent/null/') ?>', {no: $(this).text(), school_id:<?= $school->id ?>}, function (data) {
                                             alert(data)
                                              })"><?= (int) $school->students ?></div>
-                                        <div>Estimated Students</div>
+                                        <div class="text-white">Estimated Students</div>
                                     </div>
                                 </div>
                             </div>

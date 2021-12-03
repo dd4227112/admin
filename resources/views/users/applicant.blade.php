@@ -4,7 +4,7 @@
 <?php
 $root = url('/') . '/public/';
 ?>
-<div class="page-wrapper">
+
     <div class="page-header">
     
       <div class="page-header">

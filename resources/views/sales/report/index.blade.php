@@ -12,7 +12,7 @@
 ?>
 
 
-<div class="page-wrapper">
+
     <div class="page-header">
         <div class="page-header-title">
             <h4>Monthly Perfomances</h4>
