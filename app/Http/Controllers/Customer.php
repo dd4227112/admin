@@ -459,12 +459,17 @@ class Customer extends Controller {
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
+
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
+        $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) ilike '%" . strtolower($school) . "%' ");
+
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
+        } elseif(empty($status)){
+              return view('customer.checkinstallation',$this->data);
         } else {
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
@@ -548,6 +553,7 @@ class Customer extends Controller {
         \App\Models\Client::where('id', $id)->update($data);
         $data = \App\Models\ClientSchool::where('client_id', $id)->first();
         \App\Models\School::where('id', \App\Models\ClientSchool::where('client_id', $id)->first()->school_id)->update(['students' => $number_of_students]);
+        \DB::table($update->username . '.setting')->update(['estimated_students' => $number_of_students]);
         return redirect('customer/profile/' . $update->username)->with('success', 'successful updated!');
     }
 
@@ -664,7 +670,8 @@ class Customer extends Controller {
     }
 
     public function getschools() {
-        $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A left join admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%' LIMIT 10";
+        $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A left join admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE 
+        '%" . str_replace("'", null, strtolower(request('term'))) . "%' LIMIT 10";
         die(json_encode(DB::select($sql)));
     }
 
