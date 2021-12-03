@@ -340,6 +340,7 @@
                                             $total_paid = 0;
                                             $total_unpaid = 0;
                                             $i = 1;
+                                            if(isset($payments)) {
                                             foreach ($payments as $invoice) {
                                                 ?>
                                                 <tr>
@@ -353,7 +354,8 @@
                                                         <a class="btn btn-success btn-mini btn-round" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                    </td>
                                                </tr>
-                                         <?php $i++; } ?>
+                                         <?php $i++; } 
+                                              } ?>
                                         </tbody>
                                         <tfoot>
                                             {{-- <tr>
