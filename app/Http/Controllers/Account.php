@@ -87,6 +87,7 @@ class Account extends Controller {
         }
     }
 
+      // Get invoice payment reports based on date ranges
     public function getInvoiceReports($from,$to,$project_id) {
             $from = !empty($from) ? $from : date('Y-01-01');
             $this->data['from'] = $from;
