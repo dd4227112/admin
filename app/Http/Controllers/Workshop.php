@@ -18,7 +18,7 @@ class Workshop extends Controller {
     }
 
     public function register() {
-        $this->data['event'] = \App\Models\Events::latest()->first();
+        $this->data['event'] = \App\Models\Events::where('category','event')->latest()->first();
         return view('registerworkshop', $this->data);
     }
 
