@@ -14,7 +14,7 @@
     <div class="container mt-5 pt-5">
         <div class="text-centert">
             <h2 class="display-5" style="font-weight: 800">Sorry there is a problem when accessing the school</h2>
-            <h3 class="display-5" style="font-weight: 800">Do the following on order:</h3>
+            <h3 class="display-5" style="font-weight: 800">Do the following in order:</h3>
             <h4 class="display-5" style="font-weight: 800">1.Make sure the school is full onboared with correct information.</h4>
             <h4 class="display-5" style="font-weight: 800">2.Make sure the school installation is fully done.</h4>
             <h4 class="display-5" style="font-weight: 800">3.Lastly contact me 😎. </h4> 
