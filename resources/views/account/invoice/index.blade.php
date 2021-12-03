@@ -300,9 +300,9 @@
                                        </table>
                                             
                                     </div> 
-                                                                    </div>
-                                                                    <div class="tab-pane" id="messages3" role="tabpanel">
-                                                                    <div class="dt-responsive table-responsive">
+                            </div>
+                            <div class="tab-pane" id="messages3" role="tabpanel">
+                            <div class="dt-responsive table-responsive">
                                 <div class="col-sm-12">
                                <form class="form-horizontal" role="form" method="post"> 
                                     <div class="form-group row">
@@ -340,11 +340,8 @@
                                             $total_paid = 0;
                                             $total_unpaid = 0;
                                             $i = 1;
-                                            foreach ($invoices as $invoice) {
-
+                                            foreach ($payments as $invoice) {
                                                 ?>
-
-
                                                 <tr>
                                                     <td><?= $i?></td>
                                                     <td><?= $invoice->name ?></td>
