@@ -138,9 +138,9 @@
 
                                 <div class="modal-footer text-center">
                                 <h2>
-                                            <a href="{{url('public/files/brochure.jpeg')}}" download target="_blank"
+                                            <!-- <a href="{{url('public/files/brochure.jpeg')}}" download target="_blank"
                                                 class="btn btn-primary"><i class="fa fa-download"></i>Download Event
-                                                Flyer</a>
+                                                Flyer</a> -->
                                             <a href="ShuleSoft.com" class="btn btn-warning"><i
                                                     class="fa fa-link"></i>Close</a>
                                         </h2>
