@@ -72,7 +72,9 @@
                                     </h1>
                                     <hr>
                                     <h4 class="text-center"><b>{{ $event->title }}</b></h4>
-                                    <b><?= $event->note ?></b>
+                                    <b><?= 
+                                    //$event->note 
+                                    ?></b>
 
                                 </div>
                                 <form class="form-group" id="loginform" method="POST" action="<?= url('/addregister') ?>" >
