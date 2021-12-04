@@ -17,8 +17,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
 ?>
-<div class="main-body">
-    <div class="page-wrapper">
+
 
      <div class="page-header">
         <div class="page-header-title">
@@ -65,7 +64,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                                 <h4 class="m-b-0">{{ number_format($unique_visitors) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-users f-50" style="color:#19b99a"></i>
+                                                <i class="feather icon-users f-50"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -294,8 +293,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
 
             </div>
-        </div>
-    </div>
+      
 
 <script type="text/javascript">
 

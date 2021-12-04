@@ -2,8 +2,8 @@
 @section('content')
 <?php $root = url('/') . '/public/'; ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
 
      <?php
 	 $am = $invoices->invoiceFees()->sum('amount'); 

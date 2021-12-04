@@ -3,8 +3,8 @@
 <?php $root = url('/') . '/public/'; ?>
 
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
@@ -138,11 +138,11 @@
                                                                 </td>
                                                                 <td>
                                                                      <?php 
-                                                                     //if (preg_match('/not implemented/i', $status)) {
+                                                                     if (preg_match('/not implemented/i', $status)) {
                                                                         ?> 
                                                                         <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-primary btn-mini btn-round btn-sm task_allocated_id">Save</button>
                                                                        <?php 
-                                                                        //} 
+                                                                        } 
                                                                         ?>  
                                                                 </td>
                                                             </tr>

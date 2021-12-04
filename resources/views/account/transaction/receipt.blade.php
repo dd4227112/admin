@@ -21,7 +21,7 @@ $bn_number = 888999;
                                         <ul>
                                             <li style="font-size: 1em;"><strong>INETS COMPANY LIMITED</strong></li>
                                             <li>TIN 122-866-750</li>
-                                            <li>P.o Box 32258 Dar es Salaam  </li>
+                                            <li>P.o Box 32282 Dar es Salaam  </li>
                                             <li> 2nd Floor,Block NO. 576</li>
                                             <li>Mbezi Beach Bagamoyo Road</li>
                                             <li>Mobile no: +255 655 406 004 </li>

@@ -3,7 +3,7 @@
 
 <?php $root = url('/') . '/public/';  ?>
 
-<div class="page-wrapper">
+
 
   <div>
     <div class="page-header">

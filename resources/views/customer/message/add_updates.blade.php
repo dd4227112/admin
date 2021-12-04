@@ -2,8 +2,8 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 <link rel="stylesheet" href="<?= $root ?>plugins/bower_components/html5-editor/bootstrap-wysihtml5.css" />
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <!-- Page-header start -->
          
         <div class="page-header">

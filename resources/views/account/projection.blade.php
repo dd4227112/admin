@@ -17,8 +17,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
 
 
-<div class="main-body">
-  <div class="page-wrapper">
+
+  
 
      <div class="page-header">
             <div class="page-header-title">

@@ -20,8 +20,8 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
     $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and action=(\'No\') and ' . $where))->first()->count;
 ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
            <div class="page-header">
             <div class="page-header-title">
                 <h4><?= isset($start_date) && isset($end_date) ? 'Software Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Software Dashboard' ?></h4>
@@ -48,7 +48,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
             </div>
             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6> &nbsp; </h6>
-                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
             </div>
         </div>
 
@@ -79,7 +79,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                          <?php
                         $resolved = \collect(DB::select('select count(*) from admin.error_logs a WHERE  a.deleted_at is not null and  a.route is not null and  ' . $where))->first()->count;
                          ?>
-                        <div class="card bg-c-blue text-white">
+                        <div class="card bg-c-yellow text-white">
                             <div class="card-block">
                                 <div class="row align-items-center">
                                     <div class="col">

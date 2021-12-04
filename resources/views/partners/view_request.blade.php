@@ -4,8 +4,8 @@
 
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <div class="row">
         <div class="col-sm-12">
                 <a  onclick="javascript:printDiv('print_all')" class="btn btn-default btn-sm">Print</a>

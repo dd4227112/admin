@@ -9,8 +9,8 @@ $master_tables = $database->loadTables(SCHEMA::$master_schema);
 $columns = $database->loadTableColumnsBulks();
 $d = $database->loadSchema();
 ?>
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         
          <div class="page-header">
             <div class="page-header-title">

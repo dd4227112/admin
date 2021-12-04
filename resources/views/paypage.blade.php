@@ -110,7 +110,7 @@
                                             Meeting.</li>
                                     </ol>
                                     @else
-                                        <h4 align="center">This event charges 150,000/- Tsh for Schools that do not use Shulesoft.</b></h4>
+                                        <h4 align="center">This event charges <b> 150,000/-</b> Tsh for Schools that do not use Shulesoft.</b></h4>
                                     <hr>
                                         <h4>How to Pay Event Fee</h4>
                                         <ul>
@@ -120,7 +120,7 @@
                                             <li> - Account Number: 22510028669</li>
                                             <li><code>Please notify us after a deposit</code></li>
                                         </ul>
-                                        <br>
+                                        <br>  <br>
                                         <h4>Does ShuleSoft have a free Events?</h4>
 
                                     <p>

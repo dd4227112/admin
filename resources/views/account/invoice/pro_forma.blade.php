@@ -44,7 +44,7 @@
     }
 
 </style>
-<div class="main-body">
+
     <div class="@if(!isset($balance))  page-wrapper @endif">
         <style>
             #valid-msg {

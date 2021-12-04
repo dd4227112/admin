@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <?php $month = date('F,Y',strtotime($set)) .' - monthly payroll'; 
           
         ?>

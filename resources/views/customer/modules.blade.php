@@ -108,8 +108,8 @@ function select($value, $schema, $sources) {
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
 
       <div class="page-header">
         <div class="page-header-title">

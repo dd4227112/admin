@@ -3,8 +3,8 @@
 <?php $root = url('/') . '/public/' ?>
 
 
-<div class="main-body">
-  <div class="page-wrapper">
+
+  
 
        <div class="page-header">
             <div class="page-header-title">
@@ -158,8 +158,8 @@
                             <div class="card">
                                 <div class="card-title mt-4 mr-2 px-4">
                                 <h5 style="font-weight: 800"> Attendance information</h5> 
-                           <p style="font-weight:700"> Present   <label class="badge badge-info">P</label>, Present late  <label class="badge badge-warning">P</label>, Present early leave  <label class="badge badge-danger">P</label>,
-                             weekends <label class="badge badge-default">S</label>, Sick  <label class="badge badge-danger">S</label>, Permission  <label class="badge badge-info">PM</label> </p>
+                                <p style="font-weight:700"> Present   <label class="badge badge-info">P</label>, Present late  <label class="badge badge-warning">P</label>, Present early leave  <label class="badge badge-danger">P</label>,
+                                 weekends <label class="badge badge-default">S</label>, Sick  <label class="badge badge-danger">S</label>, Permission  <label class="badge badge-info">PM</label> </p>
                                 </div>
                            
                                 <div class="card-body">

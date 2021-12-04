@@ -9,7 +9,7 @@ $receipt_setting = \DB::table('receipt_settings')->first();
 $template = $receipt_setting->template;
 $file = 'invoices.receipt_templates.' . $template;
 ?>
-<div class="main-body">
+
     <div class="@if(!isset($balance))  page-wrapper @endif">
     <div class="page-body">
            

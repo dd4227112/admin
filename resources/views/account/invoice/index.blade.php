@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/'; ?>
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
     <div class="page-header">
             <div class="page-header-title">
                 <h4>Invoices</h4>
@@ -300,9 +300,9 @@
                                        </table>
                                             
                                     </div> 
-                                                                    </div>
-                                                                    <div class="tab-pane" id="messages3" role="tabpanel">
-                                                                    <div class="dt-responsive table-responsive">
+                            </div>
+                            <div class="tab-pane" id="messages3" role="tabpanel">
+                            <div class="dt-responsive table-responsive">
                                 <div class="col-sm-12">
                                <form class="form-horizontal" role="form" method="post"> 
                                     <div class="form-group row">
@@ -340,11 +340,9 @@
                                             $total_paid = 0;
                                             $total_unpaid = 0;
                                             $i = 1;
-                                            foreach ($invoices as $invoice) {
-
+                                            if(isset($payments)) {
+                                            foreach ($payments as $invoice) {
                                                 ?>
-
-
                                                 <tr>
                                                     <td><?= $i?></td>
                                                     <td><?= $invoice->name ?></td>
@@ -356,7 +354,8 @@
                                                         <a class="btn btn-success btn-mini btn-round" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                    </td>
                                                </tr>
-                                         <?php $i++; } ?>
+                                         <?php $i++; } 
+                                              } ?>
                                         </tbody>
                                         <tfoot>
                                             {{-- <tr>

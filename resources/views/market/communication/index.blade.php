@@ -3,8 +3,8 @@
 <?php $root = url('/') . '/public/';
 ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
 
            <div class="page-header">
             <div class="page-header-title">
@@ -75,6 +75,7 @@
                             </div>
 
                           
+                        
 
                             <div class="form-group" id="parents_selection" style="display: none;">
                                  <div class="col-sm-3">
@@ -111,10 +112,10 @@
                                     <select id="form-field-select-3" class="select2" name="customer_segment"
                                         onchange="setcustomerCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
-                                        <option value="0">Secondary schools </option>
+                                        <option value="0">Nursey schools only  </option>
                                         <option value="1">Primary schools</option>
-                                        <option value="2">College only</option>
-                                        <option value="3">Nursey schools only</option>
+                                        <option value="2">Secondary schools </option>
+                                        <option value="3">College only</option>
                                         <option value="4">Schools with student (greater than or less than)</option>
                                     </select>
                                 </div>
@@ -133,7 +134,8 @@
                                     </label>
                                 </div>
                                 <div class="col-sm-9">
-                                    <select id="form-field-select-4" class="select2" name="prospectscriteria">
+                                    <select id="form-field-select-4" class="select2" name="prospectscriteria"
+                                         onchange="setProspectsCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
                                         <option value="001">All Prospects </option>
                                         <option value="002">Based on segment</option>
@@ -166,7 +168,25 @@
                                     <?php echo form_error($errors, 'criteria'); ?>
                                     <?php endif ?>
                                 </div>
-                            </div>                   
+                            </div>     
+                            
+                            
+                         <div class="form-group" id="custom_number_selection" style="display: none;">
+                            <div class="col-sm-3">
+                                <label for="form-field-select-3">
+                                    Phone numbers
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="tags_1" data-role="tagsinput" class="tags form-control"  name ="custom_numbers" placeholder="separate by comma or space"  />
+                            </div>
+                            <div class="has-error">
+                                <?php if (form_error($errors, 'custom_numbers')): ?>
+                                    <?php echo form_error($errors, 'custom_numbers'); ?>
+                                <?php endif ?>
+                            </div>
+                           </div>
+
                         </div>
                  
                         <div class='form-group'>
@@ -347,6 +367,9 @@ $(document).ready(buy_sms);
             var templateID = $(this).val();
             $.ajax({
                 type: 'POST',
+                 headers: {
+                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                     },
                 url: "<?= base_url('marketing/getTemplateContent') ?>",
                 data: "templateID=" + templateID,
                 dataType: "html",
@@ -363,7 +386,7 @@ function setFirstCriteria(value) {
     switch (value) {
         case '00':
             $('#parents_selection').show();
-            $('#by_customer_segment,#leads_selection,#prospect_selection,#teachersCat,#teachersPhones').hide();
+            $('#by_customer_segment,#leads_selection,#prospect_selection,#custom_number_selection,#teachersPhones').hide();
             break;
         case '01':
             $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection').hide();
@@ -374,7 +397,7 @@ function setFirstCriteria(value) {
             $('#leads_selection').show();
             break;
         case '03':
-            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#leads_selection,#by_customer_segment,#custom_number_selection,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
             break;
         case '04':
             $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
@@ -393,8 +416,7 @@ function setCriteria(value1) {
             break;
         case '0':
             $('#by_customer_segment,#category6,#category8,#load_hostel').hide();
-            //var items = ["", "Male", "Female", "All"];
-            //push_options(items);
+         
             break;
         case '1':
             $('#load_fees,#load_payment_status,#load_types,#category6,#category7,#category8,#load_hostel').hide();
@@ -405,34 +427,14 @@ function setCriteria(value1) {
             $('#load_payment_status,#account_tags,#load_payment_amount,#load_hostel').hide();
             break;
         case '3':
-            $('#load_fees,#by_customer_segment,#load_fees,#load_types,#category6,#category8,#load_hostel')
-                .hide();
-            $('#load_payment_status,#account_tags,#load_payment_amount').show();
+            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status').hide();
             break;
         case '4':
-            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status,#load_types')
-                .hide();
-            $('#category').hide();
-            $('#category1').hide();
-            $('#category3').hide();
-            $('#category2').hide();
-            $('#category4').hide();
-            $('#category5').hide();
-            $('#category6').show();
-            $('#category7').hide();
+            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status').hide();
             break;
-
         case '5':
             $('#category').hide();
-            $('#category1').hide();
-            $('#category2').hide();
-            $('#category3').show();
-            $('#category4').hide();
-            $('#category6').hide();
-            $('#category7').hide();
-            $('#load_section,#load_payment_status,#load_types').hide();
             $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel').hide();
-            $('#category8').hide();
 
             $('#by_customer_segment').show();
             break;
@@ -462,6 +464,38 @@ function setcustomerCriteria(value) {
             break;
         case '04':
             $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+            break;
+        default:
+            break;
+    }
+}
+
+
+
+function setProspectsCriteria(value){
+      switch (value) {
+        case '001':
+            $('#custom_number_selection').show();
+            $('#parents_selection,#leads_selection,#by_customer_segment,#parents_selection').hide();
+            break;
+        case '002':
+            $('#by_customer_segment,#leads_selection,#by_customer_segment,#account_tags,#parents_selection').hide();
+            $('#custom_number_selection').show();
+            break;
+        default:
+            break;
+    }
+}
+
+function setLeadsCriteria(value){
+      switch (value) {
+        case '001':
+            $('#custom_number_selection').show();
+            $('#parents_selection,#by_customer_segment,#parents_selection,#prospect_selection').hide();
+            break;
+        case '002':
+            $('#by_customer_segment,#by_customer_segment,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#custom_number_selection').show();
             break;
         default:
             break;
