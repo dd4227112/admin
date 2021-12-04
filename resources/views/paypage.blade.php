@@ -110,7 +110,7 @@
                                             Meeting.</li>
                                     </ol>
                                     @else
-                                        <h4 align="center">This event for school they don't use ShuleSoft system. Have to Pay <b>150,000/- Tshs</b></h4>
+                                        <h4 align="center">This event charges 150,000/- Tsh for Schools that do not use Shulesoft.</b></h4>
                                     <hr>
                                         <h4>How to Pay Event Fee</h4>
                                         <ul>
