@@ -120,11 +120,11 @@
                                             <li><code>Please notify us after a deposit</code></li>
                                         </ul>
                                         <br>  <br>
-                                        <h4>Does ShuleSoft have a free Events?</h4>
+                                        <!-- <h4>Does ShuleSoft have a free Events?</h4>
 
                                     <p>
                                     Yes! All school using ShuleSoft system are free to join  all events organized by ShuleSoft — we only charge schools which they don't use our system yet each time we have an event. <br>
-                                  <br>  <b>Note:</b> For Schools using ShuleSoft system have free access to our meetings/events organized by ShuleSoft.
+                                  <br>  <b>Note:</b> For Schools using ShuleSoft system have free access to our meetings/events organized by ShuleSoft. -->
 
                                     </p>
                                     @endif
