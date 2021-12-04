@@ -76,8 +76,7 @@
                                 <hr>
                                 <h4 class="text-center"><b>{{ $event->title }}</b></h4>
                                 <br>
-                                <h3 class=" box-title" align="center" style="padding-top: 2px">Conglatulations,
-                                you have succefully been registered for the Event </h3>
+                                <h3 class=" box-title" align="center" style="padding-top: 2px">Congratulations, You've successfully registered for the Event.</h3>
                                 <div class="card-body ml-2">
         <hr>                @if (isset($status) && $status==1)
             
