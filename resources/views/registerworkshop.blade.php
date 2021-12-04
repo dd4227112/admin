@@ -76,7 +76,9 @@
                                     <h1 class="text-center" style="color: black; font-weight: bold;">
                                         <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="80" height="80">
                                     </h1>
+                                    <hr>
                                     <h4 class="text-center"><b>{{ $event->title }}</b></h4>
+                                    <b><?= $event->note ?></b>
 
                                 </div>
                                 <form class="form-group" id="loginform" method="POST" action="<?= url('/addregister') ?>" >
@@ -130,7 +132,15 @@
                                             </div>
                                         </div>
 
-
+                                        <div class="form-group ">
+                                            <div class="col-sm-12 col-xs-12">
+                                                Does Your School Use ShuleSoft System?
+                                                <select name="status" id="source" class="form-control" required>
+                                                    <option value="">..........</option>
+                                                    <option value="2">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                            </div>
 
                                         <div class="form-group ">
                                             <div class="col-sm-12 col-xs-12">
