@@ -70,7 +70,9 @@
                                     <h1 class="text-center" style="color: black; font-weight: bold;">
                                         <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="80" height="80">
                                     </h1>
+                                    <hr>
                                     <h4 class="text-center"><b>{{ $event->title }}</b></h4>
+                                    <b><?= $event->note ?></b>
 
                                 </div>
                                 <form class="form-group" id="loginform" method="POST" action="<?= url('/addregister') ?>" >
@@ -110,21 +112,19 @@
                                             <div class="col-sm-12 col-xs-12">
                                                 Your School / Organization
                                                 <input type="text" name="school_id" class="form-control" placeholder="Enter your School name here.." value="{{ old('school_id') }}" required>
-                                                <!--
-                                                                        <select name="school_id" class="form-control select2-container step2-select" data-placeholder="Select Gender" required>
-                                                                          <option value="1">Search Your School Here....</option>
-                                                <?php
-                                                $schools = DB::table('schools')->where('ownership', 'Non-Government')->get();
-                                                foreach ($schools as $school) {
-                                                    ?>
-                                                                                                <option value="<?= $school->id ?>"><?php // $school->name. ' (<b> '.$school->type. ' </b>) - '. $school->wards->district->region->name      ?></option>
-                                                <?php } ?>
-                                          
-                                                                        </select> -->
+                                                
                                             </div>
                                         </div>
 
-
+                                        <div class="form-group ">
+                                            <div class="col-sm-12 col-xs-12">
+                                                Does Your School Use ShuleSoft System?
+                                                <select name="status" id="source" class="form-control" required>
+                                                    <option value="">..........</option>
+                                                    <option value="2">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                            </div>
 
                                         <div class="form-group ">
                                             <div class="col-sm-12 col-xs-12">
@@ -151,7 +151,7 @@
                                             <div class="col-sm-12 col-xs-12">
                                                 <div class="checkbox-fade fade-in-primary">
                                                     <label>
-                                                        <input type="checkbox" name="status" value="1">
+                                                        <input type="checkbox" name="status5" value="1">
                                                         <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
                                                         <span class="text-inverse">Do you Want to Receive Update of this Workshop*</span>
                                                     </label>
