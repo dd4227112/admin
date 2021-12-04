@@ -70,7 +70,7 @@
                         <div class="card">
                             <div class="card-header ">
                                 <h1 class="text-center" style="color: black; font-weight: bold;">
-                                    <img src="<?= $root ?>assets/images/auth/ShuleSoft_logo.png" alt="logo.png"
+                                    <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png"
                                         width="80" height="80">
                                 </h1>
                                 <hr>
