@@ -497,17 +497,19 @@ group by ownership');
     
         switch ($customer_criteria) {
             case 0:   //All customers (paid)
-                $customers = DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in 
-                (select invoice_id from admin.payments where created_at::date > '" . $dates . "'))");
+                $customers = \DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in (select invoice_id from admin.payments where created_at::date > '" . $dates . "'))");
                 break;
             case 1:
                 //Active & Full paid customers
+                  $customers = \DB::select("select a.client_id,a.name,a.username,a.remain_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,f.amount as total_amount,COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,i.client_id,c.username ) a where a.remain_amount = 0");
                 break;
             case 2:
                 //Active & partial paid customers
+                  $customers = \DB::select("select a.client_id,a.name,a.username,a.total_amount,a.remain_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,f.amount as total_amount,COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,i.client_id,c.username ) a where a.remain_amount > 0");
                 break;
             case 3:
                 // Active but not paid customers (have S.I)
+                  $customers = \DB::select("select a.client_id,a.name,a.username,a.total_amount,a.paid_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,f.amount as total_amount,COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,i.client_id,c.username ) a where a.paid_amount = 0 and a.client_id in (select client_id from admin.standing_orders)");
                 break;
             case 4:
                 // Not active & paid customers
@@ -637,21 +639,20 @@ group by ownership');
 
     public function sendCustomSmsBySegment($message,$customer_segment){
          switch ($customer_segment) {
-            case 0:   //All customers (paid)
-                $customers = DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in 
-                (select invoice_id from admin.payments where created_at::date > '" . $dates . "'))");
+            case 0: //Nursey schools only 
+                $segments = DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in (select invoice_id from admin.payments where created_at::date > '" . $dates . "'))");
                 break;
             case 1:
-                //Active & Full paid customers
+                //Primary schools
                 break;
             case 2:
-                //Active & partial paid customers
+                //Secondary schools
                 break;
             case 3:
-                // Active but not paid customers (have S.I)
+                // College only
                 break;
             case 4:
-                // Not active & paid customers
+                // Schools with student (greater than or less than)
                 break;
             default:
                 break;

@@ -73,7 +73,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <body>
       <!-- Pre-loader start -->
 
-       {{-- <div class="theme-loader">
+       <div class="theme-loader">
         <div class="ball-scale">
             <div class='contain'>
                 <div class="ring">
@@ -108,9 +108,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                 </div>
             </div>
         </div>
-    </div>     --}}
+    </div>     
 
-      <style>
+      {{-- <style>
           .image {
                 position: absolute;
                 top: 50%;
@@ -133,7 +133,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                 <img class="image" width="400" height="400" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
             </div>
         </div>
-    </div>    
+    </div>     --}}
 
 
     <!-- Pre-loader end -->
