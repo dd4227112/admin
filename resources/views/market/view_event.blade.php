@@ -72,6 +72,7 @@
                                     <th>Name</th>
                                     <th>Position</th>
                                     <th>School Name</th>
+                                    <th>Client</th>
                                     <th>phone</th>
                                     <th>Email</th>
                                     <th>Source</th>
@@ -90,13 +91,14 @@
                                         <td><?=$media->name?></td>
                                         <td><?=$media->position?></td>
                                         <td> <?=$school?></td>
+                                        <td> <?=$media->status == 2 ?  'NO' : 'YES' ?></td>
                                         <td><?=$media->phone?></td>
                                         <td><?=$media->email?></td>
                                         <td><?=$media->source?></td>
                                         <td><?=$media->created_at?></td> 
                                         <td> <a class="btn btn-danger btn-sm" href="{{ url('workshop/deleteUser/'.$media->id) }}">Delete</a></td>
                                       </tr>
-                                    <?php } } ?>
+                                    <?php $i++;} } ?>
                                   </tbody>
                                 </table>
                               </div>

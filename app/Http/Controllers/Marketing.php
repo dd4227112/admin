@@ -614,14 +614,14 @@ group by ownership');
 
 
     public function sendCustomSmsToAll($message,$customer_criteria,$prospectscriteria = null,$leadscriteria = null,$customer_segment = null){
-        $customers = DB::select("select * from admin.clients");
+        $customers = DB::select("select * from admin.all_setting");
         if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
-                    $customer->name, $customer->username
+                    $customer->name, $customer->schema_name
                 );
                 $sms = $this->getCleanSms($replacements, $message, array(
-                    '/#name/i', '/#username/i', '/#schema_name/i',
+                    '/#name/i','/#schema_name/i','/#username/i'
                 ));
                 $this->send_sms($customer->phone, $sms);
             }
@@ -640,16 +640,20 @@ group by ownership');
     public function sendCustomSmsBySegment($message,$customer_segment){
          switch ($customer_segment) {
             case 0: //Nursey schools only 
-                $segments = DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in (select invoice_id from admin.payments where created_at::date > '" . $dates . "'))");
+                $segments = DB::select("select * from admin.all_classlevel where lower(name) = 'nursery' or lower(name) = 'nursery level'");
                 break;
             case 1:
                 //Primary schools
+                $segments = DB::select("SELECT * FROM admin.all_classlevel WHERE lower(name) = 'primary' OR lower(name) = 'primary level'");
                 break;
             case 2:
                 //Secondary schools
+                $segments = DB::select("SELECT * FROM admin.all_classlevel WHERE lower(name) = 'a-level' OR lower(name) = 'o-level' or lower(name) = 'secondary' or lower(result_format) = 'csee' or lower(result_format) = 'acsee'");
                 break;
             case 3:
                 // College only
+                $segments = DB::select("SELECT * FROM admin.all_classlevel WHERE lower(result_format) = 'college' or lower(name) = 'nacte'");
+
                 break;
             case 4:
                 // Schools with student (greater than or less than)
@@ -657,11 +661,12 @@ group by ownership');
             default:
                 break;
         }
-        if (isset($customers) && count($customers) > 0) {
-            foreach ($customers as $customer) {
+        if (isset($segments) && count($segments) > 0) {
+            foreach ($segments as $segment) {
+                $customer = \collect(\DB::select("select * from admin.all_setting where schema_name ='{$segment->schema_name}'"))->first();
 
                 $replacements = array(
-                    $customer->name, $customer->username
+                    $customer->sname, $segment->schema_name
                 );
 
                 $sms = $this->getCleanSms($replacements, $message, array(

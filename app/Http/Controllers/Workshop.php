@@ -31,6 +31,7 @@ class Workshop extends Controller {
 
     public function addregister() {
         $phonenumber = validate_phone_number(request('phone'), request('country_code'));
+        $phonenumber = str_replace('2550', '+255', $phonenumber);
         $workshop = \App\Models\Events::where('id', request('event_id'))->first();
         $obj = [
             'phone' => $phonenumber, 'name' => request('name'),
@@ -38,6 +39,7 @@ class Workshop extends Controller {
             'event_id' => request('event_id'),
             'status' => request('status'),
             'source' => request('source')];
+
         $check_attendee = \App\Models\EventAttendee::where('phone', $phonenumber)->where('event_id', request('event_id'))->first();
 
         if (empty($check_attendee)) {
@@ -57,13 +59,14 @@ class Workshop extends Controller {
                     . chr(10) . 'Thanks and regards,'
                     . chr(10) . 'Shulesoft Team'
                     . chr(10) . ' Call: +255 655 406 004 ';
-            DB::table('public.sms')->insert([
+
+            \DB::table('public.sms')->insert([
                 'body'=>$message1,
                 'user_id'=>1,
                 'type'=>0,
                 'priority' => 1,
                 'sent_from' => 'whatsapp',
-                'phone_number'=> str_replace('2550', '+255', $phonenumber)
+                'phone_number'=>$phonenumber
             ]);
             $chatId = $phonenumber . '@c.us';
             $this->sendMessage($chatId, $message1);

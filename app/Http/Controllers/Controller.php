@@ -108,8 +108,9 @@ class Controller extends BaseController {
 
     public function send_sms($phone_number, $message, $priority = 0) {
         if ((strlen($phone_number) > 6 && strlen($phone_number) < 20) && $message != '') {
+            // dd($phone_number);
             $sms_keys_id = DB::table('public.sms_keys')->first()->id;
-            DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id));
+            \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id));
         }
         return $this;
     }
@@ -358,7 +359,6 @@ class Controller extends BaseController {
     }
 
  
-
 
 
       public function syncMissingPayments(){
