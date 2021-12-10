@@ -24,21 +24,23 @@
                 </ul>
             </div>
         </div> 
+
+
         <div class="page-body">
                 <div class="col-sm-12">
                   <div class="card">
                     <div class="card-block">
                        <div class="row">
    
-                    <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <div class="col-sm-3">
+                         <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>">
+                            <div class="card-block">
+                            <div class="form-group row">
+                                <div class="col-sm-4">
                                     <label for="form-field-select-0">
-                                        From:
+                                        Channels:
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select multiple="" id="sms_keys_id" class="select2"  name ="sms_channels[]" required>
                                         <option value="quick-sms">Quick SMS</option>
                                         <option value="whatsapp">WhatsApp</option>
@@ -47,16 +49,15 @@
                                         <option value="email">Email</option>
                                     </select>
                                 </div>
-                             
                             </div>
 
-                            <div class="form-group">
-                                <div class="col-sm-3">
+                            <div class="form-group row">
+                                <div class="col-sm-4">
                                     <label for="form-field-select-0">
-                                        Send To:
+                                       Send SMS to
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select style="30px;" id="form-field-select-0" class="select2" name="firstCriteria"
                                         onchange="setFirstCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
@@ -76,18 +77,17 @@
 
                           
                         
-
-                            <div class="form-group" id="parents_selection" style="display: none;">
-                                 <div class="col-sm-3">
+                            <div class="form-group row" id="parents_selection" style="display: none;">
+                                 <div class="col-sm-4">
                                     <label>
                                         Select Customer:
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select id="form-field-select-3" class="select2" name="customer_criteria"
                                         onchange="setCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
-                                        <option value="0">All Customers </option>
+                                        <option value="0">All Customers (Paid) </option>
                                         <option value="1">Active & Full paid customers</option>
                                         <option value="2">Active & partial paid customers</option>
                                         <option value="3">Active but not paid customers (have S.I)</option>
@@ -102,21 +102,21 @@
                                 </div>
                             </div>
 
-                             <div class="form-group" id="by_customer_segment" style="display: none;">
-                                 <div class="col-sm-3">
+                             <div class="form-group row" id="by_customer_segment" style="display: none;">
+                                 <div class="col-sm-4">
                                     <label  for="form-field-select-4">
-                                        Customer Segment:
+                                        Customer Segment
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select id="form-field-select-3" class="select2" name="customer_segment"
-                                        onchange="setcustomerCriteria(this.value);">
+                                        onchange="BycustomerSegment(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
-                                        <option value="0">Nursey schools only  </option>
-                                        <option value="1">Primary schools</option>
-                                        <option value="2">Secondary schools </option>
-                                        <option value="3">College only</option>
-                                        <option value="4">Schools with student (greater than or less than)</option>
+                                        <option value="00">Nursey schools only  </option>
+                                        <option value="01">Primary schools</option>
+                                        <option value="02">Secondary schools </option>
+                                        <option value="03">College only</option>
+                                        <option value="04">Schools with student (greater than or less than)</option>
                                     </select>
                                 </div>
                                 <div class="has-error">
@@ -127,13 +127,14 @@
                             </div>
 
 
-                            <div class="form-group" id="prospect_selection" style="display: none;">
-                                <div class="col-sm-3">
+
+                            <div class="form-group row" id="prospect_selection" style="display: none;">
+                                <div class="col-sm-4">
                                     <label for="form-field-select-4">
-                                       Prospects:
+                                       Prospects
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select id="form-field-select-4" class="select2" name="prospectscriteria"
                                          onchange="setProspectsCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
@@ -149,13 +150,13 @@
                             </div>
 
 
-                           <div class="form-group" id="leads_selection" style="display: none;">
-                                <div class="col-sm-3">
+                           <div class="form-group row" id="leads_selection" style="display: none;">
+                                <div class="col-sm-4">
                                     <label for="form-field-select-4">
                                        Leads
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select id="form-field-select-4" class="select2" name="leadscriteria"
                                         onchange="setLeadsCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
@@ -171,13 +172,13 @@
                             </div>     
                             
                             
-                         <div class="form-group" id="custom_number_selection" style="display: none;">
-                            <div class="col-sm-3">
+                         <div class="form-group row" id="custom_number_selection" style="display: none;">
+                            <div class="col-sm-4">
                                 <label for="form-field-select-3">
                                     Phone numbers
                                 </label>
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                 <input type="text" id="tags_1" data-role="tagsinput" class="tags form-control"  name ="custom_numbers" placeholder="separate by comma or space"  />
                             </div>
                             <div class="has-error">
@@ -187,16 +188,54 @@
                             </div>
                            </div>
 
-                        </div>
+
+
+                         
+                        <div class="row" id="number_of_student" style="display: none;">
+                           <div class="form-group col-sm-12 row" >
+                                <label class="col-sm-3">
+                                   Criteria
+                                </label>
+                                <label class="col-sm-3">
+                                    Less Than   <input type="radio" id="optionsRadios1" name="less_than" value="1" >
+                                </label>
+                                <label class="col-sm-3">
+                                    Greater than  
+                                    <input type="radio" id="optionsRadios2" name="less_than"  value="0" > 
+                                </label>
+                                <label class="col-sm-3">
+                                    Equals to 
+                                    <input type="radio" id="optionsRadios3" name="less_than"  value="2" > 
+                                </label>
+                            </div>
+
+                            <div class="form-group col-sm-12 row">
+                                <div class="col-sm-5">
+                                    <label for="amount" class="control-label">
+                                        Specify students number
+                                    </label>
+                                </div>
+                                <div  class="col-sm-7">
+                                    <input type="number" name="student_number" placeholder="Enter student number Here" id= "student_number" class="form-control"/>
+                                </div>
+                            </div> 
+                         </div> 
+
+                      
                  
-                        <div class='form-group'>
-                            <div class="">
+                        <div class='form-group row'>
+                            <div class="col-sm-4">
                                 <label for="sms_template">
                                     <?= __("Template") ?>
                                 </label>
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                 <?php
+
+                                 $array = array(
+                                     'select' => 'Select Template',
+                                 );
+
                                  $templates = DB::table('admin.mailandsmstemplates')->where('status', '1')->get();
                                 foreach ($templates as $etemplate) {
                                     strtolower($etemplate->type) == 'sms' ? $array[$etemplate->id] = $etemplate->name : '';
@@ -211,9 +250,9 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-sm-11">
+                            <div class="col-sm-12">
                                 <textarea class="form-control" name="message"
-                                    onmousedown="get_estimated_delivery_time()" rows="10" id="content_area"
+                                    onmousedown="get_estimated_delivery_time()" rows="6" id="content_area"
                                     placeholder="<?= __('message') ?>"><?= old('sms_message') ?></textarea>
                             </div>
                             <div class="col-sm-12">
@@ -236,6 +275,7 @@
                                 <?php endif ?>
                             </div>
                         </div>
+
                         <div class="pull-left col-sm-4">
                             <p>Estimated Delivery Time: <span id="get_estimated_delivery_time"></span> <i
                                     class="fa fa-question-circle" data-container="body" data-toggle="popover"
@@ -247,6 +287,7 @@
                            <button type="submit" class="btn btn-primary btn-mini btn-round"> Submit </button>
                         </div>
                         <?= csrf_field() ?>
+                      </div>
                     </form>
                     </div>
                    </div>
@@ -254,9 +295,9 @@
                 </div>
                 <!--</div>-->
             </div>
-            <!--<script  src="<?php echo url('public/assets/jquery.tagsinput/bootstrap-tagsinput.min.js'); ?>"></script>-->
-            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true"
-                style="display: none;">
+ 
+
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true"style="display: none;">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
 
@@ -314,9 +355,7 @@
       debug: true
   }); 
 
-//    $('#tags_1').tagsinput({
-//  tagClass: 'big',confirmKeys: [13, 32, 44]
-//});
+
 get_estimated_delivery_time = function() {
     // var type = $('#sms_keys_id').val();
     // $.ajax({
@@ -386,21 +425,21 @@ function setFirstCriteria(value) {
     switch (value) {
         case '00':
             $('#parents_selection').show();
-            $('#by_customer_segment,#leads_selection,#prospect_selection,#custom_number_selection,#teachersPhones').hide();
+            $('#by_customer_segment,#leads_selection,#prospect_selection,#custom_number_selection,#teachersPhones,#number_of_student').hide();
             break;
         case '01':
-            $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection').hide();
+            $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection,#number_of_student').hide();
             $('#prospect_selection').show();
             break;
         case '02':
-            $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
             $('#leads_selection').show();
             break;
         case '03':
-            $('#leads_selection,#by_customer_segment,#custom_number_selection,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#leads_selection,#by_customer_segment,#custom_number_selection,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
             break;
         case '04':
-            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
             break;
         default:
             break;
@@ -412,10 +451,10 @@ function setFirstCriteria(value) {
 function setCriteria(value1) {
     switch (value1) {
         case '':
-            $('#by_customer_segment,#load_payment_status,#category6,#category8,#account_tags').hide();
+            $('#by_customer_segment,#load_payment_status,#category6,#category8,#account_tags,#number_of_student').hide();
             break;
         case '0':
-            $('#by_customer_segment,#category6,#category8,#load_hostel').hide();
+            $('#by_customer_segment,#category6,#category8,#load_hostel,#number_of_student').hide();
          
             break;
         case '1':
@@ -424,18 +463,17 @@ function setCriteria(value1) {
             break;
         case '2':
             $('#load_payment_status,#load_types,#by_customer_segment').hide();
-            $('#load_payment_status,#account_tags,#load_payment_amount,#load_hostel').hide();
+            $('#load_payment_status,#account_tags,#load_payment_amount,#load_hostel,#number_of_student').hide();
             break;
         case '3':
-            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status').hide();
+            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status,#number_of_student').hide();
             break;
         case '4':
-            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status').hide();
+            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status,#number_of_student').hide();
             break;
         case '5':
             $('#category').hide();
-            $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel').hide();
-
+            $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel,#number_of_student').hide();
             $('#by_customer_segment').show();
             break;
         default:
@@ -447,23 +485,23 @@ function setCriteria(value1) {
 
 function setcustomerCriteria(value) {
     switch (value) {
-        case '00':
-            $('#parents_selection').show();
-            $('#by_customer_segment,#leads_selection,#prospect_selection,#teachersCat,#teachersPhones').hide();
+        case 0:
+            $('#by_customer_segment,#leads_selection,#prospect_selection').hide();
             break;
-        case '01':
-            $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection').hide();
+        case 1:
+            $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags').hide();
             $('#prospect_selection').show();
             break;
-        case '02':
-            $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+        case 2:
+            $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
             $('#leads_selection').show();
             break;
-        case '03':
-            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+        case 3:
+            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
             break;
-        case '04':
-            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+        case 4:
+            $('#number_of_student').show();
+            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
             break;
         default:
             break;
@@ -476,10 +514,10 @@ function setProspectsCriteria(value){
       switch (value) {
         case '001':
             $('#custom_number_selection').show();
-            $('#parents_selection,#leads_selection,#by_customer_segment,#parents_selection').hide();
+            $('#parents_selection,#leads_selection,#by_customer_segment,#parents_selection,#number_of_student').hide();
             break;
         case '002':
-            $('#by_customer_segment,#leads_selection,#by_customer_segment,#account_tags,#parents_selection').hide();
+            $('#by_customer_segment,#leads_selection,#by_customer_segment,#account_tags,#parents_selection,#number_of_student').hide();
             $('#custom_number_selection').show();
             break;
         default:
@@ -491,10 +529,10 @@ function setLeadsCriteria(value){
       switch (value) {
         case '001':
             $('#custom_number_selection').show();
-            $('#parents_selection,#by_customer_segment,#parents_selection,#prospect_selection').hide();
+            $('#parents_selection,#by_customer_segment,#parents_selection,#prospect_selection,#number_of_student').hide();
             break;
         case '002':
-            $('#by_customer_segment,#by_customer_segment,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#by_customer_segment,#by_customer_segment,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
             $('#custom_number_selection').show();
             break;
         default:
@@ -502,6 +540,27 @@ function setLeadsCriteria(value){
     }
 }
 
+
+function BycustomerSegment(value){
+    switch (value) {
+    case '01':
+        $('#number_of_student,#prospect_selection,#custom_number_selection').hide();
+        break;
+     case '02':
+        $('#number_of_student,#prospect_selection,#custom_number_selection').hide();
+        break;
+     case '03':
+        $('#number_of_student,#prospect_selection,#custom_number_selection').hide();
+        break;
+    case '04':
+      //   $(#account_tags,#prospect_selection').hide();
+         $('#number_of_student').show();
+      
+        break;
+    default:
+        break;
+}
+}
 
 word_count = function() {
     $('#content_area').keyup(function() {

@@ -455,6 +455,7 @@ group by ownership');
             $this->validate(request(), [
                 'message' => 'required'
             ]);
+
             $message = request("message");
             $prospectscriteria = request('prospectscriteria');
             $leadscriteria = request('leadscriteria');
@@ -462,12 +463,14 @@ group by ownership');
             $customer_criteria = request('customer_criteria');
             $customer_segment = request('customer_segment');
             $custom_numbers = request('custom_numbers');
+            $criteria = request('less_than');
+            $student_number = request('student_number');
 
 
             switch ($firstCriteria) {
                 case 00:   
                     //customers First
-                    return $this->sendCustomSmsToCustomers($message,$customer_criteria, $prospectscriteria = null, $leadscriteria = null,$customer_segment);
+                    return $this->sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$prospectscriteria = null, $leadscriteria = null,$customer_segment = null);
                     break;
                 case 01:
                     //Prospects
@@ -479,11 +482,11 @@ group by ownership');
                     break;
                 case 03:
                     //All customers
-                    return $this->sendCustomSmsToAll($message, $section_id, $class_id, $message);
+                    return $this->sendCustomSmsToAll($message, $section_id, $message);
                     break;
                 case 04:
                     // Not Custom selection
-                    return $this->sendCustomSms($message, $section_id, $class_id, $message);
+                    return $this->sendCustomSms($message, $section_id, $message);
                     break;
                 default:
                     break;
@@ -492,12 +495,12 @@ group by ownership');
         return view('market.communication.index', $this->data);
     }
 
-    public function sendCustomSmsToCustomers($message,$customer_criteria,$prospectscriteria = null,$leadscriteria = null,$customer_segment = null) {
+    public function sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$prospectscriteria = null,$leadscriteria = null,$customer_segment = null) {
         $dates = date('Y-m-d',strtotime('first day of January'));
     
         switch ($customer_criteria) {
             case 0:   //All customers (paid)
-                $customers = \DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in (select invoice_id from admin.payments where created_at::date > '" . $dates . "'))");
+                $customers = \DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in (select invoice_id from admin.payments where created_at::date > '" . $this->dates . "'))");
                 break;
             case 1:
                 //Active & Full paid customers
@@ -516,19 +519,19 @@ group by ownership');
                 break;
 
             case 5:
-                return $this->sendCustomSmsBySegment($message,$customer_segment);
+                return $this->sendCustomSmsBySegment($message,$customer_segment,$criteria,$student_number);
                 break;
             default:
                 break;
         }
-        if (isset($customers) && count($customers) > 0) {
+        if (isset($customers) && count($customers) > 0) { 
             foreach ($customers as $customer) {
 
                 $replacements = array(
                     $customer->name, $customer->username
                 );
 
-                $sms = $this->getCleanSms($replacements, $message, array(
+            $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i', '/#username/i', '/#schema_name/i',
                 ));
 
@@ -541,15 +544,7 @@ group by ownership');
         }
     }
 
-    public function getCleanSms($replacements, $message, $pattern = null) {
-        $sms = preg_replace($pattern != null ? $pattern : $this->patterns, $replacements, $message);
-        if (preg_match('/#/', $sms)) {
-            //try to replace that character
-            return preg_replace('/\#[a-zA-Z]+/i', '', $sms);
-        } else {
-            return $sms;
-        }
-    }
+  
 
     public function sendCustomSmsToProspects($message,$custom_numbers) {
           $numbers = [];
@@ -637,26 +632,27 @@ group by ownership');
     }
 
 
-    public function sendCustomSmsBySegment($message,$customer_segment){
+    public function sendCustomSmsBySegment($message,$customer_segment,$criteria,$student_number){
          switch ($customer_segment) {
-            case 0: //Nursey schools only 
+            case 00: //Nursey schools only 
                 $segments = DB::select("select * from admin.all_classlevel where lower(name) = 'nursery' or lower(name) = 'nursery level'");
                 break;
-            case 1:
+            case 01:
                 //Primary schools
                 $segments = DB::select("SELECT * FROM admin.all_classlevel WHERE lower(name) = 'primary' OR lower(name) = 'primary level'");
                 break;
-            case 2:
+            case 02:
                 //Secondary schools
                 $segments = DB::select("SELECT * FROM admin.all_classlevel WHERE lower(name) = 'a-level' OR lower(name) = 'o-level' or lower(name) = 'secondary' or lower(result_format) = 'csee' or lower(result_format) = 'acsee'");
                 break;
-            case 3:
+            case 03:
                 // College only
                 $segments = DB::select("SELECT * FROM admin.all_classlevel WHERE lower(result_format) = 'college' or lower(name) = 'nacte'");
 
                 break;
-            case 4:
+            case 04:
                 // Schools with student (greater than or less than)
+                return $this->sendSmsByStudentNumber($message,$criteria,$student_number,$customer_segment);
                 break;
             default:
                 break;
@@ -681,6 +677,63 @@ group by ownership');
             return redirect()->back()->with('error', 'Message Failed to be sent');
         }
     }
+     
+
+
+     public function sendSmsByStudentNumber($message,$criteria,$student_number,$segment){
+         $sql = $this->statusNumber($criteria,$student_number,$segment);
+           dd($sql);
+         $customers = DB::select("select * from admin.clients where estimated_students is not null $sql");
+    
+         if (isset($customers) && count($customers) > 0) {
+            foreach ($customers as $customer) {
+                $replacements = array(
+                    $customer->name, $customer->username
+                );
+
+                $sms = $this->getCleanSms($replacements, $message, array(
+                    '/#name/i', '/#username/i', '/#schema_name/i',
+                ));
+
+                $this->send_sms($customer->phone, $sms);
+            }
+
+            return redirect()->back()->with('success', 'Message sent successfuly');
+        } else {
+            return redirect()->back()->with('error', 'Message Failed to be sent');
+        }
+    }
+
+
+    public function statusNumber($criteria,$number,$segment,$column = 'estimated_students') {
+        $and = '';
+        if ((int) $number > 0 && (int) $segment == 04 ) {
+            if ((int) $criteria == 1) {
+                $and = ' AND ' . $column . ' <=' . $number;
+            } else if ((int) $criteria == 0) {
+                $and = ' AND ' . $column . ' >=' . $number;
+            } else if ((int) $criteria == 2) {
+                $and = ' AND ' . $column . ' =' . $number;
+            } else {
+                $and = ' AND ' . $column . ' >=' . 0;
+            }
+        }
+        return $and;
+    }
+
+
+
+      public function getCleanSms($replacements, $message, $pattern = null) {
+        $sms = preg_replace($pattern != null ? $pattern : $this->patterns, $replacements, $message);
+        if (preg_match('/#/', $sms)) {
+            //try to replace that character
+            return preg_replace('/\#[a-zA-Z]+/i', '', $sms);
+        } else {
+            return $sms;
+        }
+    }
+
+
 
     public function templates(){
         $type = request()->segment(3);
