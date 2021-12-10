@@ -470,7 +470,7 @@ group by ownership');
             switch ($firstCriteria) {
                 case 00:   
                     //customers First
-                    return $this->sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$prospectscriteria = null, $leadscriteria = null,$customer_segment = null);
+                    return $this->sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$customer_segment,$prospectscriteria = null, $leadscriteria = null);
                     break;
                 case 01:
                     //Prospects
@@ -495,7 +495,8 @@ group by ownership');
         return view('market.communication.index', $this->data);
     }
 
-    public function sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$prospectscriteria = null,$leadscriteria = null,$customer_segment = null) {
+    public function sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$customer_segment = null,$prospectscriteria = null,$leadscriteria = null) {
+        
         $dates = date('Y-m-d',strtotime('first day of January'));
     
         switch ($customer_criteria) {
@@ -632,7 +633,7 @@ group by ownership');
     }
 
 
-    public function sendCustomSmsBySegment($message,$customer_segment,$criteria,$student_number){
+    public function sendCustomSmsBySegment($message,$customer_segment,$criteria,$students_number){
          switch ($customer_segment) {
             case 00: //Nursey schools only 
                 $segments = DB::select("select * from admin.all_classlevel where lower(name) = 'nursery' or lower(name) = 'nursery level'");
@@ -652,7 +653,7 @@ group by ownership');
                 break;
             case 04:
                 // Schools with student (greater than or less than)
-                return $this->sendSmsByStudentNumber($message,$criteria,$student_number,$customer_segment);
+                return $this->sendSmsByStudentNumber($message,$criteria,$students_number,$customer_segment);
                 break;
             default:
                 break;
@@ -680,11 +681,11 @@ group by ownership');
      
 
 
-     public function sendSmsByStudentNumber($message,$criteria,$student_number,$segment){
-         $sql = $this->statusNumber($criteria,$student_number,$segment);
-           dd($sql);
+     public function sendSmsByStudentNumber($message,$criteria,$students_number,$segment){
+         $sql = $this->statusNumber($criteria,$students_number,$segment);
+        
          $customers = DB::select("select * from admin.clients where estimated_students is not null $sql");
-    
+          dd($customers);
          if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
