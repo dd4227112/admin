@@ -3,10 +3,7 @@
 <?php $root = url('/') . '/public/';
 ?>
 
-
-    
-
-           <div class="page-header">
+    <div class="page-header">
             <div class="page-header-title">
                 <h4><?=' Compose message' ?></h4>
             </div>
@@ -26,14 +23,14 @@
         </div> 
 
 
-        <div class="page-body">
-                <div class="col-sm-12">
-                  <div class="card">
-                    <div class="card-block">
-                       <div class="row">
-   
+         <div class="page-body">
+             <div class="row">
+                <div class="col-sm-8">
+                    <div class="card">
+                        <div class="card-block">
+
                          <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>">
-                            <div class="card-block">
+                        
                             <div class="form-group row">
                                 <div class="col-sm-4">
                                     <label for="form-field-select-0">
@@ -87,7 +84,7 @@
                                     <select id="form-field-select-3" class="select2" name="customer_criteria"
                                         onchange="setCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
-                                        <option value="0">All Customers (Paid) </option>
+                                        <option value="0">All Customers (Paid Customers) </option>
                                         <option value="1">Active & Full paid customers</option>
                                         <option value="2">Active & partial paid customers</option>
                                         <option value="3">Active but not paid customers (have S.I)</option>
@@ -287,61 +284,66 @@
                            <button type="submit" class="btn btn-primary btn-mini btn-round"> Submit </button>
                         </div>
                         <?= csrf_field() ?>
-                      </div>
+                      
                     </form>
                     </div>
                    </div>
-                    <div class="col-sm-2"></div>
                 </div>
-                <!--</div>-->
-            </div>
- 
 
-            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true"style="display: none;">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
 
-                        <div class="modal-header">
-                            <button type="button" onmousedown="message_left_count()" class="close"
-                                data-dismiss="modal"><span aria-hidden="true">×</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">Quick SMS</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>These are Quick and Fasts SMS that can be delivered in less than 5min</p>
-                            <h3>Only at Tsh 20/= per SMS</h3>
-                            <p></p>
-                            <div id="buy_sms_content">
-                                <form class="form-horizontal form-label-left" onsubmit="return false">
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Enters
-                                            Number of SMS to buy <span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="number" id="number_of_sms" name="sms" required="required"
-                                                class="form-control col-md-7 col-xs-12">
-                                        </div>
-                                    </div>
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email"><span
-                                                class="required"></span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="submit" class="btn btn-success" id="buy_sms_btn">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"
-                                onmousedown="message_left_count()">Close</button>
-                            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-                        </div>
-
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-block">
+                        <h6>Summary</h6>
+                        <div class="clearfix"></div>
                     </div>
-                </div>
+                    <table class="data table table-striped no-margin">
+                        <thead>
+                            <tr>
+
+                                <th>Channel</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td> <i class="fa fa-whatsapp"></i>
+                                    WhatsApp</td>
+                                <td>
+                                
+                                </td>
+                                <td class="hidden-phone">
+                                </td>
+
+                            </tr>
+                
+                            <tr>
+                                <td> <i class="fa fa-comments"></i> Quick SMS</td>
+                                <td><span id="message_left_count"></span> Remains</td>
+                                <td class="hidden-phone">
+                                    <span class="badge bg-green" data-toggle="modal" data-target=".bs-example-modal-lg">
+                                        Add More</span>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td> <i class="fa fa-envelope"> </i> Phone SMS</td>
+                                <td colspan="2"><b id="phone_last_online"> Active - <b>  </b> <br>
+                                    <code></a></code>
+                                </td>
+
+                            </tr>
+                         
+
+                        </tbody>
+                    </table>
+
             </div>
+          </div>
+       </div>
+ 
 
         </div>
     </div>

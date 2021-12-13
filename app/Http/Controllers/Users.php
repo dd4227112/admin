@@ -86,8 +86,12 @@ class Users extends Controller {
             'body' => $message,
             'user_id' => 1,
             'phone_number' => $request->phone,
-            'table' => 'setting'
+            'table' => 'setting',
+            'priority' => 1
         ]);
+
+       $this->send_whatsapp_sms($request->phone, $message,$request->name); 
+
         \DB::table('public.email')->insert([
             'body' => $message,
             'subject' => 'ShuleSoft Administration Credentials',
@@ -95,7 +99,6 @@ class Users extends Controller {
             'email' => $request->email,
             'table' => 'setting'
         ]);
-       $this->send_whatsapp_sms($request->phone, $message); 
     }
     /**
      * Display the specified resource.

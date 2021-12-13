@@ -1788,4 +1788,7 @@ class Customer extends Controller {
          return redirect()->back()->with('success','Trial period updated successfull');
     }
 
+
+
+
 }

@@ -455,7 +455,7 @@ group by ownership');
             $this->validate(request(), [
                 'message' => 'required'
             ]);
-
+            
             $message = request("message");
             $prospectscriteria = request('prospectscriteria');
             $leadscriteria = request('leadscriteria');
@@ -501,7 +501,7 @@ group by ownership');
     
         switch ($customer_criteria) {
             case 0:   //All customers (paid)
-                $customers = \DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in (select invoice_id from admin.payments where created_at::date > '" . $this->dates . "'))");
+                $customers = \DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in (select invoice_id from admin.payments where created_at::date > '" . $dates . "'))");
                 break;
             case 1:
                 //Active & Full paid customers
@@ -527,16 +527,13 @@ group by ownership');
         }
         if (isset($customers) && count($customers) > 0) { 
             foreach ($customers as $customer) {
-
                 $replacements = array(
                     $customer->name, $customer->username
                 );
-
-            $sms = $this->getCleanSms($replacements, $message, array(
+                 $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i', '/#username/i', '/#schema_name/i',
                 ));
-
-                $this->send_sms($customer->phone, $sms);
+                  $this->sendMessages($customer->phone, $sms);
             }
 
             return redirect()->back()->with('success', 'Message sent successfuly');
@@ -545,7 +542,8 @@ group by ownership');
         }
     }
 
-  
+   
+
 
     public function sendCustomSmsToProspects($message,$custom_numbers) {
           $numbers = [];
@@ -560,7 +558,6 @@ group by ownership');
             $wrong = 0;
             $invalid_numbers = '';
 
-
        $replacements = array('', '', '', '', '', '');
 
         $sms = $this->getCleanSms($replacements, $message);
@@ -569,7 +566,7 @@ group by ownership');
             $valid = validate_phone($number);
             if (is_array($valid)) {
                 $sent_to++;
-                $this->send_sms($valid[1], $sms, 0, 1);
+                $this->sendMessages($valid[1], $sms);
             } else {
                 $wrong++;
                 $invalid_numbers .= $number . ',';
@@ -590,9 +587,7 @@ group by ownership');
             $sent_to = 0;
             $wrong = 0;
             $invalid_numbers = '';
-
-
-       $replacements = array('', '', '', '', '', '');
+        $replacements = array('', '', '', '', '', '');
 
         $sms = $this->getCleanSms($replacements, $message);
 
@@ -600,7 +595,7 @@ group by ownership');
             $valid = validate_phone($number);
             if (is_array($valid)) {
                 $sent_to++;
-                $this->send_sms($valid[1], $sms, 0, 1);
+                $this->sendMessages($valid[1], $sms);
             } else {
                 $wrong++;
                 $invalid_numbers .= $number . ',';
@@ -619,7 +614,7 @@ group by ownership');
                 $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i','/#schema_name/i','/#username/i'
                 ));
-                $this->send_sms($customer->phone, $sms);
+                $this->sendMessages($customer->phone, $sms);
             }
             return redirect()->back()->with('success', 'Message sent successfuly');
         } else {
@@ -649,7 +644,6 @@ group by ownership');
             case 03:
                 // College only
                 $segments = DB::select("SELECT * FROM admin.all_classlevel WHERE lower(result_format) = 'college' or lower(name) = 'nacte'");
-
                 break;
             case 04:
                 // Schools with student (greater than or less than)
@@ -658,21 +652,16 @@ group by ownership');
             default:
                 break;
         }
+
         if (isset($segments) && count($segments) > 0) {
             foreach ($segments as $segment) {
                 $customer = \collect(\DB::select("select * from admin.all_setting where schema_name ='{$segment->schema_name}'"))->first();
-
-                $replacements = array(
-                    $customer->sname, $segment->schema_name
-                );
-
+                $replacements = array($customer->sname, $segment->schema_name);
                 $sms = $this->getCleanSms($replacements, $message, array(
-                    '/#name/i', '/#username/i', '/#schema_name/i',
-                ));
-
-                $this->send_sms($customer->phone, $sms);
+                    '/#name/i', '/#schema_name/i','/#username/i',
+                ));                  
+                $this->sendMessages($customer->phone, $sms);
             }
-
             return redirect()->back()->with('success', 'Message sent successfuly');
         } else {
             return redirect()->back()->with('error', 'Message Failed to be sent');
@@ -683,20 +672,17 @@ group by ownership');
 
      public function sendSmsByStudentNumber($message,$criteria,$students_number,$segment){
          $sql = $this->statusNumber($criteria,$students_number,$segment);
-        
          $customers = DB::select("select * from admin.clients where estimated_students is not null $sql");
-          dd($customers);
+
          if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
                     $customer->name, $customer->username
                 );
-
                 $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i', '/#username/i', '/#schema_name/i',
                 ));
-
-                $this->send_sms($customer->phone, $sms);
+                $this->sendMessages($customer->phone, $sms);
             }
 
             return redirect()->back()->with('success', 'Message sent successfuly');
@@ -736,6 +722,40 @@ group by ownership');
 
 
 
+     public function sendMessages($phone,$message){
+        $channels = request('sms_channels');
+        $phone = \collect(DB::select("select * from admin.format_phone_number('" .$phone. "')"))->first();
+        $phonenumber = $phone->format_phone_number;
+ 
+        if(in_array("quick-sms", $channels)) {
+              // Send messages by quick sms
+         }
+
+        if(in_array("whatsapp", $channels)) {
+            $this->send_whatsapp_sms($phonenumber,$message);
+        }
+
+        if(in_array("telegram", $channels)) {
+            // Send messages by  Telegram
+        }
+
+        if(in_array("phone-sms", $channels)) {
+            // Send messages by  normal sms
+            $this->send_sms($phonenumber,$message);
+        }
+
+        if(in_array("email", $channels)) {
+            // Send messages by Email
+              $user = \collect(DB::select("select * from admin.all_users where phone = '" .$phonenumber. "' "))->first();
+              if(isset($user) && !empty($user->email)){
+                  $this->send_email($user->email, 'ShuleSoft', $message);
+              }
+        }
+      
+    }
+
+
+
     public function templates(){
         $type = request()->segment(3);
         $id = request()->segment(4);
@@ -771,6 +791,22 @@ group by ownership');
             }
 
     }
+
+
+    public function summary(){
+        $this->data['summary'] = [];
+        $this->data['whatsapp_sent_sms'] = DB::table('admin.whatsapp_messages')->count();
+        $this->data['whatsapp_sent_delivered'] = DB::table('admin.whatsapp_messages')->where('status', 1)->count();
+        $this->data['sms_sent'] = DB::table('public.sms')->count();
+        $this->data['pending_sms'] = DB::table('public.sms')->where('status', 0)->where('user_id','>',0)->where('table','<>','')->count();
+        $this->data['delevered_sms'] =  DB::table('public.sms')->where('status', 1)->where('user_id','>',0)->where('table','<>','')->count();
+        $this->data['failed_sms'] =  DB::table('public.sms')->where('status', 2)->where('user_id','>',0)->where('table','<>','')->count();
+
+        $this->data['sent_email'] = DB::table('public.email')->where('status', 1)->count();
+        $this->data['pending_email'] = DB::table('public.email')->where('status', 0)->count();
+        return view('market.communication.summary',$this->data);
+
+     }
 
 
      

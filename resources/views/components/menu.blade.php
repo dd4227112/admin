@@ -153,18 +153,25 @@
                                                         <a href="javascript:void(0)">
                                                         <span class="pcoded-mtext text-bold">Communications</span>
                                                     </a>
-                                                        <ul class="pcoded-submenu">
+                                                      <ul class="pcoded-submenu">
                                                         <li class="">
                                                             <a href="<?= url('marketing/communication') ?>">
                                                                 <span class="pcoded-mtext">Compose</span>
                                                             </a>
-                                                            </li>
+                                                        </li>
                                                         
-                                                            <li class="">
+                                                         <li class="">
                                                             <a href="<?= url('marketing/templates') ?>">
                                                                 <span class="pcoded-mtext">Template</span>
                                                             </a>
-                                                            </li>
+                                                          </li>
+
+                                                         <li class="">
+                                                            <a href="<?= url('marketing/summary') ?>">
+                                                                <span class="pcoded-mtext">Summary</span>
+                                                            </a>
+                                                          </li>
+
                                                         </ul>
                                                         </li>
                                                   <?php } ?>
@@ -215,6 +222,8 @@
                                                         <span class="pcoded-mtext">SMS & Email logs</span>
                                                     </a>
                                                 </li> 
+
+                                              
                                               <?php } ?>
 
                                               <?php if (can_access('create_update')) { ?>
