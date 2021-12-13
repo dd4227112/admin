@@ -1,17 +1,36 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-body">
-    <div class="page-wrapper">
-        <?php $breadcrumb = array('title' => isset($allowance_type) ? $allowance_type : 'Allowances','subtitle'=>'accounts','head'=>'payroll');  ?>
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+        <?php $title = isset($allowance_type) ? $allowance_type : 'Allowances';  ?>
+
+           <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= $title ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
                 <div class="card">  
                     <div class="card-block">
                         <div class="row">
                             <div class="col-sm-12 col-xl-6 m-b-30">
                                   <?php $url = "allowance/add/$category"; ?>
-                                 <x-button :url="$url" color="primary" btnsize="sm"  title="Add allowance"></x-button>
+                                     <a href="<?= url($url) ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="add allowance"> Add allowance </a> 
+                            
 
                             </div>
                             <div class="col-sm-12 col-xl-6 m-b-30">
@@ -90,9 +109,11 @@
                                         </td>
                                         <td>
                                             <?php $sub = $category == 1 ? 'subscribe' : 'monthlysubscribe';$edit_url = "allowance/edit/$allowance->id"; $delete_url = "allowance/delete/$allowance->id"; $members_url="allowance/$sub/$allowance->id";?>
-                                             <x-button :url="$edit_url" color="info" btnsize="mini"  title="edit" shape="round" toggleTitle="Edit allowance"></x-button>
-                                             <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete allowance"></x-button>
-                                             <x-button :url="$members_url" color="primary" btnsize="mini"  title="members" shape="round" toggleTitle="Members"></x-button>
+                                       
+                                            <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit member"> edit </a> 
+                                            <a href="<?= url($delete_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete member"> delete </a> 
+                                            <a href="<?= url($members_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View member"> members </a> 
+
                                         </td>
                                     </tr>
                                     <?php

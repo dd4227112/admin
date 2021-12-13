@@ -2,16 +2,34 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<div class="main-body">
-<div class="page-wrapper">
-<x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+
+
+  <div class="page-header">
+            <div class="page-header-title">
+                <h4> Phone calls</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">calls</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
 <div class="page-body">
   <div class="row">
       <div class="col-md-12 col-xl-12">
           <div class="card"> 
               <div class="card-block">
-                 <a  class="btn btn-info" href="<?= url('Phone_call/create') ?>"> Add calls </a>
+                 <a  class="btn btn-primary btn-mini btn-round" href="<?= url('Phone_call/create') ?>"> Add calls </a>
               </div> 
               
               <div class="card-block tab-icon">                               

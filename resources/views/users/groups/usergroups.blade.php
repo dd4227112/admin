@@ -1,9 +1,27 @@
 @extends('layouts.app')
 @section('content')
-<div class="main-body">
-  <div class="page-wrapper">
 
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+  
+
+
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4>School group</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">school list</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
     <div class="page-body">
       <div class="row">
@@ -11,7 +29,9 @@
           <div class="card">
             <div class="card-block">
                 <div class="">
-                    <x-button url="users/usergroup/add" color="primary" btnsize="sm"  title="Add Schools" shape="round" toggleTitle="Add School Group"></x-button>              
+                    <?php $url="users/usergroup/add"; ?>  
+                     <a href="<?= url($url) ?>" class="btn btn-primary btn-mini btn-round"> Add group </a>         
+
                 </div>
                </div>
 
@@ -39,7 +59,7 @@
                           <td><?=$group->phone_number?></td>  
                           <td class="text-center">
                               <?php $v_url = "users/group_clients/$group->id"; ?>
-                             <x-button :url="$v_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="view schools"></x-button>              
+                             <a href="<?= url($v_url) ?>" class="btn btn-primary btn-mini btn-round"> View </a>         
 
                           </td>
                         </tr>

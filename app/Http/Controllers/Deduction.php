@@ -14,8 +14,6 @@ class Deduction extends Controller {
     }
 
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'Subscription-Allowance','subtitle'=>'accounts','head'=>'payroll');
-
             $this->data['type'] = $id = request()->segment(3);
             if ((int) $id > 0) {
                 $this->data['deductions'] = \App\Models\Deduction::where('category', $id)->get();
@@ -40,9 +38,9 @@ class Deduction extends Controller {
 
 
     public function add() {
-        $this->data['breadcrumb'] = array('title' => 'Add deductions','subtitle'=>'accounts','head'=>'payroll');
             $this->data['type'] = $id = request()->segment(3);
             if ($_POST) { 
+                // dd(request()->except('_token'));
                 $deduction = \App\Models\Deduction::create(request()->except('_token'));
                 if ((int) $deduction->percent > 0 || (int) $deduction->amount > 0) {
                     $code = strtoupper(substr(0, 2));
@@ -111,7 +109,6 @@ class Deduction extends Controller {
     }
 
     public function subscribe() {
-        $this->data['breadcrumb'] = array('title' => 'Subscription-Allowance','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;
@@ -124,8 +121,11 @@ class Deduction extends Controller {
             }
             $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
             $this->data['subscriptions'] = $data;
-       
             $this->data['view'] = 'account.payroll.subscribe';
+
+              if($this->data['allowance']->name == 'NHIF'){ 
+                   $this->data["view"] = "account.payroll.nhif_fund";
+                }
             return view($this->data['view'], $this->data);
         } 
     }
@@ -204,6 +204,18 @@ class Deduction extends Controller {
         $this->data['status'] = $status;
         $this->data["subview"] = "mark/upload_status";
         $this->load->view('_layout_main', $this->data);
+    }
+
+
+
+     public function nhifNumber() {
+        $insert = array(
+            'member_id' => request('inputs'),
+        );
+        $user_pension = \App\Models\UserDeduction::where('user_id', request('user_id'))->where('deduction_id', request('pension_id'))->first();
+        $pension_id = !empty($user_pension) ? $user_pension->id : request('pension_id');
+        $user_pensions = \App\Models\UserDeduction::where('id', $pension_id)->update($insert);
+        echo (int) $user_pensions > 0 ? 'Success' : 'Error';
     }
 
 }

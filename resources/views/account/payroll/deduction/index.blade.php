@@ -8,20 +8,38 @@ if($type == 2) {
     $deductionType = 'Fixed Deductions';
   } 
   
- $breadcrumb = array('title' => $deductionType,'subtitle'=>'accounts','head'=>'payroll');
 
   ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+    
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= $deductionType ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">deduction</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+           </div>
       
               <div class="card">  
                     <div class="card-block">
                      <div class="row">
                          <div class="col-sm-6">
                                <?php $add_url = "deduction/add/$type"; ?>
-                               <x-button :url="$add_url" color="primary" btnsize="sm"  title="Add New Deduction"></x-button>
+                                <a href="<?= url($add_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add New Deduction"> Add Deduction </a> 
+
                             </div>
                             <div class="col-sm-6 offset-sm-9 m-b-30">
                                 <form  class="form-horizontal" role="form" method="post">  
@@ -102,11 +120,14 @@ if($type == 2) {
                                                 <td>
                                                      <?php $sub = $type == 1 ? 'subscribe' : 'monthlysubscribe';$members_url="deduction/$sub/$deduction->id";$edit_url="deduction/edit/$deduction->id";
                                                            $delete_url = "deduction/delete/$deduction->id"; ?>
-                                                     <x-button :url="$edit_url" color="info" btnsize="mini"  title="edit" shape="round" toggleTitle="Edit members"></x-button>
+                                                           <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit members"> edit </a> 
+                                                    
                                                     <?php if((int) $deduction->predefined !=1){ ?>
-                                                     <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete members"></x-button>
+                                                       <a href="<?= url($delete_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete members"> delete </a> 
+
                                                     <?php } ?>
-                                                     <x-button :url="$members_url" color="primary" btnsize="mini"  title="members" shape="round" toggleTitle="Deduction members"></x-button>
+                                                    <a href="<?= url($members_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Deduction members"> members </a> 
+
                                                 </td>
                                             </tr>
                                             <?php

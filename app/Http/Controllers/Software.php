@@ -384,7 +384,7 @@ class Software extends Controller {
         $this->data['tag'] = $tag = \App\Models\ErrorLog::find($id);
         $this->data['errors'] = $errors = strlen($schema) > 3 ? \App\Models\ErrorLog::where(['error_message'=>$tag->error_message,'schema_name'=>$tag->schema_name])->whereNull(['deleted_at','deleted_by'])->latest()->get() : \App\Models\ErrorLog::where('error_message',$tag->error_message)->whereNull(['deleted_at','deleted_by'])->latest()->get();
         $this->data['school']  = strlen($schema) > 3 ? \collect(\DB::select("select name from admin.clients where username = '$schema' "))->first() : [];
-      
+        
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
         return view('software.logs', $this->data);
         //echo 1;   
@@ -452,9 +452,8 @@ class Software extends Controller {
 
 
       public function banksetup() {  
-        $this->data['breadcrumb'] = array('title' => 'Bank integrations','subtitle'=>'software','head'=>'credentials');
         $this->data['settings'] = DB::table('admin.all_setting')->get();
-        $skip = ['beta_testing','beta','betatwo','public','constant','api'];
+        $skip = ['beta_testing','betatwo','public','constant','api'];
         $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name',$skip)->get();
         return view('software.api.bank_setup', $this->data);
     }
@@ -463,7 +462,6 @@ class Software extends Controller {
         $check = DB::table(request('schema') . '.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
         if (!empty($check->first())) {
             $check->update(['api_username' => request('api_username'), 'invoice_prefix' => request('invoice_prefix'), 'api_password' => request('api_password'), 'updated_at' => now()]);
-
             DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('invoice_prefix') . '\'||"id", prefix=\'' . request('invoice_prefix') . '\'');
             DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
             // echo 'Records updated successfully';
@@ -638,27 +636,21 @@ class Software extends Controller {
     }
 
     public function reconciliation() {
-       $this->data['breadcrumb'] = array('title' => 'Reconciliation','subtitle'=>'API requests','head'=>'software');
         $this->data['returns'] = [];
         $this->data['prefix'] = '';
         if ($_POST) {
             $schema = request('schema_name');
-         //   $schema = 'canossa';
-
             // echo 3535335;
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
-
             //Find All Payment on This Dates
             $dates = new \DatePeriod(
                     new \DateTime(request('start_date')), new \DateInterval('P1D'), new \DateTime(request('end_date'))
             );
             //To iterate
             foreach ($dates as $key => $value) {
-
                 foreach ($invoices as $invoice) {
-
                     $token = $background->getToken($invoice);
                     $this->data['prefix'] = $invoice->prefix;
                     if (strlen($token) > 4) {
@@ -676,8 +668,6 @@ class Software extends Controller {
                     } //else { return redirect()->back()->with('success', 'invalid token'); }
                 }
             }
-
-
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
@@ -761,7 +751,6 @@ class Software extends Controller {
     }
 
     public function smsStatus() {
-       $this->data['breadcrumb'] = array('title' => 'SMS Status','subtitle'=>'software','head'=>'sms keys');
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
         return view('software.status_sms', $this->data);
     }

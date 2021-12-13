@@ -1,9 +1,27 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-body">
-    <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Loan types' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">loans</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     		
         <div class="page-body">
           <div class="row">
@@ -14,7 +32,7 @@
                 if(can_access('manage_payroll')) { ?>
 				   <div class="card-header row">
                      <div class="col-sm-6">
-                        <x-button url="loan/loanAdd" color="primary" btnsize="sm"  title="Add New Application"></x-button>
+                        <a href="<?= url("loan/loanAdd") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add New Application"> Add application </a>
 					  </div>
 					 
                         <div class="col-sm-6 offset-sm-9">
@@ -104,13 +122,14 @@
                                                 <td data-title="<?= __('action') ?>">
                                                     <?php $delete_url = "loan/delete/$application->id"; $edit_url = "loan/edit/$application->id"; ?>
                                                     <?php  if(can_access('manage_payroll')){ ?>
-                                                        {{-- <x-button :url="$edit_url" color="info" btnsize="mini" shape="round" title="Edit" toggleTitle="Edit loan"></x-button> --}}
                                                      <?php } ?>
                                                       
-                                                     <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete"></x-button>
+                                                     <a href="<?= url($delete_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete loan type"> delete </a>
+
                                                     <?php  $approve_url = "loan/approveLoan/$application->id";
                                                      if((int) $application->approval_status <> 1 && can_access('manage_payroll')){  ?>
-                                                     <x-button :url="$approve_url" color="primary" btnsize="mini"  title="Approve" shape="round" toggleTitle="Approve loan"></x-button>
+                                                     <a href="<?= url($approve_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Approve loan"> Approve </a>
+
                                                    <?php }?>
                                                 </td>
                                             </tr>

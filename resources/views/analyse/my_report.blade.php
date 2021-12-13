@@ -18,9 +18,27 @@
 $page = request()->segment(3);
 $today = 0;
 ?>
-<div class="main-body">
- <div class="page-wrapper">
-  <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+ 
+
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= 'Report' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">report</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operation</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
 <div class="page-body">
 <div class="row">
@@ -81,7 +99,33 @@ $today = 0;
                   $name =  'TASK SUMMARY BY '.\Auth::user()->name;
               }
             ?>
-           <x-analyticCard :value="count($tasks)" :name="$name" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue"  topicon="feather icon-activity f-50" subtitle="Activities"></x-analyticCard>
+        
+
+              <div class="card">
+                  <div class="card-block">
+                      <div class="row align-items-center">
+                          <div class="col-8">
+                              <h4 class="text-c-green f-w-700">{{ number_format(count($tasks))}} </h4>
+                              <h6 class="text-muted m-b-0">{{$name}}</h6>
+                          </div>
+                          <div class="col-4 text-right">
+                              <i class="feather icon-activity f-50"></i>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer bg-c-blue">
+                      <div class="row align-items-center">
+                          <div class="col-9">
+                              <p class="text-white m-b-0"> Activities </p>
+                          </div>
+                          <div class="col-3 text-right">
+                              <i class="feather icon-trending-up text-white f-16"></i>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+
             </div>
            </div>
           </div>
@@ -94,11 +138,61 @@ $today = 0;
                 foreach($tasks as $task){
               ?>
               <div class="col-sm-6 col-xl-6">
-                 <x-analyticCard :value="$task->count" :name="ucfirst($task->status)" icon="feather icon-trending-up text-white f-16"  color="bg-c-pink"  topicon="feather icon-activity f-50" subtitle="No students schools"></x-analyticCard>
+                  <div class="card">
+                  <div class="card-block">
+                      <div class="row align-items-center">
+                          <div class="col-8">
+                              <h4 class="text-c-green f-w-700">{{ number_format($task->count)}} </h4>
+                              <h6 class="text-muted m-b-0">{{ucfirst($task->status)}}</h6>
+                          </div>
+                          <div class="col-4 text-right">
+                              <i class="feather icon-activity f-50"></i>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer bg-c-pink">
+                      <div class="row align-items-center">
+                          <div class="col-9">
+                              <p class="text-white m-b-0"> No students schools </p>
+                          </div>
+                          <div class="col-3 text-right">
+                              <i class="feather icon-trending-up text-white f-16"></i>
+                          </div>
+                      </div>
+
+                  </div>
+                </div>
+
               </div>
               <?php } ?>
               <div class="col-sm-6 col-xl-6">
-                 <x-analyticCard :value="count($activities)" name="Support Activities" icon="feather icon-trending-up text-white f-16"  color="bg-c-green"  topicon="feather icon-activity f-50" subtitle="No students schools"></x-analyticCard>
+                
+
+                 <div class="card">
+                  <div class="card-block">
+                      <div class="row align-items-center">
+                          <div class="col-8">
+                              <h4 class="text-c-green f-w-700">{{ number_format(count($activities))}} </h4>
+                              <h6 class="text-muted m-b-0">Support Activities</h6>
+                          </div>
+                          <div class="col-4 text-right">
+                              <i class="feather icon-activity f-50"></i>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer bg-c-blue">
+                      <div class="row align-items-center">
+                          <div class="col-9">
+                              <p class="text-white m-b-0"> No. students schools </p>
+                          </div>
+                          <div class="col-3 text-right">
+                              <i class="feather icon-trending-up text-white f-16"></i>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+
               </div>
             </div>
           </div>
@@ -145,12 +239,12 @@ $today = 0;
                 echo '<td>'.$i++.'</td>';
                 echo '<td>'.$task->client->name.'</td>';
                 echo '<td>'.$task->task->activity.'</td>';
-                echo '<td>'.$task->task->status.'</td>';
+                echo '<td><label class="badge badge-primary">'.$task->task->status.'</label></td>';
                 echo '<td>';
                 if($task->client->username != ''){
-                  echo '<a href="'. url('customer/profile/'.$task->client->username) .'" class="btn btn-success btn-sm"> View </a>';
+                  echo '<a href="'. url('customer/profile/'.$task->client->username) .'" class="btn btn-primary btn-round btn-sm"> View </a>';
                 }else{
-                  echo '<a href="'. url('sales/profile/'.$task->task_id) .'" class="btn btn-success btn-sm"> View</a>';
+                  echo '<a href="'. url('sales/profile/'.$task->task_id) .'" class="btn btn-primary btn-round btn-sm"> View</a>';
 
                 }
                 echo '</td>';

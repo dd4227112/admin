@@ -17,8 +17,26 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
  ?>
-<div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+
+         <div class="page-header">
+        <div class="page-header-title">
+             <h4><?= isset($start_date) && isset($end_date) ? 'Accounts Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Accounts Dashboard' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                 <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">summary</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">accounts</a>
+                </li>
+            </ul>
+        </div>
+      </div> 
 
             
           <div class="row">
@@ -28,7 +46,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             </div>
             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6> &nbsp; </h6>
-                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
             </div>
         </div>
 
@@ -43,7 +61,30 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                         $invoices_sent = \collect(DB::select('select count(*) from admin.invoices_sent a WHERE  ' . $where))->first()->count;
                         $issued = round($invoices_sent * 100 / ((int)$total_school==0 ? 1:$total_school), 1);
                     ?>
-                    <x-analyticCard :value="$issued" name="Invoice Issued" icon="feather icon-trending-up text-white f-16"  color="bg-c-green"  topicon="feather icon-file f-30" subtitle="Invoice Issued"></x-analyticCard>
+                       <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($issued)}} </h4>
+                                    <h6 class="text-muted m-b-0">Invoice Issued</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-file f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-green">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">Invoice Issued</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
              
@@ -54,21 +95,91 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     $invoice_paid =count(DB::select('select count(distinct invoice_id) from admin.invoice_fees where invoice_id in (select id from admin.invoices where account_year_id='.$account_year->id.')'));
                     $percent = ' percentage (' . round($invoice_paid * 100 / ((int) $total_invoice  == 0 ? 1 : 4), 1) .')';
                     ?>
-                    <x-analyticCard :value="$invoice_paid" name="Invoice paid" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue"  topicon="feather icon-file f-30" :subtitle="$percent"></x-analyticCard>
+                      <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($invoice_paid)}} </h4>
+                                    <h6 class="text-muted m-b-0">Invoice paid</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-file f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-blue">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">{{$percent}}</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
 
              
                 <div class="col-md-6 col-xl-3">
                   <?php $all_setting = \collect(DB::select('select count(*) from admin.all_setting  '))->first()->count; ?>
-                    <x-analyticCard :value="$all_setting" name="Our Clients" icon="feather icon-trending-up text-white f-16"  color="bg-c-yellow"  topicon="feather icon-users f-30" subtitle="School clients"></x-analyticCard>
+                  
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($all_setting)}} </h4>
+                                    <h6 class="text-muted m-b-0">Our Clients</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-file f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-yellow">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">School clients</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
               
                  <div class="col-md-6 col-xl-3">
                   <?php $paid_clients = \collect(DB::select("select COALESCE(count(distinct client_id),0) as clients from admin.invoices where id in (select invoice_id from  admin.payments where extract(year from created_at::date) = extract(year from current_date))"))->first(); ?>
-                    <x-analyticCard :value="$paid_clients->clients" name="Paid clients" icon="feather icon-trending-up text-white f-16"  color="bg-c-yellow"  topicon="feather icon-book f-30" subtitle="School clients"></x-analyticCard>
-                </div>
+                       <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($paid_clients->clients)}} </h4>
+                                    <h6 class="text-muted m-b-0">Paid Clients</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-file f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-yellow">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">School clients</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
 
+                        </div>
+                    </div>
+                </div>
             </div>
           
            <?php 
@@ -82,12 +193,19 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     $total_sms_payments=0;
                     $total = $total_revenue + $total_payments+$total_sms_payments;
                     ?>
-                     <x-smallCard title="Revenue Collected This Year"
-                                :value="$total"
-                                icon="feather icon-book f-50 text-c-red"
-                                cardcolor="bg-c-green text-white"
-                                >
-                     </x-smallCard>
+                       <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Revenue Collected This Year</p>
+                                                <h4 class="m-b-0">{{ number_format($total) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50" style="color: #19b99a;"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
               
 
@@ -96,12 +214,19 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     $day = date('Y-m-d');
                     $trans_revenue = \collect(DB::select('select count(*)*152.54 as total from admin.all_payments where extract(year from created_at)=' . date('Y') . '  and token is not null '))->first();
                     ?>
-                      <x-smallCard title="Yearly total Transaction Fee"
-                                :value="$trans_revenue->total"
-                                icon="feather icon-book f-50 text-c-red"
-                                cardcolor="bg-c-blue text-white"
-                                >
-                     </x-smallCard>
+                      <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Yearly total Transaction Fee</p>
+                                                <h4 class="m-b-0">{{ number_format($trans_revenue->total) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50" style="color: #ADD8E6;"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
               
 
@@ -109,12 +234,19 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     <?php
                     $total_expense = DB::table('expenses')->whereYear('created_at', date('Y'))->sum('amount');
                     ?>
-                     <x-smallCard title="Total Expenses This Year"
-                                :value="$total_expense"
-                                icon="feather icon-book f-50 text-c-red"
-                                cardcolor="bg-c-yellow text-white"
-                                >
-                     </x-smallCard>
+                     <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Expenses This Year</p>
+                                                <h4 class="m-b-0">{{ number_format($total_expense) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50" style="color: gray;"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
     
                </div>
@@ -129,7 +261,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                             <div class="card">
                                      <div class="card-block">  
                                           <figure class="highcharts-figure">
-                                             <div id="onboardBar" style="height: 200px; width:850px;"></div>
+                                             <div id="onboardBar" style="height: 400px; width:850px;"></div>
                                         </figure>
                                     </div>
                                 </div>
@@ -138,9 +270,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     </div>
                 </div>
                 </div>
-             </div>
-
-        </div>
+         
     <?php } ?>
 
 </div>

@@ -23,13 +23,13 @@ class Partner extends Controller {
     if (Auth::user()->department == 9 ||  Auth::user()->department == 10) {
         $this->data['refer_bank_id'] = $refer_bank_id =  preg_match('/crdb/', Auth::user()->email) ? 8 : 22;
         $ids = [$refer_bank_id];
-        $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get();
+        $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->latest()->get();
         }else{
             $this->data['refer_bank_id'] = $refer_bank_id =  '';
             $ids = [22,8];
-            $this->data['requests'] = \App\Models\IntegrationRequest::get();
+            $this->data['requests'] = \App\Models\IntegrationRequest::latest()->get();
         }
-        $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::whereIn('refer_bank_id', $ids)->get(['client_id']))->where('note','integration')->get();
+        $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::whereIn('refer_bank_id', $ids)->get(['client_id']))->where('note','integration')->latest()->get();
         return view('partners.requests', $this->data);
     }
 

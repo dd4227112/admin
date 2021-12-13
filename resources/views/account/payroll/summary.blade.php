@@ -10,43 +10,97 @@ if (!empty($basic_payments)) {
     }
 }
 ?>
-<div class="row tile_count">
+<div class="row mt-4">
 
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
-        <div class="count"><?= $users ?></div>
-        <!--<span class="count_bottom"><i class="green">4% </i> From last Week</span>-->
+    <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Users</p>
+                                                <h4 class="m-b-0"><?= $users ?></h4>
+                                            </div>
+                                            
+                                    </div>
+                                </div>
+                            </div>
+  
     </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-clock-o"></i> Total Basic Salary</span>
-        <div class="count"><?=  ' ' . money(request('basic_pay')) ?></div>
-        <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last Week</span>-->
+    <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Basic Salary</p>
+                                                <h4 class="m-b-0"><?=  ' ' . money(request('basic_pay')) ?></h4>
+                                            </div>
+                                           
+                                    </div>
+                                </div>
+                            </div>
+       
     </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-user"></i> Total Allowances</span>
-        <div class="count green"><?=  ' ' . money(request('allowance')) ?></div>
-        <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>-->
+    <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Allowances</p>
+                                                <h4 class="m-b-0"><?=  ' ' . money(request('allowance')) ?></h4>
+                                            </div>
+                                            
+                                    </div>
+                                </div>
+                            </div>
+    
     </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-user"></i> Total Deductions</span>
-        <div class="count"><?=  ' ' . money(request('deduction')) ?></div>
-        <!--<span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>-->
+    <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Deductions</p>
+                                                <h4 class="m-b-0"><?=  ' ' . money(request('deduction')) ?></h4>
+                                            </div>
+                                           
+                                    </div>
+                                </div>
+                            </div>
+       
     </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-user"></i> Total Net Payment</span>
-        <div class="count"><?=  ' ' . money(request('net_pay')) ?></div>
-        <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>-->
+    <div class="col-md-2 col-sm-4 col-xs-6 ">
+    <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Net Payment</p>
+                                                <h4 class="m-b-0"><?=  ' ' . money(request('net_pay')) ?></h4>
+                                            </div>
+                                            
+                                    </div>
+                                </div>
+                            </div>
+      
     </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-user"></i> Total PAYE</span>
-        <div class="count"><?=  ' ' . money(request('paye')) ?></div>
-        <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>-->
+    <div class="col-md-2 col-sm-4 col-xs-6 ">
+    <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total PAYE</p>
+                                                <h4 class="m-b-0"><?=  ' ' . money(request('paye')) ?></h4>
+                                            </div>
+                                            
+                                    </div>
+                                </div>
+                            </div>
+        
     </div>
 </div>
 
 <div class="clearfix"></div>
 <div class="row">
-    <div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
                 <h2>Bank Submission Forms </h2>
@@ -59,14 +113,14 @@ if (!empty($basic_payments)) {
                         <tr>
                             <th>#</th>
                             <th>Summary </th>
-                            <th>Action</th>
+                            {{-- <th>Action</th> --}}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>1</td>
                             <td>All Staff & Deductions</td>
-                            <td><a href="<?= url('payroll/bankSubmission/null/?set=' . request('set') . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg"><i class="fa fa-file"></i> View</a></td>
+                            {{-- <td><a href="<?= url('payroll/bankSubmission/null/?set=' . request('set') . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg"><i class="fa fa-file"></i> View</a></td> --}}
                         </tr>
 <!--                         <tr>
                             <td>2</td>
@@ -79,15 +133,15 @@ if (!empty($basic_payments)) {
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
-            <div class="x_title">
-                <h2>Bank Total Amount</h2>
+            <div class="x_title mb-3">
+                <h5 >Bank Total Amount</h5>
 
                 <div class="clearfix"></div>
             </div>
-            <div class="x_content">
-                <div class="tile_stats_count">
+            <div class="card">
+                <div class="card-block">
                     <span class="count_top"><i class="fa fa-money"></i> Amount to be Transacted From Bank Account</span>
                     <?php
                     $set = request('set');
@@ -95,7 +149,6 @@ if (!empty($basic_payments)) {
                     $pension = \collect(DB::select('select sum(a.employer_amount) as employer_contribution from salary_pensions a join constant.pensions b on b.id=a.pension_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . $set . '\')'))->first();
                     ?>
                     <div class="" style="font-size:32px">Tsh <?= money($salary->sum('gross_pay') + $pension->employer_contribution) ?>/=</div>
-                    <!--<span class="count_bottom"><i class="green">4% </i> From last Week</span>-->
                 </div>
             </div>
         </div>
@@ -103,7 +156,7 @@ if (!empty($basic_payments)) {
 </div>
 <div class="row">
 
-  <div class="col-md-6 col-sm-6 col-xs-12">
+  <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
       <div class="x_title">
           <h2>Tax Summary</h2>
@@ -138,7 +191,7 @@ if (!empty($basic_payments)) {
   </div>
   </div>
 
-        <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="card-body">
                     <h2>Pension Summary </h2>
@@ -197,7 +250,7 @@ if (!empty($basic_payments)) {
         </div>
 </div>
 <div class="row">
-    <div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
                 <h2>Allowance Status</h2>
@@ -248,14 +301,14 @@ if (!empty($basic_payments)) {
     </div>
 
 
-      <div class="col-md-6 col-sm-6 col-xs-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="card">
               <div class="card-body">
                   <h2>Basic Payments</h2>
 
                   <div class="clearfix"></div>
               </div>
-              <div class="card">
+              <div>
 
                   <table class="table">
                       <thead>
@@ -311,7 +364,7 @@ if (!empty($basic_payments)) {
               </div>
           </div>
       </div>
-    <div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
                 <h2>Deductions Status</h2>

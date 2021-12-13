@@ -2,18 +2,18 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Learning extends Model {
+class Course extends Model {
 
     /**
      * Generated
      */
 
-    protected $table = 'admin.learnings';
+    protected $table = 'admin.courses';
     protected $fillable = ['id', 'course_name','from_date','to_date','source','has_certificate',
-                           'company_file_id','user_id','descriptions','course_link','created_at','updated_at'];
+                           'company_file_id','created_by','descriptions','course_link','created_at','updated_at'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+    public function createdBy() {
+        return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');
     }
 
     public function companyFile() {

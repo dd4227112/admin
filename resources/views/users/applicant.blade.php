@@ -4,9 +4,27 @@
 <?php
 $root = url('/') . '/public/';
 ?>
-<div class="page-wrapper">
+
     <div class="page-header">
-     <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    
+      <div class="page-header">
+            <div class="page-header-title">
+                <h4> Applicants</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">applicants</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     
     <div class="page-body">
         <div class="row">
@@ -23,7 +41,7 @@ $root = url('/') . '/public/';
                                     <div class="form-group row col-lg-offset-6">
                                         <label class="col-sm-4 col-form-label">Select Location</label>
                                         <div class="col-sm-4">
-                                            <select name="select" class="form-control select2" id="schema_select">
+                                            <select name="select" class=" select2" id="schema_select">
                                                 <option value="0">Select</option>
                                                 <?php
                                                 $locations = \DB::select('select distinct current_location from applicants');

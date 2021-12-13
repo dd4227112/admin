@@ -1,17 +1,35 @@
 @extends('layouts.app')
 @section('content')
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
        
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+           <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= 'Payroll' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">salaries</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
                         
-                            <div class="card-header">
-                                 <x-button url="payroll/create" color="primary" btnsize="sm"  title="Add Payroll"></x-button>
+                        <div class="card-header">
+                           <a href="<?= url("payroll/create") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add Payroll">Add Payroll </a>
+                
                             </div>
                             <div class="card-block">
                                 <!-- Row start -->
@@ -69,8 +87,10 @@
                                                         <td> <?php echo money($salary->net_pay); ?></td>
                                                         <?php if (can_access('manage_payroll')) { ?>
                                                         <td> <?php $view_url = "payroll/show/$salary->payment_date"; $delete_url = "payroll/delete/$salary->reference"; ?>
-                                                           <x-button :url="$view_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="View payroll"></x-button>
-                                                           <x-button :url="$delete_url" color="danger" btnsize="mini"  title="delete" shape="round" toggleTitle="Delete payroll"></x-button>
+                                
+                                                        <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View Payroll">view  </a>
+                                                        <a href="<?= url($delete_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete Payroll">delete </a>
+
                                                         </td>
                                                         <?php } ?>
                                                         </tr>

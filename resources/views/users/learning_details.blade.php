@@ -1,9 +1,54 @@
 @extends('layouts.app')
 @section('content')
-<div class="main-body">
-  <div class="page-wrapper">
 
-   <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+  
+
+ 
+   <div class="page-header">
+        <div class="page-header-title">
+            <h4><?='Course details' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">learning</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
+
+
+     <div class="page-body">
+            <div class="card">
+                <div class="card-header" style="margin-bottom: -20px;">
+                      <p style="font-weight: 500;margin-bottom:-15px;">Title</p> <br>
+                      <p style="font-weight: 600"> <?= $learning->course_name  ?></p>
+                </div>
+                <div class="card-block">
+                        <p style="font-weight: 500;margin-bottom:-15px;">Descriptions</p> <br>
+                        <p style="font-weight: 600"> <?= $learning->descriptions  ?></p>
+                        <p style="font-weight: 600;margin-bottom:-15px;">Source: <?= $learning->source ?></p> <br>
+                        <p style="font-weight: 500;margin-bottom:-15px;">From: <?= date('F j, Y', strtotime($learning->from_date)) ?> To: <?= date('F j, Y', strtotime($learning->to_date)) ?></p> <br>
+
+                        <?php if(can_access('course_participants')) { ?>
+                          <p style="font-weight: 600;margin-bottom:-15px;">Participants: </p>  <br> 
+
+                            <ul>
+                              @foreach($users as $user)
+                                <li style="display:inline;margin:5px;"><?= $user->name() ?></li>
+                               @endforeach
+                            </ul>
+                           
+                        <?php } ?>
+                </div>
+            </div>
+      </div>
    
     <div class="page-body">
       <div class="row">
@@ -15,19 +60,7 @@
               <div class="card-header">
                 <table class="table m-0">
                      <tbody>
-                         <tr>
-                           <th scope="row">Course name: &nbsp;&nbsp; <?= $learning->course_name ?></th>
-                          </tr>
-                          <tr>
-                            <th scope="row">Learning Source: &nbsp;&nbsp;<?= $learning->source ?></th>
-                          </tr>
-                           <tr>
-                            <th scope="row"> Details: &nbsp;&nbsp;<?= $learning->descriptions ?></th>
-                          </tr>
-                         <tr>
-                           <th scope="row"> Start date: &nbsp;&nbsp;&nbsp;&nbsp;<?= date('F j, Y', strtotime($learning->from_date)) ?></th>
-                           <th scope="row"> End date: &nbsp;&nbsp;&nbsp;&nbsp;<?= date('F j, Y', strtotime($learning->to_date)) ?></th>
-                        </tr>
+                       
  
                         <?php if(isset($learning->course_link)) { ?>
                         <tr>
@@ -40,7 +73,7 @@
                           <?php if($learning->company_file_id > 0) { ?>
                             <th scope="row">
                               <?php $viw_url = "customer/viewFile/$learning->id/course_certificate"; ?>
-                               <x-button :url="$viw_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="View certificate"></x-button>
+                               <a href="<?= url($viw_url)?>" class="btn btn-primary btn-mini btn-round">View</a>
                             </th>
                           <?php } else { ?>
                             <th scope="row">   
@@ -52,7 +85,7 @@
                                       </div>
                                       <div class="col-sm-6">
                                           <?= csrf_field() ?>
-                                        <x-button color="primary" btnsize="mini"  title="Upload" shape="round" toggleTitle="Upload certificate"></x-button>
+                                        <button color="primary" class="btn btn-primary btn-mini btn-round"> Upload</button>
                                       </div>
                                   </div>
                               </form>

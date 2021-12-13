@@ -86,8 +86,12 @@ class Users extends Controller {
             'body' => $message,
             'user_id' => 1,
             'phone_number' => $request->phone,
-            'table' => 'setting'
+            'table' => 'setting',
+            'priority' => 1
         ]);
+
+       $this->send_whatsapp_sms($request->phone, $message,$request->name); 
+
         \DB::table('public.email')->insert([
             'body' => $message,
             'subject' => 'ShuleSoft Administration Credentials',
@@ -95,7 +99,6 @@ class Users extends Controller {
             'email' => $request->email,
             'table' => 'setting'
         ]);
-       $this->send_whatsapp_sms($request->phone, $message); 
     }
     /**
      * Display the specified resource.
@@ -108,12 +111,11 @@ class Users extends Controller {
     public function show() {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
         $this->data['user'] = $user = User::findOrFail($id);
-        $this->data['breadcrumb'] = array('title'=>$user->name ?? '','subtitle'=>'profile','head'=>'user');
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
-        $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->orderBy('created_at','desc')->get();
-        $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->orderBy('created_at','desc')->get();
-        $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->orderBy('created_at','desc')->get();
-        $this->data['learnings'] = \App\Models\Learning::where('user_id', $id)->orderBy('created_at','desc')->get();
+        $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->latest()->get();
+        $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->latest()->get();
+        $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->latest()->get();
+        $this->data['learnings'] = \App\Models\Course::whereIn('id', \App\Models\UserCourse::where('user_id',$id)->get(['course_id']))->latest()->get();
 
         //default number of days 22 to minutes
         $this->data['minutes'] = 22*24*60;
@@ -213,6 +215,7 @@ class Users extends Controller {
     public function askleave(){
         $id = (int) request()->segment(3);
         $request = request()->segment(4);
+       
      
         if($request == 'approve'){
             $approved = \App\Models\Absent::where('id',$id)->update(['approved_by' =>Auth::user()->id,'status'=>'Approved']);
@@ -225,6 +228,8 @@ class Users extends Controller {
                     . ' which has to end at '. date('d-m-Y', strtotime($end_date)). '';
                     
             $this->send_email($user->email, 'Success: Absent leave granted', $message);
+             $this->send_sms($user->phone, $message, 1);
+
             return redirect()->back()->with('success','Approved successfully');
         }
         //If leave request rejected, Dont give paid leave
@@ -232,32 +237,36 @@ class Users extends Controller {
             \App\Models\Absent::where('id',$id)->update(['status'=>'Rejected']);
             return redirect()->back()->with('success','Rejected successfully');
         }
-       
+    }
+
+
+    public function editLeaveDates(){
+         $absent_id = request('absent_id');
+         $user_id = request('tag');
+         $end_date = request('val');
+         $updat =  \App\Models\Absent::where(['id' => $absent_id, 'user_id'=>$user_id])->update(['end_date'=> $end_date]);
+         echo $updat > 0 ? 'success' : 'error';
     }
 
     public function password() {
-        $this->data['breadcrumb'] = array('title' => 'Change password','subtitle'=>'user','head'=>'operations');
-
         $this->data['user'] = User::find(Auth::user()->id);
         return view('auth.change_password', $this->data);
     }
 
     public function storePassword(Request $request) {
-       // dd($request->all());
         $user = User::find(Auth::user()->id);
         if (Auth::attempt(['email' => $user->email, 'password' => request('password')])) {
             $new1 = request('new');
             $new2 = request('retype');
             if ($new1 != $new2) {
-                return redirect()->back()->with('error', 'New password and confirmed one  do not matchs');
+                return redirect()->back()->with('error', 'New password and confirmed one  do not match');
             }
             $this->validate(request(), [
-                'new2' => 'required|string|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'
-                    ], ['Password must be 8–30 characters, and include a number, a symbol, a lower and a upper case letter']);
-            $user->update(['password' => Hash::make($new1)]);
+                'retype' => 'required|string|min:6'
+                    ], ['Password must be 6–30 characters, and include a number, a symbol, a lower and a upper case letter']);
+            $user->update(['password' => \Hash::make($new1)]);
             return redirect()->back()->with('success', 'Password changed successfully');
         } else {
-
             return redirect()->back()->with('error', 'Current Password is not valid');
         }
         return redirect()->back()->with('success', 'Password Updated successfully');
@@ -299,7 +308,6 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit() {
-        $this->data['breadcrumb'] = array('title' => 'Edit user','subtitle'=>'users','head'=>'human resource');
         $id = request()->segment(3);
         $this->data['user'] = User::find($id);
        
@@ -359,8 +367,10 @@ class Users extends Controller {
         
          DB::table("admin.users")->where('id', $user_id)->update(['status' => 0,'deleted_at'=>'now()']);
          $email = \App\Models\User::where('id',$user_id)->first()->email;
-         DB::table("admin.user_turnover")->insert(['user_id' => $user_id,'reason_id' => $reason_id ]);
-  
+         DB::table("admin.user_turnover")->insert(['user_id' => $user_id,'reason_id' => $reason_id]);
+
+         DB::table("admin.zone_managers")->where('user_id',$user_id)->delete();
+       
         if($email){
            DB::table("public.user")->where('email', $email)->delete();
         }
@@ -621,112 +631,6 @@ class Users extends Controller {
     }
 
 
-    // //Creating KPI
-    // public function kpi() {
-    //     $id = request()->segment(3);
-    //     $option = request()->segment(4);
-    
-    //     if ($_POST) {
-    //         $array = [
-    //             'name' => request('kpi_title'),
-    //             'value' => request('kpi_value'),
-    //             'query' => request('kpi_query')
-    //         ];
-    //       preg_match_all('/(?<!\w)#\w+/',request('kpi_query'), $matches);
-    //       $kpi = \App\Models\KeyPerfomanceIndicator::create($array);
-    //       if (!empty($kpi->id) && ($matches)) {
-    //           foreach ($matches[0] as $key => $value) {
-    //               if ($matches[0][$key] != '') {
-    //                   $array = ['parameter' => $matches[0][$key], 'kpi_id' => $kpi->id];
-    //                      \App\Models\QueryParameter::create($array);
-    //                }
-    //            } 
-    //        }
-    //         return redirect('users/kpi_list')->with('success', 'KPI created successfully');
-    //     }
-
-    //     if($option == 'edit'){
-    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-    //         return view('users.kpi.edit', $this->data);
-    //     }
-    //     if($option == 'assign'){
-    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-    //         return view('users.kpi.assign', $this->data);
-    //     }
-
-    //     if($option == 'show'){
-    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-    //         return view('users.kpi.show', $this->data);
-    //     }
-    //     $this->data['users'] = \App\Models\User::all();
-    //     return view('users.kpi.add', $this->data);
-    // }
-
-    // public function kpi_list(){
-    //     $this->data['kpis'] = \App\Models\KeyPerfomanceIndicator::all();
-    //     return view('users.kpi.kpi_list', $this->data);
-    // }
-
-    // public function  editkpi(){
-    //     $id = request()->segment(3);
-    //     if ($_POST) {
-    //         $this->validate(request(), [
-    //             'kpi_title' => 'required|max:255',
-    //             'kpi_value' => 'required|max:255',
-    //             'kpi_query' => 'required|max:255',
-    //         ]);
-    //         $array = [
-    //             'name' => request('kpi_title'),
-    //             'value' => request('kpi_value'),
-    //             'query' => request('kpi_query')
-    //         ];
-    //         $kpi = \App\Models\KeyPerfomanceIndicator::find($id)->update($array);
-    //         return redirect('users/kpi_list')->with('success', 'KPI Updated successfully');
-    //      }
-    //   }
-
-    //   public function assignKpi(){
-    //     $id = request()->segment(3);
-    //     if (request('user_id')) {
-    //         $modules = request('user_id');
-    //         foreach ($modules as $key => $value) {
-    //             if (request('user_id')[$key] != '') {
-    //                 $array = ['user_id' => request('user_id')[$key], 'kpi_id' => $id];
-    //                 $check_unique = \App\Models\KPIUser::where($array);
-    //                if (empty($check_unique->first())) {
-    //                     \App\Models\KPIUser::create($array);
-    //                }
-    //             }
-    //         }
-    //      }
-    //     return redirect('users/kpi_list')->with('success', 'Assigned successfully');
-    //   }
-     
-
-
-    //   public function evaluateKpi(){
-    //     $this->data['id'] = $id = request()->segment(3);
-    //     $this->data['userid'] = $userid = request()->segment(4);
-    //     $query = \App\Models\KeyPerfomanceIndicator::where('id', $id)->first()->query;
-     
-    //     $qy = preg_replace('/(?<!\w)#\w+/', $userid, $query);
-
-    //     if($_POST){
-    //         $start_date = request('start_date');
-    //         $end_date = request('end_date');
-    //         if($start_date != '' && $end_date != ''){
-    //             $end = "and created_at::date >= '$start_date' AND created_at::date < '$end_date'";
-    //         }
-    //         $qy = $qy .' '. $end;
-    //     }
-    //     $this->data['userdata'] = DB::SELECT($qy);
-    //     $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-    //     $this->data['info'] = \App\Models\User::findOrFail($userid);
-
-    //     $this->data['value'] = $this->data['userdata'][0]->value;
-      
-    //     return view('users.kpi.evaluation', $this->data);
-    //   }
 
 
 
@@ -744,7 +648,6 @@ class Users extends Controller {
 
 
     public function usergroup(){
-        $this->data['breadcrumb'] = array('title' => 'Clients Group','subtitle'=>'customers','head'=>'operations');
         $tab = request()->segment(3);
         $this->data['groups'] = \App\Models\Group::get();
         if($tab == 'add'){
@@ -796,26 +699,38 @@ class Users extends Controller {
 
      public function learning(){
         $learning_id = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'User learning','subtitle'=>'courses','head'=>'operations');
+        
          if($_POST){
              $array= [
                  'course_name' => request('course_name'),
                  'source' => request('source'),
                  'from_date' => request('from_date'),
                  'to_date' => request('to_date'),
-                 'user_id' => request('user_id'),
+                 'created_by' => request('user_id'),
                  'has_certificate' => request('has_certificate'),
                  'descriptions' => request('description'),
                  'course_link' => request('link')
              ];
-            \App\Models\Learning::create($array);
+           $course_id = \App\Models\Course::insertGetId($array);
+
+           \App\Models\UserCourse::create(['user_id' => request('user_id'), 'course_id' => $course_id]);
+            return redirect()->back()->with('success','success');
          }
        
          if($learning_id > 0){
-            $this->data['learning'] = \App\Models\Learning::where('id',$learning_id)->first();
-               return view('users.learning_details', $this->data);
+            $this->data['learning'] = \App\Models\Course::where('id',$learning_id)->first();                 
+            $this->data['users'] = \App\Models\User::whereIn('id',\App\Models\UserCourse::where('course_id',$learning_id)->get(['user_id']))->get();
+            return view('users.learning_details', $this->data);
         }
+
+        
         return redirect()->back()->with('success', 'success');
+     }
+
+     public function learningDelete(){
+        $learning_id = request()->segment(3);
+         \App\Models\Course::where('id',$learning_id)->delete();
+       return redirect()->back()->with('success', 'deleted successful!');
      }
 
      
@@ -824,7 +739,7 @@ class Users extends Controller {
         if ($_POST) {
             $file = request()->file('certificate');
             $file_id = $this->saveFile($file, 'company/employees',TRUE); 
-           \App\Models\Learning::where('id',$learning_id)->update(['company_file_id' => $file_id]);
+           \App\Models\Course::where('id',$learning_id)->update(['company_file_id' => $file_id]);
        }
        return redirect()->back()->with('success', 'updated successful!');
    }
@@ -865,9 +780,7 @@ class Users extends Controller {
 
     
      public function addLead() {
-        $this->data['breadcrumb'] = array('title' => 'HR Requests','subtitle'=>'customers','head'=>'operations');
         if ($_POST) {
-
             $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);
             $task = \App\Models\Task::create($data);
 
@@ -908,5 +821,64 @@ class Users extends Controller {
         }
         return view('users.hr.add', $this->data);
     }
+
+    public function usersignature(){ 
+         $this->data['user_id'] = $user_id = request('user_id');
+         $this->data['payment_date'] = $payment_date = request('payment_date');
+         return view('users.signature', $this->data);
+      }
+
+       public function updatesignature(){ 
+              $signature = str_replace(' ', '+', request('signed'));
+              $file_name = time() . ".png";
+              $this->data['user_id'] = $user_id = request('user_id');
+               $this->data['payment_date'] = $payment_date = request('payment_date');
+              $update = !empty($signature) ? \App\Models\User::where('id',(int) $user_id)->update(['signature'=>$signature,'signature_path' => $file_name]) : '';
+
+              $month = date('m', strtotime($payment_date));
+              $_url = "payroll/payslip/null/?id=$user_id&month=$month&set=$payment_date";
+
+              if($update > 0){
+                 return redirect($_url);
+              }else{
+                 return view('users.signature', $this->data); 
+              }
+             
+      }
+
+
+      public function courses(){
+         $this->data['users'] = \App\Models\User::where('status',1)->whereNotIn('role_id',[7,15])->get();
+         $this->data['courses'] = \App\Models\Course::latest()->get();
+         if($_POST){
+            $user_ids = request('user_ids');
+            $course_id = \App\Models\Course::insertGetId([
+                'course_name' =>request('course_name'),
+                'created_by' => Auth::user()->id,
+                'from_date' => request('from_date'),
+                'to_date' => request('to_date'),
+                'source' => request('source'),
+                'descriptions' => request('description'),
+                'course_link' => request('url')
+              ]);
+        
+             foreach ($user_ids as $user_id) {
+                \App\Models\UserCourse::create(['user_id' => $user_id, 'course_id' => $course_id]);
+                 $user = \App\Models\User::where(['id' => $user_id])->first();
+                  if(!empty($user)){
+                    $message = 'Hello '. $user->name()                              
+                                . chr(10) . 'You have been assigned new course'
+                                . chr(10) . 'Title:' . request('course_name') .''
+                                . chr(10) .  request('description')  .''
+                                . chr(10) .  request('url')  .''
+                                . chr(10) . 'Deadline '. date('d-m-Y',strtotime(request('to_date')));
+                     $this->send_whatsapp_sms($user->phone, $message); 
+                     $this->send_sms($user->phone,$message,1);
+                }
+              }
+            return redirect()->back()->with('success','Course created successfull!');
+         }
+         return view('users.hr.courses', $this->data);
+      }
 
 }

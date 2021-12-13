@@ -3,10 +3,9 @@
 
 <?php $root = url('/') . '/public/';  ?>
 
-<div class="page-wrapper">
-  {{-- <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb> --}}
 
-    <div>
+
+  <div>
     <div class="page-header">
         <div class="page-header-title">
             <h4>Home</h4>
@@ -25,66 +24,142 @@
             </ul>
         </div>
     </div> 
-</div>
+  </div>
+
     <div class="page-body">
-        <div class="row">
-            <?php if (can_access('manage_users')) { ?>
-                    
+        <?php if (can_access('manage_users')) { ?>
+
+           <div class="row">
                   <div class="col-xl-3 col-md-6">
-                        <x-smallCard title="Users"
-                                :value="$summary['users']"
-                                icon="feather icon-users f-50 text-c-red"
-                                cardcolor="bg-c-yellow text-white"
-                                >
-                        </x-smallCard>
+                             <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Users</p>
+                                                <h4 class="m-b-0">{{ number_format($summary['users']) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-30"></i>
+                                   
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
 
                 
                     <div class="col-xl-3 col-md-6">
-                        <x-smallCard title="Parents"
-                                     :value="$summary['parents']"
-                                     icon="feather icon-users f-50 text-c-red"
-                                     cardcolor="bg-c-green text-white"
-                                     >
-                        </x-smallCard>
+                         <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Parents</p>
+                                                <h4 class="m-b-0">{{ number_format($summary['parents']) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-30 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                        <x-smallCard title="Students"
-                                    :value="$summary['students']"
-                                    icon="feather icon-users f-50 text-c-red"
-                                    cardcolor="bg-c-blue text-white"
-                                    >
-                        </x-smallCard>
+                        <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Students</p>
+                                                <h4 class="m-b-0">{{ number_format($summary['students']) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-30 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
 
                    <div class="col-xl-3 col-md-6">
-                        <x-smallCard title="Teachers"
-                                    :value="$summary['teachers']"
-                                    icon="feather icon-users f-50 text-c-blue"
-                                    cardcolor="bg-c-blue text-white"
-                                    >
-                        </x-smallCard>
+                        <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Teachers</p>
+                                                <h4 class="m-b-0">{{ number_format($summary['teachers']) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-30 text-c-red" style="color:#19b99a"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                         </div>
                    </div>
 
                     <div class="col-xl-3 col-md-6">
-                          <x-smallCard title="Active Users" :value="$summary['active_users']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-yellow text-white">
-                         </x-smallCard>
+                         <div class="card shadow bg-primary">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Active Users</p>
+                                                <h4 class="m-b-0">{{ number_format($summary['active_users']) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-30 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                         </div>
+                    </div>
+
+                   
+
+                      <div class="col-xl-3 col-md-6">
+                         <div class="card shadow bg-primary">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Active Parents</p>
+                                                <h4 class="m-b-0">{{ number_format($summary['active_parents']) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-30 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                         </div>
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                         <x-smallCard title="Active Parents" :value="$summary['active_parents']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-green text-white">
-                        </x-smallCard>
-                     </div>
-
-                    <div class="col-xl-3 col-md-6">
-                        <x-smallCard title="Active Students" :value="$summary['active_students']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-pink text-white">
-                        </x-smallCard>
+                         <div class="card shadow bg-primary">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Active Students</p>
+                                                <h4 class="m-b-0">{{ number_format($summary['active_students']) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-30 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                         </div>
                     </div>
 
                     <div class="col-xl-3 col-md-6">
-                            <x-smallCard title="Active teachers" :value="$summary['active_teachers']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-blue text-white">
-                            </x-smallCard>
+                            <div class="card shadow bg-primary">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Active teachers</p>
+                                                <h4 class="m-b-0">{{ number_format($summary['active_teachers']) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-30 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                             </div>
                         </div>
                     </div>
 
@@ -100,7 +175,7 @@
         
                     <div class="row">
                         <div class="col-xl-6">
-                            <div class="card shadow mb-2">
+                            <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
                                         <div id="onboardPie" style="height: 300px; width:350px;"></div>
@@ -110,7 +185,7 @@
                         </div>
 
                         <div class="col-xl-6">
-                            <div class="card shadow mb-2">
+                            <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
                                         <div id="onboardBar" style="height: 300px; width:350px;"></div>
@@ -122,8 +197,6 @@
                        
               <?php } ?>
 
-              <div class="row">
-                  <div class="col-sm-12">
                    <div class="card">
                     <div class="card-header">
                         <h5>My User Activities</h5>
@@ -163,8 +236,6 @@
                         </div>
                     </div>
                   </div>
-                </div>
-            </div> 
 
         </div>
     </div>
@@ -193,7 +264,7 @@ Highcharts.chart('containa', {
             text: 'Months'
         },
         categories: [
-            <?php foreach($new_schools as $class){  ?> '<?=date("M", strtotime($class->month))?>',
+            <?php foreach($new_schools as $value){  ?> '<?=date("M", strtotime($value->month))?>',
             <?php } ?>
         ]
     },
@@ -207,7 +278,7 @@ Highcharts.chart('containa', {
     series: [{
         name: 'Schools',
         colorByPoint: true,
-        data: [<?php foreach($new_schools as $teacher){ echo $teacher->schools.','; }?>]
+        data: [<?php foreach($new_schools as $value){ echo $value->schools.','; }?>]
     }],
     responsive: {
         rules: [{

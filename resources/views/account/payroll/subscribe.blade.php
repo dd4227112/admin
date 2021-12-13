@@ -9,12 +9,29 @@
     $types = 'pension';
  }
  $deductionType = 'Subscription - '.$types;
- $breadcrumb = array('title' => $deductionType,'subtitle'=>'accounts','head'=>'payroll');
 ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+
+          <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= $deductionType ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
       					
         <div class="page-body">
           <div class="row">
@@ -134,7 +151,8 @@
                                                     <?php
                                                     if (in_array($user->id, $subscriptions)) { ?>
                                                         <?php $remove_url = "payroll/deleteSubscriber/null/?user_id=$user->id&set=$set&type=$type"; ?>
-                                                         <x-button :url="$remove_url" color="danger" btnsize="mini"  title="remove" shape="round" toggleTitle="Remove member"></x-button>
+                                                       <a href="<?= url($remove_url) ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Remove member"> remove </a> 
+                                            
                                                     <?php } else { ?>
                                                         <input type="checkbox" value="<?= $user->id; ?>" name="result<?= $user->id; ?>" class="subscribe" id="<?= $user->id ?>" datatype="<?= $type ?>"  class="check<?= $user->id ?>">
                                                     <?php } ?>

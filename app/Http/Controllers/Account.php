@@ -27,7 +27,6 @@ class Account extends Controller {
     }
 
     public function projection() {
-        $this->data['breadcrumb'] = array('title' => 'Create invoices','subtitle'=>'invoices','head'=>'accounts');
         $this->data['budget'] = [];
         return view('account.projection', $this->data);
     }
@@ -37,14 +36,14 @@ class Account extends Controller {
         $to = $this->data['to'] = request('to');
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-        $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() : Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
+        $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() : 
+        Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
         $this->data['accountyear']= \App\Models\AccountYear::where('id', $account_year_id)->first();
         return $this;
     }
 
 
     public function invoice() {
-        $this->data['breadcrumb'] = array('title' => 'Shulesoft invoices','subtitle'=>'invoices','head'=>'accounts');
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
@@ -68,6 +67,8 @@ class Account extends Controller {
             return redirect()->back()->with('success', 'deleted successfully');
           }
 
+          
+
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
@@ -79,31 +80,27 @@ class Account extends Controller {
                     $this->data['invoices'] = DB::connection('karibusms')->select('select a.transaction_code,a.method, a.amount, a.currency,a.sms_provided,a.time,a.invoice, b.name,a.confirmed,a.approved,a.payment_id from payment a join client b using(client_id)');
                     break;
                 default:
-                    $this->getInvoices($project_id, $account_year_id);
+                     !empty(request('from_date')) && !empty(request('to_date')) ? $this->getInvoiceReports(request('from_date'),request('to_date'),$project_id) : $this->getInvoices($project_id, $account_year_id);
                     break;
             }
             return view('account.invoice.index', $this->data);
         }
     }
 
-    public function invoiceReport() {
-        $this->data['breadcrumb'] = array('title' => 'Invoices report','subtitle'=>'reports','head'=>'accounts');
-        $project_id = $this->data['project_id'] = request()->segment(3);
-        $this->data['account_year_id'] = $account_year_id = request()->segment(4);
-        if((int) $project_id == 1) {
-            $from = !empty(request('from_date')) ? request('from_date') : date('Y-01-01');
+      // Get invoice payment reports based on date ranges
+    public function getInvoiceReports($from,$to,$project_id) {
+            $from = !empty($from) ? $from : date('Y-01-01');
             $this->data['from'] = $from;
             $this->data['id'] = 4;
-            $to = !empty(request('to_date')) ? request('to_date') : date('Y-m-d');
+            $to = !empty($to) ? $to : date('Y-m-d');
             $this->data['to'] = $to;
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-             $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
-             $this->data['invoice_reports'] = \DB::select("select extract(month from p.created_at) as month , sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
-            return view('account.invoice.report', $this->data);
-        }  
+            $this->data['payments']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
+            $this->data['invoice_reports'] = DB::select("select extract(month from p.created_at) as month,sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
+            return $this;
+        } 
 
-    }
 
 
     
@@ -340,9 +337,18 @@ class Account extends Controller {
 
     public function createShuleSoftInvoice() {
         $client_id = request()->segment(3);
+        $school = \App\Models\ClientSchool::where('client_id',(int)$client_id)->first();
+        // if(!empty($school)){
+        //    $temp_client = collect(\DB::select("select * from admin.temp_clients where school_id ='$school->school_id'"))->first();
+        //     // use reference number from temp_clients if client has proforma invoice
+        //    $reference = $temp_client->reference;
+        // } else {
+           $reference = time(); // to be changed for selcom ID
+       // }
+
         $client = \App\Models\Client::find($client_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
-        $reference = time(); // to be changed for selcom ID
+      //  $reference = time(); // to be changed for selcom ID
         if (empty($client->start_usage_date)) {
             //If start usage date 
             return redirect()->back()->with('error', 'You must specify '.$client->username.' start usage date !');
@@ -364,7 +370,9 @@ class Account extends Controller {
         $unit_price = $client->price_per_student;
         $amount = $unit_price * $client->estimated_students;
         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
-        return redirect()->back()->with('success', 'Invoice Created Successfully');
+       // return redirect()->back()->with('success', 'Invoice Created Successfully');
+         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+        
     }
 
 
@@ -376,7 +384,6 @@ class Account extends Controller {
         $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
         $client = \App\Models\ClientSchool::where('school_id',(int) $school_id)->first();
         
-      //  dd($client);
         $school = \App\Models\School::find($school_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 
@@ -385,7 +392,8 @@ class Account extends Controller {
             DB::table('admin.temp_clients')->insert([
                 'name' => $school->name, 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school->id, 'user_id' => \Auth::user()->id,
                 'reference' => $reference, 'date' => $start_date, 'due_date' => $due_date, 'account_year_id' => $year->id,
-                'amount' => remove_comma(request('amount')), 'project_id' => request('type')
+                'amount' => remove_comma(request('amount'))*request('students'), 'project_id' => request('type'),
+                'students' => request('students'), 'unit_amount'=> request('amount')
             ]);
          } else { 
         $client = \App\Models\Client::find($client->client_id);
@@ -406,7 +414,8 @@ class Account extends Controller {
         $amount = remove_comma(request('amount'));
          \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
         }
-        return redirect()->back()->with('success', 'Invoice Created Successfully');
+         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+
     }
 
 
@@ -588,6 +597,12 @@ class Account extends Controller {
             'date' => date('Y-m-d', strtotime($date)),
         );
 
+        // $transaction = DB::table('admin.payments')->where('transaction_id',$receipt)->first();
+        // if(!empty($transactions->transaction_id)){
+        //     return redirect()->back()->with('error', $transactions->transaction_id.' used');
+        // }
+         
+
         $payment_id = DB::table('admin.payments')->insertGetId($payment_array);
         $client = DB::table('admin.clients')->where('id', $client_id)->first();
 
@@ -690,7 +705,6 @@ class Account extends Controller {
         $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['invoice'] = Invoice::find($id);
-           // dd($this->data['invoice']);
             return view('account.transaction.receipt_sort', $this->data);
         } else {
             return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
@@ -860,7 +874,7 @@ class Account extends Controller {
                
                 $total_amount = 0;
                 if ((int) $refer_expense->predefined && $refer_expense->predefined > 0) {
-                    $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from admin. bank_transactions WHERE bank_account_id=' . $refer_expense->predefined . ' and payment_type_id <> 1 '))->first();
+                    $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from admin.bank_transactions WHERE bank_account_id=' . $refer_expense->predefined . ' and payment_type_id <> 1 '))->first();
 
                     $total_current_assets = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_current from admin. current_asset_transactions WHERE refer_expense_id=' . $refer_expense->predefined . ''))->first();
                     $total_amount = $total_bank->total_bank + $total_current_assets->total_current;
@@ -991,7 +1005,6 @@ class Account extends Controller {
     }
 
     public function chart() {
-       $this->data['breadcrumb'] = array('title' => 'Charts of Account','subtitle'=>'accounts','head'=>'settings');
         $this->data['set'] = 0;
         $this->data['id'] = 0;
         $this->data['expenses'] = ReferExpense::all();
@@ -1432,7 +1445,6 @@ class Account extends Controller {
 
     // List of standing orders
     public function standingOrders() {   
-        $this->data['breadcrumb'] = array('title' => 'Standing orders','subtitle'=>'standing orders','head'=>'accounts');
          $this->data['standingorders'] = \App\Models\StandingOrder::latest()->get();
          $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing', $this->data);

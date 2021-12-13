@@ -18,7 +18,6 @@ class Revenue extends Controller {
 
 
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'Revenues','subtitle'=>'company revenues','head'=>'accounts');
         $id = request()->segment(3);
         $page = 'index';
        if ((int) $id) {
@@ -48,7 +47,6 @@ class Revenue extends Controller {
 
 
     public function add() {
-        $this->data['breadcrumb'] = array('title' => 'Create revenues','subtitle'=>'add revenues','head'=>'accounts');
         $this->data['projects'] = \App\Models\Project::all();
         $this->data["payment_types"] = \App\Models\PaymentType::all();
         $this->data['banks'] = \App\Models\BankAccount::all();

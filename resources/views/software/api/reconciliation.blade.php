@@ -1,9 +1,26 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-body">
-    <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+       <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Reconciliation' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Bank payments</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Engineering</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
        
         <div class="page-body">
                 <div class="col-lg-12">
@@ -39,7 +56,7 @@
 
                                    <div class="col-sm-12 col-xl-3 m-b-30">
                                       <h4 class="sub-title"> &nbsp;&nbsp; </h4>
-                                      <button type="submit" name="submit" class="btn btn-primary"> Submit </button>
+                                      <button type="submit" name="submit" class="btn btn-primary btn-mini btn-round"> Submit </button>
                                    </div>
                                 </div>
                                   <?= csrf_field() ?>
@@ -91,7 +108,7 @@
                                                                     <?php
                                                                     if (empty($check)) {
                                                                         ?>
-                                                                        <a href="#" onclick="return false" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
+                                                                        <a href="#" onclick="return false" class="btn btn-primary btn-mini btn-round" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
                                                                     <?php } ?>
                                                                 </td>
                                                             </tr>

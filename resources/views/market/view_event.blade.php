@@ -2,10 +2,27 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<div class="main-body">
-  <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+  
      
+      <div class="page-header">
+            <div class="page-header-title">
+                <h4><?=' View event' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">new events</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     <!-- Page-header end -->
     <?php
     $medias = \App\Models\EventAttendee::where('event_id', $event->id)->get();
@@ -41,7 +58,7 @@
                         
                           <h4 class="card-header-text">Event Registered Attendees</h4>
                             <?php if(can_access('send_message'))  { ?>
-                            <a data-toggle="modal" data-target="#sendMessage" class="btn btn-primary btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
+                            <a data-toggle="modal" data-target="#sendMessage" class="btn btn-primary btn-mini btn-round float-right">  Send Message </a>
                           <?php } ?>
                           </div>
 
@@ -55,6 +72,7 @@
                                     <th>Name</th>
                                     <th>Position</th>
                                     <th>School Name</th>
+                                    <th>Client</th>
                                     <th>phone</th>
                                     <th>Email</th>
                                     <th>Source</th>
@@ -73,13 +91,14 @@
                                         <td><?=$media->name?></td>
                                         <td><?=$media->position?></td>
                                         <td> <?=$school?></td>
+                                        <td> <?=$media->status == 2 ?  'NO' : 'YES' ?></td>
                                         <td><?=$media->phone?></td>
                                         <td><?=$media->email?></td>
                                         <td><?=$media->source?></td>
                                         <td><?=$media->created_at?></td> 
                                         <td> <a class="btn btn-danger btn-sm" href="{{ url('workshop/deleteUser/'.$media->id) }}">Delete</a></td>
                                       </tr>
-                                    <?php } } ?>
+                                    <?php $i++;} } ?>
                                   </tbody>
                                 </table>
                               </div>

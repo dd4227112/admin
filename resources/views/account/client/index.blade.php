@@ -1,10 +1,26 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/'; ?>
-<div class="main-body">
-    <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
-       
+
+    
+           <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Clients' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">shulesoft clients</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">setting</a>
+                    </li>
+                </ul>
+            </div>
+        </div>        
         <div class="page-body">
             <div class="row">
 
@@ -12,7 +28,7 @@
                     <!-- Zero config.table start -->
                     <div class="card">
                         <div class="card-header">
-                            <a href="<?= url('account/createClient') ?>" class="btn btn-sm btn-primary">Create New Client</a>
+                            <a href="<?= url('account/createClient') ?>" class="btn btn-sm btn-primary btn-round">Create New Client</a>
                         </div>
                         <div class="col-md-12 col-xl-12">
 
@@ -49,7 +65,7 @@
                                             <td><?= warp($client->address,20) ?></td>
                                             <td>{{money( $client->payments()->sum('amount') )}}</td>
                                             <td>    
-                                           <a href="<?= url('account/client/edit/' . $client->id) ?>" class="btn btn-sm btn-primary">Edit</a>
+                                           <a href="<?= url('account/client/edit/' . $client->id) ?>" class="btn btn-sm btn-primary btn-round">Edit</a>
                                                 {{-- <a href="<?= url('account/client/delete/' . $client->id) ?>" class="btn btn-sm btn-danger">Delete</a></td>  --}}
                                           </tr>
                                         <?php $i++; $total_amount+=$client->payments()->sum('amount'); ?>

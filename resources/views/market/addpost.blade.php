@@ -1,30 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="main-body">
-  <div class="page-wrapper">
-    <!-- Page-header start -->
-    <div class="page-header">
+
+  
+
+   <div class="page-header">
       <div class="page-header-title">
-        <h4 class="box-title"> Social Media Posts </h4>
-        <span>Add Social Media Posts in the system</span>
+          <h4> <?= 'Social Media Posts' ?></h4>
       </div>
       <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Marketing/SocialMedia">Company Posts</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Create</a>
-          </li>
-        </ul>
+          <ul class="breadcrumb-title">
+              <li class="breadcrumb-item">
+              <a href="<?= url('/') ?>">
+                  <i class="feather icon-home"></i>
+              </a>
+              </li>
+              <li class="breadcrumb-item"><a href="#!">social media</a>
+              </li>
+              <li class="breadcrumb-item"><a href="#!">marketing</a>
+              </li>
+          </ul>
       </div>
-    </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
+  </div> 
+
     <div class="page-body">
       <div class="row">
         <div id="outer" class="container">

@@ -1,9 +1,28 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-<div class="main-body">
-    <div class="page-wrapper">
-     <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+
+     
+ <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Permissions' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">user permissions</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
      <?php if (can_access('manage_users')) { ?>
         <div class="page-body">
@@ -11,10 +30,10 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header row">
-                            <div class="col-sm-6">
-                              <h6 class="card-header-text">Permission group</h6>
+                            <div class="col-sm-4">
+                              <h6 class="card-header-text">Permissions</h6>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-8">
                                <?php $user_roles = \App\Models\Role::get(); ?>
                                 <span>
                                     <select class="select2"  id='permission'>
@@ -163,7 +182,6 @@
     debug: true
   });
   
-  
 $('#permission').change(function(event) {
     var id = $(this).val();
     if (id === '') {} else {
@@ -181,6 +199,9 @@ function submit_role(permission) {
     }
     $.ajax({
         url: url_obj,
+        headers: {
+             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
         method: 'post',
         data: {
             perm_id: perm_id,

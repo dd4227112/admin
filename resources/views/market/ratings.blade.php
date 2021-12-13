@@ -2,22 +2,111 @@
 @section('content')
 <?php
 $root = url('/') . '/public/'; ?>
-<div class="main-body">
-    <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+    
+           <div class="page-header">
+            <div class="page-header-title">
+                <h4> User ratings</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">schools</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
           <div class="page-body">
 
             <div class="row">
                 <div class="col-xl-3 col-md-6">
-                    <x-analyticCard :value="$nps->nps" name="NPS"  icon="feather icon-trending-up text-white f-16" color="bg-c-yellow" topicon="feather icon-bar-chart f-40" subtitle="trending"></x-analyticCard>
+                  
+                      <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h4 class="text-c-green f-w-700">{{ number_format($nps->nps,2).'%'}} </h4>
+                                        <h6 class="text-muted m-b-0">NPS</h6>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <i class="feather icon-bar-chart f-40"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-c-yellow">
+                                <div class="row align-items-center">
+                                    <div class="col-9">
+                                        <p class="text-white m-b-0">trending</p>
+                                    </div>
+                                    <div class="col-3 text-right">
+                                        <i class="feather icon-trending-up text-white f-16"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
 
                 <div class="col-xl-3 col-md-6">
-                    <x-analyticCard :value="$commentators" name="Total Rators" icon="feather icon-users text-white f-16"  color="bg-c-green"  topicon="feather icon-users f-40" subtitle="system users"></x-analyticCard>
+                    <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h4 class="text-c-green f-w-700">{{ number_format($commentators)}} </h4>
+                                        <h6 class="text-muted m-b-0">Total Rators</h6>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <i class="feather icon-users f-40"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-c-yellow">
+                                <div class="row align-items-center">
+                                    <div class="col-9">
+                                        <p class="text-white m-b-0">system users</p>
+                                    </div>
+                                    <div class="col-3 text-right">
+                                        <i class="feather icon-users text-white f-16"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
 
                 <div class="col-xl-3 col-md-6">
-                    <x-analyticCard :value="$comments" name="Comments" icon="feather icon-message-circle text-white f-16"  color="bg-c-blue"  topicon="feather icon-message-square f-40" subtitle="user comments"></x-analyticCard>
+                     <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h4 class="text-c-green f-w-700">{{ number_format($comments)}} </h4>
+                                        <h6 class="text-muted m-b-0">Comments</h6>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <i class="feather icon-message-square f-40"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-c-blue">
+                                <div class="row align-items-center">
+                                    <div class="col-9">
+                                        <p class="text-white m-b-0">user comments</p>
+                                    </div>
+                                    <div class="col-3 text-right">
+                                        <i class="feather icon-message-circle text-white f-16"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
             </div>
   

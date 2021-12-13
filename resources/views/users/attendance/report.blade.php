@@ -37,30 +37,30 @@ table td {
   
  if(!isset($export)){  ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
+
+    
+       
+
+         <div class="page-header">
             <div class="page-header-title">
-                <h4>ShuleSoft Attendances</h4>
-                <span>Show employee attendance summary</span>
+                <h4>Attendances</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Home</a>
+                    <li class="breadcrumb-item"><a href="#!">Report</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Attendance</a>
+                    <li class="breadcrumb-item"><a href="#!">Operations</a>
                     </li>
                 </ul>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        </div> 
+
+
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -68,7 +68,7 @@ table td {
                 <div class="">
                <div class="col-md-12 col-xl-12">
                            
-                <div class="card-header">
+                <div >
                 <form style="" class="form-horizontal" role="form" method="post">
                     <br>
                     <div class="form-group row">
@@ -111,9 +111,9 @@ table td {
                              <a class="nav-link active" href="#home3" id="home-tab" role="tab"  aria-expanded="true"
                                 data-toggle="tab" aria-expanded="true">Staff Attendance</a>
                            </li>
-                           <li class="nav-link">
+                           <!-- <li class="nav-link">
                                <a  class="nav-link" target="_blank" href="<?php echo $_SERVER['REQUEST_URI']; ?>/export"> <b>Print Report</b> </a>
-                          </li>
+                          </li> -->
                         </ul>
 
                         <div class="tab-content">
@@ -140,16 +140,16 @@ table td {
                                     <div class="row">
                                         <div class="col-sm-12">
                                         <h2 style="text-align: center; ">  </h2>
-                                            <table class="table">
+                                            <table class="table table">
                                                 <tr>
                                                     <th style="width: 25%;"><?= img($array); ?></th>
                                                     <th style="width: 50%;">
-                                                        <h style="margin-top: 0px;">
+                                                        <h6 style="margin-top: 0px;">
                                                            
                                                             <br> Email: support@shulesoft.com<br>
                                                             Phone Number: +255 655/754 406004
                                                             <br> Website: <a href="https://www.shulesoft.com/">www.shulesoft.com/ </a>
-                                                            </h>
+                                                            </h6>
                                                     </th>
                                                     <th style="width: 25%;">
                                                         <span class="img_right"><?= img($array); ?></span>
@@ -161,62 +161,72 @@ table td {
                                          <?php } if(isset($type) && isset($set)){    ?>
                                             <h5 style="text-align: center">Staffs Attendance Report  
                                                 <?php echo $type == 'date' ? ' on '. $set : '' ?>
-                                                <?php echo $type == 'week' ?  ' from '.date('Y-m-d', $dd[1]). ' to '.date('Y-m-d', $dd[1]) : '' ;?>
+                                                <?php echo $type == 'week' ?  ' from '.date('Y-m-d', $dd[1]). ' to '.date('Y-m-d', $dd[0]) : '' ;?>
                                             </h5>
                                             
-                                            <div id="hide-table">
-                                                <table class="table table-striped table-bordered">
+                                            <div id="hide-table" class="table-responsive">
+                                                <table   class="table dataTable table-mini table-striped table-bordered table-hover">
                                                     <thead>
-                                                        <tr style="background-color: #cccc;">
-                                                        <td class="col-sm-1">#</td>
+                                                        <tr>
+                                                        <td>#</td>
                                                          <?php
                                                         echo "<td class='col-sm-2'><strong>Staff Name</strong></td>";
-                                                        echo "<td class='col-sm-2'><strong>Phone  Number</strong></td>";
                                                         echo $type == 'date' ? "<td class='col-sm-1'><strong>Role</strong></td>" : '';
                                                         if($type == 'month'){
-                                                        
                                                         for ($i = 1; $i <= 30; $i++) {
-                                                            echo "<td class='col-sm-1'>" . ($i) . "</td>";
+                                                            echo "<td>" . ($i) . "</td>";
                                                         }
                                                     }elseif($type == 'week'){
                                                         foreach ($period as $key => $value) {
-                                                            echo "<td  style='text-align: center;' class='col-sm-1'><strong>" . $value->format('D') . "</strong></td>";
+                                                            echo "<td  style='text-align: center;'><strong>" . $value->format('D') . "</strong></td>";
                                                         }
                                                     }else{
-                                                        echo "<td class='col-sm-1'><strong>Status</strong></td>";
+                                                        echo "<td><strong>Status</strong></td>";
                                                     }
                                                     if($type == 'week' || $type == 'month'){
 
-                                                        echo "<td class='col-sm-1'>Att</td>";
-                                                        echo "<td class='col-sm-1'>Abs</td>";
-                                                        echo "<td class='col-sm-1'>Per</td>";
+                                                        echo "<td>Att</td>";
+                                                        echo "<td>Abs</td>";
+                                                        echo "<td>Per</td>";
+                                                        echo "<td>Lates</td>";
+                                                        echo "<td>Early leaves</td>";
                                                     } 
-                                                 echo !isset($export) ? "<td class='col-sm-1'>Action</td>" : '';
+                                                    //    echo !isset($export) ? "<td>Action</td>" : '';
                                                     ?>
                                                         </tr>
                                                 </thead>
                                                         <tbody>
                                                         <?php 
                                                             $fi=1;
+                                                            $the_timein = '08:00:00';
+                                                            $the_timeout = '17:00:00';
                                                             foreach($users as $user){
                                                             $total_abs = 0;
                                                             $total_press = 0;
                                                             $total_per = 0;
+                                                            $total_lates = 0;
+                                                            $total_early_leaves = 0;
                                                         ?>
                                                         <tr>
-                                                            <td style="text-align: center;"><?=$fi++?></td>
-                                                            <td><?=$user->name()?></td>
-                                                            <td><?=$user->phone?></td>
-                                                            <?php echo $type == 'date' ? '<td>'.$user->role->name.'</td>' : ''; ?>
-                                                            <?php
+                                                        <td><?=$fi++?></td>
+                                                        <td><?=$user->name()?></td>
+                                                        <?php echo $type == 'date' ? '<td>'.$user->role->name.'</td>' : ''; ?>
+                                                        <?php
                                         
                                                if($type == 'month'){
                                                   $m = $set;
                                                   for ($i = 1; $i <= 31; $i++) {
-                                                  $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
-                                                   if (!empty($att) && $att->present == 1) {
-                                                     $att = "P";
-                                                     $total_press++;
+                                                      $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
+                                                    if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat') || (date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
+                                                          $att = '<label class="badge badge-default">S</label>';
+                                                    } elseif (!empty($att) && $att->present == 1) {
+                                                          if(date("H:i:s",strtotime($att->timein)) > $the_timein){
+                                                             $att = '<label class="badge badge-warning">P</label>';
+                                                          }elseif(!empty($att->timeout) && date("H:i:s",strtotime($att->timeout)) < $the_timeout){
+                                                             $att = '<label class="badge badge-danger">P</label>';
+                                                          }else{
+                                                             $att = '<label class="badge badge-info">P</label>';
+                                                          }
                                                 } elseif(!empty($att->absent_reason_id)) {
                                                     $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
                                                     if (!empty($reason)) {
@@ -236,9 +246,21 @@ table td {
                                             foreach ($period as $key => $value) {                                       
                                             $dats++;
                                             $att = $user->uattendance()->where('date', $value->format('Y-m-d'))->first();
-                                            if (!empty($att) && $att->present == 1) {
-                                                $att = "P";
-                                                $total_press++;
+                                           // $early_leaves = $user->uattendance()->where('date', $value->format('Y-m-d'))->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->first();
+                                             if( (date('D', strtotime($value->format('Y-m-d'))) == 'Sat') || (date('D', strtotime($value->format('Y-m-d'))) == 'Sun') ){
+                                                $att = '<label class="badge badge-default">S</label>';
+                                              }elseif (!empty($att) && $att->present == 1) {
+                                                    if(date('H:i:s',strtotime($att->timein)) > $the_timein){
+                                                      $att = '<label class="badge badge-warning">P</label>';
+                                                      $total_lates++;
+                                                    }elseif(!empty($att->timeout) && date("H:i:s",strtotime($att->timeout)) < $the_timeout){
+                                                      $att = '<label class="badge badge-danger">P</label>';
+                                                      $total_early_leaves++;
+                                                    } else{
+                                                       $att = '<label class="badge badge-info">P</label>';
+                                                    }
+                                                       $total_press++;
+                                          
                                             } elseif(!empty($att->absent_reason_id)) {
                                                 $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
                                                 if (!empty($reason)) {
@@ -253,11 +275,10 @@ table td {
                                             }
                                             echo "<td style='text-align: center'>" . $att . "</td>";
                                         }
-                                      // dd($dats);
                                         }else{
                                             $att = $user->uattendance()->where('date', $set)->first();
                                             if (!empty($att) && $att->present == 1) {
-                                                $att = "PRESENT";
+                                                $att = date('H:s:i', strtotime($att->timein)) > '08:00:00' ? "Present(Late)" : "Present";
                                                 $total_press++;
                                             } elseif(!empty($att->absent_reason_id)) {
                                                 $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
@@ -265,21 +286,23 @@ table td {
                                                     $att = $reason->reason;
                                                     $total_per++;
                                                   }else{
-                                                    $att = 'ABS';
+                                                    $att = 'Abs';
                                                   }
                                                    }else {
-                                                $att = 'ABSENT';
-                                                $total_abs++;
+                                                   $att = 'Absent';
+                                                   $total_abs++;
                                                  }
-                                                      echo "<td style='text-align: center'>" . $att . "</td>";
-                                                       }
+                                                 echo "<td style='text-align: center'>" . $att . "</td>";
+                                                  }
                                                    if($type == 'week' || $type == 'month'){
                                                                 ?>
                                                             <td style='text-align: center'><?=$total_press?></td>
                                                             <td style='text-align: center'><?=$total_abs?></td>
                                                             <td style='text-align: center'><?=$total_per?></td>
+                                                            <td style='text-align: center'><?=$total_lates?></td>
+                                                            <td style='text-align: center'><?=$total_early_leaves ?></td>
                                                             <?php } ?>
-                                                            <?php echo !isset($export) ? "<td> <a href='<?=url('attendance/index/'.$user->id) ?>view</a> </td>" : ''; ?>
+                                                            {{-- <?php echo !isset($export) ? "<td> <a class='btn btn-primary btn-mini btn-round' href=<?= url('attendance/index/'.$user->id) ?> view</a> </td>" : ''; ?> --}}
                                                         </tr>
                                                         <?php } ?>
                                                     </tbody>

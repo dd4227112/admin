@@ -1,9 +1,27 @@
 @extends('layouts.app')
 @section('content')
-<div class="main-body">
-    <div class="page-wrapper">
+
     
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    
+
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Requests' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">api</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Engineering</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
         <div class="page-body">
             <div class="row">
@@ -38,7 +56,10 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                'url': "<?= url('software/api/null?tag=get') ?>"
+                'url': "<?= url('software/api/null?tag=get') ?>",
+                 'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
             },
             "columns": [
                 {"data": "id"},
@@ -51,10 +72,7 @@
                     "targets": 3,
                     "data": null,
                     "render": function (data, type, row, meta) {
-
                         return '<a href="#" id="' + row.id + '" class="btn btn-danger btn-mini btn-round dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
-
-
                     }
 
                 }

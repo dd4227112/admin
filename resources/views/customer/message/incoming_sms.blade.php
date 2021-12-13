@@ -1,10 +1,9 @@
 @extends('layouts.app')
 @section('content')
 
-<script type="text/javascript" src="<?= url('/public') ?>/assets/select2/select2.js"></script> 
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <div class="page-header">
             <div class="page-header-title">
                 <h4>SMS received</h4>
@@ -32,7 +31,7 @@
                             <p class="task-due"><strong>School with highest SMS logs: </strong><strong class="label label-danger"><?= isset($danger_schema) ? $danger_schema->schema_name : '' ?></strong></p>
                         </div>
                         <div class="task-board m-0">
-                            <a href="#" class="btn btn-info btn-mini b-none" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>
+                            <a href="#" class="btn btn-info btn-mini btn-round" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>
 
                         </div>
                         <!-- end of pull-right class -->
@@ -212,7 +211,7 @@
                                                                             <span class="table-msg"><?= $log->schema_name ?></span>
                                                                         </td>
                                                                         <td><?= $log->count ?></td>
-                                                                        <td> <a href="#" onmousedown='getErrorPage("<?= $log->count ?>")' onclick="return false" class="btn btn-sm btn-warning btn-outline-warning waves-effect md-trigger">View</a></td>
+                                                                        <td> <a href="#" onmousedown='getErrorPage("<?= $log->count ?>")' onclick="return false" class="btn btn-sm btn-warning btn-outline-warning btn-round">View</a></td>
                                                                     </tr>
                                                                 <?php }
                                                                 ?>

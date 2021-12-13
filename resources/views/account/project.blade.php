@@ -1,9 +1,27 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/'; ?>
-<div class="main-body">
-    <div class="page-wrapper">
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+      
+          <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Projects' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">company project</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">setting</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
         <div class="page-body">
             <div class="row">

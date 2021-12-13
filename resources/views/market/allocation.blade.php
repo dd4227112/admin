@@ -1,10 +1,27 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         
-       <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4><?=' Schools' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">sales schools</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">sales</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
    
         <div class="page-body">
             <div class="row">
@@ -20,13 +37,21 @@
                                     ?>
                                     <div class="col-lg-3 col-xl-3 col-sm-12">
                                 
-                                          <?php $opt =  $i == 1 ? 'yellow' : 'green' ?>
-                                          <x-smallCard :title="$type->type"
-                                                :value="$type->count"
-                                                icon="feather icon-book f-40 text-c-red"
-                                                cardcolor="bg-c-blue text-white"
-                                                >
-                                        </x-smallCard>
+                                 <?php $opt =  $i == 1 ? 'white' : 'gray' ?>
+                                         
+                                <div class="card bg-c-{{$opt}} shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">{{$type->type}}</p>
+                                                <h4 class="m-b-0">{{ number_format($type->count) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-40" style="color: #19b99a;"></i>
+                                            </div>
+                                    </div>
+                                     </div>
+                                </div>
 
             
                                     </div>
@@ -38,8 +63,31 @@
                                  <div class="col-lg-6 col-xl-6 col-sm-12">
                         
                                  <?php $percent = $nmb_schools.'  Use nmb '. $use_shulesoft .' use ShuleSoft, ' .$nmb_shulesoft_schools. ' use NMB & ShuleSoft'; ?>
-                                    <x-analyticCard :value="$total" name="Total" icon="feather icon-trending-up text-white f-16"  
-                                    color="bg-c-yellow"  topicon="feather icon-file f-50" :subtitle="$percent"></x-analyticCard>
+                                  
+                                        <div class="card">
+                                            <div class="card-block">
+                                                <div class="row align-items-center">
+                                                    <div class="col-8">
+                                                        <h4 class="text-c-green f-w-700">{{ number_format($total)}} </h4>
+                                                        <h6 class="text-muted m-b-0">Total</h6>
+                                                    </div>
+                                                    <div class="col-4 text-right">
+                                                        <i class="feather icon-activity f-30"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-c-blue">
+                                                <div class="row align-items-center">
+                                                    <div class="col-9">
+                                                        <p class="text-white m-b-0">{{$percent}}</p>
+                                                    </div>
+                                                    <div class="col-3 text-right">
+                                                        <i class="feather icon-trending-up text-white f-16"></i>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
                                 </div> 
                             </div>
                         </div>
@@ -48,7 +96,7 @@
                            <?php if(can_access('add_school')) { ?>
                              <div class="col-lg-3"> 
                                     <div class="card-body">
-                                    <x-button url="sales/addSchool" color="primary" btnsize="mini"  title="Add school" shape="round" toggleTitle="Add new school"></x-button>              
+                                     <a href="<?= url("sales/addSchool") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add new school"> Add School </a>
                                   </div>
                              </div>
                            <?php } ?>

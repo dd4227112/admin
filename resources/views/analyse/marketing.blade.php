@@ -17,29 +17,28 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
 ?>
-<div class="main-body">
-    <div class="page-wrapper">
 
-        {{-- <div class="page-header">
-            <div class="page-header-title">
-                <h4><?= isset($start_date) && isset($end_date) ? 'Analytic Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/', strtotime($end_date)) : ' Analytic Dashboard' ?></h4>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="#">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Dasboard</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Analytic Dashboard</a>
-                    </li>
-                </ul>
-            </div>
-        </div> --}}
 
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+     <div class="page-header">
+        <div class="page-header-title">
+             <h4><?= isset($start_date) && isset($end_date) ? 'Analytic Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Analytic Dashboard' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                 <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">summary</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">marketing</a>
+                </li>
+            </ul>
+        </div>
+      </div> 
+  
+
        
         <div class="row">
              <div class="col-sm-12 col-lg-3 m-b-20">
@@ -48,7 +47,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             </div>
             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6> &nbsp; </h6>
-                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
             </div>
         </div>
   
@@ -57,44 +56,72 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             <div class="row">
                  <div class="col-xl-3 col-md-6">
                     <?php $unique_visitors = \collect(DB::select('select count(*) from (select distinct platform,user_agent from admin.website_logs a where ' . $where . '  ) x '))->first()->count; ?>
-                     <x-smallCard title="Website Visits"
-                                :value="$unique_visitors"
-                                icon="feather icon-users f-50 text-c-light"
-                                cardcolor="bg-c-green text-white"
-                                >
-                     </x-smallCard>
+                       <div class="card bg-c-blue text-white shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Website Visits</p>
+                                                <h4 class="m-b-0">{{ number_format($unique_visitors) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-users f-50"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                   </div>
 
                   <div class="col-xl-3 col-md-6">
                     <?php $total_sms_sent = \collect(DB::select('select count(*) from public.sms a where ' . $where))->first()->count; ?>
-                     <x-smallCard title="SMS sent"
-                                :value="$total_sms_sent"
-                                icon="feather icon-message-square f-50 text-c-light"
-                                cardcolor="bg-c-green text-white"
-                                >
-                     </x-smallCard>
+                     <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">SMS sent</p>
+                                                <h4 class="m-b-0">{{ number_format($total_sms_sent) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-message-square f-50 text-c-light"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                   </div>
 
                 
                   <div class="col-xl-3 col-md-6">
                       <?php  $email_total_reacherd = \collect(DB::select('select count(*) from public.email a where ' . $where))->first()->count; ?>
-                     <x-smallCard title="Email sent"
-                                :value="$email_total_reacherd"
-                                icon="feather icon-mail f-50 text-c-light"
-                                cardcolor="bg-c-blue text-white"
-                                >
-                     </x-smallCard>
+                     <div class="card shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Email sent</p>
+                                                <h4 class="m-b-0">{{ number_format($email_total_reacherd) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-mail f-50 text-c-light"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                   </div>
                 <!-- Linked in card end -->
 
                  <div class="col-xl-3 col-md-6">
-                      <?php  $email_total_reacherd = \collect(DB::select('select count(*) from admin.events  a where ' . $where))->first()->count; ?>
-                       <x-smallCard title="Events"
-                                :value="$email_total_reacherd"
-                                icon="feather icon-clipboard f-50 text-c-light"
-                                cardcolor="bg-c-yellow text-white"
-                                >
-                      </x-smallCard>
+                      <?php  $events = \collect(DB::select('select count(*) from admin.events  a where ' . $where))->first()->count; ?>
+                       <div class="card bg-c-yellow text-white shadow">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Events</p>
+                                                <h4 class="m-b-0">{{ number_format($events) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-clipboard f-50 text-c-light"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                   </div>
                 </div>
 
@@ -105,18 +132,87 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                      <?php
                        $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ")"))->first()->count;
                      ?>
-                     <x-analyticCard :value="$total_reacherd" name="Total School Reached"  icon="feather icon-trending-up text-white f-16" color="bg-c-yellow" topicon="feather icon-bar-chart f-40" subtitle="new schools"></x-analyticCard>
+                     <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($total_reacherd)}} </h4>
+                                    <h6 class="text-muted m-b-0">Total School Reached</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-bar-chart f-40"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-yellow">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">new schools</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
               
                 <div class="col-md-12 col-xl-4">
                     <?php $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count; ?>
-                    <x-analyticCard :value="$total_schools" name="Total Contacts Reached"  icon="feather icon-trending-up text-white f-16" color="bg-c-green" topicon="feather icon-file f-40" subtitle="reached schools"></x-analyticCard>
+                      <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($total_schools)}} </h4>
+                                    <h6 class="text-muted m-b-0">Total Contacts Reached</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-file f-40"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-green">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">reached schools</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
                
                 <div class="col-md-12 col-xl-4">
                     <?php $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.task_type_id in (select id from admin.task_types where department=2) and ' . $where))->first()->count; ?>
-                    <x-analyticCard :value="$total_activity" name="Marketing Activities"  icon="feather icon-activity text-white f-16" color="bg-c-blue" topicon="feather icon-activity f-40" subtitle="activities"></x-analyticCard>
+                     <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($total_activity)}} </h4>
+                                    <h6 class="text-muted m-b-0">Marketing Activities</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-activity f-40"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-blue">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">activities</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-activity text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
              </div>
 
@@ -197,8 +293,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
 
             </div>
-        </div>
-    </div>
+      
 
 <script type="text/javascript">
 

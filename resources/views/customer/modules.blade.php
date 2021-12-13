@@ -108,9 +108,27 @@ function select($value, $schema, $sources) {
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
-<div class="main-body">
-    <div class="page-wrapper">
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+
+      <div class="page-header">
+        <div class="page-header-title">
+            <h4>Modules</h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Customer modules</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
       
         <div class="page-body">
             <div class="row">
@@ -224,9 +242,9 @@ function select($value, $schema, $sources) {
                                                                 <td><?= $school->schema_name ?></td>
                                                                 <td><?php
                                                                     if (isset($invoice_issued[$school->schema_name])) {
-                                                                        echo '<label class="label label-inverse-primary">'.$invoice_issued[$school->schema_name].'</label>';
+                                                                        echo '<label class="label label-primary">'.$invoice_issued[$school->schema_name].'</label>';
                                                                     } else {
-                                                                        echo '<label class="badge badge-inverse-warning">No</label>';
+                                                                        echo '<label class="badge badge-danger">No</label>';
                                                                     }
                                                                     ?></td>
 
@@ -312,7 +330,7 @@ function select($value, $schema, $sources) {
                                                                     
                                                                 <?php 
                                                                 if (isset($mark_status[$school->schema_name])) {
-                                                                    echo '<label class="label label-inverse-primary">' . date('d M Y', strtotime($mark_status[$school->schema_name])) . '</label>';
+                                                                    echo '<label class="label label-primary">' . date('d M Y', strtotime($mark_status[$school->schema_name])) . '</label>';
                                                                 } else {
                                                                     $no_marks++;
                                                                     echo '<label class="badge badge-inverse-warning">Not Defined</label>';
@@ -324,7 +342,7 @@ function select($value, $schema, $sources) {
                                                                     //classlevel
 
                                                                     if (isset($exam_report_status[$school->schema_name])) {
-                                                                        echo '<label class="label label-inverse-primary">' . date('d M Y', strtotime($exam_report_status[$school->schema_name])) . '</label>';
+                                                                        echo '<label class="label label-primary">' . date('d M Y', strtotime($exam_report_status[$school->schema_name])) . '</label>';
                                                                     } else {
                                                                         $no_exams_published++;
                                                                         echo '<label class="badge badge-inverse-warning">Not Defined</label>';
@@ -336,8 +354,8 @@ function select($value, $schema, $sources) {
                                                                     //classlevel
                                                                     if (isset($invoice_status[$school->schema_name])) {
 
-                                                                        echo '<label class="label label-inverse-primary">' . $invoice_status_count[$school->schema_name] . ' out of ' . $students . '</label><br/>
-                                                                        <label  class="label label-inverse-primary">Last created: ' . date('d M Y', strtotime($invoice_status[$school->schema_name])) . '</label>';
+                                                                        echo '<label class="label label-primary">' . $invoice_status_count[$school->schema_name] . ' out of ' . $students . '</label><br/>
+                                                                        <label  class="label label-primary">Last created: ' . date('d M Y', strtotime($invoice_status[$school->schema_name])) . '</label>';
                                                                     } else {
                                                                         $no_invoice++;
                                                                         echo '<label class="badge badge-inverse-warning">No Invoice Created</label>';
@@ -349,8 +367,8 @@ function select($value, $schema, $sources) {
                                                                 //classlevel
                                                                 if (isset($expense_status[$school->schema_name])) {
 
-                                                                    echo '<label class="label label-inverse-primary">' . $expense_status_count[$school->schema_name] . ' trans</label><br/>
-                                                                    <label  class="label label-inverse-primary">Last created: ' . date('d M Y', strtotime($expense_status[$school->schema_name])) . '</label>';
+                                                                    echo '<label class="label label-primary">' . $expense_status_count[$school->schema_name] . ' trans</label><br/>
+                                                                    <label  class="label label-primary">Last created: ' . date('d M Y', strtotime($expense_status[$school->schema_name])) . '</label>';
                                                                 } else {
                                                                     $no_expense++;
                                                                     echo '<label class="badge badge-inverse-warning">No Expense Recorded</label>';
@@ -360,8 +378,8 @@ function select($value, $schema, $sources) {
                                                                 //classlevel
                                                                 if (isset($payment_status[$school->schema_name])) {
 
-                                                                    echo '<label class="label label-inverse-primary">' . $payment_count[$school->schema_name] . ' trans</label><br/>
-                                                                    <label  class="label label-inverse-primary">Last created: ' . date('d M Y', strtotime($payment_status[$school->schema_name])) . '</label>';
+                                                                    echo '<label class="label label-primary">' . $payment_count[$school->schema_name] . ' trans</label><br/>
+                                                                    <label  class="label label-primary">Last created: ' . date('d M Y', strtotime($payment_status[$school->schema_name])) . '</label>';
                                                                 } else {
                                                                     $no_payment++;
                                                                     echo '<label class="badge badge-inverse-warning">No Payment Recorded</label>';
@@ -369,7 +387,9 @@ function select($value, $schema, $sources) {
                                                                     ?></td>
                                                                 <td>
                                                                     <?php $view_url = "customer/profile/$school->schema_name"; ?>
-                                                                       <x-button :url="$view_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="School profile"></x-button>
+                                                                     <a href="<?= url($view_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" 
+                                                                        data-original-title="School profile"> view </a>
+
                                                                 </td>
 
                                                             </tr>

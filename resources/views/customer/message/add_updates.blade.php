@@ -2,32 +2,34 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 <link rel="stylesheet" href="<?= $root ?>plugins/bower_components/html5-editor/bootstrap-wysihtml5.css" />
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         <!-- Page-header start -->
+         
         <div class="page-header">
             <div class="page-header-title">
-                <h4>ShuleSoft User Guide</h4>
-                <span>This specify instructions on how to use ShuleSoft system</span>
+                <h4><?='Create updates' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Customer Support</a>
+                    <li class="breadcrumb-item"><a href="#!">updates</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">ShuleSoft Guide</a>
+                    <li class="breadcrumb-item"><a href="#!">Marketing</a>
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> 
+
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
+                      <div class="card-block">
                         <code id="mycode"></code>  
                         <?= isset($message_success) ? '<div class="alert alert-info">' . $message_success . '</div>' : '' ?>
                         <form action="" method='post' class="form-horizontal form-bordered">
@@ -78,14 +80,15 @@
                             </div>
                             <div class="form-actions">
                                 <input type="hidden" name="version" value="V2.1"/>
-                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Submit</button>
-                                <button type="button" class="btn btn-default">Cancel</button>
+                                <button type="submit" class="btn btn-primary btn-mini btn-round"> <i class="fa fa-check"></i> Submit</button>
+                                <button type="button" class="btn btn-default btn-mini btn-round">Cancel</button>
 
 
                             </div>
                         </form>
 
                     </div>
+                  </div>
                 </div>
             </div>
         </div>

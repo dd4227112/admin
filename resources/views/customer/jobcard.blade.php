@@ -24,8 +24,8 @@ $root = url('/') . '/public/'
         
         </style>
 
-   <div class="main-body">
-       <div class="page-wrapper">
+   
+       
              <button class="btn-cs btn-sm-cs" onclick="javascript:printDiv('printablediv')"><span
           
             class="fa fa-print"></span> <?= __('print') ?> </button>

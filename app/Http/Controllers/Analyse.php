@@ -26,7 +26,6 @@ class Analyse extends Controller {
     public function index() {
         $this->data['users'] = [];
         $year = date('Y');
-        $this->data['breadcrumb'] = array('title' => 'Dashboard','subtitle'=>'dashboard','head'=>'summary');
         if (Auth::user()->role_id == 7) {
             return redirect('sales/school');
             exit;
@@ -66,13 +65,11 @@ class Analyse extends Controller {
 
     public function customers() {
         $this->data['days'] = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'Customer dashboard','subtitle'=>'summary','head'=>'customers');
         return view('analyse.customers', $this->data);
     }
 
     public function software() {
         $this->data['days'] = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'Software dashboard','subtitle'=>'summary','head'=>'software');
         return view('analyse.software', $this->data);
     }
 
@@ -83,7 +80,6 @@ class Analyse extends Controller {
 
     public function sales() {
         $this->data['days'] = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'Sales dashboard','subtitle'=>'summary','head'=>'sales');
         $this->data['shulesoft_schools'] = \collect(\DB::select("select count(*) as count from admin.all_classlevel where lower(name) NOT like '%nursery%' and schema_name not in ('public','accounts')"))->first()->count;
         $this->data['schools'] = \collect(\DB::select("select count(*) as count from admin.schools where lower(ownership)<>'government'"))->first()->count;
         $this->data['nmb_schools'] = \collect(\DB::select('select count(*) as count from admin.nmb_schools'))->first()->count;
@@ -116,7 +112,6 @@ class Analyse extends Controller {
     }
 
     public function accounts() {
-        $this->data['breadcrumb'] = array('title' => 'Account dashboard','subtitle'=>'summary','head'=>'account');
         $this->data['association'] = \App\Model\Association::first();
         $sql_2 = "select sum(count) as count, month from (
         select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')." group by month
@@ -131,6 +126,7 @@ class Analyse extends Controller {
         return view('analyse.marketing', $this->data);
     }
 
+
     public function search() {
         $q = strtolower(request('q'));
         $users = DB::select("select a.reference,a.id,b.name,b.username from admin.invoices a join admin.clients b on b.id=a.client_id where (lower(a.reference) like  '%" . $q . "%'  or lower(b.name) like  '%" . $q . "%' )");
@@ -143,7 +139,7 @@ class Analyse extends Controller {
         }
 
         $school_list = '';
-        $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%' union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 10");
+        $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%'  union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 10");
         foreach ($schools as $school) {
             $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) : url('sales/profile/' . $school->is_schema);
             $type = $school->is_schema == 1 ? ' (Already Client)' : '';

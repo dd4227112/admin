@@ -1,15 +1,41 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/';
-function bank_data($schema){
-     return \collect(\DB::select("select a.name,a.number,b.* from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id
-      where b.schema_name ='{$schema}' "))->first();   
-}
+
+function account_no($schema,$bank_id){
+   $bank =  \collect(\DB::select("select a.number from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id
+      where b.schema_name ='{$schema}' and b.bank_account_id = '{$bank_id}' "))->first(); 
+       return $bank->number;
+ }
+
+ function account_name($schema,$bank_id){
+   $bank =  \collect(\DB::select("select a.name from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id
+      where b.schema_name ='{$schema}' and b.bank_account_id = '{$bank_id}' "))->first(); 
+       return $bank->name;
+ }
 ?>                         
 
-<div class="main-body">
-  <div class="page-wrapper">
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+  
+
+     <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Bank setup' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Bank setup</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Engineering</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     
     <div class="page-body">
       <div class="row">
@@ -59,8 +85,8 @@ function bank_data($schema){
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $value->schema_name ?></td>
-                                    <td><?= isset(bank_data($value->schema_name)->name) ? bank_data($value->schema_name)->name : ''?></td>
-                                    <td><?= isset(bank_data($value->schema_name)->number) ? bank_data($value->schema_name)->number : '' ?></td>
+                                    <td><?= isset($value->schema_name,$value->bank_account_id) ? account_name($value->schema_name,$value->bank_account_id) : '' ?></td>
+                                    <td><?= isset($value->schema_name,$value->bank_account_id) ? account_no($value->schema_name,$value->bank_account_id) : '' ?></td>
                                     <td><?= $value->invoice_prefix ?></td>
                                     <td><?= $value->api_username ?></td>
                                     <td><?= $value->api_password ?></td>
@@ -98,7 +124,7 @@ function bank_data($schema){
 
                               <div class="col-md-6">
                                 <strong>  Select School</strong>
-                                 <select name="schema" class="form-control select2" required id="check_account">
+                                 <select name="schema" class="form-controlk select2" required id="check_account">
                                   <?php
                                   foreach ($settings as $setting) {
                                     ?>
@@ -109,7 +135,7 @@ function bank_data($schema){
 
                               <div class="col-md-6">
                                 <strong>Account number</strong>
-                                  <select name="bank_id" id="account_id" class="form-control select2" required>
+                                  <select name="bank_id" id="account_id" class="form-controlk select2" required>
 
                                   </select>
                               </div>
@@ -140,7 +166,7 @@ function bank_data($schema){
 
                         </div>
                         <div class="modal-footer">
-                          <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit Here</button>
+                          <button type="submit" class="btn btn-primary btn-round btn-sm ">Submit Here</button>
                         </div>
                         <?= csrf_field() ?>
                       </form>

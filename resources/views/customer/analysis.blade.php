@@ -1,10 +1,27 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-<div class="main-body">
-  <div class="page-wrapper">
+
+  
     
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+      <div class="page-header">
+        <div class="page-header-title">
+            <h4>Requirements</h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">user requirements</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Operations</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
 
     <div class="page-body">
       <div class="row">
@@ -57,10 +74,9 @@
                                   <td><?= $req->status ?></td>
                                   <td>
                                      <?php $view_url="customer/requirements/show/$req->id"; $edit_url="customer/requirements/edit/$req->id"; ?>
-                                     <x-button :url="$view_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="Requirement"></x-button>
-                                    <?php if($req->status !== 'Completed') {  ?>
-                                     <x-button :url="$view_url" color="info" btnsize="mini"  title="edit" shape="round" toggleTitle="Edit"></x-button>
-
+                                     <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Requirement"> view </a>
+                                    <?php if($req->status != 'Completed') {  ?>
+                                        <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit"> Edit </a>
                                     <?php } ?>
                                   </td>
                               </tr>
@@ -94,7 +110,7 @@
                               <div class="row">
                                   <div class="col-sm-12 col-xl-4 m-b-30">
                                       <h4 class="sub-title">Select School</h4>
-                                       <input type="number" class="form-control" id="get_schools" name="school_id">
+                                       <input type="number" class="form-" id="get_schools" name="school_id">
                                   </div>
                                   <div class="col-sm-12 col-xl-4 m-b-30">
                                       <h4 class="sub-title">School Contact</h4>
@@ -102,7 +118,7 @@
                                   </div>
                                   <div class="col-sm-12 col-xl-4 m-b-30">
                                       <h4 class="sub-title">Allocated person</h4>
-                                        <select name="to_user_id" class="form-control select2" required>
+                                        <select name="to_user_id" class="form- select2" required>
                                           <?php
                                           $staffs = DB::table('users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
                                           foreach ($staffs as $staff) {
@@ -114,9 +130,9 @@
                                 
                               </div>
                                  <div class="row">
-                                      <h4 class="sub-title">Allocated person</h4>
+                                      <h4 class="sub-title">Description</h4>
                                       <div class="col-sm-12">
-                                          <textarea rows="3" cols="7" id="content_part" class="form-control"></textarea>
+                                          <textarea rows="3" cols="7" id="content_part" class="form-control" name="note"></textarea>
                                       </div>
                                   </div>
 

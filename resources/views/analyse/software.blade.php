@@ -20,9 +20,26 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
     $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and action=(\'No\') and ' . $where))->first()->count;
 ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+           <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= isset($start_date) && isset($end_date) ? 'Software Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Software Dashboard' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">summary</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">software</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
            <div class="row">
              <div class="col-sm-12 col-lg-3 m-b-20">
@@ -31,7 +48,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
             </div>
             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6> &nbsp; </h6>
-                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
             </div>
         </div>
 
@@ -42,12 +59,19 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                         <?php 
                         $total_errors = \collect(DB::select('select count(*) from admin.error_logs a WHERE  a.deleted_at is null and  a.route is not null and  ' . $where))->first()->count;
                         ?>
-                        <x-smallCard title="Total Errors"
-                                :value="$total_errors"
-                                icon="feather icon-layers f-40 text-c-red"
-                                cardcolor="bg-c-pink text-white"
-                                >
-                       </x-smallCard>
+                        <div class="card bg-c-pink text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Errors</p>
+                                                <h4 class="m-b-0">{{ number_format($total_errors) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-layers f-40 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                          </div>
                     </div>
                    
 
@@ -55,25 +79,39 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                          <?php
                         $resolved = \collect(DB::select('select count(*) from admin.error_logs a WHERE  a.deleted_at is not null and  a.route is not null and  ' . $where))->first()->count;
                          ?>
-                         <x-smallCard title="Error Resolved"
-                                :value="$resolved"
-                                icon="feather icon-check-circle f-40 text-c-red"
-                                cardcolor="bg-c-blue text-white"
-                                >
-                       </x-smallCard>
+                        <div class="card bg-c-yellow text-white">
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <p class="m-b-5">Error Resolved</p>
+                                        <h4 class="m-b-0">{{ number_format($resolved) }}</h4>
+                                    </div>
+                                    <div class="col col-auto text-right">
+                                        <i class="feather icon-check-circle f-40 text-c-red"></i>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+
                     </div>
                    
 
                     <div class="col-md-6 col-xl-4">
-                           <?php
-                               $total_activity = \collect(DB::select('select count(*) from admin.tasks a where   a.user_id in (select id from admin.users where department=3) and ' . $where))->first()->count;
+                      <?php $total_activity = \collect(DB::select('select count(*) from admin.tasks a where   a.user_id in (select id from admin.users where department=3) and ' . $where))->first()->count;
                             ?>
-                          <x-smallCard title="New Tasks Recorded"
-                                :value="$total_activity"
-                                icon="feather icon-book f-40 text-c-red"
-                                cardcolor="bg-c-green text-white"
-                                >
-                       </x-smallCard>
+                        <div class="card bg-c-green text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">New Tasks Recorded</p>
+                                                <h4 class="m-b-0">{{ number_format($total_activity) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-40 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                 </div>
             

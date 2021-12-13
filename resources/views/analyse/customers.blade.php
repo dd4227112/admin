@@ -18,7 +18,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
 ?>
-<div class="page-wrapper">
+
     <div class="page-header">
         <div class="page-header-title">
             <?php
@@ -33,7 +33,25 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
         </div>
      
 
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= isset($start_date) && isset($end_date) ? 'Customer Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Customer Dashboard' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">summary</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">customer</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
            <div class="row">
              <div class="col-sm-12 col-lg-3 m-b-20">
@@ -72,12 +90,60 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             <div class="row">
                 <div class="col-md-6 col-xl-3">
                       <?php  $percent = 'Out of '.$out_of; ?>
-                    <x-analyticCard :value="$active_customers" name="Customers" icon="feather icon-trending-up text-white f-16"  color="bg-c-green"  topicon="feather icon-users f-30" :subtitle="$percent"></x-analyticCard>
+                
+                    <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h4 class="text-c-green f-w-700">{{ number_format($active_customers)}} </h4>
+                                        <h6 class="text-muted m-b-0">Customers</h6>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <i class="feather icon-users f-30"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-c-green">
+                                <div class="row align-items-center">
+                                    <div class="col-9">
+                                        <p class="text-white m-b-0">{{$percent}}</p>
+                                    </div>
+                                    <div class="col-3 text-right">
+                                        <i class="feather icon-trending-up text-white f-16"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
                 </div>
                  
 
-                <div class="col-md-6 col-xl-3">
-                    <x-analyticCard :value="$total_activity" name="Activities" icon="feather icon-trending-up text-white f-16"  color="bg-c-pink"  topicon="feather icon-activity f-30" subtitle="support activities"></x-analyticCard>
+                <div class="col-md-6 col-xl-3">    
+                    <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h4 class="text-c-green f-w-700">{{ number_format($total_activity)}} </h4>
+                                        <h6 class="text-muted m-b-0">Activities</h6>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <i class="feather icon-activity f-30"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-c-pink">
+                                <div class="row align-items-center">
+                                    <div class="col-9">
+                                        <p class="text-white m-b-0">support activities</p>
+                                    </div>
+                                    <div class="col-3 text-right">
+                                        <i class="feather icon-trending-up text-white f-16"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
                
 
@@ -86,13 +152,61 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                    $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=1) and " . $where . ")
                              and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=1) and " . $where . ")"))->first()->count;
                       ?> 
-                    <x-analyticCard :value="$total_reacherd" name="Client reached" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue"  topicon="feather icon-activity f-30" :subtitle="$percent"></x-analyticCard>
+                          <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h4 class="text-c-green f-w-700">{{ number_format($total_reacherd)}} </h4>
+                                        <h6 class="text-muted m-b-0">Client reached</h6>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <i class="feather icon-activity f-30"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-c-blue">
+                                <div class="row align-items-center">
+                                    <div class="col-9">
+                                        <p class="text-white m-b-0">{{$percent}}</p>
+                                    </div>
+                                    <div class="col-3 text-right">
+                                        <i class="feather icon-trending-up text-white f-16"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
              
                 <div class="col-md-6 col-xl-3">
                       <?php $total_with_students = \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
                       $total_students = $out_of - $total_with_students ?>
-                    <x-analyticCard :value="$total_students" name="No students " icon="feather icon-trending-up text-white f-16"  color="bg-c-yellow"  topicon="feather icon-users f-30" subtitle="No students schools"></x-analyticCard>
+                   
+
+                        <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h4 class="text-c-green f-w-700">{{ number_format($total_students)}} </h4>
+                                        <h6 class="text-muted m-b-0">No students </h6>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <i class="feather icon-activity f-30"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-c-yellow">
+                                <div class="row align-items-center">
+                                    <div class="col-9">
+                                        <p class="text-white m-b-0">No students schools</p>
+                                    </div>
+                                    <div class="col-3 text-right">
+                                        <i class="feather icon-trending-up text-white f-16"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
 
                 <!-- Documents card start -->
@@ -103,33 +217,54 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     $sql = 'select sum((select count(*) from admin.all_student where "schema_name"=b.username and status=1))*10000 as total_value from admin.users_schools a left join admin.clients b on b.id=a.client_id left join admin.schools c on c.id=a.school_id  ' . $where_value;
                     $value = \collect(DB::select($sql))->first()->total_value;  
                     ?>
-                     <x-smallCard title="Lead Value"
-                                :value="$value"
-                                icon="feather icon-file f-40 text-c-red"
-                                cardcolor="bg-c-green text-white"
-                                >
-                    </x-smallCard>
+                     <div class="card bg-c-green text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Lead Value</p>
+                                                <h4 class="m-b-0">{{ number_format($value) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-file f-40 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
 
             
                 <div class="col-md-6 col-xl-3">
-                     <x-smallCard title="Customer Retention Rate"
-                                :value="$total_activity"
-                                icon="feather icon-trending-up f-40 text-c-red"
-                                cardcolor="bg-c-pink text-white"
-                                >
-                    </x-smallCard>
+                     <div class="card bg-c-pink text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Customer Retention Rate</p>
+                                                <h4 class="m-b-0">{{ number_format($total_activity) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-trending-up f-40 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
            
 
 
                 <div class="col-md-6 col-xl-3">
-                     <x-smallCard title="Active Users Per schools"
-                                :value="$total_reacherd"
-                                icon="feather icon-trending-up f-40 text-c-red"
-                                cardcolor="bg-c-blue text-white"
-                                >
-                    </x-smallCard>
+                     <div class="card bg-c-blue text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Active Users Per schools</p>
+                                                <h4 class="m-b-0">{{ number_format($total_reacherd) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-trending-up f-40 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
     
               
@@ -138,12 +273,19 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                             $total_with_students = \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
                             $total = $out_of - $total_with_students;
                         ?>
-                     <x-smallCard title="Customer ARP"
-                                :value="$total"
-                                icon="feather icon-trending-up f-40 text-c-red"
-                                cardcolor="bg-c-yellow text-white"
-                                >
-                    </x-smallCard>
+                     <div class="card bg-c-yellow text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Customer ARP</p>
+                                                <h4 class="m-b-0">{{ number_format($total) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-trending-up f-40 text-c-red"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
               
 

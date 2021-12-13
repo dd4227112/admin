@@ -5,7 +5,7 @@
 ?>
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 
-<div class="page-wrapper">
+
   <div class="page-header">
     <div class="page-header-title">
       <h4>General reports </h4>

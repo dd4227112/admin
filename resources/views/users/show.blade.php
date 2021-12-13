@@ -7,11 +7,41 @@ $arr = [];
 foreach ($user_permission as $permis) {
     array_push($arr, $permis->id);
 }
+
+function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
+      $type = null ? $type = '"text"' : $type = $type;
+    if ((int) request('skip') == 1) {
+        $return = $value;
+    } else {
+        $return = '<input required class="text-muted" type="'. $type. '" date="' . $value . '" id="' . $column .$value. '" value="' . date('Y-m-d',strtotime($value)) . '" 
+        onblur="edit_records(\'' . $user_id . '\', this.value, \'' .$absent_id . '\')"/>
+        <br/>';
+    }
+    return $return;
+  }
+
 ?>
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
    
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+          <div class="page-header">
+            <div class="page-header-title">
+                <h4> <?= $user->name ?? '' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">user</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
 
         <div class="page-body">
             <!--profile cover start-->
@@ -33,30 +63,120 @@ foreach ($user_permission as $permis) {
                             if (Auth::user()->role_id != 7) { ?>
                             <div class="col-md-6 col-xl-4">
                                 <?php $pay = isset($user->salary) ? $user->salary : 1 ?>
-                                <x-analyticCard :value="$pay" name="Basic Salary" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue" 
-                                 topicon="feather icon-user f-30" subtitle="Monthly basic salary"></x-analyticCard>
+                                  <a href="<?= url('payroll/payroll_summary/'.$user->id) ?>">
+                                  <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <h4 class="text-c-green f-w-700">{{ $user->id == \Auth::user()->id  ? number_format($pay) : 0 }} </h4>
+                                                <h6 class="text-muted m-b-0">Basic Salary</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="feather icon-user f-30"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-c-blue">
+                                        <div class="row align-items-center">
+                                            <div class="col-9">
+                                                <p class="text-white m-b-0">Monthly basic salary</p>
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <i class="feather icon-trending-up text-white f-16"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                </a>
                             </div>
                             
                             <div class="col-md-6 col-xl-4">
                                  <?php $month_bonus = 0 ?>
-                                <x-analyticCard :value="$month_bonus" name="This Month Bonus" icon="feather icon-trending-up text-white f-16"  color="bg-c-green" 
-                                 topicon="feather icon-user f-30" subtitle="Based on performance"></x-analyticCard>
+                               
+                                    <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <h4 class="text-c-green f-w-700">{{ number_format($month_bonus)}} </h4>
+                                                <h6 class="text-muted m-b-0">This Month Bonus</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="feather icon-user f-30"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-c-green">
+                                        <div class="row align-items-center">
+                                            <div class="col-9">
+                                                <p class="text-white m-b-0">Based on performance</p>
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <i class="feather icon-trending-up text-white f-16"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
 
                         <?php } else { ?>
                             <div class="col-md-6 col-xl-4">
                 
                                   <?php $nmb_schools = \DB::table('admin.nmb_schools')->count(); ?>
-                                <x-analyticCard :value="$nmb_schools" name="NMB Schools" icon="feather icon-trending-up text-white f-16"  color="bg-c-yellow" 
-                                    topicon="feather icon-user f-30" subtitle="Total Schools with NMB">
-                                </x-analyticCard>
+                                   <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <h4 class="text-c-green f-w-700">{{ number_format($nmb_schools)}} </h4>
+                                                <h6 class="text-muted m-b-0">NMB Schools</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="feather icon-user f-30"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-c-yellow">
+                                        <div class="row align-items-center">
+                                            <div class="col-9">
+                                                <p class="text-white m-b-0">Total Schools with NMB</p>
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <i class="feather icon-trending-up text-white f-16"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-6 col-xl-4">
                                  <?php $b = \collect(\DB::select('select count(distinct branch) as count from admin.nmb_schools'))->first(); ?>
-                                <x-analyticCard :value="$b->count" name="Branches" icon="feather icon-trending-up text-white f-16"  color="bg-c-pink" 
-                                    topicon="feather icon-user f-30" subtitle="Branches with Schools">
-                                </x-analyticCard>
+                            
+                                   <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <h4 class="text-c-green f-w-700">{{ number_format($b->count)}} </h4>
+                                                <h6 class="text-muted m-b-0">Branches</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="feather icon-user f-30"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-c-pink">
+                                        <div class="row align-items-center">
+                                            <div class="col-9">
+                                                <p class="text-white m-b-0">Branches with Schools</p>
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <i class="feather icon-trending-up text-white f-16"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         <?php } ?>
                     </div>
@@ -98,7 +218,7 @@ foreach ($user_permission as $permis) {
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link " data-toggle="tab" href="#learning" role="tab" aria-expanded="false">Learning</a>
+                            <a class="nav-link " data-toggle="tab" href="#learning" role="tab" aria-expanded="false">Courses</a>
                             <div class="slide"></div>
                         </li>
                  
@@ -156,14 +276,26 @@ foreach ($user_permission as $permis) {
                                                                         <th scope="row">Bank name</th>
                                                                         <td> {{ $user->bank_name }}</td>
                                                                     </tr>
+
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
-                                                                        <td><a  target='_break' href="<?=  $user->academic_certificates ??  '' ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a></td>
+                                                                        <td> <?php if($user->academic_certificates == '') { ?>
+                                                                          <label class="btn btn-warning btn-mini btn-round"> No Certificates</label>
+                                                                      <?php } else { ?> 
+                                                                        <a target='_break' href="<?=  $user->academic_certificates ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a>
+                                                                      <?php } ?>
+                                                                       </td>
                                                                     </tr>
 
                                                                     <tr>
                                                                         <th scope="row">Employment Contract</th>
-                                                                        <td><a target='_break' href="<?=  $user->employment_contract ??  '' ?>" class="btn btn-default btn-mini btn-round"> View Certificate</a></td>
+                                                                        <td> <?php if($user->employment_contract == '') { ?>
+                                                                         <label class="btn btn-warning btn-mini btn-round"> No Contract</label>
+                                                                      <?php } else { ?> 
+                                                                        <a target='_break' href="<?=  $user->employment_contract ?>" class="btn btn-default btn-mini btn-round"> View Contract</a>
+                                                                      <?php } ?>
+                                                                       </td>
+
                                                                     </tr>
                                                                      <tr>
                                                                          <td> 
@@ -173,8 +305,7 @@ foreach ($user_permission as $permis) {
                                                                         </td>
                                                                          <td>
                                                                          <?php  $reset_url = "users/resetPassword/$user->id"; ?>
-                                                                         <x-button :url="$reset_url" color="warning" btnsize="mini"  title="Reset Password" shape="round" toggleTitle="Reset your password"></x-button>
-
+                                                                    <a href="<?= url($reset_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reset your password">Reset Password  </a>
                                                                          </td>
                                                                     </tr>
                                                                 </tbody>
@@ -203,7 +334,7 @@ foreach ($user_permission as $permis) {
 
                                                                     <tr>
                                                                         <th scope="row"> Designation</th>
-                                                                        <td><?= $user->designation->abbreviation ? $user->designation->name.'  ' . '('.$user->designation->abbreviation.')' : '' ?></td> 
+                                                                        <td style="font-size:10px;"><?= $user->designation->abbreviation ? $user->designation->name.'  ' . '('.$user->designation->abbreviation.')' : '' ?></td> 
                                                                     </tr>
 
                                                                     <tr>
@@ -216,8 +347,11 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Medical Report</th>
-                                                                        <td>
-                                                                            <a target='_break' href="<?= $user->medical_report ?? '' ?>" class="btn btn-default btn-mini btn-round"> View Report</a>
+                                                                        <td> <?php if($user->medical_report == ''){ ?>
+                                                                            <label class="btn btn-warning btn-mini btn-round"> No report</label>
+                                                                             <?php } else { ?>
+                                                                            <a target='_break' href="<?= $user->medical_report?>" class="btn btn-default btn-mini btn-round"> View Report</a>
+                                                                             <?php } ?>
                                                                         </td>
                                                                     </tr>
 
@@ -508,7 +642,9 @@ foreach ($user_permission as $permis) {
                                         <div class="card-header">
                                             <h5 class="card-header-text">Description About Me</h5>
                                             <?php $url_edit = "users/edit/$user->id"; ?>
-                                        <x-button :url="$url_edit" color="primary float-right" btnsize="mini"  title="Edit" shape="round" toggleTitle="Edit user data"></x-button>
+                        
+                                        <a href="<?= url($url_edit) ?>" class="btn btn-info btn-mini  btn-round float-right" data-placement="top"  data-toggle="tooltip" data-original-title="Edit user data">Edit  </a>
+                                         
 
                                         </div>
                                         <div class="card-block user-desc">
@@ -591,7 +727,8 @@ foreach ($user_permission as $permis) {
                                         <div class="form-group row">
                                             <div class="col-sm-2">
                                                 <?php $qr_code =  "QrCode/generate_qr_code/$user->email"; ?>
-                                                 <x-button :url="$qr_code" color="primary" btnsize="mini"  title="QR code" shape="round" toggleTitle="Create qr code"></x-button>
+                                                <a href="<?= url($qr_code) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Generate qr code">qr code  </a>
+                                                 
 
                                             </div>
                                             <?php if ($user->qr_code != '') { ?>
@@ -642,24 +779,7 @@ foreach ($user_permission as $permis) {
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php  $kpi_ids = \App\Models\KPIUser::where('user_id',$user->id)->get(['kpi_id']);
-                                                 $kpis = \App\Models\KeyPerfomanceIndicator::whereIn('id',$kpi_ids)->get();
-                                               
-                                            if(sizeof($kpis) > 0){ 
-                                                $i = 1; foreach($kpis as $kpi){
-                                                ?>
-                                            <tr>
-                                                <td><?=$i++?> </td>
-                                                <td><?=$kpi->name?></td>
-                                                <td><?=$kpi->created_at ?></td>
-                                                <td><?=$kpi->value?></td>
-                                                <td>
-                                                <a class="btn btn-warning btn-sm" href="{{ url('users/evaluatekpi/'.$kpi->id .'/'.$user->id) }}">Evaluate</a>
-                                                </td>
-                                            </tr>
-                                            <?php } 
-                                               } 
-                                               ?>
+                                          
                                             </tbody>
 
                                         </table>
@@ -766,7 +886,6 @@ foreach ($user_permission as $permis) {
                                                 </thead>
                                                 <tbody>
                                                  
-                                                  
                                                       <?php if(count ($absents) > 0) 
                                                              foreach($absents as $absent) { ?>
                                                         <tr>
@@ -777,19 +896,29 @@ foreach ($user_permission as $permis) {
                                                                 <a type="button" class="btn btn-primary btn-mini btn-round" target="_blank" href="<?= url('customer/viewContract/' . $absent->id .'/absent') ?>">View</a>
                                                             </td>
                                                             <td><?= $absent->approvedBy->name ?></td>
-                                                            <td><?= isset($absent->end_date) ? date('d M Y', strtotime($absent->end_date)) : '' ?></td>
-                                                            <td class="text-center">
+                                                            <td>
+                                                                {{-- <?= isset($absent->end_date) ? date('d M Y', strtotime($absent->end_date)) : '' ?> --}}
+
+                                                                <?php if(can_access('edit_leave_dates'))  { ?>
+                                                                      <?= tagEdit($absent->end_date, 'end_date', $user->id,$absent->id); ?>
+                                                                 <?php } else { ?>
+                                                                      <?= date('d-m-Y', strtotime($absent->end_date)) ?>
+                                                                 <?php } ?>
+                                                            </td>
+                                                            <td>
                                                                 <div class="dropdown-secondary dropdown f-right">
                                                                     <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
                                                                     <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                          
+                                                                     {{-- <a class="dropdown-item waves-light waves-effect" href="<?= url('users/askleave/'.$absent->id.'/edit') ?>"><span class="point-marker"></span>Edit</a> --}}
+
                                                                       <?php if ($absent->status == null) { ?>
                                                                          <?php if(can_access('approve_leave')) { ?>
                                                                          <?php $app_url = "users/askleave/$absent->id/approve"; $rej_url = "users/askleave/$absent->id/reject"; ?>
-                                                                          <x-button :url="$app_url" color="primary" btnsize="mini"  title="Approve" shape="round" toggleTitle="Approve"></x-button>
-                                                                          <x-button :url="$rej_url" color="warning" btnsize="mini"  title="Reject" shape="round" toggleTitle="Reject"></x-button>
+                                                                          
+                                                                          <a href="<?= url($app_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Approve">Approve  </a>
+                                                                          <a href="<?= url($rej_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reject">Reject  </a>
 
-                                                                         <?php } ?>
+                                                                        <?php } ?>
                                                                      <?php } else if($absent->status == 'Approved') { ?>
                                                                         <a  class="badge badge-info badge-sm"> <?=$absent->status?> </a>
                                                                      <?php } else { ?>
@@ -818,8 +947,6 @@ foreach ($user_permission as $permis) {
 
                                         </div>
                                         <div class="col-lg-12">
-                                        
-    
                                             <div class="card-block">
                                               
                                               <div class="table-responsive dt-responsive">
@@ -861,9 +988,8 @@ foreach ($user_permission as $permis) {
                                     <div class="col-lg-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5 class="card-header-text">Learning</h5>
+                                                <h5 class="card-header-text">Courses</h5>
                                                 <button type="button" class="btn btn-primary btn-mini btn-round float-right" data-toggle="modal" data-target="#learning-large-Modal">Learning</button>
-
                                             </div>
                                             <div class="col-lg-12">
         
@@ -893,9 +1019,8 @@ foreach ($user_permission as $permis) {
                                                                     <td><?= date('d-m-Y', strtotime($learning->to_date)) ?></td>
                                                                     <td> {{ $learning->source ?? '' }}</td>
                                                                     <td>
-                                                                        <?= $v_url = "users/learning/$learning->id"; ?>
-                                                                          <x-button :url="$v_url" color="primary" btnsize="mini"  title="view" shape="round" toggleTitle="View"></x-button>
-
+                                                                        <?php $v_url = "users/learning/$learning->id"; ?>
+                                                                          <a href="<?= url($v_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View">View  </a>
                                                                     </td>
                                                                 </tr>
                                                               <?php $i++;} ?>
@@ -1156,7 +1281,7 @@ foreach ($user_permission as $permis) {
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"> Learning </h4>
+                    <h4 class="modal-title"> Course </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -1246,6 +1371,15 @@ $(".select2").select2({
     allowClear: false,
     debug: true
   });
+
+
+  edit_records = function (tag, val, absent_id) {
+        $.get('<?= url('users/editLeaveDates/null') ?>', {absent_id: absent_id, val: val, tag: tag}, function (data) {
+            $('#status_' + tag + val).html('<label class="badge badge-success">'+data+'</label>');
+            toastr.success(data);
+        });
+    };
+
 
 
 $(function() {

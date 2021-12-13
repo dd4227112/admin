@@ -25,10 +25,27 @@ $taskss = DB::select($sqls1);
 $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
 $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . ' order by created_at desc');
 ?>
-<div class="main-body">
-    <div class="page-wrapper">
 
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    
+
+     <div class="page-header">
+        <div class="page-header-title">
+             <h4><?= isset($start_date) && isset($end_date) ? 'Sales Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Sales Dashboard' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                 <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">summary</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">sales</a>
+                </li>
+            </ul>
+        </div>
+      </div> 
         
           <div class="row">
              <div class="col-sm-12 col-lg-3 m-b-20">
@@ -37,7 +54,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
             </div>
             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6> &nbsp; </h6>
-                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
             </div>
         </div>
 
@@ -65,54 +82,169 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
              <div class="row">
                 <div class="col-md-6 col-xl-3">
                   <?php $percent = round($shulesoft_schools * 100 / $schools, 1). '% Coverage ' ?>
-                  <x-analyticCard :value="$shulesoft_schools" name="Schools" icon="feather icon-trending-up text-white f-16"  color="bg-c-green"  topicon="feather icon-map-pin f-30" :subtitle="$percent"></x-analyticCard>
+                
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($shulesoft_schools)}} </h4>
+                                    <h6 class="text-muted m-b-0">Schools</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-map-pin f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-green">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">{{$percent}}</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-xl-3">
                      <?php  
                     $percent =  $shulesoft_nmb_schools . ' in ShuleSoft (' . round($shulesoft_nmb_schools * 100 / ((int) $nmb_schools == 0 ? 1 : $nmb_schools), 1) .'%' ?>
-                    <x-analyticCard :value="$nmb_schools" name="NMB Schools" icon="feather icon-trending-up text-white f-16"  color="bg-c-blue"  topicon="feather icon-home f-30" :subtitle="$percent"></x-analyticCard>
+                 
+                     <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($nmb_schools)}} </h4>
+                                    <h6 class="text-muted m-b-0">NMB Schools</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-home f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-blue">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">{{$percent}}</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
              
                 <div class="col-md-6 col-xl-3">
-                    <x-analyticCard :value="$clients" name="Our clients" icon="feather icon-trending-up text-red f-16"  color="bg-c-yellow"  topicon="feather icon-users f-30" subtitle="clients"></x-analyticCard>
+                     <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($clients)}} </h4>
+                                    <h6 class="text-muted m-b-0">Our clients</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-users f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-yellow">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">clients</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
                
                 <div class="col-md-6 col-xl-3">
-                    <x-analyticCard :value="$schools" name="All Schools" icon="feather icon-trending-up text-red f-16"  color="bg-c-green"  topicon="feather icon-book f-30" subtitle="Registered schools"></x-analyticCard>
+                      <div class="card">
+                        <div class="card-block">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-c-green f-w-700">{{ number_format($schools)}} </h4>
+                                    <h6 class="text-muted m-b-0">All Schools</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="feather icon-users f-30"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-c-green">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <p class="text-white m-b-0">Registered schools</p>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <i class="feather icon-trending-up text-white f-16"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
 
             <div class="row">
                 <div class="col-md-12 col-xl-4">
-                    <x-smallCard title="Total School Reached"
-                                    :value="count($taskss)"
-                                    icon="feather icon-book f-50 text-c-red"
-                                    cardcolor="bg-c-green text-white"
-                                    >
-                    </x-smallCard>
+                     <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total School Reached</p>
+                                                <h4 class="m-b-0">{{ number_format(count($taskss)) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-book f-50" style="color: #19b99a;"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
 
 
                 <div class="col-md-6 col-xl-4">
                     <?php  $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count;  ?>
-                     <x-smallCard title="New schools onboarded"
-                                    :value="$total_schools"
-                                    icon="feather icon-user-plus f-50 text-c-red"
-                                    cardcolor="bg-c-blue text-white"
-                                    >
-                    </x-smallCard>
+                     <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">New schools onboarded</p>
+                                                <h4 class="m-b-0">{{ number_format($total_schools) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-user-plus f-50" style="color: #ADD8E6;"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
             
                 <div class="col-md-6 col-xl-4">
-                     <x-smallCard title="Total Sales Activities"
-                                    :value="$total_activity"
-                                    icon="feather icon-activity f-50 text-c-red"
-                                    cardcolor="bg-c-yellow text-white"
-                                    >
-                    </x-smallCard>
+                     <div class="card">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Sales Activities</p>
+                                                <h4 class="m-b-0">{{ number_format($total_activity) }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="feather icon-activity f-50" style="color: gray;"></i>
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
             </div>
         
@@ -146,7 +278,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                                                 <td><?=ucfirst($school->address)?></td>
                                                 <td><?= date('F,d Y', strtotime($school->created_at))?></td>
                                                 <td>
-                                                 <a class="btn btn-info btn-sm" href="<?= url('customer/profile/' . $school->schema_name) ?>">View</a>
+                                                 <a class="btn btn-info btn-min btn-round" href="<?= url('customer/profile/' . $school->schema_name) ?>">View</a>
                                                 </td>
                                                 </tr>
                                             <?php
@@ -250,10 +382,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                     </div>
 
 
-                    <div class="col-lg-4 col-sm-12">
-                         <?php $student_sum = \collect(DB::select('select sum(students) from admin.schools WHERE id in (select school_id from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where . ')'))->first()->sum;  ?>
-                         <x-analyticCard :value="$student_sum * 10000" name="Projected Income" icon="feather icon-trending-up text-red f-16"  color="bg-c-green"  topicon="feather icon-bookmark f-50" subtitle="income"></x-analyticCard>
-                     </div>
+                   
                                              
                 </div>
 

@@ -1,9 +1,27 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-body">
-  <div class="page-wrapper">
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+  
+
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4>Standing orders</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">documents</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
    
     <div class="page-body">
       <div class="row">
@@ -36,14 +54,14 @@
                         foreach($standingorders as $value){ ?>
                        <tr>
                         <td><?=$i ?></td>
-                        <td><?= isset($value->client->name) ? $value->client->name : ''?></td>
+                        <td><?= isset($value->client->name) ? warp($value->client->name,18) : ''?></td>
                         <td><?= isset($value->contact_person) ? $value->contact_person : ''?></td>
                         <td><?=$value->type?></td>
                         <td><?=money($value->occurance_amount)?></td>
                         <td><?=money($value->total_amount)?></td>
                         <td><?=isset($value->payment_date) ? date('d M Y', strtotime($value->payment_date)) : ''?></td>
                         <td class="text-center">
-                          <a  target="_break" href="<?= url('customer/viewContract/' . $value->id .'/standing') ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> 
+                          <a  target="_break" href="<?= url('customer/viewContract/' . $value->id .'/standing') ?>" class="btn btn-primary btn-mini btn-round">View</a> 
                         </td>
 
                         <td>
@@ -53,10 +71,12 @@
                                 <?php if((int) $value->is_approved == 1) { ?>
                                     <label class="badge badge-inverse-success">Approved</label>
                                 <?php } else { ?>
-                                  <x-button :url="$approve_url" color="primary" btnsize="mini"  title="Approve" shape="round" toggleTitle="Approve"></x-button>
+                                  <a href="<?= url($approve_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Approve standing order">Approve  </a>
+
                                 <?php } ?>
                                 <?php if((int) $value->is_approved != 1) { ?>
-                                   <x-button :url="$reject_url" color="warning" btnsize="mini"  title="Reject" shape="round" toggleTitle="Reject"></x-button>
+                                    <a href="<?= url($reject_url) ?>" class="btn btn-warning btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Reject standing order">reject  </a>
+
                                 <?php } ?>
 
                             <?php } ?>

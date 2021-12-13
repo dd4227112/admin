@@ -2,31 +2,45 @@
 @section('content')
 <?php $root = url('/') . '/public/'; ?>
 
-<div class="main-body">
-    <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4>Invoices</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">invoice</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <div class="page-body">
-            <div class="row">
-                <div class="col-sm-12">
-
-                    <div class="card">
+                    <div class="row">
+                        <div class="col-sm-12">
+                        <div class="card">
                         <div class="card-block">
-                            <div class="row">
-
-                                <div class="col-sm-12 col-xl-4 m-b-30">
-                                    <h4 class="sub-title">New Invoice</h4>
+                            <div class="col-sm-12 col-xl-4 m-b-30">
+                           
                                        <?php if(can_access('creating_invoice')) { ?>
-                                          <x-button url="account/projection" color="primary" btnsize="sm"  title="Create new invoice"></x-button>
+                                           <a href="<?= url("account/projection") ?>" class="btn btn-primary" data-placement="top"  data-toggle="tooltip" data-original-title="">Create new invoice  </a>
                                       <?php } ?>
                                 </div>
+                            <div class="row d-flex justify-content-center">
 
-                                <div class="col-sm-12 col-xl-4 m-b-30">
+                                <div class="col-sm-10 col-xl-4 m-b-30">
                                     <h4 class="sub-title">Select project</h4>
                                     <select name="select" class="form-control form-control-primary"  id="schema_project">
                                        <option value="0">Select</option>
                                         <?php
-                                       $projects = \App\Models\InvoiceType::all();
+                                       $projects = \App\Models\InvoiceType::whereNotIn('id',[4])->get();
                                        foreach ($projects as $project) {
                                             ?>
                                             <option value="<?= $project->id ?>" selected><?= $project->name ?></option>
@@ -53,37 +67,34 @@
                             </div>
                         </div>
 
-                    <!-- Zero config.table start -->
+                    <!-- Material tab card start -->
                     <div class="card">
-                     <div class="card tab-card">
-                        <ul class="nav nav-tabs md-tabs" role="tablist">
-                            <li class="nav-item complete">
-                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong>INVOICE LIST</strong></a>
-                                <div class="slide"></div>
-                            </li>
-
-                             <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile2" role="tab" aria-expanded="false">  <strong> PRO FORMA INVOICE</strong> </a>
-                                <div class="slide"></div>
-                            </li>
-
-                            <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false"> <strong> SUMMARY</strong>  </a> 
-                                <div class="slide"></div>
-                            </li>
-
-                            @if(isset($project_id) && isset($account_year_id)) 
-                            <li class="nav-item complete">
-                                <a class="nav-link" style="color: blue;" href="{{ url('account/invoiceReport/'.$project_id.'/'.$account_year_id) }}"> <b>VIEW REPORT</b> </a>
-                                <div class="slide"></div>
-                            </li>
-                            @endif
-                        </ul>
-
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
-                                <div class="card-block">
-                                   <div class="dt-responsive table-responsive">
+                        
+                        <div class="card-block">
+                            <!-- Row start -->
+                            <div class="row m-b-30">
+                                <div class="col-lg-12 col-xl-12">
+                                    
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs md-tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong>INVOICE LIST</strong></a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#profile2" role="tab" aria-expanded="false"><strong>PRO FORMA INVOICE</strong></a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#messages3" role="tab" aria-expanded="false"><strong>VIEW REPORT</strong></a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content card-block">
+                                        <div class="tab-pane active" id="home3" role="tabpanel">
+                                        <div class="table-responsive">
                                    <?php if ($project_id == 4) { ?>
                                       <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
@@ -237,12 +248,10 @@
                                     </table>
                                 <?php } ?>
                                </div>
-                            </div>
-                        </div>
-                        
-                           <div class="tab-pane" id="profile2" role="tabpanel" aria-expanded="false">
-                                <div class="card-block">
-                                   <div class="dt-responsive table-responsive">
+                              </div>
+
+                                <div class="tab-pane" id="profile2" role="tabpanel">
+                                <div class="dt-responsive table-responsive">
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
                                             <tr>
@@ -291,14 +300,79 @@
                                         </tfoot> 
                                        </table>
                                             
-                                    </div>
-                                </div>
+                                    </div> 
                             </div>
-                        
-
-                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
-                                 <div class="card-block">
-                                   <div class="dt-responsive table-responsive">
+                            <div class="tab-pane" id="messages3" role="tabpanel">
+                            <div class="dt-responsive table-responsive">
+                                <div class="col-sm-12">
+                               <form class="form-horizontal" role="form" method="post"> 
+                                    <div class="form-group row">
+                                        <div class="col-md-4 col-sm-12">
+                                            <input type="date" class="form-control" id="from_date" name="from_date" value="<?= old('from_date',$from) ?>" >
+                                        </div>
+                                  
+                                        <div class="col-md-4 col-sm-12">
+                                            <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to) ?>" >
+                                        </div>
+                                    
+                                        <div class="col-md-2 col-sm-2 col-xs-6">
+                                            <input type="submit" class="btn btn-success" value="Submit"  style="float: right;">
+                                        </div>
+                                    </div>
+                                   <?= csrf_field() ?>
+                                 </form>
+                               </div>
+                                    <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
+                                   
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Client Name</th>
+                                                <th>Reference #</th>
+                                                <th>Paid date</th>
+                                                <th>Amount</th>
+                                                <th>Due Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $total_amount = 0;
+                                            $total_paid = 0;
+                                            $total_unpaid = 0;
+                                            $i = 1;
+                                            if(isset($payments)) {
+                                            foreach ($payments as $invoice) {
+                                                ?>
+                                                <tr>
+                                                    <td><?= $i?></td>
+                                                    <td><?= $invoice->name ?></td>
+                                                    <td><?= $invoice->reference ?></td>
+                                                    <td><?= date('d M Y', strtotime($invoice->created_at)) ?></td>
+                                                    <td><?= money($invoice->amount) ?></td>
+                                                    <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
+                                                    <td>
+                                                        <a class="btn btn-success btn-mini btn-round" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
+                                                   </td>
+                                               </tr>
+                                         <?php $i++; } 
+                                              } ?>
+                                        </tbody>
+                                        <tfoot>
+                                            {{-- <tr>
+                                                <td colspan="2">Total</td>
+                                                <td><?= money($total_amount) ?></td>
+                                                <td><?= money($total_paid) ?></td>
+                                                <td><?= money($total_unpaid) ?></td>
+                                                <td colspan="2"></td>
+                                            </tr> --}}
+                                        </tfoot>
+                                    </table>
+                               </div> 
+                               
+                                </div>
+                                <div class="tab-pane" id="profile3" role="tabpanel">
+                                <div class="dt-responsive table-responsive">
                                      <?php if(isset($invoices) && !empty($invoices)){ ?>
                                         <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
@@ -336,23 +410,19 @@
                                                 </table>
                                               <?php }?>
                                             </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                           
+                                                        </div>
+                                                        <!-- Row end -->
+                                                       
+                                                    </div>
+                                                </div>
+                                                <!-- Material tab card end -->
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                              </div> 
-                          </div>
-
-
-                      
-                    </div>
-
-                </div>
-            </div>
-          </div>
-        <!-- Page-body end -->
-    </div>
-
+</div>
 
 
 <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
@@ -387,7 +457,8 @@
                                     <textarea name="message" required="" class="form-control" >Hello #name,
                                     Thank you for choosing ShuleSoft in your school. We really appreciate working with your school.
                                     To help us continue offering this service to your school, kindly find our invoice for Tsh #amount. You can also pay electronically via masterpass with reference number #invoice
-                                    Thank you</textarea> 
+                                    Thank you
+                                    </textarea> 
                                 </div>
                             </div>
                         </div>
@@ -406,7 +477,20 @@
     </div>
 </div>
 
+</div>
+</div>
 <script type="text/javascript">
+
+
+
+    $('.calendar').on('click', function (e) {
+        e.preventDefault();
+        $(this).attr("autocomplete", "off");
+    });
+
+
+
+
     $('#schema_project').change(function () {
         var schema = $(this).val();
         if (schema > 0) {
@@ -426,4 +510,5 @@
         }
     });
 </script>
+
 @endsection

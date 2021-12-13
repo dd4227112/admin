@@ -22,15 +22,36 @@ $echo = '<label class="badge badge-inverse-warning">Not Defined</label>';
 return $echo;
 }
 // ?>
-<div class="main-body">
-<div class="page-wrapper">
+
+
 
 <?php $school_name = isset($school->sname) ? $school->sname : '';
       $numbers=isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '';
       $s_address = isset($school->address) ? $school->address : '';
-      $breadcrumb = array('title' =>$school_name,'subtitle'=>$numbers,'head'=>$s_address);
  ?>
-<x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+    <div class="page-header">
+            <div class="page-header-title">
+                <h4><?= $school_name ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!"><?=$numbers?></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!"><?=$s_address?></a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+
+ <?php if(isset($client->trial) && $client->trial == 1) { ?>
+    <label class="badge badge-warning"> School on trial period  <?= isset($trial->end_date) ? 'Until '. date("d-m-Y", strtotime($trial->end_date)) : ''  ?></label>
+<?php } ?>
+    
 
 <div class="page-body">
 <div class="row">
@@ -129,8 +150,6 @@ if ($is_client == 1) {
 <label>Teacher</label>
 </div> 
 
-
-
 <div class="col-md-12 col-lg-12">
 <hr>
  <h6 class="">School Status</h6>
@@ -222,8 +241,8 @@ target="_blank"> Exams</a>
 
 <div class="col-lg-9">
 <!-- Nav tabs -->
-        <div class="card">
-        <ul class="nav nav-tabs md-tabs tab-timeline" role="tablist">
+        <div class="card mt-4">
+        <ul class="nav nav-tabs md-tabs nav-justified tab-timeline" role="tablist">
         <li class="nav-item">
         <a class="nav-link active" data-toggle="tab" href="#timeline"
         role="tab" aria-expanded="false">Activities</a>
@@ -1020,6 +1039,9 @@ $i++;
    <button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#uploadjobcard-Modal">Upload Job card</button>
 </div>
 
+
+
+
 <div class="modal fade" id="jobcard-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
 style="z-index: 1050; display: none;">
@@ -1177,6 +1199,59 @@ name="client_id" />
 
 
 
+<div class="modal fade" id="Update-trial" tabindex="-1"
+role="dialog" aria-hidden="true"
+style="z-index: 1050; display: none;">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title"> Update trial period
+</h4>
+<button type="button" class="close"
+data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+</div>
+
+<form action="<?= url('customer/updateSchoolTrialPeriod') ?>" method="post">
+<div class="modal-body">
+<div class="form-group">
+<div class="row">
+
+<div class="col-md-6">
+<strong>Start date</strong>
+<input type="date" class="form-control"  name="start_date" value="<?= old('start_date')?>"  required>
+</div>
+
+<div class="col-md-6">
+<strong> Period (Days)</strong>
+<input type="number" class="form-control"  name="period" value="<?= old('period')?>"  required>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="modal-footer">
+<button type="button"
+class="btn btn-default waves-effect "
+data-dismiss="modal">Close</button>
+<button type="submit"
+class="btn btn-primary waves-effect waves-light ">Save
+changes</button>
+</div>
+<input type="hidden" value="<?= $client_id ?>"
+name="client_id" />
+<?= csrf_field() ?>
+</form>
+</div>
+</div>
+</div>
+
+
+
+
+
 <div class="modal fade" id="edit-Modal-task" tabindex="-1"
 role="dialog">
 <div class="modal-dialog modal-lg" role="document">
@@ -1227,9 +1302,16 @@ name="client_id" />
 <h5>Project Implementation Schedule</h5>
 <span>This part have to be followed effectively </span>
 
+<?php if(date('Y-m-d', strtotime($client->created_at. " + 7 days")) > date('Y-m-d')) { ?>
+<p class="float-left">
+   <button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#Update-trial">Update trial</button>
+</p>
+<?php } ?>
+
 <p class="float-right">
 <?php $i_url = "customer/download/$client_id"; ?>
-<x-button :url="$i_url" color="primary" btnsize="sm"  title="Implementation plan" shape="round" toggleTitle="Initial Implementation Plan"></x-button>
+ <a href="<?= url($i_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Initial Implementation Plan">Implementation plan  </a>
+
 </p>
 </div>
 <div class="card-block">
@@ -2059,8 +2141,8 @@ style="z-index: 1050; display: none;">
 
 </div>
 <div class="modal-footer">
-<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-<button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+<button type="button" class="btn btn-default btn-mini btn-round " data-dismiss="modal">Close</button>
+<button type="submit" class="btn btn-primary btn-mini btn-round ">Save changes</button>
 </div>
 <?= csrf_field() ?>
 </form>
@@ -2178,7 +2260,7 @@ if (!empty($profile)) {
             </div>
         </div>
 
-         <div class="form-group row">
+         <div class="form-group row justify-content-center">
             <label class="col-sm-6 col-form-label">Estimated students</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">
@@ -2266,6 +2348,9 @@ if (!empty($profile)) {
             var task_id = $('#task_id' + id).val();
             $.ajax({
                 type: 'POST',
+                 headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
                 url: "<?= url('customer/taskComment/null') ?>",
                 data: {
                     content: content,

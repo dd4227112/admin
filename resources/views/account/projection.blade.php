@@ -17,9 +17,27 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
 
 
-<div class="main-body">
-  <div class="page-wrapper">
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+  
+
+     <div class="page-header">
+            <div class="page-header-title">
+                <h4>Create Invoices</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">invoice</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
     <div class="page-body">
         <div class="row">
@@ -50,7 +68,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="profile7" role="tabpanel">
                                         <div class="card-block">
-                                            <input type="checkbox" <?=(int) request('skip')==1 ?'checked':''?> id="skip_field" onmousedown="skip_field()"/> Hide Inputs Fields
                                             <div class="table-responsive dt-responsive">
                                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
@@ -115,8 +132,9 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                 </td>
                                                                 <td>
                                                                     <?php $url = "account/createShuleSoftInvoice/$schema->id"; ?>
-                                                                      <x-button :url="$url" color="primary" btnsize="mini"  title="Create" shape="round" toggleTitle="Create invoice"></x-button>
 
+                                                                    <a href="<?= url($url) ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Create invoice"> Create </a>
+                                                                
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>
@@ -150,10 +168,10 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                 <div class="col-md-4">
                                                     <strong> Invoice Type</strong>
-                                                     <select type="text" name="type" style="text-transform:uppercase" class="js-example-basic-single form-control" required>
+                                                     <select type="text" name="type"  class="select2" required>
                                                     <option value="">Select here...</option>
                                                     <?php
-                                                        $types = \App\Models\InvoiceType::get();
+                                                        $types = \App\Models\InvoiceType::whereNotIn('id',[1])->get();
                                                         foreach($types as $type){
                                                            echo  '<option value="'.$type->id.'">'.$type->name.'</option>';
                                                         }
@@ -164,7 +182,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                  
                                                  <div class="col-md-4">
                                                     <strong> Choose school </strong>
-                                                    <select type="text"  name="school_id" class="form-control js-example-basic-single" required>
+                                                    <select type="text"  name="school_id" class="select2" required>
                                                        <?php \App\Models\School::chunk(50, function ($schools) {  ?>
                                                         <?php  foreach($schools as $value) { ?>
                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
@@ -175,7 +193,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                  <div class="col-md-4">
                                                     <strong> Number of students </strong>
-                                                      <input type="text" name="students"  class="form-control" placeholder="" autofocus>
+                                                      <input type="number" name="students"  class="form-control" placeholder="" autofocus>
                                                   </div> 
 
                                                </div>
@@ -184,7 +202,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                           <div class="form-group">
                                             <div class="row">
                                              <div class="col-md-3">
-                                                <strong>  Amount</strong>
+                                                <strong>  Unit price</strong>
                                                   <input type="text" name="amount"  class="form-control" placeholder="Enter required  Amount.." autofocus required>
                                                </div>
 
@@ -281,6 +299,13 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 </div>
 
 <script type="text/javascript">
+ $(".select2").select2({
+      theme: "bootstrap",
+      dropdownAutoWidth: false,
+      allowClear: false,
+      debug: true
+  }); 
+
     edit_records = function (tag, val, schema) {
         $.get('<?= url('customer/updateProfile/null') ?>', {schema: schema, table: 'setting', val: val, tag: tag, user_id: '1'}, function (data) {
             $('#status_' + tag + schema).html('<label class="badge badge-success">'+data+'</label>');
@@ -296,9 +321,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
         }
     })
 
-  $(".js-example-basic-single").select2({
-     templateResult: formatState
-});
+
 </script>
 @endsection
 

@@ -9,9 +9,28 @@ $master_tables = $database->loadTables(SCHEMA::$master_schema);
 $columns = $database->loadTableColumnsBulks();
 $d = $database->loadSchema();
 ?>
-<div class="main-body">
-    <div class="page-wrapper">
-        <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+    
+    
+
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4><?='Compare column' ?></h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">table columns</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Engineering</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
        
         <div class="page-body">
             <div class="row">

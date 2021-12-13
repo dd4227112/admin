@@ -126,7 +126,6 @@ class Sales extends Controller {
     }
 
     public function school() {
-        $this->data['breadcrumb'] = array('title' => 'Schools','subtitle'=>'sales','head'=>'sales schools');
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
@@ -245,9 +244,9 @@ class Sales extends Controller {
             case 'schools':
                 if ((int) request('type') == 3) {
               //  $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
-                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.id,s.name,s.ownership,s.type,s.zone,s.nmb_school_name,s.nmb_zone,s.branch_code,s.branch_name,s.account_number,s.schema_name,s.nmb_branch,s.students,s.created_at,s.updated_at,s.ward_id,s.status,s.registered,w.name as ward, d.name as district,r.name as region, count(t.*) as activities from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id;"; 
+                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.id,s.name,s.ownership,s.type,s.zone,s.nmb_school_name,s.nmb_zone,s.branch_code,s.branch_name,s.account_number,s.schema_name,s.nmb_branch,s.students,s.created_at,s.updated_at,s.ward_id,s.status,s.registered,w.name as ward, d.name as district,r.name as region, count(t.*) as activities from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id"; 
                 } else if ((int) request('type') == 2) {
-                    $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,B.nmb_zone,B.registered,B.zone,B.schema_name,B.activities,B.ward_id,T.region,T.ward,T.district
+                    $sql = "select B.id,B.name,B.ownership,B.type,B.status,B.status,B.students,B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,B.nmb_zone,B.registered,B.zone,B.schema_name,B.activities,B.ward_id,T.region,T.ward,T.district
                     from (select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id)))
                     as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)) B join (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
                     admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
@@ -363,10 +362,12 @@ class Sales extends Controller {
     }
 
     public function profile() {
-        $id = request()->segment(3);
-        if ((int) $id == 0) {
+        $id = (int) request()->segment(3);
+
+        if ((int) $id == 0 || !is_int($id)) {  
             return false;
         }
+
         $this->data['school'] = \App\Models\School::findOrFail($id);
         if ($_POST) {
             if ((int) request('add_sale') == 1) {
@@ -457,7 +458,7 @@ class Sales extends Controller {
              $this->validate(request(), 
                    ['name' => 'required',
                     'sales_user_id' => 'required',
-                    'price' => 'required|numeric',
+                    'price' => 'required',
                     'username' => 'required',
                     'students' => 'required|numeric',
                     'implementation_date' => 'required',
@@ -497,8 +498,22 @@ class Sales extends Controller {
                     'created_by' => \Auth::user()->id,
                     'username' => clean($schema_name),
                     'payment_option' => request('payment_option'),
-                  
+                    'start_usage_date' => date('Y-m-d'),
+                    'trial' => request('check_trial')
                 ]); 
+
+                // trial period
+                if(request('check_trial') == 1 && !is_null(request('trial_period')) ) {
+                      $start = date('Y-m-d', strtotime(request('implementation_date')));
+                      $period  = request('trial_period');
+                    DB::table('admin.client_trials')->insert([
+                        'client_id' => $client_id,
+                        'period' => $period,
+                        'start_date' => $start,
+                        'end_date' => date('Y-m-d', strtotime($start. " + $period days")),
+                        'status' =>  1
+                     ]); 
+                }
 
                 //client school
                 DB::table('admin.client_schools')->insert([
@@ -535,29 +550,24 @@ class Sales extends Controller {
               }
  
                 // if document is standing order,Upload standing order files
-             if (!empty(request('agree_document')) && request('payment_option') == 'standing order') {
-                $file = request()->file('agree_document');
+             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))  && request('check_trial') != 1 ) {
+                $file = request()->file('standing_order_file');
                 $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
+
                 $contract_id = DB::table('admin.standing_orders')->insertGetId(array(
-                    'type' => 'Yearly','created_by' => \Auth::user()->id, 
+                    'type' => request('which_basis'),'created_by' => \Auth::user()->id, 
                     'client_id' => $client_id,'contract_type_id' => 8,
-                    'is_approved' => '0','company_file_id' => $company_file_id
+                    'is_approved' => '0','company_file_id' => $company_file_id,
+                    'payment_date' => request('maturity_date'), 'occurance_amount' => remove_comma(request('occurance_amount')),
+                    'contact_person' => request('contact_person'), 'branch_name' => request('branch_name'),
+                    'occurrence' => request('number_of_occurrence'), 'total_amount' => remove_comma($total_amount), 
                 ));
                 //client contracts
                 DB::table('admin.client_contracts')->insert([
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
-            } else {
-                $file = request()->file('agree_document');
-                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
-                $contract_id = DB::table('admin.contracts')->insertGetId([
-                'name' => 'Shulesoft', 'company_file_id' => $company_file_id, 'start_date' => date('Y-m-d'), 'contract_type_id' => 2, 'user_id' => \Auth::user()->id
-                ]);
-                //client contracts
-                DB::table('admin.client_contracts')->insert([
-                    'contract_id' => $contract_id, 'client_id' => $client_id
-                ]);
-             }
+            } 
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             // if (request('payment_status') == 1) {
@@ -577,12 +587,12 @@ class Sales extends Controller {
                 // $unit_price = $months_remains * $client->price_per_student / 12;
                 // $amount = $unit_price * $client->estimated_students;
 
-                 $unit_price = request('price');
-                 $estimated_students = request('students');
+                 $unit_price = remove_comma(request('price'));
+                 $estimated_students = remove_comma(request('students'));
                  $amount = $unit_price * $estimated_students;
 
-                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 
-                'quantity' => $estimated_students, 'unit_price' => $unit_price]);
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $estimated_students, 'unit_price' => $unit_price]);
+
             //     }
             //     $this->scheduleActivities($client_id);
             //     return redirect('sales/customerSuccess/1/' . $client_id);
@@ -602,14 +612,14 @@ class Sales extends Controller {
                 . chr(10) .'School :' . $school->name . ' has been onboarded succesfully'
                 . chr(10) .'And invoice for this school has been created'
                 . chr(10) .'Kindly verify INVOICE  created and STANDING ORDER documents before proceeding'
-                . chr(10) .'Thanks you.';
+                . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($user->phone, $message); 
 
                 $finance = \App\Models\User::where('designation_id',2)->first();
                 $sms = 'Hello '.$finance->firstname .' '. $finance->lastname 
                 . chr(10) .'New school :' . $school->name . ' has been onboarded in the shulesoft system'
                 . chr(10) .'You are remainded to verify the invoice document'
-                . chr(10) .'Thanks you.';
+                . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($finance->phone, $sms); 
 
                 $this->scheduleActivities($client_id);  
@@ -720,14 +730,16 @@ class Sales extends Controller {
                 . chr(10) . 'By :'. \Auth::user()->name
                 . chr(10) . 'Thank you';
              $this->send_whatsapp_sms($user->phone, $sms);
+            $this->send_sms($user->phone,$sms,1);
+
 
 
             //email to zonal manager
              $sales = new \App\Http\Controllers\Customer();
              $zm = $sales->zonemanager($client_id);
              if(isset($zm->user_id) && !empty((int) $zm->user_id)){
-                      $manager = \App\Models\User::where('id',$zm->user_id)->first();
-                        $manager_message = 'Hello ' . $manager->firstname . '<br/>'
+                      $manager = \App\Models\User::where(['id' => $zm->user_id,'status'=>1])->first();
+                        $manager_message = 'Hello ' . $manager->firstname ?? ''. '<br/>'
                         . 'A task ' . $section->content .' been scheduled to'
                         . '<li>' . \App\Models\Client::where('id',$client_id)->first()->name  . '</li>'
                         . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
@@ -740,6 +752,8 @@ class Sales extends Controller {
                     . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' up to '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
                     . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($manager->phone, $message);
+                    $this->send_sms($manager->phone,$message,1);
+
                }
             //sms to school personel
               if(request("train_item{$section->id}") != ''){
@@ -750,6 +764,8 @@ class Sales extends Controller {
                     . chr(10) . 'A task is expected to start at ' .date('F,d Y', strtotime($start_date)).' up to '. date('F,d Y', strtotime($start_date . " + {$section->time} days"))
                     . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($phonenumber, $sms);
+                    $this->send_sms($phonenumber,$sms,1);
+
               }
         }  
     }
@@ -888,7 +904,6 @@ class Sales extends Controller {
     }
 
     public function addLead() {
-       $this->data['breadcrumb'] = array('title' => 'Sales leads','subtitle'=>'new','head'=>'sales');
         //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
         if ($_POST) {
              $task_data = ['school_id'=>request('school_id'),'school_name'=>request('school_name'),'school_phone'=>request('school_phone'),'school_title'=>request('school_title'),

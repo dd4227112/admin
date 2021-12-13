@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+//
 //\URL::forceScheme('https');
 /*
   |--------------------------------------------------------------------------
@@ -25,8 +27,6 @@ use Illuminate\Support\Facades\Route;
   | contains the "web" middleware group. Now create something great!
   |
  */
-
-
 
 
 $bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php', 'public', '.tff', '.jpg'];
@@ -103,6 +103,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/workshop', 'Workshop@index')->name('workshop');
+Route::get('/morepage/{id}', 'Workshop@morepage')->name('morepage');
 Route::post('/addregister', 'Workshop@addregister');
 Route::get('/register', 'Workshop@register')->name('register');
 Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');

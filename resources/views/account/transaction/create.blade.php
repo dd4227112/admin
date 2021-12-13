@@ -1,9 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-body">
-  <div class="page-wrapper">
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
+  
   
     <div class="page-body">
 

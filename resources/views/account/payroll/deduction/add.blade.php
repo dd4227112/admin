@@ -1,10 +1,27 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-body">
-    <div class="page-wrapper">
+
+    
         
-      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+         <div class="page-header">
+            <div class="page-header-title">
+                <h4>Add deduction</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
 
         <div class="page-body">
@@ -146,7 +163,8 @@
                             <?= __("Employer percent") ?>
                         </label>
                         <div class="col-sm-6">
-                            <input placeholder="<?= __("Employer percent") ?>" type="number" class="form-control" id="employer_percent" name="employer_percent" value="<?= old('employer_percent') ?>" >
+                            <input placeholder="<?= __("Employer percent") ?>" type="number" class="form-control" id="employer_percent" 
+                            name="employer_percent" value="<?= old('employer_percent') ?>" >
                            
                         </div>
                         <span class="col-sm-4 control-label">
@@ -172,8 +190,8 @@
                 </span>
                 
                 </div>
-                
-                         <h5>Optional Fields</h5>
+{{--                 
+                         <h5>Optional Fields</h5> --}}
                              <div class="form-group">              
                                 <label for="gross_pay_id" class="col-sm-2 control-label">
                                    Deduct From
@@ -183,7 +201,7 @@
                                     $darray = array("0" => __("select"));
                                     $darray[0]='Basic Pay';
                                     $darray[1]='Gross Pay';
-                                    echo form_dropdown("gross_pay", $darray, old("gross_pay",0), "id='gross_pay_id' class='form-control'");
+                                    echo form_dropdown("gross_pay", $darray, old("gross_pay",0), "id='gross_pay_id' class='form-control' required");
                                     ?>
                                 </div>
                             </div>
@@ -200,7 +218,7 @@
                                     foreach ($banks as $bank) {
                                         $array[$bank->id] = $bank->branch;
                                     }
-                                    echo form_dropdown("bank_account_id", $array, old("bank_account_id"), "id='bank_account_id' class='form-control'");
+                                    echo form_dropdown("bank_account_id", $array, old("bank_account_id"), "id='bank_account_id' class='form-control' required");
                                     ?>
                                   </div>
                                  </div>
@@ -216,7 +234,8 @@
                                         <?= __("Account number") ?><span class="red"></span>
                                     </label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" id="account_number"   placeholder="<?= __('Account number') ?>" name="account_number" value="<?= old('account_number') ?>" >
+                                        <input type="text" class="form-control" id="account_number"   
+                                        placeholder="<?= __('Account number') ?>" name="account_number" value="<?= old('account_number') ?>" required>
                                         
                                     </div>
                                     <span class="col-sm-4 control-label">
@@ -230,7 +249,7 @@
                 
                    <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-6">
-                        <input type="submit" class="btn btn-success btn-block" value="Save" >
+                        <input type="submit" class="btn btn-primary btn-mini btn-round" value="Save" >
                     </div>
                  </div>
                     <?= csrf_field() ?>

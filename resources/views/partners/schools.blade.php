@@ -3,31 +3,26 @@
 
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
-<div class="main-body">
-  <div class="page-wrapper">
-    <!-- Page-header start 
-    <div class="page-header">
-      <div class="page-header-title">
-        <h4>Shulesoft Partners School Lists</h4>
-        <span>The Part holds all list of schools and their branches.</span>
 
-      </div>
-      <div class="page-header-breadcrumb">
-        <ul class="breadcrumb-title">
-          <li class="breadcrumb-item">
-            <a href="<?= url('/') ?>">
-              <i class="icofont icofont-home"></i>
-            </a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">Company schools</a>
-          </li>
-          <li class="breadcrumb-item"><a href="#!">schools</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    Page-header end -->
-    <!-- Page-body start -->
+  
+      <div class="page-header">
+            <div class="page-header-title">
+                <h4> Schools</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">our partners</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">
@@ -40,7 +35,7 @@
           <?php
                 isset($branch) ? $id = $branch->partner_id : $id = $set;
           ?>
-          <a class="btn btn-info btn-sm" href="<?= url('Partner/addSchool/'.$id) ?>"> Add New School</a>
+          <a class="btn btn-info btn-mini btn-round" href="<?= url('Partner/addSchool/'.$id) ?>"> Add New School</a>
           </span>
           </h3>
            </div>
@@ -77,7 +72,7 @@
                           <td><b><?=$school->branch->name?></b></td>
 
                           <td>
-                          <a class="btn btn-success btn-sm" href="{{ url('sales/profile/'. $school->school_id) }}"> View School</a>
+                          <a class="btn btn-primary btn-mini btn-round" href="{{ url('sales/profile/'. $school->school_id) }}"> View School</a>
                           <!-- <a class="btn btn-warning btn-sm" href="{{ url('users/deleteschool/'.$school->id) }}">Delete</a> -->
                           </td>
                         </tr>

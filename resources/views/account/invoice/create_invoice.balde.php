@@ -12,8 +12,8 @@
 
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">    
-<div class="main-body">
-  <div class="page-wrapper">
+
+  
     <!-- Page-header start -->
 
     <!-- Page-header end -->
