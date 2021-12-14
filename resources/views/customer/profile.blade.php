@@ -1777,7 +1777,7 @@ Teacher on Duty:
 
 <!-- Friends tab end -->
 
-<div class="tab-pane" id="payments" aria-expanded="false">
+<div class="tab-pane" id="payments" aria-expanded="false" >
 <div class="row">
 <div class="modal fade" id="standing-order-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
@@ -2130,7 +2130,7 @@ style="z-index: 1050; display: none;">
 </div>
 <div class="form-group">
     School <?= ucfirst($schema) ?> status
-    <select name="status" class="form-controll select2">
+    <select name="status" class="form-control select2">
         <option value="">Select status</option>
         <option value="1">Active Paid</option>
         <option value="2">Active</option>
@@ -2316,6 +2316,8 @@ if (!empty($profile)) {
         <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
 
       <script>
+     
+
 
           $(document).ready(function() {
            $('#example').DataTable();
@@ -2524,6 +2526,4 @@ if (!empty($profile)) {
                     console.log("Multiple: " + results.length + " results found");
                 });
         </script>
-
-
-                                                                                                                                            @endsection
+         @endsection
