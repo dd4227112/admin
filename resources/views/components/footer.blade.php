@@ -93,7 +93,34 @@
             </script>
 
         <script type="text/javascript">
-
+            //Prevent Tabs from displaying previous content
+ $(document).ready(function () {
+ 				//Hide all Tabs on laod
+        $('.tab-pane').hide();
+        
+        //Check which tab is active
+        var activeOnLoad = $('.card ul li a.active').attr("href");
+        $(activeOnLoad).show();
+        
+        //Handle click event
+        $('.card ul li a').on('click', function(e){
+        	e.preventDefault();
+          
+          //Save clicked element to variable
+          var clickedTab = $(this).attr("href");
+          
+          //Remove class from old tab
+        	$(this).parents('ul').find('.active').removeClass('active');
+          //Add Active class to clicked tab
+        	$(this).addClass('active');
+          
+          //Hide all Tab elements
+          $('.tab-pane').hide();
+          
+          //Show clicked Tab
+          $(clickedTab).show();
+        });
+    });
 
                    
                         send_message = function (id) {
