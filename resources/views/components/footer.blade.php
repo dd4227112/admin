@@ -94,8 +94,8 @@
 
         <script type="text/javascript">
             //Prevent Tabs from displaying previous content
- $(document).ready(function () {
- 				//Hide all Tabs on laod
+         $(document).ready(function () {
+ 				//Hide all Tabs on load
         $('.tab-pane').hide();
         
         //Check which tab is active
@@ -113,7 +113,6 @@
         	$(this).parents('ul').find('.active').removeClass('active');
           //Add Active class to clicked tab
         	$(this).addClass('active');
-          
           //Hide all Tab elements
           $('.tab-pane').hide();
           
