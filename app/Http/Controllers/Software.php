@@ -751,7 +751,6 @@ class Software extends Controller {
     }
 
     public function smsStatus() {
-       $this->data['breadcrumb'] = array('title' => 'SMS Status','subtitle'=>'software','head'=>'sms keys');
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
         return view('software.status_sms', $this->data);
     }

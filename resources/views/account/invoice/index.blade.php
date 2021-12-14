@@ -67,34 +67,34 @@
                             </div>
                         </div>
 
-                                                <!-- Material tab card start -->
-                                                <div class="card">
-                                                   
-                                                    <div class="card-block">
-                                                        <!-- Row start -->
-                                                        <div class="row m-b-30">
-                                                            <div class="col-lg-12 col-xl-12">
-                                                                
-                                                                <!-- Nav tabs -->
-                                                                <ul class="nav nav-tabs md-tabs" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong>INVOICE LIST</strong></a>
-                                                                        <div class="slide"></div>
-                                                                    </li>
-                                                                    <li class="nav-item">
-                                                                        <a class="nav-link" data-toggle="tab" href="#profile2" role="tab" aria-expanded="false"><strong>PRO FORMA INVOICE</strong></a>
-                                                                        <div class="slide"></div>
-                                                                    </li>
-                                                                    <li class="nav-item">
-                                                                        <a class="nav-link" data-toggle="tab" href="#messages3" role="tab" aria-expanded="false"><strong>VIEW REPORT</strong></a>
-                                                                        <div class="slide"></div>
-                                                                    </li>
-                                                                   
-                                                                </ul>
-                                                                <!-- Tab panes -->
-                                                                <div class="tab-content card-block">
-                                                                    <div class="tab-pane active" id="home3" role="tabpanel">
-                                                                    <div class="table-responsive">
+                    <!-- Material tab card start -->
+                    <div class="card">
+                        
+                        <div class="card-block">
+                            <!-- Row start -->
+                            <div class="row m-b-30">
+                                <div class="col-lg-12 col-xl-12">
+                                    
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs md-tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong>INVOICE LIST</strong></a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#profile2" role="tab" aria-expanded="false"><strong>PRO FORMA INVOICE</strong></a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#messages3" role="tab" aria-expanded="false"><strong>VIEW REPORT</strong></a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content card-block">
+                                        <div class="tab-pane active" id="home3" role="tabpanel">
+                                        <div class="table-responsive">
                                    <?php if ($project_id == 4) { ?>
                                       <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
@@ -248,9 +248,10 @@
                                     </table>
                                 <?php } ?>
                                </div>
-                                                                    </div>
-                                                                    <div class="tab-pane" id="profile2" role="tabpanel">
-                                                                    <div class="dt-responsive table-responsive">
+                              </div>
+
+                                <div class="tab-pane" id="profile2" role="tabpanel">
+                                <div class="dt-responsive table-responsive">
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
                                             <tr>
@@ -300,9 +301,9 @@
                                        </table>
                                             
                                     </div> 
-                                                                    </div>
-                                                                    <div class="tab-pane" id="messages3" role="tabpanel">
-                                                                    <div class="dt-responsive table-responsive">
+                            </div>
+                            <div class="tab-pane" id="messages3" role="tabpanel">
+                            <div class="dt-responsive table-responsive">
                                 <div class="col-sm-12">
                                <form class="form-horizontal" role="form" method="post"> 
                                     <div class="form-group row">
@@ -340,11 +341,9 @@
                                             $total_paid = 0;
                                             $total_unpaid = 0;
                                             $i = 1;
-                                            foreach ($invoices as $invoice) {
-
+                                            if(isset($payments)) {
+                                            foreach ($payments as $invoice) {
                                                 ?>
-
-
                                                 <tr>
                                                     <td><?= $i?></td>
                                                     <td><?= $invoice->name ?></td>
@@ -356,7 +355,8 @@
                                                         <a class="btn btn-success btn-mini btn-round" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                    </td>
                                                </tr>
-                                         <?php $i++; } ?>
+                                         <?php $i++; } 
+                                              } ?>
                                         </tbody>
                                         <tfoot>
                                             {{-- <tr>

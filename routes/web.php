@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+//
 //\URL::forceScheme('https');
 /*
   |--------------------------------------------------------------------------
@@ -101,6 +103,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/workshop', 'Workshop@index')->name('workshop');
+Route::get('/morepage/{id}', 'Workshop@morepage')->name('morepage');
 Route::post('/addregister', 'Workshop@addregister');
 Route::get('/register', 'Workshop@register')->name('register');
 Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');

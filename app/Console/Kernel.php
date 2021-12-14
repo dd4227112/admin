@@ -1333,10 +1333,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
-        $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
-           foreach ($materialized_views as $view) {
-            \DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
-        }
+        \DB::statement('select * from admin.refresh_materialized_views()');
     }
 
 

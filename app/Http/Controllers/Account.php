@@ -36,7 +36,8 @@ class Account extends Controller {
         $to = $this->data['to'] = request('to');
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-        $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() : Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
+        $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() : 
+        Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
         $this->data['accountyear']= \App\Models\AccountYear::where('id', $account_year_id)->first();
         return $this;
     }
@@ -79,48 +80,27 @@ class Account extends Controller {
                     $this->data['invoices'] = DB::connection('karibusms')->select('select a.transaction_code,a.method, a.amount, a.currency,a.sms_provided,a.time,a.invoice, b.name,a.confirmed,a.approved,a.payment_id from payment a join client b using(client_id)');
                     break;
                 default:
-                    $this->getInvoices($project_id, $account_year_id);
+                     !empty(request('from_date')) && !empty(request('to_date')) ? $this->getInvoiceReports(request('from_date'),request('to_date'),$project_id) : $this->getInvoices($project_id, $account_year_id);
                     break;
             }
             return view('account.invoice.index', $this->data);
         }
+    }
 
-        if($project_id == 1) {
-            $from = !empty(request('from_date')) ? request('from_date') : date('Y-01-01');
+      // Get invoice payment reports based on date ranges
+    public function getInvoiceReports($from,$to,$project_id) {
+            $from = !empty($from) ? $from : date('Y-01-01');
             $this->data['from'] = $from;
             $this->data['id'] = 4;
-            $to = !empty(request('to_date')) ? request('to_date') : date('Y-m-d');
+            $to = !empty($to) ? $to : date('Y-m-d');
             $this->data['to'] = $to;
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-             $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
-             $this->data['invoice_reports'] = DB::select("select extract(month from p.created_at) as month ,
-              sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on 
-              c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}'
-               and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
-               dd($this->data['invoice_reports']);
+            $this->data['payments']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
+            $this->data['invoice_reports'] = DB::select("select extract(month from p.created_at) as month,sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
+            return $this;
         } 
-        return view('account.invoice.index', $this->data);
 
-    }
-
-    // public function invoiceReport() {
-    //     $project_id = $this->data['project_id'] = request()->segment(3);
-    //     $this->data['account_year_id'] = $account_year_id = request()->segment(4);
-    //     if((int) $project_id == 1) {
-    //         $from = !empty(request('from_date')) ? request('from_date') : date('Y-01-01');
-    //         $this->data['from'] = $from;
-    //         $this->data['id'] = 4;
-    //         $to = !empty(request('to_date')) ? request('to_date') : date('Y-m-d');
-    //         $this->data['to'] = $to;
-    //         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
-    //         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-    //          $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
-    //          $this->data['invoice_reports'] = \DB::select("select extract(month from p.created_at) as month , sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
-    //         return view('account.invoice.index', $this->data);
-    //     }  
-
-    // }
 
 
     

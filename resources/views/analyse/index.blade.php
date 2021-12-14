@@ -264,7 +264,7 @@ Highcharts.chart('containa', {
             text: 'Months'
         },
         categories: [
-            <?php foreach($new_schools as $class){  ?> '<?=date("M", strtotime($class->month))?>',
+            <?php foreach($new_schools as $value){  ?> '<?=date("M", strtotime($value->month))?>',
             <?php } ?>
         ]
     },
@@ -278,7 +278,7 @@ Highcharts.chart('containa', {
     series: [{
         name: 'Schools',
         colorByPoint: true,
-        data: [<?php foreach($new_schools as $teacher){ echo $teacher->schools.','; }?>]
+        data: [<?php foreach($new_schools as $value){ echo $value->schools.','; }?>]
     }],
     responsive: {
         rules: [{

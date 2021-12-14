@@ -3,20 +3,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>ShuleSoft Admin Panel</title>
-        <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-        <!-- Meta -->
+        <title>ShuleSoft Events</title>
+  
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="description" content="Phoenixcoded">
+        <meta name="description" content="">
         <meta name="keywords" content=", Flat ui, Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
-        <meta name="author" content="Phoenixcoded">
+        <meta name="author" content="">
         <!-- Favicon icon -->
 
         <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
@@ -76,7 +70,9 @@
                                     <h1 class="text-center" style="color: black; font-weight: bold;">
                                         <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="80" height="80">
                                     </h1>
+                                    <hr>
                                     <h4 class="text-center"><b>{{ $event->title }}</b></h4>
+                                    
 
                                 </div>
                                 <form class="form-group" id="loginform" method="POST" action="<?= url('/addregister') ?>" >
@@ -116,21 +112,19 @@
                                             <div class="col-sm-12 col-xs-12">
                                                 Your School / Organization
                                                 <input type="text" name="school_id" class="form-control" placeholder="Enter your School name here.." value="{{ old('school_id') }}" required>
-                                                <!--
-                                                                        <select name="school_id" class="form-control select2-container step2-select" data-placeholder="Select Gender" required>
-                                                                          <option value="1">Search Your School Here....</option>
-                                                <?php
-                                                $schools = DB::table('schools')->where('ownership', 'Non-Government')->get();
-                                                foreach ($schools as $school) {
-                                                    ?>
-                                                                                                <option value="<?= $school->id ?>"><?php // $school->name. ' (<b> '.$school->type. ' </b>) - '. $school->wards->district->region->name      ?></option>
-                                                <?php } ?>
-                                          
-                                                                        </select> -->
+                                                
                                             </div>
                                         </div>
 
-
+                                        <div class="form-group ">
+                                            <div class="col-sm-12 col-xs-12">
+                                                Does Your School Use ShuleSoft System?
+                                                <select name="status" id="source" class="form-control" required>
+                                                    <option value="">..........</option>
+                                                    <option value="2">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                            </div>
 
                                         <div class="form-group ">
                                             <div class="col-sm-12 col-xs-12">
@@ -157,7 +151,7 @@
                                             <div class="col-sm-12 col-xs-12">
                                                 <div class="checkbox-fade fade-in-primary">
                                                     <label>
-                                                        <input type="checkbox" name="status" value="1">
+                                                        <input type="checkbox" name="status5" value="1">
                                                         <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
                                                         <span class="text-inverse">Do you Want to Receive Update of this Workshop*</span>
                                                     </label>

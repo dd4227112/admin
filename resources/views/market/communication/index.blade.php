@@ -3,10 +3,7 @@
 <?php $root = url('/') . '/public/';
 ?>
 
-
-    
-
-           <div class="page-header">
+    <div class="page-header">
             <div class="page-header-title">
                 <h4><?=' Compose message' ?></h4>
             </div>
@@ -24,21 +21,23 @@
                 </ul>
             </div>
         </div> 
-        <div class="page-body">
-                <div class="col-sm-12">
-                  <div class="card">
-                    <div class="card-block">
-                       <div class="row">
-   
-                    <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <div class="col-sm-3">
+
+
+         <div class="page-body">
+             <div class="row">
+                <div class="col-sm-8">
+                    <div class="card">
+                        <div class="card-block">
+
+                         <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>">
+                        
+                            <div class="form-group row">
+                                <div class="col-sm-4">
                                     <label for="form-field-select-0">
-                                        From:
+                                        Channels:
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select multiple="" id="sms_keys_id" class="select2"  name ="sms_channels[]" required>
                                         <option value="quick-sms">Quick SMS</option>
                                         <option value="whatsapp">WhatsApp</option>
@@ -47,16 +46,15 @@
                                         <option value="email">Email</option>
                                     </select>
                                 </div>
-                             
                             </div>
 
-                            <div class="form-group">
-                                <div class="col-sm-3">
+                            <div class="form-group row">
+                                <div class="col-sm-4">
                                     <label for="form-field-select-0">
-                                        Send To:
+                                       Send SMS to
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select style="30px;" id="form-field-select-0" class="select2" name="firstCriteria"
                                         onchange="setFirstCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
@@ -75,18 +73,18 @@
                             </div>
 
                           
-
-                            <div class="form-group" id="parents_selection" style="display: none;">
-                                 <div class="col-sm-3">
+                        
+                            <div class="form-group row" id="parents_selection" style="display: none;">
+                                 <div class="col-sm-4">
                                     <label>
                                         Select Customer:
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select id="form-field-select-3" class="select2" name="customer_criteria"
                                         onchange="setCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
-                                        <option value="0">All Customers </option>
+                                        <option value="0">All Customers (Paid Customers) </option>
                                         <option value="1">Active & Full paid customers</option>
                                         <option value="2">Active & partial paid customers</option>
                                         <option value="3">Active but not paid customers (have S.I)</option>
@@ -101,21 +99,21 @@
                                 </div>
                             </div>
 
-                             <div class="form-group" id="by_customer_segment" style="display: none;">
-                                 <div class="col-sm-3">
+                             <div class="form-group row" id="by_customer_segment" style="display: none;">
+                                 <div class="col-sm-4">
                                     <label  for="form-field-select-4">
-                                        Customer Segment:
+                                        Customer Segment
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select id="form-field-select-3" class="select2" name="customer_segment"
-                                        onchange="setcustomerCriteria(this.value);">
+                                        onchange="BycustomerSegment(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
-                                        <option value="0">Secondary schools </option>
-                                        <option value="1">Primary schools</option>
-                                        <option value="2">College only</option>
-                                        <option value="3">Nursey schools only</option>
-                                        <option value="4">Schools with student (greater than or less than)</option>
+                                        <option value="00">Nursey schools only  </option>
+                                        <option value="01">Primary schools</option>
+                                        <option value="02">Secondary schools </option>
+                                        <option value="03">College only</option>
+                                        <option value="04">Schools with student (greater than or less than)</option>
                                     </select>
                                 </div>
                                 <div class="has-error">
@@ -126,14 +124,16 @@
                             </div>
 
 
-                            <div class="form-group" id="prospect_selection" style="display: none;">
-                                <div class="col-sm-3">
+
+                            <div class="form-group row" id="prospect_selection" style="display: none;">
+                                <div class="col-sm-4">
                                     <label for="form-field-select-4">
-                                       Prospects:
+                                       Prospects
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
-                                    <select id="form-field-select-4" class="select2" name="prospectscriteria">
+                                <div class="col-sm-8">
+                                    <select id="form-field-select-4" class="select2" name="prospectscriteria"
+                                         onchange="setProspectsCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
                                         <option value="001">All Prospects </option>
                                         <option value="002">Based on segment</option>
@@ -147,13 +147,13 @@
                             </div>
 
 
-                           <div class="form-group" id="leads_selection" style="display: none;">
-                                <div class="col-sm-3">
+                           <div class="form-group row" id="leads_selection" style="display: none;">
+                                <div class="col-sm-4">
                                     <label for="form-field-select-4">
                                        Leads
                                     </label>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                     <select id="form-field-select-4" class="select2" name="leadscriteria"
                                         onchange="setLeadsCriteria(this.value);">
                                         <option value="{{old('criteria')}}">Select</option>
@@ -166,17 +166,73 @@
                                     <?php echo form_error($errors, 'criteria'); ?>
                                     <?php endif ?>
                                 </div>
-                            </div>                   
-                        </div>
+                            </div>     
+                            
+                            
+                         <div class="form-group row" id="custom_number_selection" style="display: none;">
+                            <div class="col-sm-4">
+                                <label for="form-field-select-3">
+                                    Phone numbers
+                                </label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" id="tags_1" data-role="tagsinput" class="tags form-control"  name ="custom_numbers" placeholder="separate by comma or space"  />
+                            </div>
+                            <div class="has-error">
+                                <?php if (form_error($errors, 'custom_numbers')): ?>
+                                    <?php echo form_error($errors, 'custom_numbers'); ?>
+                                <?php endif ?>
+                            </div>
+                           </div>
+
+
+
+                         
+                        <div class="row" id="number_of_student" style="display: none;">
+                           <div class="form-group col-sm-12 row" >
+                                <label class="col-sm-3">
+                                   Criteria
+                                </label>
+                                <label class="col-sm-3">
+                                    Less Than   <input type="radio" id="optionsRadios1" name="less_than" value="1" >
+                                </label>
+                                <label class="col-sm-3">
+                                    Greater than  
+                                    <input type="radio" id="optionsRadios2" name="less_than"  value="0" > 
+                                </label>
+                                <label class="col-sm-3">
+                                    Equals to 
+                                    <input type="radio" id="optionsRadios3" name="less_than"  value="2" > 
+                                </label>
+                            </div>
+
+                            <div class="form-group col-sm-12 row">
+                                <div class="col-sm-5">
+                                    <label for="amount" class="control-label">
+                                        Specify students number
+                                    </label>
+                                </div>
+                                <div  class="col-sm-7">
+                                    <input type="number" name="student_number" placeholder="Enter student number Here" id= "student_number" class="form-control"/>
+                                </div>
+                            </div> 
+                         </div> 
+
+                      
                  
-                        <div class='form-group'>
-                            <div class="">
+                        <div class='form-group row'>
+                            <div class="col-sm-4">
                                 <label for="sms_template">
                                     <?= __("Template") ?>
                                 </label>
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                 <?php
+
+                                 $array = array(
+                                     'select' => 'Select Template',
+                                 );
+
                                  $templates = DB::table('admin.mailandsmstemplates')->where('status', '1')->get();
                                 foreach ($templates as $etemplate) {
                                     strtolower($etemplate->type) == 'sms' ? $array[$etemplate->id] = $etemplate->name : '';
@@ -191,9 +247,9 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-sm-11">
+                            <div class="col-sm-12">
                                 <textarea class="form-control" name="message"
-                                    onmousedown="get_estimated_delivery_time()" rows="10" id="content_area"
+                                    onmousedown="get_estimated_delivery_time()" rows="6" id="content_area"
                                     placeholder="<?= __('message') ?>"><?= old('sms_message') ?></textarea>
                             </div>
                             <div class="col-sm-12">
@@ -216,6 +272,7 @@
                                 <?php endif ?>
                             </div>
                         </div>
+
                         <div class="pull-left col-sm-4">
                             <p>Estimated Delivery Time: <span id="get_estimated_delivery_time"></span> <i
                                     class="fa fa-question-circle" data-container="body" data-toggle="popover"
@@ -227,60 +284,66 @@
                            <button type="submit" class="btn btn-primary btn-mini btn-round"> Submit </button>
                         </div>
                         <?= csrf_field() ?>
+                      
                     </form>
                     </div>
                    </div>
-                    <div class="col-sm-2"></div>
                 </div>
-                <!--</div>-->
-            </div>
-            <!--<script  src="<?php echo url('public/assets/jquery.tagsinput/bootstrap-tagsinput.min.js'); ?>"></script>-->
-            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true"
-                style="display: none;">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
 
-                        <div class="modal-header">
-                            <button type="button" onmousedown="message_left_count()" class="close"
-                                data-dismiss="modal"><span aria-hidden="true">×</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">Quick SMS</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>These are Quick and Fasts SMS that can be delivered in less than 5min</p>
-                            <h3>Only at Tsh 20/= per SMS</h3>
-                            <p></p>
-                            <div id="buy_sms_content">
-                                <form class="form-horizontal form-label-left" onsubmit="return false">
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Enters
-                                            Number of SMS to buy <span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="number" id="number_of_sms" name="sms" required="required"
-                                                class="form-control col-md-7 col-xs-12">
-                                        </div>
-                                    </div>
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email"><span
-                                                class="required"></span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="submit" class="btn btn-success" id="buy_sms_btn">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"
-                                onmousedown="message_left_count()">Close</button>
-                            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-                        </div>
 
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-block">
+                        <h6>Summary</h6>
+                        <div class="clearfix"></div>
                     </div>
-                </div>
+                    <table class="data table table-striped no-margin">
+                        <thead>
+                            <tr>
+
+                                <th>Channel</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td> <i class="fa fa-whatsapp"></i>
+                                    WhatsApp</td>
+                                <td>
+                                
+                                </td>
+                                <td class="hidden-phone">
+                                </td>
+
+                            </tr>
+                
+                            <tr>
+                                <td> <i class="fa fa-comments"></i> Quick SMS</td>
+                                <td><span id="message_left_count"></span> Remains</td>
+                                <td class="hidden-phone">
+                                    <span class="badge bg-green" data-toggle="modal" data-target=".bs-example-modal-lg">
+                                        Add More</span>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td> <i class="fa fa-envelope"> </i> Phone SMS</td>
+                                <td colspan="2"><b id="phone_last_online"> Active - <b>  </b> <br>
+                                    <code></a></code>
+                                </td>
+
+                            </tr>
+                         
+
+                        </tbody>
+                    </table>
+
             </div>
+          </div>
+       </div>
+ 
 
         </div>
     </div>
@@ -294,9 +357,7 @@
       debug: true
   }); 
 
-//    $('#tags_1').tagsinput({
-//  tagClass: 'big',confirmKeys: [13, 32, 44]
-//});
+
 get_estimated_delivery_time = function() {
     // var type = $('#sms_keys_id').val();
     // $.ajax({
@@ -347,6 +408,9 @@ $(document).ready(buy_sms);
             var templateID = $(this).val();
             $.ajax({
                 type: 'POST',
+                 headers: {
+                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                     },
                 url: "<?= base_url('marketing/getTemplateContent') ?>",
                 data: "templateID=" + templateID,
                 dataType: "html",
@@ -363,21 +427,21 @@ function setFirstCriteria(value) {
     switch (value) {
         case '00':
             $('#parents_selection').show();
-            $('#by_customer_segment,#leads_selection,#prospect_selection,#teachersCat,#teachersPhones').hide();
+            $('#by_customer_segment,#leads_selection,#prospect_selection,#custom_number_selection,#teachersPhones,#number_of_student').hide();
             break;
         case '01':
-            $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection').hide();
+            $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection,#number_of_student').hide();
             $('#prospect_selection').show();
             break;
         case '02':
-            $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
             $('#leads_selection').show();
             break;
         case '03':
-            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#leads_selection,#by_customer_segment,#custom_number_selection,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
             break;
         case '04':
-            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
             break;
         default:
             break;
@@ -389,12 +453,11 @@ function setFirstCriteria(value) {
 function setCriteria(value1) {
     switch (value1) {
         case '':
-            $('#by_customer_segment,#load_payment_status,#category6,#category8,#account_tags').hide();
+            $('#by_customer_segment,#load_payment_status,#category6,#category8,#account_tags,#number_of_student').hide();
             break;
         case '0':
-            $('#by_customer_segment,#category6,#category8,#load_hostel').hide();
-            //var items = ["", "Male", "Female", "All"];
-            //push_options(items);
+            $('#by_customer_segment,#category6,#category8,#load_hostel,#number_of_student').hide();
+         
             break;
         case '1':
             $('#load_fees,#load_payment_status,#load_types,#category6,#category7,#category8,#load_hostel').hide();
@@ -402,38 +465,17 @@ function setCriteria(value1) {
             break;
         case '2':
             $('#load_payment_status,#load_types,#by_customer_segment').hide();
-            $('#load_payment_status,#account_tags,#load_payment_amount,#load_hostel').hide();
+            $('#load_payment_status,#account_tags,#load_payment_amount,#load_hostel,#number_of_student').hide();
             break;
         case '3':
-            $('#load_fees,#by_customer_segment,#load_fees,#load_types,#category6,#category8,#load_hostel')
-                .hide();
-            $('#load_payment_status,#account_tags,#load_payment_amount').show();
+            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status,#number_of_student').hide();
             break;
         case '4':
-            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status,#load_types')
-                .hide();
-            $('#category').hide();
-            $('#category1').hide();
-            $('#category3').hide();
-            $('#category2').hide();
-            $('#category4').hide();
-            $('#category5').hide();
-            $('#category6').show();
-            $('#category7').hide();
+            $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status,#number_of_student').hide();
             break;
-
         case '5':
             $('#category').hide();
-            $('#category1').hide();
-            $('#category2').hide();
-            $('#category3').show();
-            $('#category4').hide();
-            $('#category6').hide();
-            $('#category7').hide();
-            $('#load_section,#load_payment_status,#load_types').hide();
-            $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel').hide();
-            $('#category8').hide();
-
+            $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel,#number_of_student').hide();
             $('#by_customer_segment').show();
             break;
         default:
@@ -445,29 +487,82 @@ function setCriteria(value1) {
 
 function setcustomerCriteria(value) {
     switch (value) {
-        case '00':
-            $('#parents_selection').show();
-            $('#by_customer_segment,#leads_selection,#prospect_selection,#teachersCat,#teachersPhones').hide();
+        case 0:
+            $('#by_customer_segment,#leads_selection,#prospect_selection').hide();
             break;
-        case '01':
-            $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection').hide();
+        case 1:
+            $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags').hide();
             $('#prospect_selection').show();
             break;
-        case '02':
-            $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+        case 2:
+            $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
             $('#leads_selection').show();
             break;
-        case '03':
-            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+        case 3:
+            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
             break;
-        case '04':
-            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection').hide();
+        case 4:
+            $('#number_of_student').show();
+            $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
             break;
         default:
             break;
     }
 }
 
+
+
+function setProspectsCriteria(value){
+      switch (value) {
+        case '001':
+            $('#custom_number_selection').show();
+            $('#parents_selection,#leads_selection,#by_customer_segment,#parents_selection,#number_of_student').hide();
+            break;
+        case '002':
+            $('#by_customer_segment,#leads_selection,#by_customer_segment,#account_tags,#parents_selection,#number_of_student').hide();
+            $('#custom_number_selection').show();
+            break;
+        default:
+            break;
+    }
+}
+
+function setLeadsCriteria(value){
+      switch (value) {
+        case '001':
+            $('#custom_number_selection').show();
+            $('#parents_selection,#by_customer_segment,#parents_selection,#prospect_selection,#number_of_student').hide();
+            break;
+        case '002':
+            $('#by_customer_segment,#by_customer_segment,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
+            $('#custom_number_selection').show();
+            break;
+        default:
+            break;
+    }
+}
+
+
+function BycustomerSegment(value){
+    switch (value) {
+    case '01':
+        $('#number_of_student,#prospect_selection,#custom_number_selection').hide();
+        break;
+     case '02':
+        $('#number_of_student,#prospect_selection,#custom_number_selection').hide();
+        break;
+     case '03':
+        $('#number_of_student,#prospect_selection,#custom_number_selection').hide();
+        break;
+    case '04':
+      //   $(#account_tags,#prospect_selection').hide();
+         $('#number_of_student').show();
+      
+        break;
+    default:
+        break;
+}
+}
 
 word_count = function() {
     $('#content_area').keyup(function() {

@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-
-    
-
     <div class="page-header">
             <div class="page-header-title">
                 <h4><?='SMS Status' ?></h4>
@@ -15,9 +12,9 @@
                         <i class="feather icon-home"></i>
                     </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">loans</a>
+                    <li class="breadcrumb-item"><a href="#!">sms</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">payroll</a>
+                    <li class="breadcrumb-item"><a href="#!">schools</a>
                     </li>
                 </ul>
             </div>
