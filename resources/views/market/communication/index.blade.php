@@ -29,7 +29,7 @@
                     <div class="card">
                         <div class="card-block">
 
-                         <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>">
+                         <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>"  enctype="multipart/form-data">
                         
                             <div class="form-group row">
                                 <div class="col-sm-4">
@@ -227,12 +227,9 @@
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <?php
-
-                                 $array = array(
+                                <?php  $array = array(
                                      'select' => 'Select Template',
                                  );
-
                                  $templates = DB::table('admin.mailandsmstemplates')->where('status', '1')->get();
                                 foreach ($templates as $etemplate) {
                                     strtolower($etemplate->type) == 'sms' ? $array[$etemplate->id] = $etemplate->name : '';
@@ -273,13 +270,27 @@
                             </div>
                         </div>
 
-                        <div class="pull-left col-sm-4">
+                         <div class="form-group row">
+                            <div class="col-sm-12">
+                              <div class="col-sm-4">
+                                <label for="sms_template">
+                                    <?= __("Attachment") ?>
+                                </label>
+                            </div>
+                              <div class="col-sm-4">
+                                <input type="file" class="form-control" id="file_" name="file_">
+                            </div>
+                            </div>
+                               
+                        </div>
+
+                        {{-- <div class="pull-left col-sm-4">
                             <p>Estimated Delivery Time: <span id="get_estimated_delivery_time"></span> <i
                                     class="fa fa-question-circle" data-container="body" data-toggle="popover"
                                     data-placement="right" data-trigger="hover"
                                     title="This depends on number of parents to receive sms and existing pending SMS and whether sent by Quick SMS or phone"></i>
                             </p>
-                        </div>
+                        </div> --}}
                         <div class="pull-right col-sm-2">
                            <button type="submit" class="btn btn-primary btn-mini btn-round"> Submit </button>
                         </div>
@@ -402,24 +413,24 @@ buy_sms = function() {
         });
     });
 }
-$(document).ready(buy_sms);
+$(document).ready(buy_sms);   
 
-  $('#sms_template').change(function () {
-            var templateID = $(this).val();
-            $.ajax({
-                type: 'POST',
-                 headers: {
-                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                     },
-                url: "<?= base_url('marketing/getTemplateContent') ?>",
-                data: "templateID=" + templateID,
-                dataType: "html",
-                success: function (data) {
-                    $('#content_area').html(data);
-                }
-            });
+$('#sms_template').change(function () {
+        var templateID = $(this).val();
+        $.ajax({
+            type: 'POST',
+            headers: {
+                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             },
+            url: "<?= base_url('marketing/getTemplateContent') ?>",
+            data: "templateID=" + templateID,
+            dataType: "html",
+            success: function (data) {
+                $('#content_area').html(data);
+            }
+        });
 
-        })
+    })
 
 
 
