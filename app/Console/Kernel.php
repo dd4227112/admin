@@ -143,8 +143,7 @@ class Kernel extends ConsoleKernel {
     }
 
   
-
-    public function whatsappMessage() {        
+       public function whatsappMessage() {        
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
         $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
@@ -152,12 +151,15 @@ class Kernel extends ConsoleKernel {
                 $controller->sendMessage($message->phone, $message->message,$message->file_path);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
-            } else {
+             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
-            }
+             }
+           }
         }
-    }
+
+ 
+    
 
     function checkPaymentPattern($user, $schema) {
         $pattern = [0, 0, 0];

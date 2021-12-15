@@ -397,7 +397,7 @@ class Controller extends BaseController {
 
                         }
                    }
-              }
+        }
 
 
            public function syncMissingInv($data,$prefix,$schema_name){
