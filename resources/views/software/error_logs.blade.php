@@ -6,8 +6,6 @@
 }
  ?>
 
-  
-
           <div class="page-header">
             <div class="page-header-title">
                 <h4><?='Error logs' ?></h4>
@@ -87,6 +85,7 @@
                </div>
             
 
+               
                  <div class="col-md-12 col-xl-12">
                     <div class="form-group row col-lg-offset-6">
                         <h5 class="col-sm-4"><?= isset($schema_name) ? $schema_name. ' errors': 'Select School' ?></h5>
@@ -156,18 +155,10 @@
             <div class="row">
               <div class="col-lg-12">     
                 <div class="card">
-                    <div class="card-block">
-                      <div class="cd-horizontal-timeline loaded">
-                        <div class="events-content">
-                            <div class="card">
-                                     <div class="card-block">  
-                                          <figure class="highcharts-figure">
-                                             <div id="errors" style="height: 400px; width:850px;"></div>
-                                        </figure>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-block">  
+                        <figure class="highcharts-figure">
+                            <div id="errors" style="height: 300px;"></div>
+                        </figure>
                     </div>
                   </div>
                 </div>
@@ -188,9 +179,6 @@
         placeholder: "Select a State",
         allowClear: true
      });
-
-    
-      
 
     $(document).ready(function() {
      delete_log = function (a) {

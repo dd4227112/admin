@@ -466,6 +466,7 @@ group by ownership');
             $criteria = request('less_than');
             $student_number = request('student_number');
             $file =  request('file_');
+            $file_path = '';
             
             if(!empty($file)){
                 $file = request()->file('file_');
