@@ -148,21 +148,18 @@
                     </div>
                    </div>
                 </div>
-
-
-                
-           <br>
+             
             <div class="row">
-              <div class="col-lg-12">     
+             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-block">  
+                    <div class="card-body container">
                         <figure class="highcharts-figure">
-                            <div id="errors" style="height: 300px;"></div>
-                        </figure>
-                    </div>
+                                <div id="errors" style="height: 300px;"></div>
+                         </figure>
+                       </div>
                   </div>
                 </div>
-             </div>
+            </div>
         
         </div>
     </div>
@@ -209,11 +206,6 @@
 
     });
    
-
-
-
-
-
 Highcharts.chart('errors', {
     chart: {
         type: 'column'
