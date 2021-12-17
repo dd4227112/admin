@@ -178,7 +178,7 @@
                             <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
-                                        <div id="onboardPie" style="height: 300px; width:350px;"></div>
+                                        <div id="onboardPie" style="height: 300px;"></div>
                                     </figure>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@
                             <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
-                                        <div id="onboardBar" style="height: 300px; width:350px;"></div>
+                                        <div id="onboardBar" style="height: 300px;"></div>
                                     </figure>
                                 </div>
                             </div>

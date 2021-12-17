@@ -349,7 +349,7 @@ class Software extends Controller {
         $this->data['monthly_errors'] = \DB::select($sql1);
         $this->data['monthly_solved'] = \DB::select($sql2);
         $this->data['monthly_unsolved'] = \DB::select($sql3);
-        dd($this->data);
+        // dd($this->data);
         return view('software.error_logs', $this->data);
     }
 
