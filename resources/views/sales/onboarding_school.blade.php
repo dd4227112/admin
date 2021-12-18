@@ -40,6 +40,19 @@ if (request()->ajax() == FALSE) {
                     <input type="text" class="form-control" placeholder="Add School Namee eg, canossa" name="name" value="<?= strtoupper($school->name) ?> <?= strtoupper($school->type) ?> SCHOOL" required="" autofocus>
                 </div>
             </div>
+
+             <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Owner Phone</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" placeholder="School Owner phone number" name="owner_phone" autofocus>
+                </div>
+
+                 <label class="col-sm-2 col-form-label">Owner Email</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" placeholder="School Owner email" name="owner_email" autofocus>
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Sales Person</label>
                 <div class="col-sm-10">

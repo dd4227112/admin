@@ -188,7 +188,7 @@
                         </div>
 
                         <div class="col-xl-6">
-                            <div class="card  mb-2">
+                            <div class="card mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
                                         <div id="onboardBar" style="height: 300px;"></div>

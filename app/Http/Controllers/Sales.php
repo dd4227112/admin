@@ -499,7 +499,9 @@ class Sales extends Controller {
                     'username' => clean($schema_name),
                     'payment_option' => request('payment_option'),
                     'start_usage_date' => date('Y-m-d'),
-                    'trial' => request('check_trial')
+                    'trial' => request('check_trial'),
+                    'owner_email' => request('owner_email'),
+                    'owner_phone' => request('owner_phone')
                 ]); 
 
                 // trial period
