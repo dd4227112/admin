@@ -34,7 +34,7 @@ foreach ($exam_reports as $report) {
 }
 
 
-$invoices = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_invoices  group by schema_name');
+$invoices = DB::select('select distinct "schema_name", max(date) as created_at, count(*) from admin.all_invoices  group by schema_name');
 $invoice_status = [];
 $invoice_status_count = [];
 foreach ($invoices as $invoice) {
@@ -219,7 +219,7 @@ function select($value, $schema, $sources) {
                                                             <th>Expense Recorded</th>
                                                             <th>Payments Recorded</th>
                                                             <th>Action</th>
-
+ 
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -232,7 +232,7 @@ function select($value, $schema, $sources) {
                                                         $no_payment = 0;
                                                         $a = 0;
                                                         if(count($schools) > 0)
-                                                        foreach ($schools as $school) { 
+                                                        foreach ($schools_data as $school) { 
                                                             $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
                                                             ?>
                                                             <tr>
@@ -318,7 +318,7 @@ function select($value, $schema, $sources) {
                                                                     </td>
                                                                 <?php } ?>
 
-                                                                <td><?php
+                                                                <td align="center><?php
                                                                 if ($students == 0) {
                                                                     echo '<label class="badge badge-warning"> 0</label>';
                                                                     $no_students++;
