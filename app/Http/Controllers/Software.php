@@ -331,7 +331,6 @@ class Software extends Controller {
 
     public function logs() {
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $this->data['breadcrumb'] = array('title' => 'Error logs','subtitle'=>'software','head'=>'system errors');
         $year_start = date('Y-01-01'); $year_end = date('Y-12-01');
         $notIn =  " not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') ";
         $this->data['error_log_count'] =   strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first();
@@ -350,6 +349,7 @@ class Software extends Controller {
         $this->data['monthly_errors'] = \DB::select($sql1);
         $this->data['monthly_solved'] = \DB::select($sql2);
         $this->data['monthly_unsolved'] = \DB::select($sql3);
+        // dd($this->data);
         return view('software.error_logs', $this->data);
     }
 

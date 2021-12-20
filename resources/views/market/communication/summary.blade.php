@@ -139,7 +139,6 @@
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="feather icon-mail f-30 text-c-red"></i>
-
                                             </div>
                                     </div>
                                 </div>
@@ -156,7 +155,6 @@
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="feather icon-mail f-30 text-c-red"></i>
-
                                             </div>
                                     </div>
                                 </div>

@@ -1485,7 +1485,7 @@ $(function() {
      
      <div class="modal fade" id="status-Modal">
     <div class="modal-dialog modal-lg" role="document">
-        <form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data">
+        <form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data" >
             <?= csrf_field() ?>
             <div class="modal-content">
                 <div class="modal-header">

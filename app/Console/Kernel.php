@@ -142,20 +142,24 @@ class Kernel extends ConsoleKernel {
         })->hourly();
     }
 
-    public function whatsappMessage() {
+  
+       public function whatsappMessage() {        
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
         $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                $controller->sendMessage($message->phone, $message->message);
+                $controller->sendMessage($message->phone, $message->message,$message->file_path);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
-            } else {
+             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
-            }
+             }
+           }
         }
-    }
+
+ 
+    
 
     function checkPaymentPattern($user, $schema) {
         $pattern = [0, 0, 0];
@@ -656,7 +660,6 @@ class Kernel extends ConsoleKernel {
     }
 
     public function car_track_alert_parent($schema = '') {
-
         $imeis = DB::select("select string_agg(imeis::text, ',') as imeis from " . $schema . ".vehicles");
         $key = DB::table('public.sms_keys')->first();
         $sql = 'select  * from ' . $schema . '.car_tracker_key';
@@ -1333,10 +1336,10 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
-        \DB::statement('select * from admin.refresh_materialized_views()');
+
+        DB::statement('select * from admin.refresh_materialized_views()');
+
     }
-
-
 
     
     public function weeklyAccountsReports(){

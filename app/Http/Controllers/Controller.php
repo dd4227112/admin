@@ -133,7 +133,7 @@ class Controller extends BaseController {
         } 
     }
 
-    private function uploadFileLocal($file) {
+    public function uploadFileLocal($file) {
        //Move Uploaded File
         $destinationPath = 'storage/uploads/images';
         !is_dir($destinationPath) ? mkdir($destinationPath) : '';
@@ -269,6 +269,7 @@ class Controller extends BaseController {
     //@param $chatId [string] [required] - the ID of chat where we send a message
     //@param $format [string] [required] - file format, from the params in the message body (text[1], etc)
     public function file($chatId, $format, $filename, $caption = null) {
+    
         $availableFiles = array(
             'doc' => 'document.doc',
             'gif' => 'gifka.gif',
@@ -285,7 +286,7 @@ class Controller extends BaseController {
                 'body' => $filename,
                 'filename' => $availableFiles[$format],
                 'caption' => $caption
-            );
+            ); 
             $this->sendRequest('sendFile', $data);
         }
         if (strtolower($format) == 'ogg') {
@@ -297,13 +298,17 @@ class Controller extends BaseController {
         }
     }
 
+
+
+
+
     //sends a voice message. it is called when the bot gets the command "ptt"
     //@param $chatId [string] [required] - the ID of chat where we send a message
     public function ptt($chatId) {
         $data = array(
             'audio' => 'https://shulesoft.com/PHP/ptt.ogg',
             'chatId' => $chatId
-        );
+        ); 
         $this->sendRequest('sendAudio', $data);
     }
 
@@ -320,8 +325,13 @@ class Controller extends BaseController {
         $this->sendRequest('group', $data);
     }
 
-    public function sendMessage($chatId, $text) {
-        $data = array('chatId' => $chatId, 'body' => $text);
+    public function sendMessage($chatId, $text,$file_path) {
+        if(!empty($file_path)){
+            // $this->file($chatId, $format = 'pdf', $file_path, $text);
+           $data = array('chatId' => $chatId, 'body' => $text . PHP_EOL . $file_path);
+         } else{
+           $data = array('chatId' => $chatId, 'body' => $text);
+         }
         $this->sendRequest('message', $data);
     }
 
@@ -350,50 +360,47 @@ class Controller extends BaseController {
     }
 
 
-      public function send_whatsapp_sms($phone, $message) {
+  
+
+      public function send_whatsapp_sms($phone, $message,$file_path = null) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
-            DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "')");
+            DB::statement("insert into admin.whatsapp_messages(message, status, phone,file_path) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "'),'" . $file_path . "' ");
         }
         return $this;
     }
 
  
-
-
       public function syncMissingPayments(){
         $this->data['prefix'] = '';
         $returns = array();
         $allschemas = DB::select('select * from admin.all_setting');
+        foreach($allschemas as $schema) {
+                $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema->schema_name . '\'');
+                $background = new \App\Http\Controllers\Background();
+                //Iterate through invoices
+                    foreach ($invoices as $invoice) {
+                        $token = $background->getToken($invoice);
+                        $prefix = $invoice->prefix;
+                        if (strlen($token) > 4) {
+                            $fields = array(
+                                "reconcile_date" => date('d-m-Y'),
+                                // "reconcile_date" => $value->format('d-m-Y'),
+                                "token" => $token
+                            );
+                            $push_status = 'reconcilliation';
+                            $url = $invoice->schema_name == 'beta_testing' ?
+                                    'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                            $curl = $background->curlServer($fields, $url);
+                            array_push($returns, json_decode($curl));
+                        } 
 
-            foreach($allschemas as $schema) {
-                    $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema->schema_name . '\'');
-                    $background = new \App\Http\Controllers\Background();
-                   
-                    //Iterate through invoices
-                        foreach ($invoices as $invoice) {
-                            $token = $background->getToken($invoice);
-                            $prefix = $invoice->prefix;
-                            if (strlen($token) > 4) {
-                                $fields = array(
-                                    "reconcile_date" => date('d-m-Y'),
-                                   // "reconcile_date" => $value->format('d-m-Y'),
-                                    "token" => $token
-                                );
-                                $push_status = 'reconcilliation';
-                                $url = $invoice->schema_name == 'beta_testing' ?
-                                        'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
-                                $curl = $background->curlServer($fields, $url);
-                                array_push($returns, json_decode($curl));
-                            } 
-
-                            foreach($returns as $return){
-                               $this->syncMissingInv($return->transactions,$prefix,$invoice->schema_name);
-                           }
-
+                        foreach($returns as $return){
+                            $this->syncMissingInv($return->transactions,$prefix,$invoice->schema_name);
                         }
-                   }
-              }
+                 }
+            }
+        }
 
 
            public function syncMissingInv($data,$prefix,$schema_name){
@@ -412,6 +419,11 @@ class Controller extends BaseController {
                          }
                     }
          }
+
+
+
+
+      
 
 
       

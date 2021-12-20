@@ -1111,7 +1111,7 @@ class Customer extends Controller {
             $email_sql = "insert into public.email (subject,body,user_id,email) select 'ShuleSoft Notification', '{$sms}',id,email from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='student' ";
             DB::statement($email_sql);
         }
-        $this->data['dschools'] = \App\Models\School::whereIn('schema_name', $sch)->get();
+        $this->data['schools'] = \App\Models\School::whereIn('schema_name', $sch)->get();
         return view('customer.modules', $this->data);
     }
 
