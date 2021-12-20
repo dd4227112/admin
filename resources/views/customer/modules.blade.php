@@ -134,10 +134,10 @@ function select($value, $schema, $sources) {
             <div class="row">
                 <div class="col-sm-12">
                     <!-- Ajax data source (Arrays) table start -->
-                    <div class="card tab-card">
-                        <ul class="nav nav-tabs md-tabs" role="tablist">
+                    <div class="card mt-4">
+                       <ul class="nav nav-tabs md-tabs nav-justified tab-timeline" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#home3" role="tab" aria-expanded="false">
+                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="false">
                                     Modules
                                 </a>
                                 <div class="slide"></div>
@@ -146,15 +146,16 @@ function select($value, $schema, $sources) {
                                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Summary Allocation</a>
                                 <div class="slide"></div>
                             </li>
-                        </ul>
+                        </ul> 
 
                         <div class="tab-content">
-                            <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
+                            <div class="tab-pane active" id="home3" aria-expanded="false">
+
+
                                 <div class="card-block">
 
                                     <span>This part shows which modules are actively used by school and which areas we need to focus to help schools.</span>
-                                
-
+            
                                         <p align='right'> <button type="button" id="notify_schools" style="display:none" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Send Message</button></p>
                                         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                                             <div class="modal-dialog modal-lg" role="document">
@@ -200,7 +201,7 @@ function select($value, $schema, $sources) {
                                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
                                                         <tr>
-                                                            <th><input type="checkbox" name="all" id="toggle_all"> </th>
+                                                            <th>No </th>
                                                             <th>School Name</th>
                                                             <th>Invoice </th>
                                                             <td>Support Personnel</td>
@@ -231,13 +232,14 @@ function select($value, $schema, $sources) {
                                                         $no_expense = 0;
                                                         $no_payment = 0;
                                                         $a = 0;
+                                                        $f = 1;
                                                         if(count($schools) > 0)
                                                         foreach ($schools_data as $school) { 
                                                             $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
                                                             ?>
                                                             <tr>
                                                                 <td>
-                                                                    <input type="checkbox" class="check" name="select[]" value="<?= $school->schema_name ?>">
+                                                                    <?= $f ?>
                                                                 </td>
                                                                 <td><?= $school->schema_name ?></td>
                                                                 <td><?php
@@ -321,9 +323,10 @@ function select($value, $schema, $sources) {
                                                                 <td align="center><?php
                                                                 if ($students == 0) {
                                                                     echo '<label class="badge badge-warning"> 0</label>';
-                                                                    $no_students++;
                                                                 } else {
                                                                     echo '<label class="badge badge-info">' . $students .'</label>';
+                                                                    $no_students++;
+
                                                                 }
                                                                 ?></td>
                                                                 <td> 
@@ -393,13 +396,14 @@ function select($value, $schema, $sources) {
                                                                 </td>
 
                                                             </tr>
-                                                         <?php } ?> 
+                                                         <?php $f++;} ?> 
                                                        
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
+                                                            <th></th>
                                                             <th>School Name</th>
-                                                            <th colspan="3"></th>
+                                                            <th colspan="2"></th>
                                                             <th><?= $no_students ?></th>
                                                             <th><?= $no_marks ?></th>
                                                             <th><?= $no_exams_published ?></th>

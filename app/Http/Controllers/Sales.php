@@ -499,7 +499,9 @@ class Sales extends Controller {
                     'username' => clean($schema_name),
                     'payment_option' => request('payment_option'),
                     'start_usage_date' => date('Y-m-d'),
-                    'trial' => request('check_trial')
+                    'trial' => request('check_trial'),
+                    'owner_email' => request('owner_email'),
+                    'owner_phone' => request('owner_phone')
                 ]); 
 
                 // trial period
@@ -988,7 +990,6 @@ class Sales extends Controller {
     }
 
     public function schoolVisit() {
-       $this->data['breadcrumb'] = array('title' => 'Requirements','subtitle'=>'customer requirements','head'=>'marketing');
         $page = request()->segment(3);
         if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             //current day
@@ -1040,7 +1041,6 @@ class Sales extends Controller {
 }
 
     public function addvisit() {
-       $this->data['breadcrumb'] = array('title' => 'Shulesoft Visitation Definition','subtitle'=>'client visitation','head'=>'operations');
         $schools = DB::table('all_setting')->orderBy('created_at', 'DESC')->get();
         $all_school = [];
         foreach ($schools as $school) {

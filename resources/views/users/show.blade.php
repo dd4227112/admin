@@ -186,9 +186,9 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
 
             <!--profile cover end-->
             <div class="row">
-                <div class="col-lg-12 col-xl-12">
+                <div class="col-lg-3 col-xl-3">
                     <!-- Nav tabs -->
-                
+                    <div class="card">
                     <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#home5" role="tab" aria-expanded="true">Personal Info</a>
@@ -234,8 +234,10 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                         <?php } ?>
                     </ul>
                 
-
+                    </div>
+                </div>
                     <!-- Tab panes -->
+                    <div class="col-lg-9 col-xl-9">
                     <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">
                         <div class="tab-pane active" id="home5" role="tabpanel" aria-expanded="true">
                             <div class="card">
@@ -1483,7 +1485,7 @@ $(function() {
      
      <div class="modal fade" id="status-Modal">
     <div class="modal-dialog modal-lg" role="document">
-        <form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data">
+        <form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data" >
             <?= csrf_field() ?>
             <div class="modal-content">
                 <div class="modal-header">

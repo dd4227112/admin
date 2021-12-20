@@ -310,8 +310,8 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                         <div class="card-block">
 
                             <div class="new-task">
-                                <div class="table-responsive">
-                                    <table class="table dataTable">
+                               <div class="table-responsive">
+                                 <table class="table dataTable table-striped table-bordered nowrap">
                                         <thead>
                                             <tr class="text-capitalize">
 

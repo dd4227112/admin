@@ -1777,7 +1777,7 @@ Teacher on Duty:
 
 <!-- Friends tab end -->
 
-<div class="tab-pane" id="payments" aria-expanded="false">
+<div class="tab-pane" id="payments" aria-expanded="false" >
 <div class="row">
 <div class="modal fade" id="standing-order-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
@@ -2130,7 +2130,7 @@ style="z-index: 1050; display: none;">
 </div>
 <div class="form-group">
     School <?= ucfirst($schema) ?> status
-    <select name="status" class="form-controll select2">
+    <select name="status" class="form-control select2">
         <option value="">Select status</option>
         <option value="1">Active Paid</option>
         <option value="2">Active</option>
@@ -2244,43 +2244,56 @@ enctype="multipart/form-data">
 <?php
 if (!empty($profile)) {  
 ?>
-<div class="modal fade" id="school_details" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"aria-hidden="true">
+<div class="modal fade" id="school_details" tabindex="-1" role="dialog" style=" display: none;"aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
  <div class="modal-header">
   <div class="card-block">
     
-
 <div class="row">
     <form action="<?= url('customer/editdetails/' . $client_id) ?>" method="POST">
         <div class="form-group row">
-            <label class="col-sm-6">School Name</label>
-            <div class="col-sm-6">
+            <label class="col-sm-4">School Name</label>
+            <div class="col-sm-8">
                 <input type="text" class="form-control" name="name" value="<?= $profile->name ?>">
             </div>
         </div>
 
          <div class="form-group row justify-content-center">
-            <label class="col-sm-6 col-form-label">Estimated students</label>
-            <div class="col-sm-6">
+            <label class="col-sm-4 col-form-label">Estimated students</label>
+            <div class="col-sm-8">
                 <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">
             </div>
         </div>
 
 
          <div class="form-group row">
-            <label class="col-sm-6 col-form-label">Address</label>
-            <div class="col-sm-6">
+            <label class="col-sm-4 col-form-label">School Address</label>
+            <div class="col-sm-8">
                 <input type="text" class="form-control" name="address" value="<?= $profile->address ?>">
             </div>
         </div>
 
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label">Email</label>
-            <div class="col-sm-6">
+            <label class="col-sm-4 col-form-label">School Email</label>
+            <div class="col-sm-8">
                 <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
             </div>
         </div>
+
+
+        <label class="">School Owner Contacts</label>
+          <div class="form-group row">
+            <div class="col-sm-6">
+                 <label for="">Phone</label>
+                <input type="text" class="form-control" name="owner_phone" value="<?= $profile->owner_phone ?>">
+            </div>
+
+              <div class="col-sm-6">
+                 <label for="">Email</label>
+                <input type="text" class="form-control" name="owner_email" value="<?= $profile->owner_email ?>">
+            </div>
+          </div>
 
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
@@ -2316,6 +2329,8 @@ if (!empty($profile)) {
         <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
 
       <script>
+     
+
 
           $(document).ready(function() {
            $('#example').DataTable();
@@ -2524,6 +2539,4 @@ if (!empty($profile)) {
                     console.log("Multiple: " + results.length + " results found");
                 });
         </script>
-
-
-                                                                                                                                            @endsection
+         @endsection

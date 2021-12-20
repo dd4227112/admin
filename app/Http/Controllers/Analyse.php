@@ -112,7 +112,6 @@ class Analyse extends Controller {
     }
 
     public function accounts() {
-        $this->data['breadcrumb'] = array('title' => 'Account dashboard','subtitle'=>'summary','head'=>'account');
         $this->data['association'] = \App\Model\Association::first();
         $sql_2 = "select sum(count) as count, month from (
         select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')." group by month
