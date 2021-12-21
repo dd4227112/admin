@@ -325,7 +325,7 @@ class Controller extends BaseController {
         $this->sendRequest('group', $data);
     }
 
-    public function sendMessage($chatId, $text,$file_path) {
+    public function sendMessage($chatId, $text,$file_path=null) {
         if(!empty($file_path)){
             // $this->file($chatId, $format = 'pdf', $file_path, $text);
            $data = array('chatId' => $chatId, 'body' => $text . PHP_EOL . $file_path);
