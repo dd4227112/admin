@@ -25,7 +25,7 @@
       <div class="row">
         <div class="col-lg-12">
           <!-- tab panel personal start -->
-          <div class="tab-pane active" id="personal" role="tabpanel">
+          
             <!-- personal card start -->
             <div class="card">
               <div class="card-header">
