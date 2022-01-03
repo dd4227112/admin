@@ -1275,7 +1275,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     // function to remainder HR about annual leave of employees
     // To do more improvement to include employemet status ie intern,probation etc
     public function HRLeaveRemainders() {
-        $annual = DB::select("select user_id, case when (end_date is null) then joining_date + interval '1 year' else end_date + interval '1 year' end AS annual_date from admin.annual_leave");
+        $annual = DB::select("select user_id, case when (end_date is null) then joining_date + interval '1 year' else end_date + interval '1 year' end AS annual_date
+         from admin.annual_leave");
         $ids = array();
         foreach ($annual as $value) {
             $ids[] = $value->user_id;
@@ -1336,9 +1337,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
-
-        DB::statement('select * from admin.refresh_materialized_views()');
-
+      //  DB::statement('select * from admin.refresh_materialized_views()');
     }
 
     

@@ -473,7 +473,6 @@ group by ownership');
                 $file_path = $this->uploadFileLocal($file);
             }
 
-
             switch ($firstCriteria) {
                 case 00:   
                     //customers First
@@ -489,11 +488,11 @@ group by ownership');
                     break;
                 case 03:
                     //All customers
-                    return $this->sendCustomSmsToAll($message, $section_id, $message,$file_path);
+                    return $this->sendCustomSmsToAll($message,$file_path);
                     break;
                 case 04:
                     // Not Custom selection
-                    return $this->sendCustomSms($message, $section_id, $message,$file_path);
+                    return $this->sendCustomSms($message,$file_path);
                     break;
                 default:
                     break;
@@ -504,7 +503,8 @@ group by ownership');
 
     public function sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$file_path,$customer_segment = null,$prospectscriteria = null,$leadscriteria = null) {
         
-        $dates = date('Y-m-d',strtotime('first day of January'));
+        // $dates = date('Y-m-d',strtotime('first day of January'));
+           $dates = '2021-01-01';
     
         switch ($customer_criteria) {
             case 0:   //All customers (paid)
@@ -611,7 +611,7 @@ group by ownership');
     }
 
 
-    public function sendCustomSmsToAll($message,$customer_criteria,$prospectscriteria = null,$leadscriteria = null,$customer_segment = null){
+    public function sendCustomSmsToAll($message,$customer_criteria){
         $customers = DB::select("select * from admin.all_setting");
         if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {

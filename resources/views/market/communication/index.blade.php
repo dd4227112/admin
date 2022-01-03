@@ -61,7 +61,7 @@
                                         <option value="00">Customers</option>
                                         <option value="01">Prospects</option>
                                         <option value="02">Leads</option>
-                                        <option value="03">All</option>
+                                        <option value="03">All(schools, teachers, admins, directors)</option>
                                         <option value="04">Custom selection</option>
                                     </select>
                                 </div>

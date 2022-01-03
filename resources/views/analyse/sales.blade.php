@@ -22,7 +22,9 @@ $sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clien
         select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
         WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
 $taskss = DB::select($sqls1);
+
 $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
+
 $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . ' order by created_at desc');
 ?>
 
