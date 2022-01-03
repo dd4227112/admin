@@ -109,13 +109,35 @@ class Workshop extends Controller {
         \App\Models\EventAttendee::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'success');
     }
-    
-    public function syncMissingPayments() {
-        $background = new \App\Http\Controllers\Background();
-        $url = 'http://75.119.140.177:8081/api/init';
-        $fields = json_decode(urldecode(request('data')));
-        $curl = $background->curlServer($fields, $url, 'row');
-        return $curl;
-        // return redirect()->back()->with('success',$curl);
+
+    public function resetP() {
+        $id = request();
+        $pass = rand(1, 999) . substr(str_shuffle('abcdefghkmnpl'), 0, 3);
+        $password = bcrypt($pass);
+        $user = DB::table(request('schema').'.'.request('table'))->where(request('table').'ID', request('id'))->first();
+        if(!empty($user)){
+            $link = request('table') == 'parent' ? 'You can download Parent Experience app here : Android: https://cutt.ly/XRKSSZF'. chr(10).' IOS: https://cutt.ly/fT2Qn5f' : 'https://'.request('schema').'.shulesoft.com/';
+            $message = 'Habari '.$user->name.',  nenotumizi (username) lako ni: '.$user->username.' na nenosiri (password) ni : '.$pass.' Kumbuka kubadili password yako ukishaingia kwenye mfumo ShuleSoft. Asante'.chr(10).chr(10).$link;
+        DB::table(request('schema').'.'.request('table'))->where(request('table').'ID', request('id'))->update(['default_password' => $pass, 'password' => $password]);
+        echo 'success';
+
+        $id = str_replace('+', NULL, $user->phone) . '@c.us';
+        $this->sendMessage($id, $message);
+        \DB::table(request('schema').'.sms')->insert(array('phone_number' => $user->phone, 'body' => $message, 'type' => 1, 'priority' => 1, 'source' => 0, 'sent_from' => 'phonesms'));
+
+        DB::statement('refresh materialized view admin.all_users');
+    }else{
+        echo 'failed';
     }
+}
+
+    public function userdata() {
+        $this->data['returns'] = [];
+        $this->data['prefix'] = '';
+        if ($_POST) {
+            $this->data['users'] = DB::table('admin.all_users')->where('schema_name', request('schema_name'))->where('table',  request('table'))->where('status', 1)->get();
+        }
+        return view('market.userdata', $this->data);
+    }    
+
 }
