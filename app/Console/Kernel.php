@@ -59,7 +59,7 @@ class Kernel extends ConsoleKernel {
         })->hourly();
 
         $schedule->call(function () {
-            (new Message())->sendEmail();
+          //  (new Message())->sendEmail();
         })->everyMinute();
 
 

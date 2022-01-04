@@ -269,8 +269,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 </div>
 
 <script>
-
-    
+   
 Highcharts.chart('onboardBar', {
     chart: {
         type: 'column'
