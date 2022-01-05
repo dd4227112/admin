@@ -411,7 +411,7 @@ class Background extends Controller {
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
         DB::select('REFRESH MATERIALIZED VIEW  admin.all_users');
-        $users = DB::select("SELECT * from admin.all_users where lower(usertype) like '%admin%' or lower(usertype) like '%direct%' or lower(usertype) like '%manage%' and schema_name not in ('public') and status=1");
+        $users = DB::select(" SELECT * from admin.all_users where lower(usertype) like '%admin%' or lower(usertype) like '%direct%' or lower(usertype) like '%manage%' and schema_name not in ('public','jknyerere') and status=1 ");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {
             $message = 'Dear Sir/Madam '
