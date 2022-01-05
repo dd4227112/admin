@@ -411,18 +411,19 @@ class Background extends Controller {
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
         DB::select('REFRESH MATERIALIZED VIEW  admin.all_users');
-        $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");
+        $users = DB::select("select * from admin.all_users where lower(usertype)='admin' or lower(usertype)='director' or lower(usertype)='manager' and and schema_name not in ('public') and status=1");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {
             $message = 'Dear Sir/Madam '
                     . 'Kindly find ' . number_to_words(date('m')) . ' Month Report from 1st Jan to ' . date('d M Y') . ' and analyse your school performance '
                     . 'specifically on Students/parents/teachers Registered this Year and per Month, Amount of Fee collected Total and on Each month,'
                     . 'Academic performances per classes, subjects and teachers, Best students/teachers etc.'
-                    . 'Open this link to open https://' . $user->schema_name . '.shulesoft.com/report/quarter/' . $user->sid . '  . Dont share this message. Thank you';
+                    . 'Open this link to open https://' . $user->schema_name . '.shulesoft.com/signin/index/test/' . $user->sid . '  . Dont share this message. Thank you';
             DB::table('public.sms')->insert([
                 'body' => $message,
                 'phone_number' => $user->phone,
                 'type' => 0,
+                'sent_from' => 'phonesms, whatsapp',
                 'sms_keys_id' => $key_id
             ]);
             DB::statement('insert into admin.whatsapp_messages (message,phone) select ' . $message . ' , admin.whatsapp_phone(' . $user->phone . ')');
