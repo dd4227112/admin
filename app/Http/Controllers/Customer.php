@@ -1047,6 +1047,8 @@ class Customer extends Controller {
         return view('customer.usage.custom_report', $this->data);
     }
 
+    
+
     public function implementationReport() {
         $user_id = request()->segment(2);
         // $sql = strlen(request('q')) > 3 ? request('q') : exit;
@@ -1744,7 +1746,8 @@ class Customer extends Controller {
     }
 
     public function createTodayReport() {
-        $schemas = DB::select('select distinct "schema_name" from admin.all_payments where extract(year from created_at)>2020');
+        // $schemas = DB::select('select distinct "schema_name" from admin.all_payments where extract(year from created_at)>2020');
+        $schemas = DB::select('select distinct "schema_name" from admin.all_payments where extract(year from created_at)>2020 and schema_name <> "jknyerere"');
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
             $info = \collect(DB::select('select sum(amount) as payments from ' . $schema . '.payments where created_at::date=current_date'))->first();
