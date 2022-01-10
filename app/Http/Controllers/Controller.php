@@ -325,10 +325,12 @@ class Controller extends BaseController {
         $this->sendRequest('group', $data);
     }
 
+
     public function sendMessage($chatId, $text) {
         $data = array('chatId' => $chatId, 'body' => $text);
         $this->sendRequest('message', $data);
     }
+    
 
     public function sendRequest($method, $data) {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
