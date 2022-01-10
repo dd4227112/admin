@@ -330,7 +330,7 @@ class Controller extends BaseController {
         $data = array('chatId' => $chatId, 'body' => $text);
         $this->sendRequest('message', $data);
     }
-    
+
 
     public function sendRequest($method, $data) {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
@@ -367,6 +367,22 @@ class Controller extends BaseController {
         return $this;
     }
 
+
+      public function whatsappMessage() {        
+        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
+        $controller = new \App\Http\Controllers\Controller();
+        foreach ($messages as $message) {
+            if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
+                $controller->sendMessage($message->phone, $message->message);
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
+                //   echo 'message sent to ' . $message->phone . '' . chr(10);
+             } else {
+                //this is invalid number, so update in db to show wrong return
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
+             }
+           }
+        }
+        
  
       public function syncMissingPayments(){
         $this->data['prefix'] = '';

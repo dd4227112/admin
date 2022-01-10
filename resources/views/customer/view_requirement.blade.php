@@ -81,7 +81,7 @@
                        </div>
 
                        <div class="card">
-                        <div class="card-header"> My Other requirements </div>
+                        <div class="card-header"> My new requirements </div>
                         
                         <div class="card-block">
                         <div class="table-responsive dt-responsive">
