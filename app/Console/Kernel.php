@@ -157,9 +157,6 @@ class Kernel extends ConsoleKernel {
            }
         }
 
- 
-    
-
     function checkPaymentPattern($user, $schema) {
         $pattern = [0, 0, 0];
         if ($user->table == 'parent') {
