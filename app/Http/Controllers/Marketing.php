@@ -466,33 +466,33 @@ group by ownership');
             $criteria = request('less_than');
             $student_number = request('student_number');
             $file =  request('file_');
-            $file_path = '';
+          //  $file_path = '';
             
-            if(!empty($file)){
-                $file = request()->file('file_');
-                $file_path = $this->uploadFileLocal($file);
-            }
+            // if(!empty($file)){
+            //     $file = request()->file('file_');
+            //     $file_path = $this->uploadFileLocal($file);
+            // }
 
             switch ($firstCriteria) {
                 case 00:   
                     //customers First
-                    return $this->sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$file_path,$customer_segment,$prospectscriteria = null, $leadscriteria = null);
+                    return $this->sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$customer_segment,$prospectscriteria = null, $leadscriteria = null);
                     break;
                 case 01:
                     //Prospects
-                    return $this->sendCustomSmsToProspects($message, $custom_numbers,$file_path);
+                    return $this->sendCustomSmsToProspects($message, $custom_numbers);
                     break;
                 case 02:
                     //Leads
-                    return $this->sendCustomSmsToLeads($message, $custom_numbers,$file_path);
+                    return $this->sendCustomSmsToLeads($message, $custom_numbers);
                     break;
                 case 03:
                     //All customers
-                    return $this->sendCustomSmsToAll($message,$file_path);
+                    return $this->sendCustomSmsToAll($message);
                     break;
                 case 04:
                     // Not Custom selection
-                    return $this->sendCustomSms($message,$file_path);
+                    return $this->sendCustomSms($message);
                     break;
                 default:
                     break;
@@ -501,7 +501,7 @@ group by ownership');
         return view('market.communication.index', $this->data);
     }
 
-    public function sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$file_path,$customer_segment = null,$prospectscriteria = null,$leadscriteria = null) {
+    public function sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$customer_segment = null,$prospectscriteria = null,$leadscriteria = null) {
         
         // $dates = date('Y-m-d',strtotime('first day of January'));
            $dates = '2021-01-01';
@@ -540,7 +540,7 @@ group by ownership');
                  $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i', '/#username/i', '/#schema_name/i',
                 ));
-                  $this->sendMessages($customer->phone, $sms,$file_path);
+                  $this->sendMessages($customer->phone, $sms);
             }
 
             return redirect()->back()->with('success', 'Message sent successfuly');
@@ -573,7 +573,7 @@ group by ownership');
             $valid = validate_phone($number);
             if (is_array($valid)) {
                 $sent_to++;
-                $this->sendMessages($valid[1], $sms,$file_path);
+                $this->sendMessages($valid[1], $sms);
             } else {
                 $wrong++;
                 $invalid_numbers .= $number . ',';
@@ -602,7 +602,7 @@ group by ownership');
             $valid = validate_phone($number);
             if (is_array($valid)) {
                 $sent_to++;
-                $this->sendMessages($valid[1], $sms,$file_path);
+                $this->sendMessages($valid[1], $sms);
             } else {
                 $wrong++;
                 $invalid_numbers .= $number . ',';
@@ -621,7 +621,7 @@ group by ownership');
                 $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i','/#schema_name/i','/#username/i'
                 ));
-                $this->sendMessages($customer->phone, $sms,$file_path);
+                $this->sendMessages($customer->phone, $sms);
             }
             return redirect()->back()->with('success', 'Message sent successfuly');
         } else {
@@ -667,7 +667,7 @@ group by ownership');
                 $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i', '/#schema_name/i','/#username/i',
                 ));                  
-                $this->sendMessages($customer->phone, $sms,$file_path);
+                $this->sendMessages($customer->phone, $sms);
             }
             return redirect()->back()->with('success', 'Message sent successfuly');
         } else {
@@ -729,7 +729,7 @@ group by ownership');
 
 
 
-     public function sendMessages($phone,$message,$file_path){
+     public function sendMessages($phone,$message){
         $channels = request('sms_channels');
         $phone = \collect(DB::select("select * from admin.format_phone_number('" .$phone. "')"))->first();
         $phonenumber = $phone->format_phone_number;
@@ -739,7 +739,7 @@ group by ownership');
          }
 
         if(in_array("whatsapp", $channels)) { 
-            $this->send_whatsapp_sms($phonenumber,$message,$file_path);
+            $this->send_whatsapp_sms($phonenumber,$message);
         }
 
         if(in_array("telegram", $channels)) {
