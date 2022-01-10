@@ -148,7 +148,7 @@ class Kernel extends ConsoleKernel {
         $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                $controller->sendMessage($message->phone, $message->message,$message->file_path);
+                $controller->sendMessage($message->phone, $message->message);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
              } else {
