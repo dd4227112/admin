@@ -291,9 +291,6 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        DB::statement('refresh materialized view admin.all_invoice_prefix');
-        DB::statement('refresh materialized view admin.all_bank_accounts_integrations');
-        DB::statement('refresh materialized view admin.all_bank_accounts');
 
         $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on (a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 and a.schema_name not in ('public') ");
         foreach ($invoices as $invoice) {
@@ -408,8 +405,8 @@ class Kernel extends ConsoleKernel {
             $result = json_decode($curl);
             if (isset($result) && !empty($result)) {
                 //update invoice no
-                DB::table($invoice->schema_name . '.invoices')
-                        ->where('id', $invoice->id)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
+                DB::table($invoice->schema_name . '.invoice_prefix')
+                        ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
 
             DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
@@ -424,6 +421,7 @@ class Kernel extends ConsoleKernel {
                 "student_name" => isset($invoice->student_name) ? $invoice->student_name : '',
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
+                "allow_partial" => "TRUE",
                 "type" => ucfirst($invoice->schema_name) . '  School fee',
                 "code" => "10",
                 "callback_url" => "http://75.119.140.177:8081/api/init",
@@ -533,6 +531,7 @@ class Kernel extends ConsoleKernel {
                         "reference" => trim($invoice->reference),
                         "student_name" => $invoice->student_name,
                         "student_id" => $invoice->student_id,
+                        "allow_partial" => "TRUE",
                         "amount" => $invoice->amount,
                         //  "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "type" => ucfirst($invoice->schema_name) . ' School Fees',
@@ -558,6 +557,11 @@ class Kernel extends ConsoleKernel {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 0, 'updated_at' => 'now()']);
+                                //update invoice no
+                        if($result->description == 'Duplicate Invoice Number'){
+                            DB::table($invoice->schema_name . '.invoice_prefix')
+                            ->where('id', $invoice->id)->update(['sync' => 0, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 3, 'updated_at' => 'now()']);
+                        }
                     }
 
                     DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
