@@ -488,7 +488,7 @@ group by ownership');
                     break;
                 case 03:
                     //All customers
-                    return $this->sendCustomSmsToAll($message);
+                    return $this->sendCustomSmsToAll($message,$customer_criteria);
                     break;
                 case 04:
                     // Not Custom selection
@@ -630,8 +630,8 @@ group by ownership');
     }
 
 
-    public function sendCustomSms(){
-
+    public function sendCustomSms($message){
+       return false;
     }
 
 
