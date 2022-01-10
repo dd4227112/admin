@@ -145,10 +145,9 @@ class Kernel extends ConsoleKernel {
   
        public function whatsappMessage() {        
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
-        $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                $controller->sendMessage($message->phone, $message->message,$message->file_path);
+                $this->sendMessage($message->phone, $message->message);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
              } else {
@@ -291,9 +290,6 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        DB::statement('refresh materialized view admin.all_invoice_prefix');
-        DB::statement('refresh materialized view admin.all_bank_accounts_integrations');
-        DB::statement('refresh materialized view admin.all_bank_accounts');
 
         $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on (a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 and a.schema_name not in ('public') ");
         foreach ($invoices as $invoice) {
@@ -408,8 +404,8 @@ class Kernel extends ConsoleKernel {
             $result = json_decode($curl);
             if (isset($result) && !empty($result)) {
                 //update invoice no
-                DB::table($invoice->schema_name . '.invoices')
-                        ->where('id', $invoice->id)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
+                DB::table($invoice->schema_name . '.invoice_prefix')
+                        ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
 
             DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
@@ -424,6 +420,7 @@ class Kernel extends ConsoleKernel {
                 "student_name" => isset($invoice->student_name) ? $invoice->student_name : '',
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
+                "allow_partial" => "TRUE",
                 "type" => ucfirst($invoice->schema_name) . '  School fee',
                 "code" => "10",
                 "callback_url" => "http://75.119.140.177:8081/api/init",
@@ -533,6 +530,7 @@ class Kernel extends ConsoleKernel {
                         "reference" => trim($invoice->reference),
                         "student_name" => $invoice->student_name,
                         "student_id" => $invoice->student_id,
+                        "allow_partial" => "TRUE",
                         "amount" => $invoice->amount,
                         //  "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "type" => ucfirst($invoice->schema_name) . ' School Fees',
@@ -558,6 +556,11 @@ class Kernel extends ConsoleKernel {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 0, 'updated_at' => 'now()']);
+                                //update invoice no
+                        if($result->description == 'Duplicate Invoice Number'){
+                            DB::table($invoice->schema_name . '.invoice_prefix')
+                            ->where('id', $invoice->id)->update(['sync' => 0, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 3, 'updated_at' => 'now()']);
+                        }
                     }
 
                     DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
@@ -1394,6 +1397,38 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                 }
             }
         }
-     }
+    }
+
+        public function sendMessage($chatId, $text) {
+            $data = array('chatId' => $chatId, 'body' => $text);
+            $this->sendRequest('message', $data);
+        }
+        
+    
+        public function sendRequest($method, $data) {
+            $APIurl = 'https://eu4.chat-api.com/instance210904/';
+            $token = 'h67ddfj89j8pm4o8';
+            if (strlen($APIurl) > 5 && strlen($token) > 3) {
+    
+                $url = $APIurl . $method . '?token=' . $token;
+                if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+                    $url = $token . $method . '?token=' . $APIurl;
+                }
+    
+                if (is_array($data)) {
+                    $data = json_encode($data);
+                }
+                $options = stream_context_create(['http' => [
+                        'method' => 'POST',
+                        'header' => 'Content-type: application/json',
+                        'content' => $data]]);
+                $response = file_get_contents($url, false, $options);
+                // $response = $this->curlServer($body, $url);
+                $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
+            } else {
+                echo 'Wrong url supplied in whatsapp api';
+            }
+        }
+    
 
 }

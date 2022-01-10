@@ -325,15 +325,12 @@ class Controller extends BaseController {
         $this->sendRequest('group', $data);
     }
 
-    public function sendMessage($chatId, $text,$file_path=null) {
-        if(!empty($file_path)){
-            // $this->file($chatId, $format = 'pdf', $file_path, $text);
-           $data = array('chatId' => $chatId, 'body' => $text . PHP_EOL . $file_path);
-         } else{
-           $data = array('chatId' => $chatId, 'body' => $text);
-         }
+
+    public function sendMessage($chatId, $text) {
+        $data = array('chatId' => $chatId, 'body' => $text);
         $this->sendRequest('message', $data);
     }
+    
 
     public function sendRequest($method, $data) {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
@@ -362,10 +359,10 @@ class Controller extends BaseController {
 
   
 
-      public function send_whatsapp_sms($phone, $message,$file_path = null) {
+      public function send_whatsapp_sms($phone, $message) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
-            DB::statement("insert into admin.whatsapp_messages(message, status, phone,file_path) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "'),'" . $file_path . "' ");
+            DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "')");
         }
         return $this;
     }

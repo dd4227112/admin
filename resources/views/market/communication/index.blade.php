@@ -270,7 +270,7 @@
                             </div>
                         </div>
 
-                         <div class="form-group row">
+                         {{-- <div class="form-group row">
                             <div class="col-sm-12">
                               <div class="col-sm-4">
                                 <label for="sms_template">
@@ -282,7 +282,7 @@
                             </div>
                             </div>
                                
-                        </div>
+                        </div> --}}
 
                         {{-- <div class="pull-left col-sm-4">
                             <p>Estimated Delivery Time: <span id="get_estimated_delivery_time"></span> <i
