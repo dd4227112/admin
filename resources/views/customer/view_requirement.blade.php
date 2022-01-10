@@ -90,8 +90,8 @@
                             <thead>
                               <tr>
                                 <th>#</th>
+                                <th>Contact </th>
                                 <th>School</th>
-                                <th>Contact</th>
                                 <th>Created Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
