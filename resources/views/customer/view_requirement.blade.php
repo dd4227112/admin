@@ -2,9 +2,7 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-    
-      
-      <div class="page-header">
+    <div class="page-header">
         <div class="page-header-title">
             <h4>Requirements</h4>
         </div>
@@ -81,8 +79,60 @@
                                 </div>
                           </div>
                        </div>
-                    </div>
+                       </div>
 
+                       <div class="card">
+                        <div class="card-header"> My Other requirements </div>
+                        
+                        <div class="card-block">
+                        <div class="table-responsive dt-responsive">
+                          <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>School</th>
+                                <th>Contact</th>
+                                <th>Created Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <?php $i = 1; 
+                                 $requremts = \App\Models\Requirement::where('to_user_id',$requirement->to_user_id)->where('id','<>',$requirement->id)->latest()->get();
+                                  if(count($requremts) > 0){ 
+                                 foreach ($requremts as $req) {   
+                                 ?>
+                              <tr>
+                                  <td><?= $i ?></td>
+                                  <td><?= $req->contact ?? '' ?></td>
+                                  <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General Requirement' ?></td>
+                                  <td><?= $req->created_at ?? '' ?></td>
+                                  <td><?= $req->status ?? '' ?></td>
+                                  <td>
+                                     <?php $view_url="customer/requirements/show/$req->id"; $edit_url="customer/requirements/edit/$req->id"; ?>
+                                     <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Requirement"> view </a>
+                                        <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit"> Edit </a>
+                                  </td>
+                              </tr>
+
+                              <?php $i++; } }  ?>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th>#</th>
+                              <th>Contact</th>
+                              <th>School</th>
+                              <th>Issued Date</th>
+                              <th>Status</th>
+                              <th>Action</th>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </div>
+                    </div>
+                    
             </div>
         </div>
     </div>

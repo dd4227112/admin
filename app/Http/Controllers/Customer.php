@@ -462,7 +462,7 @@ class Customer extends Controller {
 
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
         $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) ilike '%" . strtolower($school) . "%' ");
-
+        
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
@@ -470,7 +470,7 @@ class Customer extends Controller {
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
         } elseif(empty($status)){
               return view('customer.checkinstallation',$this->data);
-        } else {
+        } else { 
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
@@ -490,11 +490,13 @@ class Customer extends Controller {
 
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
+       
         // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
         $this->data['is_client'] = $is_client;
-
+ 
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+    
         $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
         $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->get();
 
@@ -919,7 +921,6 @@ class Customer extends Controller {
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest()->get();
-
         return view('customer/analysis', $this->data);
     }
 
