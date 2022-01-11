@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-<script type="text/javascript" src="<?= url('/public') ?>/assets/select2/select2.js"></script>
 
 
     

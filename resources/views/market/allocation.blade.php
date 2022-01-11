@@ -92,43 +92,49 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                           <?php if(can_access('add_school')) { ?>
-                             <div class="col-lg-3"> 
-                                    <div class="card-body">
-                                     <a href="<?= url("sales/addSchool") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add new school"> Add School </a>
-                                  </div>
-                             </div>
-                           <?php } ?>
-                        
-                            <div class="col-lg-6">
-                            
-                                <select class="form-control" id="school_selector">
-                                    <option value="1" <?php // selected(1)  ?>>All Schools</option>
-                                    <option value="2">Client Schools</option>
-                                    {{-- <option value="3">Sales On Progress</option> --}}
-                                </select>
+                    <div class="row">
+                        <?php if(can_access('add_school')) { ?>
+                            <div class="col-lg-3"> 
+                                <div class="card-body">
+                                    <a href="<?= url("sales/addSchool") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add new school"> Add School </a>
+                                </div>
                             </div>
+                        <?php } ?>
+                    
+                        <div class="col-lg-6">
+                            <select class="form-control" id="school_selector">
+                                <option value=""></option>
+                                <option value="1">All schools</option>
+                                <option value="2">Client Schools</option>
+                            </select>
                         </div>
+                    </div>
 
 
                     <div class="row">
                       <div class="col-lg-12">
-                       <?php isset($schools) { ?>
+                       <?php if(isset($schools))  { ?>
 
                         <div class="card">
                         <div class="card-header row">
                          <div class="col-sm-8">
-                            <h5>List of Schools Under &nbsp;&nbsp;ShuleSoft </h5>
+                            <h5>List of Schools Under&nbsp;ShuleSoft </h5>
                          </div>
-                   
-
-                       
-                     </div>
+                               <div class="col-sm-4">
+                                    <select class="select2" style="width:300px;" id='region_selector'>
+                                        <option></option>
+                                        <?php 
+                                            $regions = \App\Models\Region::all();
+                                           foreach ($regions as $region) { ?>
+                                            <option value="<?= $region->id ?>" ><?= $region->name ?></option>
+                                        <?php } ?>
+                                    </select>
+                               </div>
+                        </div>
                         
                         <div class="card-block">
-                             <div class="table-responsive dt-responsive">
-                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                        <div class="table-responsive analytic-table">
+                            <table id="res-config" class="table table-bordered w-100 dataTable">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -256,8 +262,14 @@
     school_selector = function () {
         $('#school_selector').change(function () {
             var val = $(this).val();
-            console.log(val)
             window.location.href = '<?= url('sales/school') ?>/' + val;
+        })
+
+        $('#region_selector').change(function () {
+            var val = $('#school_selector').val();
+            alert(val)
+            var reg = $(this).val();
+            window.location.href = '<?= url('sales/school') ?>/' + val + '/' + reg;
         })
     }
     $(document).ready(school_selector);

@@ -127,7 +127,7 @@ class Sales extends Controller {
 
     public function school() {
         $id = request()->segment(3);
-        if($id > 0){
+        if($id > 1){
           $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
         }
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
