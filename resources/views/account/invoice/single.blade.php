@@ -190,9 +190,9 @@
 
                                                     <li>Customization of features based on school requests</li>
                                                     <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
-                                                   <?php }  elseif($invoicefee->project_id == 2){ ?>
+                                                   <?php }  elseif ($invoicefee->project_id == 3){ ?>
                                                     <li>School Bank Integration</li>
-                                                    <?php } elseif ($invoicefee->project_id == 3) { ?>
+                                                    <?php } elseif ($invoicefee->project_id == 2) { ?>
                                                     <li> Android Based Fingerprint Handleld Terminal Device</li>
                                                     <li> System installation </li>
                                                     <li>Training and Support</li>

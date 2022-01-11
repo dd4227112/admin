@@ -209,7 +209,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
     }
 
     public function myschools() {
-        $this->data['breadcrumb'] = array('title' => 'Clients list','subtitle'=>'shulesoft schools','head'=>'operations');
         if (request()->segment(3) != '') {
             $id = request()->segment(3);
         } else {
@@ -220,7 +219,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         if(($user->role_id) && ($user->role_id == 17)){  
             $zone = \App\Models\ZoneManager::where('user_id',$id)->first();
             if($zone){
-             $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::where('refer_zone_id',$zone->zone_id)->get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
+             $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
             }else{
              $schools = [];
              }
@@ -239,7 +238,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
     }
 
     public function myreport() {
-        $this->data['breadcrumb'] = array('title' => 'Task Reports','subtitle'=>'shuleSoft tasks reports','head'=>'operations');
         $id = [];
         if ($_POST) {
 
