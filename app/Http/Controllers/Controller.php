@@ -357,8 +357,6 @@ class Controller extends BaseController {
     }
 
 
-  
-
       public function send_whatsapp_sms($phone, $message) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
