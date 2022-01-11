@@ -183,7 +183,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                  <div class="col-md-4">
                                                     <strong> Choose school </strong>
                                                     <select type="text"  name="school_id" class="select2" required>
-                                                       <?php \App\Models\School::chunk(50, function ($schools) {  ?>
+                                                       <?php \App\Models\School::where('ownership','<>','Government')->chunk(50, function ($schools) {  ?>
                                                         <?php  foreach($schools as $value) { ?>
                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
                                                         <?php   }  ?>
