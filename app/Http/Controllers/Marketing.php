@@ -612,7 +612,7 @@ group by ownership');
 
 
     public function sendCustomSmsToAll($message,$customer_criteria){
-        $customers = DB::select("select * from admin.all_setting");
+        $customers = DB::select("select * from admin.all_users where usertype not in ('Student','Parent','Driver','Matron','Cooks','Cleaner','Secreatry','Conductor','Gardener','Normal')");
         if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(

@@ -157,7 +157,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div>  
                 </div>
 
                 <?php if (count($schools) > 0) { ?>
