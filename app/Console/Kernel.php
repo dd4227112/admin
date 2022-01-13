@@ -94,7 +94,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->HRContractRemainders();
-            $this->HRLeaveRemainders();
+          //  $this->HRLeaveRemainders();
         })->dailyAt('04:40'); // Eq to 07:40 AM   
 
 
