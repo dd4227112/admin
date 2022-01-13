@@ -162,6 +162,7 @@
                                         </table>
                                     </div>
 
+                                    
                                     <?php
                                     $invoice_fee = $invoice->invoiceFees()->get();
                                     ?>
