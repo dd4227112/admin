@@ -127,8 +127,14 @@ class Sales extends Controller {
 
     public function school() {
         $id = request()->segment(3);
+        $reg_id = request()->segment(4);
+
         if($id > 1){
-          $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
+            if(isset($reg_id) && (int) $reg_id > 0){
+              $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',[$reg_id])->get(['id']))->get(['id']))->get(['id']))->get();
+            } else{
+              $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
+            }
         }
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
@@ -432,7 +438,6 @@ class Sales extends Controller {
     }
 
     function addSchool() {
-    $this->data['breadcrumb'] = array('title' => 'New school','subtitle'=>'sales','head'=>'add school');
         if ($_POST) {
             $array = [
                 'name' => strtoupper(request('name')),

@@ -1,5 +1,6 @@
 @extends(!isset($balance) ? 'layouts.app' : 'layouts.nologin')
 @section('content')
+<?php $root = url('/') . '/public/'; ?>
 
 <title>Invoice</title>
 <link rel="SHORTCUT ICON" rel="icon" href="<?= url("storage/uploads/images/favicon.png") ?>">
@@ -102,6 +103,9 @@
                                 <!-- title row -->
                                 <div class="row" style="padding-top: 0px">
                                     <div class="col-lg-12 col-sm-12">
+                                        <div>
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="300" height="160"/>
+                                        </div>
                                         
                                         <table class="table">
                                             <tbody>
@@ -251,17 +255,7 @@
                                         <!-- <br/>
                                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
                                         <?php if(isset($diff_in_months)) { ?>
-                                        <?php if($diff_in_months <= 12) { ?>
-                                        <p class="text-muted well well-sm no-shadow">
-                                            {{--  --}}
-                                            We're always delighted to serve your school
-                                        </p>
-                                        <?php } else { ?>
-                                            <p class="text-muted well well-sm no-shadow">
-                                              We're always delighted to serve your school
-                                            </p>
-                                          <?php } ?>
-                                        <?php } else { ?>
+                                       
                                             <p class="text-muted well well-sm no-shadow">
                                                 We're always delighted to serve your school
                                             </p>
@@ -289,6 +283,10 @@
                                         </td>
                                       </tr>
                                     </table>
+
+                                         <div style="margin-left: 140px;margin-top:-10px;">
+                                            <img src="<?= $root ?>/images/company_seal.png"  width="300" height="160"/>
+                                        </div>
                    
                                    </div>
                             </div>
