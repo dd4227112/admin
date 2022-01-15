@@ -450,8 +450,8 @@ group by ownership');
 
 
     public function communication() {
-        $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
-        if ($_POST) { 
+         $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
+          if ($_POST) { 
             $this->validate(request(), [
                 'message' => 'required'
             ]);
@@ -465,7 +465,13 @@ group by ownership');
             $custom_numbers = request('custom_numbers');
             $criteria = request('less_than');
             $student_number = request('student_number');
-
+            $file =  request('file_');
+          //  $file_path = '';
+            
+            // if(!empty($file)){
+            //     $file = request()->file('file_');
+            //     $file_path = $this->uploadFileLocal($file);
+            // }
 
             switch ($firstCriteria) {
                 case 00:   
@@ -482,11 +488,11 @@ group by ownership');
                     break;
                 case 03:
                     //All customers
-                    return $this->sendCustomSmsToAll($message, $section_id, $message);
+                    return $this->sendCustomSmsToAll($message,$customer_criteria);
                     break;
                 case 04:
                     // Not Custom selection
-                    return $this->sendCustomSms($message, $section_id, $message);
+                    return $this->sendCustomSms($message);
                     break;
                 default:
                     break;
@@ -497,7 +503,8 @@ group by ownership');
 
     public function sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$customer_segment = null,$prospectscriteria = null,$leadscriteria = null) {
         
-        $dates = date('Y-m-d',strtotime('first day of January'));
+        // $dates = date('Y-m-d',strtotime('first day of January'));
+           $dates = '2021-01-01';
     
         switch ($customer_criteria) {
             case 0:   //All customers (paid)
@@ -604,8 +611,8 @@ group by ownership');
     }
 
 
-    public function sendCustomSmsToAll($message,$customer_criteria,$prospectscriteria = null,$leadscriteria = null,$customer_segment = null){
-        $customers = DB::select("select * from admin.all_setting");
+    public function sendCustomSmsToAll($message,$customer_criteria){
+        $customers = DB::select("select * from admin.all_users where usertype not in ('Student','Parent','Driver','Matron','Cooks','Cleaner','Secreatry','Conductor','Gardener','Normal')");
         if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
@@ -623,8 +630,8 @@ group by ownership');
     }
 
 
-    public function sendCustomSms(){
-
+    public function sendCustomSms($message){
+       return false;
     }
 
 
@@ -731,7 +738,7 @@ group by ownership');
               // Send messages by quick sms
          }
 
-        if(in_array("whatsapp", $channels)) {
+        if(in_array("whatsapp", $channels)) { 
             $this->send_whatsapp_sms($phonenumber,$message);
         }
 

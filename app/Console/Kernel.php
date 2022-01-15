@@ -59,7 +59,7 @@ class Kernel extends ConsoleKernel {
         })->hourly();
 
         $schedule->call(function () {
-            (new Message())->sendEmail();
+          //  (new Message())->sendEmail();
         })->everyMinute();
 
 
@@ -94,7 +94,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->HRContractRemainders();
-            $this->HRLeaveRemainders();
+          //  $this->HRLeaveRemainders();
         })->dailyAt('04:40'); // Eq to 07:40 AM   
 
 
@@ -142,7 +142,8 @@ class Kernel extends ConsoleKernel {
         })->hourly();
     }
 
-    public function whatsappMessage() {
+  
+       public function whatsappMessage() {        
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
         $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
@@ -150,12 +151,15 @@ class Kernel extends ConsoleKernel {
                 $controller->sendMessage($message->phone, $message->message);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
-            } else {
+             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
-            }
+             }
+           }
         }
-    }
+
+ 
+    
 
     function checkPaymentPattern($user, $schema) {
         $pattern = [0, 0, 0];
@@ -287,9 +291,6 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        DB::statement('refresh materialized view admin.all_invoice_prefix');
-        DB::statement('refresh materialized view admin.all_bank_accounts_integrations');
-        DB::statement('refresh materialized view admin.all_bank_accounts');
 
         $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on (a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 and a.schema_name not in ('public') ");
         foreach ($invoices as $invoice) {
@@ -404,8 +405,8 @@ class Kernel extends ConsoleKernel {
             $result = json_decode($curl);
             if (isset($result) && !empty($result)) {
                 //update invoice no
-                DB::table($invoice->schema_name . '.invoices')
-                        ->where('id', $invoice->id)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
+                DB::table($invoice->schema_name . '.invoice_prefix')
+                        ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
 
             DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
@@ -420,6 +421,7 @@ class Kernel extends ConsoleKernel {
                 "student_name" => isset($invoice->student_name) ? $invoice->student_name : '',
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
+                "allow_partial" => "TRUE",
                 "type" => ucfirst($invoice->schema_name) . '  School fee',
                 "code" => "10",
                 "callback_url" => "http://75.119.140.177:8081/api/init",
@@ -529,6 +531,7 @@ class Kernel extends ConsoleKernel {
                         "reference" => trim($invoice->reference),
                         "student_name" => $invoice->student_name,
                         "student_id" => $invoice->student_id,
+                        "allow_partial" => "TRUE",
                         "amount" => $invoice->amount,
                         //  "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "type" => ucfirst($invoice->schema_name) . ' School Fees',
@@ -554,6 +557,11 @@ class Kernel extends ConsoleKernel {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 0, 'updated_at' => 'now()']);
+                                //update invoice no
+                        if($result->description == 'Duplicate Invoice Number'){
+                            DB::table($invoice->schema_name . '.invoice_prefix')
+                            ->where('id', $invoice->id)->update(['sync' => 0, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 3, 'updated_at' => 'now()']);
+                        }
                     }
 
                     DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
@@ -656,7 +664,6 @@ class Kernel extends ConsoleKernel {
     }
 
     public function car_track_alert_parent($schema = '') {
-
         $imeis = DB::select("select string_agg(imeis::text, ',') as imeis from " . $schema . ".vehicles");
         $key = DB::table('public.sms_keys')->first();
         $sql = 'select  * from ' . $schema . '.car_tracker_key';
@@ -929,7 +936,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     public function sendBirthdayWish() {
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'canaanhigh', 'barbrojohannson'))) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'canaanhigh', 'barbrojohannson','jknyerere'))) {
                 //Remind parents,class and section teachers to wish their students
 
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
@@ -1272,7 +1279,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     // function to remainder HR about annual leave of employees
     // To do more improvement to include employemet status ie intern,probation etc
     public function HRLeaveRemainders() {
-        $annual = DB::select("select user_id, case when (end_date is null) then joining_date + interval '1 year' else end_date + interval '1 year' end AS annual_date from admin.annual_leave");
+        $annual = DB::select("select user_id, case when (end_date is null) then joining_date + interval '1 year' else end_date + interval '1 year' end AS annual_date
+         from admin.annual_leave");
         $ids = array();
         foreach ($annual as $value) {
             $ids[] = $value->user_id;
@@ -1333,10 +1341,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
-        \DB::statement('select * from admin.refresh_materialized_views()');
+        DB::statement('select * from admin.refresh_materialized_views()');
     }
-
-
 
     
     public function weeklyAccountsReports(){
@@ -1392,6 +1398,38 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                 }
             }
         }
-     }
+    }
+
+        public function sendMessage($chatId, $text) {
+            $data = array('chatId' => $chatId, 'body' => $text);
+            $this->sendRequest('message', $data);
+        }
+        
+    
+        public function sendRequest($method, $data) {
+            $APIurl = 'https://eu4.chat-api.com/instance210904/';
+            $token = 'h67ddfj89j8pm4o8';
+            if (strlen($APIurl) > 5 && strlen($token) > 3) {
+    
+                $url = $APIurl . $method . '?token=' . $token;
+                if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+                    $url = $token . $method . '?token=' . $APIurl;
+                }
+    
+                if (is_array($data)) {
+                    $data = json_encode($data);
+                }
+                $options = stream_context_create(['http' => [
+                        'method' => 'POST',
+                        'header' => 'Content-type: application/json',
+                        'content' => $data]]);
+                $response = file_get_contents($url, false, $options);
+                // $response = $this->curlServer($body, $url);
+                $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
+            } else {
+                echo 'Wrong url supplied in whatsapp api';
+            }
+        }
+    
 
 }

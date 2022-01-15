@@ -115,6 +115,7 @@ class Account extends Controller {
             }
             $this->data['invoice'] = Invoice::find($invoice_id);
             $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
+
         
             $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
            
@@ -383,6 +384,7 @@ class Account extends Controller {
         $reference = time(); // to be changed for selcom ID
         $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
         $client = \App\Models\ClientSchool::where('school_id',(int) $school_id)->first();
+
         
         $school = \App\Models\School::find($school_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
@@ -412,12 +414,12 @@ class Account extends Controller {
 
         $invoice = Invoice::create($data);
         $amount = remove_comma(request('amount'));
-         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
+        $total_amount = request('students') * $amount;
+         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $total_amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount , 'quantity' => request('students')]);
         }
          return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
 
     }
-
 
 
     public function createInvoice() {
@@ -459,7 +461,6 @@ class Account extends Controller {
     }
 
     public function client() {
-       $this->data['breadcrumb'] = array('title' => 'Company Clients','subtitle'=>'clients','head'=>'operations');
         $this->data['clients'] = \App\Models\Client::all();
         $seg = request()->segment(3);
         $id = request()->segment(4);
@@ -1216,7 +1217,6 @@ class Account extends Controller {
             $address = request()->file('file');
           
             $results = Excel::load($address)->all();
-            dd($results);
             //once we upload excel, register students and marks in mark_info table
             $status = '';
             foreach ($results as $value) {

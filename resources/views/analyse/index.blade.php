@@ -164,31 +164,34 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-lg-12">
+                      <div class="col-xl-12">
                         <div class="card">
-                            <div class="card-block">
-                                <div id="containa" style="height:300px"></div>
+                            <div class="card-body">
+                                <figure class="highcharts-figure">
+                                  <div id="containa" style="height: 300px;"></div>
+                                </figure>
                             </div>
                         </div>
-                     </div>
+                       </div>
                     </div>
-        
+                    
+               
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="card  mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
-                                        <div id="onboardPie" style="height: 300px; width:350px;"></div>
+                                        <div id="onboardPie" style="height: 300px;"></div>
                                     </figure>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-xl-6">
-                            <div class="card  mb-2">
+                            <div class="card mb-2">
                                 <div class="card-body">
                                     <figure class="highcharts-figure">
-                                        <div id="onboardBar" style="height: 300px; width:350px;"></div>
+                                        <div id="onboardBar" style="height: 300px;"></div>
                                     </figure>
                                 </div>
                             </div>

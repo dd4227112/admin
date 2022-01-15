@@ -94,13 +94,13 @@
                                             </a>
                                             <ul class="pcoded-submenu">
 
-                                             <?php if(\Auth::user()->role_id == 15) { ?>
+                                             <?php if(\Auth::user()->role_id == 15)  { ?>
                                                 <li class="">
                                                 <a href="<?= url('partner/index') ?>">
                                                     <span class="pcoded-mtext">Partner request</span>
                                                 </a>
                                                 </li>
-                                                <?php } else { ?>
+                                            <?php } else { ?>
                                                 <li class="">
                                                     <a href="<?= url('sales/index') ?>">
                                                        <span class="pcoded-mtext">Sales materials</span>

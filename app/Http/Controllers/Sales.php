@@ -126,6 +126,10 @@ class Sales extends Controller {
     }
 
     public function school() {
+        $id = request()->segment(3);
+        if($id > 1){
+          $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
+        }
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
@@ -499,7 +503,9 @@ class Sales extends Controller {
                     'username' => clean($schema_name),
                     'payment_option' => request('payment_option'),
                     'start_usage_date' => date('Y-m-d'),
-                    'trial' => request('check_trial')
+                    'trial' => request('check_trial'),
+                    'owner_email' => request('owner_email'),
+                    'owner_phone' => request('owner_phone')
                 ]); 
 
                 // trial period
@@ -988,7 +994,6 @@ class Sales extends Controller {
     }
 
     public function schoolVisit() {
-       $this->data['breadcrumb'] = array('title' => 'Requirements','subtitle'=>'customer requirements','head'=>'marketing');
         $page = request()->segment(3);
         if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             //current day
@@ -1040,7 +1045,6 @@ class Sales extends Controller {
 }
 
     public function addvisit() {
-       $this->data['breadcrumb'] = array('title' => 'Shulesoft Visitation Definition','subtitle'=>'client visitation','head'=>'operations');
         $schools = DB::table('all_setting')->orderBy('created_at', 'DESC')->get();
         $all_school = [];
         foreach ($schools as $school) {

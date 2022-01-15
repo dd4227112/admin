@@ -22,7 +22,9 @@ $sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clien
         select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
         WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
 $taskss = DB::select($sqls1);
+
 $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
+
 $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . ' order by created_at desc');
 ?>
 
@@ -254,9 +256,10 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                     <div class="card-header">
                         <h5>My User Activities</h5>
                     </div>
+
                     <div class="card-block">
-                        <div class="table-responsive">
-                            <table class="table dataTable">
+                      <div class="table-responsive">
+                            <table class="table dataTable table-striped table-bordered nowrap">
                                 <thead>
                                      <tr>
                                         <th>No.</th>
@@ -272,7 +275,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                                              if(count($allschools)){
                                               foreach($allschools as $school){ 
                                                 ?>
-                                                <tr>
+                                              <tr>
                                                 <td><?=$i?></td>
                                                 <td><?=ucfirst($school->sname)?></td>
                                                 <td><?=ucfirst($school->address)?></td>
@@ -280,11 +283,8 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                                                 <td>
                                                  <a class="btn btn-info btn-min btn-round" href="<?= url('customer/profile/' . $school->schema_name) ?>">View</a>
                                                 </td>
-                                                </tr>
-                                            <?php
-                                            $i++; }
-                                          }
-                                        ?>
+                                            </tr>
+                                        <?php $i++; } } ?>
                                     </tbody>
                               </table>
                         </div>
@@ -297,9 +297,9 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
             <div class="row">
                 <div class="col-xl-6">
                     <div class="card">
-                        <div class="card-block">
+                        <div class="card-body">
                              <figure class="highcharts-figure">
-                                 <div id="new_school" style="height: 300px; width:350px;"></div>
+                                 <div id="new_school" style="height: 300px;"></div>
                              </figure> 
                         </div>
                     </div>
@@ -307,9 +307,9 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
   
                 <div class="col-xl-6">
                  <div class="card">
-                    <div class="card-block">
+                    <div class="card-body">
                       <figure class="highcharts-figure">
-                           <div id="Requests" style="height: 300px; width:350px;"></div>
+                           <div id="Requests" style="height: 300px;"></div>
                        </figure> 
                     </div>
                   </div>
@@ -322,7 +322,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                         <div class="card-header">
                             <h5>Sales Person Activity Ratio</h5>
                         </div>
-                        <div class="card-block">
+                        <div class="card-body">
                             <?php
                             $sales_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where . " group by user_name";
                             echo $insight->createChartBySql($sales_distribution, 'user_name', 'Sales Activity', 'bar', false);
@@ -336,7 +336,7 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                         <div class="card-header">
                             <h5>Sales Distribution Activities</h5>
                         </div>
-                        <div class="card-block">
+                        <div class="card-body">
                             <?php
                             $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where . " group by task_name";
                             echo $insight->createChartBySql($sales_group, 'task_name', 'Sales Group Activity', 'bar', false);
@@ -346,15 +346,13 @@ $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where . 
                   </div>                       
                 </div>
 
-
-
-
                  <div class="row">
-                    <div class="col-lg-8 col-sm-12">
+                    <div class="col-lg-12 col-sm-12">
                         <div class="card">
                             <div class="card-block">
-                              <div class="table-responsive analytic-table">
-                                <table id="res-config" class="table table-bordered w-100 dataTable">
+                              <div class="table-responsive">
+                                 <table class="table dataTable table-striped table-bordered nowrap">
+ 
                                     <thead>
                                         <tr>
                                             <th>#</th>

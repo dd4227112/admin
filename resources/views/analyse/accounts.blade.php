@@ -252,32 +252,24 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                </div>
             <?php } ?>
 
-            <div class="row">
-              <div class="col-lg-12">     
-                <div class="card">
-                    <div class="card-block">
-                      <div class="cd-horizontal-timeline loaded">
-                        <div class="events-content">
-                            <div class="card">
-                                     <div class="card-block">  
-                                          <figure class="highcharts-figure">
-                                             <div id="onboardBar" style="height: 400px; width:850px;"></div>
-                                        </figure>
-                                    </div>
-                                </div>
-                            </div>
+              <div class="row">
+                 <div class="col-xl-12">     
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <figure class="highcharts-figure">
+                                <div id="onboardBar" style="height: 300px;"></div>
+                            </figure>
                         </div>
                     </div>
-                </div>
-                </div>
+                   </div>
+            </div>
          
     <?php } ?>
 
 </div>
 
 <script>
-
-    
+   
 Highcharts.chart('onboardBar', {
     chart: {
         type: 'column'
