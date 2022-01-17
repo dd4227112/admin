@@ -459,8 +459,7 @@ class Sales extends Controller {
        // $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
 
-        $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
-        $username = clean($username);
+        $username = clean(preg_replace('/[^a-z]/', null, strtolower($school->name)));
          
         $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
         if ($_POST) {
