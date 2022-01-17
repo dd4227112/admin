@@ -2,11 +2,8 @@
 @section('content')
 <?php $root = url('/') . '/public/'; ?>
 
-<title>Invoice</title>
-<link rel="SHORTCUT ICON" rel="icon" href="<?= url("storage/uploads/images/favicon.png") ?>">
-<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-<meta name="theme-color" content="#00acac">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
+
 
 
 <style>
