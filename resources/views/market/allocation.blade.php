@@ -27,7 +27,6 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-block">
 
                             <div class="row">
                                 <?php
@@ -60,7 +59,7 @@
                                     $i++;
                                 }
                                 ?>
-                                 <div class="col-lg-6 col-xl-6 col-sm-12">
+                                 <div class="col-lg-3 col-xl-3 col-sm-12">
                         
                                  <?php $percent = $nmb_schools.'  Use nmb '. $use_shulesoft .' use ShuleSoft, ' .$nmb_shulesoft_schools. ' use NMB & ShuleSoft'; ?>
                                   
@@ -90,9 +89,9 @@
                                         </div>
                                 </div> 
                             </div>
-                        </div>
+                        
 
-                    <div class="row">
+                    <div class="row mt-10">
                         <?php if(can_access('add_school')) { ?>
                             <div class="col-lg-3"> 
                                 <div class="card-body">
@@ -102,7 +101,7 @@
                         <?php } ?>
                     
                         <div class="col-lg-6">
-                            <select class="form-control" id="school_selector">
+                            <select class="form-control select2" id="school_selector">
                                 <option value=""></option>
                                 <option value="1">All schools</option>
                                 <option value="2">Client Schools</option>
@@ -120,8 +119,12 @@
                          <div class="col-sm-8">
                             <h5>List of Schools Under&nbsp;ShuleSoft </h5>
                          </div>
-                               <div class="col-sm-4">
-                                    <select class="select2" style="width:300px;" id='region_selector'>
+
+                            
+
+                               <div class="col-sm-3">
+                                   <label>Select Region </label>
+                                    <select class="form-control select2"  id='region_selector'>
                                         <option></option>
                                         <?php 
                                             $regions = \App\Models\Region::all();
@@ -134,7 +137,7 @@
                         
                         <div class="card-block">
                         <div class="table-responsive analytic-table">
-                            <table id="res-config" class="table table-bordered w-100 dataTable">
+                            <table id="example" class="table table-bordered w-100 dataTable">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -218,6 +221,10 @@
     </div>
 </div>
 <script type="text/javascript">
+   $(document).ready(function() {
+       $('#example').DataTable();
+    });
+
     $(document).ready(function () {
         var table = $('#list_of_schools').DataTable({
             "processing": true,
@@ -264,15 +271,15 @@
             var val = $(this).val();
             window.location.href = '<?= url('sales/school') ?>/' + val;
         })
-
-        $('#region_selector').change(function () {
-            var val = $('#school_selector').val();
-            alert(val)
-            var reg = $(this).val();
-            window.location.href = '<?= url('sales/school') ?>/' + val + '/' + reg;
-        })
     }
     $(document).ready(school_selector);
+
+
+      $('#region_selector').change(function () {
+            var reg = $(this).val();
+            var val = 2
+            window.location.href = '<?= url('sales/school') ?>/' + val + '/' + reg;
+        })
 </script>
 
 @endsection

@@ -414,7 +414,8 @@ class Account extends Controller {
 
         $invoice = Invoice::create($data);
         $amount = remove_comma(request('amount'));
-         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
+        $total_amount = request('students') * $amount;
+         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $total_amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount , 'quantity' => request('students')]);
         }
          return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
 
