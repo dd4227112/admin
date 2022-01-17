@@ -462,16 +462,16 @@ class Customer extends Controller {
 
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
         $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) ilike '%" . strtolower($school) . "%' ");
+        $client = \App\Models\Client::where('username', $school)->first();
+
         
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        } elseif(empty($status)){ 
-              return view('install.index');
-
-            //  return view('customer.checkinstallation',$this->data);
+        } elseif(empty($status) && isset($client->username)){ 
+              return redirect('https://' . $school . '.shulesoft.com');
         } else { 
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
