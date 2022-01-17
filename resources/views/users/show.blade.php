@@ -238,7 +238,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                 </div>
                     <!-- Tab panes -->
                     <div class="col-lg-10 col-xl-10">
-                    <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">
+                    <div class="tab-content  card-block" style="width:100%; padding-top: 0; padding-right: 0;">
                         <div class="tab-pane active" id="home5" role="tabpanel" aria-expanded="true">
                             <div class="card">
                                 <div class="card-header">
@@ -762,7 +762,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
 
                         <div class="tab-pane" id="profile5" role="tabpanel" aria-expanded="false">
                             <div class="row">
-                                <div class="col-lg-12 col-sm-12">
+                                <div class="col-lg-12 col-xl-12">
                                     <div class="card">
                                         <div class="card-header">
                                             <h5 class="card-header-text">Custom Reports</h5>
