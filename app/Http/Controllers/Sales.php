@@ -502,7 +502,7 @@ class Sales extends Controller {
                     'estimated_students' => request('students'),
                     'status' => 3,
                     'code' => $code,
-                  //  'region_id' => $region_id,
+                    'region_id' => $school->wards->district->region->id,
                     'email_verified' => 0,
                     'phone_verified' => 0,
                     'created_by' => \Auth::user()->id,
