@@ -502,6 +502,7 @@ class Sales extends Controller {
                     'estimated_students' => request('students'),
                     'status' => 3,
                     'code' => $code,
+                  //  'region_id' => $region_id,
                     'email_verified' => 0,
                     'phone_verified' => 0,
                     'created_by' => \Auth::user()->id,
@@ -888,8 +889,6 @@ class Sales extends Controller {
     }
 
     public function salesStatus() {
-    $this->data['breadcrumb'] = array('title' => 'Sales status','subtitle'=>'sales','head'=>'status');
-
         $page = request()->segment(3);
         if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             //current day
