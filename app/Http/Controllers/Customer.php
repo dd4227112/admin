@@ -472,6 +472,8 @@ class Customer extends Controller {
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
         } elseif(empty($status) && isset($client->username)){ 
               return redirect('https://' . $school . '.shulesoft.com');
+        } elseif(empty($status) && empty($client->username)){ 
+              return FALSE;
         } else { 
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
