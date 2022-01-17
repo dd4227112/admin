@@ -121,8 +121,7 @@ class Analyse extends Controller {
     }
 
     public function marketing() {
-        // $this->data['association'] = \App\Model\Association::first();
-        $this->data['breadcrumb'] = array('title' => 'Marketing dashboard','subtitle'=>'summary','head'=>'marketing');
+        $this->data['association'] = \App\Model\Association::first();
         return view('analyse.marketing', $this->data);
     }
 

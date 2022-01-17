@@ -928,7 +928,6 @@ class Account extends Controller {
 
 
     public function bank() {
-       $this->data['breadcrumb'] = array('title' => 'Our banks','subtitle'=>'banks','head'=>'settings');
         $this->data['bankaccounts'] = \App\Models\BankAccount::latest()->get();
         return view('account.bank.index', $this->data);
     }
@@ -984,7 +983,6 @@ class Account extends Controller {
     }
 
     public function groups() {
-       $this->data['breadcrumb'] = array('title' => 'Account Groups','subtitle'=>'accounts','head'=>'settings');
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::latest()->get();
         $this->data["category"] = \App\Models\FinancialCategory::latest()->get();

@@ -468,8 +468,10 @@ class Customer extends Controller {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        } elseif(empty($status)){
-              return view('customer.checkinstallation',$this->data);
+        } elseif(empty($status)){ 
+              return view('install.index');
+
+            //  return view('customer.checkinstallation',$this->data);
         } else { 
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
@@ -589,7 +591,6 @@ class Customer extends Controller {
     }
 
     public function activity() {
-       $this->data['breadcrumb'] = array('title' => 'Create activity','subtitle'=>'add new activity','head'=>'operations');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
