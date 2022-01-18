@@ -8,7 +8,7 @@
                         <?php
                             if (strlen(request('token')) < 4) {
                                 ?>
-                        <a class="main-search morphsearch-search  d-lg-none d-md-none" style="padding:70px" href="#!" style="color: white">
+                        <a class="main-search morphsearch-search  d-lg-none d-md-none" style="padding:80px" href="#!" style="color: white">
                                         <i class="feather icon-search"></i>
                                     </a>
                                     <?php } ?>
