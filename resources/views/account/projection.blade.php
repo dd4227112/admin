@@ -192,7 +192,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                 </div> 
 
                                                  <div class="col-md-4">
-                                                    <strong> Number of students </strong>
+                                                    <strong> Quantity </strong>
                                                       <input type="number" name="students"  class="form-control" placeholder="" autofocus>
                                                   </div> 
 

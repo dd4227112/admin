@@ -191,8 +191,8 @@
 
                                                     <?php } ?>
                                                  </td>
-                                                    <td class="text-center"><?= isset($invoice->students) ? $invoice->students : ''  ?></td>
-                                                    <td class="text-center"><?= isset($invoice->unit_amount) ? $invoice->unit_amount : ''  ?></td>
+                                                    <td class="text-center"><?= isset($invoice->students) ? number_format($invoice->students) : ''  ?></td>
+                                                    <td class="text-center"><?= isset($invoice->unit_amount) ? money($invoice->unit_amount) : ''  ?></td>
                                                     <td class="text-center"><?= money($invoice->amount) ?></td>
                                                 </tr>
                                             </tbody>
