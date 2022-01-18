@@ -22,8 +22,6 @@
         .invoice-title{
             float: right !important;
         }
-
-
     }
 
 </style>
@@ -179,14 +177,23 @@
                                             <tbody>
                                               
                                                 <tr>
-                                                   <td> ShuleSoft Service Fee
+                                                  <td>
+                                                    <?php if($invoice->project_id == 4){ ?>
                                                     <li>Training and Support</li>
                                                     <li>Unlimited Cloud hosting for School Information</li>
                                                     <li>Unlimited bandwidth for users to access</li>
+
                                                     <li>Customization of features based on school requests</li>
                                                     <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
-                                        
-                                                  </td>
+                                                   <?php }  elseif ($invoice->project_id == 3){ ?>
+                                                    <li>School Bank Integration</li>
+                                                    <?php } elseif ($invoice->project_id == 2) { ?>
+                                                    <li> Android Based Fingerprint Handleld Terminal Device</li>
+                                                    <li> System installation </li>
+                                                    <li>Training and Support</li>
+
+                                                    <?php } ?>
+                                                 </td>
                                                     <td class="text-center"><?= isset($invoice->students) ? $invoice->students : ''  ?></td>
                                                     <td class="text-center"><?= isset($invoice->unit_amount) ? $invoice->unit_amount : ''  ?></td>
                                                     <td class="text-center"><?= money($invoice->amount) ?></td>
