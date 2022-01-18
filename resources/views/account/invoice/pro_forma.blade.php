@@ -1,6 +1,9 @@
 @extends(!isset($balance) ? 'layouts.app' : 'layouts.nologin')
 @section('content')
 
+<?php $root = url('/') . '/public/'; ?>
+
+
 <title>Invoice</title>
 <link rel="SHORTCUT ICON" rel="icon" href="<?= url("storage/uploads/images/favicon.png") ?>">
 <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
@@ -101,6 +104,9 @@
                                 <div class="row" style="padding-top: 0px">
                                     <div class="col-lg-12 col-sm-12">
                                         
+                                         <div>
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="300" height="120"/>
+                                        </div>
                                         <table class="table">
                                             <tbody>
                                                 <tr>
@@ -242,6 +248,10 @@
                                                     <tr>
                                                         <th>Grand Total :</th>
                                                         <th>Tsh <?= number_format($invoice->amount) ?></th>
+
+                                                          <th style="margin-left: 1px; z-index:1">
+                                                            <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
+                                                         </th>
                                                     </tr>
 
                                                 </tbody>
