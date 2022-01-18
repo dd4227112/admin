@@ -377,6 +377,8 @@ class Account extends Controller {
     }
 
 
+
+
       public function createinvoices() {
         $school_id =  (int) request('school_id');
         
@@ -390,7 +392,7 @@ class Account extends Controller {
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 
         // If school is not client, create pro forma invoice
-         if (is_null($client)) {
+         if (is_null($client) && request('type')== '4') {
             DB::table('admin.temp_clients')->insert([
                 'name' => $school->name, 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school->id, 'user_id' => \Auth::user()->id,
                 'reference' => $reference, 'date' => $start_date, 'due_date' => $due_date, 'account_year_id' => $year->id,
@@ -928,7 +930,6 @@ class Account extends Controller {
 
 
     public function bank() {
-       $this->data['breadcrumb'] = array('title' => 'Our banks','subtitle'=>'banks','head'=>'settings');
         $this->data['bankaccounts'] = \App\Models\BankAccount::latest()->get();
         return view('account.bank.index', $this->data);
     }
@@ -984,7 +985,6 @@ class Account extends Controller {
     }
 
     public function groups() {
-       $this->data['breadcrumb'] = array('title' => 'Account Groups','subtitle'=>'accounts','head'=>'settings');
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::latest()->get();
         $this->data["category"] = \App\Models\FinancialCategory::latest()->get();

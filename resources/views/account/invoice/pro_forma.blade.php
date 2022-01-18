@@ -1,15 +1,9 @@
 @extends(!isset($balance) ? 'layouts.app' : 'layouts.nologin')
 @section('content')
 
-<title>Invoice</title>
-<link rel="SHORTCUT ICON" rel="icon" href="<?= url("storage/uploads/images/favicon.png") ?>">
-<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-<meta name="theme-color" content="#00acac">
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<link href="<?php echo url('public/assets/shulesoft/style.css'); ?>" rel="stylesheet" media="all">
-<link href="<?php echo url('public/assets/shulesoft/shulesoft.css'); ?>" rel="stylesheet">
-<link href="<?php echo url('public/assets/shulesoft/responsive.css'); ?>" rel="stylesheet">
-<link href="<?php echo url('public/assets/shulesoft/rid.css'); ?>" rel="stylesheet">
+<?php $root = url('/') . '/public/'; ?>
+
+
 
 <style>
     @media print {
@@ -22,8 +16,6 @@
         .invoice-title{
             float: right !important;
         }
-
-
     }
 
 </style>
@@ -103,6 +95,9 @@
                                 <div class="row" style="padding-top: 0px">
                                     <div class="col-lg-12 col-sm-12">
                                         
+                                         <div>
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="300" height="120"/>
+                                        </div>
                                         <table class="table">
                                             <tbody>
                                                 <tr>
@@ -179,16 +174,25 @@
                                             <tbody>
                                               
                                                 <tr>
-                                                   <td> ShuleSoft Service Fee
+                                                  <td>
+                                                    <?php if($invoice->project_id == 4){ ?>
                                                     <li>Training and Support</li>
                                                     <li>Unlimited Cloud hosting for School Information</li>
                                                     <li>Unlimited bandwidth for users to access</li>
+
                                                     <li>Customization of features based on school requests</li>
                                                     <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
-                                        
-                                                  </td>
-                                                    <td class="text-center"><?= isset($invoice->students) ? $invoice->students : ''  ?></td>
-                                                    <td class="text-center"><?= isset($invoice->unit_amount) ? $invoice->unit_amount : ''  ?></td>
+                                                   <?php }  elseif ($invoice->project_id == 3){ ?>
+                                                    <li>School Bank Integration</li>
+                                                    <?php } elseif ($invoice->project_id == 2) { ?>
+                                                    <li> Android Based Fingerprint Handleld Terminal Device</li>
+                                                    <li> System installation </li>
+                                                    <li>Training and Support</li>
+
+                                                    <?php } ?>
+                                                 </td>
+                                                    <td class="text-center"><?= isset($invoice->students) ? number_format($invoice->students) : ''  ?></td>
+                                                    <td class="text-center"><?= isset($invoice->unit_amount) ? money($invoice->unit_amount) : ''  ?></td>
                                                     <td class="text-center"><?= money($invoice->amount) ?></td>
                                                 </tr>
                                             </tbody>
@@ -235,6 +239,10 @@
                                                     <tr>
                                                         <th>Grand Total :</th>
                                                         <th>Tsh <?= number_format($invoice->amount) ?></th>
+
+                                                          <th style="margin-left: 1px; z-index:1">
+                                                            <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
+                                                         </th>
                                                     </tr>
 
                                                 </tbody>

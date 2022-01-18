@@ -187,8 +187,8 @@
 
                                                     <?php } ?>
                                                 </td>
-                                                    <td class="text-center"><?= $fees->quantity ?></td>
-                                                    <td class="text-center"><?= $fees->unit_price ?></td>
+                                                    <td class="text-center"><?= number_format($fees->quantity) ?></td>
+                                                    <td class="text-center"><?= money($fees->unit_price) ?></td>
                                                     <td class="text-center"><?= money($fees->amount) ?></td>
                                                 </tr>
                                             <?php } ?>
@@ -260,8 +260,8 @@
                                                         <th>Grand Total :</th>
                                                         <th>Tsh <?= number_format($unpaid) ?></th>
                                                         <th style="margin-left: 1px; z-index:1">
-                                            <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
-</th>
+                                                            <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
+                                                       </th>
                                                     </tr>
 
                                                 </tbody>

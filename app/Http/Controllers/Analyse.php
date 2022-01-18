@@ -121,8 +121,7 @@ class Analyse extends Controller {
     }
 
     public function marketing() {
-        // $this->data['association'] = \App\Model\Association::first();
-        $this->data['breadcrumb'] = array('title' => 'Marketing dashboard','subtitle'=>'summary','head'=>'marketing');
+        $this->data['association'] = \App\Model\Association::first();
         return view('analyse.marketing', $this->data);
     }
 
@@ -139,7 +138,8 @@ class Analyse extends Controller {
         }
 
         $school_list = '';
-        $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%'  union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 10");
+        $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%'  
+        union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 10");
         foreach ($schools as $school) {
             $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) : url('sales/profile/' . $school->is_schema);
             $type = $school->is_schema == 1 ? ' (Already Client)' : '';
