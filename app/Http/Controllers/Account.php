@@ -231,13 +231,13 @@ class Account extends Controller {
 
           if($_POST) {
                 $validated = request()->validate([
-                     'service_name' => 'required|max:255',
+                     'name' => 'required|max:255',
                 ]);
 
                 \App\Models\CompanyService::create(request()->except('_token'));
 
                  $obj = [
-                     'name' => request('service_name'),
+                     'name' => request('name'),
                      "financial_category_id" => $financial_category->id,
                  ];
 
@@ -245,7 +245,7 @@ class Account extends Controller {
                   $account_group_id = !empty($check) ? $check->id : DB::table('admin.account_groups')->insertGetId($obj);
 
                   $array = array(
-                    "name" => trim(request("service_name")),
+                    "name" => trim(request("name")),
                     "financial_category_id" => $financial_category->id,
                     "note" => request("description"),
                     "account_group_id" => $account_group_id,

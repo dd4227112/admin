@@ -98,10 +98,10 @@
                             <?= __("Service name") ?>
                         </label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" required="true"  name="service_name" value="<?= old('service_name') ?>" >
+                            <input type="text" class="form-control" required="true"  name="name" value="<?= old('name') ?>" >
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error($errors, 'service_name'); ?>
+                            <?php echo form_error($errors, 'name'); ?>
                         </span>
                     </div>
 

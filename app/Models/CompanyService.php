@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 class CompanyService extends Model {
 
     protected $table = 'company_services';
-    protected $fillable = ['id', 'service_name', 'created_at', 'updated_at', 'description','created_by'];
+    protected $fillable = ['id', 'name', 'created_at', 'updated_at', 'description','created_by'];
 
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');
