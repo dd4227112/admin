@@ -300,6 +300,14 @@ class Controller extends BaseController {
 
 
 
+     public function testing(){
+         $timein = '2022-01-11 12:30:12';
+         $today  = date('Y-m-d H:i:s');
+         $ti = date('Y-m-d H:i:s', strtotime('+10 minutes',strtotime($timein)));
+         echo $today;
+     }
+
+
 
 
     //sends a voice message. it is called when the bot gets the command "ptt"
@@ -330,7 +338,7 @@ class Controller extends BaseController {
         $data = array('chatId' => $chatId, 'body' => $text);
         $this->sendRequest('message', $data);
     }
-    
+
 
     public function sendRequest($method, $data) {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
@@ -357,8 +365,6 @@ class Controller extends BaseController {
     }
 
 
-  
-
       public function send_whatsapp_sms($phone, $message) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
@@ -366,7 +372,7 @@ class Controller extends BaseController {
         }
         return $this;
     }
-
+        
  
       public function syncMissingPayments(){
         $this->data['prefix'] = '';

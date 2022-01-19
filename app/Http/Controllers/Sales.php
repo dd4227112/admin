@@ -126,6 +126,16 @@ class Sales extends Controller {
     }
 
     public function school() {
+        $id = request()->segment(3);
+        $reg_id = request()->segment(4);
+
+        if($id > 1){
+            if(isset($reg_id) && (int) $reg_id > 0){
+              $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',[$reg_id])->get(['id']))->get(['id']))->get(['id']))->get();
+            } else{
+              $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
+            }
+        }
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
@@ -428,7 +438,6 @@ class Sales extends Controller {
     }
 
     function addSchool() {
-    $this->data['breadcrumb'] = array('title' => 'New school','subtitle'=>'sales','head'=>'add school');
         if ($_POST) {
             $array = [
                 'name' => strtoupper(request('name')),
@@ -450,8 +459,7 @@ class Sales extends Controller {
        // $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
 
-        $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
-        $username = clean($username);
+        $username = clean(preg_replace('/[^a-z]/', null, strtolower($school->name)));
          
         $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
         if ($_POST) {
@@ -493,6 +501,7 @@ class Sales extends Controller {
                     'estimated_students' => request('students'),
                     'status' => 3,
                     'code' => $code,
+                    'region_id' => $school->wards->district->region->id,
                     'email_verified' => 0,
                     'phone_verified' => 0,
                     'created_by' => \Auth::user()->id,
@@ -879,8 +888,6 @@ class Sales extends Controller {
     }
 
     public function salesStatus() {
-    $this->data['breadcrumb'] = array('title' => 'Sales status','subtitle'=>'sales','head'=>'status');
-
         $page = request()->segment(3);
         if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             //current day

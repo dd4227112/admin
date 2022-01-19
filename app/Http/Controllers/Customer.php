@@ -462,13 +462,17 @@ class Customer extends Controller {
 
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
         $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) ilike '%" . strtolower($school) . "%' ");
+        $client = \App\Models\Client::where('username', $school)->first();
+
         
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        } elseif(empty($status)){
+        } elseif(empty($status) && isset($client->username)){ 
+              return redirect('https://' . $school . '.shulesoft.com');
+        } elseif(empty($status) && empty($client->username)){ 
               return view('customer.checkinstallation',$this->data);
         } else { 
             $is_client = 1;
@@ -490,6 +494,7 @@ class Customer extends Controller {
 
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
+
        
         // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
@@ -589,7 +594,6 @@ class Customer extends Controller {
     }
 
     public function activity() {
-       $this->data['breadcrumb'] = array('title' => 'Create activity','subtitle'=>'add new activity','head'=>'operations');
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {

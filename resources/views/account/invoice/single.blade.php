@@ -1,15 +1,10 @@
 @extends(!isset($balance) ? 'layouts.app' : 'layouts.nologin')
 @section('content')
+<?php $root = url('/') . '/public/'; ?>
 
-<title>Invoice</title>
-<link rel="SHORTCUT ICON" rel="icon" href="<?= url("storage/uploads/images/favicon.png") ?>">
-<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-<meta name="theme-color" content="#00acac">
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<link href="<?php echo url('public/assets/shulesoft/style.css'); ?>" rel="stylesheet" media="all">
-<link href="<?php echo url('public/assets/shulesoft/shulesoft.css'); ?>" rel="stylesheet">
-<link href="<?php echo url('public/assets/shulesoft/responsive.css'); ?>" rel="stylesheet">
-<link href="<?php echo url('public/assets/shulesoft/rid.css'); ?>" rel="stylesheet">
+
+
+
 
 <style>
     @media print {
@@ -22,28 +17,17 @@
         .invoice-title{
             float: right !important;
         }
-
+#print_div{
+    top: 0;
+    bottom: 0;
+    margin-top: 0px;
+}
 
     }
 
 </style>
 
-<style>
-    .btn-bs-file{
-        position:relative;
-    }
-    .btn-bs-file input[type="file"]{
-        position: absolute;
-        top: -9999999;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        width:0;
-        height:0;
-        outline: none;
-        cursor: inherit;
-    }
 
-</style>
 
     <div class="@if(!isset($balance))  page-wrapper @endif">
         <style>
@@ -68,7 +52,7 @@
         $message .= 'https://admin.shulesoft/customer/shareinvoicewhatsapp/'.$invoice->id.'';
         ?>
         
-        <div class="page-body">
+        
             <div class="row">
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6">
@@ -100,8 +84,11 @@
                             <div id="print_div">
 
                                 <!-- title row -->
-                                <div class="row" style="padding-top: 0px">
+                                <div class="row" style="margin-top: 0px">
                                     <div class="col-lg-12 col-sm-12">
+                                        <div>
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="300" height="120"/>
+                                        </div>
                                         
                                         <table class="table">
                                             <tbody>
@@ -162,6 +149,7 @@
                                         </table>
                                     </div>
 
+                                    
                                     <?php
                                     $invoice_fee = $invoice->invoiceFees()->get();
                                     ?>
@@ -183,18 +171,24 @@
                                                     ?>
                                                     <tr>
                                                  <td><?= $fees->item_name ?>
-                                                    
+                                                    <?php if($invoicefee->project_id == 1){ ?>
                                                     <li>Training and Support</li>
                                                     <li>Unlimited Cloud hosting for School Information</li>
                                                     <li>Unlimited bandwidth for users to access</li>
 
                                                     <li>Customization of features based on school requests</li>
                                                     <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
-                                            
+                                                   <?php }  elseif ($invoicefee->project_id == 3){ ?>
+                                                    <li>School Bank Integration</li>
+                                                    <?php } elseif ($invoicefee->project_id == 2) { ?>
+                                                    <li> Android Based Fingerprint Handleld Terminal Device</li>
+                                                    <li> System installation </li>
+                                                    <li>Training and Support</li>
 
+                                                    <?php } ?>
                                                 </td>
-                                                    <td class="text-center"><?= $fees->quantity ?></td>
-                                                    <td class="text-center"><?= $fees->unit_price ?></td>
+                                                    <td class="text-center"><?= number_format($fees->quantity) ?></td>
+                                                    <td class="text-center"><?= money($fees->unit_price) ?></td>
                                                     <td class="text-center"><?= money($fees->amount) ?></td>
                                                 </tr>
                                             <?php } ?>
@@ -244,17 +238,7 @@
                                         <!-- <br/>
                                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
                                         <?php if(isset($diff_in_months)) { ?>
-                                        <?php if($diff_in_months <= 12) { ?>
-                                        <p class="text-muted well well-sm no-shadow">
-                                            {{--  --}}
-                                            We're always delighted to serve your school
-                                        </p>
-                                        <?php } else { ?>
-                                            <p class="text-muted well well-sm no-shadow">
-                                              We're always delighted to serve your school
-                                            </p>
-                                          <?php } ?>
-                                        <?php } else { ?>
+                                       
                                             <p class="text-muted well well-sm no-shadow">
                                                 We're always delighted to serve your school
                                             </p>
@@ -275,6 +259,9 @@
                                                     <tr>
                                                         <th>Grand Total :</th>
                                                         <th>Tsh <?= number_format($unpaid) ?></th>
+                                                        <th style="margin-left: 1px; z-index:1">
+                                                            <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
+                                                       </th>
                                                     </tr>
 
                                                 </tbody>
@@ -282,6 +269,8 @@
                                         </td>
                                       </tr>
                                     </table>
+
+                                         
                    
                                    </div>
                             </div>

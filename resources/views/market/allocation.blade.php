@@ -27,7 +27,6 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-block">
 
                             <div class="row">
                                 <?php
@@ -60,7 +59,7 @@
                                     $i++;
                                 }
                                 ?>
-                                 <div class="col-lg-6 col-xl-6 col-sm-12">
+                                 <div class="col-lg-3 col-xl-3 col-sm-12">
                         
                                  <?php $percent = $nmb_schools.'  Use nmb '. $use_shulesoft .' use ShuleSoft, ' .$nmb_shulesoft_schools. ' use NMB & ShuleSoft'; ?>
                                   
@@ -90,41 +89,100 @@
                                         </div>
                                 </div> 
                             </div>
-                        </div>
-
-                        <div class="row">
-                           <?php if(can_access('add_school')) { ?>
-                             <div class="col-lg-3"> 
-                                    <div class="card-body">
-                                     <a href="<?= url("sales/addSchool") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add new school"> Add School </a>
-                                  </div>
-                             </div>
-                           <?php } ?>
                         
-                            <div class="col-lg-6">
-                                <?php
-                                if (can_access('manage_customers')) {
-                                    ?>
-                                    <p align="center">
-                                        <?php
-                                        ?>
-                                        <a href="<?= url('sales/prospect/demo') ?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?php //echo $demo     ?></span></button></a>
-                                        <a href="<?= url('sales/prospect/join') ?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?php // echo $join      ?></span></button></a>
-                                    </p>
-                                <?php } ?>
-                                <select class="form-control" id="school_selector">
-                                    <option value="1" <?php // selected(1)  ?>>All Schools</option>
-                                    <option value="2" <?php // selected(2)  ?>>Use ShuleSoft Only</option>
-                                    <option value="3"<?php // selected(3)  ?>>Sales On Progress</option>
-                                </select>
+
+                    <div class="row mt-10">
+                        <?php if(can_access('add_school')) { ?>
+                            <div class="col-lg-3"> 
+                                <div class="card-body">
+                                    <a href="<?= url("sales/addSchool") ?>" class="btn btn-primary btn-sm  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Add new school"> Add School </a>
+                                </div>
                             </div>
+                        <?php } ?>
+                    
+                        <div class="col-lg-6">
+                            <select class="form-control select2" id="school_selector">
+                                <option value=""></option>
+                                <option value="1">All schools</option>
+                                <option value="2">Client Schools</option>
+                            </select>
                         </div>
+                    </div>
 
 
-                        <div class="row">
-                            <div class="col-lg-12">
+                    <div class="row">
+                      <div class="col-lg-12">
+                       <?php if(isset($schools))  { ?>
+
+                        <div class="card">
+                        <div class="card-header row">
+                         <div class="col-sm-8">
+                            <h5>List of Schools Under&nbsp;ShuleSoft </h5>
+                         </div>
+
+                            
+
+                               <div class="col-sm-3">
+                                   <label>Select Region </label>
+                                    <select class="form-control select2"  id='region_selector'>
+                                        <option></option>
+                                        <?php 
+                                            $regions = \App\Models\Region::all();
+                                           foreach ($regions as $region) { ?>
+                                            <option value="<?= $region->id ?>" ><?= $region->name ?></option>
+                                        <?php } ?>
+                                    </select>
+                               </div>
+                        </div>
+                        
+                        <div class="card-block">
+                        <div class="table-responsive analytic-table">
+                            <table id="example" class="table table-bordered w-100 dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>School Name</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>School Link</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <?php 
+                                        $i = 1;
+                                           if(count($schools) > 0) {
+                                            foreach ($schools as $school) {
+                                            ?>
+                                            <tr>
+                                                <td><?= $i++ ?></td>
+                                                <td><?= warp($school->client->name,20) ?></td>
+                                                <td><?= warp($school->client->address,20) ?></td>
+                                                <td><?= $school->client->phone ?></td>
+                                                <td>
+                                                    <a href="https://<?=$school->client->username?>.shulesoft.com/" target="_blank" rel="noopener noreferrer"><?=warp($school->client->name,20)?></a>
+                                                </td>
+                                               
+                                                <?php
+                                                 echo '<td>';
+                                                 echo '<a href="' . url('customer/profile/' . $school->client->username) . '" class="btn btn-primary btn-mini btn-round"> View</a>';
+                                                 echo '</td>';
+                                                 echo '</tr>';
+                                                  }
+                                                }
+                                            ?>
+                                       </tbody>
+                                   </table>
+                                  </div>
+                               </div>
+                            </div>  
                                 
-                                    <div class="card-header">
+                          <?php } else { ?>
+
+
+                                    <div class="card">
+                                     <div class="card-header">
                                         <h5>List of all schools</h5>
                                     </div>
                                         <div class="card-block">
@@ -150,6 +208,9 @@
                                         </table>
                                     </div>
                                   </div>
+                               </div>
+
+                               <?php } ?>
                             
                             </div>
                         </div>
@@ -160,6 +221,10 @@
     </div>
 </div>
 <script type="text/javascript">
+   $(document).ready(function() {
+       $('#example').DataTable();
+    });
+
     $(document).ready(function () {
         var table = $('#list_of_schools').DataTable({
             "processing": true,
@@ -204,11 +269,17 @@
     school_selector = function () {
         $('#school_selector').change(function () {
             var val = $(this).val();
-            console.log(val)
             window.location.href = '<?= url('sales/school') ?>/' + val;
         })
     }
     $(document).ready(school_selector);
+
+
+      $('#region_selector').change(function () {
+            var reg = $(this).val();
+            var val = 2
+            window.location.href = '<?= url('sales/school') ?>/' + val + '/' + reg;
+        })
 </script>
 
 @endsection

@@ -115,6 +115,7 @@ class Account extends Controller {
             }
             $this->data['invoice'] = Invoice::find($invoice_id);
             $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
+
         
             $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
            
@@ -224,10 +225,38 @@ class Account extends Controller {
     }
 
     
-    public function project() {
-       $this->data['breadcrumb'] = array('title' => 'Projects','subtitle'=>'Company Projects/Services','head'=>'settings');
-        $this->data['projects'] = Project::all();
-        return view('account.project', $this->data);
+    public function services() {
+         $financial_category = \App\Models\FinancialCategory::where('name','Revenue')->first();
+         $this->data['services'] = \App\Models\CompanyService::latest()->get();
+
+          if($_POST) {
+                $validated = request()->validate([
+                     'name' => 'required|max:255',
+                ]);
+
+                \App\Models\CompanyService::create(request()->except('_token'));
+
+                 $obj = [
+                     'name' => request('name'),
+                     "financial_category_id" => $financial_category->id,
+                 ];
+
+                  $check = DB::table('admin.account_groups')->where($obj)->first();
+                  $account_group_id = !empty($check) ? $check->id : DB::table('admin.account_groups')->insertGetId($obj);
+
+                  $array = array(
+                    "name" => trim(request("name")),
+                    "financial_category_id" => $financial_category->id,
+                    "note" => request("description"),
+                    "account_group_id" => $account_group_id,
+                    'code' => createCode(),
+                    'open_balance' =>  0,
+                    "status" => 1
+                  );
+
+               \App\Models\ReferExpense::create($array);
+           }
+        return view('account.services', $this->data);
     }
 
 
@@ -258,7 +287,7 @@ class Account extends Controller {
         $invoice_task = [
             "activity" => 'Invoice sent to '.$invoice->client->name,
             "task_type_id" => "9",
-            "to_user_id" => Auth::user()->id,
+            "to_user_id" => \Auth::user()->id,
             "status" => "complete",
             "client_id" => $invoice->client->id,
             "user_id" => Auth::user()->id,
@@ -376,6 +405,8 @@ class Account extends Controller {
     }
 
 
+
+
       public function createinvoices() {
         $school_id =  (int) request('school_id');
         
@@ -383,12 +414,13 @@ class Account extends Controller {
         $reference = time(); // to be changed for selcom ID
         $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
         $client = \App\Models\ClientSchool::where('school_id',(int) $school_id)->first();
+
         
         $school = \App\Models\School::find($school_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 
         // If school is not client, create pro forma invoice
-         if (is_null($client)) {
+         if (is_null($client) && request('type')== '4') {
             DB::table('admin.temp_clients')->insert([
                 'name' => $school->name, 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school->id, 'user_id' => \Auth::user()->id,
                 'reference' => $reference, 'date' => $start_date, 'due_date' => $due_date, 'account_year_id' => $year->id,
@@ -412,12 +444,12 @@ class Account extends Controller {
 
         $invoice = Invoice::create($data);
         $amount = remove_comma(request('amount'));
-         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
+        $total_amount = request('students') * $amount;
+         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $total_amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount , 'quantity' => request('students')]);
         }
          return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
 
     }
-
 
 
     public function createInvoice() {
@@ -459,7 +491,6 @@ class Account extends Controller {
     }
 
     public function client() {
-       $this->data['breadcrumb'] = array('title' => 'Company Clients','subtitle'=>'clients','head'=>'operations');
         $this->data['clients'] = \App\Models\Client::all();
         $seg = request()->segment(3);
         $id = request()->segment(4);
@@ -927,7 +958,6 @@ class Account extends Controller {
 
 
     public function bank() {
-       $this->data['breadcrumb'] = array('title' => 'Our banks','subtitle'=>'banks','head'=>'settings');
         $this->data['bankaccounts'] = \App\Models\BankAccount::latest()->get();
         return view('account.bank.index', $this->data);
     }
@@ -983,7 +1013,6 @@ class Account extends Controller {
     }
 
     public function groups() {
-       $this->data['breadcrumb'] = array('title' => 'Account Groups','subtitle'=>'accounts','head'=>'settings');
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::latest()->get();
         $this->data["category"] = \App\Models\FinancialCategory::latest()->get();
@@ -1216,7 +1245,6 @@ class Account extends Controller {
             $address = request()->file('file');
           
             $results = Excel::load($address)->all();
-            dd($results);
             //once we upload excel, register students and marks in mark_info table
             $status = '';
             foreach ($results as $value) {
@@ -1504,7 +1532,6 @@ class Account extends Controller {
     }
 
     public function holidays(){
-       $this->data['breadcrumb'] = array('title' => 'Holidays','subtitle'=>'Public holidays','head'=>'settings');
         $option = request()->segment(3);
         $id = request()->segment(4);
         $this->data['holidays'] = DB::select("select * from admin.public_days where country_id = '1' order by date desc limit 10");
@@ -1568,6 +1595,18 @@ class Account extends Controller {
         $update = DB::table('admin.users')->where('id',request('id'))->update([$column => $new_value]);
         echo $update > 0 ? $new_value : 'No changes happened';
     }
+
+
+
+     public function editSetting() {
+        $id =  request('id');
+        $newvalue = request('newvalue');
+        $column = request('column');
+        $table = request('table'); 
+        $update = DB::table('admin.'.$table)->where('id',request('id'))->update([$column => $newvalue]);
+        echo $update > 0 ? $newvalue : 'No changes happened';
+    }
+
 
 }
 

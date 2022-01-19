@@ -4,13 +4,18 @@
                         <a class="mobile-menu" id="mobile-collapse" href="#!">
                         <i class="icofont icofont-navigation-menu"></i>
                             
-                        </a>
-                        <a href="#">
-                            <img width="50" height="50" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
                         </a> 
-                        <a class="mobile-options">
-                            <i class="feather icon-more-horizontal"></i>
-                        </a>
+                        <?php
+                            if (strlen(request('token')) < 4) {
+                                ?>
+                        <a class="main-search morphsearch-search  d-lg-none d-md-none" style="padding:80px" href="#!" style="color: white">
+                                        <i class="feather icon-search"></i>
+                                    </a>
+                                    <?php } ?>
+                        <a href="#">
+                            <img width="50" height="50" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft"  >
+                        </a> 
+                       
                     </div>
 
                     <div class="navbar-container container-fluid mobile-menu">

@@ -186,7 +186,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
 
             <!--profile cover end-->
             <div class="row">
-                <div class="col-lg-3 col-xl-3">
+                <div class="col-lg-2 col-xl-2">
                     <!-- Nav tabs -->
                     <div class="card">
                     <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
@@ -237,8 +237,8 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                     </div>
                 </div>
                     <!-- Tab panes -->
-                    <div class="col-lg-9 col-xl-9">
-                    <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">
+                    <div class="col-lg-10 col-xl-10">
+                    <div class="tab-content  card-block" style="width:100%; padding-top: 0; padding-right: 0;">
                         <div class="tab-pane active" id="home5" role="tabpanel" aria-expanded="true">
                             <div class="card">
                                 <div class="card-header">
@@ -516,7 +516,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                             <div class="col-lg-12">
                                                 <div class="general-info">
                                                     <div class="row">
-                                                        <div class="col-lg-6">
+                                                        <div class="col-lg-8">
                                                             <table class="table">
                                                                 <tbody>
                                                                     <tr>
@@ -762,15 +762,15 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
 
                         <div class="tab-pane" id="profile5" role="tabpanel" aria-expanded="false">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-12 col-xl-12">
                                     <div class="card">
                                         <div class="card-header">
                                             <h5 class="card-header-text">Custom Reports</h5>
                                         </div>
                                         <div class="card-block">
                                       
-                                        <div class="table-responsive dt-responsive">
-                                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                        <div class="data_table_main table-responsive dt-responsive">
+                                        <table id="dt-ajax-array" class="table  table-striped table-bordered nowrap dataTable">
                                             <thead>
                                             <tr>
                                                 <th>Id </th>
@@ -818,7 +818,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal"><i class="fa fa-plus"></i>Add Attendance</button>
                                         <?php } ?>
                                         
-                                        <div class="table-responsive dt-responsive">
+                                        <div class="data_table_main  table-responsive dt-responsive">
                                         <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
                                                     <tr>
@@ -873,7 +873,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
 
                                         <div class="card-block">
                                            
-                                           <div class="table-responsive dt-responsive">
+                                           <div class="data_table_main  table-responsive dt-responsive">
                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                 <thead>
                                                     <tr>

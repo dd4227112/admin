@@ -94,7 +94,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->HRContractRemainders();
-            $this->HRLeaveRemainders();
+          //  $this->HRLeaveRemainders();
         })->dailyAt('04:40'); // Eq to 07:40 AM   
 
 
@@ -145,9 +145,10 @@ class Kernel extends ConsoleKernel {
   
        public function whatsappMessage() {        
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
+        $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                $this->sendMessage($message->phone, $message->message);
+                $controller->sendMessage($message->phone, $message->message);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
              } else {
