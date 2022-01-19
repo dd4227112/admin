@@ -225,10 +225,39 @@ class Account extends Controller {
     }
 
     
-    public function project() {
-       $this->data['breadcrumb'] = array('title' => 'Projects','subtitle'=>'Company Projects/Services','head'=>'settings');
-        $this->data['projects'] = Project::all();
-        return view('account.project', $this->data);
+    public function services() {
+         $financial_category = \App\Models\FinancialCategory::where('name','Revenue')->first();
+         $this->data['services'] = \App\Models\CompanyService::latest()->get();
+
+          if($_POST) {
+                $validated = request()->validate([
+                     'service_name' => 'required|max:255',
+                ]);
+                 dd(request()->except('_token'));
+
+                \App\Models\CompanyService::create(request()->except('_token'));
+
+                 $obj = [
+                     'name' => request('service_name'),
+                     "financial_category_id" => $financial_category->id,
+                 ];
+
+                  $check = DB::table('admin.account_groups')->where($obj)->first();
+                  $account_group_id = !empty($check) ? $check->id : DB::table('admin.account_groups')->insertGetId($obj);
+
+                  $array = array(
+                    "name" => trim(request("service_name")),
+                    "financial_category_id" => $financial_category->id,
+                    "note" => request("description"),
+                    "account_group_id" => $account_group_id,
+                    'code' => createCode(),
+                    'open_balance' =>  0,
+                    "status" => 1
+                  );
+
+               \App\Models\ReferExpense::create($array);
+           }
+        return view('account.services', $this->data);
     }
 
 
@@ -259,7 +288,7 @@ class Account extends Controller {
         $invoice_task = [
             "activity" => 'Invoice sent to '.$invoice->client->name,
             "task_type_id" => "9",
-            "to_user_id" => Auth::user()->id,
+            "to_user_id" => \Auth::user()->id,
             "status" => "complete",
             "client_id" => $invoice->client->id,
             "user_id" => Auth::user()->id,
@@ -1504,7 +1533,6 @@ class Account extends Controller {
     }
 
     public function holidays(){
-       $this->data['breadcrumb'] = array('title' => 'Holidays','subtitle'=>'Public holidays','head'=>'settings');
         $option = request()->segment(3);
         $id = request()->segment(4);
         $this->data['holidays'] = DB::select("select * from admin.public_days where country_id = '1' order by date desc limit 10");
@@ -1568,6 +1596,18 @@ class Account extends Controller {
         $update = DB::table('admin.users')->where('id',request('id'))->update([$column => $new_value]);
         echo $update > 0 ? $new_value : 'No changes happened';
     }
+
+
+
+     public function editSetting() {
+        $id =  request('id');
+        $newvalue = request('newvalue');
+        $column = request('column');
+        $table = request('table'); 
+        $update = DB::table('admin.'.$table)->where('id',request('id'))->update([$column => $newvalue]);
+        echo $update > 0 ? $newvalue : 'No changes happened';
+    }
+
 
 }
 

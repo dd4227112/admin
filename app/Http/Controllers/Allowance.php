@@ -33,7 +33,6 @@ class Allowance extends Controller {
        }
 
     public function add() {
-        $this->data['breadcrumb'] = array('title' => 'Add allowances','subtitle'=>'accounts','head'=>'payroll');
 
             if ($_POST) {
                 // $this->validate(request(), [
@@ -59,7 +58,6 @@ class Allowance extends Controller {
     }
 
     public function edit() {
-        $this->data['breadcrumb'] = array('title' => 'Edit allowances','subtitle'=>'accounts','head'=>'payroll');
          $id = request()->segment(3);
             if ((int) $id) {
          $this->data['allowance'] = \App\Models\Allowance::find($id);
