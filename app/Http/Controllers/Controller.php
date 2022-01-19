@@ -300,6 +300,14 @@ class Controller extends BaseController {
 
 
 
+     public function testing(){
+         $timein = '2022-01-11 12:30:12';
+         $today  = date('Y-m-d H:i:s');
+         $ti = date('Y-m-d H:i:s', strtotime('+10 minutes',strtotime($timein)));
+         echo $today;
+     }
+
+
 
 
     //sends a voice message. it is called when the bot gets the command "ptt"
