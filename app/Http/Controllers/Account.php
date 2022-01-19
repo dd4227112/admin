@@ -233,7 +233,6 @@ class Account extends Controller {
                 $validated = request()->validate([
                      'service_name' => 'required|max:255',
                 ]);
-                 dd(request()->except('_token'));
 
                 \App\Models\CompanyService::create(request()->except('_token'));
 
