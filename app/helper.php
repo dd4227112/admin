@@ -334,6 +334,12 @@ function btn_attendance($id, $method, $class, $name) {
 }
 
 
+  function createCode($last_code = 12345) {
+    $number_part = substr($last_code, -3);
+    return strtoupper(substr('SHULESOFT', 0, 2)) . '-' . ((int) $number_part + 1);
+}
+
+
  function timeZones($value)
     {
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);

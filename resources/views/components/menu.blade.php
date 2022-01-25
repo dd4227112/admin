@@ -801,8 +801,8 @@
                                                 </li>
 
                                                  <li class="">
-                                                    <a href="<?= url('account/project') ?>">
-                                                        <span class="pcoded-mtext">Company projects</span>
+                                                    <a href="<?= url('account/services') ?>">
+                                                        <span class="pcoded-mtext">Company services</span>
                                                     </a>
                                                 </li>
 
