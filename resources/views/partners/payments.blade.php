@@ -109,6 +109,7 @@
                                             $prefix = $invoice_prefix;
                                             $i = 1; 
                                             if (count($payments)>0) {
+                                                
                                                 foreach ($payments as $value) {
                                                     $payment = json_decode($value->content);
                                                     if(isset($payment->transactionRef)){
@@ -180,28 +181,45 @@
 
                                       <div>
                                        <div class="col-sm-12">
-                                          <br/><br/>
+                                          <hr/>
+                                          <?php
+                                          if(isset($invoice_prefix) && $invoice_prefix != ''){
+                                                $bank1 =  DB::table('admin.bank_accounts_integrations')->where('invoice_prefix', $invoice_prefix)->first();
+                                                if(!empty($bank1)){
+                                                    $bank_accounts =  DB::table($bank1->schema_name.'.bank_accounts')->where('id', $bank1->bank_account_id)->first();
+                                                    $setting =  DB::table($bank1->schema_name.'.setting')->first();
+                                                    echo '<h2>'. $setting->sname.'</h2>';
+                                                }
+                                            }
+
+                                          ?>
                                           <div class="">
                                                 <div class="list-group-item">
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th><?= ("bank_name") ?></th>
+                                                            <th><?= ("Account Name") ?></th>
+                                                            <th><?= ("Number") ?></th>
                                                                 <th><?= ("dates") ?></th>
-                                                                <th><?= ("payment_method") ?></th>
+                                                                <th><?= ("Amount Collected") ?></th>
                                                                 <th><?= ("transactions") ?></th>
-                        
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                         
                                                                 <td><?php
-                                                                    
+                                                                    if(isset($bank1) && !empty($bank1) && isset($bank_accounts)){
+                                                                        echo $bank_accounts->name;
+                                                                    }
                                                                     ?></td>
-                        
+                                                                <td><?php                          
+                                                                    if(isset($bank1) && !empty($bank1) && isset($bank_accounts)){
+                                                                        echo $bank_accounts->number;
+                                                                    }
+                                                                    ?></td>
                                                                 <td><?= 'From: <b>' . $from_date . '</b> - to - <b>' . $to_date . '</b>' ?></td>
-                                                                <td><?= request('invoice_prefix') ?></td>
+                                                                <td><?= money($total_payments) ?></td>
                                                                 <td><?= $i ?></td>
                                                             </tr>
                                                         </tbody>
