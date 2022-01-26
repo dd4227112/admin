@@ -151,11 +151,11 @@
                                                         </td>
                                                         
                                                 
-                                                        <td data-title="<?= ('action') ?>">
+                                                        <td id="payment<?=$payment->payerID?>" data-title="<?= ('action') ?>">
                                                         <?php
                                                         if (empty($check)) {
                                                             ?>
-                                                            <a href="#" onclick="return false" class="btn btn-primary btn-mini btn-round" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($payment))) ?>')">Sync</a>
+                                                            <a href="#" onclick="return false" class="btn btn-primary btn-mini btn-round" onmousedown="reconcile('<?= url('Partner/pushPayment/null?data=' . urlencode(json_encode($payment))) ?>', <?=$payment->payerID?>)">Sync</a>
                                                         <?php } ?>
                                                         </td>
                                                     </tr>
@@ -216,33 +216,15 @@
 </div>
 
 <script type="text/javascript">
-    function unreconcile(a, b) {
+    reconcile = function (a, b) {
         $.ajax({
-            type: 'POST',
-            url: "<?= url('account/unreconcile') ?>",
-            data: {"id": a, type: b},
-            dataType: "html",
+            url: a,
+            method: 'GET',
             success: function (data) {
-                toast(data);
+                $('#payment'+ b).html(data);
             }
         });
     }
-    $('.reconcile').click(function () {
-        var id = $(this).attr("id");
-        var type = $(this).attr('data-type');
-        var table = $(this).attr('data-table');
-        if (parseInt(id)) {
-            $.ajax({
-                type: 'POST',
-                url: "<?= url('account/reconcile') ?>",
-                data: {"id": id, type: type, table: table},
-                dataType: "html",
-                success: function (data) {
-                    toast(data);
-                }
-            });
-        }
-    });
 </script>
 @endsection
 
