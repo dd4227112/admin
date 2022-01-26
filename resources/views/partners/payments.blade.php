@@ -112,7 +112,7 @@
                                                 foreach ($payments as $value) {
                                                     $payment = json_decode($value->content);
                                                     if(isset($payment->transactionRef)){
-                                                        $school = DB::table('admin.all_invoice_prefix')->where('reference', $payment->paymentReference)->firs();
+                                                        $school = DB::table('admin.all_invoice_prefix')->where('reference', $payment->paymentReference)->first();
                                                         if(!empty($school)){
                                                             if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->paymentReference))) {
                                                                 $check = DB::table($school->schema_name.'payments')->where('transaction_id', $payment->transactionRef)->first();
