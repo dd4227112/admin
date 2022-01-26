@@ -124,7 +124,7 @@
                                                     ?>
                                                     <tr>
                                                         <td data-title="<?= ('slno') ?>">
-                                                       <?php echo $i; ?>
+                                                       <?php echo $i++; ?>
                                                         </td>
                                                         <td data-title="<?= ('bank_name') ?>">
                                                         <?php echo $payment->payerName; ?>
@@ -161,21 +161,11 @@
                                                         </td>
                                                     </tr>
                                                     <?php
-                                                    $i++;
                                                 }
                                             }
                                             } ?>
                                         </tbody>
 
-                                        <tfoot>
-                                            <tr>
-                                            <td colspan="1">Total</td>
-                                            <td colspan="1">{{ $i }}</td>
-                                            <td colspan="2"> Amount Collected</td>
-                                                <td><?= money($total_payments) ?></td>
-                                                <td colspan="4"></td>
-                                            </tr>
-                                        </tfoot>
                                         </table>
                                        </div>
 
