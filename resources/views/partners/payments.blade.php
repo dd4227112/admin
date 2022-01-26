@@ -184,7 +184,7 @@
                                           <hr/>
                                           <?php
                                           if(isset($invoice_prefix) && $invoice_prefix != ''){
-                                                $bank1 =  DB::table('admin.bank_accounts_integrations')->where('invoice_prefix', $invoice_prefix)->first();
+                                                $bank1 =  DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice_prefix)->first();
                                                 if(!empty($bank1)){
                                                     $bank_accounts =  DB::table($bank1->schema_name.'.bank_accounts')->where('id', $bank1->bank_account_id)->first();
                                                     $setting =  DB::table($bank1->schema_name.'.setting')->first();
