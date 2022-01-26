@@ -200,8 +200,8 @@
                                                                     
                                                                     ?></td>
                         
-                                                                <td><?= 'From: <b>' . request('from') . '</b> - to - <b>' . request('to') . '</b>' ?></td>
-                                                                <td><?= request('method') ?></td>
+                                                                <td><?= 'From: <b>' . $from_date . '</b> - to - <b>' . $to_date . '</b>' ?></td>
+                                                                <td><?= request('invoice_prefix') ?></td>
                                                                 <td><?= count($payments) ?></td>
                                                             </tr>
                                                         </tbody>
