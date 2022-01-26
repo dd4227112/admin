@@ -202,7 +202,7 @@
                         
                                                                 <td><?= 'From: <b>' . $from_date . '</b> - to - <b>' . $to_date . '</b>' ?></td>
                                                                 <td><?= request('invoice_prefix') ?></td>
-                                                                <td><?= count($payments) ?></td>
+                                                                <td><?= $i ?></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
