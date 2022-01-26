@@ -112,8 +112,13 @@
                                                 foreach ($payments as $value) {
                                                     $payment = json_decode($value->content);
                                                     if(isset($payment->transactionRef)){
-                                                        if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->paymentReference))) {
-                                                            $check = DB::table('shulesoft.payments')->where('transaction_id', $payment->transactionRef)->first();
+                                                        $school = DB::table('admin.all_invoice_prefix')->where('reference', $payment->paymentReference)->firs();
+                                                        if(!empty($school)){
+                                                            if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->paymentReference))) {
+                                                                $check = DB::table($school->schema_name.'payments')->where('transaction_id', $payment->transactionRef)->first();
+                                                            }
+                                                        }else{
+                                                            $check = [];
                                                         }
                                                     ?>
                                                     <tr>
