@@ -43,12 +43,11 @@
                                                         </label>
                                                         <div class="col-sm-10">
                                                             <?php
-                                                            $array = array("" => ("bank_account"));
-                                                            $array["0"] = 'All';
+                                                            $array = array("" => ("Select School"));
                                                              foreach ($bank_accounts as $bank) {
                                                                 $array[$bank->invoice_prefix] = $bank->schema_name . ' (' . $bank->invoice_prefix . ')';
                                                              }
-                                                            echo form_dropdown("invoice_prefix", $array, old("invoice_prefix"), "id='bank_account_id' class='form-control'");
+                                                            echo form_dropdown("invoice_prefix", $array, old("invoice_prefix"), "id='bank_account_id' required class='form-control'");
                                                             ?>
                                                         </div>
                                                     </div>
