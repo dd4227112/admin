@@ -100,6 +100,11 @@
                                                     <span class="pcoded-mtext">Partner request</span>
                                                 </a>
                                                 </li>
+                                                <li class="">
+                                                <a href="<?= url('partner/transactions') ?>">
+                                                    <span class="pcoded-mtext">School Transactions</span>
+                                                </a>
+                                                </li>
                                             <?php } else { ?>
                                                 <li class="">
                                                     <a href="<?= url('sales/index') ?>">
@@ -247,17 +252,9 @@
                                             <ul class="pcoded-submenu">
                                                 <li class="">
                                                     <a href="<?= url('Partner/index') ?>">
-                                                        <span class="pcoded-mtext">List of Partners</span>
+                                                    <span class="pcoded-mtext"> Integration Requests </span>
                                                     </a>
                                                 </li>
-
-                                               <?php if(can_access('integration_requests')) { ?>
-                                                 <li class="">
-                                                    <a href="<?= url('users/usergroup') ?>">
-                                                        <span class="pcoded-mtext"> Integration Requests </span>
-                                                    </a>
-                                                </li>
-                                                <?php } ?>
 
                                                <?php if(can_access('view_epayments')) { ?>
                                                  <li class=" ">
@@ -270,11 +267,26 @@
                                                  <?php if(can_access('nmb_integration')) { ?>
                                                    <li class=" ">
                                                     <a href="<?= url('software/banksetup') ?>">
-                                                        <span class="pcoded-mtext">Nmb integration</span>
+                                                        <span class="pcoded-mtext">NMB Bank Setup</span>
                                                     </a>
                                                   </li>
                                                 <?php } ?>
 
+                                                <?php if(can_access('reconciliation')) { ?>
+                                               <li class="">
+                                                <a href="<?= url('software/reconciliation') ?>">
+                                                    <span class="pcoded-mtext">NMB Payments </span>
+                                                </a>
+                                               </li>
+                                            <?php } ?>
+                                    
+                                            <?php if(can_access('integration_requests')) { ?>
+                                                   <li class=" ">
+                                                    <a href="<?= url('Partner/transactions') ?>">
+                                                        <span class="pcoded-mtext">CRDB Payments</span>
+                                                    </a>
+                                                  </li>
+                                                <?php } ?>
                                             </ul>
                                         </li>
                                       <?php } ?>
@@ -337,14 +349,6 @@
                                                         <span class="pcoded-mtext">SMS Status</span>
                                                     </a>
                                                 </li>
-                                            <?php } ?>
-
-                                             <?php if(can_access('reconciliation')) { ?>
-                                               <li class="">
-                                                <a href="<?= url('software/reconciliation') ?>">
-                                                    <span class="pcoded-mtext">Reconciliation</span>
-                                                </a>
-                                               </li>
                                             <?php } ?>
 
 

@@ -526,4 +526,33 @@ class Partner extends Controller {
             return redirect('Partner/index/');
         }
     }
+
+    public function transactions() {
+        $this->data['bank_accounts'] =  DB::table('admin.all_bank_accounts_integrations')->whereRaw('UPPER(invoice_prefix) LIKE ?', ['%SASA%'])->get();
+        $this->data['from_date'] = $from = request('from_date') != '' ? request('from_date') : date("Y-m-d", strtotime('-10 day'));
+        $this->data['to_date'] = $to = request('to_date') != '' ? request('to_date') : date("Y-m-d");
+        $reference = request('invoice_prefix') != '' ? 'PAYMENTREFERENCE":"'.request('invoice_prefix') : 'PAYMENTREFERENCE":"SASA80';
+        $this->data['payments'] = DB::table('api.requests')
+        ->select('content')->whereBetween('created_at', [$from, $to])->whereRaw('UPPER(content) LIKE ?', ['%' . strtoupper($reference) . '%'])
+        ->groupBy('content')->get();
+        $this->data['invoice_prefix'] = request('invoice_prefix');
+    return view('partners.payments', $this->data);
+
+    }
+    
+    
+    public function pushPayment() {
+        $url = 'http://51.91.251.252:8081/api/init';
+        $myvars = request('data');
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $myvars);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+
+        echo isset(json_decode($response)->description) ? json_decode($response)->description : json_decode($response)->Message;
+    }
+
 }
