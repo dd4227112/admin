@@ -1799,13 +1799,9 @@ class Customer extends Controller {
 
 
        public function sendInvoice(){
-              $caption = request('message');
+               $caption = request('message');
                $phone = request('phone_number');
-            if($_POST){ 
-               
-               $phone = \collect(DB::select("select format_phone_number from admin.format_phone_number('$phone') "))->first();
-         
-               $phone = $phone->format_phone_number;
+             if($_POST){ 
               
               $file = request()->file('invoice_file');
               $path = $this->uploadFileLocal($file);

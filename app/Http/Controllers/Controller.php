@@ -369,8 +369,10 @@ class Controller extends BaseController {
 
 
         public function sendWhatsappFiles($phone,$filename,$path,$caption = null){
+              $phone = \collect(DB::select("select whatsapp_phone from admin.whatsapp_phone('$phone') "))->first();
+             
               $data = json_encode(array(
-                  'chatId' => $phone.'@c.us',
+                  'chatId' => $phone,
                   'body'   => $path,
                   'filename' => $filename,
                   'capture' => $caption
