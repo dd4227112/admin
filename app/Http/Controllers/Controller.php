@@ -372,7 +372,7 @@ class Controller extends BaseController {
               $phone = \collect(DB::select("select whatsapp_phone from admin.whatsapp_phone('$phone') "))->first();
              
               $data = json_encode(array(
-                  'chatId' => $phone,
+                  'chatId' => $phone->whatsapp_phone,
                   'body'   => $path,
                   'filename' => $filename,
                   'capture' => $caption

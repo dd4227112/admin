@@ -1801,7 +1801,7 @@ class Customer extends Controller {
        public function sendInvoice(){
                $caption = request('message');
                $phone = request('phone_number');
-             if($_POST){ 
+               if($_POST){ 
               
               $file = request()->file('invoice_file');
               $path = $this->uploadFileLocal($file);
