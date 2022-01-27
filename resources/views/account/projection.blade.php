@@ -70,7 +70,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                              <?php if(isset($client) ) {  ?>
                                 <div class="card"> 
                                     <div class="card-header">
-                                        <h5>  CREATE INVOICE FOR <?= $client->name ?>  </h5>
+                                        <h5>  CREATE INVOICE FOR <?= strtoupper($client->name) ?>  </h5>
                                     </div>
                                      <div class="card-block">
                                            

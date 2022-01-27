@@ -369,7 +369,7 @@
                         <!-- Material tab card end -->
                     </div>
                 </div>
-</div>
+             </div>
 
 
 <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
@@ -383,16 +383,21 @@
             </div>
            
             <div class="modal-body">
-                    <form action="<?=url('account/sendInvoice')?>" method="post">
+                    <form action="<?=url('Homecontroller/sendInvoice')?>" method="post"  enctype="multipart/form-data">
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     Email Address
                                     <input type="email" class="form-control"  name="email" required>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     Phone Number
                                     <input type="text" class="form-control"  name="phone_number" required>
+                                </div>
+
+                                  <div class="col-md-4">
+                                      File
+                                    <input type="file" class="form-control"  name="invoice_file" required>
                                 </div>
                             </div>
                         </div>

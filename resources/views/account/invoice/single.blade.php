@@ -172,9 +172,9 @@
                                                     ?>
                                                     <tr>
                                                     <td><?= $i ?> </td>
-                                                    <td> <strong><?= $fees->item_name ?></strong> <br>
-                                                       <?php  $descr = \App\Models\CompanyService::where('id',$fees->service_id)->first()->description;
-                                                              echo warp($descr,90) ?? '';
+                                                    <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
+                                                       <?php  $descr = \App\Models\CompanyService::where('id',$fees->service_id)->first();
+                                                              echo warp($descr->description,90) ?? '';
                                                         ?>
                                                     </td>
                                                     <td class="text-right"><?= money($fees->quantity) ?></td>

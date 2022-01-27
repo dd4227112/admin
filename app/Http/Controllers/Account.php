@@ -278,12 +278,10 @@ class Account extends Controller {
             $this->data['to'] = $to;
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-            $this->data['payments']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' ");
+            $this->data['payments']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' order by p.date desc");
             $this->data['invoice_reports'] = DB::select("select extract(month from p.created_at) as month,sum(p.amount) from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}' group by month order by month");
             return $this;
         } 
-
-
 
     
     public function invoiceView() {
@@ -442,6 +440,7 @@ class Account extends Controller {
         $invoice = Invoice::find(request('invoice_id'));
         $message = request('message');
         $email = request('email');
+        //$email = request('email');
         $client = \App\Models\Client::where('email',$email)->first();
         if(empty($client)){
          $client = \App\Models\Client::where('email',$invoice->client->email)->first();
@@ -542,9 +541,8 @@ class Account extends Controller {
        return redirect(url('account/invoiceView/'. $invoice_id))->with('success', 'Invoice Edited Successfully');
     }
 
-  
-
-
+    
+    
 
 
     //   public function createinvoices() {

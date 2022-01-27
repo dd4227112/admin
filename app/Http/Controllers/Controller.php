@@ -142,6 +142,16 @@ class Controller extends BaseController {
         return url($destinationPath . '/' . $filename);
     }
 
+
+     public function uploadFileLocalu($file) {
+       //Move Uploaded File
+        $destinationPath = 'storage/uploads/images';
+        !is_dir($destinationPath) ? mkdir($destinationPath) : '';
+        $filename = rand(145, 87998) . time() . '.';
+        $file->move($destinationPath, $filename);
+        return url($destinationPath . '/' . $filename);
+    }
+
     public function curlPrivate($fields, $url = null) {
         // Open connection
         $url = 'http://75.119.140.177:8081/api/payment';
@@ -269,7 +279,6 @@ class Controller extends BaseController {
     //@param $chatId [string] [required] - the ID of chat where we send a message
     //@param $format [string] [required] - file format, from the params in the message body (text[1], etc)
     public function file($chatId, $format, $filename, $caption = null) {
-    
         $availableFiles = array(
             'doc' => 'document.doc',
             'gif' => 'gifka.gif',
@@ -357,6 +366,24 @@ class Controller extends BaseController {
             echo 'Wrong url supplied in whatsapp api';
         }
     }
+
+
+        public function sendWhatsappFiles($phone,$filename,$path,$caption = null){
+              $data = json_encode(array(
+                  'chatId' => $phone.'@c.us',
+                  'body'   => $path,
+                  'filename' => $filename,
+                  'capture' => $caption
+              ));
+
+              $url = $this->APIurl.'sendFile?token='.$this->token;
+              $options = stream_context_create(['http' =>[
+                  'method' => 'POST',
+                  'header' => 'Content-type: application/json',
+                  'content' => $data]]);
+              $response = file_get_contents($url, false, $options);
+              echo $response; 
+      }
 
 
       public function send_whatsapp_sms($phone, $message) {
