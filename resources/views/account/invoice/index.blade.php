@@ -383,7 +383,7 @@
             </div>
            
             <div class="modal-body">
-                    <form action="<?=url('Homecontroller/sendInvoice')?>" method="post"  enctype="multipart/form-data">
+                    <form action="<?= url('customer/sendInvoice') ?>" method="post"  enctype="multipart/form-data">
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-4">

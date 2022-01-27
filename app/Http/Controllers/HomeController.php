@@ -51,23 +51,7 @@ class HomeController extends Controller
     }
 
 
-    public function sendInvoice(){
-        if($_POST){ 
-               $caption = request('message');
-               $phone = request('phone_number');
-               $phone = \collect(DB::select("select format_phone_number from admin.format_phone_number('$phone') "))->first();
-         
-               $phone = $phone->format_phone_number;
-              
-              $file = request()->file('invoice_file');
-              $path = $this->uploadFileLocal($file);
-
-              $filename = $file->getClientOriginalName();
-
-              $this->sendWhatsappFiles($phone,$filename,$path,$caption);
-
-        }
-     }
+  
 
 
 }
