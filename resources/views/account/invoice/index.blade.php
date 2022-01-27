@@ -36,14 +36,14 @@
                             <div class="row d-flex justify-content-center">
 
                                 <div class="col-sm-10 col-xl-4 m-b-30">
-                                    <h4 class="sub-title">Select project</h4>
+                                    <h4 class="sub-title">Select Invoice Type</h4>
                                     <select name="select" class="form-control form-control-primary"  id="schema_project">
                                        <option value="0">Select</option>
                                         <?php
-                                       $projects = \App\Models\InvoiceType::whereNotIn('id',[4])->get();
-                                       foreach ($projects as $project) {
+                                       $invoice_types = \App\Models\InvoiceType::whereNotIn('id',[3])->get();
+                                       foreach ($invoice_types as $type) {
                                             ?>
-                                            <option value="<?= $project->id ?>" selected><?= $project->name ?></option>
+                                            <option value="<?= $type->id ?>" selected><?= $type->name ?></option>
                                         <?php  }
                                         ?>
                                      </select>
@@ -61,8 +61,6 @@
                                         ?>
                                     </select>
                                   </div>
-
-                                
                                 </div>
                             </div>
                         </div>
@@ -78,13 +76,13 @@
                                     <!-- Nav tabs -->
                                     <ul class="nav nav-tabs md-tabs" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong>INVOICE LIST</strong></a>
+                                            <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true"><strong> <?= strtoupper($invoice_type->name)?>  LIST</strong></a>
                                             <div class="slide"></div>
                                         </li>
-                                        <li class="nav-item">
+                                        {{-- <li class="nav-item">
                                             <a class="nav-link" data-toggle="tab" href="#profile2" role="tab" aria-expanded="false"><strong>PRO FORMA INVOICE</strong></a>
                                             <div class="slide"></div>
-                                        </li>
+                                        </li> --}}
                                         <li class="nav-item">
                                             <a class="nav-link" data-toggle="tab" href="#messages3" role="tab" aria-expanded="false"><strong>VIEW REPORT</strong></a>
                                             <div class="slide"></div>
@@ -95,67 +93,7 @@
                                     <div class="tab-content card-block">
                                         <div class="tab-pane active" id="home3" role="tabpanel">
                                         <div class="table-responsive">
-                                   <?php if ($project_id == 4) { ?>
-                                      <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Client Name</th>
-                                                <th>Reference #</th>
-                                                <th>Amount</th>
-                                                <th>Paid Amount</th>
-                                                <th>SMS Provided</th>
-                                                <th>Transaction ID</th>
-                                                <th>Method</th>
-                                                <th>Date</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                             
-                                        <tbody>
-                                            <?php
-                                            $total_amount = 0;
-                                            $total_paid = 0;
-                                            $total_sms = 0;
-                                            $x = 1;
-                                            foreach ($invoices as $invoice) {
-                                                $amount = $invoice->amount;
-                                                $paid = $invoice->confirmed == 1 && $invoice->approved == 1 ? $amount : 0;
-                                                $unpaid = $amount - $paid;
-                                                $total_paid += $paid;
-                                                $total_amount += $amount;
-                                                $total_sms += $invoice->sms_provided;
-                                                ?>
-                                                <tr>
-                                                    <td><?= $x ?></td>
-                                                    <td><?= $invoice->name ?></td>
-                                                    <td><?= $invoice->invoice ?></td>
-                                                    <td><?= money($amount) ?></td>
-                                                    <td><?= money($paid) ?></td>
-                                                    <td><?= $invoice->sms_provided ?></td>
-                                                    <td><?= $invoice->transaction_code ?></td>
-                                                    <td><?= $invoice->method ?></td>
-                                                    <td><?= date('d M Y', strtotime($invoice->time)) ?></td>
-                                                    <td>
-        <!--                                            <a href="<?= url('account/invoiceView/' . $invoice->payment_id) ?>" class="btn btn-sm btn-success">View</a>
-                                                        <a href="<?= url('account/invoice/edit/' . $invoice->payment_id) ?>" class="btn btn-sm btn-primary">Edit</a>-->
-                                                        <!--<a href="<?= url('account/invoice/delete/' . $invoice->payment_id) ?>" class="btn btn-sm btn-danger">Delete</a>-->
-                                                        </td>
-                                                </tr>
-                                            <?php $x++; } ?>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="3">Total</td>
-                                                <td><?= money($total_amount) ?></td>
-                                                <td><?= money($total_paid) ?></td>
-                                                <td><?= $total_sms ?></td>
-                                                <td colspan="4"></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                <?php } else {
-                                    ?>
+                                
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
                                             <tr>
@@ -219,9 +157,11 @@
                                                         <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a>
-                                                         <?php if(can_access('delete_invoice')) {  ?>
-                                                         <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Delete</a>
+
+                                                         <?php if(can_access('delete_invoice') && (int) $paid <= 0) {  ?>
+                                                         <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span> Delete</a>
                                                          <?php } ?> 
+
                                                         <?php if ((int) $unpaid > 0) { ?>
                                                             <hr/>
                                                             <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add Payments</a>
@@ -235,26 +175,26 @@
                                                             </div>
                                                         </div>
                                         
-                                                      </td>
+                                                    </td>
                                                   </tr>
                                    
                                     <?php $i++; } ?>
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="2">Total</td>
+                                                <td colspan="3"><strong>TOTAL</strong></td>
                                                 <td><?= isset($total_amount) ? money($total_amount) : '' ?></td>
                                                 <td><?= isset($total_paid) ? money($total_paid) : '' ?></td>
+                                                <td> </td>
                                                 <td><?= isset($total_unpaid) ? money($total_unpaid) : '' ?></td>
-                                                <td colspan="2"></td>
+                                                <td colspan="3"></td>
                                             </tr>
                                         </tfoot>
                                     </table>
-                                <?php } ?>
                                </div>
                               </div>
 
-                                <div class="tab-pane" id="profile2" role="tabpanel">
+                         <div class="tab-pane" id="profile2" role="tabpanel">
                                 <div class="dt-responsive table-responsive">
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
@@ -305,7 +245,10 @@
                                        </table>
                                             
                                     </div> 
-                            </div>
+                            </div> 
+
+
+
                             <div class="tab-pane" id="messages3" role="tabpanel">
                             <div class="dt-responsive table-responsive">
                                 <div class="col-sm-12">
@@ -414,18 +357,18 @@
                                                 </table>
                                               <?php }?>
                                             </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                           
-                                                        </div>
-                                                        <!-- Row end -->
-                                                       
-                                                    </div>
-                                                </div>
-                                                <!-- Material tab card end -->
                                             </div>
                                         </div>
+                                    </div>
+                                
+                                </div>
+                                <!-- Row end -->
+                            
+                            </div>
+                        </div>
+                        <!-- Material tab card end -->
+                    </div>
+                </div>
 </div>
 
 
@@ -484,16 +427,10 @@
 </div>
 </div>
 <script type="text/javascript">
-
-
-
     $('.calendar').on('click', function (e) {
         e.preventDefault();
         $(this).attr("autocomplete", "off");
     });
-
-
-
 
     $('#schema_project').change(function () {
         var schema = $(this).val();

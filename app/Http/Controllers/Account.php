@@ -27,17 +27,196 @@ class Account extends Controller {
     }
 
     public function projection() {
-        $this->data['budget'] = [];
+        $this->data['invoice_type'] = $invoice_type = request()->segment(3);
+        $this->data['client_id']= $client_id = request()->segment(4);
+        $this->data['invoice_types'] = DB::table('constant.invoices_type')->whereNotIn('id',[3])->orderBy('id','asc')->get();
+        $this->data['services'] = \App\Models\CompanyService::latest()->get();
+
+        $this->data['schools'] = \App\Models\School::whereNotIn('id',\App\Models\ClientSchool::get(['school_id']))->get();
+        $this->data['clients'] = \App\Models\Client::latest()->get();
+
+        if($client_id > 0){
+            $type = \DB::table('constant.invoices_type')->where('id', (int) $invoice_type)->first();
+            if (preg_match('/proforma invoice/i', strtolower($type->name) )) {
+                $this->data['client'] = \App\Models\School::where('ownership','<>','Government')->where('id', (int) $client_id)->first();
+            }else{
+                $this->data['client'] = \App\Models\Client::where('id', (int)$client_id)->first();
+            }
+        }
+
+        if( (int) $client_id > 0 && $_POST){
+             $service_data = request()->all();
+             $data = array('invoice_type' => $invoice_type, 'client_id' => $client_id );
+             return $this->createInvoice($service_data,$data,$type);
+        }
         return view('account.projection', $this->data);
     }
 
-    public function getInvoices($project_id = null, $account_year_id = null) {
+
+      public function createInvoice($service,$invoice,$type){
+           $reference = time(); // to be changed for selcom ID
+           $client_id = $invoice['client_id'];
+           $client = \App\Models\Client::find($client_id);
+           $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+
+          if( empty($client)  && preg_match('/proforma invoice/i', strtolower($type->name)) ){
+                $school_id = $invoice['client_id'];
+                $school = \App\Models\School::find($school_id);
+
+                $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
+                if (empty($school_contact)) {
+                DB::table('admin.school_contacts')->insert([
+                    'name' => $school->name, 'email' => $service['email'], 'phone' => $service['phone'], 'school_id' => $school_id, 'user_id' => \Auth::user()->id, 'title' => ''
+                ]); 
+                  $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
+                } 
+
+                $code = rand(343, 32323) . time();
+                $arr = explode(' ',trim($school->name));
+                $username = strtolower($arr[0]) == 'st' ? trim(strtolower($arr[0].$arr[1])) : strtolower($arr[0]);
+                $schema_name = clean(preg_replace('/[^a-z]/', null, $username));
+                
+                $client_id = DB::table('admin.clients')->insertGetId([
+                    'name' => $school->name,
+                    'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'phone' => $school_contact->phone,
+                    'email' => $school_contact->email,
+                    'estimated_students' => $school->students ?? 0,
+                    'status' => 3,
+                    'code' => $code,
+                    'region_id' => $school->wards->district->region->id,
+                    'email_verified' => 0,
+                    'phone_verified' => 0,
+                    'created_by' => \Auth::user()->id,
+                    'username' => $schema_name,
+                    'start_usage_date' => date('Y-m-d'),
+                    'owner_email' => '',
+                    'owner_phone' => ''
+                ]);
+
+                //client school
+                DB::table('admin.client_schools')->insert([
+                    'school_id' => $school_id, 'client_id' => $client_id
+                ]);
+                 //support person
+                DB::table('admin.users_schools')->insert([
+                    'school_id' => $school_id, 'client_id' => $client_id, 'user_id' => \Auth::user()->id, 'role_id' => \Auth::user()->role_id, 'status' => 1
+                ]);
+
+                $data = ['user_id' => \Auth::user()->id, 'school_id' => $school_id, 'activity' => 'Issue School Invoice', 'task_type_id' => 68, 'user_id' => \Auth::user()->id];
+                $task = \App\Models\Task::create($data);
+                DB::table('tasks_schools')->insert([
+                    'task_id' => $task->id,
+                    'school_id' => $school_id
+                ]);
+                $client = \App\Models\Client::find($client_id);
+             }                            
+
+                 $start_date = !empty($service['invoice_start_date']) ? date('Y-m-d', strtotime($service['invoice_start_date'])) : date('Y-m-d');
+                 $end_date   = date('Y-m-d', strtotime($start_date. " + 30 days"));
+
+                 $invoice_data = ['reference' => $reference, 
+                    'client_id' => $client_id, 
+                    'date' => $start_date, 
+                    'due_date' => $end_date, 
+                    'year' => date('Y'), 
+                    'user_id' => \Auth::user()->id, 
+                    'account_year_id' => $year->id,
+                    'invoice_type' => $invoice['invoice_type']
+                ];
+
+             $invoice_id = \DB::table('invoices')->insertGetId($invoice_data);
+              for($i = 0; $i < count($service['service_ids']); $i++){
+                    $service_ = \App\Models\CompanyService::where('id',$service['service_ids'][$i])->first();
+
+                         \App\Models\InvoiceFee::create([ 'invoice_id' => $invoice_id, 'amount' => $service['amounts'][$i]*$service['quantity'][$i], 
+                          'item_name' => $service_->name, 'quantity' => $service['quantity'][$i], 'unit_price' => $service['amounts'][$i] ,'service_id' => $service['service_ids'][$i] ]);
+              }
+
+           return redirect(url('account/invoiceView/'. $invoice_id))->with('success', 'Invoice Created Successfully');
+      }
+
+
+
+    public function createShuleSoftInvoice() {
+        $client_id = request()->segment(3);
+        $school = \App\Models\ClientSchool::where('client_id',(int)$client_id)->first();
+        // if(!empty($school)){
+        //    $temp_client = collect(\DB::select("select * from admin.temp_clients where school_id ='$school->school_id'"))->first();
+        //     // use reference number from temp_clients if client has proforma invoice
+        //    $reference = $temp_client->reference;
+        // } else {
+           $reference = time(); // to be changed for selcom ID
+       // }
+
+        $client = \App\Models\Client::find($client_id);
+        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+      //  $reference = time(); // to be changed for selcom ID
+        if (empty($client->start_usage_date)) {
+            //If start usage date 
+            return redirect()->back()->with('error', 'You must specify '.$client->username.' start usage date !');
+        }
+        $data = ['reference' => $reference, 
+                 'client_id' => $client_id, 
+                 'date' => $client->invoice_start_date, 
+                 'due_date' => $client->invoice_end_date, 
+                 'year' => date('Y'), 
+                 'user_id' => Auth::user()->id, 
+                 'account_year_id' => $year->id];
+        $invoice = Invoice::create($data);
+        //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
+        //validate for simple missing inputs
+        if ((int) $client->price_per_student == 0 || (int) $client->estimated_students == 0) {
+            //both price per students and Estimated students cannot be 0
+            return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
+        }
+        $unit_price = $client->price_per_student;
+        $amount = $unit_price * $client->estimated_students;
+        \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
+       // return redirect()->back()->with('success', 'Invoice Created Successfully');
+         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+        
+    }
+
+
+     public function getClients() {
+        $invoice_type = request()->segment(3);
+        $clients = \App\Models\Client::latest()->get();
+
+        if (!empty($clients)) {
+            echo '<option value="">select class</option>';
+            foreach ($clients as $value) {
+                echo '<option value="' . $value->id . '">' . $value->name . '</option>';
+            }
+        } else {
+            echo "0";
+        }
+    }
+
+
+    public function getSchools(){
+         $invoice_type = request()->segment(3);
+         $clients = \App\Models\School::where('ownership','<>','Government')->get();
+        if (!empty($clients)) {
+            echo '<option value="">select class</option>';
+            foreach ($clients as $value) {
+                echo '<option value="' . $value->id . '">' . $value->name . '</option>';
+            }
+        } else {
+            echo "0";
+        }
+    }
+
+
+    public function getInvoices($type_id = null, $account_year_id = null) {
         $from = $this->data['from'] = request('from');
         $to = $this->data['to'] = request('to');
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
         $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() : 
-        Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
+        // Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
+        Invoice::whereIn('id', InvoiceFee::get(['invoice_id']))->where('invoice_type',$type_id)->where('account_year_id', $account_year_id)->latest()->get();
         $this->data['accountyear']= \App\Models\AccountYear::where('id', $account_year_id)->first();
         return $this;
     }
@@ -45,16 +224,20 @@ class Account extends Controller {
 
     public function invoice() {
         $this->data['budget'] = [];
-        $project_id = $this->data['project_id'] = request()->segment(3);
-        $this->data['account_year_id'] = $account_year_id = request()->segment(4);
-        if ((int) $project_id > 0) {
+        $accountyear = \App\Models\AccountYear::where('name', date('Y'))->first();
+        $type_id = $this->data['type_id'] = !empty(request()->segment(3)) ? request()->segment(3) : 1;
+        $this->data['account_year_id'] = $account_year_id = empty(request()->segment(4)) ? $accountyear->id : request()->segment(4);
+                  
+        if ((int) $type_id > 0) {
+            $this->data['invoice_type'] = \DB::table('constant.invoices_type')->where('id',$type_id)->first();
+
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
             $clients=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."')) order by created_at desc");
-            $this->getInvoices($project_id, $account_year_id);
+            $this->getInvoices($type_id, $account_year_id);
         }
 
-        if ($project_id == 'delete') {
+        if ($type_id == 'delete') {
             $invoice_id = request()->segment(4);
             \App\Models\Invoice::find($invoice_id)->delete();
             $invoice_fee = \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->first();
@@ -67,20 +250,19 @@ class Account extends Controller {
             return redirect()->back()->with('success', 'deleted successfully');
           }
 
-          
-
-        if ($project_id == 'edit') {
+        if ($type_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
-            $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$this->data['invoice']->id)->first();
+            $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$this->data['invoice']->id)->get();
+            $this->data['payments'] = \App\Models\Payment::where('invoice_id', $id)->sum('amount');
             return view('account.invoice.edit', $this->data);
         } else {
-            switch ($project_id) {
+            switch ($type_id) {
                 case 4:
                     $this->data['invoices'] = DB::connection('karibusms')->select('select a.transaction_code,a.method, a.amount, a.currency,a.sms_provided,a.time,a.invoice, b.name,a.confirmed,a.approved,a.payment_id from payment a join client b using(client_id)');
                     break;
                 default:
-                     !empty(request('from_date')) && !empty(request('to_date')) ? $this->getInvoiceReports(request('from_date'),request('to_date'),$project_id) : $this->getInvoices($project_id, $account_year_id);
+                     !empty(request('from_date')) && !empty(request('to_date')) ? $this->getInvoiceReports(request('from_date'),request('to_date'),$type_id) : $this->getInvoices($type_id, $account_year_id);
                     break;
             }
             return view('account.invoice.index', $this->data);
@@ -113,14 +295,12 @@ class Account extends Controller {
                 $this->createSelcomControlNumber($invoice_id);
                 return redirect()->back()->with('success', 'success');
             }
-            $this->data['invoice'] = Invoice::find($invoice_id);
+            $this->data['invoice'] = $invoice = Invoice::find($invoice_id);
             $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
-
         
-            $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
+            $this->data['invoice_name'] = $invoice->invoice_type == 1 ? 'Invoice' : 'Proforma Invoice';
            
             $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));
-           
             $yearEnd = date('Y-m-d', strtotime('Dec 31'));
 
             $to = \Carbon\Carbon::createFromFormat('Y-m-d',  $yearEnd);
@@ -233,9 +413,7 @@ class Account extends Controller {
                 $validated = request()->validate([
                      'name' => 'required|max:255',
                 ]);
-
                 \App\Models\CompanyService::create(request()->except('_token'));
-
                  $obj = [
                      'name' => request('name'),
                      "financial_category_id" => $financial_category->id,
@@ -253,8 +431,8 @@ class Account extends Controller {
                     'open_balance' =>  0,
                     "status" => 1
                   );
-
                \App\Models\ReferExpense::create($array);
+                return redirect()->back()->with('success', 'Service created succesfully');
            }
         return view('account.services', $this->data);
     }
@@ -350,137 +528,99 @@ class Account extends Controller {
         $invoice_id = request()->segment(3);
         $invoice = Invoice::find($invoice_id);
         $date = date("Y-m-d H:i:s");
-        $invoice->update(['due_date' => date('d M Y', strtotime(request('due_date')))]);
+
+        $invoice->update(['due_date' => date('Y-m-d',strtotime(request('due_date')))]);
         $client = \App\Models\Client::find($invoice->client_id);
-        $data = ['price_per_student' => request('price_per_student'),'estimated_students' => request('estimated_students'), 'start_usage_date' => request('start_usage_date')];
+        $data = ['start_usage_date' => request('start_usage_date')];
         $client->update($data);
-        $unit_price = request('price_per_student');
-        $amount = $unit_price * request('estimated_students');
-        if (date('Y', strtotime($client->created_at)) == 1970) {
-            $client->update([
-                'created_at' => date('Y-m-d', strtotime(request('onboard_date')))]);
+
+        for($i = 0;$i < count(request('service_id')); $i++){
+             \App\Models\InvoiceFee::where(['invoice_id' => $invoice_id, 'service_id' => (int) request('service_id')[$i]])
+             ->update(['unit_price' => request('amounts')[$i],'quantity'=> request('quantity')[$i],'amount' => request('amounts')[$i]*request('quantity')[$i] ]);
         }
-        \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->where('project_id', 1)->update(['amount' => $amount, 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
-        return redirect(url('account/invoice'))->with('success', 'success');
+       
+       return redirect(url('account/invoiceView/'. $invoice_id))->with('success', 'Invoice Edited Successfully');
     }
 
-    public function createShuleSoftInvoice() {
-        $client_id = request()->segment(3);
-        $school = \App\Models\ClientSchool::where('client_id',(int)$client_id)->first();
-        // if(!empty($school)){
-        //    $temp_client = collect(\DB::select("select * from admin.temp_clients where school_id ='$school->school_id'"))->first();
-        //     // use reference number from temp_clients if client has proforma invoice
-        //    $reference = $temp_client->reference;
-        // } else {
-           $reference = time(); // to be changed for selcom ID
-       // }
+  
 
-        $client = \App\Models\Client::find($client_id);
-        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
-      //  $reference = time(); // to be changed for selcom ID
-        if (empty($client->start_usage_date)) {
-            //If start usage date 
-            return redirect()->back()->with('error', 'You must specify '.$client->username.' start usage date !');
-        }
-        $data = ['reference' => $reference, 
-                 'client_id' => $client_id, 
-                 'date' => $client->invoice_start_date, 
-                 'due_date' => $client->invoice_end_date, 
-                 'year' => date('Y'), 
-                 'user_id' => Auth::user()->id, 
-                 'account_year_id' => $year->id];
-        $invoice = Invoice::create($data);
-        //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
-        //validate for simple missing inputs
-        if ((int) $client->price_per_student == 0 || (int) $client->estimated_students == 0) {
-            //both price per students and Estimated students cannot be 0
-            return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
-        }
-        $unit_price = $client->price_per_student;
-        $amount = $unit_price * $client->estimated_students;
-        \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
-       // return redirect()->back()->with('success', 'Invoice Created Successfully');
-         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+
+
+
+    //   public function createinvoices() {
+    //     $school_id =  (int) request('school_id');
         
-    }
-
-
-
-
-      public function createinvoices() {
-        $school_id =  (int) request('school_id');
-        
-        $due_date = request('due_date');
-        $reference = time(); // to be changed for selcom ID
-        $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
-        $client = \App\Models\ClientSchool::where('school_id',(int) $school_id)->first();
+    //     $due_date = request('due_date');
+    //     $reference = time(); // to be changed for selcom ID
+    //     $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
+    //     $client = \App\Models\ClientSchool::where('school_id',(int) $school_id)->first();
 
         
-        $school = \App\Models\School::find($school_id);
-        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+    //     $school = \App\Models\School::find($school_id);
+    //     $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 
-        // If school is not client, create pro forma invoice
-         if (is_null($client) && request('type')== '4') {
-            DB::table('admin.temp_clients')->insert([
-                'name' => $school->name, 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school->id, 'user_id' => \Auth::user()->id,
-                'reference' => $reference, 'date' => $start_date, 'due_date' => $due_date, 'account_year_id' => $year->id,
-                'amount' => remove_comma(request('amount'))*request('students'), 'project_id' => request('type'),
-                'students' => request('students'), 'unit_amount'=> request('amount')
-            ]);
-         } else { 
-        $client = \App\Models\Client::find($client->client_id);
-        $project_id = request('type');
-        $item = \App\Models\InvoiceType::where('id', (int) $project_id)->first();
+    //     // If school is not client, create pro forma invoice
+    //      if (is_null($client) && request('type')== '4') {
+    //         DB::table('admin.temp_clients')->insert([
+    //             'name' => $school->name, 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school->id, 'user_id' => \Auth::user()->id,
+    //             'reference' => $reference, 'date' => $start_date, 'due_date' => $due_date, 'account_year_id' => $year->id,
+    //             'amount' => remove_comma(request('amount'))*request('students'), 'project_id' => request('type'),
+    //             'students' => request('students'), 'unit_amount'=> request('amount')
+    //         ]);
+    //      } else { 
+    //     $client = \App\Models\Client::find($client->client_id);
+    //     $project_id = request('type');
+    //     $item = \App\Models\InvoiceType::where('id', (int) $project_id)->first();
         
-        $item_name = $item->name;
-        $data = array('reference' => $reference, 
-                        'client_id' => $client->id, 
-                        'date' => $start_date, 
-                        'due_date' => $due_date, 
-                        'year' => date('Y'), 
-                        'user_id' => \Auth::user()->id, 
-                        'account_year_id' => $year->id
-                    );
+    //     $item_name = $item->name;
+    //     $data = array('reference' => $reference, 
+    //                     'client_id' => $client->id, 
+    //                     'date' => $start_date, 
+    //                     'due_date' => $due_date, 
+    //                     'year' => date('Y'), 
+    //                     'user_id' => \Auth::user()->id, 
+    //                     'account_year_id' => $year->id
+    //                 );
 
-        $invoice = Invoice::create($data);
-        $amount = remove_comma(request('amount'));
-        $total_amount = request('students') * $amount;
-         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $total_amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount , 'quantity' => request('students')]);
-        }
-         return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
+    //     $invoice = Invoice::create($data);
+    //     $amount = remove_comma(request('amount'));
+    //     $total_amount = request('students') * $amount;
+    //      \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $total_amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount , 'quantity' => request('students')]);
+    //     }
+    //      return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
 
-    }
+    // }
 
 
-    public function createInvoice() {
-        $this->data['projects'] = Project::all();
-        if (request('noexcel')) {
-            $data = request('users');
-            $client_id = request('client_id');
-            $client_record = \App\Models\Client::find($client_id);
-            if (request('project_id') == 1) {
-                $user_invoice = [];
-                $reference = 'SASA11' . date('Y') . $client_record->id . rand(10, 100);
-            } else {
-                $user_invoice = Invoice::where('client_id', $client_id)->first();
-                $reference = 'SASA11' . date('Y') . $client_record->id;
-            }
-            $this->data["payment_types"] = \App\Models\PaymentType::all();
-            if (empty($user_invoice)) {
-                $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => date('d M Y', strtotime(request('date'))), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y', strtotime(request('date'))), 'sync', 'user_id' => Auth::user()->id]);
-                foreach ($data as $value) {
-                    //check if this user has invoice already 
-                    $project = Project::where('name', 'ílike', $value['project'])->first();
-                    $amount = (float) $value['quantity'] * (float) $value['unit_price'];
-                    \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => !empty($project) ? $project->id : request('project_id'), 'item_name' => $value['name'], 'quantity' => (int) $value['quantity'], 'unit_price' => (float) $value['unit_price']]);
-                }
-                echo 1;
-            } else {
-                echo ' <div class="alert alert-warning">User <b>' . $client_record->name . '</b>  has an invoice number ' . $user_invoice->reference . ' already generated on ' . $user_invoice->created_at . '. Please update</div>';
-            }
-        }
-        return view('account.invoice.create', $this->data);
-    }
+    // public function createInvoice() {
+    //     $this->data['projects'] = Project::all();
+    //     if (request('noexcel')) {
+    //         $data = request('users');
+    //         $client_id = request('client_id');
+    //         $client_record = \App\Models\Client::find($client_id);
+    //         if (request('project_id') == 1) {
+    //             $user_invoice = [];
+    //             $reference = 'SASA11' . date('Y') . $client_record->id . rand(10, 100);
+    //         } else {
+    //             $user_invoice = Invoice::where('client_id', $client_id)->first();
+    //             $reference = 'SASA11' . date('Y') . $client_record->id;
+    //         }
+    //         $this->data["payment_types"] = \App\Models\PaymentType::all();
+    //         if (empty($user_invoice)) {
+    //             $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => date('d M Y', strtotime(request('date'))), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y', strtotime(request('date'))), 'sync', 'user_id' => Auth::user()->id]);
+    //             foreach ($data as $value) {
+    //                 //check if this user has invoice already 
+    //                 $project = Project::where('name', 'ílike', $value['project'])->first();
+    //                 $amount = (float) $value['quantity'] * (float) $value['unit_price'];
+    //                 \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => !empty($project) ? $project->id : request('project_id'), 'item_name' => $value['name'], 'quantity' => (int) $value['quantity'], 'unit_price' => (float) $value['unit_price']]);
+    //             }
+    //             echo 1;
+    //         } else {
+    //             echo ' <div class="alert alert-warning">User <b>' . $client_record->name . '</b>  has an invoice number ' . $user_invoice->reference . ' already generated on ' . $user_invoice->created_at . '. Please update</div>';
+    //         }
+    //     }
+    //     return view('account.invoice.create', $this->data);
+    // }
 
     public function getClient() {
         $project_id = request('project_id');
@@ -551,32 +691,28 @@ class Account extends Controller {
      public function payment() {
         $id = request()->segment(3);
         $this->data['invoice'] = $invoice = Invoice::find($id);
+        $this->data['invoicefee'] = $invoicefee = InvoiceFee::where('invoice_id',$id)->get();
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $this->data["payment_types"] = \App\Models\PaymentType::all();
         $this->data['banks'] = \App\Models\BankAccount::all();
-        if ($_POST) {
-            $previous_amount = collect(\DB::SELECT("select sum(coalesce(balance,0))  as last_balance from 
-            admin.client_invoice_balances where client_id = '$invoice->client_id' and extract(year from created_at) < '$year->name' "))->first();
-             if($previous_amount->last_balance > 0){
-                $invoices = \DB::table('admin.client_invoice_balances')->where('client_id',$invoice->client_id)->get();
-                 foreach($invoices as $invoice){
-                    // to be reviewed
-                      return $this->addPayment($invoice->invoice_id);
-                 }
-             } else{
-                  return $this->addPayment($id);
-             }
-        }
         $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [1])->get();
-        return view('account.invoice.payment', $this->data);
-    }
 
-   
-    public function addPayment($id) {
-        $invoice = Invoice::find($id);
-        
-        if (!empty($invoice)) {
-            $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required', 'date' => 'required']);
+        if ($_POST) {
+           $this->validate(request(), ['payment_type' => 'required', 'date' => 'required']);
+           $refer_expense_id = request('refer_expense_id');
+           $mobile_transaction_id = request('mobile_transaction_id');
+           $payment_type = \App\Models\PaymentType::find(request('payment_type'));
+
+            $sum = 0;
+            $unit_amount = 0;
+            for($i=0;$i < count(request('service_id')); $i++){
+                  $unit_amount = !is_null(remove_comma(request('amounts')[$i])) ? remove_comma(request('amounts')[$i]) : 0;
+                  $sum += (int) $unit_amount; 
+            } 
+             if($sum == 0){
+                return redirect()->back()->with('error', 'Both payments can not be empty!');
+            }
+
             $transaction_id =  request('transaction_id') == 0 ?  time() : request('transaction_id');
             $payments = collect(\DB::select("select * from admin.payments where transaction_id = '.$transaction_id.' "))->first();
             if (!empty($payments)) {
@@ -588,29 +724,83 @@ class Account extends Controller {
                 );
                 die(json_encode($data));
             }
-            $am = $invoice->invoiceFees()->sum('amount');
-            $paid = $invoice->payments()->sum('amount');
-            $unpaid = $am - $paid;
-            $advanced_amount = 0;
-            $amount = request('amount');
-            $mobile_transaction_id = request('mobile_transaction_id');
-    
-            if (request('amount') > $unpaid) {
-                $advanced_amount = request('amount') - $unpaid;
-                $amount = $unpaid;
+        
+           $payment = $this->acceptPayment($sum, $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id, $refer_expense_id, request('date'));
+            for($i=0;$i < count(request('amounts')); $i++){  
+                 $single_amount = request('amounts')[$i];
+                 if(!empty($single_amount)){
+                   \App\Models\ServicePayment::create(['invoice_id'=>$id,'service_id'=>request('service_id')[$i], 'unit_amount' => (int) remove_comma($single_amount) ]);
+                   $this->addPayment($id,json_decode($payment)->payment_id,(int) remove_comma($single_amount), request('service_id')[$i]);
+                 }
             }
-            $refer_expense_id = request('refer_expense_id');
-            $payment_type = \App\Models\PaymentType::find(request('payment_type'));
-            $payment = $this->acceptPayment($amount, $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id, $refer_expense_id, request('date'));
-            if ((int) $advanced_amount > 0) {
-                DB::table('admin.advance_payments')->insert([
-                    'client_id' => $invoice->client_id,
-                    'payment_id' => json_decode($payment)->payment_id,
-                    'amount' => $advanced_amount
-                ]);
-            }
+           
+
+            // $previous_amount = collect(\DB::SELECT("select sum(coalesce(balance,0))  as last_balance from 
+            // admin.client_invoice_balances where client_id = '$invoice->client_id' and extract(year from created_at) < '$year->name' "))->first();
+            //  if($previous_amount->last_balance > 0){
+            //     $invoices = \DB::table('admin.client_invoice_balances')->where('client_id',$invoice->client_id)->get();
+            //      foreach($invoices as $invoice){
+            //         // to be reviewed
+            //           return $this->addPayment($invoice->invoice_id);
+            //      }
+            //  } else{
+           return redirect(url('account/invoice/'.$invoice->invoice_type.'/'.$invoice->account_year_id))->with('success', 'success');
+               
         }
-        return redirect('account/invoice/1/' . $invoice->account_year_id)->with('success', json_decode($payment)->description);
+        return view('account.invoice.payment', $this->data);
+
+    }
+
+   
+    public function addPayment($id,$payment_id,$paid_amount,$service_id) {
+        $invoice = Invoice::find($id);
+        
+        if (!empty($invoice)) {
+            $am = \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->where('service_id',$service_id);
+            $invoice_service = $am->first();
+            $paid = \App\Models\InvoiceFeesPayment::where('invoice_fee_id',$invoice_service->id)->sum('paid_amount');
+
+            $unpaid = $invoice_service->amount - $paid;
+
+            $advanced_amount = 0;
+             if ($paid_amount > $unpaid) {
+                $advanced_amount = $paid_amount - $unpaid;
+                $paid_amount = $unpaid;
+            }
+
+          
+            if ($invoice_service->status <> 1 && $paid_amount > 0) {
+                if ($paid_amount >= $invoice_service->amount) {
+                    $status = 1;
+                    \App\Models\InvoiceFeesPayment::create([
+                        'invoice_fee_id' => $invoice_service->id,
+                        'payment_id' => $payment_id,
+                        'paid_amount' => $invoice_service->amount,
+                        'status' => $status,
+                    ]);
+                  //  $amount = $paid_amount - $invoice_service->amount;
+                } else {
+                    //amount is less than invoice paid amount
+                    $status = 2;
+                    \App\Models\InvoiceFeesPayment::create([
+                        'invoice_fee_id' => $invoice_service->id,
+                        'payment_id' => $payment_id,
+                        'paid_amount' => $paid_amount,
+                        'status' => $status,
+                    ]);
+                   // $amount = $paid_amount - $amount;
+                  }
+              }
+
+         if ((int) $advanced_amount > 0) {
+            DB::table('admin.advance_payments')->insert([
+                'client_id' => $invoice->client_id,
+                'payment_id' => $payment_id,
+                'amount' => $advanced_amount
+             ]);
+            }
+         }
+       // return redirect('account/invoice/1/' . $invoice->account_year_id)->with('success', 'success');
     }
 
     public function acceptPayment($amount, $invoice_id, $payment_method, $receipt, $mobile_transaction_id, $customer_name, $bank_account_id, $timestamp, $token, $client_id, $refer_expense_id, $date = null) {
@@ -627,68 +817,45 @@ class Account extends Controller {
             'token' => $token,
             'date' => date('Y-m-d', strtotime($date)),
         );
-
-        // $transaction = DB::table('admin.payments')->where('transaction_id',$receipt)->first();
-        // if(!empty($transactions->transaction_id)){
-        //     return redirect()->back()->with('error', $transactions->transaction_id.' used');
-        // }
          
 
         $payment_id = DB::table('admin.payments')->insertGetId($payment_array);
         $client = DB::table('admin.clients')->where('id', $client_id)->first();
 
-        $data = [
-            'payer_name' => $client->name,
-            'payer_phone' => $client->phone,
-            'payer_email' => $client->name,
-            'created_by_id' => $payment_id,
-            'amount' => $amount,
-            "refer_expense_id" => $refer_expense_id,
-            "bank_account_id" => $bank_account_id,
-            'payment_method' => $payment_method,
-            'transaction_id' => $receipt,
-            'date' => 'now()',
-            'note' => ''
-        ];
+
+        // $data = [
+        //     'payer_name' => $client->name,
+        //     'payer_phone' => $client->phone,
+        //     'payer_email' => $client->name,
+        //     'created_by_id' => $payment_id,
+        //     'amount' => $amount,
+        //     "refer_expense_id" => $refer_expense_id,
+        //     "bank_account_id" => $bank_account_id,
+        //     'payment_method' => $payment_method,
+        //     'transaction_id' => $receipt,
+        //     'date' => 'now()',
+        //     'note' => ''
+        // ];
         // \App\Models\Revenue::create($data);
-        $invoice_fee = \App\Models\InvoiceFee::where('invoice_id', $invoice_id);
+
+        
+
+    //    $budget_rations = DB::table('budget_ratios')->where('project_id', $invoice_fee->first()->project_id)->get();
+
+    //     foreach ($budget_rations as $ratio) {
+    //         DB::table('payments_budget_ratios')->insert([
+    //             'budget_ratio_id' => $ratio->id,
+    //             'payment_id' => $payment_id,
+    //             'amount' => $ratio->percent * $total_amount / 100
+    //         ]);
+    //     }
+
         $status = 1;
 
-        $invoice_fee_ids = $invoice_fee->get();
-        foreach ($invoice_fee_ids as $invoice_fee_data) {
-            if ($invoice_fee_data->status <> 1 && $amount > 0) {
-                if ($amount >= $invoice_fee_data->amount) {
-                    $status = 1;
-                    \App\Models\InvoiceFeesPayment::create([
-                        'invoice_fee_id' => $invoice_fee_data->id,
-                        'payment_id' => $payment_id,
-                        'paid_amount' => $invoice_fee_data->amount,
-                        'status' => $status
-                    ]);
-                    $amount = $amount - $invoice_fee_data->amount;
-                } else {
-                    //amount is less than invoice paid amount
-                    $status = 2;
-                    \App\Models\InvoiceFeesPayment::create([
-                        'invoice_fee_id' => $invoice_fee_data->id,
-                        'payment_id' => $payment_id,
-                        'paid_amount' => $amount,
-                        'status' => $status
-                    ]);
-                    $amount = $amount - $amount;
-                }
-            }
-        }
+        
         $invoice = Invoice::find($invoice_id);
         $invoice->update(['status' => $status]);
-        $budget_rations = DB::table('budget_ratios')->where('project_id', $invoice_fee->first()->project_id)->get();
-        foreach ($budget_rations as $ratio) {
-            DB::table('payments_budget_ratios')->insert([
-                'budget_ratio_id' => $ratio->id,
-                'payment_id' => $payment_id,
-                'amount' => $ratio->percent * request('amount') / 100
-            ]);
-        }
+
         if ($status == 1) {
             //amount has been paid correctly to more than one id so the returned id should be changed.
             return json_encode(array('control' => 1, 'description' => 'Invoice fully paid', 'payment_id' => $payment_id));
@@ -1605,6 +1772,14 @@ class Account extends Controller {
         $table = request('table'); 
         $update = DB::table('admin.'.$table)->where('id',request('id'))->update([$column => $newvalue]);
         echo $update > 0 ? $newvalue : 'No changes happened';
+    }
+
+
+
+    public function getClientInfo(){
+       $client_id = request()->segment(3);
+
+
     }
 
 

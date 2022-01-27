@@ -486,13 +486,9 @@ class Sales extends Controller {
 
              $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
              DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students'),'schema_name' => $schema_name]);
-
              $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
-             
-            if (!empty($check_client)) {
-                $client_id = $check_client->id;
-            } else {
-                $client_id = DB::table('admin.clients')->insertGetId([
+
+             $client_data = [
                     'name' => $school->name,
                     'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
                     'created_at' => date('Y-m-d H:i:s'),
@@ -511,8 +507,13 @@ class Sales extends Controller {
                     'trial' => request('check_trial'),
                     'owner_email' => request('owner_email'),
                     'owner_phone' => request('owner_phone')
-                ]); 
-
+             ];
+             
+            if (!empty($check_client)) {
+                $client_id = $check_client->id;
+               DB::table('admin.clients')->where('id',$client_id)->update($client_data); 
+            } else {
+                $client_id = DB::table('admin.clients')->insertGetId($client_data); 
                 // trial period
                 if(request('check_trial') == 1 && !is_null(request('trial_period')) ) {
                       $start = date('Y-m-d', strtotime(request('implementation_date')));

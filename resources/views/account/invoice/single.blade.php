@@ -113,7 +113,7 @@
                                                         </ul>
                                                     </td>
                                                     <td>
-                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; ">Invoice</h1>
+                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; "><?= $invoice_name ?? '' ?></h1>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -158,6 +158,7 @@
                                         <table class="table table-bordered table-colapse">
                                             <thead>
                                                 <tr>
+                                                    <th>#</th>
                                                     <th>Description</th>
                                                     <th class="text-center">Quantity</th>
                                                     <th class="text-center">Unit Price</th>
@@ -170,28 +171,17 @@
                                                 foreach ($invoice_fee as $fees) {
                                                     ?>
                                                     <tr>
-                                                 <td><?= $fees->item_name ?>
-                                                    <?php if($invoicefee->project_id == 1){ ?>
-                                                    <li>Training and Support</li>
-                                                    <li>Unlimited Cloud hosting for School Information</li>
-                                                    <li>Unlimited bandwidth for users to access</li>
-
-                                                    <li>Customization of features based on school requests</li>
-                                                    <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
-                                                   <?php }  elseif ($invoicefee->project_id == 3){ ?>
-                                                    <li>School Bank Integration</li>
-                                                    <?php } elseif ($invoicefee->project_id == 2) { ?>
-                                                    <li> Android Based Fingerprint Handleld Terminal Device</li>
-                                                    <li> System installation </li>
-                                                    <li>Training and Support</li>
-
-                                                    <?php } ?>
-                                                </td>
-                                                    <td class="text-center"><?= number_format($fees->quantity) ?></td>
-                                                    <td class="text-center"><?= money($fees->unit_price) ?></td>
-                                                    <td class="text-center"><?= money($fees->amount) ?></td>
+                                                    <td><?= $i ?> </td>
+                                                    <td> <strong><?= $fees->item_name ?></strong> <br>
+                                                       <?php  $descr = \App\Models\CompanyService::where('id',$fees->service_id)->first()->description;
+                                                              echo warp($descr,90) ?? '';
+                                                        ?>
+                                                    </td>
+                                                    <td class="text-right"><?= money($fees->quantity) ?></td>
+                                                    <td class="text-right"><?= money($fees->unit_price) ?></td>
+                                                    <td class="text-right"><?= money($fees->amount) ?></td>
                                                 </tr>
-                                            <?php } ?>
+                                            <?php $i++;} ?>
 
                                             </tbody>
                                         </table>

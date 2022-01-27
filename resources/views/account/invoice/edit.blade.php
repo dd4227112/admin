@@ -1,8 +1,5 @@
 @extends('layouts.app')
-
 @section('content')
-
-    
         <!-- Page-header start -->
        <div class="page-header">
             <div class="page-header-title">
@@ -22,11 +19,10 @@
                 </ul>
             </div>
         </div>
+
         <div class="page-body">
             <div class="row">
-
                 <div class="col-sm-12">
-                    <!-- Zero config.table start -->
                     <div class="card tab-card">
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
@@ -35,15 +31,14 @@
                                 </a>
                                 <div class="slide"></div>
                             </li>
-
                         </ul>
+
                         <div class="tab-content">
                             <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
                                 <div class="card-block">
 
                                     <header class="panel-heading">
                                         Edit Invoice Details
-
                                     </header>
                                     <div class="panel-body">
                                         <div id="error_area"></div>
@@ -59,7 +54,7 @@
                                                     <div class="col-lg-6"> <span id="project_id_error"></span></div>
                                                 </div>
                                                  <div class="form-group ">
-                                                    <label for="type" class="control-label col-lg-3">Amount</label>
+                                                    <label for="type" class="control-label col-lg-3">Total Amount</label>
                                                     <div class="col-lg-6">
                                                         <input type="text" class="form-control transaction_amount"  value="<?= $invoice->invoiceFees()->sum('amount') ?>" disabled=""/>
 
@@ -68,56 +63,49 @@
                                                     <div class="col-lg-6"> <span id="project_id_error"></span></div>
                                                 </div>
 
-                                            <?php if($invoicefee->project_id == 1) { ?>
+                                            <?php 
+                                              if(isset($invoicefee)) { 
+                                                foreach($invoicefee as $value) { ?>
                                                 <div class="form-group ">
-                                                    <label for="number" class="control-label col-lg-3">Students</label>
+                                                    <label for="number" class="control-label col-lg-3"><?= $value->service->name . '<strong>(Unit price)</strong>' ?></label>
                                                     <div class="col-lg-6">
-                                                        <input type="number" value="<?= $invoice->client->estimated_students ?>" name="estimated_students" id="date" class="form-control"/>
+                                                        <input type="number" value="<?= $value->unit_price ?>" name="amounts[]"  class="form-control"  <?php if((int) $payments > 0) echo 'disabled="disabled"'?>/>
                                                     </div>
-                                                    <?php echo form_error($errors, 'date'); ?>
-                                                    <div class="col-lg-6"> <span id="date_error"></span></div>
+                                                    <?php echo form_error($errors, 'amount'); ?>
+                                                    <div class="col-lg-6"> <span id="amount"></span></div>
                                                 </div>
 
                                                 <div class="form-group ">
-                                                    <label for="number" class="control-label col-lg-3">Price</label>
+                                                    <label for="number" class="control-label col-lg-3"><?= $value->service->name .'<strong>(Quantity)</strong>' ?></label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" value="<?= $invoice->client->price_per_student ?>" name="price_per_student" id="date" class="form-control"/>
-
+                                                        <input type="text" value="<?= $value->quantity?>" name="quantity[]" id="quantity" class="form-control"  <?php if((int) $payments > 0) echo 'disabled="disabled"'?> />
                                                     </div>
-                                                    <?php echo form_error($errors, 'date'); ?>
-                                                    <div class="col-lg-6"> <span id="date_error"></span></div>
+                                                    <?php echo form_error($errors, 'quantity'); ?>
+                                                    <div class="col-lg-6"> <span id="quantity"></span></div>
+                                                   <input type="hidden" value="<?= $value->service_id?>" name="service_id[]" />
+
                                                 </div>
-                                            <?php } ?>
+                                             <?php } }
+                                             ?>
                                             
                                                
 
                                                 <div class="form-group ">
-                                                    <label for="number" class="control-label col-lg-3">Invoice Due Date</label>
+                                                    <label for="number" class="control-label col-lg-3">Invoice End Date</label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" value="<?= date('Y-m-d',strtotime($invoice->due_date)) ?>" name="due_date" id="date" class="form-control"/>
-
+                                                        <input type="date" value="<?= date('Y-m-d',strtotime($invoice->due_date)) ?>" name="due_date" id="due_date" class="form-control"/>
                                                     </div>
-                                                    <?php echo form_error($errors, 'date'); ?>
+                                                    <?php echo form_error($errors, 'due_date'); ?>
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
                                                 </div>
-                                               
-                                                {{-- 
-                                                  <div class="form-group ">
-                                                    <label for="number" class="control-label col-lg-3">Start Date</label>
-                                                    <div class="col-lg-6">
-                                                        <input type="text" value="<?= date('Y-m-d',strtotime($invoice->client->created_at)) ?>" name="onboard_date" id="onboard_date" class="form-control"/>
-
-                                                    </div>
-                                                    <?php echo form_error($errors, 'date'); ?>
-                                                    <div class="col-lg-6"> <span id="date_error"></span></div>
-                                                </div> --}}
+                                             
 
                                                   <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3">Start Usage date</label>
                                                     <div class="col-lg-6">
                                                         <input type="date" value="<?= date('Y-m-d',strtotime($invoice->client->start_usage_date)) ?>" name="start_usage_date" id="start_usage_date" class="form-control"/>
                                                     </div>
-                                                    <?php echo form_error($errors, 'date'); ?>
+                                                    <?php echo form_error($errors, 'start_usage_date'); ?>
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
                                                 </div>
 
@@ -125,7 +113,7 @@
                                                 <div class="form-group">
                                                     <div class="col-lg-offset-3 col-lg-6">
                                                        <?= csrf_field() ?>
-                                                        <button class="btn btn-primary" type="submit" >Update Invoice</button>
+                                                        <button class="btn btn-primary btn-sm btn-round" type="submit" >Update Invoice</button>
                                                     </div>
                                                 </div>
                                             </form>

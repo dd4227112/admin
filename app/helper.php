@@ -136,6 +136,8 @@ function json_call($array = null) {
     }
 }
 
+
+
 function money($amount, $decimal = 0) {
     return number_format($amount, $decimal);
 }
@@ -423,7 +425,7 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
     return $remaindays - $holidays->count;
 }
 
-
+  // clean string from special characters
     function clean($string) {
          $string = str_replace(' ', '', $string); // Replaces all spaces with empty.
          return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.

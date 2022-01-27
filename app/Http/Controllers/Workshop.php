@@ -134,9 +134,9 @@ class Workshop extends Controller {
     public function userdata() {
         $this->data['returns'] = [];
         $this->data['prefix'] = '';
-        if ($_POST) {
+          if($_POST) {
             $this->data['users'] = DB::table('admin.all_users')->where('schema_name', request('schema_name'))->where('table',  request('table'))->where('status', 1)->get();
-        }
+          }
         return view('market.userdata', $this->data);
     }    
 

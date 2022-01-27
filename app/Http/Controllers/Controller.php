@@ -117,7 +117,7 @@ class Controller extends BaseController {
 
 
   
- //Altenative function to store files on localstorage
+ //Altenative function to store files on locally
     public function saveFile($file, $subfolder = null, $local = null) {
         if ($local == TRUE) { 
             $url = $this->uploadFileLocal($file);
@@ -300,12 +300,6 @@ class Controller extends BaseController {
 
 
 
-     public function testing(){
-         $timein = '2022-01-11 12:30:12';
-         $today  = date('Y-m-d H:i:s');
-         $ti = date('Y-m-d H:i:s', strtotime('+10 minutes',strtotime($timein)));
-         echo $today;
-     }
 
 
 
@@ -369,7 +363,7 @@ class Controller extends BaseController {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
             DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "')");
-        }
+           }
         return $this;
     }
         

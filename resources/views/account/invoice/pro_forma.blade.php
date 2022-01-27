@@ -121,7 +121,7 @@
                                                         </ul>
                                                     </td>
                                                     <td>
-                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; ">Invoice</h1>
+                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; ">Proforma Invoice</h1>
                                                     </td>
                                                 </tr>
                                             </tbody>
