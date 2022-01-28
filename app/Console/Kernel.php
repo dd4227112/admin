@@ -142,17 +142,17 @@ class Kernel extends ConsoleKernel {
         })->hourly();
     }
 
-  
-       public function whatsappMessage() {        
+   public function whatsappMessage() {        
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
         $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                // if(!empty($message->company_file_id)){
-                //     $controller->sendMessageWithFile($message->phone,$message->file_name,$message->file_path,$message->message);
-                // }else{
+                if(!empty($message->company_file_id)){
+                    $file = \App\Models\CompanyFile::find($message->company_file_id);
+                    $controller->sendMessageFile($message->phone,$message->message,$file->name,$file->path);
+                  }else{
                    $controller->sendMessage($message->phone, $message->message);
-                //}
+                  }
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
              } else {

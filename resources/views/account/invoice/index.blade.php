@@ -43,7 +43,7 @@
                                        $invoice_types = \App\Models\InvoiceType::whereNotIn('id',[3])->get();
                                        foreach ($invoice_types as $type) {
                                             ?>
-                                            <option value="<?= $type->id ?>" selected><?= $type->name ?></option>
+                                            <option value="<?= $type->id ?>" selected><?= strtoupper($type->name) ?></option>
                                         <?php  }
                                         ?>
                                      </select>
@@ -91,8 +91,8 @@
                                     </ul>
                                     <!-- Tab panes -->
                                     <div class="tab-content card-block">
-                                        <div class="tab-pane active" id="home3" role="tabpanel">
-                                        <div class="table-responsive">
+                                    <div class="tab-pane active" id="home3" role="tabpanel">
+                                     <div class="table-responsive">
                                 
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
@@ -194,59 +194,7 @@
                                </div>
                               </div>
 
-                         <div class="tab-pane" id="profile2" role="tabpanel">
-                                <div class="dt-responsive table-responsive">
-                                    <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>School Name</th>
-                                                <th>Reference #</th>
-                                                <th>Amount</th>
-                                                <th>Due Date</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                            <?php 
-                                              $f = 1; $total_amount = 0;
-                                             $temp_clients = \App\Models\TempClients::latest()->get();
-                                            foreach ($temp_clients as $value) {
-                                                ?>
-                                                <tr>
-                                                    <td><?= $f ?></td>
-                                                    <td><?= isset($value->school->name) ? warp(strtoupper($value->school->name),15) : '' ?></td>
-                                                    <td><?= $value->reference ?></td>
-                                                    <td><?php $total_amount+= $value->amount; echo money($value->amount) ?></td>
-                                                    <td><?= date('d M Y', strtotime($value->due_date)) ?></td>
-                                                    <td>
-                                                     
-                                                     <div class="dropdown-secondary dropdown f-right">
-                                                        <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                                         <a class="dropdown-item waves-light waves-effect" href="<?= url('account/proinvoiceView/' . $value->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
-                                                         {{-- <a class="dropdown-item waves-light waves-effect" href="<?= url('account/proinvoiceView/edit/' . $value->id) ?>"><span class="point-marker bg-warning"></span>Edit</a> --}}
-                                                        </div>
-                                                    </div>
-                                                  
-                                                  </td>
-                                              </tr>
-                                   
-                                         <?php $f++; } ?>
-                                        </tbody>
-                                         <tfoot>
-                                            <tr>
-                                                <td colspan="3"><strong> Total Amount</strong></td>
-                                                <td><strong><?= isset($total_amount) ? money($total_amount) : '' ?></strong></td>
-                                                <td colspan="1"></td>
-                                            </tr>
-                                        </tfoot> 
-                                       </table>
-                                            
-                                    </div> 
-                            </div> 
-
+                       
 
 
                             <div class="tab-pane" id="messages3" role="tabpanel">
@@ -388,7 +336,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     Email Address
-                                    <input type="email" class="form-control"  name="email" required>
+                                    <input type="email" class="form-control"  name="email">
                                 </div>
                                 <div class="col-md-4">
                                     Phone Number

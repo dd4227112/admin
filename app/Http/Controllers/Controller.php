@@ -98,7 +98,6 @@ class Controller extends BaseController {
     }
 
     public function send_email($email, $subject, $message) {
-
         // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $obj = array('body' => $message, 'subject' => $subject, 'email' => $email);
         DB::table('public.email')->insert($obj);
@@ -142,25 +141,7 @@ class Controller extends BaseController {
     }
 
     
-    public function whatsappMessage() {        
-        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
-        $controller = new \App\Http\Controllers\Controller();
-        foreach ($messages as $message) {
-            if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                if(!empty($message->company_file_id)){
-                    $file = \App\Models\CompanyFile::find($message->company_file_id);
-                    $controller->sendMessageFile($message->phone,$message->message,$file->name,$file->path);
-                  }else{
-                   $controller->sendMessage($message->phone, $message->message);
-                  }
-                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
-                //   echo 'message sent to ' . $message->phone . '' . chr(10);
-             } else {
-                //this is invalid number, so update in db to show wrong return
-                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
-             }
-           }
-        }
+   
    
 
     public function curlPrivate($fields, $url = null) {
@@ -319,11 +300,6 @@ class Controller extends BaseController {
     }
 
 
-
-   
-
-
-
     //sends a voice message. it is called when the bot gets the command "ptt"
     //@param $chatId [string] [required] - the ID of chat where we send a message
     public function ptt($chatId) {
@@ -353,7 +329,7 @@ class Controller extends BaseController {
               'body'   => $path,
               'filename' => $filename,
               'caption' => $caption
-          ));
+             ));
           $this->sendRequest('sendFile',$data);
       }
 
@@ -390,14 +366,15 @@ class Controller extends BaseController {
     }
 
 
-      public function send_whatsapp_sms($phone, $message, $company_file_id = 0) {
+      public function send_whatsapp_sms($phone, $message, $company_file_id = null) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
-             \DB::statement("insert into admin.whatsapp_messages(message, status, phone,company_file_id) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "'),'" . $company_file_id ."' ");
+            $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $phone . "')"))->first();
+            $data = array('message'=> $message,'phone'=> $phone->whatsapp_phone, 'company_file_id'=>$company_file_id);
+            \App\Models\WhatsAppMessages::create($data);
            }
         return $this;
     }
-        
  
       public function syncMissingPayments(){
         $this->data['prefix'] = '';

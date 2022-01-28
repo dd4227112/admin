@@ -78,7 +78,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                 <table class="table  table-bordered nowrap ">
                                                     <thead>
                                                         <tr>
-                                                            <th>#</th>
+                                                            <th>Choose</th>
                                                             <th>Service Name</th>
                                                             <th>Description</th>
                                                             <th>Quantity</th>
@@ -96,7 +96,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                    <input class="form-control" type="checkbox" id="services<?= $service->id ?>"  value="<?= $service->id ?>"  onclick="service('<?= $service->id ?>')" name="service_ids[]" />
                                                                 </td>
                                                              
-                                                                <th style="width: 40px;">
+                                                                <th>
                                                                     <?=  warp($service->name,20); ?>  
                                                                 </th>
 
@@ -104,11 +104,11 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                    <input class="form-control" type="text" id="note<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? 'Training and Support,Unlimited Cloud hosting for School Information,Unlimited bandwidth for users to access,Customization of features based on school requestsFree Technical support for all ShuleSoft users ( parents, teachers, students and staff)': '' ;?>"  name="note[]"  disabled="disabled"/>
                                                                 </th>
 
-                                                                <td style="width: 30px;"> 
+                                                                <td> 
                                                                    <input class="form-control" type="number" id="quantity<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? $client->estimated_students :  '' ;?>"  name="quantity[]"  onkeyup="quantity('<?= $service->id ?>')"  disabled="disabled"/>
                                                                 </td> 
                                                                 
-                                                                  <td style="width: 30px;">
+                                                                  <td>
                                                                    <input class="form-control amounts"  type="number" id="amount<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? $client->price_per_student :  '' ;?>"  name="amounts[]"  onkeyup="get_amount('<?= $service->id ?>')" disabled="disabled"/>
                                                                 </td>
 
@@ -148,7 +148,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                              <td>
                                                                  <td colspan="2">
                                                                      <div class="col-md-4 col-sm-4 col-xs-12 ">
-                                                                        <button type="submit" id="add_revenue" class="btn btn-primary btn-sm btn-round"> Save </button>
+                                                                        <button type="submit" id="add_revenue" class="btn btn-primary btn-round"> Save </button>
                                                                     </div>
                                                                   </td> 
                                                                   <td></td>

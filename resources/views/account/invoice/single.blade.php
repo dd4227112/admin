@@ -164,7 +164,7 @@
                                                     <tr>
                                                     <td><?= $i ?> </td>
                                                     <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
-                                                        <?= warp($fees->note,50) ?? ''?>
+                                                        <?= warp($fees->note,70) ?? ''?>
 
                                                         {{-- <span style="text-decoration: none;" contenteditable="true" 
                                                        onblur="save('<?= $fees->invoice_id . 'note' ?>', '<?= $fees->service_id  ?>','note')" 

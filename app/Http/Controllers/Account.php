@@ -59,7 +59,7 @@ class Account extends Controller {
            $client = \App\Models\Client::find($client_id);
            $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 
-          if( empty($client)  && preg_match('/proforma invoice/i', strtolower($type->name)) ){
+          if(empty($client)  && preg_match('/proforma invoice/i', strtolower($type->name)) ){
                 $school_id = $invoice['client_id'];
                 $school = \App\Models\School::find($school_id);
 
@@ -180,7 +180,6 @@ class Account extends Controller {
         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
        // return redirect()->back()->with('success', 'Invoice Created Successfully');
          return redirect(url('account/invoice/1/'.$year->id))->with('success', 'Invoice Created Successfully');
-        
     }
 
 
@@ -444,27 +443,28 @@ class Account extends Controller {
         $invoice = Invoice::find(request('invoice_id'));
         $message = request('message');
         $email = request('email');
-        //$email = request('email');
+        $phone_number = request('phone_number');
+        $company_file_id = null;
+        
         $file = request()->file('invoice_file');
         if(!empty($file)){
           $company_file_id =  $this->saveFile($file, 'company/contracts',TRUE);
         }
 
-        $client = \App\Models\Client::where('email',$email)->first();
-        if(empty($client)){
-         $client = \App\Models\Client::where('email',$invoice->client->email)->first();
-        }
+
+        $client = \App\Models\Client::where('id',$invoice->client->id)->first();
+       
         $search  = array("#name","#amount","#invoice");
-        $replace = array($client->name, $invoice->invoiceFees()->sum('amount'), $invoice->reference);
+        $replace = array($invoice->client->name, $invoice->invoiceFees()->sum('amount'), $invoice->reference);
         $newmessage = str_replace($search, $replace, $message);
-        
+
         $arr = [
             'amount' => $invoice->invoiceFees()->sum('amount'),
             'schema_name' => $invoice->client->username,
             'user_id' => Auth::user()->id,
             'date' => date('Y-m-d'),
             'email' => request('email'),
-            'phone_number' => request('phone_number'),
+            'phone_number' => !empty($phone_number) ? $phone_number : $invoice->client->phone,
             'message' => $newmessage,
             'student' => $invoice->client->estimated_students
         ];
@@ -527,7 +527,7 @@ class Account extends Controller {
 
       //  $button = '<p align="center"><a style="padding:8px 16px;color:#ffffff;white-space:nowrap;font-weight:500;display:inline-block;text-decoration:none;border-color:#0073b1;background-color:green;border-radius:2px;border-width:1px;border-style:solid;margin-bottom:4px" href="' . url('epayment/i/' . $invoice->id) . '" target="_blank">Click to View Your Invoice</a></p>';
 
-        $this->send_whatsapp_sms(request('phone_number'), $newmessage,$company_file_id);
+        $this->send_whatsapp_sms($phone_number, $newmessage,$company_file_id);
        // $this->send_sms(validate_phone_number(request('phone_number'))[1], $sms . '. Open ' . url('epayment/i/' . $invoice->id) . ' to view Invoice');
        // $this->send_email(request('email'), 'ShuleSoft Invoice of Service', nl2br($sms) . '<br/><br/>' . $button);
         return redirect()->back()->with('success', 'Sent successfully');
