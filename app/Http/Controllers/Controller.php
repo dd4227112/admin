@@ -290,6 +290,7 @@ class Controller extends BaseController {
             ); 
             $this->sendRequest('sendFile', $data);
         }
+
         if (strtolower($format) == 'ogg') {
             $data = array(
                 'audio' => $filename,

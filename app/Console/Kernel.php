@@ -148,7 +148,9 @@ class Kernel extends ConsoleKernel {
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 if(!empty($message->company_file_id)){
+                    
                     $file = \App\Models\CompanyFile::find($message->company_file_id);
+                    
                     $controller->sendMessageFile($message->phone,$message->message,$file->name,$file->path);
                   }else{
                    $controller->sendMessage($message->phone, $message->message);
@@ -160,7 +162,7 @@ class Kernel extends ConsoleKernel {
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
              }
            }
-        }
+    }
 
     function checkPaymentPattern($user, $schema) {
         $pattern = [0, 0, 0];
