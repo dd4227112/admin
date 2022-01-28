@@ -48,15 +48,7 @@
                                         <tr>
                                             <td><?= $index + 1 ?></td>
                                             <td>{{$service->name}}</td> 
-                                            {{-- <td>
-                                               <span style="text-decoration: none;" contenteditable="true" 
-                                                 onblur="save('<?= $service->id . 'name' ?>', '<?= $service->id  ?>','name' )" 
-                                                 id="<?= $service->id . 'name' ?>"> <?= $service->name == '' ? 'null' : $service->name ?>
-                                                </span>
-                                                <span id="stat<?= $service->id .  'name' ?>"></span>
-                                             </td> --}}
-
-                                            
+                                           
                                            <td>
                                                <span style="text-decoration: none;" contenteditable="true" 
                                                  onblur="save('<?= $service->id . 'description' ?>', '<?= $service->id  ?>','description')" 

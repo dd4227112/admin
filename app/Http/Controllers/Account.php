@@ -127,11 +127,15 @@ class Account extends Controller {
                 ];
 
              $invoice_id = \DB::table('invoices')->insertGetId($invoice_data);
+             if( !is_null($service['service_ids']) ) {
               for($i = 0; $i < count($service['service_ids']); $i++){
                     $service_ = \App\Models\CompanyService::where('id',$service['service_ids'][$i])->first();
-
                          \App\Models\InvoiceFee::create([ 'invoice_id' => $invoice_id, 'amount' => $service['amounts'][$i]*$service['quantity'][$i], 
-                          'item_name' => $service_->name, 'quantity' => $service['quantity'][$i], 'unit_price' => $service['amounts'][$i] ,'service_id' => $service['service_ids'][$i] ]);
+                          'item_name' => $service_->name, 'note' => $service['note'][$i],'quantity' => $service['quantity'][$i], 'unit_price' => $service['amounts'][$i] ,'service_id' => $service['service_ids'][$i] ]);
+                  }
+                } 
+                 else{
+                     return redirect()->back()->with('error', 'You must specify choose at least one service');
               }
 
            return redirect(url('account/invoiceView/'. $invoice_id))->with('success', 'Invoice Created Successfully');
@@ -441,6 +445,11 @@ class Account extends Controller {
         $message = request('message');
         $email = request('email');
         //$email = request('email');
+        $file = request()->file('invoice_file');
+        if(!empty($file)){
+          $company_file_id =  $this->saveFile($file, 'company/contracts',TRUE);
+        }
+
         $client = \App\Models\Client::where('email',$email)->first();
         if(empty($client)){
          $client = \App\Models\Client::where('email',$invoice->client->email)->first();
@@ -477,7 +486,7 @@ class Account extends Controller {
          if ((int) Auth::user()->id > 0) {
              DB::table('tasks_users')->insert([
                  'task_id' => $task->id,
-                 'user_id' => Auth::user()->id 
+                 'user_id' => \Auth::user()->id 
              ]);
            }
 
@@ -501,25 +510,26 @@ class Account extends Controller {
         //generate a random link and include it in the email and 
         //in the sms
         if (preg_match('/invoice/i', $message)) {
-            $this->createSelcomControlNumber(request('invoice_id'));
+          //  $this->createSelcomControlNumber(request('invoice_id'));
             $invoice = Invoice::find(request('invoice_id'));
         }
-        $replacements = array(
-            $invoice->client->name, money($invoice->invoiceFees()->sum('amount') - $invoice->payments()->sum('amount')), $invoice->token
-        );
-        $sms = preg_replace(array(
-            '/#name/i', '/#amount/i', '/#invoice/i'
-                ), $replacements, $message);
+        // $replacements = array(
+        //     $invoice->client->name, money($invoice->invoiceFees()->sum('amount') - $invoice->payments()->sum('amount')), $invoice->token
+        // );
+        // $sms = preg_replace(array(
+        //     '/#name/i', '/#amount/i', '/#invoice/i'
+        //         ), $replacements, $message);
 
-        if (preg_match('/#/', $sms)) {
-            //try to replace that character
-            $sms = preg_replace('/\#[a-zA-Z]+/i', '', $sms);
-        }
+        // if (preg_match('/#/', $sms)) {
+        //     //try to replace that character
+        //     $sms = preg_replace('/\#[a-zA-Z]+/i', '', $sms);
+        // }  
 
-        $button = '<p align="center"><a style="padding:8px 16px;color:#ffffff;white-space:nowrap;font-weight:500;display:inline-block;text-decoration:none;border-color:#0073b1;background-color:green;border-radius:2px;border-width:1px;border-style:solid;margin-bottom:4px" href="' . url('epayment/i/' . $invoice->id) . '" target="_blank">Click to View Your Invoice</a></p>';
+      //  $button = '<p align="center"><a style="padding:8px 16px;color:#ffffff;white-space:nowrap;font-weight:500;display:inline-block;text-decoration:none;border-color:#0073b1;background-color:green;border-radius:2px;border-width:1px;border-style:solid;margin-bottom:4px" href="' . url('epayment/i/' . $invoice->id) . '" target="_blank">Click to View Your Invoice</a></p>';
 
-        $this->send_sms(validate_phone_number(request('phone_number'))[1], $sms . '. Open ' . url('epayment/i/' . $invoice->id) . ' to view Invoice');
-        $this->send_email(request('email'), 'ShuleSoft Invoice of Service', nl2br($sms) . '<br/><br/>' . $button);
+        $this->send_whatsapp_sms(request('phone_number'), $newmessage,$company_file_id);
+       // $this->send_sms(validate_phone_number(request('phone_number'))[1], $sms . '. Open ' . url('epayment/i/' . $invoice->id) . ' to view Invoice');
+       // $this->send_email(request('email'), 'ShuleSoft Invoice of Service', nl2br($sms) . '<br/><br/>' . $button);
         return redirect()->back()->with('success', 'Sent successfully');
     }
 

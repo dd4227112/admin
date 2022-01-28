@@ -79,8 +79,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>Select</th>
                                                             <th>Service Name</th>
+                                                            <th>Description</th>
                                                             <th>Quantity</th>
                                                             <th>Unit price</th>
                                                             <th>Total</th>
@@ -92,21 +92,24 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                             <?php $i=1; if(!empty($services)) {
                                                                    foreach($services as $service)  { ?>
                                                              <tr>
-                                                                <td><?= $i ?></td>
                                                                 <td>
-                                                                   <input class="form-control services" type="checkbox" id="services<?= $service->id ?>"  value="<?= $service->id ?>"  onclick="service('<?= $service->id ?>')" name="service_ids[]" />
+                                                                   <input class="form-control" type="checkbox" id="services<?= $service->id ?>"  value="<?= $service->id ?>"  onclick="service('<?= $service->id ?>')" name="service_ids[]" />
                                                                 </td>
                                                              
-                                                                <th>
-                                                                    <?= $service->name ?>  
+                                                                <th style="width: 40px;">
+                                                                    <?=  warp($service->name,20); ?>  
                                                                 </th>
 
-                                                                <td> 
-                                                                   <input class="form-control quantity" type="number" id="quantity<?= $service->id ?>"   name="quantity[]"  onkeyup="quantity('<?= $service->id ?>')"  disabled="disabled"/>
+                                                                <th>
+                                                                   <input class="form-control" type="text" id="note<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? 'Training and Support,Unlimited Cloud hosting for School Information,Unlimited bandwidth for users to access,Customization of features based on school requestsFree Technical support for all ShuleSoft users ( parents, teachers, students and staff)': '' ;?>"  name="note[]"  disabled="disabled"/>
+                                                                </th>
+
+                                                                <td style="width: 30px;"> 
+                                                                   <input class="form-control" type="number" id="quantity<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? $client->estimated_students :  '' ;?>"  name="quantity[]"  onkeyup="quantity('<?= $service->id ?>')"  disabled="disabled"/>
                                                                 </td> 
                                                                 
-                                                                <td>
-                                                                   <input class="form-control amounts"  type="number" id="amount<?= $service->id ?>"   name="amounts[]"  onkeyup="get_amount('<?= $service->id ?>')" disabled="disabled"/>
+                                                                  <td style="width: 30px;">
+                                                                   <input class="form-control amounts"  type="number" id="amount<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? $client->price_per_student :  '' ;?>"  name="amounts[]"  onkeyup="get_amount('<?= $service->id ?>')" disabled="disabled"/>
                                                                 </td>
 
                                                                  <td>
@@ -118,22 +121,23 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                              <tr>
                                                                   <td></td>
+                                                                  <td></td>
                                                                   <td>
                                                                      <div> 
                                                                         <strong >Email </strong>
-                                                                            <input class="form-control" type="email" value="<?= old('email') ?>"  name="email" id="email"  required>
+                                                                            <input class="form-control" type="email" value="<?= $client->email ?>"  name="email" id="email"  required>
                                                                       </div>
                                                                   </td> 
                                                                   <td>
                                                                       <div>
                                                                           <strong>Phone number </strong>
-                                                                          <input class="form-control" type="phone" value="<?= old('phone') ?>"  name="phone" id="phone" required>
+                                                                          <input class="form-control" type="phone" value="<?= $client->phone ?>"  name="phone" id="phone" required>
                                                                     </div>
                                                                   </td>
                                                                   <td>
                                                                       <div> 
                                                                        <strong >Invoice start date </strong>
-                                                                          <input class="form-control" type="date" value="<?= old('invoice_start_date') ?>"  name="invoice_start_date" required>
+                                                                          <input class="form-control" type="date" value="<?= date('Y-m-d') ?>"  name="invoice_start_date" required>
                                                                       </div>
                                                                   </td>
                                                                   <td>
@@ -183,12 +187,14 @@ function tagEdit($schema_name, $column, $value, $type = null) {
          if ( $("#services" + service_id).is(":checked")) {
                 $("#quantity" + service_id).removeAttr("disabled");
                 $("#amount" + service_id).removeAttr("disabled");
+                $("#note" + service_id).removeAttr("disabled");
                 $("#quantity"+service_id).focus();
                 $("#amounts"+service_id).focus();
+                $("#note"+service_id).focus();
             }else {
                 $("#quantity" + service_id).attr("disabled", "disabled");
                 $("#amount" + service_id).attr("disabled", "disabled");
-              
+                $("#note" + service_id).attr("disabled", "disabled");
             }
         };
 

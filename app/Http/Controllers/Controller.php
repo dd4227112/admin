@@ -108,7 +108,6 @@ class Controller extends BaseController {
 
     public function send_sms($phone_number, $message, $priority = 0) {
         if ((strlen($phone_number) > 6 && strlen($phone_number) < 20) && $message != '') {
-            // dd($phone_number);
             $sms_keys_id = DB::table('public.sms_keys')->first()->id;
             \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id));
         }
@@ -142,15 +141,27 @@ class Controller extends BaseController {
         return url($destinationPath . '/' . $filename);
     }
 
-
-     public function uploadFileLocalu($file) {
-       //Move Uploaded File
-        $destinationPath = 'storage/uploads/images';
-        !is_dir($destinationPath) ? mkdir($destinationPath) : '';
-        $filename = rand(145, 87998) . time() . '.';
-        $file->move($destinationPath, $filename);
-        return url($destinationPath . '/' . $filename);
-    }
+    
+    public function whatsappMessage() {        
+        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
+        $controller = new \App\Http\Controllers\Controller();
+        foreach ($messages as $message) {
+            if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
+                if(!empty($message->company_file_id)){
+                    $file = \App\Models\CompanyFile::find($message->company_file_id);
+                    $controller->sendMessageFile($message->phone,$message->message,$file->name,$file->path);
+                  }else{
+                   $controller->sendMessage($message->phone, $message->message);
+                  }
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
+                //   echo 'message sent to ' . $message->phone . '' . chr(10);
+             } else {
+                //this is invalid number, so update in db to show wrong return
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
+             }
+           }
+        }
+   
 
     public function curlPrivate($fields, $url = null) {
         // Open connection
@@ -309,7 +320,7 @@ class Controller extends BaseController {
 
 
 
-
+   
 
 
 
@@ -336,6 +347,16 @@ class Controller extends BaseController {
         $this->sendRequest('group', $data);
     }
 
+     public function sendMessageFile($chatId,$caption,$filename,$path){
+          $data = json_encode(array(
+              'chatId' => $chatId,
+              'body'   => $path,
+              'filename' => $filename,
+              'caption' => $caption
+          ));
+          $this->sendRequest('sendFile',$data);
+      }
+
 
     public function sendMessage($chatId, $text) {
         $data = array('chatId' => $chatId, 'body' => $text);
@@ -361,6 +382,7 @@ class Controller extends BaseController {
             $response = file_get_contents($url, false, $options);
             // $response = $this->curlServer($body, $url);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
+           // echo $response;
             // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
         } else {
             echo 'Wrong url supplied in whatsapp api';
@@ -368,30 +390,10 @@ class Controller extends BaseController {
     }
 
 
-        public function sendWhatsappFiles($phone,$filename,$path,$caption = null){
-              $phone = \collect(DB::select("select whatsapp_phone from admin.whatsapp_phone('$phone') "))->first();
-             
-              $data = json_encode(array(
-                  'chatId' => $phone->whatsapp_phone,
-                  'body'   => $path,
-                  'filename' => $filename,
-                  'capture' => $caption
-              ));
-
-              $url = $this->APIurl.'sendFile?token='.$this->token;
-              $options = stream_context_create(['http' =>[
-                  'method' => 'POST',
-                  'header' => 'Content-type: application/json',
-                  'content' => $data]]);
-              $response = file_get_contents($url, false, $options);
-              echo $response; 
-      }
-
-
-      public function send_whatsapp_sms($phone, $message) {
+      public function send_whatsapp_sms($phone, $message, $company_file_id = 0) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
-            DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "')");
+             \DB::statement("insert into admin.whatsapp_messages(message, status, phone,company_file_id) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "'),'" . $company_file_id ."' ");
            }
         return $this;
     }

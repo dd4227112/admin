@@ -1801,16 +1801,15 @@ class Customer extends Controller {
        public function sendInvoice(){
                $caption = request('message');
                $phone = request('phone_number');
+               $file = request()->file('invoice_file');
                if($_POST){ 
-              
-              $file = request()->file('invoice_file');
-              $path = $this->uploadFileLocal($file);
 
-              $filename = $file->getClientOriginalName();
-
-              $this->sendWhatsappFiles($phone,$filename,$path,$caption);
-
-        }
-     }
+                //   $path = $this->uploadFileLocal($file);
+                  $path = "https://admin.shulesoft.com/storage/uploads/images/90221642764123.pdf";
+                //   $filename = $file->getClientOriginalName();
+                  $filename = 'TEST';
+                  $this->sendWhatsappFiles($phone,$filename,$path);
+              }
+          }
 
 }

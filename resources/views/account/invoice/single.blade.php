@@ -52,20 +52,11 @@
         $message .= 'https://admin.shulesoft/customer/shareinvoicewhatsapp/'.$invoice->id.'';
         ?>
         
-        
             <div class="row">
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6">
                     <p class="text-right" align="right">
-                       
                         <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
-
-                       
-                        <a href="whatsapp://send?text=<?=$message?>" data-action="share/whatsapp/share" 
-                            onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on whatsapp">
-                            <img width="50" src="https://web.whatsapp.com/favicon-64x64.ico">
-                        </a>
-
                         <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
                         <a href="mailto:?subject=Invoice kwa ajili ya malipo ya shulesoft &amp;body=Open this Link:<?= $link ?>"
                            title="Share by Email">
@@ -173,9 +164,13 @@
                                                     <tr>
                                                     <td><?= $i ?> </td>
                                                     <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
-                                                       <?php  $descr = \App\Models\CompanyService::where('id',$fees->service_id)->first();
-                                                              echo warp($descr->description,90) ?? '';
-                                                        ?>
+                                                        <?= warp($fees->note,50) ?? ''?>
+
+                                                        {{-- <span style="text-decoration: none;" contenteditable="true" 
+                                                       onblur="save('<?= $fees->invoice_id . 'note' ?>', '<?= $fees->service_id  ?>','note')" 
+                                                       id="<?= $fees->service_id . 'note' ?>"> <?= $fees->note == '' ? '' : $fees->note ?></span>
+                                                       <span id="stat<?= $fees->service_id .  'note' ?>"></span> --}}
+
                                                     </td>
                                                     <td class="text-right"><?= money($fees->quantity) ?></td>
                                                     <td class="text-right"><?= money($fees->unit_price) ?></td>
