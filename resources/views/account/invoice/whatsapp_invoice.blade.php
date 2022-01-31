@@ -1,10 +1,7 @@
- <?php if(!isset($export)) { ?>
-@extends('layouts.app')
-@section('content')
-<?php } ?>
 
-<?php $root = url('/') . '/public/'; ?>
-
+<?php $root = url('/') . '/public/';?>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <style>
     @media print {
         @page {
@@ -21,40 +18,25 @@
          bottom: 0;
          margin-top: 0px;
          }
-
     }
-
 </style>
 
 
 
     <div class="@if(!isset($balance))  page-wrapper @endif">
-     
+        <style>
+            #valid-msg {
+                color: #00C900;
+            }
+            #error-msg {
+                color: red;
+            }
 
-      
-        
-      <?php if(!isset($export)) { ?>
-            <div class="row">
-                <div class="col-lg-6"></div>
-                <div class="col-lg-6">
-                    <p class="text-right" align="right">
-                        <a href="#" id="printInvoice" class="btn btn-primary btn-mini btn-round"><i class="fa fa-print"></i> Print </a>
+        </style>
+        <?php
+        $bn_number = 888999;
+        ?>
 
-                        <a href="<?= url('account/invoiceView/'.$invoice->id .'/send') ?>" id="printInvoice" class="btn btn-primary btn-mini btn-round"><i class="fa fa-print"></i> send </a>
-
-
-                        <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
-                        <a href="mailto:?subject=Invoice kwa ajili ya malipo ya shulesoft &amp;body=Open this Link:<?= $link ?>"
-                           title="Share by Email">
-                              <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
-                        </a>
-                    </p>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        <?php } ?>
-
-            
             <div class="row">
                 <div class="col-md-12 col-xl-12">
                     <div class="card">
@@ -73,7 +55,7 @@
                                                 <tr>
                                                     <td>
                                                         <ul>
-                                                            <li style="font-size: 1rem">From  </li>
+                                                            <li style="font-size: 1rem">From</li>
                                                             <li><strong>INETS COMPANY LIMITED</strong></li>
                                                             <li>P.o Box 32282 Dar es Salaam</li>
                                                             <li>2nd Floor,Block NO. 576</li>
@@ -254,7 +236,6 @@
 </div>
  
 
-<?php if(!isset($export)) { ?>
 
 <script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>
 <script type="text/javascript">
@@ -280,8 +261,5 @@ $(document).ready(function () {
 });
 </script>
 
- @endsection 
- <?php } ?>
-
-
+ 
 

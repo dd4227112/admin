@@ -881,4 +881,9 @@ class Users extends Controller {
          return view('users.hr.courses', $this->data);
       }
 
+
+      public function updateAttendances(){
+          dd(request()->all());
+      }
+
 }

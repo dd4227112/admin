@@ -12,10 +12,12 @@ use \App\Models\Expense;
 use App\Charts\SimpleChart;
 use DB;
 use Auth;
+use PDF;
+use Storage;
+
+
 
 class Account extends Controller {
-
-  
     public function __construct() {
         $this->middleware('auth');
         $this->data['insight'] = $this;
@@ -291,11 +293,12 @@ class Account extends Controller {
         $invoice_id = request()->segment(3);
         $set = $this->data['set'] = 1;
         if ((int) $invoice_id > 0) {
-            $request_control = request()->segment(4);
+            $this->data['request_control'] = $request_control = request()->segment(4);
             if ((int) $request_control > 0) {
                 $this->createSelcomControlNumber($invoice_id);
                 return redirect()->back()->with('success', 'success');
             }
+
             $this->data['invoice'] = $invoice = Invoice::find($invoice_id);
             $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
         
@@ -307,9 +310,64 @@ class Account extends Controller {
             $to = \Carbon\Carbon::createFromFormat('Y-m-d',  $yearEnd);
             $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
             $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
+
+
+            if($request_control == 'send'){ 
+                $this->data['export'] = 'export';
+                $pdf = PDF::loadView('account.invoice.single', $this->data);
+                Storage::put($invoice->client->name.'-Invoice-'.date("Y").'.pdf', $pdf->output());
+                $path = url('/') . '/storage/app/'. $invoice->client->name.'-Invoice-'.date("Y"). '.pdf';
+                $filename = $invoice->client->name.'-Invoice-'.date("Y");
+               
+                $chatId = '255655007457@c.us';
+                $this->sendMessageFile($chatId,$caption = 'hello',$filename,$path);
+
+               // return view('account.invoice.single', $this->data);
+             //  return redirect()->back()->with('success',' successful!');
+
+
+            }
+
             return view('account.invoice.single', $this->data);
+
         }
     }
+
+
+      public function whatsappSend(){
+            $invoice_id = request()->segment(3);
+             
+             $set = $this->data['set'] = 1;
+          if ((int) $invoice_id > 0) {
+           
+            $this->data['invoice'] = $invoice = Invoice::find($invoice_id);
+            $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
+        
+            $this->data['invoice_name'] = $invoice->invoice_type == 1 ? 'Invoice' : 'Proforma Invoice';
+           
+            $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));
+            $yearEnd = date('Y-m-d', strtotime('Dec 31'));
+  
+            $to = \Carbon\Carbon::createFromFormat('Y-m-d',  $yearEnd);
+            $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
+            $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
+            $pdf = PDF::loadView('account.invoice.single', $this->data);
+            Storage::put($invoice->client->name.'-Invoice-'.date("Y").'.pdf', $pdf->output());
+            $path = url('/') . '/storage/app/'. $invoice->client->name.'-Invoice-'.date("Y"). '.pdf';
+            $filename = $invoice->client->name.'-Invoice-'.date("Y");
+
+            dd($path);
+
+          //  return view('account.invoice.whatsapp_invoice', $this->data);
+
+
+        
+            // Storage::disk('local')->put($invoice->client->name.'.pdf', $pdf->output());
+
+          //  return $pdf->download($invoice->client->name.'.pdf', array('Content-Type: application/pdf'));
+           //    return redirect()->back()->with('success',' successful!');
+         }
+      }
 
 
        public function receiptView() {
