@@ -212,7 +212,7 @@ class Account extends Controller {
     }
 
 
-    public function getInvoices($type_id = null, $account_year_id = null) {
+    public function getInvoices($type_id = null, $account_year_id = null, $project_id = null) {
         $from = $this->data['from'] = request('from');
         $to = $this->data['to'] = request('to');
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
@@ -220,6 +220,9 @@ class Account extends Controller {
         $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() : 
         // Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
         Invoice::whereIn('id', InvoiceFee::get(['invoice_id']))->where('invoice_type',$type_id)->where('account_year_id', $account_year_id)->latest()->get();
+        if($type_id > 0 && $account_year_id > 0 && $project_id > 0){
+            $this->data['invoices'] = Invoice::whereIn('id', InvoiceFee::get(['invoice_id']))->where('project_id', $project_id)->where('account_year_id', $account_year_id)->latest()->get();
+        }
         $this->data['accountyear']= \App\Models\AccountYear::where('id', $account_year_id)->first();
         return $this;
     }
@@ -230,6 +233,7 @@ class Account extends Controller {
         $accountyear = \App\Models\AccountYear::where('name', date('Y'))->first();
         $type_id = $this->data['type_id'] = !empty(request()->segment(3)) ? request()->segment(3) : 1;
         $this->data['account_year_id'] = $account_year_id = empty(request()->segment(4)) ? $accountyear->id : request()->segment(4);
+        $project_id = $this->data['project_id'] = !empty(request()->segment(5)) ? request()->segment(5) : null;
                   
         if ((int) $type_id > 0) {
             $this->data['invoice_type'] = \DB::table('constant.invoices_type')->where('id',$type_id)->first();
@@ -237,7 +241,7 @@ class Account extends Controller {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
             $clients=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."')) order by created_at desc");
-            $this->getInvoices($type_id, $account_year_id);
+            $this->getInvoices($type_id, $account_year_id, $project_id);
         }
 
         if ($type_id == 'delete') {
