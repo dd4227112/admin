@@ -221,7 +221,7 @@ class Account extends Controller {
         // Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
         Invoice::whereIn('id', InvoiceFee::get(['invoice_id']))->where('invoice_type',$type_id)->where('account_year_id', $account_year_id)->latest()->get();
         if($type_id > 0 && $account_year_id > 0 && $project_id > 0){
-            $this->data['invoices'] = Invoice::whereIn('id', InvoiceFee::get(['invoice_id']))->where('project_id', $project_id)->where('account_year_id', $account_year_id)->latest()->get();
+            $this->data['invoices'] = Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
         }
         $this->data['accountyear']= \App\Models\AccountYear::where('id', $account_year_id)->first();
         return $this;
