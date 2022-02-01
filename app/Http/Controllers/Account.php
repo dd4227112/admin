@@ -314,8 +314,8 @@ class Account extends Controller {
 
             if($request_control == 'send'){ 
                 $this->data['export'] = 'export';
-                $pdf = PDF::loadView('account.invoice.single', $this->data);
-                Storage::put($invoice->client->name.'-Invoice-'.date("Y").'.pdf', $pdf->output());
+               // $pdf = PDF::loadView('account.invoice.single', $this->data);
+               // Storage::put($invoice->client->name.'-Invoice-'.date("Y").'.pdf', $pdf->output());
                 $path = url('/') . '/storage/app/'. $invoice->client->name.'-Invoice-'.date("Y"). '.pdf';
                 $filename = $invoice->client->name.'-Invoice-'.date("Y");
                
