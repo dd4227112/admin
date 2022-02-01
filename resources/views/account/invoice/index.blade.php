@@ -67,8 +67,8 @@
                                     <option value="0">Select </option>
                                     <option value=""> All Project</option>
                                         <?php
-                                        $years = \App\Models\AccountYear::all();
-                                        foreach ($years as $year) {
+                                        $services = \App\Models\CompanyService::latest()->get();
+                                        foreach ($services as $year) {
                                             ?>
                                             <option value="<?= $year->id ?>" ><?= $year->name ?></option>
                                         <?php }
