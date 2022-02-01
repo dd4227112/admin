@@ -61,6 +61,20 @@
                                         ?>
                                     </select>
                                   </div>
+                                <div class="col-sm-12 col-xl-4 m-b-30">
+                                    <h4 class="sub-title">Select Project</h4>
+                                    <select name="select" class="form-control form-control-primary js-example-basic-singl"  id="year_project">
+                                    <option value="0">Select </option>
+                                    <option value=""> All Project</option>
+                                        <?php
+                                        $services = \App\Models\CompanyService::latest()->get();
+                                        foreach ($services as $year) {
+                                            ?>
+                                            <option value="<?= $year->id ?>" ><?= $year->name ?></option>
+                                        <?php }
+                                        ?>
+                                    </select>
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -394,13 +408,14 @@
           //  window.location.href = "<?= url('account/invoice') ?>/" + schema;
         }
     });
-    $('#year_select').change(function () {
-        var year = $(this).val();
+    $('#year_project').change(function () {
+        var type = $(this).val();
         var project = $('#schema_project').val();
+        var year = $('#year_select').val();
         if (year == 0) {
             return false;
         } else {
-            window.location.href = "<?= url('account/invoice') ?>/" + project + '/' + year;
+            window.location.href = "<?= url('account/invoice') ?>/" + project + '/' + year + '/' + type;
         }
     });
 </script>

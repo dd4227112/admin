@@ -13,9 +13,9 @@ class QrCode extends Controller
             $user_email = request()->segment(3);
             
             $qr_code = new \App\Http\Controllers\BarcodeQR();
-            $targetPath = "public/";
+            $targetPath = base_path() . '/public/';
             $user_url = 'https://admin.shulesoft.com/user-details/' . md5($user_email);
-            $qr_code->url($user_url);
+            $qr_code->url_format($user_url);
             if (!is_dir($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
