@@ -315,14 +315,17 @@ class Account extends Controller {
             if($request_control == 'send'){ 
                 $this->data['export'] = 'export';
                 $pdf = PDF::loadView('account.invoice.single', $this->data);
-                Storage::put($invoice->client->name.'-Invoice-'.date("Y").'.pdf', $pdf->output());
-                $path = url('/') . '/storage/app/'. $invoice->client->name.'-Invoice-'.date("Y"). '.pdf';
-                $filename = $invoice->client->name.'-Invoice-'.date("Y");
+                 $pdf->setPaper('A4', 'landscape');
+                    return $pdf->stream('account_invoice.pdf');
+                    exit;
+                // Storage::put($invoice->client->name.'-Invoice-'.date("Y").'.pdf', $pdf->output());
+                // $path = url('/') . '/storage/app/'. $invoice->client->name.'-Invoice-'.date("Y"). '.pdf';
+                // $filename = $invoice->client->name.'-Invoice-'.date("Y");
                
-                $chatId = '255655007457@c.us';
-                $this->sendMessageFile($chatId,$caption = 'hello',$filename,$path);
+              //  $chatId = '255655007457@c.us';
+             //   $this->sendMessageFile($chatId,$caption = 'hello',$filename,$path);
 
-               // return view('account.invoice.single', $this->data);
+                return view('account.invoice.single', $this->data);
              //  return redirect()->back()->with('success',' successful!');
 
 

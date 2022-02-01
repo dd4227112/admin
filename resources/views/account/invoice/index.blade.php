@@ -41,7 +41,7 @@
                                        <option value="0">Select</option>
                                         <?php
                                        $invoice_types = \App\Models\InvoiceType::whereNotIn('id',[3])->get();
-                                       foreach ($invoice_types as $type) {
+                     invoice                  foreach ($invoice_types as $type) {
                                             ?>
                                             <option value="<?= $type->id ?>" selected><?= strtoupper($type->name) ?></option>
                                         <?php  }
