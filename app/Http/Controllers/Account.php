@@ -212,13 +212,13 @@ class Account extends Controller {
     }
 
 
-    public function getInvoices($type_id = null, $account_year_id = null, $project_id = null) {
+    public function getInvoices($type_id = null, $account_year_id = null, $service_id = null) {
         $from = $this->data['from'] = request('from');
         $to = $this->data['to'] = request('to');
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-        if($type_id > 0 && $account_year_id > 0 && $project_id > 0){
-            $this->data['invoices'] = Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
+        if($type_id > 0 && $account_year_id > 0 && $service_id > 0){
+            $this->data['invoices'] = Invoice::whereIn('id', InvoiceFee::where('service_id', $service_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
         }else{
             $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() : 
             Invoice::whereIn('id', InvoiceFee::get(['invoice_id']))->where('invoice_type',$type_id)->where('account_year_id', $account_year_id)->latest()->get();
