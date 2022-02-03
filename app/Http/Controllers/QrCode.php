@@ -47,6 +47,7 @@ class QrCode extends Controller
             $qr_code_name = 'images/qrcode/'.md5($user_email). '.png';
             $qr_code_push = $targetPath.$qr_code_name;
             $generate_qr_code = $qr_code->draw(150, $qr_code_push);
+            DB::table('admin.all_users')->where('sid', $user_email)->first(); 
             $update_user = User::where('email',$user_email)->update(['qr_code'=>$qr_code_name]);
     
             if ($generate_qr_code){
