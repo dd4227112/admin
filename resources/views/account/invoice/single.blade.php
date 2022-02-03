@@ -89,7 +89,7 @@
                                                             <li style="font-size: 1rem">From</li>
                                                             <li><strong>INETS COMPANY LIMITED</strong></li>
                                                             <li>P.o Box 32282 Dar es Salaam</li>
-                                                            <li>2nd Floor,Block NO. 576</li>
+                                                            <li>Shamo Park House, 3rd Floor</li>
                                                             <li>Mbezi Beach Bagamoyo Road</li>
                                                             <li>Mobile no: +255 655/754 406004</li>
                                                         </ul>
