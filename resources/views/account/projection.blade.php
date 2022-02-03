@@ -121,7 +121,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                              <tr>
                                                                   <td></td>
-                                                                  <td></td>
+                                                                  <td>School Contact</td>
                                                                   <td>
                                                                      <div> 
                                                                         <strong >Email </strong>
