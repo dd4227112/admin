@@ -75,8 +75,8 @@ class Account extends Controller {
                 $arr = explode(' ',trim($school->name));
                 $username = strtolower($arr[0]) == 'st' ? trim(strtolower($arr[0].$arr[1])) : strtolower($arr[0]);
                 $schema_name = clean(preg_replace('/[^a-z]/', null, $username));
-                
-                $client_id = DB::table('admin.clients')->insertGetId([
+                if(empty(DB::table('admin.clients')->where('username', $schema_name)->first())){
+                 $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
                     'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
                     'created_at' => date('Y-m-d H:i:s'),
@@ -94,6 +94,9 @@ class Account extends Controller {
                     'owner_email' => '',
                     'owner_phone' => ''
                 ]);
+            }else{
+                $client_id = DB::table('admin.clients')->where('username', $schema_name)->first()->id;
+            }
 
                 //client school
                 DB::table('admin.client_schools')->insert([

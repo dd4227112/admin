@@ -109,7 +109,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                 </td> 
                                                                 
                                                                   <td>
-                                                                   <input class="form-control amounts"  type="number" id="amount<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? $client->price_per_student :  '' ;?>"  name="amounts[]"  onkeyup="get_amount('<?= $service->id ?>')" disabled="disabled"/>
+                                                                   <input class="form-control amounts"  type="text" id="amount<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? $client->price_per_student :  '' ;?>"  name="amounts[]"  onkeyup="get_amount('<?= $service->id ?>')" disabled="disabled"/>
                                                                 </td>
 
                                                                  <td>
@@ -121,7 +121,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                              <tr>
                                                                   <td></td>
-                                                                  <td></td>
+                                                                  <td>School Contact</td>
                                                                   <td>
                                                                      <div> 
                                                                         <strong >Email </strong>
