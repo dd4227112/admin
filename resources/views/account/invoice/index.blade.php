@@ -62,10 +62,10 @@
                                     </select>
                                   </div>
                                 <div class="col-sm-12 col-xl-4 m-b-30">
-                                    <h4 class="sub-title">Select Project</h4>
+                                    <h4 class="sub-title">Select service</h4>
                                     <select name="select" class="form-control form-control-primary js-example-basic-singl"  id="year_project">
-                                    <option value="0">Select </option>
-                                    <option value=""> All Project</option>
+                                    <option value="">Select </option>
+                                    <option value="0"> Collective services</option>
                                         <?php
                                         $services = \App\Models\CompanyService::latest()->get();
                                         foreach ($services as $year) {

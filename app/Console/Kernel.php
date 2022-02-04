@@ -1403,36 +1403,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-        public function sendMessage($chatId, $text) {
-            $data = array('chatId' => $chatId, 'body' => $text);
-            $this->sendRequest('message', $data);
-        }
-        
-    
-        public function sendRequest($method, $data) {
-            $APIurl = 'https://eu4.chat-api.com/instance210904/';
-            $token = 'h67ddfj89j8pm4o8';
-            if (strlen($APIurl) > 5 && strlen($token) > 3) {
-    
-                $url = $APIurl . $method . '?token=' . $token;
-                if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
-                    $url = $token . $method . '?token=' . $APIurl;
-                }
-    
-                if (is_array($data)) {
-                    $data = json_encode($data);
-                }
-                $options = stream_context_create(['http' => [
-                        'method' => 'POST',
-                        'header' => 'Content-type: application/json',
-                        'content' => $data]]);
-                $response = file_get_contents($url, false, $options);
-                // $response = $this->curlServer($body, $url);
-                $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
-            } else {
-                echo 'Wrong url supplied in whatsapp api';
-            }
-        }
+     
     
 
 }
