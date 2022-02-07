@@ -80,8 +80,8 @@ class Account extends Controller {
                     'name' => $school->name,
                     'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
                     'created_at' => date('Y-m-d H:i:s'),
-                    'phone' => $school_contact->phone,
-                    'email' => $school_contact->email,
+                    'phone' => !empty($school_contact->phone) ? $school_contact->phone : $service['phone'],
+                    'email' => !empty($school_contact->email) ? $school_contact->email : $service['email'],
                     'estimated_students' => $school->students ?? 0,
                     'status' => 3,
                     'code' => $code,
@@ -554,13 +554,16 @@ class Account extends Controller {
         for($i = 0;$i < count(request('service_id')); $i++){
              \App\Models\InvoiceFee::where(['invoice_id' => $invoice_id, 'service_id' => (int) request('service_id')[$i]])
              ->update(['unit_price' => request('amounts')[$i],'quantity'=> request('quantity')[$i],'amount' => request('amounts')[$i]*request('quantity')[$i] ]);
+
+             $data = array('invoice_id' => $invoice_id,'new_amount' => request('amounts')[$i]*request('quantity')[$i],'user_id' => \Auth::user()->id,'created_at' => now(),'date' =>date('Y-m-d'),'service_id' => (int) request('service_id')[$i]);
+            \DB::table('admin.invoice_logs')->insert($data);
         }
        
        return redirect(url('account/invoiceView/'. $invoice_id))->with('success', 'Invoice Edited Successfully');
     }
 
     
-    
+   
 
 
     //   public function createinvoices() {
