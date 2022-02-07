@@ -36,12 +36,14 @@ class Account extends Controller {
         $this->data['clients'] = \App\Models\Client::latest()->get();
 
         if($client_id > 0){
-            $type = \DB::table('constant.invoices_type')->where('id', (int) $invoice_type)->first();
-            if (preg_match('/proforma invoice/i', strtolower($type->name) )) {
-                $this->data['client'] = \App\Models\School::where('ownership','<>','Government')->where('id', (int) $client_id)->first();
-            }else{
-                $this->data['client'] = \App\Models\Client::where('id', (int)$client_id)->first();
-            }
+             $type = \DB::table('constant.invoices_type')->where('id', (int) $invoice_type)->first();
+            // if (preg_match('/proforma invoice/i', strtolower($type->name) )) {
+            //     $this->data['client'] = \App\Models\School::where('ownership','<>','Government')->where('id', (int) $client_id)->first();
+            // }else{
+            //     $this->data['client'] = \App\Models\Client::where('id', (int)$client_id)->first();
+            // }
+
+            $this->data['client'] = \App\Models\School::where('ownership','<>','Government')->where('id', (int) $client_id)->first();
         }
 
         if( (int) $client_id > 0 && $_POST){
@@ -55,12 +57,14 @@ class Account extends Controller {
 
       public function createInvoice($service,$invoice,$type){
            $reference = time(); // to be changed for selcom ID
-           $client_id = $invoice['client_id'];
-           $client = \App\Models\Client::find($client_id);
+           $school_id = $invoice['client_id'];
+
+           $school = \App\Models\School::find($school_id);
+           $client_school = \App\Models\ClientSchool::where('school_id', (int) $school_id)->first();
            $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 
-          if(empty($client)  && preg_match('/proforma invoice/i', strtolower($type->name)) ){
-                $school_id = $invoice['client_id'];
+        //   if(is_null($client_school)  && preg_match('/proforma invoice/i', strtolower($type->name)) ){
+          if(is_null($client_school) ){
                 $school = \App\Models\School::find($school_id);
 
                 $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
@@ -83,7 +87,7 @@ class Account extends Controller {
                     'phone' => !empty($school_contact->phone) ? $school_contact->phone : $service['phone'],
                     'email' => !empty($school_contact->email) ? $school_contact->email : $service['email'],
                     'estimated_students' => $school->students ?? 0,
-                    'status' => 3,
+                    'status' => 0,  // proforma client
                     'code' => $code,
                     'region_id' => $school->wards->district->region->id,
                     'email_verified' => 0,
@@ -114,13 +118,13 @@ class Account extends Controller {
                     'school_id' => $school_id
                 ]);
                 $client = \App\Models\Client::find($client_id);
-             }                            
+             }  
 
                  $start_date = !empty($service['invoice_start_date']) ? date('Y-m-d', strtotime($service['invoice_start_date'])) : date('Y-m-d');
                  $end_date   = date('Y-m-d', strtotime($start_date. " + 30 days"));
 
                  $invoice_data = ['reference' => $reference, 
-                    'client_id' => $client_id, 
+                    'client_id' => !empty($client_id) ? $client_id : $client_school->client_id, 
                     'date' => $start_date, 
                     'due_date' => $end_date, 
                     'year' => date('Y'), 
@@ -186,19 +190,19 @@ class Account extends Controller {
     }
 
 
-     public function getClients() {
-        $invoice_type = request()->segment(3);
-        $clients = \App\Models\Client::latest()->get();
+    //  public function getClients() {
+    //     $invoice_type = request()->segment(3);
+    //     $clients = \App\Models\Client::latest()->get();
 
-        if (!empty($clients)) {
-            echo '<option value="">select class</option>';
-            foreach ($clients as $value) {
-                echo '<option value="' . $value->id . '">' . $value->name . '</option>';
-            }
-        } else {
-            echo "0";
-        }
-    }
+    //     if (!empty($clients)) {
+    //         echo '<option value="">select class</option>';
+    //         foreach ($clients as $value) {
+    //             echo '<option value="' . $value->id . '">' . $value->name . '</option>';
+    //         }
+    //     } else {
+    //         echo "0";
+    //     }
+    // }
 
 
     public function getSchools(){

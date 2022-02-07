@@ -484,9 +484,12 @@ class Sales extends Controller {
                 $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             }
 
-             $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
+           //  $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
+
+             $schema_name = strtolower($arr[0]) == 'st' ? trim(strtolower($arr[0].$arr[1])) : strtolower($arr[0]);
+
              DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students'),'schema_name' => $schema_name]);
-             $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
+             $check_client = DB::table('admin.clients')->where('username', $schema_name)->where('status', 0)->first();
 
              $client_data = [
                     'name' => $school->name,

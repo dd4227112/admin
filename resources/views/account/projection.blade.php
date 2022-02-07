@@ -205,12 +205,14 @@ function tagEdit($schema_name, $column, $value, $type = null) {
         var type = invoice_t.options[invoice_t.selectedIndex].text;
         var type = type.toLowerCase();
 
-           if(type.match(/proforma invoice/)){
-               var url = '<?= url('Account/getSchools') ?>';
-             }else{
-               var url = '<?= url('Account/getClients') ?>';
-             }
+        //    if(type.match(/proforma invoice/)){
+        //        var url = '<?= url('Account/getSchools') ?>';
+        //      }else{
+        //        var url = '<?= url('Account/getClients') ?>';
+        //      }
 
+             var url = '<?= url('Account/getSchools') ?>';
+             
             $.ajax({ 
                 type: 'POST',
                 headers: {
