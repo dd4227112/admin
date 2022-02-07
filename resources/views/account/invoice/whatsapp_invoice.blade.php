@@ -1,41 +1,5 @@
 
 <?php $root = url('/') . '/public/';?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
-integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<style>
-    @media print {
-        @page {
-            margin: 2cm 2cm 2cm 2cm;
-        }
-        .invoice-header{
-            margin-right:30% !important;
-        }
-        .invoice-title{
-            float: right !important;
-        }
-        #print_div{
-         top: 0;
-         bottom: 0;
-         margin-top: 0px;
-         }
-    }
-</style>
-
-
-
-    <div class="@if(!isset($balance))  page-wrapper @endif">
-        <style>
-            #valid-msg {
-                color: #00C900;
-            }
-            #error-msg {
-                color: red;
-            }
-
-        </style>
-        <?php
-        $bn_number = 888999;
-        ?>
 
             <div class="row">
                 <div class="col-md-12 col-xl-12">
@@ -52,9 +16,9 @@ integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6J
                                         
                                         <table class="table">
                                             <tbody>
-                                                <tr>
+                                                <tr style="">
                                                     <td>
-                                                        <ul>
+                                                        <ul style="list-style:none; margin-right:50px">
                                                             <li style="font-size: 1rem">From</li>
                                                             <li><strong>INETS COMPANY LIMITED</strong></li>
                                                             <li>P.o Box 32282 Dar es Salaam</li>
@@ -134,11 +98,6 @@ integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6J
                                                     <td><?= $i ?> </td>
                                                     <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
                                                         <?= warp($fees->note,70) ?? ''?>
-
-                                                        {{-- <span style="text-decoration: none;" contenteditable="true" 
-                                                       onblur="save('<?= $fees->invoice_id . 'note' ?>', '<?= $fees->service_id  ?>','note')" 
-                                                       id="<?= $fees->service_id . 'note' ?>"> <?= $fees->note == '' ? '' : $fees->note ?></span>
-                                                       <span id="stat<?= $fees->service_id .  'note' ?>"></span> --}}
 
                                                     </td>
                                                     <td class="text-right"><?= money($fees->quantity) ?></td>
@@ -231,35 +190,11 @@ integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6J
                     </div>
                   </div>  
                </div>
-          </div>
-                
-</div>
+
  
 
 
-<script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>
-<script type="text/javascript">
-function printDiv(divID) {
-    //Get the HTML of div
-    var divElements = document.getElementById(divID).innerHTML;
-    //Get the HTML of whole page
-    var oldPage = document.body.innerHTML;
-    //Reset the page's HTML with div's HTML only
-    document.body.innerHTML =
-            "<html><head><title></title></head><body><div style='margin-left: 4em; margin-right:4em; margin-top:10em'>" +
-            divElements + "</div></body>";
-    //Print Page
-    window.print();
-    //Restore orignal HTML
-    document.body.innerHTML = oldPage;
-}
 
-$(document).ready(function () {
-    $("#printInvoice").click(function () {
-        printDiv("print_div");
-    });
-});
-</script>
 
  
 

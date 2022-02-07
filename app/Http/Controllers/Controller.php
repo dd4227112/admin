@@ -327,6 +327,7 @@ class Controller extends BaseController {
      public function sendMessageFile($chatId,$caption,$filename,$path){
           $data = array('chatId' => $chatId,'body' => $path,'filename' => $filename,'caption' => $caption);
           $data = json_encode($data);
+         
           $this->sendRequest('sendFile',$data);
       }
 
