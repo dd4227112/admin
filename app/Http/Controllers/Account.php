@@ -74,11 +74,15 @@ class Account extends Controller {
                 ]); 
                   $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
                 } 
+                 
+                $username = clean(preg_replace('/[^a-z]/', null, strtolower($school->name)));
 
                 $code = rand(343, 32323) . time();
                 $arr = explode(' ',trim($school->name));
-                $username = strtolower($arr[0]) == 'st' ? trim(strtolower($arr[0].$arr[1])) : strtolower($arr[0]);
-                $schema_name = clean(preg_replace('/[^a-z]/', null, $username));
+                $schema_name = strtolower($arr[0]) == 'st' ? trim(strtolower($arr[0].$arr[1])) : strtolower($arr[0]);
+                $schema_name = strlen($username) < 10 ? $username : $schema_name;
+
+                $schema_name = clean(preg_replace('/[^a-z]/', null, $schema_name));
                 if(empty(DB::table('admin.clients')->where('username', $schema_name)->first())){
                  $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
@@ -98,9 +102,9 @@ class Account extends Controller {
                     'owner_email' => '',
                     'owner_phone' => ''
                 ]);
-            }else{
-                $client_id = DB::table('admin.clients')->where('username', $schema_name)->first()->id;
-            }
+                 }else{
+                   $client_id = DB::table('admin.clients')->where('username', $schema_name)->first()->id;
+                }
 
                 //client school
                 DB::table('admin.client_schools')->insert([
