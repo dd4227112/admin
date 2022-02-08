@@ -246,6 +246,9 @@ if (request()->ajax() == FALSE) {
                 </div>
             </div> --}}
 
+
+
+            
                <div class="col-sm-12 m-t-20"  id="standing_order_form"  style="display: none;">
                 <div class="form-group row">
                     <div class="col-sm-4">
@@ -310,7 +313,7 @@ if (request()->ajax() == FALSE) {
                         </select>
                     </div>
                 </div>
-        </div>
+            </div>
 
             <br/><br/>
             <div class="form-group row">

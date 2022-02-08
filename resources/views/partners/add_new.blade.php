@@ -9,6 +9,8 @@
 <!-- Style.css -->
 <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/bars.css">
 
+
+{{-- 
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <!-- Style.css -->
 <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
@@ -16,7 +18,7 @@
 <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
 
 <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
-<link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">
+<link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css"> --}}
 
 <style type="text/css">
 #regiration_form fieldset:not(:first-of-type) {
@@ -26,288 +28,217 @@
 </head>
 
   
+  <div class="page-header">
+      <div class="page-header-title">
+        <h4><?='Onboard new school' ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">new school</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">sales</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
 
-    <!-- Page-body start -->
-    <div class="page-body">
-      <div class="row">
-        <div class="col-lg-12">
-
+  
           <div class="card">
             <div class="card-block">
-              <div class="px-0 pb-0 mt-1 mb-3">
                 <div class="text-center">
                   <h2 id="heading">Onboard New School</h2>
-                  <p>Please Fill all form field to go next step</p>
-
                 </div>
-                <div id="msform">
-                  <!-- progressbar -->
-                  <ul id="progressbar">
-                    <li class="active" id="account"><strong>About School</strong></li>
-                    <li class="active" id="personal"><strong>School Contact</strong></li>
-                    <li class="active" id="payment"><strong>Application Attachments</strong></li>
-                    <li class="active" id="confirm"><strong>Bank Integration</strong></li>
-                  </ul>
-                  <div class="progress">
-                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <hr>
-                </div>
+             
                 <!-- <div class="alert alert-success hide"></div> -->
-                <form id="regiration_form" action="" method='POST' enctype='multipart/form-data'>
+                <form action="<?= url('sales/onboard/' . $school->id) ?>" method="POST" enctype="multipart/form-data">
                   <fieldset>
                     <div class="form-group row">
                       <div class="col-sm-6">
                         School Name
                         <input type="text" class="form-control" placeholder="School Name here.." name="school_name" value="<?=$school->name ?? '' ?>" required>
                         </div>
+
                         <div class="col-sm-6">
-                        Registration No:
-                        <input type="text" class="form-control"  name="registration_number" value="<?=$school->registration_number ?? '' ?>" required="">
+                           Sales Person
+                        <select name="sales_user_id" class="form-control select2">
+                        <?php foreach ($staffs as $staff) { ?>
+                            <option user_id="<?= $staff->id ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                        <?php } ?>
+                       </select>
                       </div>
                       
                     </div>
 
                     <div class="form-group row">
+                      <div class="col-sm-6">
+                           Owner Phone
+                        <input type="text" class="form-control" placeholder="School Owner phone number" name="owner_phone" required>
+                      </div>
+                      <div class="col-sm-6">
+                          Owner Email
+                           <input type="text" class="form-control" placeholder="School Owner email" name="owner_email" required>
+                      </div>
+                    </div>
+
+              
+                     <div class="form-group row">
+                       <div class="col-sm-6">
+                           Agreement Type
+                            <select name="contract_type_id" class="form-control">
+                               <option value="">select</option>
+                             <?php $ctypes = DB::table('admin.contracts_types')->whereNotIn('id',[4,5,6,7,8])->get();
+                                 foreach ($ctypes as $ctype) {?>
+                                  <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
+                              <?php } ?>
+                          </select>
+                      </div>
+
+                      <div class="col-md-6">
+                           Upload Agreement Form
+                            <input type="file" class="form-control" accept=".pdf" name="file" required="">
+                       </div>
+                     </div>
+
+                    <div class="form-group row">
+                      <div class="col-md-6">
+                          Price Per Student
+                        <input type="text" class="form-control transaction_amount" value="10000" name="price" required="">
+                      </div>
+
+                      <div class="col-md-6">
+                         Estimated Students
+                          <input type="number" class="form-control" value="<?= $school->students ?>" name="students" required="">
+                       </div>
+                     </div>
                       
-                      <div class="col-sm-6">
-                          Number of Students
-                          <input type="text" class="form-control" placeholder="Enter here..." name="students" value="<?=$school->students ?? '' ?>" required="">
-                      </div>
-                      <div class="col-sm-6">
-                        Implementation Start Date
-                        <input type="date" class="form-control"  name="implementation_date" required="">
-                      </div>
-                    </div>
-                    <div class="form-group row">
+                    <div class="form-group row" id="paymentption">
                       <div class="col-md-6">
-                        <strong> Select Ownership</strong>
-                        <select name="ownership" class="form-control" required>
-                          <option value="Non-Government">Non-Government</option>
-                          <option value="Government">Government</option>
+                          Payment Option
+                          <select name="payment_option" class="form-control" id="_payment_option">
+                            <option value="">select</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Standing Order">Standing Order</option>
+                            <option value="Bank Transfer">Bank Transfer </option>
+                            <option value="Bank Deposit">Bank Deposit</option>
                         </select>
                       </div>
-                      <div class="col-md-6">
-                        <strong> Select School Type</strong>
-                        <select type="text" name="type" class="form-control" required>
-                          <option value="primary"> Primary School</option>
-                          <option value="secondary"> Secondary School</option>
-                          <option value="college"> College</option>
-                        </select>
-                      </div>
-                    </div>
 
-                    <div class="form-group row">
-                      <div class="col-md-6">
-                        Select Region
-                        <select type="text" name="region" id="region" style="text-transform:uppercase" required class="form-control select2">
-                          <option value="">Select here...</option>
-                          <?php
-                          $regions = \App\Models\Region::where('country_id', 1)->get();
-                          foreach($regions as $region){
-                            echo  '<option value="'.$region->id.'">'.$region->name.'</option>';
-                          }
-                          ?>
-                        </select>
-                      </div>
-                      <div class="col-md-6">
-                        <strong>Enter District</strong>
-                        <select type="text" name="district" id="district" style="text-transform:uppercase" required class="form-control select2">
-                          <option value="">Select Here...</option>
-                        </select>
-                      </div>
-                      </div>
-                      
-                    <div class="form-group row">
-                      <div class="col-md-6">
-                        Select Ward
-                        <select type="text" name="ward" id="ward" style="text-transform:uppercase" required class="form-control select2">
-                         
-                        </select>
-                      </div>
-                      <div class="col-sm-6">
-                        P.O Box Address
-                        <input type="text" class="form-control"  name="address" required="">
-
-                      </div>
-                    </div>
-
-                    
-                    
-                    <input type="button" name="password" class="next btn btn-info" value="Next" />
-                  </fieldset>
-                  <fieldset>
-                    <h4>Step 2. Key Personal Contact</h4>
-
-                    <div class="form-group row">
-                      <div class="col-sm-6">
-                        Fullname
-                        <input type="text" name="fullname" class="form-control" value="<?=$contact->name ?? '' ?>" required/>
-                      </div>
-                      <div class="col-sm-6">
-                      Title
-                        <select name="title" class="form-control select2" required>
-                        <option value="<?=$contact->title ?? '' ?>"><?=$contact->title ?? '' ?></option>
-                        <option value="director">Director/Owner</option>
-                          <option value="manager">School Manager</option>
-                          <option value="head teacher">Head Teacher</option>
-                          <option value="Second Master/Mistress">Second Master/Mistress</option>
-                          <option value="academic master">Academic Master</option>
-                          <option value="teacher">Normal Teacher</option>
-                          <option value="Accountant">Accountant</option>
-                          <option value="Other Staff">Other Non Teaching Staff</option>
-                        </select>
-                        
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <div class="col-sm-6">
-                        Email Address
-                        <input type="text" name="email" value="<?=$contact->email ?? '' ?>" class="form-control" required/>
-                      </div>
-                      <div class="col-sm-6">
-                      Phone Number
-                        <input type="text" name="phone" value="<?=$contact->phone ?? '' ?>" class="form-control" required/>
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                    <div class="col-sm-6">
-                        <strong>Select School Levels</strong>
-                        <br>
-                        <input type="checkbox" name="classlevel[]" value="A-level">&nbsp; &nbsp; &nbsp; A-level (Advanced Secondary Level - ACSEE exams)
-                        <br>
-                        <input type="checkbox" name="classlevel[]" value="O-level">&nbsp; &nbsp; &nbsp; O-level (Ordinary Secondary Level - CSEE exams)
-                       
-                      </div>
-                    <div class="col-sm-6">
-                        <br>
-                        <input type="checkbox"  name="classlevel[]" value="Primary">&nbsp; &nbsp; &nbsp; Primary (Primary Education Level - PSLE exams)
-                        <br>
-                        <input type="checkbox"  name="classlevel[]" value="Nursery">&nbsp; &nbsp; &nbsp; Nursery (Pre-Primary)- (Pre-primary Education Level)
+                        <div class="col-sm-6">
+                           Final Sales Method
+                            <select name="task_type_id"  class="form-control" required>
+                                <?php
+                                $types = DB::table('task_types')->where('department', 2)->get();
+                                foreach ($types as $type) {
+                                    ?>
+                                    <option value="<?= $type->id ?>"><?= $type->name ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                    <div class="row" style="border: 0.5px dashed;">
-                      <div class="col-sm-4">Account Name  <b style="font-size: 1.4em; float:right"> https://</b> </div>
-                      <div class="col-sm-6">
-                        <input  class="form-control " id="school_username" name="username" type="text" autofocus="" placeholder="Enter school keyname here.."  required="" onkeyup="validateForm()">
-                      </div>
-                      <div class="col-sm-2">
-                        <b style="font-size: 1.4em;">.shulesoft.com</b>
-                      </div>
-                      <small id="username_message_reply"></small>
+
+
+               <div class="m-t-20"  id="standing_order_form"  style="display: none;">
+                 <h6><strong>Add standing Order informations</strong></h6>
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                            Branch name 
+                        <input type="text" placeholder="Bank branch name"  class="form-control"  name="branch_name">
+                    </div>
+                    <div class="col-sm-4">
+                            Contact person
+                        <input type="text" placeholder="Contact person"  class="form-control"  name="contact_person">
+                    </div>
+                        <div class="col-sm-4">
+                            Number of Occurance
+                        <input type="number" placeholder="must be number eg 2, 3, 12 etc"  class="form-control" id="box1" name="number_of_occurrence">
                     </div>
                 </div>
-                    
-                    <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
-                    <input type="button" name="next" class="next btn btn-info" value="Next" />
-                  </fieldset>
-
-                  <fieldset>
-                    <!-- <h4> Step 3: School Application Attachments </h4> -->
-
-                    <div class="form-group row">
-                      <div class="col-sm-6">
-                        ShuleSoft Application Form
-                        <input type="file" name="attachments[]" class="form-control" required/>
-                      </div>
-                      <div class="col-sm-6">
-                        Bank Application Form
-                        <input type="file" name="attachments[]" class="form-control" required/>
-                      </div>
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                           Payment Basis
+                            <select name="which_basis"  class="form-control">
+                                <option value=""></option>
+                                <option value="Annually">Annually</option>
+                                <option value="Semiannually">Semi Annually</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Monthly">Monthly</option>
+                            </select>
                     </div>
-                    
-                    <div class="form-group row">
-                      <div class="col-sm-6">
-                        ShuleSoft Contract Document
-                        <input type="file" name="attachments[]" class="form-control"/>
-                      </div>
-                      <div class="col-sm-6">
-                      Standing Order Form
-                        <input type="file" name="attachments[]" class="form-control"/>
-                        </div>
-                      </div>
-
-                      <div class="form-group row">
-                      <div class="col-sm-6">
-                        Shulesoft Terms of Services
-                        <input type="file" name="attachments[]" class="form-control" required/>
-                      </div>
-                      <div class="col-sm-6">
-                      CRDB Terms and Conditions 
-                        <input type="file" name="attachments[]" class="form-control"/>
-                      </div>
+                    <div class="col-sm-4">
+                            Amount for Every Occurrence 
+                            <input type="text"  class="form-control transaction_amount"  name="occurance_amount" id="box2">
                     </div>
-                    
-                    
-                    <hr>
-
-                    <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
-                    <input type="button" name="next" class="next btn btn-info" value="Next" />
-                  </fieldset>
-
-                  <fieldset>
-                    <h4>Step 4: Bank Integrations </h4>
-
-                    <div class="form-group row">
-                      <div class="col-sm-12">
-                        Account Name
-                        <input type="text" name="account_name" class="form-control"/>
-                      </div>
+                        <div class="col-sm-4">
+                           Total Amount
+                            <input type="text" class="form-control" name="total_amount" >
                     </div>
+                </div>
 
                     <div class="form-group row">
-                      <div class="col-sm-6">
-                        Bank Account Number
-                        <input type="text" class="form-control"  name="account_number" required="">
-                      </div>
-
-                      <div class="col-sm-6">
-                        Branch Name
-                        <input type="text" name="branch_name" class="form-control"/>
-                      </div>
+                    <div class="col-sm-4">
+                           Maturity Date
+                            <input type="date"class="form-control" name="maturity_date">
                     </div>
-
-
-                    <div class="form-group row">
-                      <div class="col-sm-6">
-                        Currency
-                        <select name="refer_currency_id" class="form-control select2">
-                          <?php $curs = DB::table('constant.refer_currencies')->get();
-                          foreach($curs  as $cur){
+                    <div class="col-sm-4">
+                            Standing order file
+                            <input type="file" class="form-control" name="standing_order_file">
+                    </div>
+                        <div class="col-sm-4">
+                           Refer bank
+                            <select name="refer_bank_id"  class="form-control">
+                            <?php
+                            $banks = DB::table('constant.refer_banks')->get();
+                            if (!empty($banks)) {
+                                foreach ($banks as $bank) {
+                                    ?>
+                            <option
+                                value="<?= $bank->id ?>">
+                                    <?= $bank->name ?>
+                            </option>
+                            <?php
+                            }
+                            }
                             ?>
-                            <option value="<?=$cur->id?>"><?=$cur->currency?> (<?=$cur->symbol?>)</option>
-                          <?php } ?>
                         </select>
-                      </div>
-                      <div class="col-sm-6">
-                        Opening Balance
-                        <input type="text" class="form-control"  name="opening_balance" required="">
-                      </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="form-group row">
-                    <div class="col-sm-10">
-                    <div class="form-check form-check-inline">
-                    <label class="form-check-label"> 
-                    <input class="form-check-input" type="radio" name="payment_status" id="gender-1" value="1" required=""> I Agree All Information Filled Here is True and Verified
-                  </label>
-                  </div>
-                  </div>
-                  </div>
-                  <hr>
-                <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
-                <input type="submit" name="submit" class="submit btn btn-success" value="Submit" />
-              </fieldset>
+              <div class="form-group row">
+                <div class="col-sm-12"> 
+                   Areas much interested
+                    <textarea rows="4" cols="5" name="description" class="form-control" placeholder="Clarify if this client has any special needs or areas much interested to start ?"></textarea>
+                </div>
+            </div>
+
+             <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary btn-round btn-sm">Submit</button>
+                </div>
+            </div>
+                    
                         
             {{ csrf_field() }}
 
           </form>
 
 <script type="text/javascript">
+
+  $('#_payment_option').change(function () {
+        var val = $(this).val();
+        if (val != 'Standing Order') {
+            $('#standing_order_form').hide();
+        } else {
+            $('#standing_order_form').show();
+        }
+    });
+
 
 $(".select2").select2({
   theme: "bootstrap",

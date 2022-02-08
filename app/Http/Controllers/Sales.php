@@ -456,6 +456,8 @@ class Sales extends Controller {
         if(Auth::user()->department == 9 || Auth::user()->department == 10){
             return redirect('Partner/add/'.$school_id);
         }
+
+       // dd(request()->all());
        // $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
 
@@ -644,7 +646,8 @@ class Sales extends Controller {
             $this->onboardMessage($client);
             return redirect('https://' . $username . '.shulesoft.com');
         }
-        return view('sales.onboarding_school', $this->data);
+         return view('sales.onboarding_school', $this->data);
+       // return view('partners.add_new', $this->data);
     }
  
     
