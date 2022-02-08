@@ -1,31 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-<head>
-<script type="text/javascript" src="http://thecodeplayer.com/uploads/js/jquery-1.9.1.min.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-<script type="text/javascript" src="http://thecodeplayer.com/uploads/js/jquery.easing.min.js"></script>
 
-<!-- Style.css -->
-<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/bars.css">
-
-
-{{-- 
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-<!-- Style.css -->
-<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
-
-<link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
-
-<link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
-<link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css"> --}}
-
-<style type="text/css">
-#regiration_form fieldset:not(:first-of-type) {
-  display: none;
-}
-</style>
-</head>
 
   
   <div class="page-header">
@@ -50,8 +26,8 @@
   
           <div class="card">
             <div class="card-block">
-                <div class="text-center">
-                  <h2 id="heading">Onboard New School</h2>
+                <div class="text-center m-t-10">
+                  <h4 id="heading">Onboard New School</h4>
                 </div>
              
                 <!-- <div class="alert alert-success hide"></div> -->
@@ -65,7 +41,7 @@
 
                         <div class="col-sm-6">
                            Sales Person
-                        <select name="sales_user_id" class="form-control select2">
+                        <select name="sales_user_id" class="select2">
                         <?php foreach ($staffs as $staff) { ?>
                             <option user_id="<?= $staff->id ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
                         <?php } ?>
