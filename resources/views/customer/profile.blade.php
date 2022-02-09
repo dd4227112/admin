@@ -268,13 +268,13 @@ target="_blank"> Exams</a>
         aria-expanded="true">Staff Members</a>
         <div class="slide"></div>
         </li>
-        <?php if (can_access('add_si')) { ?>
+      
         <li class="nav-item">
         <a class="nav-link " data-toggle="tab" href="#payments" role="tab"
         aria-expanded="true">Invoice</a>
         <div class="slide"></div>
         </li>
-        <?php } ?>
+      
         </ul>
         </div>
 

@@ -30,7 +30,6 @@
                   <h4 id="heading">Onboard New School</h4>
                 </div>
              
-                <!-- <div class="alert alert-success hide"></div> -->
                 <form action="<?= url('sales/onboard/' . $school->id) ?>" method="POST" enctype="multipart/form-data">
                   <fieldset>
                     <div class="form-group row">
