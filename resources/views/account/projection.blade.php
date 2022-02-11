@@ -48,7 +48,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                 <option value="0">Select</option>
                                                     <?php
                                                         foreach ($invoice_types as $project) { ?>
-                                                        <option value="<?= $project->id ?>" selected><?= $project->name ?></option>
+                                                        <option value="<?= $project->id ?>" selected><?= strtoupper($project->name) ?></option>
                                                     <?php  }
                                                     ?>
                                             </select>
@@ -87,13 +87,13 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                          <form method="POST" action="<?= url('account/projection/'.$invoice_type . '/' . $client->id) ?>" >
+                                                          <form  method="POST" action="<?= url('account/projection/'.$invoice_type . '/' . $client->id) ?>" >
  
                                                             <?php $i=1; if(!empty($services)) {
                                                                    foreach($services as $service)  { ?>
                                                              <tr>
                                                                 <td>
-                                                                   <input class="form-control" type="checkbox" id="services<?= $service->id ?>"  value="<?= $service->id ?>"  onclick="service('<?= $service->id ?>')" name="service_ids[]" />
+                                                                   <input class="form-control service_ids" type="checkbox" id="services<?= $service->id ?>"  value="<?= $service->id ?>"  onclick="service('<?= $service->id ?>')" name="service_ids[]" />
                                                                 </td>
                                                              
                                                                 <th>
@@ -120,8 +120,13 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                           <?php  $i++; } } ?>
 
                                                              <tr>
-                                                                  <td></td>
                                                                   <td>School Contact</td>
+                                                                  <td>
+                                                                     <div> 
+                                                                      <strong> &nbsp;  </strong>
+                                                                       <?php echo  is_null($client->client_id) ? '<input class="form-control" type="text"  name="username"  required>' : '' ?>
+                                                                     </div>
+                                                                  </td>
                                                                   <td>
                                                                      <div> 
                                                                         <strong >Email </strong>
@@ -156,11 +161,10 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                   <td></td>
                                                              </tr>
 
-                                    
                                                     <?= csrf_field() ?>
 
                                                 </form>
-                                        </tbody>
+                                           </tbody>
                                         
                                     </table>
                                 </div> 
@@ -173,12 +177,21 @@ function tagEdit($schema_name, $column, $value, $type = null) {
     </div>
 
 <script type="text/javascript">
-    
+            
+
+        $("#add_revenue").click(function(){
+            if ($('.service_ids').filter(':checked').length < 1){
+                alert("Please Check at least one service");
+                return false;
+            }
+        });
+
+
         $(".select2").select2({
-        theme: "bootstrap",
-        dropdownAutoWidth: false,
-        allowClear: false,
-        debug: true
+            theme: "bootstrap",
+            dropdownAutoWidth: false,
+            allowClear: false,
+            debug: true
         }); 
 
 
@@ -228,7 +241,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
             });
         });
 
-        $('#clients').change(function () {
+     $('#clients').change(function () {
         var client_id = $(this).val();
         var invoice_type = $('#invoice_type').val();
         if (client_id == 0 || invoice_type == 0) {

@@ -33,21 +33,23 @@ class Account extends Controller {
         $this->data['services'] = \App\Models\CompanyService::latest()->get();
 
         $this->data['schools'] = \App\Models\School::whereNotIn('id',\App\Models\ClientSchool::get(['school_id']))->get();
-        $this->data['clients'] = \App\Models\Client::latest()->get();
+       // $this->data['clients'] = \App\Models\Client::latest()->get();
 
         if($client_id > 0){
              $type = \DB::table('constant.invoices_type')->where('id', (int) $invoice_type)->first();
-            // if (preg_match('/proforma invoice/i', strtolower($type->name) )) {
-            //     $this->data['client'] = \App\Models\School::where('ownership','<>','Government')->where('id', (int) $client_id)->first();
-            // }else{
-            //     $this->data['client'] = \App\Models\Client::where('id', (int)$client_id)->first();
-            // }
+           //  $this->data['client'] = \App\Models\School::where('ownership','<>','Government')->where('id', (int) $client_id)->first();
 
-            $this->data['client'] = \App\Models\School::where('ownership','<>','Government')->where('id', (int) $client_id)->first();
+         $this->data['client'] = DB::table('admin.schools')->LeftJoin('admin.client_schools','admin.schools.id', '=' ,'admin.client_schools.school_id')
+                  ->LeftJoin('admin.school_contacts','admin.schools.id', '=' ,'admin.school_contacts.school_id')
+                  ->LeftJoin('admin.clients','admin.clients.id', '=' ,'admin.client_schools.client_id')
+                  ->select('admin.schools.id','admin.schools.name','admin.client_schools.client_id','admin.schools.created_at',
+                  'admin.clients.phone','admin.clients.email','admin.clients.estimated_students','admin.clients.price_per_student')
+                  ->where('admin.schools.id',(int) $client_id)->latest()->first();
         }
 
         if( (int) $client_id > 0 && $_POST){
              $service_data = request()->all();
+             dd($service_data);
              $data = array('invoice_type' => $invoice_type, 'client_id' => $client_id );
              return $this->createInvoice($service_data,$data,$type);
         }

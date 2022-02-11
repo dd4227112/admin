@@ -31,11 +31,22 @@ if (request()->ajax() == FALSE) {
  
     <div class="card-block">
         <form action="<?= url('sales/implemetation/'. $client_id) ?>" method="POST" enctype="multipart/form-data">
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Account name</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" value="" name="account_name" required="">
+           
+
+            <div class="form-group row" style="border: 1px dashed4;">
+                <label class="col-sm-2 col-form-label">Account Name</label>
+                <div class="row">
+                    <div id="col-sm-2">  
+                        <b style="font-size: 1.2em;"> https://</b>
+                     </div>
+                    <div id="col-sm-7">
+                        <input style="max-width: 17em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($client->name) ?>" required="" onkeyup="validateForm()"> 
+                    </div>
+                    <div id="col-sm-3">
+                        <b style="font-size: 1.2em;">.shulesoft.com</b>
+                    </div>
                 </div>
+                <small style="max-width: 13em;" id="username_message_reply"></small>
             </div>
 
             <div class="form-group row">

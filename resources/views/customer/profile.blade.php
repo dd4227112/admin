@@ -1925,11 +1925,9 @@ name="client_id" />
 <div class="card-header">
 
 <div class="col-sm-4 my-2">
-<?php if (can_access('add_si')) { ?>
 <a class="btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#standing-order-Modal">
     Add Standing Orders
 </a>
-<?php } ?>
 </div>
  <div class="table-responsive">
  <table id="example"  class="table dataTable table-sm table-striped table-bordered nowrap">

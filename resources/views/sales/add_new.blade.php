@@ -33,12 +33,12 @@
                 <form action="<?= url('sales/onboard/' . $school->id) ?>" method="POST" enctype="multipart/form-data">
                   <fieldset>
                     <div class="form-group row">
-                      <div class="col-sm-6">
-                        School Name
-                        <input type="text" class="form-control" placeholder="School Name here.." name="school_name" value="<?=$school->name ?? '' ?>" required>
-                        </div>
+                      <div class="col-sm-4">
+                         School Name
+                         <input type="text" class="form-control" placeholder="School Name here.." name="school_name" value="<?=$school->name ?? '' ?>" required>
+                      </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                            Sales Person
                         <select name="sales_user_id" class="select2">
                         <?php foreach ($staffs as $staff) { ?>

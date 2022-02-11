@@ -137,6 +137,7 @@ class Sales extends Controller {
               $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
             }
         }
+        
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
@@ -475,7 +476,7 @@ class Sales extends Controller {
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (empty($school_contact)) {
                 DB::table('admin.school_contacts')->insert([
-                    'name' => request('name'), 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school_id, 'user_id' => Auth::user()->id, 'title' => request('title')
+                    'name' => request('school_name'), 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school_id, 'user_id' => \Auth::user()->id, 'title' => request('title')
                 ]);
                 $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             }
@@ -484,23 +485,23 @@ class Sales extends Controller {
              $schema_name = strtolower($arr[0]) == 'st' ? trim(strtolower($arr[0].$arr[1])) : trim(strtolower($arr[0]));
              $schema_name = strlen($username) < 10 ? $username : $schema_name;
 
-             DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students'),'schema_name' => $schema_name]);
+             DB::table('admin.schools')->where('id', $school_id)->update(['name'=> request('school_name'),'students' => request('students'),'schema_name' => $schema_name]);
              $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
 
              $client_data = [
-                    'name' => $school->name,
+                    'name' => empty(request('school_name')) ? $school->name : request('school_name'),
                     'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
                     'created_at' => date('Y-m-d H:i:s'),
                     'phone' => $school_contact->phone,
                     'email' => !empty($school_contact->email) ? $school_contact->email : request('owner_email'),
                     'estimated_students' => request('students'),
-                    'status' => 1,
+                    'status' => 1, // Unapproved application
                     'code' => $code,
                     'region_id' => $school->wards->district->region->id,
                     'email_verified' => 0,
                     'phone_verified' => 0,
                     'created_by' => \Auth::user()->id,
-                    'username' => clean($schema_name),
+                    'username' => '',
                     'payment_option' => request('payment_option'),
                     'start_usage_date' => date('Y-m-d'),
                     'trial' => request('check_trial'),
@@ -659,7 +660,7 @@ class Sales extends Controller {
         $time = 0;
         if($client_id > 0){ 
 
-            \App\Models\Client::where('id', (int)$client_id)->update(['account_name'=>request('account_name'),'data_type_id'=>request('data_type_id')]);
+            \App\Models\Client::where('id', (int) $client_id)->update(['username'=>request('username'),'data_type_id'=>request('data_type_id')]);
             $sections = \App\Models\TrainItem::where('status',1)->orderBy('id', 'asc')->get();
             $start_date = date('Y-m-d H:i');
 
