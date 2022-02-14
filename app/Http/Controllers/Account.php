@@ -306,6 +306,11 @@ class Account extends Controller {
             return $this;
         } 
 
+
+      
+
+      
+           
     
     public function invoiceView() {
         $invoice_id = request()->segment(3);
@@ -330,6 +335,9 @@ class Account extends Controller {
             $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
 
 
+        
+          
+
             if($request_control == 'send'){ 
                 $this->data['export'] = 'export';
                 $pdf = PDF::loadView('account.invoice.whatsapp_invoice', $this->data);
@@ -348,7 +356,8 @@ class Account extends Controller {
 
 
             }
-
+            
+           
             return view('account.invoice.single', $this->data);
 
         }

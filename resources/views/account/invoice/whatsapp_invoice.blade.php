@@ -1,24 +1,117 @@
 
 <?php $root = url('/') . '/public/';?>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+<style>
+*{
+    font-family: "Open Sans",sans-serif;
+}
+.page {
+      background: white;
+      margin: 0 auto;
+      margin-bottom: 0.5cm;
+      box-shadow: 0 0 0.2cm rgba(0,0,0,0.2);
+      width: 21cm;
+      height: 29.7cm;
+      padding: 10mm; 
+    }
+    
+  
+                                @page {
+                                    margin: 0
+                                }
+                                #invoce {
+ 
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#invoce td, #invoce th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+
+
+#summary {
+ border-collapse: collapse;
+ width: 100%;
+}
+
+#summary td, #summary th {
+ font-size: 14px;
+ padding: 4px;
+ text-align: center;
+ border-bottom: 1px solid #ddd;
+}
+
+  
+#customers {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+ 
+}
+#customers tr:last-child{
+    background-color: #f2f2f2;}
+    #customers tr:first-child{
+        border-top: 1px solid #ddd;
+    }
+    @media print {
+        @page {
+            margin: 2cm 2cm 2cm 2cm;
+        }
+        .invoice-header{
+            margin-right:30% !important;
+        }
+        .invoice-title{
+            float: right !important;
+        }
+        #print_div{
+         top: 0;
+         bottom: 0;
+         margin-top: 0px;
+         }
+    }
+</style>
+
+
+
+    <div class="@if(!isset($balance))  page-wrapper @endif">
+        <style>
+            #valid-msg {
+                color: #00C900;
+            }
+            #error-msg {
+                color: red;
+            }
+
+        </style>
+        <?php
+        $bn_number = 888999;
+        ?>
 
             <div class="row">
                 <div class="col-md-12 col-xl-12">
                     <div class="card">
                         <div class="card-block tab-icon">
                             <div id="print_div">
-
-                                <!-- title row -->
-                                <div class="row" style="margin-top: 0px">
+<div class="page sheet padding-10mm">
+<div class="row" style="margin-top: 0px ">
                                     <div class="col-lg-12 col-sm-12">
-                                        <div>
+                                        <div style="border-bottom: 1px solid #dadada; margin-bottom:10px;">
                                             <img src="<?= $root ?>/images/Inetslogo.png"  width="300" height="120"/>
                                         </div>
                                         
                                         <table class="table">
                                             <tbody>
-                                                <tr style="">
-                                                    <td>
-                                                        <ul style="list-style:none; margin-right:50px">
+                                                <tr>
+                                                    <td style="margin-right:10px;">
+                                                        <ul  style="list-style: none;">
                                                             <li style="font-size: 1rem">From</li>
                                                             <li><strong>INETS COMPANY LIMITED</strong></li>
                                                             <li>P.o Box 32282 Dar es Salaam</li>
@@ -28,7 +121,7 @@
                                                         </ul>
                                                     </td>
                                                     <td>
-                                                        <ul style="border-left: 1px solid #cccc; padding-left: 3em;">
+                                                        <ul  style="border-left: 1px solid #cccc; padding-left: 3em; margin-left:40px;list-style: none;">
                                                             <li style="font-size: 1.5rem; font-weght: bold;">To</li>
                                                             <li><strong><?= $invoice->client->name ?></strong></li>
 
@@ -37,7 +130,7 @@
                                                         </ul>
                                                     </td>
                                                     <td>
-                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; "><?= $invoice_name ?? '' ?></h1>
+                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; margin-left:70px;"><?= $invoice_name ?? '' ?></h1>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -46,7 +139,7 @@
                                     </div>
 
                                     <div class="col-sm-12 col-lg-12">
-                                        <table  class="table">
+                                        <table  class="table" id="customers">
                                             <tr>
                                                 <td>Invoice #</td>
                                                 <td><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
@@ -79,7 +172,7 @@
                                     ?>
                                     <br/>
                                     <div class="col-xs-12 col-sm-12 col-lg-12">
-                                        <table class="table table-bordered table-colapse">
+                                        <table class="table table-bordered table-colapse" id="invoce">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -152,14 +245,14 @@
                                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
                                         <?php if(isset($diff_in_months)) { ?>
                                        
-                                            <p class="text-muted well well-sm no-shadow">
+                                            <p class="text-muted well well-sm no-shadow" style="background-color: #f2f2f2;">
                                                 We're always delighted to serve your school
                                             </p>
                                         <?php } ?>
                                         </td>
                                         <td>
                                             <b>Summary</b>
-                                            <table class="table ">
+                                            <table class="table" id="summary" >
                                                 <tbody>
                                                     <tr>
                                                         <th>Sub - Total amount :</th>
@@ -183,6 +276,9 @@
                                       </tr>
                                     </table>
                                 </div>
+</div>
+                                <!-- title row -->
+                               
                             </div>
 
                             

@@ -40,7 +40,7 @@
                     <p class="text-right" align="right">
                         <a href="#" id="printInvoice" class="btn btn-primary btn-mini btn-round"><i class="fa fa-print"></i> Print </a>
 
-                        <a href="<?= url('account/invoiceView/'.$invoice->id .'/send') ?>" id="printInvoice" class="btn btn-primary btn-mini btn-round"><i class="fa fa-print"></i> send </a>
+                        <a href="<?= url('account/invoiceView/'.$invoice->id .'/send') ?>" id="printInvoice" class="btn btn-primary btn-mini btn-round mr-2"><i class="fa fa-print"></i> send </a>
 
 
                         <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
