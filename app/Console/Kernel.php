@@ -1344,7 +1344,13 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
-        DB::statement('select * from admin.refresh_materialized_views()');
+        try{
+            DB::beginTransaction();
+            DB::statement('select from admin.refresh_materialized_views()');
+            DB::commit();
+        } catch(Exception $e){
+            DB::rollBack();
+        }
     }
 
     

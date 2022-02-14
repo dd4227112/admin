@@ -1904,10 +1904,10 @@ required>
 
 <div class="modal-footer">
 <button type="button"
-class="btn btn-default waves-effect "
+class="btn btn-default btn-mini btn-round"
 data-dismiss="modal">Close</button>
 <button type="submit"
-class="btn btn-primary waves-effect waves-light ">Save
+class="btn btn-primary btn-mini btn-round">Save
 changes</button>
 </div>
 <input type="hidden" value="<?= $client_id ?>"
