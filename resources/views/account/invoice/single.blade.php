@@ -76,7 +76,7 @@
                                                             <li style="font-size: 1rem">From  </li>
                                                             <li><strong>INETS COMPANY LIMITED</strong></li>
                                                             <li>P.o Box 32282 Dar es Salaam</li>
-                                                            <li>2nd Floor,Block NO. 576</li>
+                                                            <li>Shamo Park House, 3rd Floor</li>
                                                             <li>Mbezi Beach Bagamoyo Road</li>
                                                             <li>Mobile no: +255 655/754 406004</li>
                                                         </ul>
@@ -152,12 +152,6 @@
                                                     <td><?= $i ?> </td>
                                                     <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
                                                         <?= warp($fees->note,70) ?? ''?>
-
-                                                        {{-- <span style="text-decoration: none;" contenteditable="true" 
-                                                       onblur="save('<?= $fees->invoice_id . 'note' ?>', '<?= $fees->service_id  ?>','note')" 
-                                                       id="<?= $fees->service_id . 'note' ?>"> <?= $fees->note == '' ? '' : $fees->note ?></span>
-                                                       <span id="stat<?= $fees->service_id .  'note' ?>"></span> --}}
-
                                                     </td>
                                                     <td class="text-right"><?= money($fees->quantity) ?></td>
                                                     <td class="text-right"><?= money($fees->unit_price) ?></td>

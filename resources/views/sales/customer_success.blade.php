@@ -7,7 +7,7 @@
     <!-- Page-header start -->
     <div class="page-header">
         <div class="page-header-title">
-            <h4>School </h4>
+            <h4>Onboarding school </h4>
         </div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
@@ -42,13 +42,11 @@
                                 <div class="card borderless-card">
                                     <div class="card-block-big bg-primary quick-note-card">
                                          <div class="card-block-big bg-info text-center">
-                                <h1><?=$trial_code?></h1>
-                                <h6 class="m-t-10">Trial Code</h6>
-                            </div>
-                                        <h6> </h6>
-                                        <h2>Click the  Install button to proceed With ShuleSoft Installation</h2>
-                                        <div class="text-right">
-                                            <a class="btn btn-primary btn-outline-primary" href="<?= url('https://' . $client->username . '.shulesoft.com')?>" target="_blank">Install</a>
+                                          <h1><?= $client->name?></h1>
+                                         <h6 class="m-t-10"><?=$trial_code. ' Trial Code' ?></h6>
+                                      </div>
+                                        <div class="text-right m-t-10">
+                                             <a class="btn btn-info btn-sm" href="<?= url('https://' . $client->username . '.shulesoft.com')?>" target="_blank"> install </a>
                                         </div>
                                     </div>
                                 </div>

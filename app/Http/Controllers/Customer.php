@@ -470,7 +470,7 @@ class Customer extends Controller {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        } elseif(empty($status) && isset($client->username)){ 
+        } elseif(empty($status) && isset($client->username) && ($client->status == 3)){ 
               return redirect('https://' . $school . '.shulesoft.com');
         } elseif(empty($status) && empty($client->username)){ 
               return view('customer.checkinstallation',$this->data);

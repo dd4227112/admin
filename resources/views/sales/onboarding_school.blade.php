@@ -28,100 +28,27 @@ if (request()->ajax() == FALSE) {
 
 
 <div class="card">
-    <div class="card-header">
-        <h5>Customer Onboarding</h5>
-    </div>
+ 
     <div class="card-block">
-        <h4 class="sub-title">Basic Inputs</h4>
-        <form action="<?= url('sales/onboard/' . $school->id) ?>" method="POST" enctype="multipart/form-data">
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">School Name</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" placeholder="Add School Namee eg, canossa" name="name" value="<?= strtoupper($school->name) ?> <?= strtoupper($school->type) ?> SCHOOL" required="" autofocus>
-                </div>
-            </div>
+        <form action="<?= url('sales/implemetation/'. $client_id) ?>" method="POST" enctype="multipart/form-data">
+           
 
-             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Owner Phone</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" placeholder="School Owner phone number" name="owner_phone" autofocus>
-                </div>
-
-                 <label class="col-sm-2 col-form-label">Owner Email</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" placeholder="School Owner email" name="owner_email" autofocus>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Sales Person</label>
-                <div class="col-sm-10">
-                    <select name="sales_user_id" class="form-control">
-                        <?php foreach ($staffs as $staff) { ?>
-                            <option user_id="<?= $staff->id ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Sales Method</label>
-                <div class="col-sm-10">
-                    <select name="task_type_id"  class="form-control">
-                        <?php
-                        $types = DB::table('task_types')->where('department', 2)->get();
-                        foreach ($types as $type) {
-                            ?>
-                            <option value="<?= $type->id ?>"><?= $type->name ?></option>
-                        <?php } ?>
-
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Price Per Student</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control transaction_amount" value="10000" name="price" required="">
-                </div>
-            </div>
-            <?php
-            $school_contact = DB::table('admin.school_contacts')->where('school_id', $school->id)->first();
-            if (empty($school_contact)) { ?>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Customer Official Email</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" value="" name="email" required="">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Customer Official Mobile Phone </label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" value="" name="phone" required="">
-                    </div>
-                </div>
-                <?php } ?>
             <div class="form-group row" style="border: 1px dashed4;">
                 <label class="col-sm-2 col-form-label">Account Name</label>
                 <div class="row">
-                    <div id="col-sm-4">  
+                    <div id="col-sm-2">  
                         <b style="font-size: 1.2em;"> https://</b>
                      </div>
-                    <div id="col-sm-4">
-                        <input style="max-width: 17em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($school->name) ?>" required="" onkeyup="validateForm()"> 
+                    <div id="col-sm-7">
+                        <input style="max-width: 17em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($client->name) ?>" required="" onkeyup="validateForm()"> 
                     </div>
-                    <div id="col-sm-4">
+                    <div id="col-sm-3">
                         <b style="font-size: 1.2em;">.shulesoft.com</b>
                     </div>
                 </div>
                 <small style="max-width: 13em;" id="username_message_reply"></small>
             </div>
 
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Estimated Students</label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control" value="<?= $school->students ?>" name="students" required="">
-                </div>
-            </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Data Format Available</label>
                 <div class="col-sm-10">
@@ -139,7 +66,7 @@ if (request()->ajax() == FALSE) {
                 </div>
             </div>
 
-              <br>
+              {{-- <br>
              <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Trial Period</label>
                 <div class="col-sm-5">
@@ -148,7 +75,7 @@ if (request()->ajax() == FALSE) {
                     <input type="radio" name="check_trial" id="trial_yes" value="1">
                     <label for="Trial">YES</label>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="form-group row" id="period"  style="display: none;">
                  <label class="col-sm-3 col-form-label">Trial period (Days)</label>
@@ -158,7 +85,7 @@ if (request()->ajax() == FALSE) {
             </div>
             
             <div class="form-group">
-                <label class="col-sm-2 col-form-label"> Module Selected by school</label>
+                <label class="col-form-label"> Module Selected by school</label>
                 <div class="col-sm-12">
                     <div class="table-responsive">
                         <table class="table table-bordered">
@@ -189,142 +116,13 @@ if (request()->ajax() == FALSE) {
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Agreement Type</label>
-                <div class="col-sm-10">
-                    <select name="contract_type_id" class="form-control">
-                        <?php
-                        $ctypes = DB::table('admin.contracts_types')->get();
-                        foreach ($ctypes as $ctype) {
-                            ?>
-                            <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-            </div> 
 
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Contract Start Date</label>
-                <div class="col-sm-10">
-                    <input type="date" class="form-control" value="" name="start_date" required="">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Contract End Date</label>
-                <div class="col-sm-10">
-                    <input type="date" class="form-control" name="end_date" required="">
-                </div>
-            </div>
-
-
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Upload Agreement Form</label>
-                <div class="col-sm-10">
-                    <input type="file" class="form-control" accept=".pdf" name="file" required="">
-                </div>
-            </div>
-
-            
-            <div class="form-group row" id="paymentption">
-                <label class="col-sm-2 col-form-label">Payment Option</label>
-                <div class="col-sm-10">
-                    <select name="payment_option" class="form-control" id="_payment_option">
-                        <option value="">select</option>
-                        <option value="Cash">Cash</option>
-                        <option value="Standing Order">Standing Order</option>
-                        <option value="Bank Transfer">Bank Transfer </option>
-                        <option value="Bank Deposit">Bank Deposit</option>
-                    </select>
-                </div>
-            </div>  
-
-            {{-- <div class="row" id="standing_order_form"  style="display: none;">
-                <label class="col-sm-2 col-form-label">Upload document Form</label>
-                <div class="col-sm-10">
-                    <input type="file" class="form-control" accept=".pdf" name="agree_document" required="">
-                    <span class="messages">Client MUST sign a standing order to specify which date he/she will start to pay. <a href="#">Click Here to download </a> Standing Order Template</span>
-                </div>
-            </div> --}}
-
-               <div class="col-sm-12 m-t-20"  id="standing_order_form"  style="display: none;">
-                <div class="form-group row">
-                    <div class="col-sm-4">
-                            <strong> Branch name </strong>
-                            <input type="text" placeholder="Bank branch name"  class="form-control"  name="branch_name">
-                    </div>
-                    <div class="col-sm-4">
-                            <strong for="">Contact person</strong>
-                            <input type="text" placeholder="Contact person"  class="form-control"  name="contact_person">
-                    </div>
-                        <div class="col-sm-4">
-                            <strong for="">Number of Occurance</strong>
-                            <input type="number" placeholder="must be number eg 2, 3, 12 etc"  class="form-control" id="box1" name="number_of_occurrence">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-4">
-                            <strong>Payment Basis</strong>
-                            <select name="which_basis"  class="form-control">
-                                <option value=""></option>
-                                <option value="Annually">Annually</option>
-                                <option value="Semiannually">Semi Annually</option>
-                                <option value="Quarterly">Quarterly</option>
-                                <option value="Monthly">Monthly</option>
-                            </select>
-                    </div>
-                    <div class="col-sm-4">
-                            <strong>Amount for Every Occurrence </strong>
-                            <input type="text"  class="form-control transaction_amount"  name="occurance_amount" id="box2">
-                    </div>
-                        <div class="col-sm-4">
-                            <strong>Total Amount</strong>
-                            <input type="text" class="form-control" name="total_amount" >
-                    </div>
-                </div>
-
-                    <div class="form-group row">
-                    <div class="col-sm-4">
-                            <strong>Maturity Date</strong>
-                            <input type="date"class="form-control" name="maturity_date">
-                    </div>
-                    <div class="col-sm-4">
-                            <strong> Standing order file </strong>
-                            <input type="file" class="form-control" name="standing_order_file">
-                    </div>
-                        <div class="col-sm-4">
-                            <strong> Refer bank</strong>
-                            <select name="refer_bank_id"  class="form-control">
-                            <?php
-                            $banks = DB::table('constant.refer_banks')->get();
-                            if (!empty($banks)) {
-                                foreach ($banks as $bank) {
-                                    ?>
-                            <option
-                                value="<?= $bank->id ?>">
-                                    <?= $bank->name ?>
-                            </option>
-                            <?php
-                            }
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-        </div>
-
-            <br/><br/>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Areas much interested</label>
-                <div class="col-sm-10"> 
-                    <textarea rows="5" cols="5" name="description" class="form-control" placeholder="Clarify if this client has any special needs or areas much interested to start ?"></textarea>
-                </div>
-            </div>
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
+                    <button type="submit" class="btn btn-primary btn-round btn-sm">Submit</button>
                 </div>
             </div>
         </form>
@@ -351,14 +149,6 @@ if (request()->ajax() == FALSE) {
     });
 
 
-     $('#_payment_option').change(function () {
-        var val = $(this).val();
-        if (val != 'Standing Order') {
-            $('#standing_order_form').hide();
-        } else {
-            $('#standing_order_form').show();
-        }
-    });
 
     notify = function (title, message, type) {
         new PNotify({

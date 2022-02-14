@@ -1,9 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
-  
-
- 
    <div class="page-header">
         <div class="page-header-title">
             <h4><?='Course details' ?></h4>

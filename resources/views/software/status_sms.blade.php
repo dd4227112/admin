@@ -58,8 +58,11 @@
                                                 <td> <?= $i ?> </td>
                                                 <td> <?= !empty($status->schema_name) ? $status->schema_name : '' ?></td>
                                                 <td> <?= $status->last_active == '' ? '<label class="label label-inverse-warning">Not Installed</label>' : '<label class="label label-inverse-success">Installed</label>' ?></td>
+                                                @if($status->api_key != '6664567894')
                                                 <td><label class="badge badge-primary"><?= $status->api_key ?></label></td> 
-                                                    
+                                                @else
+                                                <td><label class="label label-inverse-warning">Not Installed</label></td> 
+                                                @endif
                                                 <td>
                                                     <?php
                                                     if(isset($cont[$status->schema_name])) {

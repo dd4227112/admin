@@ -118,6 +118,13 @@
                                                     </a>
                                                   </li>
 
+                                                   <li class="">
+                                                    <a href="<?= url('sales/onboaredSchools') ?>">
+                                                        <span class="pcoded-mtext">School Implementation</span>
+                                                    </a>
+                                                  </li>
+
+
                                                 <?php if (can_access('sales_plan')) { ?>
                                                 <li class="">
                                                     <a href="<?= url('sales/salesStatus') ?>">
@@ -125,6 +132,7 @@
                                                     </a>
                                                  </li>
                                                 <?php } ?>
+
                                                <?php } ?>
 
                                             </ul>

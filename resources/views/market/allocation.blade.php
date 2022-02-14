@@ -1,9 +1,11 @@
 @extends('layouts.app')
 @section('content')
-
-
-    
-        
+ <?php  
+    function school_status($username){
+     $max_date = \collect(\DB::select("select max(created_at) as max_date from admin.all_login_locations where schema_name = '". $username. "'"))->first();
+       return $max_date->max_date;
+    }
+ ?>
         <div class="page-header">
             <div class="page-header-title">
                 <h4><?=' Schools' ?></h4>
@@ -26,7 +28,6 @@
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
 
                             <div class="row">
                                 <?php
@@ -34,26 +35,24 @@
                                 $total = 0;
                                 foreach ($school_types as $type) {
                                     ?>
-                                    <div class="col-lg-3 col-xl-3 col-sm-12">
-                                
-                                 <?php $opt =  $i == 1 ? 'white' : 'gray' ?>
-                                         
-                                <div class="card bg-c-{{$opt}} shadow">
-                                    <div class="card-block">
+                               
+                                   <div class="col-xl-3 col-md-6">
+                                       <div class="card shadow bg-primary">
+                                         <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
                                                 <p class="m-b-5">{{$type->type}}</p>
                                                 <h4 class="m-b-0">{{ number_format($type->count) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-book f-40" style="color: #19b99a;"></i>
+                                                <i class="feather icon-users f-30 text-c-red"></i>
                                             </div>
-                                    </div>
-                                     </div>
-                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      </div>
 
             
-                                    </div>
                                     <?php
                                     $total += $type->count;
                                     $i++;
@@ -100,11 +99,11 @@
                             </div>
                         <?php } ?>
                     
-                        <div class="col-lg-6">
+                        <div class="col-sm-6">
                             <select class="form-control select2" id="school_selector">
                                 <option value=""></option>
-                                <option value="1">All schools</option>
-                                <option value="2">Client Schools</option>
+                                <option value="1">ALL SCHOOLS</option>
+                                <option value="2">CLIENT SCHOOLS</option>
                             </select>
                         </div>
                     </div>
@@ -144,6 +143,7 @@
                                             <th>School Name</th>
                                             <th>Address</th>
                                             <th>Phone</th>
+                                            <th>Status</th>
                                             <th>School Link</th>
                                             <th>Action</th>
                                         </tr>
@@ -160,6 +160,7 @@
                                                 <td><?= warp($school->client->name,20) ?></td>
                                                 <td><?= warp($school->client->address,20) ?></td>
                                                 <td><?= $school->client->phone ?></td>
+                                                <td><?php school_status($school->client->username)  ?></td>
                                                 <td>
                                                     <a href="https://<?=$school->client->username?>.shulesoft.com/" target="_blank" rel="noopener noreferrer"><?=warp($school->client->name,20)?></a>
                                                 </td>
@@ -214,7 +215,6 @@
                             
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
