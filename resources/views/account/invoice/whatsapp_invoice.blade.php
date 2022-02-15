@@ -1,83 +1,6 @@
 
 <?php $root = url('/') . '/public/';?>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-<style>
-*{
-    font-family: "Open Sans",sans-serif;
-}
-.page {
-      background: white;
-      margin: 0 auto;
-      margin-bottom: 0.5cm;
-      box-shadow: 0 0 0.2cm rgba(0,0,0,0.2);
-      width: 21cm;
-      height: 29.7cm;
-      padding: 10mm; 
-    }
-    
-  
-                                @page {
-                                    margin: 0
-                                }
-                                #invoce {
- 
-  border-collapse: collapse;
-  width: 100%;
-}
-
-#invoce td, #invoce th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-
-
-#summary {
- border-collapse: collapse;
- width: 100%;
-}
-
-#summary td, #summary th {
- font-size: 14px;
- padding: 4px;
- text-align: center;
- border-bottom: 1px solid #ddd;
-}
-
-  
-#customers {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-#customers td, #customers th {
-  padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
- 
-}
-#customers tr:last-child{
-    background-color: #f2f2f2;}
-    #customers tr:first-child{
-        border-top: 1px solid #ddd;
-    }
-    @media print {
-        @page {
-            margin: 2cm 2cm 2cm 2cm;
-        }
-        .invoice-header{
-            margin-right:30% !important;
-        }
-        .invoice-title{
-            float: right !important;
-        }
-        #print_div{
-         top: 0;
-         bottom: 0;
-         margin-top: 0px;
-         }
-    }
-</style>
 
 
 
@@ -97,10 +20,8 @@
 
             <div class="row">
                 <div class="col-md-12 col-xl-12">
-                    <div class="card">
-                        <div class="card-block tab-icon">
                             <div id="print_div">
-<div class="page sheet padding-10mm">
+<div style="margin: 0 auto; margin-bottom: 0.5cm; padding: 10mm;">
 <div class="row" style="margin-top: 0px ">
                                     <div class="col-lg-12 col-sm-12">
                                         <div style="border-bottom: 1px solid #dadada; margin-bottom:10px;">
@@ -130,7 +51,7 @@
                                                         </ul>
                                                     </td>
                                                     <td>
-                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; margin-left:70px;"><?= $invoice_name ?? '' ?></h1>
+                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; margin-left:20px;"><?= $invoice_name ?? '' ?></h1>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -139,29 +60,52 @@
                                     </div>
 
                                     <div class="col-sm-12 col-lg-12">
-                                        <table  class="table" id="customers">
+                                        <table   style="border-collapse: collapse; width: 100%;  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;">
                                             <tr>
-                                                <td>Invoice #</td>
-                                                <td><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
-                                                <td colspan="2"> </td>
+                                                
+                                                <td style="padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;">Invoice #</td>
+                                                <td style="padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;"><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
+                                                <td colspan="2" style="padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;"> </td>
                                             </tr>
 
                                             <tr>
-                                                <td>Start Date #</td>
-                                                <td><?=date('d M Y', strtotime('-30 day', strtotime($invoice->due_date))) ?> </td>
+                                                <td style="padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;">Start Date #</td>
+                                                <td style="padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;"><?=date('d M Y', strtotime('-30 day', strtotime($invoice->due_date))) ?> </td>
                                                
-                                                <td>Due Date #</td>
-                                                <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
+                                                <td style="padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;">Due Date #</td>
+                                                <td style="padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;"><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                             </tr>
                                             <tr>
-                                                <td>TOTAL DUE</td>
-                                                <td>  <?php
+                                                <td style="padding: 8px;
+  text-align: left;
+  background-color: rgb(211, 208, 208);">TOTAL DUE</td>
+                                                <td style="padding: 8px;
+  text-align: left;
+  background-color: rgb(211, 208, 208);">  <?php
                                                     $am = $invoice->invoiceFees()->sum('amount');
                                                     $paid = $invoice->payments()->sum('amount');
                                                     $unpaid = $am - $paid;
                                                     ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b>
                                                 </td>
-                                                <td colspan="2"> </td>
+                                                <td colspan="2" style="padding: 8px;
+  text-align: left;
+  background-color: rgb(211, 208, 208);"> </td>
                                             </tr>
                                         </table>
                                     </div>
@@ -172,14 +116,14 @@
                                     ?>
                                     <br/>
                                     <div class="col-xs-12 col-sm-12 col-lg-12">
-                                        <table class="table table-bordered table-colapse" id="invoce">
+                                        <table style="border-collapse: collapse; width: 100%;border: 1px solid #ddd; padding: 8px;" >
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Description</th>
-                                                    <th class="text-center">Quantity</th>
-                                                    <th class="text-center">Unit Price</th>
-                                                    <th class="text-center">Total (Tsh)</th>
+                                                    <th style="border: 1px solid #ddd; padding:8px">#</th>
+                                                    <th style="border: 1px solid #ddd;padding:8px">Description</th>
+                                                    <th style="border: 1px solid #ddd;padding:8px">Quantity</th>
+                                                    <th style="border: 1px solid #ddd;padding:8px">Unit Price</th>
+                                                    <th style="border: 1px solid #ddd;padding:8px">Total (Tsh)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -188,14 +132,14 @@
                                                 foreach ($invoice_fee as $fees) {
                                                     ?>
                                                     <tr>
-                                                    <td><?= $i ?> </td>
-                                                    <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
+                                                    <td style="border: 1px solid #ddd;padding:8px"><?= $i ?> </td>
+                                                    <td style="border: 1px solid #ddd;padding:8px"> <strong><?= $fees->item_name ?? '' ?></strong> <br>
                                                         <?= warp($fees->note,70) ?? ''?>
 
                                                     </td>
-                                                    <td class="text-right"><?= money($fees->quantity) ?></td>
-                                                    <td class="text-right"><?= money($fees->unit_price) ?></td>
-                                                    <td class="text-right"><?= money($fees->amount) ?></td>
+                                                    <td class="text-right"style="border: 1px solid #ddd;padding:8px"><?= money($fees->quantity) ?></td>
+                                                    <td class="text-right"style="border: 1px solid #ddd;padding:8px"><?= money($fees->unit_price) ?></td>
+                                                    <td class="text-right"style="border: 1px solid #ddd;padding:8px"><?= money($fees->amount) ?></td>
                                                 </tr>
                                             <?php $i++;} ?>
 
@@ -204,11 +148,9 @@
                                         <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($unpaid) ?>    </p>
                                     </div>
                                     <!-- /.col -->
-                                    <div class="col-sm-12 col-lg-12">
+                                    
 
-                                    </div>
-
-                                    <table class="table">
+                                    <table>
                                         <tr>
                                             <td>
                                                 <?php 
@@ -245,25 +187,40 @@
                                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
                                         <?php if(isset($diff_in_months)) { ?>
                                        
-                                            <p class="text-muted well well-sm no-shadow" style="background-color: #f2f2f2;">
+                                            <p class="text-muted well well-sm no-shadow" style="background-color: #f2f2f2; padding:20px;">
                                                 We're always delighted to serve your school
                                             </p>
                                         <?php } ?>
                                         </td>
                                         <td>
                                             <b>Summary</b>
-                                            <table class="table" id="summary" >
+                                            <table style="border-collapse: collapse;
+ width: 100%;font-size: 14px;
+ padding: 4px;
+ text-align: right;
+ border-bottom: 1px solid #ddd;">
+ 
                                                 <tbody>
                                                     <tr>
-                                                        <th>Sub - Total amount :</th>
-                                                        <th>Tsh <?= number_format($am) ?></th>
+                                                        <th style="padding: 8px;
+ text-align: center;
+ border-bottom: 1px solid #ddd;">Sub - Total amount :</th>
+                                                        <th style="padding:8px;
+ text-align: center;
+ border-bottom: 1px solid #ddd;">Tsh <?= number_format($am) ?></th>
                                                     </tr>
                                                     <tr>
-                                                        <th>Paid Amount :</th>
-                                                        <th>Tsh <?= $paid > 0 ? number_format($paid) : 0 ?> </th>
+                                                        <th style="padding: 4px;
+ text-align: center;
+ border-bottom: 1px solid #ddd;">Paid Amount :</th>
+                                                        <th style="padding: 4px;
+ text-align: center;
+ border-bottom: 1px solid #ddd;">Tsh <?= $paid > 0 ? number_format($paid) : 0 ?> </th>
                                                     </tr>
                                                     <tr>
-                                                        <th>Grand Total :</th>
+                                                        <th style="padding: 4px;
+ text-align: center;
+ border-bottom: 1px solid #ddd;">Grand Total :</th>
                                                         <th>Tsh <?= number_format($unpaid) ?></th>
                                                         <th style="margin-left: 1px; z-index:1">
                                                             <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
@@ -284,8 +241,7 @@
                             
                         </div>
                     </div>
-                  </div>  
-               </div>
+                  
 
  
 
