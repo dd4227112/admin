@@ -149,10 +149,10 @@
                                     </div>
                                     <!-- /.col -->
                                     
-
-                                    <table>
+                                    <div class="col-sm-12 col-lg-12 col-xs-12"> 
+                                     <table>
                                         <tr>
-                                            <td>
+                                            <td style="margin-right: 20px;">
                                                 <?php 
                                                 $a  = [];
                                                         $setting = DB::table('admin.all_setting')->where('schema_name', $invoice->client->username)->first();
@@ -197,41 +197,43 @@
                                             <table style="border-collapse: collapse;
  width: 100%;font-size: 14px;
  padding: 4px;
- text-align: right;
+ text-align: left;
  border-bottom: 1px solid #ddd;">
  
                                                 <tbody>
                                                     <tr>
-                                                        <th style="padding: 8px;
- text-align: center;
- border-bottom: 1px solid #ddd;">Sub - Total amount :</th>
-                                                        <th style="padding:8px;
- text-align: center;
- border-bottom: 1px solid #ddd;">Tsh <?= number_format($am) ?></th>
+                                                        <td style="padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Sub - Total amount :</td>
+                                                        <td style="padding:8px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Tsh <?= number_format($am) ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <th style="padding: 4px;
- text-align: center;
- border-bottom: 1px solid #ddd;">Paid Amount :</th>
-                                                        <th style="padding: 4px;
- text-align: center;
- border-bottom: 1px solid #ddd;">Tsh <?= $paid > 0 ? number_format($paid) : 0 ?> </th>
+                                                        <td style="padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Paid Amount :</td>
+                                                        <td style="padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Tsh <?= $paid > 0 ? number_format($paid) : 0 ?> </td>
                                                     </tr>
                                                     <tr>
-                                                        <th style="padding: 4px;
- text-align: center;
- border-bottom: 1px solid #ddd;">Grand Total :</th>
+                                                        <td style="padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Grand Total :</td>
                                                         <th>Tsh <?= number_format($unpaid) ?></th>
-                                                        <th style="margin-left: 1px; z-index:1">
+                                                        
+                                                    </tr>
+<th style="margin-left: 1px; z-index:1">
                                                             <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
                                                        </th>
-                                                    </tr>
-
                                                 </tbody>
                                             </table>
                                         </td>
                                       </tr>
                                     </table>
+                                    </div>
+                                    
                                 </div>
 </div>
                                 <!-- title row -->
