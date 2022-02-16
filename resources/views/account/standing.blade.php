@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-
-  
-
     <div class="page-header">
             <div class="page-header-title">
                 <h4>Standing orders</h4>
@@ -26,7 +23,6 @@
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">
-          <!-- Ajax data source (Arrays) table start -->
           <div class="card tab-card">
             <div class="card-block">
         
@@ -95,6 +91,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>
 @endsection

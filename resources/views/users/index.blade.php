@@ -156,13 +156,6 @@
       </div>
   </div>
 
-
-
-
-
-
-
-
   <script type="text/javascript">
       
           $(document).on("click", ".user_dialog", function () {

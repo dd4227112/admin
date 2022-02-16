@@ -268,13 +268,13 @@ target="_blank"> Exams</a>
         aria-expanded="true">Staff Members</a>
         <div class="slide"></div>
         </li>
-        <?php if (can_access('add_si')) { ?>
+      
         <li class="nav-item">
         <a class="nav-link " data-toggle="tab" href="#payments" role="tab"
         aria-expanded="true">Invoice</a>
         <div class="slide"></div>
         </li>
-        <?php } ?>
+      
         </ul>
         </div>
 
@@ -1904,10 +1904,10 @@ required>
 
 <div class="modal-footer">
 <button type="button"
-class="btn btn-default waves-effect "
+class="btn btn-default btn-mini btn-round"
 data-dismiss="modal">Close</button>
 <button type="submit"
-class="btn btn-primary waves-effect waves-light ">Save
+class="btn btn-primary btn-mini btn-round">Save
 changes</button>
 </div>
 <input type="hidden" value="<?= $client_id ?>"
@@ -1925,11 +1925,9 @@ name="client_id" />
 <div class="card-header">
 
 <div class="col-sm-4 my-2">
-<?php if (can_access('add_si')) { ?>
 <a class="btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#standing-order-Modal">
     Add Standing Orders
 </a>
-<?php } ?>
 </div>
  <div class="table-responsive">
  <table id="example"  class="table dataTable table-sm table-striped table-bordered nowrap">

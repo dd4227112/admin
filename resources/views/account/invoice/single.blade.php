@@ -165,12 +165,6 @@
                                                     <td><?= $i ?> </td>
                                                     <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
                                                         <?= warp($fees->note,70) ?? ''?>
-
-                                                        {{-- <span style="text-decoration: none;" contenteditable="true" 
-                                                       onblur="save('<?= $fees->invoice_id . 'note' ?>', '<?= $fees->service_id  ?>','note')" 
-                                                       id="<?= $fees->service_id . 'note' ?>"> <?= $fees->note == '' ? '' : $fees->note ?></span>
-                                                       <span id="stat<?= $fees->service_id .  'note' ?>"></span> --}}
-
                                                     </td>
                                                     <td class="text-right"><?= money($fees->quantity) ?></td>
                                                     <td class="text-right"><?= money($fees->unit_price) ?></td>
@@ -257,8 +251,8 @@
 
                                          
                    
-                                   </div>
-                            </div>
+                              </div>
+                          </div>
                         </div>
                     </div>
                   </div>  
@@ -270,12 +264,6 @@
               <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Edit This Invoice</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
                         <?php
                      //   $invoice_fee = $invoice->invoiceFees()->first();
                         ?>

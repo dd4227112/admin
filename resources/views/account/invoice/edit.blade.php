@@ -69,7 +69,7 @@
                                                 <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3"><?= $value->service->name . '<strong>(Unit price)</strong>' ?></label>
                                                     <div class="col-lg-6">
-                                                        <input type="number" value="<?= $value->unit_price ?>" name="amounts[]"  class="form-control"  <?php if((int) $payments > 0) echo 'disabled="disabled"'?>/>
+                                                        <input type="number" value="<?= $value->unit_price ?>" name="amounts[]"  class="form-control"  />
                                                     </div>
                                                     <?php echo form_error($errors, 'amount'); ?>
                                                     <div class="col-lg-6"> <span id="amount"></span></div>
@@ -78,7 +78,7 @@
                                                 <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3"><?= $value->service->name .'<strong>(Quantity)</strong>' ?></label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" value="<?= $value->quantity?>" name="quantity[]" id="quantity" class="form-control"  <?php if((int) $payments > 0) echo 'disabled="disabled"'?> />
+                                                        <input type="text" value="<?= $value->quantity?>" name="quantity[]" id="quantity" class="form-control"   />
                                                     </div>
                                                     <?php echo form_error($errors, 'quantity'); ?>
                                                     <div class="col-lg-6"> <span id="quantity"></span></div>

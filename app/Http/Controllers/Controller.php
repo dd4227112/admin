@@ -343,7 +343,6 @@ class Controller extends BaseController {
 
     public function sendRequest($method, $data) {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
-
             $url = $this->APIurl . $method . '?token=' . $this->token;
             if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
                 $url = $this->token . $method . '?token=' . $this->APIurl;
@@ -409,28 +408,37 @@ class Controller extends BaseController {
         }
 
 
-           public function syncMissingInv($data,$prefix,$schema_name){
+                  public function syncMissingInv($data,$prefix,$schema_name){
                    $trans = (object) $data;
                     foreach ($trans as $tran) {
                         if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
                              $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
-                             if(empty($check)){
-                                    $data= urlencode(json_encode($tran));
-                                    $background = new \App\Http\Controllers\Background();
-                                    $url = 'http://75.119.140.177:8081/api/init';
-                                    $fields = json_decode(urldecode($data));
-                                    $curl = $background->curlServer($fields, $url, 'row');
-                                    return $curl;
-                             }
+                            if(empty($check)){
+                                $data= urlencode(json_encode($tran));
+                                $background = new \App\Http\Controllers\Background();
+                                $url = 'http://75.119.140.177:8081/api/init';
+                                $fields = json_decode(urldecode($data));
+                                $curl = $background->curlServer($fields, $url, 'row');
+                                return $curl;
+                           }
                          }
-                    }
-         }
+                       }
+                   }
 
 
 
 
       
-
+              public function check(){
+                  $client_id = '20203';
+                  $clients = DB::table('admin.schools')->LeftJoin('admin.client_schools','admin.schools.id', '=' ,'admin.client_schools.school_id')
+                  ->LeftJoin('admin.school_contacts','admin.schools.id', '=' ,'admin.school_contacts.school_id')
+                  ->LeftJoin('admin.clients','admin.clients.id', '=' ,'admin.client_schools.client_id')
+                  ->select('admin.schools.id','admin.schools.name','admin.client_schools.client_id','admin.schools.created_at',
+                  'admin.clients.phone','admin.clients.email','admin.clients.estimated_students','admin.clients.price_per_student')
+                  ->where('admin.schools.id',(int) $client_id)->latest()->first();
+                  dd($clients);
+              }
 
       
 
