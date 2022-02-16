@@ -34,13 +34,9 @@ class General extends Controller {
 
        $this->data['missed_calls'] =  \collect(DB::SELECT("select count(*),to_char(created_at::date,'Month') as month,extract(year from created_at::date) as year from admin.phone_calls where call_type = 'Missed' group by created_at::date"))->first();
        
-       $this->data['Incoming_calls'] =  \collect(DB::SELECT("select count(*),to_char(created_at::date,'Month') as month,extract(year from created_at::date) as year from admin.phone_calls where call_type = 'Incoming' group by created_at::date"))->first();
 
-       $this->data['outgoing_calls'] =  \collect(DB::SELECT("select count(*),to_char(created_at::date,'Month') as month,extract(year from created_at::date) as year from admin.phone_calls where call_type = 'Outgoing' group by created_at::date"))->first();
-       $this->data['Incoming_calls']  = \App\Models\PhoneCall::where(DB::raw('EXTRACT(MONTH FROM created_at) '), '7')->where('call_type', 'Incoming')->count();
        $url = 'https://www.pivotaltracker.com/services/v5/projects?token='.$this->TokenAPI.'';
        $this->data['projectdata'] = $this->get($url);
-                https://www.pivotaltracker.com/services/v5/projects/2553591/stories?token=c3c067a65948d99055ab1ac60891c174
        $str = "https://www.pivotaltracker.com/services/v5/projects/$this->projectID/stories?filter=state:delivered,finished,rejected,started,unstarted,unscheduled&token=$this->TokenAPI";
        $this->data['stories'] = $this->get($str);
 
@@ -55,8 +51,10 @@ class General extends Controller {
      */
     public function create() {
         $url = 'https://www.pivotaltracker.com/services/v5/projects?token='.$this->TokenAPI.'';
-        $obj = $this->get($url);
-        dd($obj);
+        $this->data['projectdata'] = $this->get($url);
+        $str = "https://www.pivotaltracker.com/services/v5/projects/$this->projectID/stories?token=$this->TokenAPI";
+        $this->data['stories'] = $this->get($str);
+       return view('general.minutes', $this->data);
     }
     /**
      * Show the form for editing the specified resource.

@@ -9,26 +9,38 @@
       <div class="col-md-12 col-xl-12">
           <div class="card"> 
               <div class="card-block">
-                <button type="button" class="btn btn-info btn-outline-info waves-effect md-trigger" data-modal="modal-12">Just Me</button>
-              </div> 
+                {{-- <button type="button" class="btn btn-info btn-outline-info waves-effect md-trigger" data-modal="modal-12">Just Me</button> --}}
               
-              <div class="card-block tab-icon">                               
+                <form class="form-horizontal" role="form" method="post"> 
+                     <div class="form-group row">
+                       <div class="col-sm-5">
+                         <label>Start date </label>
+                          <input type="date" name="start_date" class="form-control" id="start_date" value="<?= date('Y-01-01')?>">
+                       </div>
+
+                       <div class="col-sm-5">
+                         <label>End date</label>
+                          <input type="date" name="end_date" class="form-control" id="end_date" value="<?= date('Y-m-d')?>">
+                       </div>
+
+                        <div style="padding-top: 30px;">
+                           <button type="submit" class="btn btn-sm btn-info">Submit</button>
+                       </div>
+                      </div>
+                   <?= csrf_field() ?>
+                  </form>
+              <hr>                              
                 <ul class="nav nav-tabs md-tabs " role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#profile7" role="tab"> <h6 class="text-center text-subtitle">Phone calls </h6></a>
                         <div class="slide"></div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#home7" role="tab"> <h6 class="text-center text-subtitle">Incoming calls </h6></a>
+                        <a class="nav-link" data-toggle="tab" href="#home7" role="tab"> <h6 class="text-center text-subtitle"> Project Profile </h6></a>
                         <div class="slide"></div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#missedCall" role="tab"> <h6 class="text-center text-subtitle">Missed calls </h6></a>
-                        <div class="slide"></div>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#OutgoingCall" role="tab"> <h6 class="text-center text-subtitle">Outgoing calls </h6></a>
+                        <a class="nav-link" data-toggle="tab" href="#missedCall" role="tab"> <h6 class="text-center text-subtitle">Project Statistics </h6></a>
                         <div class="slide"></div>
                     </li>
                 </ul> 
@@ -36,26 +48,7 @@
                    <div class="tab-content">
                     
                       <div class="tab-pane active" id="profile7" role="tabpanel">
-                          <div class="col-sm-12 m-10">
-                             <form class="form-horizontal" role="form" method="post"> 
-                                  <div class="form-group row">
-                                    <div class="col-sm-3">
-                                      <label>Start date </label>
-                                       <input type="date" name="start_date" class="form-control" id="start_date" value="<?= date('Y-01-01')?>">
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                      <label>End date</label>
-                                       <input type="date" name="end_date" class="form-control" id="end_date" value="<?= date('Y-m-d')?>">
-                                    </div>
-
-                                     <div style="padding-top: 30px;">
-                                        <button type="submit" class="btn btn-sm btn-info">Submit</button>
-                                    </div>
-                                   </div>
-                                <?= csrf_field() ?>
-                               </form>
-                            </div> 
+               
                                
                              <div class="card-block">
                                      <div class="dt-responsive table-responsive">
@@ -100,57 +93,49 @@
                              </div>
                         
                             <div class="tab-pane" id="home7" role="tabpanel">               
-                               <div class="col-sm-12">
                                 <div class="row"> 
                                    <div class="col-sm-12">
-                     
+                                    @if(!empty($projectdata))
+                                      <?php
+                                        $project = json_decode($projectdata);
+                                  
+                                        $columns = array('id','name', 'kind', 'week_start_day',  'start_date', 'created_at', 'start_time', 'updated_at');
+                                    
+                                      ?>
+                                  
+                                          <div class="card"> 
+                                            <div class="card-header">
+                                                <h3>{{ $project[0]->name }} </h3>
+                                            </div>
+                                              <div class="card-block">
+                                                <div class="row">
+                                                  <div class="col-md-12 col-xl-12">
+                                                    <table class="table">
+                                                      <thead>
+                                                        @foreach ($columns as $value) 
+                                                        <tr>
+                                                          <th><?= ucwords(str_replace('_', ' ', $value)) ?> </th>
+                                                          <th>{{ $project[0]->{$value} }} </th>
+                                                        </tr>
+                                                        @endforeach
+                                                      </thead>
+                                                    </table>
+                                                  </div>
+                                              </div>
+                                            </div>
+                                        
+                                      @endif
                                    </div> 
                                 
                                </div>    
                             </div> 
                     
-                          </div>
-                      </div> 
-                  </div>
-                  <!-- Row end -->
               </div>
 
           </div>
       </div>
   </div>
-  <div class="row">
-    <div class="col-md-12 col-xl-12">
-      @if(!empty($projectdata))
-    <?php
-      $project = json_decode($projectdata);
 
-      $columns = array('id','name', 'kind', 'week_start_day',  'start_date', 'created_at', 'start_time', 'updated_at');
-  
-    ?>
-
-        <div class="card"> 
-          <div class="card-header">
-              <h3>{{ $project[0]->name }} </h3>
-          </div>
-            <div class="card-block">
-              <div class="row">
-                <div class="col-md-12 col-xl-12">
-                  <table class="table">
-                    <thead>
-                      @foreach ($columns as $value) 
-                      <tr>
-                        <th><?= ucwords(str_replace('_', ' ', $value)) ?> </th>
-                        <th>{{ $project[0]->{$value} }} </th>
-                      </tr>
-                      @endforeach
-                    </thead>
-                  </table>
-                </div>
-            </div>
-            @endif
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
