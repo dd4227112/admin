@@ -101,23 +101,20 @@
                   </div>
 
                   <div class="tab-pane" id="addnew" role="tabpanel">
-               
-
-                         <div class="card">
-                          <div class="card-block">
+                      <br><br>
                              <form method="post">
                               <div class="row">
-                                  <div class="col-sm-12 col-xl-4 m-b-30">
+                                  <div class="col-sm-12 col-xl-4">
                                       <h4 class="sub-title">Select School</h4>
-                                       <input type="number" class="form-" id="get_schools" name="school_id">
+                                       <input type="number" class="form-control" id="get_schools" name="school_id">
                                   </div>
-                                  <div class="col-sm-12 col-xl-4 m-b-30">
+                                  <div class="col-sm-12 col-xl-4">
                                       <h4 class="sub-title">School Contact</h4>
-                                      <input type="text" name="contact" style="text-transform:uppercase" class="form-control">
+                                      <input type="text" required name="contact" style="text-transform:uppercase" class="form-control">
                                   </div>
-                                  <div class="col-sm-12 col-xl-4 m-b-30">
+                                  <div class="col-sm-12 col-xl-4">
                                       <h4 class="sub-title">Allocated person</h4>
-                                        <select name="to_user_id" class="form- select2" required>
+                                        <select name="to_user_id" class="form-control select2" required>
                                           <?php
                                           $staffs = DB::table('users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
                                           foreach ($staffs as $staff) {
@@ -128,10 +125,47 @@
                                   </div>
                                 
                               </div>
+                              <hr>
+                              <div class="row">
+                                <div class="col-sm-12 col-md-4 m-b-30">
+                                     <select name="story_priority" class="form-control" required>
+                                       <option value="">Requirement Priority</option>
+                                      <option value="null">None</option>
+                                      <option value="P0">Critical</option>
+                                      <option value="P1">High</option>
+                                      <option value="P2">Medium</option>
+                                      <option value="P3">Low</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 col-md-4 m-b-30">
+                                     <select name="current_state" class="form-control" required>
+                                      <option value="unscheduled">Current Requirement State</option>
+                                      <option value="unstarted">Unstarted</option>
+                                      <option value="started">Started</option>
+                                      <option value="finished">Finished</option>
+                                      <option value="delivered">Delivered</option>
+                                      <option value="rejected">Rejected</option>
+                                      <option value="accepted">Accepted</option>
+                                      <option value="unscheduled">Unscheduled</option>
+                                      <option value="planned">Planned</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 col-md-4 m-b-30">
+                                      <select name="module" class="form-control select2" required>
+                                        <option value="">Requirement Module</option>
+                                        <?php
+                                        $staffs = DB::table('modules')->get();
+                                        foreach ($staffs as $staff) {
+                                          ?>
+                                          <option value="<?= $staff->name ?>"><?= $staff->name ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                              
+                            </div>
                                  <div class="row">
-                                      <h4 class="sub-title">Description</h4>
                                       <div class="col-sm-12">
-                                          <textarea rows="3" cols="7" id="content_part" class="form-control" name="note"></textarea>
+                                          <textarea rows="7" minlength="30" required="" class="form-control" placeholder="Explain about this requirement" name="note"></textarea>
                                       </div>
                                   </div>
 
@@ -142,9 +176,7 @@
                                   <?= csrf_field() ?>
                                 
                               </form>
-                          </div>
-                      </div>
-
+                      
 
                   </div>
                 </div>

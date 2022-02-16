@@ -1,4 +1,5 @@
 <?php
+if (function_exists('check_implementation')) {
 
 function check_implementation($activity, $schema_name) {
     $status = '';
@@ -108,8 +109,8 @@ function check_implementation($activity, $schema_name) {
         }
     }
     return $status;
+    }
 }
-
 function customdate($datatime) {
     $newTZ = new DateTimeZone('America/New_York');
     date_default_timezone_set('America/New_York');
