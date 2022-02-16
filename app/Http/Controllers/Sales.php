@@ -659,7 +659,7 @@ class Sales extends Controller {
         $time = 0;
         if($client_id > 0){ 
 
-            \App\Models\Client::where('id', (int) $client_id)->update(['username'=>request('username'),'data_type_id'=>request('data_type_id')]);
+            \App\Models\Client::where('id', (int) $client_id)->update(['username'=> trim(request('username')),'data_type_id'=>request('data_type_id')]);
             $sections = \App\Models\TrainItem::where('status',1)->orderBy('id', 'asc')->get();
             $start_date = date('Y-m-d H:i');
 
