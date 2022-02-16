@@ -933,7 +933,7 @@ class Customer extends Controller {
                 ];
                 $story = new \App\Http\Controllers\General();
                $data1 = $story->post($url, $fields);
-                dd($data1);
+                
                 $this->send_whatsapp_sms($user->phone, $sms);
                 $this->send_sms($user->phone, $sms, 1);
             }
