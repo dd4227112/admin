@@ -120,12 +120,13 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                           <?php  $i++; } } ?>
 
                                                              <tr>
-                                                                  <td>School Contact</td>
+                                                                  
                                                                   <td>
-                                                                     <div> 
+                                                                     {{-- <div> 
                                                                       <strong> &nbsp;  </strong>
-                                                                       <?php echo  is_null($client->client_id) ? '<input class="form-control" type="text"  name="username"  required>' : '' ?>
-                                                                     </div>
+                                                                       <?php //echo  is_null($client->client_id) ? '<input class="form-control" type="text"  name="username"  required>' : '' ?>
+                                                                     </div> --}}
+                                                                      School Contact
                                                                   </td>
                                                                   <td>
                                                                      <div> 
