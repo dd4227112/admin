@@ -639,8 +639,7 @@ class Sales extends Controller {
   
 
      public function onboaredSchools(){
-        $this->data['clients'] = $clients = \DB::select("select c.id,c.name,c.email,c.phone,c.address,c.estimated_students,c.status,count(t.id) as tasks from admin.clients c 
-                 left join admin.tasks_clients t on c.id = t.client_id  where extract(year from c.created_at) >= 2022 group by c.id having count(t.task_id) <= 0 order by c.created_at desc");
+        $this->data['clients'] = \DB::select("select c.id,c.name,c.email,c.phone,c.address,c.code,c.status,count(t.id) as tasks,s.id as sid,s.company_file_id,p.client_id,p.invoice_id,coalesce(sum(p.amount),0) as paid from admin.clients c left join admin.tasks_clients t on c.id = t.client_id left join admin.standing_orders s on s.client_id = c.id left join admin.payments p on c.id = p.client_id where extract(year from c.created_at) >= 2022 group by c.id,s.company_file_id,p.client_id,p.invoice_id,s.id having count(t.task_id) <= 0 order by c.created_at desc");
         return view('sales.onboard', $this->data);
      }
 

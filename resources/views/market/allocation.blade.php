@@ -253,7 +253,7 @@
                     "targets": 8,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        if (row.client_id != null) {
+                        if (row.client_id != null && row.status == 3) {
                             return '<a href="<?= url('customer/profile') ?>/' + row.username + '" class="label label-inverse-warning"> Already Customer  </a>';
                         } else {
                             return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="badge badge-primary">Onboard School</a>';

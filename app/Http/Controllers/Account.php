@@ -49,7 +49,7 @@ class Account extends Controller {
 
         if( (int) $client_id > 0 && $_POST){
              $service_data = request()->all();
-             dd($service_data);
+            
              $data = array('invoice_type' => $invoice_type, 'client_id' => $client_id );
              return $this->createInvoice($service_data,$data,$type);
         }
@@ -1671,7 +1671,7 @@ class Account extends Controller {
     public function standingOrders() {   
          $this->data['standingorders'] = \App\Models\StandingOrder::latest()->get();
          $this->data['schools'] = \App\Models\Client::get();
-        return view('account.standing', $this->data);
+         return view('account.standing', $this->data);
     }
 
     // Approve standing orders
