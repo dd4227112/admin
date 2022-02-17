@@ -1334,7 +1334,7 @@ $x = 1;
 $customer = new \App\Http\Controllers\Customer();
 $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->whereIn('train_item_id',\App\Models\TrainItem::where('status',1)->get(['id']))->get();
 foreach ($trainings as $training) {
-$status=check_implementation($training->trainItem->content, $schema);
+$status  = check_implementation($training->trainItem->content, $schema);
 ?>
 <tr>
 <th scope="row"><input type="checkbox"/></th>
