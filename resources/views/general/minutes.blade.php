@@ -2,7 +2,15 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-
+<?php
+    $pr = [
+        ""=>"None",
+        "p0"=>"Critical",
+        "p1"=>"High",
+        "p2"=>"Medium",
+        "p3"=>"Low",
+    ];
+?>
 <!-- Page body start -->
 <div class="page-body">
     <!-- Task board design block start-->
@@ -66,15 +74,8 @@
                         </li>
                     </ul>
                     <div class="nav-item nav-grid">
-                        <span class="m-r-15">View Mode: </span>
-                        <button type="button" class="btn btn-sm btn-primary waves-effect waves-light m-r-10"
-                            data-toggle="tooltip" data-placement="top" title="list view">
-                            <i class="icofont icofont-listine-dots"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-primary waves-effect waves-light"
-                            data-toggle="tooltip" data-placement="top" title="grid view">
-                            <i class="icofont icofont-table"></i>
-                        </button>
+                        <span class="m-r-15">View all tasks here: </span>
+                        
                     </div>
                     <!-- end of by priority dropdown -->
 
@@ -97,7 +98,10 @@
                 <div class="card-block">
                     <div class="row">
                         <div class="col-sm-12">
-                            <p class="task-detail">{{ isset($value->description) ? $value->description : ''  }}</p>
+                            <p class="task-detail">{{ isset($value->description) ? $value->description : ''  }}
+                            
+                            <span class="btn btn-default btn-mini"><i class="icofont icofont-clock"></i> Last Updated 
+                                : {{ timeAgo($value->updated_at) }}</span></p>
                         </div>
                         <!-- end of col-sm-8 -->
                     </div>
@@ -108,12 +112,14 @@
 
                         <a href="#!" class="btn btn-info btn-mini"><i class="icofont icofont-tags"></i><b>
                                 {{ $value->story_type  }}</b> </a>
-                        <a href="#!" class="btn btn-default btn-mini"><i class="icofont icofont-clock"></i> Last Update
-                            : {{ timeAgo($value->updated_at) }}</a>
+                                
+                            <button class="btn btn-warning btn-mini" data-target=".bd-example-modal-sm" id="myBtn"
+                            onmousedown="send_comment(<?= $value->id ?>)"> <strong> <i class="icofont icofont-comment"></i> View Tasks </strong></button>
+                        
                     </div>
                     <div class="task-board">
                         <div class="dropdown-secondary dropdown">
-                            <button class="btn btn-danger btn-mini">{{ $value->story_priority  }}</button>
+                            <button class="btn btn-danger btn-mini">{{ $pr[$value->story_priority]  }} - Priority</button>
 
                             <!-- end of dropdown menu -->
                         </div>
@@ -122,8 +128,6 @@
                         </div>
                         <!-- end of dropdown-secondary -->
                         <div class="dropdown-secondary dropdown">
-                            <button class="btn btn-warning btn-mini" data-target=".bd-example-modal-sm" id="myBtn"
-                                onmousedown="send_comment(<?= $value->id ?>)"> View Tasks </button>
                         </div>
                         <!-- end of seconadary -->
                     </div>
@@ -145,7 +149,7 @@
 </div>
 <!-- Main-body end -->
 <!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="myModal" role="dialog">
+<div class="modal fade centered bd-example-modal-lg" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -153,8 +157,11 @@
             <div id="districts">
 
             </div>
+            <div id="pleasewait" class="text-center">
+                <img src="{{ url('public/images/loading-buffering.gif') }}" alt="">
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button"class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
 
@@ -164,24 +171,42 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function(){
+
         send_comment = function (id) {
             $('#districts').hide();
-            $.ajax({
-                method: 'get',
-                url: '<?= url('
-                General / roadTask / null ') ?>',
-                data: {
-                    story_id: id
-                },
-                dataType: 'html',
-                success: function (data) {
-                    $('#districts').show();
-                    $('#districts').html(data);
-                }
-            });
-            $("#myModal").modal();
-        }
+            $('.modal-footer').hide();
+            $('#pleasewait').show();
+          $.ajax({
+            method: 'get',
+            url: '<?= url('General/roadTask/null') ?>',
+            data: {story_id: id},
+            dataType: 'html',
+            success: function (data) {
+              $('#pleasewait').hide();
+              $('#districts').show();
+              $('.modal-footer').show();
+              $('#districts').html(data);
+            }
+          });
+        $("#myModal").modal();
+      }
+
+      send_storycomment = function (id) {
+        var storycomment = $('#storycomment').val();
+        if(storycomment !== ''){
+          $.ajax({
+            method: 'get',
+            url: '<?= url('General/postComment/null') ?>',
+            data: {story_id: id, text: storycomment},
+            dataType: 'html',
+            success: function (data) {
+              $('#sentcomment').show();
+              $('#showcomment').hide();
+            }
+          });
+      }
+      }
     });
 
 </script>

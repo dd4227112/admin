@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * used to perform all CRUD for general database tables
@@ -362,23 +363,27 @@ class General extends Controller {
 
     public function roadTask(){
         $id = request('story_id');
-       // dd($id);
+     
        $story_url = 'https://www.pivotaltracker.com/services/v5/projects/'.$this->projectID.'/stories/'.$id.'?token='.$this->TokenAPI;
        $url =  'https://www.pivotaltracker.com/services/v5/projects/'.$this->projectID.'/stories/'.$id.'/tasks?token='.$this->TokenAPI;
     $story = json_decode($this->get($story_url));
     $tasks = json_decode($this->get($url));
+
+    //Load all story comments
+    $coment_url = 'https://www.pivotaltracker.com/services/v5/projects/'.$this->projectID.'/stories/'.$id.'/comments?token='.$this->TokenAPI;
+    $comments = json_decode($this->get($coment_url));
+
     if($story){
-        echo '
-        <div class="modal-header">
-            <p class="modal-title"><b>#' .$story->id. ' -' .$story->name. '('.$story->story_type.')</b></p>
-        </div>
-      <div class="modal-body">';
+        echo '<div class="modal-header">
+                <p class="modal-title"><b>#' .$story->id. ' -' .$story->name. '('.$story->story_type.')</b></p>
+            </div>
+        <div class="modal-body">';
       
       echo isset($story->description) ? '<p>'. $story->description . '</p>' : '';
 
       echo '<p> <strong>Current State - '.$story->current_state.'</strong></p>';
         if($tasks){
-            echo '<h4><b>List of Tasks</b></h4>';
+            echo '<h5><b>List of Tasks</b></h5>';
             echo '<ol>';
             foreach ($tasks as $key => $value) {
              if($value->complete == true){
@@ -388,8 +393,35 @@ class General extends Controller {
              }
             }
         echo '</ol>';
+        if($comments){
+            echo '<h5><b>List of Story Comments</b></h5>';
+            echo '<ol>';
+                foreach ($comments as $key => $value) {
+                    echo  isset($value->text) ? '<li> <strong>'.  $value->text .'. </strong> Added - '.timeAgo($value->created_at).'</li>' : '';
+            }
+            echo '</ol>';
         }
+    }
+    echo '<hr><div class="col-sm-12" id="showcomment">
+            <textarea rows="3" minlength="30" id="storycomment" class="form-control" placeholder="add new task comment" name="text"></textarea>
+        <button onmousedown="send_storycomment('. $story->id.')" class="btn btn-primary waves-light">Save Comment</button>
+    </div>';
+    echo '<div style="display: none" id="sentcomment">Comment submited</div>';
     echo '</div>';
     }
-    }
+}
+
+public function postComment(){
+        $id = request('story_id');
+        $comment = request('text'); 
+        $fields = [
+            "token"  => "c3c067a65948d99055ab1ac60891c174",
+            "text" => Auth::User()->name .' - '. $comment
+        ];
+        //Post story comments
+        $coment_url = 'https://www.pivotaltracker.com/services/v5/projects/'.$this->projectID.'/stories/'.$id.'/comments?token='.$this->TokenAPI;
+       $data1 = $this->post($coment_url, $fields);
+       
+}
+
 }
