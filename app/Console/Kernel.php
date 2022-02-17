@@ -264,7 +264,7 @@ class Kernel extends ConsoleKernel {
     }
 
     // function notifyUsersDailyReports() {
-    //     $users = DB::select('select * from admin.users');
+    //     $users = DB::select('select * from admin.users where status=1');
     //     foreach ($users as $user) {
     //         $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '. Kindly remember to submit your daily marketing/sales report in your hubspot account. Thank you';
     //         DB::table('public.sms')->insert([

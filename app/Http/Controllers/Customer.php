@@ -908,7 +908,7 @@ class Customer extends Controller {
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
-                $new_req = isset($req->school->name) ? ' new school requirement from ' . $req->school->name : ' new requirement ';
+                $new_req = isset($req->school->name) ? ' New school requirement from ' . $req->school->name.' on ' . request('module') : ' New requirement on ' . request('module');
                 $message = 'Hello ' . $user->name . '<br/>'
                         . 'There is ' . $new_req . '</p>'
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
@@ -920,6 +920,20 @@ class Customer extends Controller {
                         . chr(10) . strip_tags($req->note)
                         . chr(10) . 'By: ' . $req->user->name . '.'
                         . chr(10) . 'Thanks and regards.';
+                        
+                $url = 'https://www.pivotaltracker.com/services/v5/projects/2553591/stories';
+                
+                $fields = [
+                    "current_state" => request('current_state'),
+                    "name"  => 'Hello '. $user->name .' - '. $new_req,
+                    "estimate" => 1,
+                    'story_priority' => request('story_priority'),
+                    "token"  => "c3c067a65948d99055ab1ac60891c174",
+                    "description" => Auth::User()->name .' - '. strip_tags(request('note'))
+                ];
+                $story = new \App\Http\Controllers\General();
+               $data1 = $story->post($url, $fields);
+                
                 $this->send_whatsapp_sms($user->phone, $sms);
                 $this->send_sms($user->phone, $sms, 1);
             }

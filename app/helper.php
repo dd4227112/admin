@@ -108,7 +108,7 @@ function check_implementation($activity, $schema_name) {
         }
     }
     return $status;
-}
+    }
 
 function customdate($datatime) {
     $newTZ = new DateTimeZone('America/New_York');
