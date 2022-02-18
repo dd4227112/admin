@@ -586,11 +586,15 @@
                                  
                                         <ul class="pcoded-submenu">
                                             <li class=" ">
+                                                <a href="<?= url('general/create') ?>">
+                                                    <span class="pcoded-mtext">Task Management</span>
+                                                </a>
+                                            </li>
+                                            <li class=" ">
                                                 <a href="<?= url('software/template') ?>">
                                                     <span class="pcoded-mtext">Manuals</span>
                                                 </a>
                                             </li>
-
                                             <?php if (can_access('manage_database')) { ?>
                                             <li class=" pcoded-hasmenu">
                                                 <a href="javascript:void(0)">
