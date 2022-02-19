@@ -636,8 +636,6 @@ class Sales extends Controller {
     }
  
     
-  
-
      public function onboaredSchools(){
         $this->data['clients'] = \DB::select("select c.id,c.name,c.email,c.phone,c.address,c.code,c.status,count(t.id) as tasks,s.id as sid,s.company_file_id,p.client_id,p.invoice_id,coalesce(sum(p.amount),0) as paid from admin.clients c left join admin.tasks_clients t on c.id = t.client_id left join admin.standing_orders s on s.client_id = c.id left join admin.payments p on c.id = p.client_id where extract(year from c.created_at) >= 2022 group by c.id,s.company_file_id,p.client_id,p.invoice_id,s.id having count(t.task_id) <= 0 order by c.created_at desc");
         return view('sales.onboard', $this->data);
@@ -647,6 +645,19 @@ class Sales extends Controller {
      public function updateOnboardStatus(){
         $client_id = request()->segment(3);
         \App\Models\Client::where('id', (int)$client_id)->update(['status'=> 3]);
+
+        $user = \App\Models\User::find(761);  //Head of product Mr Paul --default 
+        $client = \App\Models\Client::find($client_id);  
+
+        $message = 'Dear '.$user->firstname .' '. $user->lastname 
+                . chr(10) .'School of ' . $client->name . ' has been approved by finance officer for implementation'
+                . chr(10) .'Kindly proceeds with implementation plan'
+                . chr(10) .'Link  https://admin.shulesoft.com/sales/implemetation/'.$client_id
+                . chr(10) .'Thank you.';
+
+         $this->send_whatsapp_sms($user->phone, $message); 
+         $this->send_sms($user->phone,$message,1);
+
          return redirect()->back()->with('success','Status updated');
      }
 

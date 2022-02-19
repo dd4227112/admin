@@ -23,21 +23,19 @@
                                       <div class="row" style="margin-top: 0px ">
                                     <div class="col-lg-12 col-sm-12">
                                         <div style="border-bottom: 1px solid #dadada; margin-bottom:10px;">
-                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="250" height="100"/>
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="180" height="80"/>
                                         </div>
                                         
                                         <table  style="padding: 8px;text-align: left;">
                                             <tbody>
                                                 <tr style="text-align: left;">
                                                     <td>
-                                                
-                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">From</li>
-                                                    <li style="font-size: 1rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
-                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
-                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">Shamo Park House</li>
-                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
-                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
-                                                        
+                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">From</li>
+                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
+                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
+                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">Shamo Park House</li>
+                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
+                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
                                                     </td>
                                                     <td>
                                                         <ul  style="border-left: 1px solid #cccc; padding-left: 3em; margin-left:20px;list-style: none;">
@@ -110,7 +108,7 @@
                                                     ?>
                                                     <tr>
                                                     <td style="border: 1px solid #ddd;padding:8px"><?= $i ?> </td>
-                                                    <td style="border: 1px solid #ddd;padding:8px;font-size:11px;"> <strong><?= $fees->item_name ?? '' ?></strong> <br>
+                                                    <td style="border: 1px solid #ddd;padding:8px;font-size:12px;"> <strong><?= $fees->item_name ?? '' ?></strong> <br>
                                                         <?= warp($fees->note,90) ?? ''?>
 
                                                     </td>

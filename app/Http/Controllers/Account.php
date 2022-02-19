@@ -323,27 +323,26 @@ class Account extends Controller {
                 $this->data['export'] = 'export';
                 $pdf = PDF::loadView('account.invoice.whatsapp_invoice', $this->data);
                
-                Storage::put($invoice->client->name.'_Invoice_'.date("Y").'.pdf', $pdf->output());
+              //  Storage::put($invoice->client->name.'_Invoice_'.date("Y").'.pdf', $pdf->output());
                 $path = url('/') . '/storage/app/'. $invoice->client->name.'_Invoice_'.date("Y"). '.pdf';
                 $filename = $invoice->client->name.'_Invoice_'.date("Y");
                 $caption = $client->name .' Invoice';
                 $chatId = $client->phone;
                 
-                 $file_id = DB::table('company_files')->insertGetId([
-                    'extension' => 'pdf',
-                    'name' => 'School Invoice for '.$client->name,
-                    'user_id' => \Auth::user()->id,
-                    'size' => 0,
-                    'caption' => $caption,
-                    'path' => $path
-                 ]);
+                //  $file_id = DB::table('company_files')->insertGetId([
+                //     'extension' => 'pdf',
+                //     'name' => 'School Invoice for '.$client->name,
+                //     'user_id' => \Auth::user()->id,
+                //     'size' => 0,
+                //     'caption' => $caption,
+                //     'path' => $path
+                //  ]);
 
-                //$this->sendMessageFile($phone->whatsapp_phone,$caption,$filename,$path);
-                $this->send_whatsapp_sms($chatId,$caption,$file_id);
-                $this->send_whatsapp_sms($chatId, $caption);
+               // $this->send_whatsapp_sms($chatId,$caption,$file_id);
+               // $this->send_whatsapp_sms($chatId, $caption);
 
-               //   return view('account.invoice.whatsapp_invoice', $this->data);
-               return redirect()->back()->with('success',' successfull sent invoice to ' . $client->name);
+               return view('account.invoice.whatsapp_invoice', $this->data);
+             //  return redirect()->back()->with('success',' successfull sent invoice to ' . $client->name);
             }
             
            
