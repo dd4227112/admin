@@ -440,12 +440,12 @@ class Controller extends BaseController {
                   dd($clients);
               }
 
-      
 
 
-
-
-
+              public function test(){
+                  $value  = '31`';
+                  echo (int) $value;
+              }
    
 }
 

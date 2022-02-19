@@ -138,7 +138,7 @@ class Kernel extends ConsoleKernel {
         })->monthlyOn(28, '06:36');
 
         $schedule->call(function () {
-            (new Controller())->syncMissingPayments();
+           // (new Controller())->syncMissingPayments();
         })->hourly();
     }
 

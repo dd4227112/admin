@@ -438,7 +438,6 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
 
 
 
-
     function validate_phone($number) {
     $phone_number = preg_replace("/[^0-9]/", '', $number);
     ;
@@ -482,4 +481,6 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
         $valid = array($country_name, $valid_number);
         return $valid;
     }
+
+
 }

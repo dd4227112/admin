@@ -30,12 +30,10 @@ class General extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'Phone Calls','subtitle'=>'customer service','head'=>'operations');
         $this->data['phone_calls'] =  \App\Models\PhoneCall::latest()->get();
 
        $this->data['missed_calls'] =  \collect(DB::SELECT("select count(*),to_char(created_at::date,'Month') as month,extract(year from created_at::date) as year from admin.phone_calls where call_type = 'Missed' group by created_at::date"))->first();
        
-
        $url = 'https://www.pivotaltracker.com/services/v5/projects?token='.$this->TokenAPI.'';
        $this->data['projectdata'] = $this->get($url);
        $str = "https://www.pivotaltracker.com/services/v5/projects/$this->projectID/stories?filter=state:delivered,finished,rejected,started,unstarted,unscheduled&token=$this->TokenAPI";
