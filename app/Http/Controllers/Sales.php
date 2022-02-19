@@ -717,7 +717,6 @@ class Sales extends Controller {
 
                DB::table('tasks_clients')->insert(['task_id' => $task->id,'client_id' => (int) $client_id]);
 
-        
                   \App\Models\TrainItemAllocation::create([
                     'task_id' => $task->id,
                     'client_id' => $client_id,

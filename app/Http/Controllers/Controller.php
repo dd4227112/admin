@@ -438,10 +438,7 @@ class Controller extends BaseController {
 
 
 
-              public function test(){
-                  $value  = '31`';
-                  echo (int) $value;
-              }
+          
    
 }
 

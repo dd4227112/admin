@@ -43,11 +43,12 @@
                         <a href="<?= url('account/invoiceView/'.$invoice->id .'/send') ?>" id="printInvoice" class="btn btn-primary btn-mini btn-round mr-2"><i class="fa fa-print"></i> send </a>
 
 
-                        <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
+                        {{-- <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
                         <a href="mailto:?subject=Invoice kwa ajili ya malipo ya shulesoft &amp;body=Open this Link:<?= $link ?>"
                            title="Share by Email">
                               <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
-                        </a>
+                        </a> --}}
+                        
                     </p>
                 </div>
                 <div class="clearfix"></div>

@@ -337,17 +337,27 @@ class Account extends Controller {
             if($request_control == 'send'){ 
                 $this->data['export'] = 'export';
                 $pdf = PDF::loadView('account.invoice.whatsapp_invoice', $this->data);
-               //  $pdf->stream('Single_Exam_Report.pdf');
                
-                  Storage::put($invoice->client->name.'_Invoice_'.date("Y").'.pdf', $pdf->output());
-                  $path = url('/') . '/storage/app/'. $invoice->client->name.'_Invoice_'.date("Y"). '.pdf';
-                  $filename = $invoice->client->name.'_Invoice_'.date("Y");
-                //  $path = "https://admin.shulesoft.com/storage/uploads/images/68481642407170.pdf";
-                  $chatId = '255655007457@c.us';
-                //  $this->sendMessageFile($chatId,$caption = 'hello',$filename,$path);
+                Storage::put($invoice->client->name.'_Invoice_'.date("Y").'.pdf', $pdf->output());
+                $path = url('/') . '/storage/app/'. $invoice->client->name.'_Invoice_'.date("Y"). '.pdf';
+                $filename = $invoice->client->name.'_Invoice_'.date("Y");
+                $caption = $client->name .' Have this invoice';
+                $chatId = $client->phone;
 
-                return view('account.invoice.whatsapp_invoice', $this->data);
-              //  return redirect()->back()->with('success',' successful!');
+                 $file_id = DB::table('company_files')->insertGetId([
+                    'extension' => 'pdf',
+                    'name' => 'School Invoice for '.$client->name,
+                    'user_id' => \Auth::user()->id,
+                    'size' => 0,
+                    'caption' => $caption,
+                    'path' => $path
+                 ]);
+
+                $this->sendMessageFile($chatId,$caption,$filename,$path);
+                $this->send_whatsapp_sms($chatId, $caption);
+
+               //   return view('account.invoice.whatsapp_invoice', $this->data);
+               return redirect()->back()->with('success',' successfull sent invoice to ' . $client->name);
             }
             
            
