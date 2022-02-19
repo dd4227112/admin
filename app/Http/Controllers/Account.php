@@ -343,6 +343,8 @@ class Account extends Controller {
                 $filename = $invoice->client->name.'_Invoice_'.date("Y");
                 $caption = $client->name .' Have this invoice';
                 $chatId = $client->phone;
+                $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $chatId . "')"))->first();
+
 
                  $file_id = DB::table('company_files')->insertGetId([
                     'extension' => 'pdf',
@@ -353,7 +355,7 @@ class Account extends Controller {
                     'path' => $path
                  ]);
 
-                $this->sendMessageFile($chatId,$caption,$filename,$path);
+                $this->sendMessageFile($phone,$caption,$filename,$path);
                 $this->send_whatsapp_sms($chatId, $caption);
 
                //   return view('account.invoice.whatsapp_invoice', $this->data);
