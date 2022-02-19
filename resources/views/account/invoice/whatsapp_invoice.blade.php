@@ -2,8 +2,6 @@
 <?php $root = url('/') . '/public/';?>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
 
-
-
     <div class="@if(!isset($balance))  page-wrapper @endif">
         <style>
             #valid-msg {
@@ -21,28 +19,28 @@
             <div class="row">
                 <div class="col-md-12 col-xl-12">
                             <div id="print_div">
-<div style="margin: 0 auto; margin-bottom: 0.5cm; padding: 10mm;">
-<div class="row" style="margin-top: 0px ">
+                                <div style="margin: 0 auto; margin-bottom: 0.5cm; padding: 10mm;">
+                                      <div class="row" style="margin-top: 0px ">
                                     <div class="col-lg-12 col-sm-12">
                                         <div style="border-bottom: 1px solid #dadada; margin-bottom:10px;">
                                             <img src="<?= $root ?>/images/Inetslogo.png"  width="250" height="100"/>
                                         </div>
                                         
-                                        <table class="table">
+                                        <table  style="padding: 8px;text-align: left;">
                                             <tbody>
-                                                <tr>
-                                                    <td style="margin-right:10px;">
-                                                        <ul  style="list-style: none;">
-                                                            <li style="font-size: 1rem">From</li>
-                                                            <li><strong>INETS COMPANY LIMITED</strong></li>
-                                                            <li>P.o Box 32282 Dar es Salaam</li>
-                                                            <li>2nd Floor,Block NO. 576</li>
-                                                            <li>Mbezi Beach Bagamoyo Road</li>
-                                                            <li>Mobile no: +255 655/754 406004</li>
-                                                        </ul>
+                                                <tr style="text-align: left;">
+                                                    <td>
+                                                        
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">From</li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">Shamo Park House</li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
+                                                        
                                                     </td>
                                                     <td>
-                                                        <ul  style="border-left: 1px solid #cccc; padding-left: 3em; margin-left:40px;list-style: none;">
+                                                        <ul  style="border-left: 1px solid #cccc; padding-left: 3em; margin-left:20px;list-style: none;">
                                                             <li style="font-size: 1.5rem; font-weght: bold;">To</li>
                                                             <li><strong><?= $invoice->client->name ?></strong></li>
 
@@ -60,52 +58,31 @@
                                     </div>
 
                                     <div class="col-sm-12 col-lg-12">
-                                        <table   style="border-collapse: collapse; width: 100%;  padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;">
+                                        <table   style="border-collapse: collapse; width: 100%;  padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">
                                             <tr>
                                                 
-                                                <td style="padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;">Invoice #</td>
-                                                <td style="padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;"><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
-                                                <td colspan="2" style="padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;"> </td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">Invoice #</td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">
+                                              <?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
+                                                <td colspan="2" style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"> </td>
                                             </tr>
 
                                             <tr>
-                                                <td style="padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;">Start Date #</td>
-                                                <td style="padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;"><?=date('d M Y', strtotime('-30 day', strtotime($invoice->due_date))) ?> </td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">Start Date #</td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><?=date('d M Y', strtotime('-30 day', strtotime($invoice->due_date))) ?> </td>
                                                
-                                                <td style="padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;">Due Date #</td>
-                                                <td style="padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;"><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">Due Date #</td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 8px;
-  text-align: left;
-  background-color: rgb(211, 208, 208);">TOTAL DUE</td>
-                                                <td style="padding: 8px;
-  text-align: left;
-  background-color: rgb(211, 208, 208);">  <?php
+                                                <td style="padding: 8px;text-align: left;background-color: rgb(211, 208, 208);">TOTAL DUE</td>
+                                                <td style="padding: 8px;text-align: left;background-color: rgb(211, 208, 208);">  <?php
                                                     $am = $invoice->invoiceFees()->sum('amount');
                                                     $paid = $invoice->payments()->sum('amount');
                                                     $unpaid = $am - $paid;
                                                     ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b>
                                                 </td>
-                                                <td colspan="2" style="padding: 8px;
-  text-align: left;
-  background-color: rgb(211, 208, 208);"> </td>
+                                                <td colspan="2" style="padding: 8px;text-align: left;background-color: rgb(211, 208, 208);"> </td>
                                             </tr>
                                         </table>
                                     </div>
