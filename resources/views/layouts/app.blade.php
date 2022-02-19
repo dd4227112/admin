@@ -110,30 +110,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         </div>
     </div>     
 
-      {{-- <style>
-          .image {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 240px;
-                height: 240px;
-                margin:-60px 0 0 -60px;
-                -webkit-animation:spin 20s linear infinite;
-                -moz-animation:spin 10s linear infinite;
-                animation:spin 10s linear infinite;
-            }
-            @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-            @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-            @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-      </style>
-          
-       <div class="theme-loader itext-center">
-        <div class="ball-scale justify-content-center">
-            <div class='contain'>
-                <img class="image" width="400" height="400" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
-            </div>
-        </div>
-    </div>     --}}
 
 
     <!-- Pre-loader end -->

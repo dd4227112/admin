@@ -25,7 +25,7 @@
 <div class="row" style="margin-top: 0px ">
                                     <div class="col-lg-12 col-sm-12">
                                         <div style="border-bottom: 1px solid #dadada; margin-bottom:10px;">
-                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="300" height="120"/>
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="250" height="100"/>
                                         </div>
                                         
                                         <table class="table">

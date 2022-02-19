@@ -341,15 +341,15 @@ class Account extends Controller {
                 // $pdf->setPaper('A4', 'landscape');
                //  $pdf->stream('Single_Exam_Report.pdf');
                
-                  Storage::put($invoice->client->name.'-Invoice-'.date("Y").'.pdf', $pdf->output());
-                  $path = url('/') . '/storage/app/'. $invoice->client->name.'-Invoice-'.date("Y"). '.pdf';
-                  $filename = $invoice->client->name.'-Invoice-'.date("Y");
-               //  $path = "https://admin.shulesoft.com/storage/uploads/images/68481642407170.pdf";
-                // $chatId = '255655007457@c.us';
-               //  $this->sendMessageFile($chatId,$caption = 'hello',$filename,$path);
+                  Storage::put($invoice->client->name.'_Invoice_'.date("Y").'.pdf', $pdf->output());
+                  $path = url('/') . '/storage/app/'. $invoice->client->name.'_Invoice_'.date("Y"). '.pdf';
+                  $filename = $invoice->client->name.'_Invoice_'.date("Y");
+                  $path = "https://admin.shulesoft.com/storage/uploads/images/68481642407170.pdf";
+                  $chatId = '255655007457@c.us';
+                  $this->sendMessageFile($chatId,$caption = 'hello',$filename,$path);
 
-                return view('account.invoice.whatsapp_invoice', $this->data);
-            //  return redirect()->back()->with('success',' successful!');
+              //  return view('account.invoice.whatsapp_invoice', $this->data);
+              //  return redirect()->back()->with('success',' successful!');
             }
             
            

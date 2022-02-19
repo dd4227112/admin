@@ -327,7 +327,6 @@ class Controller extends BaseController {
      public function sendMessageFile($chatId,$caption,$filename,$path){
           $data = array('chatId' => $chatId,'body' => $path,'filename' => $filename,'caption' => $caption);
           $data = json_encode($data);
-         
           $this->sendRequest('sendFile',$data);
       }
 
@@ -355,7 +354,7 @@ class Controller extends BaseController {
             $response = file_get_contents($url, false, $options);
             // $response = $this->curlServer($body, $url);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
-            echo $response;
+            //  echo $response;
             // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
         } else {
             echo 'Wrong url supplied in whatsapp api';
