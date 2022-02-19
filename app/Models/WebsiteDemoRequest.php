@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 
 class WebsiteDemoRequest extends Model {
-
+ 
     /**
      * Generated
      */
