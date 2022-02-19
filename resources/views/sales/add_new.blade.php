@@ -2,8 +2,6 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-
-  
   <div class="page-header">
       <div class="page-header-title">
         <h4><?='Onboard new school' ?></h4>
@@ -22,8 +20,7 @@
             </ul>
         </div>
     </div> 
-
-  
+    
           <div class="card">
             <div class="card-block">
                 <div class="text-center m-t-10">

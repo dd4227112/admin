@@ -1,88 +1,46 @@
- <?php if(!isset($export)) { ?>
-@extends('layouts.app')
-@section('content')
-<?php } ?>
 
-<?php $root = url('/') . '/public/'; ?>
-
-<style>
-    @media print {
-        @page {
-            margin: 2cm 2cm 2cm 2cm;
-        }
-        .invoice-header{
-            margin-right:30% !important;
-        }
-        .invoice-title{
-            float: right !important;
-        }
-        #print_div{
-         top: 0;
-         bottom: 0;
-         margin-top: 0px;
-         }
-
-    }
-
-</style>
-
-
+<?php $root = url('/') . '/public/';?>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
 
     <div class="@if(!isset($balance))  page-wrapper @endif">
-     
+        <style>
+            #valid-msg {
+                color: #00C900;
+            }
+            #error-msg {
+                color: red;
+            }
 
-      
-        
-      <?php if(!isset($export)) { ?>
-            <div class="row">
-                <div class="col-lg-6"></div>
-                <div class="col-lg-6">
-                    <p class="text-right" align="right">
-                        <a href="#" id="printInvoice" class="btn btn-primary btn-mini btn-round"><i class="fa fa-print"></i> Print </a>
+        </style>
+        <?php
+        $bn_number = 888999;
+        ?>
 
-                        <a href="<?= url('account/invoiceView/'.$invoice->id .'/send') ?>" id="printInvoice" class="btn btn-primary btn-mini btn-round mr-2"><i class="fa fa-print"></i> send </a>
-
-
-                        <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
-                        <a href="mailto:?subject=Invoice kwa ajili ya malipo ya shulesoft &amp;body=Open this Link:<?= $link ?>"
-                           title="Share by Email">
-                              <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
-                        </a>
-                    </p>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        <?php } ?>
-
-            
             <div class="row">
                 <div class="col-md-12 col-xl-12">
-                    <div class="card">
-                        <div class="card-block tab-icon">
                             <div id="print_div">
-
-                                <!-- title row -->
-                                <div class="row" style="margin-top: 0px">
+                                <div style="margin: 0 auto; margin-bottom: 0.5cm; padding: 10mm;">
+                                      <div class="row" style="margin-top: 0px ">
                                     <div class="col-lg-12 col-sm-12">
-                                        <div>
-                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="300" height="120"/>
+                                        <div style="border-bottom: 1px solid #dadada; margin-bottom:10px;">
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="250" height="100"/>
                                         </div>
                                         
-                                        <table class="table">
+                                        <table  style="padding: 8px;text-align: left;">
                                             <tbody>
-                                                <tr>
+                                                <tr style="text-align: left;">
                                                     <td>
-                                                        <ul>
-                                                            <li style="font-size: 1rem">From  </li>
-                                                            <li><strong>INETS COMPANY LIMITED</strong></li>
-                                                            <li>P.o Box 32282 Dar es Salaam</li>
-                                                            <li>Shamo Park House, 3rd Floor</li>
-                                                            <li>Mbezi Beach Bagamoyo Road</li>
-                                                            <li>Mobile no: +255 655/754 406004</li>
-                                                        </ul>
+                                                        
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">From</li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">Shamo Park House</li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
+                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
+                                                        
                                                     </td>
                                                     <td>
-                                                        <ul style="border-left: 1px solid #cccc; padding-left: 3em;">
+                                                        <ul  style="border-left: 1px solid #cccc; padding-left: 3em; margin-left:20px;list-style: none;">
                                                             <li style="font-size: 1.5rem; font-weght: bold;">To</li>
                                                             <li><strong><?= $invoice->client->name ?></strong></li>
 
@@ -91,7 +49,7 @@
                                                         </ul>
                                                     </td>
                                                     <td>
-                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; "><?= $invoice_name ?? '' ?></h1>
+                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; margin-left:20px;"><?= $invoice_name ?? '' ?></h1>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -100,29 +58,31 @@
                                     </div>
 
                                     <div class="col-sm-12 col-lg-12">
-                                        <table  class="table">
+                                        <table   style="border-collapse: collapse; width: 100%;  padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">
                                             <tr>
-                                                <td>Invoice #</td>
-                                                <td><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
-                                                <td colspan="2"> </td>
+                                                
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">Invoice #</td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">
+                                              <?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
+                                                <td colspan="2" style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"> </td>
                                             </tr>
 
                                             <tr>
-                                                <td>Start Date #</td>
-                                                <td><?=date('d M Y', strtotime('-30 day', strtotime($invoice->due_date))) ?> </td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">Start Date #</td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><?=date('d M Y', strtotime('-30 day', strtotime($invoice->due_date))) ?> </td>
                                                
-                                                <td>Due Date #</td>
-                                                <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;">Due Date #</td>
+                                                <td style="padding: 8px;text-align: left;border-bottom: 1px solid #ddd;"><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                             </tr>
                                             <tr>
-                                                <td>TOTAL DUE</td>
-                                                <td>  <?php
+                                                <td style="padding: 8px;text-align: left;background-color: rgb(211, 208, 208);">TOTAL DUE</td>
+                                                <td style="padding: 8px;text-align: left;background-color: rgb(211, 208, 208);">  <?php
                                                     $am = $invoice->invoiceFees()->sum('amount');
                                                     $paid = $invoice->payments()->sum('amount');
                                                     $unpaid = $am - $paid;
                                                     ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b>
                                                 </td>
-                                                <td colspan="2"> </td>
+                                                <td colspan="2" style="padding: 8px;text-align: left;background-color: rgb(211, 208, 208);"> </td>
                                             </tr>
                                         </table>
                                     </div>
@@ -133,14 +93,14 @@
                                     ?>
                                     <br/>
                                     <div class="col-xs-12 col-sm-12 col-lg-12">
-                                        <table class="table table-bordered table-colapse">
+                                        <table style="border-collapse: collapse; width: 100%;border: 1px solid #ddd; padding: 8px;" >
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Description</th>
-                                                    <th class="text-center">Quantity</th>
-                                                    <th class="text-center">Unit Price</th>
-                                                    <th class="text-center">Total (Tsh)</th>
+                                                    <th style="border: 1px solid #ddd; padding:8px">#</th>
+                                                    <th style="border: 1px solid #ddd;padding:8px">Description</th>
+                                                    <th style="border: 1px solid #ddd;padding:8px">Quantity</th>
+                                                    <th style="border: 1px solid #ddd;padding:8px">Unit Price</th>
+                                                    <th style="border: 1px solid #ddd;padding:8px">Total (Tsh)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -149,13 +109,14 @@
                                                 foreach ($invoice_fee as $fees) {
                                                     ?>
                                                     <tr>
-                                                    <td><?= $i ?> </td>
-                                                    <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
+                                                    <td style="border: 1px solid #ddd;padding:8px"><?= $i ?> </td>
+                                                    <td style="border: 1px solid #ddd;padding:8px"> <strong><?= $fees->item_name ?? '' ?></strong> <br>
                                                         <?= warp($fees->note,70) ?? ''?>
+
                                                     </td>
-                                                    <td class="text-right"><?= money($fees->quantity) ?></td>
-                                                    <td class="text-right"><?= money($fees->unit_price) ?></td>
-                                                    <td class="text-right"><?= money($fees->amount) ?></td>
+                                                    <td class="text-right"style="border: 1px solid #ddd;padding:8px"><?= money($fees->quantity) ?></td>
+                                                    <td class="text-right"style="border: 1px solid #ddd;padding:8px"><?= money($fees->unit_price) ?></td>
+                                                    <td class="text-right"style="border: 1px solid #ddd;padding:8px"><?= money($fees->amount) ?></td>
                                                 </tr>
                                             <?php $i++;} ?>
 
@@ -164,13 +125,11 @@
                                         <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($unpaid) ?>    </p>
                                     </div>
                                     <!-- /.col -->
-                                    <div class="col-sm-12 col-lg-12">
-
-                                    </div>
-
-                                    <table class="table">
+                                    
+                                    <div class="col-sm-12 col-lg-12 col-xs-12"> 
+                                     <table>
                                         <tr>
-                                            <td>
+                                            <td style="margin-right: 20px;">
                                                 <?php 
                                                 $a  = [];
                                                         $setting = DB::table('admin.all_setting')->where('schema_name', $invoice->client->username)->first();
@@ -205,77 +164,68 @@
                                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
                                         <?php if(isset($diff_in_months)) { ?>
                                        
-                                            <p class="text-muted well well-sm no-shadow">
+                                            <p class="text-muted well well-sm no-shadow" style="background-color: #f2f2f2; padding:20px;">
                                                 We're always delighted to serve your school
                                             </p>
                                         <?php } ?>
                                         </td>
                                         <td>
                                             <b>Summary</b>
-                                            <table class="table ">
+                                            <table style="border-collapse: collapse;
+ width: 100%;font-size: 14px;
+ padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">
+ 
                                                 <tbody>
                                                     <tr>
-                                                        <th>Sub - Total amount :</th>
-                                                        <th>Tsh <?= number_format($am) ?></th>
+                                                        <td style="padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Sub - Total amount :</td>
+                                                        <td style="padding:8px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Tsh <?= number_format($am) ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Paid Amount :</th>
-                                                        <th>Tsh <?= $paid > 0 ? number_format($paid) : 0 ?> </th>
+                                                        <td style="padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Paid Amount :</td>
+                                                        <td style="padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Tsh <?= $paid > 0 ? number_format($paid) : 0 ?> </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Grand Total :</th>
+                                                        <td style="padding: 4px;
+ text-align: left;
+ border-bottom: 1px solid #ddd;">Grand Total :</td>
                                                         <th>Tsh <?= number_format($unpaid) ?></th>
-                                                        <th style="margin-left: 1px; z-index:1">
+                                                        
+                                                    </tr>
+<th style="margin-left: 1px; z-index:1">
                                                             <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
                                                        </th>
-                                                    </tr>
-
                                                 </tbody>
                                             </table>
                                         </td>
                                       </tr>
                                     </table>
+                                    </div>
+                                    
                                 </div>
+</div>
+                                <!-- title row -->
+                               
                             </div>
 
                             
                         </div>
                     </div>
-                  </div>  
-               </div>
-          </div>
-                
-</div>
+                  
+
  
 
-<?php if(!isset($export)) { ?>
-
-<script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>
-<script type="text/javascript">
-function printDiv(divID) {
-    //Get the HTML of div
-    var divElements = document.getElementById(divID).innerHTML;
-    //Get the HTML of whole page
-    var oldPage = document.body.innerHTML;
-    //Reset the page's HTML with div's HTML only
-    document.body.innerHTML =
-            "<html><head><title></title></head><body><div style='margin-left: 4em; margin-right:4em; margin-top:10em'>" +
-            divElements + "</div></body>";
-    //Print Page
-    window.print();
-    //Restore orignal HTML
-    document.body.innerHTML = oldPage;
-}
-
-$(document).ready(function () {
-    $("#printInvoice").click(function () {
-        printDiv("print_div");
-    });
-});
-</script>
-
- @endsection 
- <?php } ?>
 
 
+
+ 
 

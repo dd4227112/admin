@@ -41,7 +41,7 @@
                                        <option value="0">Select</option>
                                         <?php
                                        $invoice_types = \App\Models\InvoiceType::whereNotIn('id',[3])->get();
-                                       foreach ($invoice_types as $type) {
+                                    foreach ($invoice_types as $type) {
                                             ?>
                                             <option value="<?= $type->id ?>" selected><?= strtoupper($type->name) ?></option>
                                         <?php  }
@@ -131,7 +131,7 @@
                                             $total_amount = 0;
                                             $total_paid = 0;
                                             $total_unpaid = 0;
-                                            $i = 1; 
+                                            $i = 1;
                                             foreach ($invoices as $invoice) {
                                                 $amount = $invoice->invoiceFees()->sum('amount');
                                                 $paid = $invoice->payments()->sum('amount');
