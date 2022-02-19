@@ -30,13 +30,13 @@
                                             <tbody>
                                                 <tr style="text-align: left;">
                                                     <td>
-                                                        
-                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">From</li>
-                                                            <li style="font-size: 1rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
-                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
-                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">Shamo Park House</li>
-                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
-                                                            <li style="font-size: 1rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
+                                                
+                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">From</li>
+                                                    <li style="font-size: 1rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
+                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
+                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">Shamo Park House</li>
+                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
+                                                    <li style="font-size: 1rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
                                                         
                                                     </td>
                                                     <td>
@@ -110,8 +110,8 @@
                                                     ?>
                                                     <tr>
                                                     <td style="border: 1px solid #ddd;padding:8px"><?= $i ?> </td>
-                                                    <td style="border: 1px solid #ddd;padding:8px"> <strong><?= $fees->item_name ?? '' ?></strong> <br>
-                                                        <?= warp($fees->note,70) ?? ''?>
+                                                    <td style="border: 1px solid #ddd;padding:8px;font-size:11px;"> <strong><?= $fees->item_name ?? '' ?></strong> <br>
+                                                        <?= warp($fees->note,90) ?? ''?>
 
                                                     </td>
                                                     <td class="text-right"style="border: 1px solid #ddd;padding:8px"><?= money($fees->quantity) ?></td>

@@ -326,7 +326,7 @@ class Account extends Controller {
                 Storage::put($invoice->client->name.'_Invoice_'.date("Y").'.pdf', $pdf->output());
                 $path = url('/') . '/storage/app/'. $invoice->client->name.'_Invoice_'.date("Y"). '.pdf';
                 $filename = $invoice->client->name.'_Invoice_'.date("Y");
-                $caption = $client->name .' Have this invoice';
+                $caption = $client->name .' Invoice';
                 $chatId = $client->phone;
                 
                  $file_id = DB::table('company_files')->insertGetId([
