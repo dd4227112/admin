@@ -198,20 +198,6 @@ class Account extends Controller {
     }
 
 
-    //  public function getClients() {
-    //     $invoice_type = request()->segment(3);
-    //     $clients = \App\Models\Client::latest()->get();
-
-    //     if (!empty($clients)) {
-    //         echo '<option value="">select class</option>';
-    //         foreach ($clients as $value) {
-    //             echo '<option value="' . $value->id . '">' . $value->name . '</option>';
-    //         }
-    //     } else {
-    //         echo "0";
-    //     }
-    // }
-
 
     public function getSchools(){
          $invoice_type = request()->segment(3);
@@ -317,8 +303,7 @@ class Account extends Controller {
         $set = $this->data['set'] = 1;
         if ((int) $invoice_id > 0) {
             $this->data['request_control'] = $request_control = request()->segment(4);
-         
-
+        
             $this->data['invoice'] = $invoice = Invoice::find($invoice_id);
             $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
         
@@ -343,9 +328,7 @@ class Account extends Controller {
                 $filename = $invoice->client->name.'_Invoice_'.date("Y");
                 $caption = $client->name .' Have this invoice';
                 $chatId = $client->phone;
-                $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $chatId . "')"))->first();
-
-
+                
                  $file_id = DB::table('company_files')->insertGetId([
                     'extension' => 'pdf',
                     'name' => 'School Invoice for '.$client->name,
@@ -355,7 +338,8 @@ class Account extends Controller {
                     'path' => $path
                  ]);
 
-                $this->sendMessageFile($phone,$caption,$filename,$path);
+                //$this->sendMessageFile($phone->whatsapp_phone,$caption,$filename,$path);
+                $this->send_whatsapp_sms($chatId,$caption,$file_id);
                 $this->send_whatsapp_sms($chatId, $caption);
 
                //   return view('account.invoice.whatsapp_invoice', $this->data);

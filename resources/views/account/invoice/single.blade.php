@@ -48,7 +48,7 @@
                            title="Share by Email">
                               <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
                         </a> --}}
-                        
+
                     </p>
                 </div>
                 <div class="clearfix"></div>
