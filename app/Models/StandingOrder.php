@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class StandingOrder extends Model
 {
-    protected $table = 'standing_orders';
+    protected $table = 'admin.standing_orders';
 
-    protected $fillable = ['client_id', 'type', 'refer_bank_id','branch_id', 'company_file_id','school_contact_id','created_by',
+    protected $fillable = ['id','client_id', 'type', 'refer_bank_id','branch_id', 'company_file_id','school_contact_id','created_by',
     'occurrence','total_amount','occurance_amount','payment_date','status','created_at','updated_at'];
 
     public function client() {

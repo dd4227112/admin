@@ -343,7 +343,6 @@ class General extends Controller {
 	}
 
 	public function delete($url, $data_string){
-
 		$ch = curl_init($url);                                                                      
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE"); 
 		curl_setopt($ch, CURLOPT_FAILONERROR, true);                                                                    

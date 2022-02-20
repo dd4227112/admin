@@ -2,8 +2,6 @@
 
 @section('content')
 
-    
-
             <div class="page-header">
             <div class="page-header-title">
                 <h4>Change password</h4>
@@ -44,19 +42,19 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
                                         <strong>Old Password:</strong>
-                                        <input placeholder="Old Password" class="form-control" name="password" type="password">
+                                        <input placeholder="Old Password" class="form-control" name="password" type="password" required>
                                     </div>
                                 </div>
-                   <div class="col-xs-12 col-sm-12 col-md-12">
+                               <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
                                         <strong>New Password:</strong>
-                                        <input placeholder="New Password" class="form-control" name="new" type="password">
+                                        <input placeholder="New Password" class="form-control" name="new" type="password" required>
                                     </div>
                                 </div>
                                  <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
                                         <strong>Re-type Password:</strong>
-                                         <input placeholder="Retype Password" class="form-control" name="retype" type="password">
+                                         <input placeholder="Retype Password" class="form-control" name="retype" type="password" required>
                                     </div>
                                 </div>
                              

@@ -30,11 +30,9 @@ class Client extends Model {
         return $this->hasMany(\App\Models\Payment::class, 'client_id', 'id');
     }
       public function createdBy() {
-        return $this->hasMany(\App\Models\User::class, 'created_by', 'id');
+        return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');
     }
-    public function user() {
-        
-    }
+   
 
     public function clientschool() { 
         return $this->hasMany(\App\Models\ClientSchool::class,'client_id', 'id');

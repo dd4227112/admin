@@ -27,12 +27,22 @@ if (request()->ajax() == FALSE) {
     </div> 
 
 
+    <div class="card">
+        <div class="card-block">
+               <ul class="list-group">
+                <li class="list-group-item"> <strong>School name </strong>&nbsp; <?= $client->name ?> &nbsp;&nbsp; &nbsp;&nbsp; <strong>Estmated students </strong>&nbsp; <?= $client->estimated_students ?? '0' ?></li>
+                <li class="list-group-item"><strong> Email </strong> &nbsp;<?= $client->email ?>  &nbsp;&nbsp; <strong> Phone </strong> <?= $client->phone ?></li>
+                <li class="list-group-item"><strong> Address </strong> &nbsp;<?= $client->address ?> </li>  
+                <li class="list-group-item"><strong> Onboarded by </strong> &nbsp; <?= $client->createdBy->name(); ?>  &nbsp;&nbsp; <strong> Phone </strong> <?=$client->createdBy->phone; ?></li>
+                {{-- <li class="list-group-item"><strong> Contract  </strong> &nbsp; <?= $client->createdBy->name(); ?>  &nbsp;&nbsp; <strong> Standing Order </strong> <?php echo !is_null($client->standingorder) ? '<a target="_break" href="" class="btn btn-primary btn-mini btn-round">View</a>' : '<label class="badge badge-inverse-warning">Not Defined</label>' ; ?></li> --}}
+              </ul>
+        </div>
+    </div>
+
+
 <div class="card">
- 
     <div class="card-block">
         <form action="<?= url('sales/implemetation/'. $client_id) ?>" method="POST" enctype="multipart/form-data">
-           
-
             <div class="form-group row" style="border: 1px dashed4;">
                 <label class="col-sm-2 col-form-label">Account Name</label>
                 <div class="row">
@@ -51,20 +61,27 @@ if (request()->ajax() == FALSE) {
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Data Format Available</label>
-                <div class="col-sm-10">
+                <div class="col-sm-4">
                     <select name="data_type_id" class="form-control" required>
                         <option value="1">Excel With Parent Phone Numbers</option>
                         <option value="2">Physical Files Format</option>
                         <option value="3">Softcopy but without parents phone numbers</option>
                     </select>
                 </div>
+
+                <label class="col-sm-2 col-form-label">Implementation Start </label>
+                <div class="col-sm-4">
+                    <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
+                </div>
             </div>
-            <div class="form-group row">
+
+
+            {{-- <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Implementation Start Date</label>
                 <div class="col-sm-10">
                     <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
                 </div>
-            </div>
+            </div> --}}
 
               {{-- <br>
              <div class="form-group row">
