@@ -323,26 +323,26 @@ class Account extends Controller {
                 $this->data['export'] = 'export';
                 $pdf = PDF::loadView('account.invoice.whatsapp_invoice', $this->data);
                
-              //  Storage::put($invoice->client->name.'_Invoice_'.date("Y").'.pdf', $pdf->output());
+                Storage::put($invoice->client->name.'_Invoice_'.date("Y").'.pdf', $pdf->output());
                 $path = url('/') . '/storage/app/'. $invoice->client->name.'_Invoice_'.date("Y"). '.pdf';
                 $filename = $invoice->client->name.'_Invoice_'.date("Y");
                 $caption = $client->name .' Invoice';
                 $chatId = $client->phone;
                 
-                //  $file_id = DB::table('company_files')->insertGetId([
-                //     'extension' => 'pdf',
-                //     'name' => 'School Invoice for '.$client->name,
-                //     'user_id' => \Auth::user()->id,
-                //     'size' => 0,
-                //     'caption' => $caption,
-                //     'path' => $path
-                //  ]);
+                 $file_id = DB::table('company_files')->insertGetId([
+                    'extension' => 'pdf',
+                    'name' => 'School Invoice for '.$client->name,
+                    'user_id' => \Auth::user()->id,
+                    'size' => 0,
+                    'caption' => $caption,
+                    'path' => $path
+                 ]);
 
-               // $this->send_whatsapp_sms($chatId,$caption,$file_id);
-               // $this->send_whatsapp_sms($chatId, $caption);
+                $this->send_whatsapp_sms($chatId,$caption,$file_id);
+                $this->send_whatsapp_sms($chatId, $caption);
 
-               return view('account.invoice.whatsapp_invoice', $this->data);
-             //  return redirect()->back()->with('success',' successfull sent invoice to ' . $client->name);
+              // return view('account.invoice.whatsapp_invoice', $this->data);
+               return redirect()->back()->with('success',' successfull sent invoice to ' . $client->name);
             }
             
            
@@ -352,40 +352,7 @@ class Account extends Controller {
     }
 
 
-    //   public function whatsappSend(){
-    //         $invoice_id = request()->segment(3);
-             
-    //          $set = $this->data['set'] = 1;
-    //       if ((int) $invoice_id > 0) {
-           
-    //         $this->data['invoice'] = $invoice = Invoice::find($invoice_id);
-    //         $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
-        
-    //         $this->data['invoice_name'] = $invoice->invoice_type == 1 ? 'Invoice' : 'Proforma Invoice';
-           
-    //         $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));
-    //         $yearEnd = date('Y-m-d', strtotime('Dec 31'));
-  
-    //         $to = \Carbon\Carbon::createFromFormat('Y-m-d',  $yearEnd);
-    //         $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
-    //         $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
-    //         $pdf = PDF::loadView('account.invoice.single', $this->data);
-    //         Storage::put($invoice->client->name.'-Invoice-'.date("Y").'.pdf', $pdf->output());
-    //         $path = url('/') . '/storage/app/'. $invoice->client->name.'-Invoice-'.date("Y"). '.pdf';
-    //         $filename = $invoice->client->name.'-Invoice-'.date("Y");
 
-    //         dd($path);
-
-    //       //  return view('account.invoice.whatsapp_invoice', $this->data);
-
-
-        
-    //         // Storage::disk('local')->put($invoice->client->name.'.pdf', $pdf->output());
-
-    //       //  return $pdf->download($invoice->client->name.'.pdf', array('Content-Type: application/pdf'));
-    //        //    return redirect()->back()->with('success',' successful!');
-    //      }
-    //   }
 
 
        public function receiptView() {
