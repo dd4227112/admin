@@ -491,7 +491,6 @@ class Customer extends Controller {
               //  $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
                 $this->data['manager'] = \App\Models\User::where(['id' =>$user->user_id,'status'=>1]);
             }
-
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
 
@@ -1765,8 +1764,7 @@ class Customer extends Controller {
     }
 
     public function createTodayReport() {
-        // $schemas = DB::select('select distinct "schema_name" from admin.all_payments where extract(year from created_at)>2020');
-        $schemas = DB::select('select distinct "schema_name" from admin.all_payments where extract(year from created_at)>2020 and schema_name <> "jknyerere"');
+        $schemas = DB::select("select distinct schema_name from admin.all_payments where extract(year from created_at)>2020 and schema_name not in ('jknyerere')");
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
             $info = \collect(DB::select('select sum(amount) as payments from ' . $schema . '.payments where created_at::date=current_date'))->first();
@@ -1775,14 +1773,11 @@ class Customer extends Controller {
             $list = \collect(DB::select('select email_list,sname from ' . $schema . '.setting'))->first();
 
             $electronic = !empty($info_electronic) && $info_electronic->payments > 0 ? ' _Malipo kwa control namba, jumla ni_ *Tsh ' . $info_electronic->payments . ' /=* ' : '';
-
             $message_kw = 'Habari ' . chr(10) . chr(10) . 'Repoti ya leo : *' . date('d M Y') . '*  kutoka *' . ucwords(strtolower($list->sname)) . '* ' . chr(10) . chr(10) . ''
                     . 'Jumla ya Makusanyo  ni : *Tsh ' . number_format($info->payments) . ' /=*' . $electronic . chr(10)
                     . 'Jumla ya matumizi ni : *Tsh ' . number_format($expense->expense) . ' /=*' . chr(10) . chr(10) . ''
                     . 'Kwa taarifa kamili, ingia katika mfumo wa ShuleSoft' . chr(10) . chr(10) .
                     '[_Hii repoti  imetengenezwa automatically kutoka https://' . $schema . '.shulesoft.com na hutumwa kila siku. Kubadili, kuongeza au kuondoa hii namba, nenda sehemu ya settings kwenye mfumo wako wa ShuleSoft_]';
-
-
             $phones = explode(',', $list->email_list);
 
             foreach ($phones as $phone) {

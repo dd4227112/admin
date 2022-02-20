@@ -325,8 +325,12 @@ class Controller extends BaseController {
     }
 
      public function sendMessageFile($chatId,$caption,$filename,$path){
-          $data = array('chatId' => $chatId,'body' => $path,'filename' => $filename,'caption' => $caption);
-          $data = json_encode($data);
+          $data = json_encode(array(
+              'chatId' => $chatId,
+              'body'   => $path,
+              'filename' => $filename,
+              'caption' => $caption
+             ));
           $this->sendRequest('sendFile',$data);
       }
 
@@ -354,7 +358,7 @@ class Controller extends BaseController {
             $response = file_get_contents($url, false, $options);
             // $response = $this->curlServer($body, $url);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
-            //  echo $response;
+           // echo $response;
             // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
         } else {
             echo 'Wrong url supplied in whatsapp api';
@@ -368,7 +372,7 @@ class Controller extends BaseController {
             $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $phone . "')"))->first();
             $data = array('message'=> $message,'phone'=> $phone->whatsapp_phone, 'company_file_id'=>$company_file_id);
             \App\Models\WhatsAppMessages::create($data);
-         }
+           }
         return $this;
     }
  
@@ -421,24 +425,13 @@ class Controller extends BaseController {
                        }
                    }
 
+           
+           
 
 
-
-      
-              public function check(){
-                  $client_id = '20203';
-                  $clients = DB::table('admin.schools')->LeftJoin('admin.client_schools','admin.schools.id', '=' ,'admin.client_schools.school_id')
-                  ->LeftJoin('admin.school_contacts','admin.schools.id', '=' ,'admin.school_contacts.school_id')
-                  ->LeftJoin('admin.clients','admin.clients.id', '=' ,'admin.client_schools.client_id')
-                  ->select('admin.schools.id','admin.schools.name','admin.client_schools.client_id','admin.schools.created_at',
-                  'admin.clients.phone','admin.clients.email','admin.clients.estimated_students','admin.clients.price_per_student')
-                  ->where('admin.schools.id',(int) $client_id)->latest()->first();
-                  dd($clients);
-              }
-
-
-
-          
+        public function test(){
+              $this->sendBirthdayWish();
+        }
    
 }
 

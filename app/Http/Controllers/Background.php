@@ -409,9 +409,8 @@ class Background extends Controller {
     }
 
     //Notify all admin about monthly reports
-    public function schoolMonthlyReport() {
-        DB::select('REFRESH MATERIALIZED VIEW  admin.all_users');
-        $users = DB::select(" SELECT * from admin.all_users where lower(usertype) like '%admin%' or lower(usertype) like '%direct%' or lower(usertype) like '%manage%' and schema_name not in ('public','jknyerere') and status=1 ");
+      public function schoolMonthlyReport() {
+        $users = DB::select("SELECT * from admin.all_users where lower(usertype) like '%admin%' or lower(usertype) like '%direct%' or lower(usertype) like '%manage%' and schema_name not in ('public','jknyerere') and status=1 ");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {
             $message = 'Dear Sir/Madam '
@@ -426,16 +425,15 @@ class Background extends Controller {
                 'sent_from' => 'phonesms, whatsapp',
                 'sms_keys_id' => $key_id
             ]);
-            DB::statement('insert into admin.whatsapp_messages (message,phone) select ' . $message . ' , admin.whatsapp_phone(' . $user->phone . ')');
-            // DB::table('admin.whatsapp_messages')->insert([
-            //    'message' => $message,
-            //     'phone' => $user->phone,
-            // ]);
-            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email) && !in_array($user->email, ['inetscompany@gmail.com'])) {
 
+            $company_file_id = null;
+            $phone = \collect(DB::select("select admin.whatsapp_phone('" . $user->phone . "')"))->first();
+            $data = array('message'=> $message,'phone'=> $phone->whatsapp_phone, 'company_file_id'=>$company_file_id);
+            \App\Models\WhatsAppMessages::create($data);
+
+            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email) && !in_array($user->email, ['inetscompany@gmail.com'])) {
                 $subject = 'ShuleSoft ' . number_to_words(date('m')) . ' Months Report';
                 $obj = array('body' => $message, 'subject' => $subject, 'email' => $user->email);
-
                 DB::table($user->schema_name . '.email')->insert($obj);
             }
         }

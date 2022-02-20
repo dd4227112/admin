@@ -24,25 +24,10 @@ class Kernel extends ConsoleKernel {
     protected $commands = [
 // \App\Console\Commands\Inspire::class,
     ];
-// public   $email_log = 'email_'.str_replace('-', '_', date('Y-M-d')) . '.html';
-// public   $sms_log = 'sms_'.str_replace('-', '_', date('Y-M-d')) . '.html';
     public $emails;
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
     protected function schedule(Schedule $schedule) {
-        //$schedule->call(function () {
-        //     $this->save_car_track_access_token('public');
-        // })->everyTwoHours();
-        // $schedule->call(function () {
-        //     $this->car_track_alert_parent('public'); 
-        // })->everyTwoHours();
-        // $schedule->command('inspire')
-        //         ->hourly();
+ 
         $schedule->call(function () {
             //sync invoices 
             $this->syncInvoice();
@@ -62,16 +47,7 @@ class Kernel extends ConsoleKernel {
           //  (new Message())->sendEmail();
         })->everyMinute();
 
-
-        //  $schedule->call(function () {
-        //     (new Customer())->paymendRemainderMessages();
-        // })->everyMinute();
-
-        //  $schedule->call(function () {
-        //(new Message())->karibusmsEmails();
-        // })->everyMinute();
         $schedule->call(function () {
-            // remind parents to login in shulesoft and check their child performance
             $this->sendTodReminder();
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
@@ -89,7 +65,6 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
              $this->standingOrderRemainder();
-           // $this->updateCompleteItems();
         })->dailyAt('03:40'); // Eq to 06:40 AM   
 
         $schedule->call(function () {
@@ -99,7 +74,7 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-           // $this->RefreshMaterializedView();
+            $this->RefreshMaterializedView();
         })->twiceDaily(1, 13); // Run the task daily at 1:00 & 13:00
 
 
@@ -107,36 +82,10 @@ class Kernel extends ConsoleKernel {
           (new Customer())->createTodayReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
 
-//        $schedule->call(function() {
-//            //send login reminder to parents in all schema
-//            $this->sendLoginReminder();
-//        })->fridays()->at('9:00');
-//
-//        $schedule->call(function() {
-//            //send login reminder to parents in all schema
-//            //$this->notifyUsersDailyReports();
-//        })->weekly()->weekdays()->at('13:00');
-//
-        // $schedule->call(function () {
-        //     // send Birdthday 
-        //     // $this->sendReportReminder();
-        //     (new Message())->paymentReminder();
-        // })->dailyAt('05:10');
-        // $schedule->call(function () {
-        //     $this->checkSchedule();
-        // })->everyMinute();
-        // $schedule->call(function () {
-        //     //  (new HomeController())->createTodayReport();
-        //     (new Background())->officeDailyReport();
-        // })->dailyAt('14:50'); // Eq to 17:50 h 
+
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
-
-         $schedule->call(function () {
-            $this->schoolMonthlyReport();
-        })->monthlyOn(28, '06:36');
-
         
     }
 
@@ -843,16 +792,17 @@ class Kernel extends ConsoleKernel {
 
     public function sendTaskReminder() {
         $users = DB::select('select a.activity,a.time,b.email,b.phone, b.name, c.name as client_name from admin.tasks a join admin.users b on a.user_id=b.id join admin.clients c on c.id=a.client_id where date::date=CURRENT_DATE and b.status=1');
-        foreach ($users as $user) {
-            $message = 'Hello  ' . $user->name . ' ,'
-                    . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kindly remember to write all activities in respective profile.  Thanks';
-
-            DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Todays Tasks','" . $message . "')");
-
-            $key = DB::table('public.sms_keys')->first();
-            DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $user->phone . "','" . $message . "',0," . $key->id . " )");
+          if(!empty($users)){
+            foreach ($users as $user) {
+                $message = 'Hello  ' . $user->name . ' ,'
+                        . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kindly remember to write all activities in respective profile.  Thanks';
+                DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Todays Tasks','" . $message . "')");
+                $key = DB::table('public.sms_keys')->first();
+                DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $user->phone . "','" . $message . "',0," . $key->id . " )");
+            }
         }
     }
+
 
     public function getCleanSms($replacements, $message) {
         $patterns = array(
@@ -906,7 +856,6 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
         $notices = DB::select("select * from admin.all_notice  WHERE schema_name !='stpeterclaver' AND date-CURRENT_DATE=3 and status=0 ");
 ///these are notices
         foreach ($notices as $notice) {
-
 //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
             $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
 
@@ -940,9 +889,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
 
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
                         . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe '|| a.dob ||'. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe '|| a.dob ||', tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from " . $schema->table_schema . ".sms_keys limit 1)  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
-                    DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1  
-
-                    AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
+                    DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1 AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
                 DB::statement($sql);
 
                 //get students with birthday, with their section teacher names
@@ -1097,26 +1044,23 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     public function standingOrderRemainder() {
         $controller = new \App\Http\Controllers\Controller();
         $users = \App\Models\User::where('designation_id', 2)->where('status', 1)->get();
-        foreach ($users as $user) {
-            $standingorders = \App\Models\StandingOrder::whereDate('payment_date', \Carbon\Carbon::today())->get();
-          if(!empty($standingorders)) {
-              foreach ($standingorders as $standing) {
-               $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
-                          . chr(10) .'Remember to check matured standing order from ' . $standing->client->name 
-                          . chr(10) . 'Thanks.';
-               $controller->send_sms($user->phone,$message,1);
-               $controller->send_whatsapp_sms($user->phone, $message);
-             }
-          }
+        if(!empty($users)) {
+            foreach ($users as $user) {
+                $standingorders = \App\Models\StandingOrder::whereDate('payment_date', \Carbon\Carbon::today())->get();
+                if(!empty($standingorders)) {
+                    foreach ($standingorders as $standing) {
+                    $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
+                                . chr(10) .'Remember to check matured standing order from ' . $standing->client->name 
+                                . chr(10) . 'Thanks.';
+                    $controller->send_sms($user->phone,$message,1);
+                    $controller->send_whatsapp_sms($user->phone, $message);
+                    }
+                }
+            }
         }
     }
 
-    // public function endDeadlock() {
-    //     DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
-    //     FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
-    //     AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
-    //     return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
-    // }
+    
 
 
     // F(x) to send text remainder to keep phone active to school admins
@@ -1139,120 +1083,15 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    public function updateCompleteItems() {
-        $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
-        foreach ($materialized_views as $view) {
-            DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
-        }
-        $checks = DB::select('select * from admin.train_items where status=1');
-        foreach ($checks as $check) {
-            if (preg_match('/exam/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $classes = DB::table($schema->schema_name . '.classes')->count();
-                    $exams = DB::table($schema->schema_name . '.exam_report')->whereYear('created_at', date('Y'))->count();
-                    $client = $this->client_school($schema->schema_name);
-                    if ($exams >= $classes) {
-                        $this->updateStatus($check->id, $client->id);
-                    }
-                }
-            } else if (preg_match('/invoice/i', strtolower($check->content))) {
-                //receive at least 10 payments
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $payments = DB::table($schema->schema_name . '.payments')->whereYear('created_at', date('Y'))->count();
-                    if ($payments >= 10) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            } else if (preg_match('/transactions/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $expense = DB::table($schema->schema_name . '.expense')->whereYear('created_at', date('Y'))->count();
-                    if ($expense >= 10) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            } else if (preg_match('/payroll/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $salary = DB::table($schema->schema_name . '.salaries')->whereYear('created_at', date('Y'))->count();
-                    if ($salary > 10) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            } else if (preg_match('/inventory/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $inventory = DB::table($schema->schema_name . '.product_alert_quantity')->whereYear('created_at', date('Y'))->count();
-                    if ($inventory >= 10) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            } else if (preg_match('/onboarding/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $students = DB::table($schema->schema_name . '.student')->count();
-                    if ($students >= (int) $this->client_school($schema->schema_name)->estimated_students) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            } else if (preg_match('/operations/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    //check transport and hostel
-                    $tmembers = DB::table($schema->schema_name . '.tmembers')->whereYear('created_at', date('Y'))->count();
-                    $hmembers = DB::table($schema->schema_name . '.hmembers')->whereYear('created_at', date('Y'))->count();
-                    if ((int) $tmembers >= 20 || (int) $hmembers >= 20) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            } else if (preg_match('/sms/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '6664567894')->where('schema_name', $schema->schema_name)->count();
-                    if ((int) $sms_config > 0) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            } else if (preg_match('/nmb/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $nmb_payments = DB::table($schema->schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
-                    $mappend = DB::table($schema->schema_name . '.bank_accounts_integrations')->join($schema->schema_name . '.bank_accounts', $schema->schema_name . '.bank_accounts.id', '=', $schema->schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema->schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count();
-                    if ((int) $mappend > 0 && (int) $nmb_payments >= 10) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            } else if (preg_match('/crdb/i', strtolower($check->content))) {
-                $schemas = DB::select('select * from admin.all_setting');
-                foreach ($schemas as $schema) {
-                    $crdb_payments = DB::table($schema->schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
-                    $mappend = DB::table($schema->schema_name . '.bank_accounts_integrations')->join($schema->schema_name . '.bank_accounts', $schema->schema_name . '.bank_accounts.id', '=', $schema->schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema->schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count();
-                    if ((int) $mappend > 0 && (int) $crdb_payments >= 10) {
-                        $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
-                    }
-                }
-            }
-        }
-    }
+ 
 
-    private function client_school($schema_name) {
-        return strlen($schema_name) > 2 ? DB::table('admin.clients')->where('username', $schema_name)->first() : '';
-    }
-
-    private function updateStatus($item_id, $client_id) {
-        $training = \App\Models\TrainItemAllocation::where('train_item_id', $item_id)->where('client_id', $client_id)->first();
-        if (!empty($training)) {
-            \App\Models\TrainItemAllocation::where('train_item_id', $item_id)->where('client_id', $client_id)->update(['status' => '1']);
-        }
-    }
+ 
 
     // function to remaind HRO on employees contracts end 
     public function HRContractRemainders() {
         $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
         $hr_officer = \App\Models\User::where(['role_id' => 16,'status' => 1])->first();
-        if(!empty($hr_officer)){
+        if(!empty($users)){
             foreach ($users as $user) {
                 if ($user->contract_end_date < date('Y-m-d')) {
                     $message = 'Hello ' . $hr_officer->firstname . ' ' . $hr_officer->lastname . '.'
@@ -1406,7 +1245,6 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
         public function findMissingPayments(){
-            
             $invoices = DB::select('SELECT "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
