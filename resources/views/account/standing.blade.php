@@ -45,8 +45,7 @@
                       </thead>
                       <tbody>
                       <?php 
-                      if(sizeof($standingorders) > 0){
-                        $i = 1;
+                      if(sizeof($standingorders) > 0){$i = 1;
                         foreach($standingorders as $value){ ?>
                        <tr>
                         <td><?=$i ?></td>
@@ -61,7 +60,7 @@
                         </td>
 
                         <td>
-                           <?php $approve_url="account/approvestandingorder/$value->id";$reject_url="account/rejectstandingorder/$value->id";
+                           <?php $approve_url="account/approvestandingorder/$value->id";  $reject_url="account/rejectstandingorder/$value->id";
                            if(isset($value->payment_date)) {  ?>  
                             <?php if(isset($value->client)) {  ?>
                                 <?php if((int) $value->is_approved == 1) { ?>

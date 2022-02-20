@@ -57,7 +57,9 @@
                               <td><?= $value->code ?></td>
                               
                               <td class="text-center">
-                                 <?php echo  $value->sid == null ? '<label class="badge badge-inverse-warning">Not Defined</label>' : '<a  target="_break" href="customer/viewContract/' . $value->sid .'/standing" class="btn btn-primary btn-mini btn-round">View</a>'  ?>
+                                 <?php $url = url("customer/viewContract/$value->sid/standing"); 
+                                 echo  $value->sid == null ? '<label class="badge badge-inverse-warning">Not Defined</label>' : '<a target="_break" href="'.$url.'" class="btn btn-primary btn-mini btn-round">View</a>'  
+                                 ?>
                               </td>
                               <td>
                                 <?php echo  $value->client_id == null ? '<label class="badge badge-inverse-danger">Not paid</label>' : '<label class="badge badge-inverse-info">' .money($value->paid). '<label/>'  ?>
