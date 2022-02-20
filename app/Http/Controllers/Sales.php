@@ -654,7 +654,6 @@ class Sales extends Controller {
                 . chr(10) .'Kindly proceeds with implementation plan'
                 . chr(10) .'Link  https://admin.shulesoft.com/sales/implemetation/'.$client_id
                 . chr(10) .'Thank you.';
-
          $this->send_whatsapp_sms($user->phone, $message); 
          $this->send_sms($user->phone,$message,1);
 

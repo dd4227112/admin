@@ -66,7 +66,7 @@
                                 <div class="row" style="margin-top: 0px">
                                     <div class="col-lg-12 col-sm-12">
                                         <div>
-                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="300" height="120"/>
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="180" height="80"/>
                                         </div>
                                         
                                         <table class="table">

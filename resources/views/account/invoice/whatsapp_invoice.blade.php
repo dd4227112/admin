@@ -30,20 +30,19 @@
                                             <tbody>
                                                 <tr style="text-align: left;">
                                                     <td>
-                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">From</li>
-                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
-                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
-                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">Shamo Park House</li>
-                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
-                                                        <li style="font-size: 0.8rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
+                                                        <li style="font-size: 1.5rem;list-style: none; text-align:left;">From</li>
+                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
+                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
+                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;">Shamo Park House</li>
+                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
+                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
                                                     </td>
                                                     <td>
                                                         <ul  style="border-left: 1px solid #cccc; padding-left: 3em; margin-left:20px;list-style: none;">
                                                             <li style="font-size: 1.5rem; font-weght: bold;">To</li>
-                                                            <li><strong><?= $invoice->client->name ?></strong></li>
-
-                                                            <li>Phone: <?= $invoice->client->phone ?></li>
-                                                            <li>Email: <?= $invoice->client->email ?></li>
+                                                            <li style="font-size: 0.9rem;"><strong><?= $invoice->client->name ?></strong></li>
+                                                            <li style="font-size: 0.9rem;">Phone: <?= $invoice->client->phone ?></li>
+                                                            <li style="font-size: 0.9rem;">Email: <?= $invoice->client->email ?></li>
                                                         </ul>
                                                     </td>
                                                     <td>
@@ -136,19 +135,19 @@
                                                         }
                                                  if(!empty($a)){ ?>
                                                    <p>
-                                                    <b>Account Details :</b><br/>
-                                                    <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
-                                                    <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                     <b>Account Number:</b> 22510028669
+                                                    <b  style="font-size: 0.8rem;">Account Details :</b><br/>
+                                                    <b  style="font-size: 0.8rem;">Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                    <b  style="font-size: 0.8rem;">Bank Name:</b> NMB BANK PLC <br/> 
+                                                     <b  style="font-size: 0.8rem;">Account Number:</b> 22510028669
                                                     <br/>
                                                     <small>Please notify us after a deposit</small>
                                                   </p>
                                                   <?php }else { ?>
                                                     <p>
-                                                        <b>Account Details :</b><br/>
-                                                        <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
-                                                        <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                         <b>Account Number:</b> 22510028669
+                                                        <b  style="font-size: 0.8rem;">Account Details :</b><br/>
+                                                        <b  style="font-size: 0.8rem;">Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                        <b  style="font-size: 0.8rem;">Bank Name:</b> NMB BANK PLC <br/> 
+                                                        <b  style="font-size: 0.8rem;">Account Number:</b> 22510028669
                                                         <br/>
                                                         <small>Please notify us after a deposit</small>
                                                     </p>
