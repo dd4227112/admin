@@ -170,7 +170,7 @@ class Software extends Controller {
             $stable .= '<hr/>';
         }
         return $stable;
-    }
+    } 
 
     /**
      * Show the form for creating a new resource.
