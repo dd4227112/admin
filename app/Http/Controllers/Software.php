@@ -697,6 +697,9 @@ class Software extends Controller {
     }
 
     public function whatsapp() {
+        $data = ['id'=>1, 'name'=>"albo"];
+      //  dd(json_encode($data));
+        $dr = '{"status":0,"reference":"SAS8003699","description":"This invoice does not exists in the ShuleSoft"}';
         $this->data['faqs'] = [];
         return view('software.whatsapp', $this->data);
     }

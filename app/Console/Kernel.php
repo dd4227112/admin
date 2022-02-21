@@ -1442,7 +1442,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                                     if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
                                         $check = DB::table($invoice->schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
                                         if (empty($check)) {
-                                            $this->syncMissingPayments($tran, $invoice->schema_name, $tran->customer_name, $tran->amount, $tran->timestamp);
+                                            $this->syncMissingPayments(json_encode($tran), $invoice->schema_name, $tran->customer_name, $tran->amount, $tran->timestamp);
                                         }
                                     }
                                 }
@@ -1455,7 +1455,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
  
  
-            public function syncMissingPayments($data, $schema, $student = null, $amount = null, $date = '') {
+public function syncMissingPayments($data, $schema, $student = null, $amount = null, $date = '') {
     $controller = new \App\Http\Controllers\Controller();
     $background = new \App\Http\Controllers\Background();
     $url = 'http://75.119.140.177:8081/api/init';
