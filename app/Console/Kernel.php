@@ -1459,7 +1459,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         $controller = new \App\Http\Controllers\Controller();
         $background = new \App\Http\Controllers\Background();
         $url = 'http://75.119.140.177:8081/api/init';
-        $fields = json_decode(urldecode($data));
+        $fields = json_decode($data);
         $curl = $background->curlServer($fields, $url, 'row');
         $status = json_decode($curl);
         if(isset($status->status) && $status->status == 0){
