@@ -513,7 +513,7 @@ class Sales extends Controller {
            
             if(!empty($check_client)) {
                 $client_id = $check_client->id;
-               \DB::table('admin.clients')->where('id',$client_id)->update(Arr::except($client_data, ['username'])); 
+                 \DB::table('admin.clients')->where('id',$client_id)->update(Arr::except($client_data, ['username'])); 
             } else {
                 $client_id = \DB::table('admin.clients')->insertGetId($client_data); 
                 // trial period
@@ -637,7 +637,7 @@ class Sales extends Controller {
  
     
      public function onboaredSchools(){
-        $this->data['clients'] = \DB::select("select c.id,c.name,c.email,c.phone,c.address,c.code,c.status,count(t.id) as tasks,s.id as sid,s.company_file_id,p.client_id,p.invoice_id,coalesce(sum(p.amount),0) as paid from admin.clients c left join admin.tasks_clients t on c.id = t.client_id left join admin.standing_orders s on s.client_id = c.id left join admin.payments p on c.id = p.client_id where extract(year from c.created_at) >= 2022 group by c.id,s.company_file_id,p.client_id,p.invoice_id,s.id having count(t.task_id) <= 0 order by c.created_at desc");
+        $this->data['clients'] = \DB::select("select c.id,c.name,c.email,c.phone,c.address,c.code,c.status,count(t.id) as tasks,s.id as sid,s.company_file_id,p.client_id,p.invoice_id,coalesce(sum(p.amount),0) as paid from admin.clients c left join admin.tasks_clients t on c.id = t.client_id left join admin.standing_orders s on s.client_id = c.id left join admin.payments p on c.id = p.client_id where extract(year from c.created_at) >= 2022 and c.status <> 0  group by c.id,s.company_file_id,p.client_id,p.invoice_id,s.id having count(t.task_id) <= 0 order by c.created_at desc");
         return view('sales.onboard', $this->data);
      }
 
@@ -856,17 +856,14 @@ class Sales extends Controller {
     /**
      * Redirect to this page to finalize onboarding
      */
-    public function customerSuccess() {
-        $id = request()->segment(3);
-        //    if ((int) $id == 2) {
-        $this->data['trial_code'] = request()->segment(4);
+    public function customerSuccess($id,$trial_code) {
+        $this->data['trial_code'] = $trial_code;
         $this->data['client'] = \App\Models\Client::where('id', (int) $id)->first();
         if (!empty($this->data['client'])) {
             return view('sales.customer_success', $this->data);
         } else {
             die('Invalid URL');
         }
-        
     }
 
 
@@ -876,7 +873,8 @@ class Sales extends Controller {
           $this->data['trial_code'] = $client_id . time();
           if($_POST){
                $this->scheduleActivities($client_id); 
-               return view('sales.customer_success', $this->data);
+               $this->customerSuccess($client_id,$this->data['trial_code']); 
+            //    return view('sales.customer_success', $this->data);
            }
          return view('sales.onboarding_school', $this->data);
     }
