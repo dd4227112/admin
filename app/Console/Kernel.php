@@ -85,7 +85,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () { 
             $this->findMissingPayments();
-            })->everyFiveMinutes();
+            })->everyTwoHours();
 
         $schedule->call(function () {
              $this->standingOrderRemainder();
@@ -137,9 +137,7 @@ class Kernel extends ConsoleKernel {
             $this->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
 
-        $schedule->call(function () {
-            (new Controller())->syncMissingPayments();
-        })->hourly();
+        
     }
 
    public function whatsappMessage() {        
