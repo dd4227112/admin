@@ -1460,15 +1460,15 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
     $fields = json_decode($data);
     $curl = $background->curlServer($fields, $url, 'row'); 
     $status = json_decode($curl); 
-    if(isset($status->status) && $status->status == 0){ 
-        $reference = isset($status->reference) ? $status->reference : ''; 
-        $message = isset($status->description) ? $status->description : ''; 
-        $sms = 'Hello Mr. Endobile this Invoice '. $reference . ' of '.$student.' from *'. strtoupper($schema) .'* with paid amount of '. $amount .' failed to be paid. With Error message: '.chr(10). chr(10).$message.' happened on '.$date.' Take a look';
-        $whatsapp_numbers = ['255744158016', '255754015554']; 
-        foreach ($whatsapp_numbers as $number) { 
-            $controller->sendMessage($number . '@c.us', $sms); 
-        } 
-    } 
+    // if(isset($status->status) && $status->status == 0){ 
+    //     $reference = isset($status->reference) ? $status->reference : ''; 
+    //     $message = isset($status->description) ? $status->description : ''; 
+    //     $sms = 'Hello Mr. Endobile this Invoice '. $reference . ' of '.$student.' from *'. strtoupper($schema) .'* with paid amount of '. $amount .' failed to be paid. With Error message: '.chr(10). chr(10).$message.' happened on '.$date.' Take a look';
+    //     $whatsapp_numbers = ['255744158016', '255754015554']; 
+    //     foreach ($whatsapp_numbers as $number) { 
+    //         $controller->sendMessage($number . '@c.us', $sms); 
+    //     } 
+    // } 
     return $curl; 
     }
     
