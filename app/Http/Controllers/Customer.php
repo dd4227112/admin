@@ -553,10 +553,19 @@ class Customer extends Controller {
 
     public function editdetails() {
         $id = request()->segment(3);
-        $data = request()->except('_token');
+      //  $data = request()->except('_token');
+         $data = [
+             'name' => request('name'),
+             'estimated_students' => request('estimated_students'),
+             'address' => request('address'),
+             'email' => request('email'),
+             'phone' => request('owner_phone'),
+             'owner_phone' => request('owner_phone'),
+             'owner_email' => request('owner_email')
+         ];
         $number_of_students = request('estimated_students');
-        $update = \App\Models\Client::where('id', $id)->first();
-        \App\Models\Client::where('id', $id)->update($data);
+        $update = \App\Models\Client::where('id',(int) $id)->first();
+        \App\Models\Client::where('id',(int) $id)->update($data);
         $data = \App\Models\ClientSchool::where('client_id', $id)->first();
         \App\Models\School::where('id', \App\Models\ClientSchool::where('client_id', $id)->first()->school_id)->update(['students' => $number_of_students]);
         \DB::table($update->username . '.setting')->update(['estimated_students' => $number_of_students]);
