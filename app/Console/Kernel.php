@@ -1416,7 +1416,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         $background = new \App\Http\Controllers\Background();
         //Find All Payment on This Dates
         $dates = new \DatePeriod(
-                new \DateTime(date('Y-m-d', strtotime('-7 days'))), new \DateInterval('P1D'), new \DateTime(date('Y-m-d', strtotime('2 days')))
+                new \DateTime(date('Y-m-d', strtotime('-30 days'))), new \DateInterval('P1D'), new \DateTime(date('Y-m-d', strtotime('2 days')))
         );
         //To iterate
         foreach ($dates as $key => $value) {
