@@ -85,7 +85,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () { 
             $this->findMissingPayments();
-            })->everyFiveHours();
+            })->everyTwoHours();
 
         $schedule->call(function () {
              $this->standingOrderRemainder();
