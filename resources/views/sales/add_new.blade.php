@@ -61,7 +61,7 @@
                      <div class="form-group row">
                        <div class="col-sm-6">
                            Agreement Type
-                            <select name="contract_type_id" class="form-control">
+                            <select name="contract_type_id" class="form-control" >
                                <option value="">select</option>
                              <?php $ctypes = DB::table('admin.contracts_types')->whereNotIn('id',[4,5,6,7,8])->get();
                                  foreach ($ctypes as $ctype) {?>

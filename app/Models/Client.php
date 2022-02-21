@@ -33,13 +33,16 @@ class Client extends Model {
         return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');
     }
    
-
     public function clientschool() { 
-        return $this->hasMany(\App\Models\ClientSchool::class,'client_id', 'id');
+        return $this->hasMany(\App\Models\ClientSchool::class,'school_id', 'id');
     }
 
     public function standingorder() { 
         return $this->hasMany(\App\Models\StandingOrder::class,'client_id', 'id');
+    }
+
+     public function clientContract() { 
+        return $this->hasMany(\App\Models\ClientContract::class,'contract_id', 'id');
     }
 
 }

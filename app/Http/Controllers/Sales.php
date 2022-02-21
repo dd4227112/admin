@@ -860,11 +860,10 @@ class Sales extends Controller {
         $id = request()->segment(3);
         //    if ((int) $id == 2) {
         $this->data['trial_code'] = request()->segment(4);
-        $this->data['client'] = DB::table('admin.clients')->where('id', $this->data['trial_code'])->first();
+        $this->data['client'] = \App\Models\Client::where('id', (int) $id)->first();
         if (!empty($this->data['client'])) {
             return view('sales.customer_success', $this->data);
         } else {
-
             die('Invalid URL');
         }
         
