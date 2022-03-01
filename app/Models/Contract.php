@@ -25,10 +25,10 @@ class Contract extends Model {
     }
 
     public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
    public function contractType() {
-        return $this->belongsTo(\App\Models\ContractType::class, 'contract_type_id', 'id');
+        return $this->belongsTo(\App\Models\ContractType::class, 'contract_type_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
 }
