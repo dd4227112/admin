@@ -25,7 +25,7 @@ class Requirement extends Model {
 
     
     public function school() {
-        return $this->belongsTo(\App\Models\School::class, 'school_id', 'id')->withDefault(['name' => 'Not allocated']);
+        return $this->belongsTo(\App\Models\School::class, 'school_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
     public function modules() {
