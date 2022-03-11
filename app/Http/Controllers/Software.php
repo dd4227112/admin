@@ -58,7 +58,6 @@ class Software extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function comparetable($schema = 'betatwo') {
-        $this->data['breadcrumb'] = array('title' => 'Compare tables','subtitle'=>'software','head'=>'database');
         $this->data['data'] = $this->compareSchemaTables($schema);
         $view = 'software.database.' . strtolower('compareTable');
         if (view()->exists($view)) {
@@ -67,7 +66,6 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['breadcrumb'] = array('title' => 'Compare columns','subtitle'=>'software','head'=>'database');
         $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')')
            AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
@@ -101,7 +99,6 @@ class Software extends Controller {
     }
 
     public function loadSchema() {
-
         return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant', 'admin','api','app','skysat','dodoso','forum','academy','carryshop')");
     }
 

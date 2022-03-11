@@ -42,7 +42,6 @@ class Sales extends Controller {
      */
 
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'Sales material','subtitle'=>'sales','head'=>'materials');
         return view('sales.index', $this->data);
     }
 
@@ -614,8 +613,6 @@ class Sales extends Controller {
     
                 $message = 'Hello '.$user->firstname .' '. $user->lastname 
                 . chr(10) .'School :' . $school->name . ' has been onboarded succesfully'
-                . chr(10) .'And invoice for this school has been created'
-                . chr(10) .'Kindly verify INVOICE  created and STANDING ORDER documents before proceeding'
                 . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($user->phone, $message); 
 
@@ -625,6 +622,8 @@ class Sales extends Controller {
                 . chr(10) .'You are remainded to verify the invoice document'
                 . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($finance->phone, $sms); 
+                $this->send_sms($finance->phone, $sms, 1);
+
 
                 // $this->scheduleActivities($client_id);  
                 return redirect('sales/onboaredSchools');

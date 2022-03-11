@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+ 
 
 
-//
 //\URL::forceScheme('https');
+
 /*
   |--------------------------------------------------------------------------
   | Web Routes
@@ -93,6 +94,7 @@ Route::get('/customer/getschools/null', function() {
 if (createRoute() != NULL) {
     $route = explode('@', createRoute());
     $file = app_path() . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $route[0] . '.php';
+    
     if (file_exists($file)) {
         Route::any('/{controller?}/{method?}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}/{param7?}', createRoute());
     } else if ($route[0] == 'LoginController') {
@@ -108,10 +110,8 @@ Route::post('/addregister', 'Workshop@addregister');
 Route::get('/register', 'Workshop@register')->name('register');
 Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');
 
-
 // 
 Route::get('/application', 'Recruitments@index');
 Route::post('/addrecruiment', 'Recruitments@register'); 
-
 Route::get('/nda_form/{id}', 'Recruitments@nda');
 Route::post('/sendndaform','Recruitments@uploadnda');

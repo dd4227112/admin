@@ -20,7 +20,6 @@ class Recruitments extends Controller {
           }else{
             $phonenumber = trim(request('phone')); 
           }
-        //  dd($phonenumber);
         $file = request()->file('documents');
         $file_id = $this->saveFile($file, 'company/contracts', TRUE);
         // $file_id = 1;

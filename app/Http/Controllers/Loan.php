@@ -15,7 +15,6 @@ class Loan extends Controller {
 
     public function index() {
         if (can_access('manage_payroll')) {
-           $this->data['breadcrumb'] = array('title' => 'Loan types','subtitle'=>'loans','head'=>'payroll');
 
           $this->data['type'] = $id = (request()->segment(3));
             if ((int) $id > 0) {
