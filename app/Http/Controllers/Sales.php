@@ -642,6 +642,7 @@ class Sales extends Controller {
      }
 
 
+     
      public function updateOnboardStatus(){
         $client_id = request()->segment(3);
         \App\Models\Client::where('id', (int)$client_id)->update(['status'=> 3]);
@@ -659,6 +660,8 @@ class Sales extends Controller {
 
          return redirect()->back()->with('success','Status updated');
      }
+
+
 
 
 
