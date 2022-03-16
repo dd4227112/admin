@@ -587,7 +587,9 @@ class Sales extends Controller {
                 $client = \App\Models\Client::findOrFail($client_id);
                 $year = \App\Models\AccountYear::where('name', date('Y'))->first();
                 $reference = time(); // to be changed for selcom ID
-              //  $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
+
+
+                $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
                 //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
 
                 // $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
@@ -597,8 +599,7 @@ class Sales extends Controller {
                  $unit_price = remove_comma(request('price'));
                  $estimated_students = remove_comma(request('students'));
                  $amount = $unit_price * $estimated_students;
-
-               // \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $estimated_students, 'unit_price' => $unit_price]);
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $estimated_students, 'unit_price' => $unit_price]);
 
            
                 $trial_code = $client_id . time();
