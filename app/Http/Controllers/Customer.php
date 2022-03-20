@@ -10,6 +10,8 @@ use \App\Models\User;
 use DB;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class Customer extends Controller {
 
@@ -43,8 +45,6 @@ class Customer extends Controller {
     }
 
     function faq() {
-        $this->data['breadcrumb'] = array('title' => 'FAQ','subtitle'=>'frequent asked questions','head'=>'operations');
-
         if ((int) request('id') > 0 && request('action') == 'delete') {
             DB::table('faq')->where('id', request('id'))->delete();
             return redirect()->back()->with('success', 'successfully');
@@ -357,13 +357,13 @@ class Customer extends Controller {
 
     public function guide() {
         if (request()->segment(3) == 'delete') {
-            \App\Model\Guide::findOrFail(request()->segment(4))->delete();
+            \App\Models\Guide::findOrFail(request()->segment(4))->delete();
             return redirect()->back();
         } else if (request('pg') == 'add') {
             $this->data['guides'] = [];
             $page = 'add_guide';
         } else if (request()->segment(3) == 'edit') {
-            $this->data['guide'] = $guide =  \App\Model\Guide::find(request()->segment(4));
+            $this->data['guide'] = $guide =  \App\Models\Guide::find(request()->segment(4));
             $page = 'edit_guide';
             if ($_POST) {
                 $file = request()->file('image_file');
@@ -377,12 +377,12 @@ class Customer extends Controller {
                     'company_file_id' => $company_file_id
                 ];
 
-                \App\Model\Guide::find(request('guide_id'))->update($obj);
+                \App\Models\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
         } else {
             $page = 'guide';
-            $this->data['guides'] = \App\Model\Guide::latest()->get();
+            $this->data['guides'] = \App\Models\Guide::latest()->get();
            // $this->data['guides'] = \App\Model\Guide::orderBy('id', 'desc')->get();
         }
         return view('customer.' . $page, $this->data);
@@ -459,22 +459,23 @@ class Customer extends Controller {
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
+        $this->data['shulesoft_users'] = (new \App\Http\Controllers\Users)->shulesoftUsers();
 
-        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-        $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) ilike '%" . strtolower($school) . "%' ");
-        $client = \App\Models\Client::where('username', $school)->first();
-
-        
+        $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) like '%" . strtolower($school) . "%' ");
+        $client = \App\Models\Client::where('username', $school)->first(); 
+           
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        } elseif(empty($status) && isset($client->username) && ($client->status == 3)){ 
+        } elseif(empty($status) && isset($client->username) && ((int)$client->status == 3)){ 
               return redirect('https://' . $school . '.shulesoft.com');
-        } elseif(empty($status) && empty($client->username)){ 
+        }
+         elseif(empty($status) && empty($client->username)){ 
               return view('customer.checkinstallation',$this->data);
-        } else { 
+        } 
+        else { 
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
@@ -486,10 +487,9 @@ class Customer extends Controller {
             }
             $this->data['client_id'] = $client->id;
 
-            $user = $this->zonemanager($this->data['client_id']);
-            if (!empty($user)) {
-              //  $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
-                $this->data['manager'] = \App\Models\User::where(['id' =>$user->user_id,'status'=>1]);
+            $zone_manager = $this->zonemanager($this->data['client_id']);
+            if ($zone_manager) {
+                $this->data['manager'] = \App\Models\User::where(['id' =>$zone_manager->user_id,'status'=>1]);
             }
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
@@ -501,7 +501,7 @@ class Customer extends Controller {
  
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
     
-        $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
+        $this->data['invoices'] =\App\Models\Invoice::where('client_id', (int)$client->id)->where('account_year_id', (int) $year->id)->get();
         $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->get();
 
         if ($_POST) {
@@ -1444,35 +1444,7 @@ class Customer extends Controller {
         }
     }
 
-    // method to share invoice link
-    public function ShareInvoiceWhatsApp() {
-        $invoice_id = request()->segment(3);
-        $set = $this->data['set'] = 1;
-        if ((int) $invoice_id > 0) {
-            $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
-            $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
-            $start_usage_date = date('Y-m-d', strtotime($this->data['usage_start_date']));
-            $yearEnd = date('Y-m-d', strtotime('Dec 31'));
-            $to = \Carbon\Carbon::createFromFormat('Y-m-d', $yearEnd);
-            $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
-            $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
-            return view('layouts.invoice_to_share', $this->data);
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
-
-    public function ShareInvoiceEmail() {
-        $invoice_id = request()->segment(3);
-        $set = $this->data['set'] = 1;
-        if ((int) $invoice_id > 0) {
-            $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
-            return view('layouts.invoice_to_share', $this->data);
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
-
+  
     public function deleteContract() {
         $contract_id = request()->segment(3);
         $contract = \App\Models\Contract::where('id', $contract_id)->delete();

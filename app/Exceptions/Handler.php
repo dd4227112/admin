@@ -65,7 +65,7 @@ class Handler extends ExceptionHandler {
 
         $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
 
-        //error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
+        error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
     }
 
     public function sendLog($err) {

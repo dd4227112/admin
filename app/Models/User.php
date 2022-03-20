@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model {
+// class User extends Model {
+    
+use Illuminate\Foundation\Auth\User as Authenticatable;
+class User extends Authenticatable {
 
     /**
      * Generated
@@ -29,9 +32,6 @@ class User extends Model {
         return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
     }
 
-    public function location() {
-        return $this->hasMany('App\Model\Location');
-    }
 
     public function deductions() {
         return $this->belongsToMany(\App\Models\Deduction::class, 'user_deductions', 'user_id', 'deduction_id');

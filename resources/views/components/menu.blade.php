@@ -113,7 +113,7 @@
                                                  </li>
                                              
                                                  <li class="">
-                                                    <a href="<?= url('sales/school') ?>">
+                                                    <a href="<?= url('sales/schools') ?>">
                                                         <span class="pcoded-mtext">List of Schools</span>
                                                     </a>
                                                   </li>

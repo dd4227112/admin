@@ -12,6 +12,8 @@ use App\Mail\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 class Users extends Controller {
 
     public function __construct() {
@@ -24,7 +26,6 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'ShuleSoft Users','subtitle'=>'employees','head'=>'Human resource');
         $this->data['users'] = User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
         return view('users.index', $this->data);
     }
@@ -178,13 +179,14 @@ class Users extends Controller {
         ]);
         return redirect()->back()->with('success', 'success');
     }
+  
 
+    public function shulesoftUsers(){
+        return \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+    }
 
     public function absent() {
         if ($_POST) {
-            // $dates = request('datetimes');
-            // $dates = str_replace('-','',$dates);
-            // dd($dates);
             $file = request()->file('file');
             $absent_reason_id = request('absent_reason_id'); 
             switch ($absent_reason_id) {
@@ -216,7 +218,6 @@ class Users extends Controller {
         $id = (int) request()->segment(3);
         $request = request()->segment(4);
        
-     
         if($request == 'approve'){
             $approved = \App\Models\Absent::where('id',$id)->update(['approved_by' =>Auth::user()->id,'status'=>'Approved']);
             if($approved){

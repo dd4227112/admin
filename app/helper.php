@@ -155,7 +155,6 @@ function number_to_words($number) {
     if (($number < 0) || ($number > 999999999)) {
         return "$number";
     }
-
     $Gn = floor($number / 1000000);  /* Millions (giga) */
     $number -= $Gn * 1000000;
     $kn = floor($number / 1000);     /* Thousands (kilo) */
@@ -166,28 +165,23 @@ function number_to_words($number) {
     $n = $number % 10; /* Ones */
 
     $res = "";
-
     if ($Gn) {
         $res .= number_to_words($Gn) . " Million";
     }
-
     if ($kn) {
         $res .= (empty($res) ? "" : " ") .
                 number_to_words($kn) . " Thousand";
     }
-
     if ($Hn) {
         $res .= (empty($res) ? "" : " ") .
                 number_to_words($Hn) . " Hundred";
     }
-
     $ones = array("", "One", "Two", "Three", "Four", "Five", "Six",
         "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
         "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eightteen",
         "Nineteen");
     $tens = array("", "", "Twenty", "Thirty", "Fourty", "Fifty", "Sixty",
         "Seventy", "Eighty", "Ninety");
-
     if ($Dn || $n) {
         if (!empty($res)) {
             $res .= " and ";
@@ -214,9 +208,9 @@ function number_to_words($number) {
 function userAccessRole() {
     $user_id = \Auth::user()->id;
     if ((int) $user_id > 0) {
-        $user = \App\Model\User::where('id', $user_id)->first();
+        $user = \App\Models\User::where('id', (int) $user_id)->first();
         if ($user) {
-            $permission = \App\Models\PermissionRole::where('role_id', $user->role_id)->get();
+            $permission = \App\Models\PermissionRole::where('role_id',  (int) $user->role_id)->get();
             $objet = array();
             if (count($permission) > 0) {
                 foreach ($permission as $perm) {

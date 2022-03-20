@@ -21,9 +21,7 @@ class Guide extends Model
         return $this->belongsTo(\App\Models\User::class,'created_by','id')->withDefault(['firstname'=>'Not Defined','lastname'=>'Not Defined']);
     }
     
-    public function guidePageVisit() {
-        return $this->hasMany(\App\Model\GuidePageVisit::class);
-    }
+  
 
     public function companyFile() {
         return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
