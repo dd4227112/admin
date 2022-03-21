@@ -508,11 +508,13 @@ class Customer extends Controller {
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
     
         $this->data['invoices'] =\App\Models\Invoice::where('client_id', (int)$client->id)->where('account_year_id', (int) $year->id)->get();
-        $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->get();
+        $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->latest()->get();
 
         if ($_POST) {
-            $remainder = request('remainder') ? 0 : 1;
-            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))), 'remainder' => $remainder, 'remainder_date' => date('Y-m-d', strtotime(request('remainder_date')))]);
+            $remainder = empty(request('remainder_date')) ? 1 : 0;
+            $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
+            $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
+            $data = array_merge(request()->except(['start_date', 'end_date','to_user_id']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date ]);
 
             $task = \App\Models\Task::create($data);
             DB::table('tasks_clients')->insert([
@@ -520,19 +522,22 @@ class Customer extends Controller {
                 'client_id' => (int) request('client_id')
             ]);
 
-            if ((int) request('to_user_id') > 0) {
-                DB::table('tasks_users')->insert([
-                    'task_id' => $task->id,
-                    'user_id' => request('to_user_id')
-                ]);
-                $user = \App\Models\User::find(request('to_user_id'));
-                $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
-                        . chr(10) . 'A task has been allocated to you'
-                        . chr(10) . 'Task: ' . $task->activity . '.'
-                        . chr(10) . 'Type: ' . $task->taskType->name . '.'
-                        . chr(10) . 'Deadline: ' . $task->start_date . '.'
-                        . chr(10) . 'Thanks.';
-                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            if(!empty(request('to_user_id'))) {
+                $to_users = request('to_user_id');
+                foreach($to_users as $key => $user_id){
+                    DB::table('tasks_users')->insert([
+                        'task_id' => $task->id,
+                        'user_id' => $user_id
+                    ]);
+                    $user = \App\Models\User::find($user_id);
+                    $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
+                            . chr(10) . 'A task has been allocated to you'
+                            . chr(10) . 'Task: ' . $task->activity . '.'
+                            . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                            . chr(10) . 'Deadline: ' . $task->start_date . '.'
+                            . chr(10) . 'Thanks.';
+                  //  $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                }
             }
 
 

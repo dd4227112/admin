@@ -741,7 +741,7 @@ class Software extends Controller {
 
     public function smsStatus() {
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
-        return view('software.status_sms', $this->data);
+        return view('software.smsstatus', $this->data);
     }
 
     /**
