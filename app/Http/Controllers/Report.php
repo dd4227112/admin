@@ -188,7 +188,6 @@ class Report extends Controller {
       }
       if((int)$id == 13){
         $this->data["title"] = "Number of Videos Uploaded";
-
         $this->data["datas"] = DB::SELECT('SELECT count(created_at) as ynumber,created_at::date from admin.all_medias group by created_at::date order by created_at desc limit 14');
         $sql = "with dates as (select min(date_trunc('week', created_at)) as startw, max(date_trunc('week', created_at)) as endw from admin.all_medias),weeks as ( select generate_series(startw, endw, '7 days') as week from dates )select w.week, count(i.created_at) as ycounts from weeks w left outer join admin.all_medias i on date_trunc('week', i.created_at) = w.week group by w.week order by w.week desc limit 7";
         $this->data["weeks"] = DB::SELECT($sql);

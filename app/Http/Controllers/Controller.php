@@ -115,9 +115,9 @@ class Controller extends BaseController {
 
 
   
- //Altenative function to store files on locally
-    public function saveFile($file, $subfolder = null, $local = null) {
-        if ($local == TRUE) { 
+ //Altenative function to store files locally
+    public function saveFile($file, $local = null) {
+            if($local == TRUE) { 
             $url = $this->uploadFileLocal($file);
             $file_id = DB::table('company_files')->insertGetId([
                 'extension' => $file->getClientOriginalExtension(),
@@ -128,7 +128,7 @@ class Controller extends BaseController {
                 'path' => $url
             ]);
             return $file_id;
-        } 
+        }
     }
 
     public function uploadFileLocal($file) {

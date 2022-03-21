@@ -21,7 +21,10 @@ class Recruitments extends Controller {
             $phonenumber = trim(request('phone')); 
           }
         $file = request()->file('documents');
-        $file_id = $this->saveFile($file, 'company/contracts', TRUE);
+         if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+          }
+        $file_id = $this->saveFile($file, TRUE);
         // $file_id = 1;
         
        $recruiment = \App\Models\Recruiment::create(array_merge(request()->except('phone'), ['phone' => $phonenumber,'company_file_id' =>$file_id ]));
@@ -79,7 +82,11 @@ class Recruitments extends Controller {
     public function uploadnda(){
         $file = request()->file('nda_form');
         dd($file);
-        $nda_file_id = $this->saveFile($file, 'company/contracts');
+
+        if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+         }
+        $nda_file_id = $this->saveFile($file, TRUE);
     }
 
 }

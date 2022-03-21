@@ -552,7 +552,10 @@ class Sales extends Controller {
   
             if (!empty(request('file'))) {
                 $file = request()->file('file');
-                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                if(filesize($file) > 2015110 ) {
+                    return redirect()->back()->with('error', 'File must have less than 2MBs');
+                 }
+                $company_file_id = $file ? $this->saveFile($file,TRUE) : 1;
                 $contract_id = DB::table('admin.contracts')->insertGetId([
                 'name' => 'Shulesoft service fee', 'company_file_id' => $company_file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => \Auth::user()->id
                 ]);
@@ -565,7 +568,8 @@ class Sales extends Controller {
                 // if document is standing order,Upload standing order files
              if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))  && request('check_trial') != 1 ) {
                 $file = request()->file('standing_order_file');
-                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                
+                $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
                 $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
 
                 $contract_id = DB::table('admin.standing_orders')->insertGetId(array(

@@ -318,7 +318,10 @@ class Customer extends Controller {
 
     public function createGuide() {
         $file = request()->file('image_file');
-        $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+        if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+         }
+        $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
 
         $obj = [
             'permission_id' => request()->permission_id,
@@ -367,7 +370,10 @@ class Customer extends Controller {
             $page = 'edit_guide';
             if ($_POST) {
                 $file = request()->file('image_file');
-                $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : $guide->company_file_id;
+                if(filesize($file) > 2015110 ) {
+                    return redirect()->back()->with('error', 'File must have less than 2MBs');
+                 }
+                $company_file_id = $file ? $this->saveFile($file, TRUE) : $guide->company_file_id;
 
                 $obj = [
                     'permission_id' => request()->permission_id,
@@ -574,8 +580,11 @@ class Customer extends Controller {
     public function addstandingorder() {
         if ($_POST) {
             $file = request('standing_order_file');
+            if(filesize($file) > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+             }
             $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
-            $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+            $company_file_id = $file ? $this->saveFile($file,TRUE) : 1;
 
             $data = [
                 'client_id' => request('client_id'),
@@ -1454,7 +1463,10 @@ class Customer extends Controller {
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
-        $file_id = $this->saveFile($file, 'company/contracts', TRUE);
+        if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+         }
+        $file_id = $this->saveFile($file, TRUE);
         //save contract
 
         $contract_id = DB::table('admin.contracts')->insertGetId([
@@ -1557,14 +1569,17 @@ class Customer extends Controller {
     public function uploadJobCard() {
         if ($_POST) {
             $file = request()->file('job_card_file');
-            $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+            
+             if(($file)->getSize() > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+             }
 
+            $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
             $where = ['date' => request('job_date'), 'client_id' => request('client_id')];
             $card = DB::table('client_job_cards')->where($where)->first();
-
             $data = [
                 'company_file_id' => $company_file_id,
-                'client_id' => request('client_id'),
+                'client_id' => (int) request('client_id'),
                 'created_by' => \Auth::user()->id,
                 'date' => request('job_date')
             ];

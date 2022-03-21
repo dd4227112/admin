@@ -493,8 +493,11 @@ class Account extends Controller {
         $company_file_id = null;
         
         $file = request()->file('invoice_file');
+        if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+         }
         if(!empty($file)){
-          $company_file_id =  $this->saveFile($file, 'company/contracts',TRUE);
+          $company_file_id =  $this->saveFile($file,TRUE);
         }
 
 
