@@ -197,7 +197,7 @@ function select($value, $schema, $sources) {
         <thead>
             <tr>
                 <th>School Name</th>                                                          
-                <td>Support Personnel</td>                                                
+                <td>Date Onboarded</td>                                                
                 <td>Students</td>
                 <th>Exam  Published</th>	
                 <th>Fee collection</th>	
@@ -233,14 +233,7 @@ function select($value, $schema, $sources) {
                 ?>
                 <tr>
                     <td><?= $school->schema_name ?></td>
-                    <td><?php
-                        if (isset($allocation[$school->schema_name])) {
-                            echo $allocation[$school->schema_name];
-                        } else {
-
-                            echo 'No Person Allocated';
-                        }
-                        ?>
+                    <td><?=date('d M Y', strtotime($school->created_at))?>
                     </td>
                     
                     <td>
