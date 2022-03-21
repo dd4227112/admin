@@ -186,20 +186,20 @@ class Message extends Controller {
     }
 
     public function feedback() {
-        $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
+        $feedbacks = \App\Models\Feedback::orderBy('id', 'desc')->paginate();
         return view('message.feedback', compact('feedbacks'));
     }
 
     public function website() {
-        $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
+        $feedbacks = \App\Models\Feedback::orderBy('id', 'desc')->paginate();
         return view('message.website', compact('feedbacks'));
     }
 
     public function reply() {
         $message = request('message');
         $message_id = request('message_id');
-        \App\Model\Feedback_reply::create(['feedback_id' => $message_id, 'message' => $message, 'user_id' => Auth::user()->id]);
-        $feedback = \App\Model\Feedback::find($message_id);
+        \App\Models\Feedback_reply::create(['feedback_id' => $message_id, 'message' => $message, 'user_id' => Auth::user()->id]);
+        $feedback = \App\Models\Feedback::find($message_id);
 
         $user = DB::table('admin.all_users')->where('id', $feedback->user_id)->where('table', $feedback->table)->where('schema_name', str_replace('.', NULL, $feedback->schema))->first();
         if (count($user) == 1) {
@@ -480,7 +480,7 @@ Kind regards,';
     }
 
     public function showreply() {
-        $update = \App\Model\Feedback::find(request('message_id'));
+        $update = \App\Models\Feedback::find(request('message_id'));
         $update->update(['shared' => request('status') == 'false' ? 1 : 0]);
         return 1;
     }

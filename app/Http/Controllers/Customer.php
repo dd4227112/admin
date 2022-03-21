@@ -475,7 +475,7 @@ class Customer extends Controller {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        } elseif(empty($status) && isset($client->username) && ((int)$client->status == 3)){ 
+        } elseif(empty($status) && isset($client->username) ){ 
               return redirect('https://' . $school . '.shulesoft.com');
         }
          elseif(empty($status) && empty($client->username)){ 
@@ -1225,7 +1225,7 @@ class Customer extends Controller {
     }
 
     public function feedbacks() {
-        $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
+        $feedbacks = \App\Models\Feedback::orderBy('id', 'desc')->paginate();
         return view('customer.feedback', compact('feedbacks'));
     }
 
