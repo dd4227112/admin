@@ -1216,7 +1216,7 @@ class Customer extends Controller {
     }
 
     public function feedbacks() {
-        $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
+        $feedbacks = \App\Models\Feedback::orderBy('id', 'desc')->paginate();
         return view('customer.feedback', compact('feedbacks'));
     }
 
