@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model {
 
+    use \App\Traits\BelongsToUser;
+
+
     /**
      * Generated
      */
@@ -14,9 +17,6 @@ class Expense extends Model {
     'amount', 'depreciation', 'refer_expense_id', 'ref_no', 'payment_method', 'bank_account_id', 'transaction_id', 'reconciled', 'file', 'voucher_no', 'payer_name', 'recipient', 'payment_type_id', 'expense_subcategories_id'];
 
     
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
-    }
 
     public function referExpense() {
         return $this->belongsTo(\App\Models\ReferExpense::class, 'refer_expense_id', 'id');

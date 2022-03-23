@@ -511,6 +511,13 @@ class Customer extends Controller {
         $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->latest()->get();
 
         if ($_POST) {
+             $validated = request()->validate([
+                'activity' => 'required|min:12',
+                'start_date' => 'required',
+                'end_date' => 'nullable|after:start_date',
+                'remainder_date' => 'nullable|after:start_date|before:end_date'
+            ]); 
+
             $remainder = empty(request('remainder_date')) ? 1 : 0;
             $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
             $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
@@ -690,7 +697,6 @@ class Customer extends Controller {
             return view('customer/view_task', $this->data);
         } else {
             $date = request('taskdate');
-
             $this->data['activities'] = [];
             return view('customer/activity', $this->data);
         }
@@ -841,9 +847,9 @@ class Customer extends Controller {
 
     public function removeTag() {
         $id = request('id');
-        $tag = \App\Models\Task::find($id);
-        !empty($tag) ? $tag->delete() : '';
-        echo 1;
+        $tag = \App\Models\Task::where('id',(int) $id);
+        $reply = !empty($tag) ? $tag->delete() : '';
+        echo $reply > 0 ? 'Task deleted' : 'No changes happened';
     }
 
     public function updateTask() {
@@ -906,7 +912,6 @@ class Customer extends Controller {
             $this->data['requirement'] = \App\Models\Requirement::where('id', (int) $id)->first();
             $next_id = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first();
             $this->data['next'] = is_null($next_id) ? '' : $next_id->id;
-           // $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
 
@@ -917,6 +922,11 @@ class Customer extends Controller {
 
         $this->data['levels'] = [];
         if ($_POST) {
+            $validated = request()->validate([
+                'note' => 'required|min:12',
+                'contact' => 'required'
+            ]); 
+
             $requirement = [
                 'school_id' => is_null(request('school_id')) ? '0' : request('school_id'),
                 'contact' => request('contact'),
@@ -959,7 +969,7 @@ class Customer extends Controller {
                 $this->send_sms($user->phone, $sms, 1);
             }
         }
-        $this->data['requirements'] = \App\Models\Requirement::latest()->get();
+        $this->data['requirements'] = \App\Models\Requirement::latest();
         return view('customer/analysis', $this->data);
     }
 
@@ -1820,5 +1830,18 @@ class Customer extends Controller {
                   $this->sendWhatsappFiles($phone,$filename,$path);
               }
           }
+
+
+        public function requirementUpload(){
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\RequirementImport, request()->file('excel_tasks'));
+            return redirect('customer/requirements')->with('success', 'All requirements uploaded successfully!');
+        }
+
+
+        public function searchRequirement(){
+             $this->data['from_date'] = request('from_date');
+             $this->data['to_date'] = request('to_date');
+             return view('customer/analysis', $this->data);
+        }
 
 }

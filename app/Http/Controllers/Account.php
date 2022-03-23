@@ -1823,8 +1823,6 @@ class Account extends Controller {
         echo $update > 0 ? $new_value : 'No changes happened';
     }
 
-
-
      public function editSetting() {
         $id =  request('id');
         $newvalue = request('newvalue');
@@ -1838,8 +1836,6 @@ class Account extends Controller {
 
     public function getClientInfo(){
        $client_id = request()->segment(3);
-
-
     }
 
 

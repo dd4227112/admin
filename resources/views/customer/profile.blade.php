@@ -101,6 +101,16 @@ Message</a>
 </div>
 </div>
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="row">
 <div class="col-xl-3 col-lg-4 col-md-4 col-xs-12">
 
@@ -306,9 +316,10 @@ Create a task for this school with
 implementation deadline</span>
 
 <div class="form-group">
-<textarea class="form-control" rows="4"
-placeholder="Create Task"
-name="activity"></textarea>
+<textarea class="form-control" rows="4"  placeholder="Create Task" name="activity">
+</textarea>
+
+
 </div>
 <div class="form-group">
 <div class="row"> 
@@ -390,7 +401,7 @@ foreach ($staffs as $staff) {
 <div class="row">
 <div class="col-md-6">
 <strong> Start Date</strong>
-<input type="datetime-local"
+<input type="datetime-local" required
 class="form-control" 
 placeholder="Deadline"
 name="start_date">
@@ -489,10 +500,19 @@ Task</button> --}}
            border-radius: 50%;
            overflow: hidden;">
    &nbsp;&nbsp;<?= $task->user->firstname ?> -
-<span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span> &nbsp;&nbsp; <label class="badge badge-inverse-primary">{{ $task->status}}</label>
+    <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span> &nbsp;&nbsp; <label class="badge badge-inverse-primary">{{ $task->status}}</label>
+    <?php if(can_access('delete_tasks')) { ?>
+       <a class="btn btn-mini btn-round btn-danger float-right text-light"   onclick="RemoveAttr(<?= $task->id ?>);"> delete </a>
+    <?php } ?>
 </div>
-<p class="text-muted">
-<?= $task->activity ?></p>
+<p class="text-muted editable" id="txt1<?= $task->id ?>">
+   {{-- <?= $task->activity ?> --}}
+
+   <span style="text-decoration: none;" <?= $task->user->id == \Auth::user()->id ? 'contenteditable="true"': 'contenteditable="false"' ?> 
+    onblur="save('<?= $task->id . 'activity' ?>', '<?= $task->id  ?>','activity')" 
+    id="<?= $task->id . 'activity' ?>"> <?= $task->activity == '' ? 'null' : $task->activity ?></span>
+    <span id="stat<?= $task->id .  'activity' ?>"></span>
+</p>
 <?php
 $modules = $task->modules()->get();
 if (count($modules) > 0) {
@@ -505,6 +525,8 @@ foreach ($modules as $module) {
 }
 }
 ?>
+
+
 <p>Start Date- <?= $task->start_date ?>
  &nbsp; &nbsp; | &nbsp; &nbsp; 
  <?= date('Y-m-d', strtotime($task->end_date)) == '1970-01-01' ? '' : 'End Date - '.$task->end_date  ?></p> 
@@ -2319,6 +2341,28 @@ if (!empty($profile)) {
         <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
 
       <script>
+
+      
+
+
+    function RemoveAttr(a) {
+        var val = a;
+        if (val !== '') {
+            $.ajax({
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
+                url: "<?= base_url('customer/removeTag/null') ?>",
+                data: {"id": val},
+                dataType: "html",
+                success: function (data) {
+                     toastr.success(data);
+                     location.reload();
+                }
+            });
+          }
+        }
      
         function chooseValue(value){
               if(value == 'complete'){
@@ -2329,6 +2373,31 @@ if (!empty($profile)) {
                 $('#remainder_date').show();
               }
             }
+
+
+     function save(a, id, column) {
+        var val = $('#' + a).text();
+        if (val !== '') {
+            $.ajax({
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
+                url: "<?= base_url('account/editSetting/null') ?>",
+                data: {"id": id, newvalue: val, column: column,table:'tasks'},
+                dataType: "html",
+                beforeSend: function (xhr) {
+                    $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
+                },
+                complete: function (xhr, status)  {
+                    $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
+                },
+                success: function (data) {
+                     toastr.success(data);
+                }
+            });
+          }
+        }
 
           $(document).ready(function() {
            $('#example').DataTable();
@@ -2425,20 +2494,9 @@ if (!empty($profile)) {
                 }
             });
         });
-        removeTag = function (a) {
-            $.ajax({
-                url: '<?= url('customer/removeTag') ?>/null',
-                method: 'get',
-                data: {
-                    id: a
-                },
-                success: function (data) {
-                    if (data == '1') {
-                        $('#removetag' + a).fadeOut();
-                    }
-                }
-            });
-        }
+
+  
+       
 
         task_group = function () {
             $('.task_groups').change(function () {

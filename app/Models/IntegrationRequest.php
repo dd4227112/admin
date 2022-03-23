@@ -7,6 +7,9 @@ use DB;
 
 class IntegrationRequest extends Model {
 
+    use \App\Traits\BelongsToUser;
+
+
     /**
      * Generated
      */
@@ -23,9 +26,6 @@ class IntegrationRequest extends Model {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
     }
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'User Not Defined']);
-    }
     
     public function approval() {
         return $this->belongsTo(\App\Models\User::class, 'approval_user_id', 'id')->withDefault(['name' => 'User Not Defined']);

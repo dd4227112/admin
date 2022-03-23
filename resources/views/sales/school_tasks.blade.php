@@ -3,7 +3,7 @@
 
      <div class="page-header">
             <div class="page-header-title">
-              <h4><?='Onboard new school' ?></h4>
+              <h4><?='Implement school tasks' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -14,7 +14,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">new school</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">sales</a>
+                    <li class="breadcrumb-item"><a href="#!">Tasks</a>
                     </li>
                 </ul>
             </div>
@@ -38,15 +38,14 @@
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Code</th>
-                            <th>Standing Order</th>
                             <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
                       <?php 
-                      if(sizeof($clients) > 0){
+                      if(sizeof($schoolstasks) > 0){
                         $i = 1;
-                        foreach($clients as $value){ ?>
+                        foreach($schoolstasks as $value){ ?>
                               <tr>
                               <td><?= $i ?></td>
                               <td><?= $value->name ?? '' ?></td>
@@ -54,19 +53,10 @@
                               <td><?= $value->phone ?? '' ?></td>
                               <td><?= $value->code ?? '' ?></td>
                               
-                              <td class="text-center">
-                                 <?php $url = url("customer/viewContract/$value->sid/standing"); 
-                                 echo  $value->sid == null ? '<label class="badge badge-inverse-warning">Not Defined</label>' : '<a target="_break" href="'.$url.'" class="btn btn-primary btn-sm btn-round">View</a>'  
-                                 ?>
-                              </td>
+                            
                             
                               <td class="text-center">
-                              
-                                    <?php if(can_access('approve_implementaion')) { ?>
-                                      <a href="<?= url('sales/updateOnboardStatus/'. $value->id) ?>" class="btn btn-success btn-mini btn-round">Approve</a>
-
-                                    
-                                <?php } ?>
+                                  <a href="<?= url('sales/implemetation/'.$value->id) ?>" class="btn btn-info btn-mini btn-round">Implement tasks</a>                     
                               </td>
                           </tr>
                         <?php $i++; } } ?>

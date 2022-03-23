@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,13 +10,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Requirement extends Model {
 
+    use \App\Traits\BelongsToUser;
+
     //put your code here
     protected $table = 'requirements';
     protected $fillable = ['id', 'note', 'user_id', 'contact', 'created_at', 'updated_at', 'to_user_id', 'school_id', 'status'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Not allocated']);
-    }
+  
 
     public function toUser() {
         return $this->belongsTo(\App\Models\User::class, 'to_user_id', 'id')->withDefault(['name' => 'Not allocated']);

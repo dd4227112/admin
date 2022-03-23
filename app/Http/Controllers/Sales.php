@@ -643,7 +643,9 @@ class Sales extends Controller {
  
     
      public function onboaredSchools(){
-        $this->data['clients'] = \DB::select("select c.id,c.name,c.email,c.phone,c.address,c.code,c.status,count(t.id) as tasks,s.id as sid,s.company_file_id,p.client_id,p.invoice_id,coalesce(sum(p.amount),0) as paid from admin.clients c left join admin.tasks_clients t on c.id = t.client_id left join admin.standing_orders s on s.client_id = c.id left join admin.payments p on c.id = p.client_id where extract(year from c.created_at) >= 2022 and c.status <> 0  group by c.id,s.company_file_id,p.client_id,p.invoice_id,s.id having count(t.task_id) <= 0 order by c.created_at desc");
+        $this->data['clients'] = \DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,
+        s.company_file_id FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a 
+        on a.client_id = c.id   where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status HAVING count(a.id) <= 0 ORDER BY c.created_at DESC");
         return view('sales.onboard', $this->data);
      }
 
@@ -664,7 +666,7 @@ class Sales extends Controller {
          $this->send_whatsapp_sms($user->phone, $message); 
          $this->send_sms($user->phone,$message,1);
 
-         return redirect()->back()->with('success','Status updated');
+         return redirect()->back()->with('success','School Approved for onboarding');
      }
 
 
@@ -1194,7 +1196,7 @@ class Sales extends Controller {
     }
 
 
-
+ 
 
 
 

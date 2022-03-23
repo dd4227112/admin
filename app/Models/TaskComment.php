@@ -17,13 +17,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TaskComment extends Model {
 
+    use \App\Traits\BelongsToUser;
+
+
     //put your code here
     protected $table = 'task_comments';
     protected $fillable = ['id', 'task_id', 'content', 'user_id', 'created_at', 'updated_at'];
-
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
-    }
 
     public function task() {
         return $this->belongsTo(\App\Models\Task::class, 'task_id', 'id');

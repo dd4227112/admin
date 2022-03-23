@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable {
 
+    use \App\Traits\belongsTocompanyFile;
+
+
     /**
      * Generated
      */
@@ -92,9 +95,6 @@ class User extends Authenticatable {
         return $this->belongsTo('App\Models\Role')->withDefault(['display_name' => 'unknown']);
     }
 
-    public function companyFile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
-    }
 
     public function uattendance() { 
         return $this->hasMany(\App\Models\Uattendance::class, 'user_id', 'id');

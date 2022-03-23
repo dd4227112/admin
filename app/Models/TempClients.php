@@ -17,14 +17,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TempClients extends Model {
 
+    use \App\Traits\BelongsToUser;
+
+
     //put your code here
     protected $table = 'admin.temp_clients';
     protected $fillable = ['id', 'name','email','phone','school_id','user_id','reference','date','due_date','account_year_id',
                            'project_id', 'amount','created_at','updated_at'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
-    }
 
     public function school() {
         return $this->belongsTo(\App\Models\School::class, 'school_id', 'id');
