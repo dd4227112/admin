@@ -278,7 +278,8 @@ class Customer extends Controller {
             //     $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
             // }
 
-            die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
+            //die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
+            echo 'Success'; // we disable json returns 
         }
         //insert into training allocation
         echo 'success';
