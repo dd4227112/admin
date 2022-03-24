@@ -20,7 +20,7 @@
            </a>
         </li>
 
-       <?php if (!can_access('onboarded_schools')) { ?>
+       <?php if (can_access('approve_onboard')) { ?>
         <li class="nav-item">
           <a href="<?= url('sales/onboaredSchools') ?>">
                 <div class="media-body">
@@ -30,7 +30,7 @@
         </li>
       <?php } ?>
 
-      <?php if (!can_access('implement_tasks')) { ?>
+      <?php if (can_access('implement_tasks')) { ?>
         <li class="nav-item">
           <a href="<?= url('background/schoolTasks') ?>">
                 <div class="media-body">
