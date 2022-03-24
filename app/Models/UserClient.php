@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserClient extends Model {
    
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
     /**
      * Generated
@@ -17,6 +17,10 @@ class UserClient extends Model {
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Guide extends Model
 {
 
-    use \App\Traits\belongsTocompanyFile;
+   // use \App\Traits\belongsTocompanyFile;
 
     protected $table = 'constant.guides';
     
@@ -22,6 +22,10 @@ class Guide extends Model
 
     public function createdBy() {
         return $this->belongsTo(\App\Models\User::class,'created_by','id')->withDefault(['firstname'=>'Not Defined','lastname'=>'Not Defined']);
+    }
+
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
     
 }

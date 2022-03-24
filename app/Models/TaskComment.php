@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TaskComment extends Model {
 
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\BelongsToUser;
 
 
     //put your code here
@@ -26,6 +26,10 @@ class TaskComment extends Model {
 
     public function task() {
         return $this->belongsTo(\App\Models\Task::class, 'task_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

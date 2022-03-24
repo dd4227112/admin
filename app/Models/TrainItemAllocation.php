@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TrainItemAllocation extends Model {
 
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
 
     //put your code here
@@ -28,6 +28,10 @@ class TrainItemAllocation extends Model {
     public function trainItem() {
         return $this->belongsTo(\App\Models\TrainItem::class, 'train_item_id', 'id');
     }
+
+    public function user(){
+      return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
+  }
 
 
       public function client() {

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ChatUser extends Model {
 
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
     
     //put your code here
@@ -26,6 +26,10 @@ class ChatUser extends Model {
 
     public function toUser() {
         return $this->belongsTo(\App\Models\User::class, 'to_user_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

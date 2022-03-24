@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientJobCard extends Model {
 
-    use \App\Traits\belongsTocompanyFile;
+   // use \App\Traits\belongsTocompanyFile;
 
 
     protected $table = 'admin.client_job_cards';
@@ -18,6 +18,10 @@ class ClientJobCard extends Model {
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class,'client_id','id');
+    }
+
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
 
 

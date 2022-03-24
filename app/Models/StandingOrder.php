@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StandingOrder extends Model
 {   
     
-    use \App\Traits\belongsTocompanyFile;
+   // use \App\Traits\belongsTocompanyFile;
 
     protected $table = 'admin.standing_orders';
 
@@ -30,6 +30,10 @@ class StandingOrder extends Model
 
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');
+    }
+
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
 
 

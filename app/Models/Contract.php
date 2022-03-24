@@ -18,8 +18,8 @@ use Illuminate\Database\Eloquent\Model;
 class Contract extends Model {
 
 
-    use \App\Traits\belongsTocompanyFile;
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\belongsTocompanyFile;
+  //  use \App\Traits\BelongsToUser;
 
 
     protected $table = 'contracts';
@@ -28,5 +28,12 @@ class Contract extends Model {
    public function contractType() {
         return $this->belongsTo(\App\Models\ContractType::class, 'contract_type_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
+ 
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
+    }
 
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
+    }
 }

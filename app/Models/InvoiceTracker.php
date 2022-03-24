@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvoiceTracker extends Model {
 
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
 
     protected $table = 'invoices_tracker';
@@ -14,6 +14,10 @@ class InvoiceTracker extends Model {
 
     public function invoice() {
         return $this->belongsTo(\App\Models\Invoice::class, 'invoice_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

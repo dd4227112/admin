@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UsersSchool extends Model {
   
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\BelongsToUser;
 
     /**
      * Generated
@@ -21,6 +21,10 @@ class UsersSchool extends Model {
 
     public function role() {
         return $this->belongsTo(\App\Models\Role::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

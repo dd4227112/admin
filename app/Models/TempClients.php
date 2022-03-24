@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TempClients extends Model {
 
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\BelongsToUser;
 
 
     //put your code here
@@ -28,6 +28,10 @@ class TempClients extends Model {
 
     public function school() {
         return $this->belongsTo(\App\Models\School::class, 'school_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
       public function account_year() {

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class IntegrationBankDocument extends Model {
  
-    use \App\Traits\belongsTocompanyFile;
+   // use \App\Traits\belongsTocompanyFile;
 
     /**
      * Generated
@@ -23,6 +23,10 @@ class IntegrationBankDocument extends Model {
 
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'created_by', 'id')->withDefault(['name' => 'User Not Defined']);
+    }
+
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
 
 

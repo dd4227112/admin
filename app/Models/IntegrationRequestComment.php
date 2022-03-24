@@ -7,7 +7,7 @@ use DB;
 
 class IntegrationRequestComment extends Model {
     
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
     /**
      *
@@ -21,6 +21,9 @@ class IntegrationRequestComment extends Model {
     public function requests() {
         return $this->belongsTo(\App\Models\IntegrationRequest::class, 'integration_request_id', 'id');
     }
-
+   
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
+    }
  
 }

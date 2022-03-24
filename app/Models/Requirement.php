@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Requirement extends Model {
 
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\BelongsToUser;
 
     //put your code here
     protected $table = 'requirements';
@@ -20,6 +20,10 @@ class Requirement extends Model {
 
     public function toUser() {
         return $this->belongsTo(\App\Models\User::class, 'to_user_id', 'id')->withDefault(['name' => 'Not allocated']);
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
     

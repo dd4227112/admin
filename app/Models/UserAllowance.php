@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserAllowance extends Model {
    
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\BelongsToUser;
 
     /**
      * Generated
@@ -17,6 +17,9 @@ class UserAllowance extends Model {
     public function allowance() {
         return $this->belongsTo(\App\Models\Allowance::class, 'allowance_id', 'id');
     }
-
+   
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
+    }
 
 }

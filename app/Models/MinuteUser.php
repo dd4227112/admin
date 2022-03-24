@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MinuteUser extends Model {
 
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
 
     /**
@@ -17,6 +17,10 @@ class MinuteUser extends Model {
 
     public function minute() {
         return $this->belongsTo(\App\Models\Minutes::class, 'minute_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model {
 
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
 
     /**
@@ -35,6 +35,10 @@ class Invoice extends Model {
 
     public function invoiceType() {
         return $this->belongsTo(\App\Models\InvoiceType::class, 'invoice_type', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 

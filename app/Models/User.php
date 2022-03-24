@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable {
 
-    use \App\Traits\belongsTocompanyFile;
+    //use \App\Traits\belongsTocompanyFile;
 
 
     /**
@@ -106,6 +106,10 @@ class User extends Authenticatable {
 
      public function department() {
         return $this->belongsTo(\App\Models\Department::class,'department','id')->withDefault(['display_name' => 'undefined']);
+    }
+
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
 
 }

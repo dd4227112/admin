@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GroupUser extends Model {
 
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
 
     /**
@@ -19,6 +19,8 @@ class GroupUser extends Model {
         return $this->belongsTo(\App\Models\Group::class, 'group_id', 'id');
     }
 
-
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
+    }
 
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserBranch extends Model {
     
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\BelongsToUser;
 
     /**
      * Generated
@@ -16,6 +16,10 @@ class UserBranch extends Model {
     
     public function branch() {
         return $this->belongsTo(\App\Models\PartnerBranch::class, 'branch_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 

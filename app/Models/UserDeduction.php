@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserDeduction extends Model {
     
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\BelongsToUser;
 
     /**
      * Generated
@@ -21,6 +21,10 @@ class UserDeduction extends Model {
 
     public function loanApplication() {
         return $this->belongsTo(\App\Models\LoanApplication::class, 'loan_application_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

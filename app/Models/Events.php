@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Events extends Model {
 
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
    
     //put your code here
@@ -29,5 +29,9 @@ class Events extends Model {
     
     public function attach() {
         return $this->belongsTo(\App\Models\CompanyFile::class, 'attach_id', 'id')->withDefault(['path'=>'not defined']);
+    }
+
+    public function user() {
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'unknown']);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvoiceSent extends Model {
 
-    use \App\Traits\BelongsToUser;
+    //use \App\Traits\BelongsToUser;
 
 
     /**
@@ -14,5 +14,7 @@ class InvoiceSent extends Model {
     protected $table = 'invoices_sent';
     protected $fillable = ['id', 'user_id', 'amount', 'student', 'schema_name', 'date', 'created_at','email','phone_number','message'];
 
-
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
+    }
 }

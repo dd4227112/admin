@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model {
 
-    use \App\Traits\BelongsToUser;
+   // use \App\Traits\BelongsToUser;
 
 
     /**
@@ -32,6 +32,10 @@ class Expense extends Model {
 
     public function expenseSubcategories() {
         return $this->belongsTo(\App\Models\ExpenseSubcategory::class, 'expense_subcategories_id', 'id');
+    }
+
+    public function user() {
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'unknown']);
     }
 
 }
