@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class UsersSchool extends Model {
+  
+    use \App\Traits\BelongsToUser;
 
     /**
      * Generated
@@ -16,9 +18,6 @@ class UsersSchool extends Model {
         return $this->belongsTo(\App\Models\School::class);
     }
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class);
-    }
 
     public function role() {
         return $this->belongsTo(\App\Models\Role::class);

@@ -1,7 +1,14 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/public/';
+    $from = '2021-12-01 00:00:01';
+    $to = '2022-03-01 00:00:01';
+    //dd($requirements->whereBetween('created_at', [$from, $to])->get());
 
+
+?>
+
+  
 
       <div class="page-header">
         <div class="page-header-title">
@@ -22,12 +29,78 @@
         </div>
     </div> 
 
+
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+   @endif
+
     <div class="page-body">
       <div class="row">
         <div class="col-md-12 col-xl-12">
           <div class="card">
             <div class="card-block tab-icon">
-              <!-- Row start -->
+              <div class="row">
+                <div class="col-lg-12 col-xl-12">
+                  <div class="tab-content">
+                    <div class="">
+                        <h6> Search requirements by date </h6>
+                    </div>
+
+                   <div class="card-block button-list">
+                    <form class="form-horizontal" role="form" method="post"> 
+                      <div class="form-group row">
+                          <div class="col-md-4 col-sm-12">
+                              <input type="date" class="form-control" id="from_date" name="from_date" value="<?= old('from_date') ?>" >
+                          </div>
+                    
+                          <div class="col-md-4 col-sm-12">
+                              <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date') ?>" >
+                          </div>
+                      
+                          <div class="col-md-2 col-sm-2 col-xs-6">
+                              <input type="submit" class="btn btn-success btn-sm btn-round" value="Submit"  style="float: right;">
+                          </div>
+                      </div>
+                     <?= csrf_field() ?>
+                   </form>
+                  </div>
+
+
+                   <div class="card-block button-list">
+                    <button type="button" class="btn btn-primary waves-effect waves-light" data-toggle="tooltip" data-placement="top">
+                         New Tasks
+                        <span class="badge">90</span>
+                    </button>
+                    <button type="button" class="btn btn-success waves-effect waves-light" data-toggle="tooltip" data-placement="top">
+                      On Progres Tasks
+                        <span class="badge">70</span>
+                    </button>
+                    <button type="button" class="btn btn-warning waves-effect waves-light" data-toggle="tooltip" data-placement="top">
+                      Canceled Tasks
+                        <span class="badge">170</span>
+                    </button>
+                   
+                    <button type="button" class="btn btn-info waves-effect waves-light" data-toggle="tooltip" data-placement="top">
+                      Completed Tasks
+                        <span class="badge">80</span>
+                    </button>
+                </div>
+                  
+                 </div>
+               </div>
+             </div>
+           </div>
+        </div>
+
+
+          <div class="card">
+            <div class="card-block tab-icon">
               <div class="row">
                 <div class="col-lg-12 col-xl-12">
                 
@@ -38,6 +111,11 @@
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" data-toggle="tab" href="#addnew" role="tab"><strong>Add New </strong></a>
+                      <div class="slide"></div>
+                    </li>
+
+                    <li class="nav-item">
+                      <a class="nav-link" data-toggle="tab" href="#addExcel" role="tab"><strong>Add Tasks by Excel </strong></a>
                       <div class="slide"></div>
                     </li>
                   </ul>
@@ -62,8 +140,8 @@
                             </thead>
                             <tbody>
                               <?php $i = 1;
-                              if(count($requirements) > 0){ 
-                              foreach ($requirements as $req) {  ?>
+                              if(count($requirements->get()) > 0){ 
+                              foreach ($requirements->get() as $req) {  ?>
                               <tr>
                                   <td><?= $i ?></td>
                                   <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General Requirement' ?></td>
@@ -99,6 +177,8 @@
                       </div>
                     </div>
                   </div>
+
+
 
                   <div class="tab-pane" id="addnew" role="tabpanel">
                       <br><br>
@@ -176,20 +256,48 @@
                                   <?= csrf_field() ?>
                                 
                               </form>
-                      
+                          </div>
 
-                  </div>
+
+                          
+                      <div class="tab-pane" id="addExcel" role="tabpanel">
+                       
+                          <div class="card">
+                            <div class="card-header">
+                            <h5>Add New requirements</h5>
+                              <span>Import Calls  from a CSV file. In Excel<br></b>
+                                <a href="<?=url('public/sample_files/upload_customer_requirements.csv')?>" class="right"> <u><b>#Download Sample</b></u> </a>
+                            </span>
+                        </div>
+                      </div>
+                           <form method="post" action="{{ url('customer/requirementUpload') }}" method="POST" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-sm-12 col-xl-4">
+                                    <h4 class="sub-title">Upload excel file</h4>
+                                     <input type="file" class="form-control"  name="excel_tasks">
+                                </div>
+                              </div>
+                          
+                                 <div class="col-sm-3 m-10">
+                                      <button type="submit" class="btn btn-primary btn-sm btn-round">Submit Here</button>
+                                </div>
+                                <?= csrf_field() ?>
+                              
+                            </form>
+                        </div>
+
+
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
-</div>
-</div>
-</div>
+
+
 <script>
 $(".select2").select2({
     theme: "bootstrap",

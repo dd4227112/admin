@@ -480,7 +480,7 @@ Kind regards,';
     }
 
     public function showreply() {
-        $update = \App\Model\Feedback::find(request('message_id'));
+        $update = \App\Models\Feedback::find(request('message_id'));
         $update->update(['shared' => request('status') == 'false' ? 1 : 0]);
         return 1;
     }

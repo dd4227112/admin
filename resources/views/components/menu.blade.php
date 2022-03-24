@@ -113,16 +113,16 @@
                                                  </li>
                                              
                                                  <li class="">
-                                                    <a href="<?= url('sales/school') ?>">
+                                                    <a href="<?= url('sales/schools') ?>">
                                                         <span class="pcoded-mtext">List of Schools</span>
                                                     </a>
                                                   </li>
 
-                                                   <li class="">
+                                                   <!-- <li class="">
                                                     <a href="<?= url('sales/onboaredSchools') ?>">
                                                         <span class="pcoded-mtext">School Implementation</span>
                                                     </a>
-                                                  </li>
+                                                  </li> -->
 
 
                                                 <?php if (can_access('sales_plan')) { ?>

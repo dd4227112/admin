@@ -10,6 +10,9 @@ use \App\Models\User;
 use DB;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+
 
 class Customer extends Controller {
 
@@ -43,8 +46,6 @@ class Customer extends Controller {
     }
 
     function faq() {
-        $this->data['breadcrumb'] = array('title' => 'FAQ','subtitle'=>'frequent asked questions','head'=>'operations');
-
         if ((int) request('id') > 0 && request('action') == 'delete') {
             DB::table('faq')->where('id', request('id'))->delete();
             return redirect()->back()->with('success', 'successfully');
@@ -318,7 +319,10 @@ class Customer extends Controller {
 
     public function createGuide() {
         $file = request()->file('image_file');
-        $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+        if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+         }
+        $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
 
         $obj = [
             'permission_id' => request()->permission_id,
@@ -357,17 +361,20 @@ class Customer extends Controller {
 
     public function guide() {
         if (request()->segment(3) == 'delete') {
-            \App\Model\Guide::findOrFail(request()->segment(4))->delete();
+            \App\Models\Guide::findOrFail(request()->segment(4))->delete();
             return redirect()->back();
         } else if (request('pg') == 'add') {
             $this->data['guides'] = [];
             $page = 'add_guide';
         } else if (request()->segment(3) == 'edit') {
-            $this->data['guide'] = $guide =  \App\Model\Guide::find(request()->segment(4));
+            $this->data['guide'] = $guide =  \App\Models\Guide::find(request()->segment(4));
             $page = 'edit_guide';
             if ($_POST) {
                 $file = request()->file('image_file');
-                $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : $guide->company_file_id;
+                if(filesize($file) > 2015110 ) {
+                    return redirect()->back()->with('error', 'File must have less than 2MBs');
+                 }
+                $company_file_id = $file ? $this->saveFile($file, TRUE) : $guide->company_file_id;
 
                 $obj = [
                     'permission_id' => request()->permission_id,
@@ -377,12 +384,12 @@ class Customer extends Controller {
                     'company_file_id' => $company_file_id
                 ];
 
-                \App\Model\Guide::find(request('guide_id'))->update($obj);
+                \App\Models\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
         } else {
             $page = 'guide';
-            $this->data['guides'] = \App\Model\Guide::latest()->get();
+            $this->data['guides'] = \App\Models\Guide::latest()->get();
            // $this->data['guides'] = \App\Model\Guide::orderBy('id', 'desc')->get();
         }
         return view('customer.' . $page, $this->data);
@@ -452,28 +459,24 @@ class Customer extends Controller {
         return view('customer.training.report');
     }
 
-    public function usage() {
-        return view('customer.usage');
-    }
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
+        $this->data['shulesoft_users'] = (new \App\Http\Controllers\Users)->shulesoftUsers();
 
-        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-        $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) ilike '%" . strtolower($school) . "%' ");
-        $client = \App\Models\Client::where('username', $school)->first();
-
-        
+        $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) like '%" . strtolower($school) . "%' ");
+        $client = \App\Models\Client::where('username', $school)->first(); 
+           
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        } elseif(empty($status) && isset($client->username) && ($client->status == 3)){ 
+        } elseif(empty($status) && isset($client->username) ){ 
               return redirect('https://' . $school . '.shulesoft.com');
-        } elseif(empty($status) && empty($client->username)){ 
-              return view('customer.checkinstallation',$this->data);
+        }elseif(empty($status) && empty($client->username)){ 
+              return view('customer.checkinstallation', $this->data);
         } else { 
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
@@ -486,10 +489,9 @@ class Customer extends Controller {
             }
             $this->data['client_id'] = $client->id;
 
-            $user = $this->zonemanager($this->data['client_id']);
-            if (!empty($user)) {
-              //  $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
-                $this->data['manager'] = \App\Models\User::where(['id' =>$user->user_id,'status'=>1]);
+            $zone_manager = $this->zonemanager($this->data['client_id']);
+            if ($zone_manager) {
+                $this->data['manager'] = \App\Models\User::where(['id' =>$zone_manager->user_id,'status'=>1]);
             }
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
@@ -501,12 +503,21 @@ class Customer extends Controller {
  
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
     
-        $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
-        $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->get();
+        $this->data['invoices'] =\App\Models\Invoice::where('client_id', (int)$client->id)->where('account_year_id', (int) $year->id)->get();
+        $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->latest()->get();
 
         if ($_POST) {
-            $remainder = request('remainder') ? 0 : 1;
-            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))), 'remainder' => $remainder, 'remainder_date' => date('Y-m-d', strtotime(request('remainder_date')))]);
+             $validated = request()->validate([
+                'activity' => 'required|min:12',
+                'start_date' => 'required',
+                'end_date' => 'nullable|after:start_date',
+                'remainder_date' => 'nullable|after:start_date|before:end_date'
+            ]); 
+
+            $remainder = empty(request('remainder_date')) ? 1 : 0;
+            $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
+            $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
+            $data = array_merge(request()->except(['start_date', 'end_date','to_user_id']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date ]);
 
             $task = \App\Models\Task::create($data);
             DB::table('tasks_clients')->insert([
@@ -514,19 +525,22 @@ class Customer extends Controller {
                 'client_id' => (int) request('client_id')
             ]);
 
-            if ((int) request('to_user_id') > 0) {
-                DB::table('tasks_users')->insert([
-                    'task_id' => $task->id,
-                    'user_id' => request('to_user_id')
-                ]);
-                $user = \App\Models\User::find(request('to_user_id'));
-                $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
-                        . chr(10) . 'A task has been allocated to you'
-                        . chr(10) . 'Task: ' . $task->activity . '.'
-                        . chr(10) . 'Type: ' . $task->taskType->name . '.'
-                        . chr(10) . 'Deadline: ' . $task->start_date . '.'
-                        . chr(10) . 'Thanks.';
-                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            if(!empty(request('to_user_id'))) {
+                $to_users = request('to_user_id');
+                foreach($to_users as $key => $user_id){
+                    DB::table('tasks_users')->insert([
+                        'task_id' => $task->id,
+                        'user_id' => $user_id
+                    ]);
+                    $user = \App\Models\User::find($user_id);
+                    $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
+                            . chr(10) . 'A task has been allocated to you'
+                            . chr(10) . 'Task: ' . $task->activity . '.'
+                            . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                            . chr(10) . 'Deadline: ' . $task->start_date . '.'
+                            . chr(10) . 'Thanks.';
+                    $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                }
             }
 
 
@@ -574,8 +588,11 @@ class Customer extends Controller {
     public function addstandingorder() {
         if ($_POST) {
             $file = request('standing_order_file');
+            if(filesize($file) > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+             }
             $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
-            $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+            $company_file_id = $file ? $this->saveFile($file,TRUE) : 1;
 
             $data = [
                 'client_id' => request('client_id'),
@@ -676,7 +693,6 @@ class Customer extends Controller {
             return view('customer/view_task', $this->data);
         } else {
             $date = request('taskdate');
-
             $this->data['activities'] = [];
             return view('customer/activity', $this->data);
         }
@@ -827,9 +843,9 @@ class Customer extends Controller {
 
     public function removeTag() {
         $id = request('id');
-        $tag = \App\Models\Task::find($id);
-        !empty($tag) ? $tag->delete() : '';
-        echo 1;
+        $tag = \App\Models\Task::where('id',(int) $id);
+        $reply = !empty($tag) ? $tag->delete() : '';
+        echo $reply > 0 ? 'Task deleted' : 'No changes happened';
     }
 
     public function updateTask() {
@@ -892,7 +908,6 @@ class Customer extends Controller {
             $this->data['requirement'] = \App\Models\Requirement::where('id', (int) $id)->first();
             $next_id = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first();
             $this->data['next'] = is_null($next_id) ? '' : $next_id->id;
-           // $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
 
@@ -903,6 +918,11 @@ class Customer extends Controller {
 
         $this->data['levels'] = [];
         if ($_POST) {
+            $validated = request()->validate([
+                'note' => 'required|min:12',
+                'contact' => 'required'
+            ]); 
+
             $requirement = [
                 'school_id' => is_null(request('school_id')) ? '0' : request('school_id'),
                 'contact' => request('contact'),
@@ -945,7 +965,7 @@ class Customer extends Controller {
                 $this->send_sms($user->phone, $sms, 1);
             }
         }
-        $this->data['requirements'] = \App\Models\Requirement::latest()->get();
+        $this->data['requirements'] = \App\Models\Requirement::latest();
         return view('customer/analysis', $this->data);
     }
 
@@ -1444,35 +1464,7 @@ class Customer extends Controller {
         }
     }
 
-    // method to share invoice link
-    public function ShareInvoiceWhatsApp() {
-        $invoice_id = request()->segment(3);
-        $set = $this->data['set'] = 1;
-        if ((int) $invoice_id > 0) {
-            $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
-            $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
-            $start_usage_date = date('Y-m-d', strtotime($this->data['usage_start_date']));
-            $yearEnd = date('Y-m-d', strtotime('Dec 31'));
-            $to = \Carbon\Carbon::createFromFormat('Y-m-d', $yearEnd);
-            $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
-            $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
-            return view('layouts.invoice_to_share', $this->data);
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
-
-    public function ShareInvoiceEmail() {
-        $invoice_id = request()->segment(3);
-        $set = $this->data['set'] = 1;
-        if ((int) $invoice_id > 0) {
-            $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
-            return view('layouts.invoice_to_share', $this->data);
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
-
+  
     public function deleteContract() {
         $contract_id = request()->segment(3);
         $contract = \App\Models\Contract::where('id', $contract_id)->delete();
@@ -1482,7 +1474,10 @@ class Customer extends Controller {
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
-        $file_id = $this->saveFile($file, 'company/contracts', TRUE);
+        if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+         }
+        $file_id = $this->saveFile($file, TRUE);
         //save contract
 
         $contract_id = DB::table('admin.contracts')->insertGetId([
@@ -1585,14 +1580,17 @@ class Customer extends Controller {
     public function uploadJobCard() {
         if ($_POST) {
             $file = request()->file('job_card_file');
-            $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+            
+             if(($file)->getSize() > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+             }
 
+            $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
             $where = ['date' => request('job_date'), 'client_id' => request('client_id')];
             $card = DB::table('client_job_cards')->where($where)->first();
-
             $data = [
                 'company_file_id' => $company_file_id,
-                'client_id' => request('client_id'),
+                'client_id' => (int) request('client_id'),
                 'created_by' => \Auth::user()->id,
                 'date' => request('job_date')
             ];
@@ -1828,5 +1826,18 @@ class Customer extends Controller {
                   $this->sendWhatsappFiles($phone,$filename,$path);
               }
           }
+
+
+        public function requirementUpload(){
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\RequirementImport, request()->file('excel_tasks'));
+            return redirect('customer/requirements')->with('success', 'All requirements uploaded successfully!');
+        }
+
+
+        public function searchRequirement(){
+             $this->data['from_date'] = request('from_date');
+             $this->data['to_date'] = request('to_date');
+             return view('customer/analysis', $this->data);
+        }
 
 }

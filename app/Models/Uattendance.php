@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Uattendance extends Model {
 
+    use \App\Traits\BelongsToUser;
+
     /**
      * Generated
      */
@@ -16,8 +18,5 @@ class Uattendance extends Model {
         return $this->belongsTo(\App\Models\AbsentReason::class, 'absent_reason_id', 'id');
     }
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class,'user_id','id');
-    }
 
 }

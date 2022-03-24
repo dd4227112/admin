@@ -1,11 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
 
-
-
-    
-      
          <div class="page-header">
             <div class="page-header-title">
                 <h4> Create phone call</h4>
@@ -202,7 +197,7 @@
                     <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                 </div>
                 </form>
-                    </div>
+              </div>
 
                 </div>
     </div>

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class IntegrationRequestDocument extends Model {
+   
+    use \App\Traits\belongsTocompanyFile;
 
     /**
      * Generated
@@ -18,8 +20,5 @@ class IntegrationRequestDocument extends Model {
         return $this->belongsTo(\App\Models\IntegrationRequest::class, 'integration_request_id', 'id');
     }
 
-    public function companyFile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
-    }
     
 }

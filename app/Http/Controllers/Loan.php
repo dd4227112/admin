@@ -39,7 +39,6 @@ class Loan extends Controller {
     }
 
       public function type() {
-        $this->data['breadcrumb'] = array('title' => 'Loan types','subtitle'=>'loans','head'=>'payroll');
                $id = request()->segment(3);
                $loan_id = request()->segment(4);
 
@@ -82,7 +81,6 @@ class Loan extends Controller {
      }
 
     public function loanAdd() {
-        $this->data['breadcrumb'] = array('title' => 'Add loan','subtitle'=>'loans','head'=>'payroll');
         $this->data['type'] = 0;
         $this->data['loan_types'] = \App\Models\LoanType::all();
         if (can_access('manage_payroll')) {
@@ -210,8 +208,6 @@ class Loan extends Controller {
 
     
     public function add() {
-        $this->data['breadcrumb'] = array('title' => 'Add loan type','subtitle'=>'loans','head'=>'payroll');
-
             $this->data['type'] = $id = request()->segment(3);
             if ($_POST) {
                 request()->validate([

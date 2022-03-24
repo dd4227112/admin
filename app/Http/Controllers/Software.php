@@ -401,17 +401,6 @@ class Software extends Controller {
         return view('software.api.requests',$this->data);
     }
 
-    // public function banksetup() {
-    //     $this->data['settings'] = DB::table('admin.all_setting')->get();
-    //     $seg = request()->segment(3);
-    //     $this->data['schema'] = $seg;
-    //     if (strlen($seg) > 2) {
-    //         $this->data['banks'] = DB::select('select b.*,a.api_username,a.api_password,a.invoice_prefix,a.sandbox_api_username,a.sandbox_api_password from ' . $seg . '.bank_accounts_integrations a right join ' . $seg . '.bank_accounts b on a.bank_account_id=b.id');
-    //     }
-    //     return view('software.api.banksetup', $this->data);
-    // }
-
-
     public function loadaccounts() {
         $schema = request('schema');
         if (strlen($schema) > 2) {
@@ -752,7 +741,7 @@ class Software extends Controller {
 
     public function smsStatus() {
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
-        return view('software.status_sms', $this->data);
+        return view('software.smsstatus', $this->data);
     }
 
     /**

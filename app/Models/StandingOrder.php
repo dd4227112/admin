@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StandingOrder extends Model
-{
+{   
+    
+    use \App\Traits\belongsTocompanyFile;
+
     protected $table = 'admin.standing_orders';
 
     protected $fillable = ['id','client_id', 'type', 'refer_bank_id','branch_id', 'company_file_id','school_contact_id','created_by',
@@ -20,9 +23,6 @@ class StandingOrder extends Model
         return $this->belongsTo(\App\Models\PartnerBranch::class, 'branch_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
-    public function companyFile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
-    }
 
     public function schoolcontact() {
         return $this->belongsTo(\App\Models\SchoolContact::class,'school_contact_id', 'id');

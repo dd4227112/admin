@@ -17,16 +17,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Contract extends Model {
 
+
+    use \App\Traits\belongsTocompanyFile;
+    use \App\Traits\BelongsToUser;
+
+
     protected $table = 'contracts';
     protected $fillable = ['id', 'name', 'company_file_id', 'user_id', 'start_date', 'end_date', 'type', 'created_at', 'updated_at', 'note','contract_type_id'];
 
-    public function companyFile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
-    }
-
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Not Defined']);
-    }
    public function contractType() {
         return $this->belongsTo(\App\Models\ContractType::class, 'contract_type_id', 'id')->withDefault(['name' => 'Not Defined']);
     }

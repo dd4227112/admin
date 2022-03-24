@@ -13,7 +13,7 @@ class Feedback extends Model {
     ];
 
     public function reply() {
-        return $this->hasMany('\App\Model\Feedback_reply');
+        return $this->hasMany('\App\Models\Feedback_reply');
     }
     
     public function user() {

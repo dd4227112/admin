@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchoolContact extends Model {
 
+    use \App\Traits\BelongsToUser;
+
     /**
      * Generated
      */
@@ -16,8 +18,5 @@ class SchoolContact extends Model {
         return $this->belongsTo(\App\Models\School::class);
     }
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class);
-    }
 
 }

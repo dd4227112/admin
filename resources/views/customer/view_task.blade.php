@@ -2,32 +2,27 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<!-- Sidebar inner chat end-->
-<!-- Main-body start -->
-
-    
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4> TASK PERFORMED</h4>
-                <span>This Part Show Task performed on a school</span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Company Minutes</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">minutes</a>
-                    </li>
-                </ul>
-            </div>
+<div>
+    <div class="page-header">
+        <div class="page-header-title">
+            <h4>Task</h4>
         </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                 <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">Task Allocated</a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!">summary</a>
+                </li>
+            </ul>
+        </div>
+    </div> 
+  </div>
+
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">

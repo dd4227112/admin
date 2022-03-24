@@ -10,14 +10,14 @@ use Illuminate\Database\Eloquent\Model;
  * @author hp
  */
 class Events extends Model {
+
+    use \App\Traits\BelongsToUser;
+
    
     //put your code here
     protected $table = 'events';
     protected $fillable = ['id','title', 'note', 'attach_id', 'event_date', 'start_time', 'end_time', 'status', 'file_id', 'category', 'user_id', 'department_id', 'created_at', 'updated_at','meeting_link'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'User Not allocated']);
-    }
 
     public function department() {
         return $this->belongsTo(\App\Models\Department::class, 'department_id', 'id')->withDefault(['name' => 'Not Defined']);
