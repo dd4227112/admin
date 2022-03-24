@@ -427,6 +427,14 @@ class Controller extends BaseController {
 
            
            
+        public function action($action) {
+            if (request()->ajax()) {
+                return response()->json(['error' => 'Not Found'], 404);
+            } else {
+                return $action;
+            }
+        }
+            
 
 
         public function test(){

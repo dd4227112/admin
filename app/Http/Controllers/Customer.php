@@ -11,6 +11,7 @@ use DB;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 
 
 class Customer extends Controller {
@@ -458,16 +459,24 @@ class Customer extends Controller {
         return view('customer.training.report');
     }
 
-    public function usage() {
-        return view('customer.usage');
-    }
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
         $this->data['shulesoft_users'] = (new \App\Http\Controllers\Users)->shulesoftUsers();
 
+        try{
+            // $this->data['school'] = DB::table($school . '.setting')->firstOrFail(); // error
+            $this->data['school']  = \App\Models\School::where('schema_name', $school)->firstOrFail(); 
+         } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+               return redirect('https://' . $school . '.shulesoft.com');
+            // return $this->action(redirect()->back()->with('error', 'School Not onboarded yet'));
+         } catch(\Illuminate\Database\Eloquent\RelationNotFoundException $e){
+               return redirect('https://' . $school . '.shulesoft.com');
+       }
+
         $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) like '%" . strtolower($school) . "%' ");
+        // $status = \collect(DB::select('SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '". strtolower($school) ."'))->first();
         $client = \App\Models\Client::where('username', $school)->first(); 
            
         $is_client = 0;
@@ -477,13 +486,11 @@ class Customer extends Controller {
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
         } elseif(empty($status) && isset($client->username) ){ 
               return redirect('https://' . $school . '.shulesoft.com');
-        }
-         elseif(empty($status) && empty($client->username)){ 
-              return view('customer.checkinstallation',$this->data);
-        } 
-        else { 
+        }elseif(empty($status) && empty($client->username)){ 
+              return view('customer.checkinstallation', $this->data);
+        } else { 
             $is_client = 1;
-            $this->data['school'] = DB::table($school . '.setting')->first();
+
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
             $this->data['client'] = $client = \App\Models\Client::where('username', $school)->first();
             $this->data['trial'] = DB::table('admin.client_trials')->where('client_id',$client->id)->first();
