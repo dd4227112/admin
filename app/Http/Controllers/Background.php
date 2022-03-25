@@ -672,7 +672,7 @@ class Background extends Controller {
 
     public function taskallocated(){
         $user_id = \Auth::user()->id;
-        $this->data['tasks_allocated'] = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id',$user_id)->get(['task_id']))->latest()->get();
+        $this->data['tasks_allocated'] = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id',$user_id)->get(['task_id']))->where('status','!=','complete')->latest()->get();
         return view('sales.tasks_allocated',$this->data);
      }
 

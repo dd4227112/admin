@@ -464,8 +464,12 @@ class Customer extends Controller {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
         $this->data['shulesoft_users'] = (new \App\Http\Controllers\Users)->shulesoftUsers();
+        $status = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
 
-        $status = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) like '%" . strtolower($school) . "%' ");
+        if(empty($status)){
+              return redirect('https://' . $school . '.shulesoft.com');
+        }
+
         $client = \App\Models\Client::where('username', $school)->first(); 
            
         $is_client = 0;
@@ -852,7 +856,7 @@ class Customer extends Controller {
         $id = request('id');
         $action = request('action');
         \App\Models\Task::where('id', $id)->update(['status' => $action]);
-        echo '<small style="color: red">Success</small>';
+        echo 'Success';
     }
 
     public function allocate() {
@@ -911,9 +915,34 @@ class Customer extends Controller {
             return view('customer/view_requirement', $this->data);
         }
 
-         if ($tab == 'edit' && $id > 0) {
+        if ($tab == 'edit' && $id > 0) {
             $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
             return view('customer/edit_requirement', $this->data);
+        }
+
+        if($tab == 'range'){
+            $startDate = request('start');
+            $endDate = request('end');
+            $this->data['stats'] = $this->checkTaskProgress($startDate,$endDate);
+            $this->data['requirements'] = \App\Models\Requirement::whereBetween('created_at', [$startDate, $endDate]);
+            return view('customer/analysis', $this->data);
+        }
+
+
+        if($tab == 'allocated'){
+            $to_user_id = \Auth()->user()->id;
+            $this->data['startDate'] = $startDate = date("Y-m-d", strtotime('monday this week'));
+            $this->data['endDate']  = $endDate  = date('Y-m-d', strtotime($startDate. ' + 6 days'));  
+            
+            if($_POST){
+               $to_user_id = request('to_user_id') != '' ?  request('to_user_id') : \Auth()->user()->id;
+               $this->data['startDate'] = $startDate = date('Y-m-d',strtotime(request('week')));
+               $this->data['endDate'] = $endDate  = date('Y-m-d', strtotime($startDate. ' + 6 days')); 
+               $this->data['person_stats'] = $this->checkTaskProgress($startDate,$endDate,$to_user_id);
+               $this->data['requirements'] = \App\Models\Requirement::whereBetween('created_at', [$startDate, $endDate]);
+             }
+            $this->data['person_stats'] = $this->checkTaskProgress($startDate,$endDate,$to_user_id);
+            return view('customer/analysis', $this->data);
         }
 
         $this->data['levels'] = [];
@@ -959,7 +988,7 @@ class Customer extends Controller {
                     "description" => Auth::User()->name .' - '. strip_tags(request('note'))
                 ];
                 $story = new \App\Http\Controllers\General();
-               $data1 = $story->post($url, $fields);
+                $data1 = $story->post($url, $fields);
                 
                 $this->send_whatsapp_sms($user->phone, $sms);
                 $this->send_sms($user->phone, $sms, 1);
@@ -975,6 +1004,8 @@ class Customer extends Controller {
         \App\Models\Requirement::where('id', $id)->update($data);
         return redirect('customer/requirements')->with('success', 'Edited successfully!');
     }
+
+
 
     public function updateReq() {
         $id = request('id');
@@ -1839,5 +1870,51 @@ class Customer extends Controller {
              $this->data['to_date'] = request('to_date');
              return view('customer/analysis', $this->data);
         }
+
+
+        public function checkTaskProgress($from_date,$to_date,$to_user_id = null){
+            if($to_user_id == null){
+                $data =  \collect(DB::select("select A.new_task,B.complete,C.progress,F.canceled,D.resolved,E.total,
+                        (A.new_task::float/NULLIF(E.total::float,0))*100 as percentage_new,
+                        (B.complete::float/NULLIF(E.total::float,0))*100 as percentage_complete,
+                        (C.progress::float/NULLIF(E.total::float,0))*100 as percentage_progress,
+                        (F.canceled::float/NULLIF(E.total::float,0))*100 as percentage_canceled,
+                        (D.resolved::float/NULLIF(E.total::float,0))*100 as percentage_resolved from 
+                        (select count(*) as new_task from admin.requirements where status ilike '%new%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}') A,
+                        (select count(*) as complete from admin.requirements where status ilike '%completed%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}') B,
+                        (select count(*) as progress from admin.requirements where status ilike '%on progres%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}') C,
+                        (select count(*) as resolved from admin.requirements where status ilike '%resolved%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}' ) D,
+                        (select count(*) as canceled from admin.requirements where status ilike '%canceled%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}' ) F,
+                        (select count(*) as total from admin.requirements where created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}' ) E"))->first();
+            } else {
+                $data =  \collect(DB::select("select A.new_task,B.complete,C.progress,F.canceled,D.resolved,E.total,
+                        (A.new_task::float/NULLIF(E.total::float,0))*100 as percentage_new,
+                        (B.complete::float/NULLIF(E.total::float,0))*100 as percentage_complete,
+                        (C.progress::float/NULLIF(E.total::float,0))*100 as percentage_progress,
+                        (F.canceled::float/NULLIF(E.total::float,0))*100 as percentage_canceled,
+                        (D.resolved::float/NULLIF(E.total::float,0))*100 as percentage_resolved from 
+                        (select count(*) as new_task from admin.requirements where to_user_id = '{$to_user_id}' and status ilike '%new%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}') A,
+                        (select count(*) as complete from admin.requirements where to_user_id = '{$to_user_id}' and status ilike '%completed%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}') B,
+                        (select count(*) as progress from admin.requirements where to_user_id = '{$to_user_id}' and status ilike '%on progres%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}') C,
+                        (select count(*) as resolved from admin.requirements where to_user_id = '{$to_user_id}' and status ilike '%resolved%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}' ) D,
+                        (select count(*) as canceled from admin.requirements where to_user_id = '{$to_user_id}' and status ilike '%canceled%' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}' ) F,
+                        (select count(*) as total from admin.requirements where to_user_id = '{$to_user_id}' and created_at::date >= '{$from_date}' and 
+                        created_at::date <= '{$to_date}' ) E"))->first();
+               }
+
+               return $data;
+           
+         }
 
 }

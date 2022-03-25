@@ -98,10 +98,10 @@
                             </thead>
                             <tbody>
                               <?php $i = 1; 
-                                 $requremts = \App\Models\Requirement::where('to_user_id',$requirement->to_user_id)
+                                 $requirements = \App\Models\Requirement::where('to_user_id',$requirement->to_user_id)
                                  ->where('id','<>',$requirement->id)->where('status','<>','Completed')->latest()->get();
-                                  if(count($requremts) > 0){ 
-                                 foreach ($requremts as $req) {   
+                                  if(count($requirements) > 0){ 
+                                 foreach ($requirements as $req) {   
                                  ?>
                               <tr>
                                   <td><?= $i ?></td>

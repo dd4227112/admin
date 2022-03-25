@@ -109,12 +109,12 @@ class Analyse extends Controller {
     }
 
     public function setting() {
-        $this->data['association'] = \App\Model\Association::first();
+        $this->data['association'] = \App\Models\Association::first();
         return view('analyse.setting', $this->data);
     }
 
     public function accounts() {
-        $this->data['association'] = \App\Model\Association::first();
+        $this->data['association'] = \App\Models\Association::first();
         $sql_2 = "select sum(count) as count, month from (
         select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')." group by month
         UNION ALL select sum(amount) as count, extract(month from created_at) as month from admin.revenues a   where extract(year from created_at)=".date('Y')." group by month) a group by month order by month asc";
@@ -123,7 +123,7 @@ class Analyse extends Controller {
     }
 
     public function marketing() {
-        $this->data['association'] = \App\Model\Association::first();
+        $this->data['association'] = \App\Models\Association::first();
         return view('analyse.marketing', $this->data);
     }
 

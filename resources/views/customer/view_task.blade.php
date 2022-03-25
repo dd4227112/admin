@@ -35,7 +35,7 @@
                                                 <tr>
                                                     <th scope="row">Task Period</th>
                                                     <th>Start {{ date('d-m-Y H:i:s', strtotime($activity->start_date)) }} &nbsp;&nbsp; &nbsp;  to  &nbsp;&nbsp; &nbsp;   <?=  date('d-m-Y H:i:s', strtotime($activity->end_date)) ?></th>
-                                                </tr>
+                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Staff Members</th>
                                                                     <th>
@@ -54,7 +54,7 @@
                                                                             echo $person;
                                                                         }
                                                                         ?>
-                                                                </tr>
+                                                                   </tr>
                                                                 <tr>
                                                                     <th> Client Name</th>
                                                                     <th><?php
@@ -108,16 +108,7 @@
                                         <div class="card-block user-desc">
                                             <div class="view-desc">
                                                 <h4>About This Activity </h4>
-                                                <p style="float: right;"> <span style="float: right;" id="added_"> </span>
-                                                <b>Task Excuted:</b>
-                                                    <select id="action" class="form-control">
-                                                        <option value='{{ $activity->action }}'>{{ $activity->status }}</option>
-                                                        <option value='complete'>Complete</option>
-                                                        <option value='Pending'>Pending</option>
-                                                        <option value='on progress'>Progress</option>
-                                                        <option value='Resolved'>Resolved</option>
-                                                    </select>
-                                                </p>
+                                              
                                                 <p> <?= $activity->activity ?></p>
 
                                             </div>
@@ -155,9 +146,9 @@
                                                                     <div class="">
                                                                         <textarea rows="5" cols="5" id="task_comment<?= $activity->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
                                                                         <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $activity->id ?>').val(), task_id:<?= $activity->id ?>}, function (data) {
-                                                            $('.new_comment<?= $activity->id ?>').after(data);
-                                                            $('#task_comment<?= $activity->id ?>').val('')
-                                                        })">Post</a></div>
+                                                                            $('.new_comment<?= $activity->id ?>').after(data);
+                                                                            $('#task_comment<?= $activity->id ?>').val('')
+                                                                        })">Post</a></div>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -165,6 +156,19 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+
+                                            <p style="float: right;"> <span style="float: right;" id="added_"> </span>
+                                                <b>Task Excuted:</b>
+                                                    <select id="action" class="form-control">
+                                                        <option value='{{ $activity->action }}'>{{ $activity->status }}</option>
+                                                        <option value='complete'>Complete</option>
+                                                        <option value='Pending'>Pending</option>
+                                                        <option value='on progress'>Progress</option>
+                                                        <option value='Resolved'>Resolved</option>
+                                                    </select>
+                                                </p>
+
                                         </div>
                                     </div>
                                 </div>
@@ -184,11 +188,15 @@
         var val = $(this).val();
         $.ajax({
             type: 'POST',
+            headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             url: "<?= url('Customer/updateTask') ?>",
             data: "id=" + <?= $activity->id ?> + "&action=" + val,
             dataType: "html",
             success: function (data) {
-                $('#added_').html(data);
+                toastr.success(data);
+
             }
         });
     });

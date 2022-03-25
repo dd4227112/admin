@@ -4,11 +4,8 @@
     $from = '2021-12-01 00:00:01';
     $to = '2022-03-01 00:00:01';
     //dd($requirements->whereBetween('created_at', [$from, $to])->get());
-
-
 ?>
 
-  
 
       <div class="page-header">
         <div class="page-header-title">
@@ -40,6 +37,17 @@
     </div>
    @endif
 
+   <div class="row">
+    <div class="col-sm-12 col-lg-3 m-b-20">
+       <h6>Pick date </h6>
+       <input type="text" name="dates" id="rangeDate" class="form-control">
+   </div>
+   <div class="col-sm-12 col-lg-3 m-b-20">
+       <h6> &nbsp; </h6>
+       <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-primary">
+   </div>
+</div>
+
     <div class="page-body">
       <div class="row">
         <div class="col-md-12 col-xl-12">
@@ -49,55 +57,81 @@
                 <div class="col-lg-12 col-xl-12">
                   <div class="tab-content">
                     <div class="">
-                        <h6> Search requirements by date </h6>
+                       <h6>  <b> Tasks statistics (Numbers)  </b> </h6>
                     </div>
+                    <br>
 
-                   <div class="card-block button-list">
-                    <form class="form-horizontal" role="form" method="post"> 
-                      <div class="form-group row">
-                          <div class="col-md-4 col-sm-12">
-                              <input type="date" class="form-control" id="from_date" name="from_date" value="<?= old('from_date') ?>" >
-                          </div>
-                    
-                          <div class="col-md-4 col-sm-12">
-                              <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date') ?>" >
-                          </div>
-                      
-                          <div class="col-md-2 col-sm-2 col-xs-6">
-                              <input type="submit" class="btn btn-success btn-sm btn-round" value="Submit"  style="float: right;">
-                          </div>
-                      </div>
-                     <?= csrf_field() ?>
-                   </form>
-                  </div>
-
-
-                   <div class="card-block button-list">
-                    <button type="button" class="btn btn-primary waves-effect waves-light" data-toggle="tooltip" data-placement="top">
-                         New Tasks
-                        <span class="badge">90</span>
+                   <div class=" button-list">
+                    <button type="button" class="btn btn-primary waves-effect waves-light">
+                        New
+                        <span class="badge"><?= isset($stats->new_task) ? $stats->new_task:  0 ?></span>
                     </button>
-                    <button type="button" class="btn btn-success waves-effect waves-light" data-toggle="tooltip" data-placement="top">
-                      On Progres Tasks
-                        <span class="badge">70</span>
+                    <button type="button" class="btn btn-success waves-effect waves-light">
+                      On Progres 
+                        <span class="badge"><?= isset($stats->progress) ? $stats->progress : 0 ?></span>
                     </button>
-                    <button type="button" class="btn btn-warning waves-effect waves-light" data-toggle="tooltip" data-placement="top">
-                      Canceled Tasks
-                        <span class="badge">170</span>
+                    <button type="button" class="btn btn-warning waves-effect waves-light">
+                      Resolved 
+                        <span class="badge"><?= isset($stats->resolved) ? $stats->resolved : 0 ?></span>
                     </button>
                    
-                    <button type="button" class="btn btn-info waves-effect waves-light" data-toggle="tooltip" data-placement="top">
-                      Completed Tasks
-                        <span class="badge">80</span>
+                    <button type="button" class="btn btn-info waves-effect waves-light">
+                      Completed 
+                        <span class="badge"><?= isset($stats->complete) ? $stats->complete : 0  ?></span>
                     </button>
-                </div>
+
+                    <button type="button" class="btn btn-default waves-effect waves-light">
+                      Cancelled 
+                        <span class="badge"> <?= isset($stats->canceled) ? $stats->canceled : 0 ?></span>
+                    </button>
+
+                    <button type="button" class="btn btn-info waves-effect waves-light">
+                      Total
+                        <span class="badge"> <?= isset($stats->total) ? $stats->total : 0 ?></</span>
+                    </button>
+                  </div>
+                   <br>
+
+                  <div class="">
+                    <h6>  <b>  Percentages </b> </h6>
+                 </div>
+                  <br>
+
+                  <div class=" button-list">
+                    <button type="button" class="btn btn-primary waves-effect waves-light">
+                        New
+                        <span class="badge"><?= isset($stats->percentage_new) ? percent($stats->percentage_new) : 0 ?></span>
+                    </button>
+                    <button type="button" class="btn btn-success waves-effect waves-light">
+                      On Progres 
+                        <span class="badge"><?= isset($stats->percentage_progress) ? percent($stats->percentage_progress): 0 ?></span>
+                    </button>
+                    <button type="button" class="btn btn-warning waves-effect waves-light">
+                      Resolved 
+                        <span class="badge"><?= isset($stats->percentage_resolved) ? percent($stats->percentage_resolved) : 0 ?></span>
+                    </button>
+                   
+                    <button type="button" class="btn btn-info waves-effect waves-light">
+                      Completed 
+                        <span class="badge"><?= isset($stats->percentage_complete) ? percent($stats->percentage_complete) : 0 ?></span>
+                    </button>
+
+                    <button type="button" class="btn btn-default waves-effect waves-light">
+                      Cancelled 
+                        <span class="badge"><?= isset($stats->percentage_canceled) ? percent($stats->percentage_canceled) : 0 ?></span>
+                    </button>
+
+                    <button type="button" class="btn btn-info waves-effect waves-light">
+                      Total
+                        <span class="badge">100</span>
+                    </button>
+                  </div>
                   
                  </div>
                </div>
              </div>
            </div>
         </div>
-
 
           <div class="card">
             <div class="card-block tab-icon">
@@ -117,7 +151,13 @@
                     <li class="nav-item">
                       <a class="nav-link" data-toggle="tab" href="#addExcel" role="tab"><strong>Add Tasks by Excel </strong></a>
                       <div class="slide"></div>
-                    </li>
+                    </li> 
+
+                    
+                    <li class="nav-item">
+                      <a class="nav-link" data-toggle="tab" href="#personali" role="tab"><strong> Individual Tasks </strong></a>
+                      <div class="slide"></div>
+                    </li> 
                   </ul>
 
 
@@ -181,7 +221,7 @@
 
 
                   <div class="tab-pane" id="addnew" role="tabpanel">
-                      <br><br>
+                      <br>
                              <form method="post">
                               <div class="row">
                                   <div class="col-sm-12 col-xl-4">
@@ -274,7 +314,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-xl-4">
                                     <h4 class="sub-title">Upload excel file</h4>
-                                     <input type="file" class="form-control"  name="excel_tasks">
+                                     <input type="file" class="form-control"  name="excel_tasks" required>
                                 </div>
                               </div>
                           
@@ -284,6 +324,189 @@
                                 <?= csrf_field() ?>
                               
                             </form>
+                        </div>
+
+
+                        <div class="tab-pane" id="personali" role="tabpanel">
+                            <div class="col-xl-12">
+                                <div class="cardt">
+                                    <div class="card-body">
+                                      <form method="post" action="<?= url('customer/requirements/allocated') ?>">
+                                        <div class="row">
+                                        
+                                            <div class="col-sm-12 col-xl-4">
+                                                <h4 class="sub-title">Allocated person</h4>
+                                                  <select name="to_user_id" class="form-control select2" required>
+                                                    <?php
+                                                    $staffs = DB::table('users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+                                                       foreach ($staffs as $staff) {
+                                                         ?>
+                                                      <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                              </div>
+
+                                              <div class="col-sm-12 col-xl-4">
+                                                <h4 class="sub-title">Week</h4>
+                                                <input type="week" name="week" id="camp-week"  class="form-control"
+                                                min="2018-W18" max="2023-W26" required>
+                                              </div>
+
+                                              <div class="col-sm-12 col-xl-4">
+                                                <h4 class="sub-title">  &nbsp; </h4>
+                                                 <button class="btn btn-primary btn-mini btn-round">Submit</button>
+                                              </div>
+
+                                             </div>
+                                           </form>
+
+                                        
+                                             <br>
+                                           <div class="row">
+                                            <div class="col-xl-2 col-md-6">
+                                                <div class="card statustic-progress-card">
+                                                    <div class="card-header">
+                                                        <h5>New</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="row align-items-center">
+                                                            <div class="col">
+                                                                <label class="label label-success">
+                                                                  <?= isset($person_stats->percentage_new) ? percent($person_stats->percentage_new) : 0 ?> <i class="m-l-10 feather icon-arrow-up"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                <h5 class=""><?= isset($person_stats->new_task) ? $person_stats->new_task:  0 ?></h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress m-t-15">
+                                                            <div class="progress-bar bg-c-green" style="width:35%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6">
+                                                <div class="card statustic-progress-card">
+                                                    <div class="card-header">
+                                                        <h5>On Progress</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="row align-items-center">
+                                                            <div class="col">
+                                                                <label class="label label-success">
+                                                                  <?= isset($person_stats->percentage_progress) ? percent($person_stats->percentage_progress) : 0 ?>
+                                                                  <i class="m-l-10 feather icon-arrow-up"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                <h5 class=""><?= isset($person_stats->progress) ? $person_stats->progress:  0 ?></h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress m-t-15">
+                                                            <div class="progress-bar bg-c-green" style="width:28%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6">
+                                                <div class="card statustic-progress-card">
+                                                    <div class="card-header">
+                                                        <h5>Resolved</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="row align-items-center">
+                                                            <div class="col">
+                                                                <label class="label label-success">
+                                                                  <?= isset($person_stats->percentage_resolved) ? percent($person_stats->percentage_resolved) : 0 ?>
+                                                                    <i class="m-l-10 feather icon-arrow-up"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                <h5 class=""><?= isset($person_stats->resolved) ? $person_stats->resolved:  0 ?></h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress m-t-15">
+                                                            <div class="progress-bar bg-c-green" style="width:87%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6">
+                                                <div class="card statustic-progress-card">
+                                                    <div class="card-header">
+                                                        <h5> Completed</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="row align-items-center">
+                                                            <div class="col">
+                                                                <label class="label label-success">
+                                                                  <?= isset($person_stats->percentage_complete) ? percent($person_stats->percentage_complete) : 0 ?>
+                                                                  <i class="m-l-10 feather icon-arrow-up"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                <h5 class=""><?= isset($person_stats->complete) ? $person_stats->complete:  0 ?></h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress m-t-15">
+                                                            <div class="progress-bar bg-c-green" style="width:32%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xl-2 col-md-6">
+                                              <div class="card statustic-progress-card">
+                                                  <div class="card-header">
+                                                      <h5> Cancelled</h5>
+                                                  </div>
+                                                  <div class="card-block">
+                                                      <div class="row align-items-center">
+                                                          <div class="col">
+                                                              <label class="label label-success">
+                                                                <?= isset($person_stats->percentage_canceled) ? percent($person_stats->percentage_canceled) : 0 ?>
+                                                                  <i class="m-l-10 feather icon-arrow-up"></i>
+                                                              </label>
+                                                          </div>
+                                                          <div class="col text-right">
+                                                              <h5 class=""><?= isset($person_stats->canceled) ? $person_stats->canceled:  0 ?></h5>
+                                                          </div>
+                                                      </div>
+                                                      <div class="progress m-t-15">
+                                                          <div class="progress-bar bg-c-green" style="width:32%"></div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+
+                                          <div class="col-xl-2 col-md-6">
+                                            <div class="card statustic-progress-card">
+                                                <div class="card-header">
+                                                    <h5>Total</h5>
+                                                </div>
+                                                <div class="card-block">
+                                                    <div class="row align-items-center">
+                                                        <div class="col">
+                                                            <label class="label label-success">
+                                                                100% <i class="m-l-10 feather icon-arrow-up"></i>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col text-right">  
+                                                            <h5 class=""><?= isset($person_stats->total) ? $person_stats->total:  0 ?> </h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress m-t-15">
+                                                        <div class="progress-bar bg-c-green" style="width:32%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                          </div>
+
+
+                                      </div>
+                                  </div>
+                                </div>
                         </div>
 
 
@@ -304,7 +527,32 @@ $(".select2").select2({
     dropdownAutoWidth: false,
     allowClear: false,
     debug: true
-}); 
+  }); 
+
+  submit_search = function () {
+        $('#search_custom').mousedown(function () {
+            var alldates = $('#rangeDate').val();
+            alldates = alldates.trim();
+            alldates = alldates.split("-");
+            start_date = formatDate(alldates[0]);
+            end_date = formatDate(alldates[1]);
+            window.location.href = '<?= url('customer/requirements/range') ?>/5?start=' + start_date + '&end=' + end_date;
+        });
+    }
+
+     $('input[name="dates"]').daterangepicker();
+
+    formatDate = function (date) {
+        date = new Date(date);
+        var day = ('0' + date.getDate()).slice(-2);
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        return year + '-' + month + '-' + day;
+    }
+
+    $(document).ready(submit_search);
+    $(document).ready(formatDate);
+
 
 get_schools = function () {
   $("#get_schools").select2({
