@@ -1,11 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/';
-    $from = '2021-12-01 00:00:01';
-    $to = '2022-03-01 00:00:01';
-    //dd($requirements->whereBetween('created_at', [$from, $to])->get());
-?>
-
 
       <div class="page-header">
         <div class="page-header-title">
@@ -171,8 +165,8 @@
                               <tr>
                                 <th>#</th>
                                 <th>School Name</th>
-                                <th>Contact</th>
-                                <th> Allocated </th>
+                                <th>Priority</th>
+                                <th>Allocated </th>
                                 <th>Created Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -185,7 +179,7 @@
                               <tr>
                                   <td><?= $i ?></td>
                                   <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General Requirement' ?></td>
-                                  <td><?php echo $req->contact; ?></td>
+                                  <td><?php echo $req->priority ?? 'Medium Priority'; ?></td>
                                   <td><?php echo $req->toUser->name;?> </td>
                                   <td><?= $req->created_at ?></td>
                                   <td><?= $req->status ?></td>
@@ -206,7 +200,7 @@
                             <tr>
                               <th>#</th>
                               <th>School Name</th>
-                              <th>Contact</th>
+                              <th>Priority</th>
                               <th> Allocated </th>
                               <th>Issued Date</th>
                               <th>Status</th>

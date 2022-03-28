@@ -11,14 +11,15 @@ class RequirementImport implements ToModel, WithHeadingRow
     public function model(array $row)
     { 
         if(!empty($row)) {
-           $user = \DB::table('users')->where('name', $row['to_user'])->first();
+           $user = \DB::table('admin.users')->where('name','ilike','%' . $row['to_user'] . '%')->first();
            $to_user_id = !empty($user) ? $user->id : \Auth::User()->id;
 
-           $school = \DB::table('schools')->where('name', $row['school'])->first();
+           $school = \DB::table('schools')->where('schema_name', $row['school'])->first();
            $school_id = !empty($school) ? $school->id : 0;
     
            $requirement_array = array( 
                 'note'  => $row['note'],
+                'priority' => $row['priority'],
                 'user_id' => \Auth::User()->id,
                 'contact' => $row['contact'],
                 'to_user_id' => $to_user_id,

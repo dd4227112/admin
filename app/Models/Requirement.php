@@ -14,7 +14,8 @@ class Requirement extends Model {
 
     //put your code here
     protected $table = 'requirements';
-    protected $fillable = ['id', 'note', 'user_id', 'contact', 'created_at', 'updated_at', 'to_user_id', 'school_id', 'status'];
+
+    protected $fillable = ['id', 'note','priority', 'user_id', 'contact', 'created_at', 'updated_at', 'to_user_id', 'school_id', 'status'];
 
   
 

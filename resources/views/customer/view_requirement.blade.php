@@ -89,7 +89,7 @@
                             <thead>
                               <tr>
                                 <th>#</th>
-                                <th>Contact </th>
+                                <th>Priority </th>
                                 <th>School</th>
                                 <th>Created Date</th>
                                 <th>Status</th>
@@ -105,7 +105,7 @@
                                  ?>
                               <tr>
                                   <td><?= $i ?></td>
-                                  <td><?= $req->contact ?? '' ?></td>
+                                  <td><?= $req->priority ?? 'Medium Priority' ?></td>
                                   <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General Requirement' ?></td>
                                   <td><?= $req->created_at ?? '' ?></td>
                                   <td><?= $req->status ?? '' ?></td>
@@ -121,7 +121,7 @@
                           <tfoot>
                             <tr>
                               <th>#</th>
-                              <th>Contact</th>
+                              <th>Priority</th>
                               <th>School</th>
                               <th>Issued Date</th>
                               <th>Status</th>
