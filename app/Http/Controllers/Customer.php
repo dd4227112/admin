@@ -521,7 +521,7 @@ class Customer extends Controller {
             $remainder = empty(request('remainder_date')) ? 1 : 0;
             $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
             $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
-            $data = array_merge(request()->except(['start_date', 'end_date','to_user_id']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date ]);
+            $data = array_merge(request()->except(['start_date', 'end_date','to_user_id','activity']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date,'activity'=> nl2br(request('activity'))]);
 
             $task = \App\Models\Task::create($data);
             DB::table('tasks_clients')->insert([

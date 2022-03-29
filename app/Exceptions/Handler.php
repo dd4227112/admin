@@ -33,6 +33,7 @@ class Handler extends ExceptionHandler {
      */
 
     function createLog($e) {
+       // dd($e->getTrace());
         $line = @$e->getTrace()[0]['line'];
         $object = [
             'error_message' => $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'],

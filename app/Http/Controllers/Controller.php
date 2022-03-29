@@ -460,17 +460,64 @@ class Controller extends BaseController {
     
 
       public function test(){
-        $errors = [
-              'Invalid datetime format',
-              'Invalid text representation',
-              'Trying to get property',
-              'Deadlock detected'
-          ];
+            $errors_array = [
+               'Invalid datetime format',
+                'Invalid text representation',
+                'Trying to get property',
+                'Deadlock detected',
+                'Undefined variable',
+                'Undefined function',
+                'Call to undefined function',
+                'Call to a member function',
+                'Datatype mismatch',
+                'Foreign key violation',
+                'Unique violation',
+                'Too Many Attempts',
+                'The given data was invalid',
+                'No query results for model',
+                'Argument 1 passed to',
+                'Parameter must be an array or an object',
+                'Division by zero',
+                'on line 162 of file',
+                'does not exist on this collection instance'
+            ];
 
-       $error_array = array();
-   
-       dd($filtered);
-  }
+            $startDate = '2022-02-21';
+            $endDate = '2022-03-28';
+
+            
+            $errors = \DB::table('admin.error_logs')->where('created_at','>=',$startDate)->where('created_at','<=',$endDate);
+            $solved_errors = $errors;
+
+            $final = [];
+            foreach($errors_array as $field => $value)
+            {   
+                $error_count = $errors->where('error_message','ILIKE',"%${value}%")->count();   
+              //  $solved_error_count = $solved_errors->where('error_message','ILIKE',"%${value}%")->whereNotNull('deleted_at')->count(); 
+                $data = [
+                    'Error message' => $value,
+                    'error_count' => $error_count,
+                  //  'solved_error_count' => $solved_error_count
+                ];
+
+               array_push($final, $data);
+            }
+
+            dd($final);
+
+        }
+
+
+
+        public function test2(){
+            // dd( date('Y-m-d H:i:s')); 
+            $start = '2022-03-29 08:52';
+            $time = 60;
+            // $end = date('Y-m-d H:i:s',strtotime('+1 hours',strtotime($start)));
+            $end_date = date('Y-m-d H:i:s', strtotime("+60 minutes", strtotime($start)));
+
+            dd($end_date);
+        }
    
 }
 
