@@ -101,6 +101,16 @@ Message</a>
 </div>
 </div>
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="row">
 <div class="col-xl-3 col-lg-4 col-md-4 col-xs-12">
 
@@ -284,13 +294,11 @@ target="_blank"> Exams</a>
 <div class="tab-pane active" id="timeline" aria-expanded="false">
 <div class="row">
 <div class="card-block">
-<button type="button" class="btn btn-primary waves-effect"
-data-toggle="modal" data-target="#large-Modal">Create
-Task</button>
-<!-- <a href="<?= url('Customer/activity/add') ?>" class="btn btn-primary waves-effect">Create Task</a> -->
+<button type="button" class="btn btn-primary btn-lg btn-round" data-toggle="modal" data-target="#large-Modal">Create Task</button>
+
 <div class="modal fade" id="large-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
-style="z-index: 1050; display: none;">
+style="z-index: 1050;  display: none;">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
@@ -308,9 +316,10 @@ Create a task for this school with
 implementation deadline</span>
 
 <div class="form-group">
-<textarea class="form-control" rows="4"
-placeholder="Create Task"
-name="activity"></textarea>
+<textarea class="form-control" rows="4"  placeholder="Create Task" name="activity">
+</textarea>
+
+
 </div>
 <div class="form-group">
 <div class="row"> 
@@ -318,9 +327,9 @@ name="activity"></textarea>
 <div class="col-md-6">
 Task Type
 <select name="task_type_id"
-class="form-control select2">
+class="select2">
 <?php
-$types = DB::table('task_types')->where('department', Auth::user()->department)->get();
+$types = Auth::user()->role_id == 1 ? DB::table('task_types')->get() : DB::table('task_types')->where('department', Auth::user()->department)->get();
 if (!empty($types)) {
 foreach ($types as $type) {
 ?>
@@ -332,20 +341,19 @@ value="<?= $type->id ?>">
 }
 }
 ?>
-
 </select>
 </div>
+
+
 <div class="col-md-6">
 Person Allocated to do
-<select name="to_user_id"
-class="form-control select2">
+<select name="to_user_id[]" class="select2"  multiple="">
 <?php
 $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
 if (!empty($staffs)) {
 foreach ($staffs as $staff) {
 ?>
-<option
-value="<?= $staff->id ?>">
+<option value="<?= $staff->id ?>">
 <?= $staff->firstname . ' ' . $staff->lastname ?>
 </option>
 <?php
@@ -357,16 +365,49 @@ value="<?= $staff->id ?>">
 </div>
 </div>
 </div>
+
+<div class="form-group">
+
+<div class="row">
+<div class="col-md-6">
+<strong> Task Executed Successfully</strong>
+<select name="status" class="form-control"  onchange="chooseValue(this.value);" id="task_executed" required>
+    <option value='new'> Select
+    Task Status Here...
+    </option>
+    <option value='complete'>
+    Yes and Completed
+    </option>
+    <option value='on progress'>
+    Yes but on Progress
+    </option>
+    <option value='schedule'>
+    Not yet (Schedule)
+    </option>
+</select>
+</div>
+
+<div class="col-md-6"  id="remainder_date">
+   <strong> Remainder Date</strong>
+   <input type="date"  name="remainder_date" class="form-control">
+</div>
+</div>
+</div>
+
+
+
+
 <div class="form-group">
 <div class="row">
 <div class="col-md-6">
 <strong> Start Date</strong>
-<input type="datetime-local"
+<input type="datetime-local" required
 class="form-control" 
 placeholder="Deadline"
 name="start_date">
 </div>
-<div class="col-md-6">
+
+<div class="col-md-6" id="end_date">
 <strong> End Date </strong>
 <input type="datetime-local"
 class="form-control"
@@ -378,77 +419,29 @@ name="end_date">
 
 
 <div class="form-group">
-<strong> Pick Modules where task will be
-Performed</strong>
+<strong> Pick Modules where task will be Performed</strong>
 <hr>
+<select name="module_id[]" class="select2"  multiple="">
 <?php
 $modules = DB::table('modules')->get();
 if (!empty($modules)) {
 foreach ($modules as $module) {
 ?>
-<input type="checkbox"
-id="feature<?= $module->id ?>"
-value="{{$module->id}}"
-name="module_id[]">
-<?php echo $module->name; ?> &nbsp;
-&nbsp;
-
+<option value="<?= $module->id ?>">
+<?= $module->name ?>
+</option>
 <?php
 }
 }
 ?>
-</div>
-
-<div class="form-group">
-<div class="row">
-
-<div class="col-md-12">
-<strong> Task Executed
-Successfully</strong>
-<select name="status"
-class="form-control"
-required>
-
-<option value='new'> Select
-Task Status Here...
-</option>
-<option value='complete'>
-Yes and Completed
-</option>
-<option value='on progress'>
-Yes but on Progress
-</option>
-<option value='schedule'>
-Not yet (Schedule)
-</option>
 </select>
 </div>
-</div>
-</div>
-
-<hr>
-<div class="form-group">
- <div class="row">
-   <div class="col-md-4">
-      <strong> Set Remainder</strong>: <input type="checkbox"  id="supplied" name="remainder" checked>
-   </div>
-     <div id="idate" class="form-group col-md-4">
-        <strong>Remainder date</strong> : <input type="date"  name="remainder_date" class="form-control">
-    </div>
-
-  </div>
-</div>
-
 
 </div>
 
 <div class="modal-footer">
-<button type="button"
-class="btn btn-default waves-effect "
-data-dismiss="modal">Close</button>
-<button type="submit"
-class="btn btn-primary waves-effect waves-light ">Save
-changes</button>
+    <button type="button" class="btn btn-default btn-sm btn-round" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary btn-sm btn-round">Save changes</button>
 </div>
 <input type="hidden" value="<?= $client_id ?>"
 name="client_id" />
@@ -476,11 +469,11 @@ id="removetag<?= $task->id ?>">
 </div>
 <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
 <div class="card m-0">
-<span
+<!-- <span
 class="dropdown-toggle addon-btn text-muted f-right service-btn"
 data-toggle="dropdown" aria-haspopup="true"
 aria-expanded="true"
-role="tooltip">Actions</span>
+role="tooltip">Actions</span> -->
 <div
 class="dropdown-menu dropdown-menu-right b-none services-list">
 <a class="dropdown-item" href="#"
@@ -497,12 +490,29 @@ Task</button> --}}
 <div class="card-block">
 <div class="timeline-details">
 <div class="chat-header">
-<?= $task->user->firstname ?> -
-<span
-class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span>
+    <?php 
+      $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task->user->id}'"))->first(); 
+      $local = $root . 'assets/images/user.png';
+     ?>
+    <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
+           width: 25px;
+           height: 25px;
+           border-radius: 50%;
+           overflow: hidden;">
+   &nbsp;&nbsp;<?= $task->user->firstname ?> -
+    <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span> &nbsp;&nbsp; <label class="badge badge-inverse-primary">{{ $task->status}}</label>
+    <?php if(can_access('delete_tasks')) { ?>
+       <a class="btn btn-mini btn-round btn-danger float-right text-light"   onclick="RemoveAttr(<?= $task->id ?>);"> delete </a>
+    <?php } ?>
 </div>
-<p class="text-muted">
-<?= $task->activity ?></p>
+<p class="text-muted editable" id="txt1<?= $task->id ?>">
+   {{-- <?= $task->activity ?> --}}
+
+   <span style="text-decoration: none;" <?= $task->user->id == \Auth::user()->id ? 'contenteditable="true"': 'contenteditable="false"' ?> 
+    onblur="save('<?= $task->id . 'activity' ?>', '<?= $task->id  ?>','activity')" 
+    id="<?= $task->id . 'activity' ?>"> <?= $task->activity == '' ? 'null' : $task->activity ?></span>
+    <span id="stat<?= $task->id .  'activity' ?>"></span>
+</p>
 <?php
 $modules = $task->modules()->get();
 if (count($modules) > 0) {
@@ -515,9 +525,11 @@ foreach ($modules as $module) {
 }
 }
 ?>
+
+
 <p>Start Date- <?= $task->start_date ?>
-{{-- &nbsp; &nbsp; | &nbsp; &nbsp; End
-Date - $task->end_date ?></p> --}}
+ &nbsp; &nbsp; | &nbsp; &nbsp; 
+ <?= date('Y-m-d', strtotime($task->end_date)) == '1970-01-01' ? '' : 'End Date - '.$task->end_date  ?></p> 
 </div>
 
 <div class="user-box">
@@ -533,14 +545,19 @@ foreach ($comments as $comment) {
 ?>
 <div class="media" class="pb-1">
 <a class="media-left" href="#">
-<img class="media-object img-circle m-r-20"
+<!-- <img class="media-object img-circle m-r-20"
 src="<?= $root . '/assets/images/avatar-2.png'; ?>"
-alt="Image">
+alt="Image"> -->
+<?php
+$path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task->user->id}'"))->first(); 
+      $local = $root . '/assets/images/avatar-2.png';  ?>
+<img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
+width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
 </a>
 <div
 class="media-body b-b-muted social-client-description">
 <div class="chat-header">
-<?= $comment->user->name ?><span
+<?= $comment->user->name ?> &nbsp;&nbsp; <span 
 class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span>
 </div>
 <p class="text-muted">
@@ -557,7 +574,7 @@ class="new_comment<?= $task->id ?>">
 </div>
 <div class="media">
 <a href="#"
-class="btn btn-success btn-sm right"
+class="btn btn-success btn-mini btn-round m-1"
 onclick="return false"
 onmousedown="$('#comment_area<?= $task->id ?>').toggle()"><i
 class="ti-comment"></i>
@@ -577,10 +594,7 @@ value="<?= $task->id ?>"
 id="task_id<?= $task->id ?>" />
 <span
 class="input-group-btn">
-<button
-type="button"
-class="btn btn-primary"
-onmousedown="save_comment(<?= $task->id ?>)">Send</button>
+  <button type="button" class="btn btn-primary btn-sm btn-round"  onmousedown="save_comment(<?= $task->id ?>)">Send</button>
 </span>
 
 <span
@@ -668,7 +682,7 @@ class="social-user-name b-none">
     ?>
 </td>
 
-<?php if(can_access('reset_school_password') && !preg_match('/stfrancisgirlssecondaryschool/i', strtolower($school->username))) { ?>
+<?php if( can_access('reset_school_password') && isset($school->username) && !preg_match('/stfrancisgirlssecondaryschool/i', strtolower($school->username))) { ?>
 <tr>
 <th class="social-label b-none p-b-0">School Access</th>
 <td class="social-user-name b-none p-t-10">
@@ -2327,8 +2341,63 @@ if (!empty($profile)) {
         <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
 
       <script>
-     
 
+      
+
+
+    function RemoveAttr(a) {
+        var val = a;
+        if (val !== '') {
+            $.ajax({
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
+                url: "<?= base_url('customer/removeTag/null') ?>",
+                data: {"id": val},
+                dataType: "html",
+                success: function (data) {
+                     toastr.success(data);
+                     location.reload();
+                }
+            });
+          }
+        }
+     
+        function chooseValue(value){
+              if(value == 'complete'){
+                $('#end_date').hide();  
+                $('#remainder_date').hide();  
+              }else{
+                $('#end_date').show();
+                $('#remainder_date').show();
+              }
+            }
+
+
+     function save(a, id, column) {
+        var val = $('#' + a).text();
+        if (val !== '') {
+            $.ajax({
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
+                url: "<?= base_url('account/editSetting/null') ?>",
+                data: {"id": id, newvalue: val, column: column,table:'tasks'},
+                dataType: "html",
+                beforeSend: function (xhr) {
+                    $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
+                },
+                complete: function (xhr, status)  {
+                    $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
+                },
+                success: function (data) {
+                     toastr.success(data);
+                }
+            });
+          }
+        }
 
           $(document).ready(function() {
            $('#example').DataTable();
@@ -2425,20 +2494,9 @@ if (!empty($profile)) {
                 }
             });
         });
-        removeTag = function (a) {
-            $.ajax({
-                url: '<?= url('customer/removeTag') ?>/null',
-                method: 'get',
-                data: {
-                    id: a
-                },
-                success: function (data) {
-                    if (data == '1') {
-                        $('#removetag' + a).fadeOut();
-                    }
-                }
-            });
-        }
+
+  
+       
 
         task_group = function () {
             $('.task_groups').change(function () {

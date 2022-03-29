@@ -276,29 +276,7 @@ Highcharts.chart('errors', {
             <?php } ?>
         ]
     }
-    // {
-    //     type: 'pie',
-    //     name: 'Total errors',
-    //     data: [{
-    //         name: 'All errors',
-    //         y: <?php $sum=0; foreach($monthly_errors as $value){ $sum+=$value->count;} echo $sum; ?>,
-    //         color: Highcharts.getOptions().colors[0] 
-    //     }, {
-    //         name: 'Resolved errors',
-    //         y: <?php $sum1=0; foreach($monthly_solved as $value){ $sum1+=$value->count;} echo $sum1; ?>,
-    //         color: Highcharts.getOptions().colors[1] 
-    //     }, {
-    //         name: 'Unresolved errors',
-    //         y: <?php $sum2=0; foreach($monthly_unsolved as $value){ $sum2+=$value->count;} echo $sum2; ?>,
-    //         color: Highcharts.getOptions().colors[2] 
-    //     }],
-    //     center: [100, 80],
-    //     size: 100,
-    //     showInLegend: false,
-    //     dataLabels: {
-    //         enabled: false
-    //     }
-    // }
+ 
   ]
 });
 

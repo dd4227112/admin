@@ -14,7 +14,7 @@ return [
         | Here you can specify how big the chunk should be.
         |
         */
-        'chunk_size'             => 1000,
+        'chunk_size' => 1000,
 
         /*
         |--------------------------------------------------------------------------
@@ -289,7 +289,7 @@ return [
         | storing reading or downloading. Here you can customize that path.
         |
         */
-        'local_path'          => storage_path('framework/laravel-excel'),
+        'local_path' => storage_path('framework/laravel-excel'),
 
         /*
         |--------------------------------------------------------------------------

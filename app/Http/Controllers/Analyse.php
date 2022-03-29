@@ -96,23 +96,25 @@ class Analyse extends Controller {
         $this->data['parents'] = \collect(\DB::select('select count(*) as count from admin.all_parent'))->first()->count;
         $this->data['students'] = \collect(\DB::select('select count(*) as count from admin.all_student'))->first()->count;
         $this->data['teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
-        $this->data['users'] = \collect(\DB::select('select count(*) as count from admin.all_users'))->first()->count;
+        // $this->data['users'] = \collect(\DB::select('select count(*) as count from admin.all_users'))->first()->count;
+        $this->data['users'] = 100;
         $this->data['total_schools'] = \collect(\DB::select("select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema','pg_catalog')"))->first()->aggregate;
         $this->data['schools_with_students'] =  \collect(\DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
         $this->data['active_parents'] = \collect(\DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
         $this->data['active_students'] = \collect(\DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
         $this->data['active_teachers'] = \collect(\DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
-        $this->data['active_users'] = \collect(\DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
+        // $this->data['active_users'] = \collect(\DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
+        $this->data['active_users'] = 120;
         return $this->data;
     }
 
     public function setting() {
-        $this->data['association'] = \App\Model\Association::first();
+        $this->data['association'] = \App\Models\Association::first();
         return view('analyse.setting', $this->data);
     }
 
     public function accounts() {
-        $this->data['association'] = \App\Model\Association::first();
+        $this->data['association'] = \App\Models\Association::first();
         $sql_2 = "select sum(count) as count, month from (
         select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')." group by month
         UNION ALL select sum(amount) as count, extract(month from created_at) as month from admin.revenues a   where extract(year from created_at)=".date('Y')." group by month) a group by month order by month asc";
@@ -121,7 +123,7 @@ class Analyse extends Controller {
     }
 
     public function marketing() {
-        $this->data['association'] = \App\Model\Association::first();
+        $this->data['association'] = \App\Models\Association::first();
         return view('analyse.marketing', $this->data);
     }
 

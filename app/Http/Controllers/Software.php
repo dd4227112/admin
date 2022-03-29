@@ -58,7 +58,6 @@ class Software extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function comparetable($schema = 'betatwo') {
-        $this->data['breadcrumb'] = array('title' => 'Compare tables','subtitle'=>'software','head'=>'database');
         $this->data['data'] = $this->compareSchemaTables($schema);
         $view = 'software.database.' . strtolower('compareTable');
         if (view()->exists($view)) {
@@ -67,7 +66,6 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['breadcrumb'] = array('title' => 'Compare columns','subtitle'=>'software','head'=>'database');
         $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')')
            AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
@@ -101,7 +99,6 @@ class Software extends Controller {
     }
 
     public function loadSchema() {
-
         return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant', 'admin','api','app','skysat','dodoso','forum','academy','carryshop')");
     }
 
@@ -329,10 +326,15 @@ class Software extends Controller {
         }
     }
 
+    public function errorInstanceNotIn(){
+        return  " not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException',
+        'BadMethodCallException') ";
+    }
+
     public function logs() {
         $this->data['schema_name'] = $schema = request()->segment(3);
         $year_start = date('Y-01-01'); $year_end = date('Y-12-01');
-        $notIn =  " not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') ";
+        $notIn =  $this->errorInstanceNotIn();
         $this->data['error_log_count'] =   strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first();
         $this->data['error_log_resolved'] = strlen($schema) > 3 ?  \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and schema_name = '$schema' and error_instance $notIn) as resolved"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and error_instance $notIn) as resolved"))->first();
         $this->data['fatal_errors'] = strlen($schema) > 3 ?  \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_message) as a where a.total > 10"))->first() :  \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_message) as a where a.total > 10"))->first();
@@ -349,7 +351,6 @@ class Software extends Controller {
         $this->data['monthly_errors'] = \DB::select($sql1);
         $this->data['monthly_solved'] = \DB::select($sql2);
         $this->data['monthly_unsolved'] = \DB::select($sql3);
-        // dd($this->data);
         return view('software.error_logs', $this->data);
     }
 
@@ -365,10 +366,6 @@ class Software extends Controller {
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
-
-        // if(isset($tag->error_message)) {
-        //    DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
-        //  } 
          if(isset($tag->error_message)){
             $update = \DB::table('admin.error_logs')->where('error_message','=',$tag->error_message)->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
             echo $update > 0 ? 1 : 0;
@@ -380,7 +377,6 @@ class Software extends Controller {
         $this->data['id'] = $id = request()->segment(3);
         $this->data['schema'] = $schema = request()->segment(4);
     
-        $this->data['breadcrumb'] = array('title' => 'Error log','subtitle'=>'software','head'=>'system errors');
         $this->data['tag'] = $tag = \App\Models\ErrorLog::find($id);
         $this->data['errors'] = $errors = strlen($schema) > 3 ? \App\Models\ErrorLog::where(['error_message'=>$tag->error_message,'schema_name'=>$tag->schema_name])->whereNull(['deleted_at','deleted_by'])->latest()->get() : \App\Models\ErrorLog::where('error_message',$tag->error_message)->whereNull(['deleted_at','deleted_by'])->latest()->get();
         $this->data['school']  = strlen($schema) > 3 ? \collect(\DB::select("select name from admin.clients where username = '$schema' "))->first() : [];
@@ -397,23 +393,11 @@ class Software extends Controller {
     }
 
     public function api() {
-       $this->data['breadcrumb'] = array('title' => 'Payment Api Requests','subtitle'=>'API Requests','head'=>'software');
         if (request('tag')) {
             return $this->ajaxTable('api.requests', ['id', 'content', 'created_at']);
         }
         return view('software.api.requests',$this->data);
     }
-
-    // public function banksetup() {
-    //     $this->data['settings'] = DB::table('admin.all_setting')->get();
-    //     $seg = request()->segment(3);
-    //     $this->data['schema'] = $seg;
-    //     if (strlen($seg) > 2) {
-    //         $this->data['banks'] = DB::select('select b.*,a.api_username,a.api_password,a.invoice_prefix,a.sandbox_api_username,a.sandbox_api_password from ' . $seg . '.bank_accounts_integrations a right join ' . $seg . '.bank_accounts b on a.bank_account_id=b.id');
-    //     }
-    //     return view('software.api.banksetup', $this->data);
-    // }
-
 
     public function loadaccounts() {
         $schema = request('schema');
@@ -755,7 +739,7 @@ class Software extends Controller {
 
     public function smsStatus() {
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
-        return view('software.status_sms', $this->data);
+        return view('software.smsstatus', $this->data);
     }
 
     /**
@@ -807,4 +791,21 @@ class Software extends Controller {
     }
 
     //   id	error_message	file	route	url	error_instance	request	schema_name	created_by	created_by_table	created_at
+
+    public function statistics(){
+        $this->data['first_day'] = $first_day = date("Y-m-d", strtotime('monday this week'));
+        $this->data['end_week']  = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days'));  
+        $notIn =  $this->errorInstanceNotIn();
+        $all_errors = "SELECT error_message,COUNT(error_message) as error_count FROM admin.error_logs WHERE created_at::date >= '{$first_day}' and created_at::date <= '{$end_week}' AND error_instance $notIn GROUP BY error_message";
+        $this->data['weekly_errors'] = \DB::select($all_errors);
+        
+        if($_POST){
+           $this->data['first_day'] = $first_day = date('Y-m-d',strtotime(request('week')));
+           $this->data['end_week'] = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days')); 
+           $all_errors = "SELECT error_message,COUNT(error_message) as error_count FROM admin.error_logs WHERE created_at::date >= '{$first_day}' and created_at::date <= '{$end_week}' AND error_instance $notIn GROUP BY error_message";
+           $this->data['weekly_errors'] = \DB::select($all_errors);
+         }
+
+        return view('software.error_statistics', $this->data);
+    }
 }

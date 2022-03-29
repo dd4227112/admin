@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,7 +8,5 @@ class Association extends Model
 {
       protected $table = 'constant.associations';
       
-      public function globalExams() {
-          return $this->hasMany('\App\Model\GlobalExam');
-      }
+  
 }

@@ -14,6 +14,8 @@ use DB;
 use Auth;
 use PDF;
 use Storage;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 
 
@@ -51,7 +53,6 @@ class Account extends Controller {
 
         if( (int) $client_id > 0 && $_POST){
              $service_data = request()->all();
-            
              $data = array('invoice_type' => $invoice_type, 'client_id' => $client_id );
              return $this->createInvoice($service_data,$data,$type);
         }
@@ -304,8 +305,12 @@ class Account extends Controller {
         if ((int) $invoice_id > 0) {
             $this->data['request_control'] = $request_control = request()->segment(4);
         
-            $this->data['invoice'] = $invoice = Invoice::find($invoice_id);
-            $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
+            try{
+                $this->data['invoice'] = $invoice = Invoice::findOrFail($invoice_id);
+                $this->data['invoicefee'] = InvoiceFee::where('invoice_id',(int)$invoice_id)->firstOrFail();
+             } catch (ModelNotFoundException $e) {
+                  return redirect()->back()->with('error', 'No such invoice');
+             }
         
             $this->data['invoice_name'] = $invoice->invoice_type == 1 ? 'Invoice' : 'Proforma Invoice';
 
@@ -341,11 +346,9 @@ class Account extends Controller {
                 $this->send_whatsapp_sms($chatId,$caption,$file_id);
                 $this->send_whatsapp_sms($chatId, $caption);
 
-              // return view('account.invoice.whatsapp_invoice', $this->data);
                return redirect()->back()->with('success',' successfull sent invoice to ' . $client->name);
             }
             
-           
             return view('account.invoice.single', $this->data);
 
         }
@@ -490,8 +493,11 @@ class Account extends Controller {
         $company_file_id = null;
         
         $file = request()->file('invoice_file');
+        if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+         }
         if(!empty($file)){
-          $company_file_id =  $this->saveFile($file, 'company/contracts',TRUE);
+          $company_file_id =  $this->saveFile($file,TRUE);
         }
 
 
@@ -1817,8 +1823,6 @@ class Account extends Controller {
         echo $update > 0 ? $new_value : 'No changes happened';
     }
 
-
-
      public function editSetting() {
         $id =  request('id');
         $newvalue = request('newvalue');
@@ -1832,8 +1836,6 @@ class Account extends Controller {
 
     public function getClientInfo(){
        $client_id = request()->segment(3);
-
-
     }
 
 

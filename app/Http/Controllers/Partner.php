@@ -125,7 +125,10 @@ class Partner extends Controller {
                 $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
                 if (empty($check_contract)) {
                     $file = request()->file('attachments')[0];
-                    $file_id = $this->saveFile($file, 'company/contracts');
+                    if(filesize($file) > 2015110 ) {
+                        return redirect()->back()->with('error', 'File must have less than 2MBs');
+                     }
+                    $file_id = $this->saveFile($file,TRUE);
                     //save contract
                     $contract_id = DB::table('admin.contracts')->insertGetId([
                         'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('implementation_date'), 'end_date' => date('Y-m-d', strtotime('+1 years')), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
@@ -188,7 +191,10 @@ class Partner extends Controller {
 
             $attachments = request()->file('attachments');
             foreach ($attachments as $file) {
-                $file_id = $this->saveFile($file, 'company/contracts');
+                if(filesize($file) > 2015110 ) {
+                    return redirect()->back()->with('error', 'File must have less than 2MBs');
+                 }
+                $file_id = $this->saveFile($file,TRUE);
                 // Integration requests documents
                 DB::table('admin.integration_requests_documents')->insertGetId(['company_file_id' => $file_id, 'integration_request_id' => $request_id]);
             } 
@@ -501,7 +507,10 @@ class Partner extends Controller {
             $file = request()->file('standing_order');
             $contract_id = 0;
             if($file){
-            $file_id = $this->saveFile($file, 'company/contracts');
+               if(filesize($file) > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+                }
+            $file_id = $this->saveFile($file,TRUE);
             //save contract
             $contract_id = DB::table('admin.contracts')->insertGetId([
                 'name' => $request->client->name .' Standing Order', 'company_file_id' => $file_id, 'start_date' => date('Y-m-d'), 'end_date' => date("Y-m-d", strtotime('1 year')), 'contract_type_id' => 2, 'user_id' => Auth::user()->id, 'note' =>  $request->client->name .' Standing Order'

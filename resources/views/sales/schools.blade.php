@@ -1,11 +1,6 @@
 @extends('layouts.app')
 @section('content')
- <?php  
-    function school_status($username){
-     $max_date = \collect(\DB::select("select max(created_at) as max_date from admin.all_login_locations where schema_name = '". $username. "'"))->first();
-       return $max_date->max_date;
-    }
- ?>
+ 
         <div class="page-header">
             <div class="page-header-title">
                 <h4><?=' Schools' ?></h4>
@@ -119,8 +114,6 @@
                             <h5>List of Schools Under&nbsp;ShuleSoft </h5>
                          </div>
 
-                            
-
                                <div class="col-sm-3">
                                    <label>Select Region </label>
                                     <select class="form-control select2"  id='region_selector'>
@@ -143,7 +136,6 @@
                                             <th>School Name</th>
                                             <th>Address</th>
                                             <th>Phone</th>
-                                            <th>Status</th>
                                             <th>School Link</th>
                                             <th>Action</th>
                                         </tr>
@@ -160,7 +152,6 @@
                                                 <td><?= warp($school->client->name,20) ?></td>
                                                 <td><?= warp($school->client->address,20) ?></td>
                                                 <td><?= $school->client->phone ?></td>
-                                                <td><?php school_status($school->client->username)  ?></td>
                                                 <td>
                                                     <a href="https://<?=$school->client->username?>.shulesoft.com/" target="_blank" rel="noopener noreferrer"><?=warp($school->client->name,20)?></a>
                                                 </td>
@@ -253,7 +244,7 @@
                     "targets": 8,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        if (row.client_id != null && row.status == 3) {
+                        if (row.client_id != null) {
                             return '<a href="<?= url('customer/profile') ?>/' + row.username + '" class="label label-inverse-warning"> Already Customer  </a>';
                         } else {
                             return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="badge badge-primary">Onboard School</a>';
@@ -269,16 +260,14 @@
     school_selector = function () {
         $('#school_selector').change(function () {
             var val = $(this).val();
-            window.location.href = '<?= url('sales/school') ?>/' + val;
+            window.location.href = '<?= url('sales/schools') ?>/' + val;
         })
     }
     $(document).ready(school_selector);
-
-
       $('#region_selector').change(function () {
             var reg = $(this).val();
             var val = 2
-            window.location.href = '<?= url('sales/school') ?>/' + val + '/' + reg;
+            window.location.href = '<?= url('sales/schools') ?>/' + val + '/' + reg;
         })
 </script>
 

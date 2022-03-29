@@ -42,7 +42,6 @@ class Sales extends Controller {
      */
 
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'Sales material','subtitle'=>'sales','head'=>'materials');
         return view('sales.index', $this->data);
     }
 
@@ -61,7 +60,6 @@ class Sales extends Controller {
     }
 
     public function prospect() {
-        $this->data['breadcrumb'] = array('title' => 'Sales prospect reports','subtitle'=>'sales','head'=>'prospect');
         $this->data['demo_requests'] = DB::table('website_demo_requests')->where('status', 0)->get();
         $this->data['join_requests'] = DB::table('website_join_shulesoft')->where('status', 0)->get();
         $this->data['page'] = $page = request()->segment(3);
@@ -126,7 +124,8 @@ class Sales extends Controller {
         return view('market.legal');
     }
 
-    public function school() {
+
+     public function schools() {   
         $id = request()->segment(3);
         $reg_id = request()->segment(4);
 
@@ -143,7 +142,7 @@ class Sales extends Controller {
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count,SUM(COUNT(*)) over() as total_schools,(COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent FROM admin.schools group by ownership');
-        return view('market.allocation', $this->data);
+        return view('sales.schools', $this->data);
     }
 
     function objective() {
@@ -553,7 +552,10 @@ class Sales extends Controller {
   
             if (!empty(request('file'))) {
                 $file = request()->file('file');
-                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                if(filesize($file) > 2015110 ) {
+                    return redirect()->back()->with('error', 'File must have less than 2MBs');
+                 }
+                $company_file_id = $file ? $this->saveFile($file,TRUE) : 1;
                 $contract_id = DB::table('admin.contracts')->insertGetId([
                 'name' => 'Shulesoft service fee', 'company_file_id' => $company_file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => \Auth::user()->id
                 ]);
@@ -566,7 +568,8 @@ class Sales extends Controller {
                 // if document is standing order,Upload standing order files
              if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))  && request('check_trial') != 1 ) {
                 $file = request()->file('standing_order_file');
-                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                
+                $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
                 $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
 
                 $contract_id = DB::table('admin.standing_orders')->insertGetId(array(
@@ -588,7 +591,9 @@ class Sales extends Controller {
                 $client = \App\Models\Client::findOrFail($client_id);
                 $year = \App\Models\AccountYear::where('name', date('Y'))->first();
                 $reference = time(); // to be changed for selcom ID
-              //  $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
+
+
+                $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
                 //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
 
                 // $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
@@ -598,8 +603,7 @@ class Sales extends Controller {
                  $unit_price = remove_comma(request('price'));
                  $estimated_students = remove_comma(request('students'));
                  $amount = $unit_price * $estimated_students;
-
-               // \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $estimated_students, 'unit_price' => $unit_price]);
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $estimated_students, 'unit_price' => $unit_price]);
 
            
                 $trial_code = $client_id . time();
@@ -614,10 +618,10 @@ class Sales extends Controller {
     
                 $message = 'Hello '.$user->firstname .' '. $user->lastname 
                 . chr(10) .'School :' . $school->name . ' has been onboarded succesfully'
-                . chr(10) .'And invoice for this school has been created'
-                . chr(10) .'Kindly verify INVOICE  created and STANDING ORDER documents before proceeding'
                 . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($user->phone, $message); 
+                $this->send_sms($user->phone, $message, 1);
+                
 
                 $finance = \App\Models\User::where('designation_id',2)->first();
                 $sms = 'Hello '.$finance->firstname .' '. $finance->lastname 
@@ -625,6 +629,8 @@ class Sales extends Controller {
                 . chr(10) .'You are remainded to verify the invoice document'
                 . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($finance->phone, $sms); 
+                $this->send_sms($finance->phone, $sms, 1);
+
 
                 // $this->scheduleActivities($client_id);  
                 return redirect('sales/onboaredSchools');
@@ -637,9 +643,12 @@ class Sales extends Controller {
  
     
      public function onboaredSchools(){
-        $this->data['clients'] = \DB::select("select c.id,c.name,c.email,c.phone,c.address,c.code,c.status,count(t.id) as tasks,s.id as sid,s.company_file_id,p.client_id,p.invoice_id,coalesce(sum(p.amount),0) as paid from admin.clients c left join admin.tasks_clients t on c.id = t.client_id left join admin.standing_orders s on s.client_id = c.id left join admin.payments p on c.id = p.client_id where extract(year from c.created_at) >= 2022 and c.status <> 0  group by c.id,s.company_file_id,p.client_id,p.invoice_id,s.id having count(t.task_id) <= 0 order by c.created_at desc");
+        $this->data['clients'] = \DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,
+        s.company_file_id FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a 
+        on a.client_id = c.id   where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status HAVING count(a.id) <= 0 ORDER BY c.created_at DESC");
         return view('sales.onboard', $this->data);
      }
+
 
 
      public function updateOnboardStatus(){
@@ -657,8 +666,10 @@ class Sales extends Controller {
          $this->send_whatsapp_sms($user->phone, $message); 
          $this->send_sms($user->phone,$message,1);
 
-         return redirect()->back()->with('success','Status updated');
+         return redirect()->back()->with('success','School Approved for onboarding');
      }
+
+
 
 
 
@@ -756,7 +767,7 @@ class Sales extends Controller {
                 . chr(10) . 'By :'. \Auth::user()->name
                 . chr(10) . 'Thank you';
              $this->send_whatsapp_sms($user->phone, $sms);
-            $this->send_sms($user->phone,$sms,1);
+             $this->send_sms($user->phone,$sms,1);
 
 
 
@@ -883,7 +894,7 @@ class Sales extends Controller {
         // Open connection
         $url = 'http://75.119.140.177:8081/api/payment';
         $ch = curl_init();
-// Set the url, number of POST vars, POST data
+       // Set the url, number of POST vars, POST data
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -926,7 +937,6 @@ class Sales extends Controller {
     }
 
     public function addLead() {
-        //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
         if ($_POST) {
              $task_data = ['school_id'=>request('school_id'),'school_name'=>request('school_name'),'school_phone'=>request('school_phone'),'school_title'=>request('school_title'),
                       'students'=>request('students'),'start_date'=>date('Y-m-d', strtotime(request('start_date'))),'end_date'=>date('Y-m-d', strtotime(request('end_date'))),
@@ -1045,7 +1055,6 @@ class Sales extends Controller {
             //$this->data['new_schools'] = \App\Models\Task::whereIn('user_id', $id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
     
             $this->data['query'] = 'SELECT count(a.status), a.status from admin.tasks_clients a where task_id in(select id from admin.tasks where  action=\'visit\') group by a.status order by count(a.status) desc';
-// dd( $this->data['query']);
 
             $this->data['types'] = 'SELECT count(a.updated_at::date), a.updated_at::date as "Date" from admin.tasks_clients a where task_id in(select id from admin.tasks where  action=\'visit\') and a.status is not null group by a.updated_at::date order by count(a.updated_at::date) desc';
             return view('sales.sales_status.visitation_index', $this->data);
@@ -1066,15 +1075,11 @@ class Sales extends Controller {
         foreach ($schools as $school) {
             array_push($all_school, $school->schema_name);
         }
-
-        $this->data['schools'] = \App\Models\Client::whereIN('username', $all_school)->get();
+        $this->data['schools'] = \App\Models\Client::whereIn('username', $all_school)->get();
 
         if ($_POST) {
-            // $data = request()->all();
-            // dd($data);
             $data = array_merge(request()->except(['_token','start_date','end_date']), ['start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))), 'user_id' => Auth::user()->id, 'status' => 'new', 'action' => 'visit', 'date' => date('Y-m-d')]);
             $task = \App\Models\Task::create($data);
-
             DB::table('tasks_users')->insert([
                 'task_id' => $task->id,
                 'user_id' => Auth::user()->id
@@ -1101,7 +1106,6 @@ class Sales extends Controller {
                     }
                 }
             }
-
             return redirect('Sales/schoolVisit/1')->with('success', 'success');
         }
 
@@ -1109,7 +1113,6 @@ class Sales extends Controller {
     }
 
     public function analysis() {
-
         $table = DB::select("select count(*)*400*10000 as total, lower(region) as region from admin.schools where lower(ownership) <>'government' group by lower(region) order by total desc ");
         $title = array('region', 'total');
         $this->data['records'] = $this->createTable($table, $title);
@@ -1125,7 +1128,6 @@ class Sales extends Controller {
 
         $this->data['activity'] = $task = \App\Models\TaskClient::where('id', $id)->first();
         if ($_POST) {
-            // dd(request()->all());
             if (!empty(request('staff_id'))) {
                 foreach (request('staff_id') as $staff) {
                     $user_id = explode(',', $staff);
@@ -1151,7 +1153,6 @@ class Sales extends Controller {
         }
         $this->data['school'] = \App\Models\School::where('schema_name', $task->client->username)->first();
         $this->data['users'] = DB::SELECT('SELECT count(a."table"), a."table" from ' . $task->client->username . '.users a where status=1 and "table" !=\'setting\'  group by a."table" order by count(a."table") desc');
-        // DB::table($task->client->username.'.users')->where('status', 1)->first();
         return view('sales.sales_status.view_task', $this->data);
     }
 
@@ -1167,26 +1168,6 @@ class Sales extends Controller {
         \App\Models\Task::where('id', $id)->update(['status' => request('status'), 'start_date' => request('start_time'), 'end_date' => request('end_time'), 'task_type_id' => request('task_type_id'), 'updated_at' => date('Y-m-d H:i:s')]);
         return redirect()->back()->with('success', 'School record updated successfully');
     }
-
-
-    public function generalreport(){
-        if (request()->segment(3) != '') {
-            $id = request()->segment(3);
-        } else {
-            $id = Auth::user()->id;
-        }
-        $school_ids = \App\Models\UsersSchool::where('user_id', $id)->get(['school_id']);
-
-       // $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
-        // $school_ids = [];
-        // foreach ($schools as $school) {
-        //     array_push($school_ids, $school->school_id);
-        // }
-        $this->data['schools'] = \App\Models\School::whereIn('id', $school_ids)->where(DB::raw('lower(ownership)'),'<>','government')->get();
-        return view('sales.performance_report',$this->data);
-    }
-
-
 
 
     public function hrReport(){
@@ -1215,76 +1196,8 @@ class Sales extends Controller {
     }
 
 
+ 
 
-      public function allData(){
-        $this->data['type'] = $type = request()->segment(3);
-        $kigezo = request()->segment(4);
-        $today = date('Y-m-d');
-
-        switch ($type) {
-            //All logins per day, week, month and year
-        case 'logins':
-            //today
-                $this->data['today'] = \collect(DB::select("select  count(schema_name)  as total from admin.all_login_locations where created_at::date='{$today}'"))->first();
-            //thisweek
-                $this->data['week'] = \collect(DB::select("select  count(schema_name)  as total from admin.all_login_locations where created_at >= date_trunc('week',current_date)"))->first();
-            //thismonth
-                $this->data['month'] = \collect(DB::select("select  count(schema_name)  as total from admin.all_login_locations where created_at >= date_trunc('month',current_date)"))->first();
-            // thisyear
-                $this->data['year'] = \collect(DB::select("select  count(schema_name) as total from admin.all_login_locations where created_at >= date_trunc('year',current_date)"))->first();
-            break;
-
-        //All teachers
-        case 'allteachers':
-            $this->data['teachers'] = \collect(DB::select("select count(*) as total from admin.all_teacher where status = '1'"))->first();
-            break;
-
-        //All staffs
-        case 'allstaffs':
-             $this->data['allstaffs'] = \collect(DB::select("select count(*) as total from admin.all_users where status = '1'"))->first();
-             break;
-
-        //All students, male and female
-        case 'allstudents':
-            // Male students
-            $male="Male";
-            $this->data['mstudents'] = \collect(DB::select("select count(*) as total from admin.all_student where status = '1' and sex = '$male'"))->first(); 
-            // Female students
-            $female="Female";
-            $this->data['fstudents']  = \collect(DB::select("select count(*) as total from admin.all_student where status = '1' and sex = '$female'"))->first();
-            // All students
-            $this->data['allstudents'] = \collect(DB::select("select count(*) as total from admin.all_student where status = '1'"))->first();
-            break;
-
-        //All parents
-        case 'allparents':
-            $this->data['allparents'] = \collect(DB::select("select count(*) as total from admin.all_parent where status = '1'"))->first();
-            break;
-
-        //All users
-        case 'allusers':
-            $this->data['teachers'] = \collect(DB::select("select count(*) as total from admin.all_teacher where status = '1'"))->first();
-            $this->data['allstudents'] = \collect(DB::select("select count(*) as total from admin.all_student where status = '1'"))->first();
-            $this->data['allparents'] = \collect(DB::select("select count(*) as total from admin.all_parent where status = '1'"))->first();
-            $this->data['allstaffs'] = \collect(DB::select("select count(*) as total from admin.all_users where status = '1'"))->first();
-            break;
-
-        //All schools sent sms per day
-        case 'allschools_sms':
-           // $this->data['allschools_sms'] = \collect(DB::select("select count(*) as total from admin.school_keys"))->first();
-
-            //today
-            $this->data['today_sms'] = \collect(DB::select("select count(schema_name)  as total from admin.school_keys where created_at::date='{$today}'"))->first();
-            //thisweek
-            $this->data['week_sms'] = \collect(DB::select("select  count(schema_name)  as total from admin.school_keys where created_at >= date_trunc('week',current_date)"))->first();
-            //thismonth
-            $this->data['month_sms'] = \collect(DB::select("select count(schema_name)  as total from admin.school_keys where created_at >= date_trunc('month',current_date)"))->first();
-            // thisyear
-            $this->data['year_sms'] = \collect(DB::select("select  count(schema_name)  as total from admin.school_keys where created_at >= date_trunc('year',current_date)"))->first();
-            break;
-        }
-        return view('sales.performance_report',$this->data);
-    }
 
 
      

@@ -73,7 +73,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <body>
       <!-- Pre-loader start -->
 
-       <div class="theme-loader">
+        <div class="theme-loader">
         <div class="ball-scale">
             <div class='contain'>
                 <div class="ring">
@@ -108,17 +108,14 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                 </div>
             </div>
         </div>
-    </div>     
-
+    </div>      
 
 
     <!-- Pre-loader end -->
     <div id="pcoded" class="pcoded">
         <div class="pcoded-overlay-box"></div>
         <div class="pcoded-container navbar-wrapper">
-
-          
-
+            
         @include('components.header')
                     @include('components.menu')
                       <div class="pcoded-content">

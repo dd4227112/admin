@@ -11,6 +11,7 @@ use DateTime;
 use App\Mail\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Users extends Controller {
 
@@ -24,7 +25,6 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'ShuleSoft Users','subtitle'=>'employees','head'=>'Human resource');
         $this->data['users'] = User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
         return view('users.index', $this->data);
     }
@@ -178,14 +178,18 @@ class Users extends Controller {
         ]);
         return redirect()->back()->with('success', 'success');
     }
+  
 
+    public function shulesoftUsers(){
+        return \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+    }
 
     public function absent() {
         if ($_POST) {
-            // $dates = request('datetimes');
-            // $dates = str_replace('-','',$dates);
-            // dd($dates);
             $file = request()->file('file');
+            if(filesize($file) > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+             }
             $absent_reason_id = request('absent_reason_id'); 
             switch ($absent_reason_id) {
                   //Martenity leave 90 days
@@ -205,7 +209,8 @@ class Users extends Controller {
                  break;
                } 
              //  dd($end_date);
-            $file_id = $file ? $this->saveFile($file, 'company/employees',TRUE) : 1;
+          
+            $file_id = $file ? $this->saveFile($file,TRUE) : 1;
             \App\Models\Absent::create(['date' => request('date'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
             'note' => request('note'), 'company_file_id' => $file_id,'end_date' => $end_date]);
         }
@@ -216,7 +221,6 @@ class Users extends Controller {
         $id = (int) request()->segment(3);
         $request = request()->segment(4);
        
-     
         if($request == 'approve'){
             $approved = \App\Models\Absent::where('id',$id)->update(['approved_by' =>Auth::user()->id,'status'=>'Approved']);
             if($approved){
@@ -405,7 +409,7 @@ class Users extends Controller {
           $file = request()->file('photo');
           $filesize = filesize($file);
           if($filesize > 2000048 ){ return redirect()->back()->with('warning','your image file is too big'); }
-          $user_file_id = $this->saveFile($file, 'company/contracts',true);
+          $user_file_id = $this->saveFile($file,true);
           $data = [
             'company_file_id' => $user_file_id
           ];
@@ -637,7 +641,10 @@ class Users extends Controller {
       public function legalcontract(){
         if ($_POST) {
             $file = request()->file('file');
-           $file_id = $file ? $this->saveFile($file, 'company/employees', TRUE) : 1; 
+            if(filesize($file) > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+             }
+           $file_id = $file ? $this->saveFile($file,TRUE) : 1; 
            $arr = ['name' => request('contract_legal'),'start_date'=>request('start_date'),'end_date'=>request('end_date'),
            'user_id' => request('user_id'),'company_file_id' => $file_id ,'description' => request('description')];
              \App\Models\LegalContract::create($arr);
@@ -738,8 +745,11 @@ class Users extends Controller {
         $learning_id = request()->segment(3);
         if ($_POST) {
             $file = request()->file('certificate');
-            $file_id = $this->saveFile($file, 'company/employees',TRUE); 
-           \App\Models\Course::where('id',$learning_id)->update(['company_file_id' => $file_id]);
+            if(filesize($file) > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+             }
+            $file_id = $this->saveFile($file,TRUE); 
+           \App\Models\Course::where('id', (int) $learning_id)->update(['company_file_id' => $file_id]);
        }
        return redirect()->back()->with('success', 'updated successful!');
    }

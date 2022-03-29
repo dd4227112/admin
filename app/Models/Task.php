@@ -11,17 +11,21 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Task extends Model {
 
+    //use \App\Traits\BelongsToUser;
+
+
     //put your code here
     protected $table = 'tasks';
     protected $fillable = ['id','activity', 'client_id', 'action', 'date', 'time', 'user_id','next_action', 'priority', 'created_at', 'updated_at',
       'task_type_id','to_user_id','school_id','start_date','end_date','status','slot_id','ticket_no','budget','remainder_date','remainder'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Not allocated']);
-    }
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id')->withDefault(['name' => 'Not Defined']);
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
     public function taskComments() {

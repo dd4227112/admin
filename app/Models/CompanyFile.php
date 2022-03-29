@@ -17,12 +17,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CompanyFile extends Model {
 
+    //use \App\Traits\BelongsToUser;
+
+
     protected $table = 'company_files';
     protected $fillable = ['id', 'name', 'extenstion','user_id','size','caption','path', 'created_at', 'updated_at', 'note'];
-
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+  
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
-
-
 }

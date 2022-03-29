@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TrainItemAllocation extends Model {
 
+   // use \App\Traits\BelongsToUser;
+
+
     //put your code here
     protected $table = 'admin.train_items_allocations';
     protected $fillable = ['id', 'train_item_id', 'user_id','client_id','max_time','school_person_allocated','task_id', 'created_at', 'updated_at','is_allocated'];
@@ -26,9 +29,11 @@ class TrainItemAllocation extends Model {
         return $this->belongsTo(\App\Models\TrainItem::class, 'train_item_id', 'id');
     }
 
-      public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
-    }
+    public function user(){
+      return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
+  }
+
+
       public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
     }

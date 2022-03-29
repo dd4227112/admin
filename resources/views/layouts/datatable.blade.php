@@ -84,7 +84,7 @@
                     <ul class="nav navbar-top-links navbar-left">
                         <li><a href="javascript:void(0)" class="open-close waves-effect waves-light" onmousedown="$('body').toggleClass('show-sidebar hide-sidebar')"><i class="ti-menu"></i></a></li>
                         <?php
-                        $feedbacks = \App\Model\Feedback::where('opened', 1)->get();
+                        $feedbacks = \App\Models\Feedback::where('opened', 1)->get();
                         ?>
                         <?php if (can_access('manage_messages')) { ?>     
                             <li class="dropdown">

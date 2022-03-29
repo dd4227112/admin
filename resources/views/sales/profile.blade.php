@@ -71,21 +71,20 @@
                         </div>
                         <div class="user-body" style="min-height: 625px;">
                             <?php
-              $school_clients = DB::table('client_schools')->where('school_id', $school->id)->first();
-              if (empty($school_clients)) {
-                ?>
+                       $school_clients = DB::table('client_schools')->where('school_id', (int)$school->id)->first();
+                        if (empty($school_clients)) { ?>
                             <div class="card-block">
                                 <?php if (Auth::user()->department == 9) {
-                  echo '<a href="'.url('Partner/add/'. $school->id).'" class="btn btn-danger btn-block" >Onboard School</button>';
-                  }else{
-                    echo '<a href="'.url('sales/onboard/'. $school->id).'" class="btn btn-primary btn-sm btn-round" id="onboard_school">Onboard School</a>';
-                  }
-                  ?>
+                              echo '<a href="'.url('Partner/add/'. $school->id).'" class="btn btn-danger btn-block" >Onboard School</button>';
+                                 }else{
+                                echo '<a href="'.url('sales/onboard/'. $school->id).'" class="btn btn-primary btn-sm btn-round" id="onboard_school">Onboard School</a>';
+                              }
+                           ?>
                             </div>
                             <?php
-              } else {
-                $client_id = $school_clients->client_id;
-                ?>
+                     } else {
+                          $client_id = $school_clients->client_id;
+                        ?>
                             <br />
                             <div class="card-block alert alert-warning">
                                 <b class="">Already Onboarded</b>

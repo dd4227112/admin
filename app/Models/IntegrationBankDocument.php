@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class IntegrationBankDocument extends Model {
+ 
+   // use \App\Traits\belongsTocompanyFile;
 
     /**
      * Generated
@@ -18,12 +20,13 @@ class IntegrationBankDocument extends Model {
     protected $table = 'integration_bank_documents';
     protected $fillable = ['id',  'created_by', 'company_file_id',  'created_at','updated_at'];
 
-    public function companyfile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
-    }
 
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'created_by', 'id')->withDefault(['name' => 'User Not Defined']);
+    }
+
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
 
 

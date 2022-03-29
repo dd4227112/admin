@@ -4,6 +4,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Salary extends Model {
 
+   // use \App\Traits\BelongsToUser;
+
+
     /**
      * Generated
      */
@@ -11,9 +14,8 @@ class Salary extends Model {
     protected $table = 'salaries';
     protected $fillable = ['id', 'user_id', 'basic_pay', 'allowance', 'gross_pay', 'pension_fund', 'deduction', 'tax', 'paye', 'net_pay', 'payment_date', 'reference', 'allowance_distribution', 'deduction_distribution', 'pension_distribution'];
 
-
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
     public function allowances() {

@@ -256,11 +256,11 @@ group by ownership');
             $file_id = null;
             $attach_id = null;
             if (!empty(request('attached'))) {
-                $file_id = $this->saveFile(request('attached'), 'company/contracts',TRUE);
+                $file_id = $this->saveFile(request('attached'),TRUE);
             }
 
             if (!empty(request('image'))) {
-                $attach_id = $this->saveFile(request('image'), 'company/contracts',TRUE);
+                $attach_id = $this->saveFile(request('image'),TRUE);
             }
             $array = [
                 'title' => request('title'),
@@ -466,12 +466,6 @@ group by ownership');
             $criteria = request('less_than');
             $student_number = request('student_number');
             $file =  request('file_');
-          //  $file_path = '';
-            
-            // if(!empty($file)){
-            //     $file = request()->file('file_');
-            //     $file_path = $this->uploadFileLocal($file);
-            // }
 
             switch ($firstCriteria) {
                 case 00:   

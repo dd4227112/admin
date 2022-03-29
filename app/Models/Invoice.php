@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model {
 
+   // use \App\Traits\BelongsToUser;
+
+
     /**
      * Generated
      */
@@ -16,9 +19,6 @@ class Invoice extends Model {
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
-    }
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }
 
     public function invoiceFees() {
@@ -35,6 +35,10 @@ class Invoice extends Model {
 
     public function invoiceType() {
         return $this->belongsTo(\App\Models\InvoiceType::class, 'invoice_type', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 

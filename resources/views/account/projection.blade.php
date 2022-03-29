@@ -105,7 +105,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                 </th>
 
                                                                 <td> 
-                                                                   <input class="form-control" type="number" id="quantity<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? $client->estimated_students :  '' ;?>"  name="quantity[]"  onkeyup="quantity('<?= $service->id ?>')"  disabled="disabled"/>
+                                                                   <input class="form-control" type="number" id="quantity<?= $service->id ?>"  value="<?php echo preg_match('/Shulesoft system/i', strtolower($service->name)) ? $client->estimated_students :  '' ;?>"  name="quantity[]"  
+                                                                    onkeyup="quantity('<?= $service->id ?>')"  disabled="disabled"/>
                                                                 </td> 
                                                                 
                                                                   <td>
@@ -219,13 +220,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
         var type = invoice_t.options[invoice_t.selectedIndex].text;
         var type = type.toLowerCase();
 
-        //    if(type.match(/proforma invoice/)){
-        //        var url = '<?= url('Account/getSchools') ?>';
-        //      }else{
-        //        var url = '<?= url('Account/getClients') ?>';
-        //      }
-
-             var url = '<?= url('Account/getSchools') ?>';
+        var url = '<?= url('Account/getSchools') ?>';
              
             $.ajax({ 
                 type: 'POST',
@@ -261,7 +256,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
     };
 
      get_amount = function (id) {
-         var service_id = id;
             $('#amount_tag' + id).html($('#quantity' + id).val() * $('#amount' + id).val());
             var sum = 0;
             $('.total_amount').each(function () {

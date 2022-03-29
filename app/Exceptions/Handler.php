@@ -66,6 +66,12 @@ class Handler extends ExceptionHandler {
         $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
 
         error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
+
+    //    $controller = new \App\Http\Controllers\Controller();
+    //    $number ='255655007457'; 
+    //    $chatId = $number . '@c.us';
+    //    $controller->send_whatsapp_sms($chatId, $err);
+    
     }
 
     public function sendLog($err) {
@@ -94,10 +100,7 @@ class Handler extends ExceptionHandler {
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->back()->with('info', 'Your session expired, please login below to continue');
         }
-        // if ($exception->getStatusCode() === 500){
-        //   //  return redirect()->guest(route('login'));
-        //    // return response()->view('errors.' . '500', [], 500);
-        // }
+     
         $this->createLog($exception);
         return parent::render($request, $exception);
     
@@ -116,62 +119,14 @@ class Handler extends ExceptionHandler {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
-
         return redirect()->guest(route('login'));
     }
 
     public function automateDatabaseRecovery() {
         // First Notify key people
-        
         //try to see if we can restart our db here
-        
         system("service postgresql-12 stop");
-        system("service postgresql-12 start");
-        
-//        $karibusms = new \karibusms();
-//        $karibusms->API_KEY = '25336025463';
-//        $karibusms->API_SECRET = '1cb066306b7c36d3e665228a50ceca939609864d';
-//        $karibusms->set_name(strtoupper('SHULESOFT'));
-//        $karibusms->karibuSMSpro = 1;
-//        $message = 'Database System is down and needs your immediate attention. Thanks';
-//        (object) json_decode($karibusms->send_sms('255714825469', $message, 'SHULESOFT_recovery' . time()));
-//
-//        $data = ['content' => $message, 'link' => 'demo.',
-//            'photo' => 'shulesoft.png', 'sitename' => 'ShuleSoft', 'name' => ''];
-//        $mes = [];
-//        $emails = ['email' => 'ephraim@shulesoft.com', 'email' => 'swillae1@gmail.com'];
-//        foreach ($emails as $mail) {
-//            \Mail::send('email.default', $data, function ($m) use ($mail) {
-//                $m->from('noreply@shulesoft.com', 'ShuleSoft');
-//                $m->to($mail['email'])->subject('Database System is down and needs your immediate attention');
-//            });
-//        }
-//        $whatsapp_numbers = ['255714825469', '255744158016', '255684033878', '255652160360'];
-//        foreach ($whatsapp_numbers as $number) {
-//            $chat_id = $number.'@c.us';
-//            $this->sendMessage($chat_id, $message);
-//        }
-        
-        
-    }
-
-    public function sendMessage($chatId, $text) {
-        $data = array('chatId' => $chatId, 'body' => $text);
-        $this->sendRequest('message', $data);
-    }
-
-    public function sendRequest($method, $data) {
-        $APIurl = 'https://eu4.chat-api.com/instance210904/';
-        $token = 'h67ddfj89j8pm4o8';
-        $url = $APIurl . $method . '?token=' . $token;
-        if (is_array($data)) {
-            $data = json_encode($data);
-        }
-        $options = stream_context_create(['http' => [
-                'method' => 'POST',
-                'header' => 'Content-type: application/json',
-                'content' => $data]]);
-        $response = file_get_contents($url, false, $options);
+        system("service postgresql-12 start"); 
     }
 
 }

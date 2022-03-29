@@ -64,7 +64,7 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
-              's3' => [
+            's3' => [
             'driver' => 's3',
             'key' => 'AKIA5W6BO2M5CMNJJNEQ',
             'secret' =>'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',

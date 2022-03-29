@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Guide extends Model
 {
+
+   // use \App\Traits\belongsTocompanyFile;
+
     protected $table = 'constant.guides';
     
     public $timestamps=false;
@@ -20,12 +23,9 @@ class Guide extends Model
     public function createdBy() {
         return $this->belongsTo(\App\Models\User::class,'created_by','id')->withDefault(['firstname'=>'Not Defined','lastname'=>'Not Defined']);
     }
-    
-    public function guidePageVisit() {
-        return $this->hasMany(\App\Model\GuidePageVisit::class);
-    }
 
     public function companyFile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
+    
 }

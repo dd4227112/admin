@@ -89,7 +89,7 @@
                             <thead>
                               <tr>
                                 <th>#</th>
-                                <th>Contact </th>
+                                <th>Priority </th>
                                 <th>School</th>
                                 <th>Created Date</th>
                                 <th>Status</th>
@@ -98,14 +98,14 @@
                             </thead>
                             <tbody>
                               <?php $i = 1; 
-                                 $requremts = \App\Models\Requirement::where('to_user_id',$requirement->to_user_id)
+                                 $requirements = \App\Models\Requirement::where('to_user_id',$requirement->to_user_id)
                                  ->where('id','<>',$requirement->id)->where('status','<>','Completed')->latest()->get();
-                                  if(count($requremts) > 0){ 
-                                 foreach ($requremts as $req) {   
+                                  if(count($requirements) > 0){ 
+                                 foreach ($requirements as $req) {   
                                  ?>
                               <tr>
                                   <td><?= $i ?></td>
-                                  <td><?= $req->contact ?? '' ?></td>
+                                  <td><?= $req->priority ?? 'Medium Priority' ?></td>
                                   <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General Requirement' ?></td>
                                   <td><?= $req->created_at ?? '' ?></td>
                                   <td><?= $req->status ?? '' ?></td>
@@ -121,7 +121,7 @@
                           <tfoot>
                             <tr>
                               <th>#</th>
-                              <th>Contact</th>
+                              <th>Priority</th>
                               <th>School</th>
                               <th>Issued Date</th>
                               <th>Status</th>

@@ -113,16 +113,16 @@
                                                  </li>
                                              
                                                  <li class="">
-                                                    <a href="<?= url('sales/school') ?>">
+                                                    <a href="<?= url('sales/schools') ?>">
                                                         <span class="pcoded-mtext">List of Schools</span>
                                                     </a>
                                                   </li>
 
-                                                   <li class="">
+                                                   <!-- <li class="">
                                                     <a href="<?= url('sales/onboaredSchools') ?>">
                                                         <span class="pcoded-mtext">School Implementation</span>
                                                     </a>
-                                                  </li>
+                                                  </li> -->
 
 
                                                 <?php if (can_access('sales_plan')) { ?>
@@ -363,34 +363,6 @@
                                             </ul>
                                         </li>
                                       <?php } ?>
-                                    
-{{-- 
-                                        <li class=" pcoded-hasmenu">
-                                            <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Usage and analysis</span>
-                                            </a>
-                                            <ul class="pcoded-submenu">
-                                                <li class=" ">
-                                                    <a href="<?= url('marketing/moduleusage') ?>">
-                                                        <span class="pcoded-mtext">Usage analysis</span>
-                                                    </a>
-                                                </li>
-                                             
-
-                                               
-                                            </ul>
-                                        </li> --}}
-
-                                         {{--   <ul class="pcoded-submenu">
-                                             
-                                             
-                                                 <li class="">
-                                                    <a href="<?= url('customer/calls') ?>">
-                                                        <span class="pcoded-mtext">Call logs</span>
-                                                    </a>
-                                                </li> 
-                                                
-                                            </ul>  --}}
                                 
                                     </ul>
                                 </li>
@@ -595,6 +567,7 @@
                                                     <span class="pcoded-mtext">Manuals</span>
                                                 </a>
                                             </li>
+
                                             <?php if (can_access('manage_database')) { ?>
                                             <li class=" pcoded-hasmenu">
                                                 <a href="javascript:void(0)">
@@ -625,18 +598,31 @@
                                                         </a>
                                                     </li>
                                                 </ul>
-                                            </li>
-                                        <?php } ?>
-                                           
-                                           <?php if(can_access('manage_errors')) { ?>
-                                            <li class="">
-                                                <a href="<?= url('software/logs') ?>">
-                                                    <span class="pcoded-mtext">Error Logs</span>
+                                               </li>
+                                           <?php } ?>
+
+                                           <?php if (can_access('manage_errors')) { ?>
+                                            <li class=" pcoded-hasmenu">
+                                                <a href="javascript:void(0)">
+                                                    <span class="pcoded-mtext">System errors</span>
                                                 </a>
-                                            </li>
-                                            <?php } ?>
+                                                <ul class="pcoded-submenu">
+                                                    <li class="">
+                                                        <a href="<?= url('software/logs') ?>">
+                                                            <span class="pcoded-mtext">Error Logs</span>
+                                                        </a>
+                                                    </li>
 
-
+                                                    <li class="">
+                                                        <a href="<?= url('software/statistics') ?>">
+                                                            <span class="pcoded-mtext">Error Statistics</span>
+                                                        </a>
+                                                    </li>
+                                                 
+                                                </ul>
+                                               </li>
+                                           <?php } ?>
+                                           
                                             <li class="">
                                                 <a href="<?= url('software/api') ?>">
                                                     <span class="pcoded-mtext">API Requests</span>
