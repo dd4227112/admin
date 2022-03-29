@@ -508,7 +508,7 @@ Task</button> --}}
 <p class="text-muted editable" id="txt1<?= $task->id ?>">
    {{-- <?= $task->activity ?> --}}
 
-   <span style="text-decoration: none;" <?= $task->user->id == \Auth::user()->id && date('Y-m-d H:i:s') > date('Y-m-d H:i:s', strtotime("+60 minutes", strtotime($task->created_at))) ? 'contenteditable="true"': 'contenteditable="false"' ?> 
+   <span style="text-decoration: none;" <?= $task->user->id == \Auth::user()->id && date('Y-m-d H:i:s') < date('Y-m-d H:i:s', strtotime("+60 minutes", strtotime($task->created_at))) ? 'contenteditable="true"': 'contenteditable="false"' ?> 
     onblur="save('<?= $task->id . 'activity' ?>', '<?= $task->id  ?>','activity')" 
     id="<?= $task->id . 'activity' ?>"> <?= $task->activity == '' ? 'null' : $task->activity ?></span>
     <span id="stat<?= $task->id .  'activity' ?>"></span>
