@@ -882,7 +882,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     public function sendBirthdayWish() {
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'canaanhigh', 'barbrojohannson','jknyerere'))) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin','makongo', 'anazak','atlasschool', 'canaanhigh', 'barbrojohannson','jknyerere'))) {
                 //Remind parents,class and section teachers to wish their students
 
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"

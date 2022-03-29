@@ -166,7 +166,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <figure class="highcharts-figure">
-                                  <div id="containa" style="height: 300px;"></div>
+                                  <div id="containa" style="height: 400px;"></div>
                                 </figure>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                     </div>
                     
                
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-xl-6">
                             <div class="card  mb-2">
                                 <div class="card-body">
@@ -194,7 +194,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                        
               <?php } ?>
 
