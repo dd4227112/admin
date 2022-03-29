@@ -509,15 +509,7 @@ class Controller extends BaseController {
 
 
 
-        public function test2(){
-            // dd( date('Y-m-d H:i:s')); 
-            $start = '2022-03-29 08:52';
-            $time = 60;
-            // $end = date('Y-m-d H:i:s',strtotime('+1 hours',strtotime($start)));
-            $end_date = date('Y-m-d H:i:s', strtotime("+60 minutes", strtotime($start)));
-
-            dd($end_date);
-        }
+  
    
 }
 

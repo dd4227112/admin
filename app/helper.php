@@ -475,8 +475,6 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
 
 }
 
-
-
-function percent($number){
-    return number_format($number, 2, '.', ''). '%';
-}
+    function percent($number){
+        return number_format($number, 2, '.', ''). '%';
+    }

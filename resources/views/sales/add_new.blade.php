@@ -23,7 +23,7 @@
     
           <div class="card">
             <div class="card-block">
-                <div class="text-center m-t-10">
+                <div class="text-center m-t-10 m-b-20">
                   <h4 id="heading">Onboard New School</h4>
                 </div>
              
@@ -35,12 +35,28 @@
                          <input type="text" class="form-control" placeholder="School Name here.." name="school_name" value="<?=$school->name ?? '' ?>" required>
                       </div>
 
+                      <div class="col-sm-4">
+                          Account Name
+                          <div class="row">
+                              <div id="col-sm-2">  
+                                  <b style="font-size: 1.2em;"> https://</b>
+                               </div>
+                              <div id="col-sm-7">
+                                  <input style="max-width: 15em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= clean(strtolower($school->name)) ?>" maxlength="10" onkeyup="validateForm()"> 
+                              </div>
+                              <div id="col-sm-3">
+                                  <b style="font-size: 1.2em;">.shulesoft.com</b>
+                              </div>
+                          </div>
+                          <small style="max-width: 13em;" id="username_message_reply"></small>
+                       </div>
+
                         <div class="col-sm-4">
                            Sales Person
                         <select name="sales_user_id" class="select2">
-                        <?php foreach ($staffs as $staff) { ?>
+                          <?php foreach ($staffs as $staff) { ?>
                             <option user_id="<?= $staff->id ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                        <?php } ?>
+                          <?php } ?>
                        </select>
                       </div>
                       
@@ -202,14 +218,14 @@
 
 <script type="text/javascript">
 
-  $('#_payment_option').change(function () {
-        var val = $(this).val();
-        if (val != 'Standing Order') {
-            $('#standing_order_form').hide();
-        } else {
-            $('#standing_order_form').show();
-        }
-    });
+$('#_payment_option').change(function () {
+      var val = $(this).val();
+      if (val != 'Standing Order') {
+          $('#standing_order_form').hide();
+      } else {
+          $('#standing_order_form').show();
+      }
+  });
 
 
 $(".select2").select2({
@@ -260,7 +276,8 @@ function validateForm() {
   if (x == null || x == "") {
     $('#username_message_reply').html("Name must not be blank").addClass('alert alert-danger');
     return false;
-  } else if (!regex.test(x)) {
+  }
+  else if (!regex.test(x)) {
     $('#username_message_reply').html("Name contains invalid characters (Only letters with no spaces !)").addClass('alert alert-danger');
     return false;
   } else {

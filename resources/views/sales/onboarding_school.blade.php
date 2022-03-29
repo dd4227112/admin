@@ -35,6 +35,13 @@ if (request()->ajax() == FALSE) {
                 <li class="list-group-item"><strong> School address </strong> &nbsp;<?= $client->address ?> </li>  
                 <li class="list-group-item"><strong> Onboarded by </strong> &nbsp; <?= $client->createdBy->name(); ?>  &nbsp;&nbsp; <strong> Phone </strong> <?=$client->createdBy->phone; ?></li>
                 {{-- <li class="list-group-item"><strong> Agreement Form  </strong> &nbsp; <?= 'y'; ?>  &nbsp;&nbsp; <strong> Standing Order </strong> <?php echo !is_null($client->standingorder) ? '<a target="_break" href="" class="btn btn-primary btn-mini btn-round">View</a>' : '<label class="badge badge-inverse-warning">Not Defined</label>' ; ?></li>  --}}
+
+                <li class="list-group-item"><strong> School Description </strong> <br>
+                <p class="text-muted">
+                     <?= $client->note ?? '' ?> 
+                 </p>
+                </li>
+
               </ul>
         </div>
     </div>
@@ -43,22 +50,7 @@ if (request()->ajax() == FALSE) {
 <div class="card">
     <div class="card-block">
         <form action="<?= url('sales/implemetation/'. $client_id) ?>" method="POST" enctype="multipart/form-data">
-            <div class="form-group row" style="border: 1px dashed4;">
-                <label class="col-sm-2 col-form-label">Account Name</label>
-                <div class="row">
-                    <div id="col-sm-2">  
-                        <b style="font-size: 1.2em;"> https://</b>
-                     </div>
-                    <div id="col-sm-7">
-                        <input style="max-width: 17em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($client->name) ?>" required="" onkeyup="validateForm()"> 
-                    </div>
-                    <div id="col-sm-3">
-                        <b style="font-size: 1.2em;">.shulesoft.com</b>
-                    </div>
-                </div>
-                <small style="max-width: 13em;" id="username_message_reply"></small>
-            </div>
-
+          
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Data Format Available</label>
                 <div class="col-sm-4">
@@ -73,26 +65,7 @@ if (request()->ajax() == FALSE) {
                 <div class="col-sm-4">
                     <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
                 </div>
-            </div>
-
-
-            {{-- <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Implementation Start Date</label>
-                <div class="col-sm-10">
-                    <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
-                </div>
-            </div> --}}
-
-              {{-- <br>
-             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Trial Period</label>
-                <div class="col-sm-5">
-                    <input type="radio" name="check_trial" id="trial_no" value="0" checked>
-                    <label for="Trial">NO</label> &nbsp; &nbsp; &nbsp;
-                    <input type="radio" name="check_trial" id="trial_yes" value="1">
-                    <label for="Trial">YES</label>
-                </div>
-            </div> --}}
+            </div>          
 
             <div class="form-group row" id="period"  style="display: none;">
                  <label class="col-sm-3 col-form-label">Trial period (Days)</label>

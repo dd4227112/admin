@@ -25,7 +25,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['users'] = User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+        $this->data['users'] = $this->shulesoftUsers();
         return view('users.index', $this->data);
     }
 

@@ -395,18 +395,19 @@ class Sales extends Controller {
                 ]);
                 return redirect()->back()->with('success', 'user recorded successfully');
             } else {
-                $data = array_merge(request()->all(), ['user_id' => Auth::user()->id, 'school_id' => request('client_id')]);
-                $task = \App\Models\Task::create($data);
-                \App\Models\UsersSchool::create([
-                    'user_id' => Auth::user()->id, 'school_id' => request('client_id'), 'role_id' => Auth::user()->role_id, 'status' => 1,
-                ]);
                 $school_id = request('client_id');
-
-                DB::table('tasks_schools')->insert([
-                    'task_id' => $task->id,
-                    'school_id' => (int) $school_id
-                ]);
-                return redirect()->back()->with('success', 'Report added successfully');
+                $data = array_merge(request()->all(), ['user_id' => \Auth::user()->id, 'school_id' => request('client_id')]);
+                 DB::transaction(function () use($data,$school_id) {
+                    $task = \App\Models\Task::create($data);
+                    \App\Models\UsersSchool::create([
+                        'user_id' => Auth::user()->id, 'school_id' => (int) $school_id, 'role_id' => \Auth::user()->role_id, 'status' => 1,
+                    ]);
+                    DB::table('tasks_schools')->insert([
+                        'task_id' => $task->id,
+                        'school_id' => (int) $school_id
+                    ]);
+                    return redirect()->back()->with('success', 'Report added successfully');
+               });
             }
         }
         return view('sales.profile', $this->data);
@@ -460,18 +461,24 @@ class Sales extends Controller {
 
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
         $username = clean(preg_replace('/[^a-z]/', null, strtolower($school->name)));
-         
-        $this->data['staffs'] = DB::table('users')->where('status', 1)->whereNotIn('role_id', [7,15])->get();
+
+        $user_object = new \App\Http\Controllers\Users();
+        $this->data['staffs'] =  $user_object->shulesoftUsers();
         if ($_POST) {
+            $file = request()->file('file');
+            if(filesize($file) > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+             }
+             
              $this->validate(request(), 
                    ['school_name' => 'required',
                     'sales_user_id' => 'required',
                     'price' => 'required',
-                    'students' => 'required|numeric'
+                    'students' => 'required|numeric',
+                    'username' => 'required'
                 ]);
 
             $code = rand(343, 32323) . time();
-
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (empty($school_contact)) {
                 DB::table('admin.school_contacts')->insert([
@@ -480,10 +487,7 @@ class Sales extends Controller {
                 $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             }
 
-             $arr = explode(' ',trim($school->name));
-             $schema_name = strtolower($arr[0]) == 'st' ? trim(strtolower($arr[0].$arr[1])) : trim(strtolower($arr[0]));
-             $schema_name = strlen($username) < 10 ? $username : $schema_name;
-
+             $schema_name = str_replace(' ','', request('username'));
              DB::table('admin.schools')->where('id', $school_id)->update(['name'=> request('school_name'),'students' => request('students'),'schema_name' => $schema_name]);
              $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
 
@@ -491,7 +495,7 @@ class Sales extends Controller {
                     'name' => empty(request('school_name')) ? $school->name : request('school_name'),
                     'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
                     'created_at' => date('Y-m-d H:i:s'),
-                    'phone' => $school_contact->phone,
+                    'phone' => !empty($school_contact->phone) ? $school_contact->phone : request('owner_phone'),
                     'email' => !empty($school_contact->email) ? $school_contact->email : request('owner_email'),
                     'estimated_students' => request('students'),
                     'status' => 1, // Unapproved application
@@ -500,20 +504,20 @@ class Sales extends Controller {
                     'email_verified' => 0,
                     'phone_verified' => 0,
                     'created_by' => \Auth::user()->id,
-                    'username' => '',
+                    'username' => clean($schema_name),
                     'payment_option' => request('payment_option'),
                     'start_usage_date' => date('Y-m-d'),
                     'trial' => request('check_trial'),
                     'owner_email' => request('owner_email'),
                     'owner_phone' => request('owner_phone'),  
                     'price_per_student' => request('price'),
-                    'note' => request('description')
+                    'note' => nl2br(request('description'))
              ];  
            
             if(!empty($check_client)) {
                 $client_id = $check_client->id;
                  \DB::table('admin.clients')->where('id',$client_id)->update(Arr::except($client_data, ['username'])); 
-            } else {
+            } else { 
                 $client_id = \DB::table('admin.clients')->insertGetId($client_data); 
                 // trial period
                 // if(request('check_trial') == 1 && !is_null(request('trial_period')) ) {
@@ -537,7 +541,6 @@ class Sales extends Controller {
                     'project_id' => 1, 'client_id' => $client_id //default ShuleSoft project
                 ]);
                 //sales person
-                //support person
                 DB::table('admin.users_schools')->insert([
                     'school_id' => $school_id, 'client_id' => $client_id, 'user_id' =>Auth::user()->id, 'role_id' => 8, 'status' => 1
                 ]);
@@ -552,9 +555,6 @@ class Sales extends Controller {
   
             if (!empty(request('file'))) {
                 $file = request()->file('file');
-                if(filesize($file) > 2015110 ) {
-                    return redirect()->back()->with('error', 'File must have less than 2MBs');
-                 }
                 $company_file_id = $file ? $this->saveFile($file,TRUE) : 1;
                 $contract_id = DB::table('admin.contracts')->insertGetId([
                 'name' => 'Shulesoft service fee', 'company_file_id' => $company_file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => \Auth::user()->id
@@ -566,9 +566,8 @@ class Sales extends Controller {
               }
  
                 // if document is standing order,Upload standing order files
-             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))  && request('check_trial') != 1 ) {
+             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option')) ) {
                 $file = request()->file('standing_order_file');
-                
                 $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
                 $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
 
@@ -584,7 +583,7 @@ class Sales extends Controller {
                 DB::table('admin.client_contracts')->insert([
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
-            } 
+              } 
 
             //once a school has been installed, now create an invoice for this school or create a promo code
          
@@ -592,13 +591,7 @@ class Sales extends Controller {
                 $year = \App\Models\AccountYear::where('name', date('Y'))->first();
                 $reference = time(); // to be changed for selcom ID
 
-
                 $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
-                //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
-
-                // $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
-                // $unit_price = $months_remains * $client->price_per_student / 12;
-                // $amount = $unit_price * $client->estimated_students;
 
                  $unit_price = remove_comma(request('price'));
                  $estimated_students = remove_comma(request('students'));
@@ -622,8 +615,7 @@ class Sales extends Controller {
                 $this->send_whatsapp_sms($user->phone, $message); 
                 $this->send_sms($user->phone, $message, 1);
                 
-
-                $finance = \App\Models\User::where('designation_id',2)->first();
+                $finance = \App\Models\User::where('designation_id',2)->where('status',1)->first();
                 $sms = 'Hello '.$finance->firstname .' '. $finance->lastname 
                 . chr(10) .'New school :' . $school->name . ' has been onboarded in the shulesoft system'
                 . chr(10) .'You are remainded to verify the invoice document'
@@ -631,12 +623,8 @@ class Sales extends Controller {
                 $this->send_whatsapp_sms($finance->phone, $sms); 
                 $this->send_sms($finance->phone, $sms, 1);
 
-
-                // $this->scheduleActivities($client_id);  
                 return redirect('sales/onboaredSchools');
-            //}
-            // return redirect('https://' . $schema_name . '.shulesoft.com');
-        }
+           }
     
         return view('sales.add_new', $this->data);
     }
@@ -644,8 +632,9 @@ class Sales extends Controller {
     
      public function onboaredSchools(){
         $this->data['clients'] = \DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,
-        s.company_file_id FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a 
-        on a.client_id = c.id   where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status HAVING count(a.id) <= 0 ORDER BY c.created_at DESC");
+        s.company_file_id FROM admin.clients c LEFT JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a 
+        on a.client_id = c.id   where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status HAVING count(a.id) <= 0
+         ORDER BY c.created_at DESC");
         return view('sales.onboard', $this->data);
      }
 

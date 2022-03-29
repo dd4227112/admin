@@ -580,13 +580,17 @@ class Customer extends Controller {
              'owner_phone' => request('owner_phone'),
              'owner_email' => request('owner_email')
          ];
+
         $number_of_students = request('estimated_students');
-        $update = \App\Models\Client::where('id',(int) $id)->first();
-        \App\Models\Client::where('id',(int) $id)->update($data);
-        $data = \App\Models\ClientSchool::where('client_id', $id)->first();
-        \App\Models\School::where('id', \App\Models\ClientSchool::where('client_id', $id)->first()->school_id)->update(['students' => $number_of_students,'name'=>request('name')]);
-        \DB::table($update->username . '.setting')->update(['estimated_students' => $number_of_students]);
-        return redirect('customer/profile/' . $update->username)->with('success', 'successful updated!');
+
+        DB::transaction(function () use($id,$data,$number_of_students) {
+             $update = \App\Models\Client::where('id',(int) $id)->first();
+             \App\Models\Client::where('id',(int) $id)->update($data);
+             $data = \App\Models\ClientSchool::where('client_id', (int) $id)->first();
+             \App\Models\School::where('id', \App\Models\ClientSchool::where('client_id', (int) $id)->first()->school_id)->update(['students' => $number_of_students,'name'=>request('name')]);
+              \DB::table($update->username . '.setting')->update(['estimated_students' => $number_of_students]);
+              return redirect('customer/profile/' . $update->username)->with('success', 'successful updated!');
+        });
     }
 
     public function addstandingorder() {

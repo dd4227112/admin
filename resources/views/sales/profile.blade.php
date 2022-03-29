@@ -57,13 +57,13 @@
                                 <p align="center">
 
                                     <?php
-                  $user_allocated = \App\Models\UsersSchool::where('school_id', $school->id)->where('role_id', '<>', 6)->first();
-                  if (!empty($user_allocated)) {
-                    echo '                  <a href="#" class="btn btn-outline-primary waves-effect text-white"><i class="icofont icofont-ui-user m-r-10"></i>' . $user_allocated->user->firstname . ' ' . $user_allocated->user->lastname . ' </a>';
-                  } else {
-                    echo 'No Person Allocated';
-                  }
-                  ?>
+                                        $user_allocated = \App\Models\UsersSchool::where('school_id', $school->id)->where('role_id', '<>', 6)->first();
+                                        if (!empty($user_allocated)) {
+                                            echo '                  <a href="#" class="btn btn-outline-primary waves-effect text-white"><i class="icofont icofont-ui-user m-r-10"></i>' . $user_allocated->user->firstname . ' ' . $user_allocated->user->lastname . ' </a>';
+                                        } else {
+                                            echo 'No Person Allocated';
+                                        }
+                                        ?>
 
 
                                 </p>
@@ -474,58 +474,11 @@
 
                                                 
 
-                                                  <div id="myForm">
-                                                     <label for="">Name location</label>
-                                                    <input id="myInput" data-geocomplete="street address" class="form-control" />
-                                                  </div>
-
-                                                  {{-- <div id="map">
-                                                  </div> --}}
-
-                                                  <div class="mapouter">
-                                                    <div class="gmap_canvas"><iframe width="100%" height="500"
-                                                            id="gmap_canvas"
-                                                            src="https://maps.google.com/maps?q=<?= $school->sname ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                                                            frameborder="0" scrolling="no" marginheight="0"
-                                                            marginwidth="0"></iframe><a
-                                                            href="https://www.embedgooglemap.net/blog/nordvpn-coupon-code/">nordvpn
-                                                            coupon</a>
-                                                    </div>
-                                                    
-                                                    <style>
-                                                    .mapouter {
-                                                        position: relative;
-                                                        text-align: right;
-                                                        height: 300px;
-                                                        width: 100%;
-                                                    }
-        
-                                                    .gmap_canvas {
-                                                        overflow: hidden;
-                                                        background: none !important;
-                                                        height: 300px;
-                                                        width: 100%;
-                                                    }
-                                                    </style>
-                                                </div>
-
-                                                  <form action="" id="mapform">
-                                                      Latitude: <input class="form-control" type="text" data-geo="lat">
-                                                      Longitude: <input class="form-control" type="text" data-geo="lng">
-                                                      Address: <input class="form-control" type="text" data-geo="formatted_address">
-                                                  </form>
-
-                                                  <script>
-                                                      $('#myInput').geocomplete({
-                                                          map: '#map',
-                                                          details: '#mapform',
-                                                          detailsAttribute : 'data-geo'
-                                                      });
-                                                  </script>
+                                                
 
                                                 <?php
                                                 if (isset($client_id) && (int) $client_id > 0) {
-                                                    $client = DB::table('admin.clients')->where('id', $client_id)->first();
+                                                    $client = DB::table('admin.clients')->where('id', (int) $client_id)->first();
                                                     ?>
                                                 <h3>Onboarding Details</h3>
                                                 <table class="table">
@@ -550,39 +503,10 @@
                                                 <?php } ?>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
-                                <div class="live_tabs" id='contracts' style="display:none">
-                                    <table>
-                                        <div class="card-block table-border-style">
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>First Name</th>
-                                                            <th>Last Name</th>
-                                                            <th>Username</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>Mark</td>
-                                                            <td>Otto</td>
-                                                            <td>@mdo</td>
-                                                        </tr>
 
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </table>
-                                </div>
-                                <div class="live_tabs" id="onboard_school_content">
-
-                                </div>
+                               
                             </div>
                         </div>
                     </div>
@@ -734,25 +658,25 @@ function save_comment(id) {
     });
 }
 
-onboard = function() {
-    $('#task_count_').html($('#task_count').val());
-    $('#onboard_school').mousedown(function() {
-        $('#onboard_tabs').hide();
-        $.ajax({
-            type: 'GET',
-            url: '<?= url('sales/onboard/' . request()->segment(3)) ?>',
-            data: {
-                id: '<?= $school->id ?>'
-            },
-            dataType: "html",
-            success: function(data) {
-                $('.live_tabs').hide();
-                $('#onboard_school_content').html(data).show();
-            }
-        });
+// onboard = function() {
+//     $('#task_count_').html($('#task_count').val());
+//     $('#onboard_school').mousedown(function() {
+//         $('#onboard_tabs').hide();
+//         $.ajax({
+//             type: 'GET',
+//             url: '<?= url('sales/onboard/' . request()->segment(3)) ?>',
+//             data: {
+//                 id: '<?= $school->id ?>'
+//             },
+//             dataType: "html",
+//             success: function(data) {
+//                 $('.live_tabs').hide();
+//                 $('#onboard_school_content').html(data).show();
+//             }
+//         });
 
-    })
-}
+//     })
+// }
 $(document).ready(onboard);
 </script>
 @endsection
