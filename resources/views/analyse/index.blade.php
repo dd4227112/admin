@@ -166,7 +166,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <figure class="highcharts-figure">
-                                  <div id="containa" style="height: 300px;"></div>
+                                  <div id="containa" style="height: 400px;"></div>
                                 </figure>
                             </div>
                         </div>
