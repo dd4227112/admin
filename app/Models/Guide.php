@@ -17,7 +17,7 @@ class Guide extends Model
     ];
     
     public function permission() {
-        return $this->belongsTo(\App\Model\Permissions::class);
+        return $this->belongsTo(\App\Models\Permission::class);
     }
 
     public function createdBy() {

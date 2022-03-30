@@ -603,9 +603,6 @@ class Sales extends Controller {
                 $client = DB::table('admin.clients')->where('id', $client_id); 
                 DB::table('admin.clients')->where('id', $client_id)->update(['code' => $trial_code]);
                 $user = $client->first();
-               // $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
-                //$this->send_sms($user->phone, $message, 1);
-                //$this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
 
                 $user = \App\Models\User::find(request('sales_user_id'));
     
