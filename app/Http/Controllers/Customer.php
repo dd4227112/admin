@@ -390,7 +390,6 @@ class Customer extends Controller {
         } else {
             $page = 'guide';
             $this->data['guides'] = \App\Models\Guide::latest()->get();
-           // $this->data['guides'] = \App\Model\Guide::orderBy('id', 'desc')->get();
         }
         return view('customer.' . $page, $this->data);
     }
