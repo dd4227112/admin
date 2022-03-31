@@ -96,15 +96,15 @@ class Analyse extends Controller {
         $this->data['parents'] = \collect(\DB::select('select count(*) as count from admin.all_parent'))->first()->count;
         $this->data['students'] = \collect(\DB::select('select count(*) as count from admin.all_student'))->first()->count;
         $this->data['teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
-        $this->data['users'] = \collect(\DB::select('select count(*) as count from admin.all_users'))->first()->count;
-        //$this->data['users'] = 100;
+       // $this->data['users'] = \collect(\DB::select('select count(*) as count from admin.all_users'))->first()->count;
+        $this->data['users'] = 100;
         $this->data['total_schools'] = \collect(\DB::select("select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema','pg_catalog')"))->first()->aggregate;
         $this->data['schools_with_students'] =  \collect(\DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
         $this->data['active_parents'] = \collect(\DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
         $this->data['active_students'] = \collect(\DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
         $this->data['active_teachers'] = \collect(\DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
-        $this->data['active_users'] = \collect(\DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
-        // $this->data['active_users'] = 120;
+       // $this->data['active_users'] = \collect(\DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
+         $this->data['active_users'] = 120;
         return $this->data;
     }
 
@@ -351,7 +351,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
 
        public function ratings(){
-          $this->data['breadcrumb'] = array('title' => 'Users ratings','subtitle'=>'ratings','head'=>'marketing');
           $this->data['nps'] = \collect(\DB::select('select  (a.promoter/c.total::float)*100 - (b.detractor/c.total::float)*100 as NPS from (select sum(rate) as promoter from admin.rating where rate > 8) a,(select sum(rate) as detractor from admin.rating where rate < 7 ) b,(select sum(rate) as total from admin.rating) c'))->first();
           $this->data['ratings'] = \App\Models\Rating::latest()->get();
           $this->data['commentators'] = \collect(\DB::select("select distinct user_id from admin.rating"))->count();

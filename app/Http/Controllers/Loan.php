@@ -43,7 +43,6 @@ class Loan extends Controller {
                $loan_id = request()->segment(4);
 
             if ($id == 'edit' && (int) $loan_id > 0) {
-                $this->data['breadcrumb'] = array('title' => 'Edit  types','subtitle'=>'loans','head'=>'payroll');
                 $this->data['type'] = \App\Models\LoanType::find($loan_id);
                 if ($_POST) {
                     $this->data['type']->update(request()->all());

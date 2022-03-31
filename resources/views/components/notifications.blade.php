@@ -53,8 +53,7 @@
                     $('#onboarded').html(data.schools_to_approve);
                     $('#schools_to_implement').html(data.schools_to_implement);
                     $('#total_notifications').html(data.total);
-                 
             });
         }
         $(document).ready(alerts);
-    </script>
+</script>

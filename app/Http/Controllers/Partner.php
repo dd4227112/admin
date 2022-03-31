@@ -363,7 +363,6 @@ class Partner extends Controller {
     }
 
     public function partnerStaff() {
-        $this->data['breadcrumb'] = array('title' => 'Staff Members','subtitle'=>'partners','head'=>'operations');
         $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['staffs'] = \App\Models\PartnerUser::where('branch_id', $id)->get();
@@ -405,7 +404,6 @@ class Partner extends Controller {
     }
 
     public function addPartner() {
-        $this->data['breadcrumb'] = array('title' => 'Company Partners','subtitle'=>'add partners','head'=>'operations');
         $this->data['countries'] = \App\Models\Country::all();
         $id = request()->segment(3);
         if ((int) $id > 0) {

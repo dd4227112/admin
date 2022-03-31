@@ -119,7 +119,6 @@ class Allowance extends Controller {
     }
 
      public function monthlysubscribe() {
-        $this->data['breadcrumb'] = array('title' => 'Subscription-Allowance','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;

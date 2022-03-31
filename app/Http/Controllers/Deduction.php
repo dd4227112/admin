@@ -60,7 +60,6 @@ class Deduction extends Controller {
 
 
     public function edit() {
-           $this->data['breadcrumb'] = array('title' => 'Edit deductions','subtitle'=>'accounts','head'=>'payroll');
             $id = request()->segment(3);
             if ((int) $id) {
                 $this->data['deduction'] = \App\Models\Deduction::find($id);

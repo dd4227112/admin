@@ -247,7 +247,6 @@ class Software extends Controller {
     }
 
     public function upgrade() {
-       $this->data['breadcrumb'] = array('title' => 'Create script','subtitle'=>'software','head'=>'database');
         if (request('sql') != '') {
             $this->data['script'] = $this->createUpgradeScript();
         } else {
@@ -279,7 +278,6 @@ class Software extends Controller {
     }
 
     public function constrains() {
-       $this->data['breadcrumb'] = array('title' => 'Constrains','subtitle'=>'software','head'=>'database');
         $type = $this->data['sub'] = request()->segment(3);
         if ($type == 'CHECK') {
             $relations = DB::select('SELECT nspname as "table_schema",conname as constraint_name, replace( conrelid::regclass::text , nspname||\'.\', \'\') AS TABLE_NAME FROM   pg_constraint c JOIN   pg_namespace n ON n.oid = c.connamespace WHERE  contype IN (\'c\') ORDER  BY "nspname"');
@@ -675,7 +673,6 @@ class Software extends Controller {
     }
 
     public function template() {
-       $this->data['breadcrumb'] = array('title' => 'Sofware materials','subtitle'=>'software','head'=>'materials');
         $this->data['faqs'] = [];
         return view('software.index', $this->data);
     }

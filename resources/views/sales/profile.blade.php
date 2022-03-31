@@ -471,11 +471,7 @@
                                                     </table>
                                                 </form>
                                                 <br />
-
                                                 
-
-                                                
-
                                                 <?php
                                                 if (isset($client_id) && (int) $client_id > 0) {
                                                     $client = DB::table('admin.clients')->where('id', (int) $client_id)->first();

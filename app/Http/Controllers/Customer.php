@@ -176,7 +176,6 @@ class Customer extends Controller {
     }
 
     function types() {
-        $this->data['breadcrumb'] = array('title' => 'Schools Setup','subtitle'=>'customer service','head'=>'operations');
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -466,7 +465,7 @@ class Customer extends Controller {
         $status = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
 
         if(empty($status)){
-              return redirect('https://' . $school . '.shulesoft.com');
+           return redirect('https://' . $school . '.shulesoft.com');
         }
 
         $client = \App\Models\Client::where('username', $school)->first(); 
@@ -1266,7 +1265,6 @@ class Customer extends Controller {
     }
 
     public function sequence() {
-        $this->data['breadcrumb'] = array('title' => 'Training Sequence','subtitle'=>'shuleSoft training sequence','head'=>'operations');
         $this->data['sequences'] = \App\Models\Sequence::all();
         return view('customer.training.sequence', $this->data);
     }

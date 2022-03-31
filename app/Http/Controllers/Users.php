@@ -35,10 +35,9 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $breadcrumb = array('title' => 'Create user','subtitle'=>'employees','head'=>'Human resource');
         $users = User::where('created_by', Auth::user()->id)->get();
         $roles = DB::table('roles')->get();
-        return view('users.create', compact('users', 'roles','breadcrumb'));
+        return view('users.create', compact('users', 'roles'));
     }
 
     /**
@@ -418,7 +417,6 @@ class Users extends Controller {
     }
 
     public function applicant() {
-        $this->data['breadcrumb'] = array('title' => 'Applicants','subtitle'=>'human resource','head'=>'applicants');
         $this->data['applicants'] = DB::table('admin.applicants')->get();
         $this->data['applicant'] = DB::table('admin.applicants')->first();
         return view('users.applicant', $this->data);
@@ -450,13 +448,11 @@ class Users extends Controller {
     }
 
     public function minutes() {
-       $this->data['breadcrumb'] = array('title' => 'Add meeting','subtitle'=>'add new meeting','head'=>'operations');
         $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
         return view('users.minutes.minutes', $this->data);
     }
 
     public function addMinute() {
-       $this->data['breadcrumb'] = array('title' => 'Add meeting','subtitle'=>'add new meeting','head'=>'operations');
         if ($_POST) {
             $filename = '';
             if (!empty(request('attached'))) {
@@ -495,7 +491,6 @@ class Users extends Controller {
     }
 
     public function showMinute() {
-       $this->data['breadcrumb'] = array('title' => 'Shulesoft Meeting Minutes','subtitle'=>'meeting','head'=>'operations');
         $id = request()->segment(3);
         $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
         return view('users.minutes.view_minute', $this->data);
