@@ -98,7 +98,6 @@
                                         data: "q=" + val,
                                         dataType: 'JSON',
                                         success: function (data) {
-                                            console.log(data);
                                             $('#search_people').html(data.people);
                                             $('#search_schools').html(data.schools);
                                             $('#search_activities').html(data.activities);

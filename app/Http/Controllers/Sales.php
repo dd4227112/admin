@@ -789,7 +789,6 @@ class Sales extends Controller {
         
         $this->data['trial_code'] = $trial_code;
         $this->data['client'] = \App\Models\Client::where('id', (int) $client_id)->first();
-        // return view('sales.customer_success', $this->data);
         $this->customerSuccess($trial_code,$this->data['client']);
     }
 
@@ -800,8 +799,6 @@ class Sales extends Controller {
         $this->data['client'] = \App\Models\Client::where('id', (int)$client->id)->first();
         if (!empty($this->data['client'])) {
            return view('sales.customer_success', $this->data);
-         //  return redirect()->back()->with('success',"Product updated successfully");
-        
         } else {
             die('Invalid URL');
         }
