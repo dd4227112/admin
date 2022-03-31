@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\ModuleTask;
 use DB;
+use Auth;
 
 class Background extends Controller {
 
@@ -641,6 +642,7 @@ class Background extends Controller {
 
 
     public function alerts(){
+        if(Auth::check()) {
         $user_id = \Auth::user()->id;
         $tasks_allocated = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id', $user_id)->whereYear('created_at', '>', '2021')->get(['task_id']))->whereYear('created_at', '>', '2021')->where('status','<>','complete')->get();
         $last_created_task = \collect(DB::select("select max(t.created_at) from admin.tasks t join admin.tasks_users u on u.task_id = t.id where t.status <> 'complete' and u.user_id = '$user_id'"))->first();
@@ -657,6 +659,9 @@ class Background extends Controller {
            'schools_to_implement' => $schools_to_implement,
            'total' => count($tasks_allocated) + $schools_to_approve + $schools_to_implement
         ));
+        } else {
+          return redirect()->guest(route('login'));
+       }
     }
 
      public function schoolTasks(){
@@ -669,9 +674,13 @@ class Background extends Controller {
 
 
     public function taskallocated(){
-        $user_id = \Auth::user()->id;
-        $this->data['tasks_allocated'] = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id',$user_id)->whereYear('created_at', '>', '2021')->get(['task_id']))->whereYear('created_at', '>', '2021')->where('status','!=','complete')->latest()->get();
-        return view('sales.tasks_allocated',$this->data);
+        if(Auth::check()) {
+            $user_id = \Auth::user()->id;
+            $this->data['tasks_allocated'] = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id', Auth::user()->id)->whereYear('created_at', '>', '2021')->get(['task_id']))->whereYear('created_at', '>', '2021')->where('status','!=','complete')->latest()->get();
+            return view('sales.tasks_allocated',$this->data);
+        } else {
+            return redirect()->guest(route('login'));
+        }
      }
 
 }
