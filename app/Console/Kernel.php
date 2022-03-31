@@ -872,7 +872,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     public function sendBirthdayWish() {
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin','makongo', 'anazak','atlasschool', 'canaanhigh', 'barbrojohannson','jknyerere'))) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin','anazak','atlasschool', 'canaanhigh', 'barbrojohannson','jknyerere'))) {
                 //Remind parents,class and section teachers to wish their students
 
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
@@ -1077,7 +1077,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     // function to remaind HRO on employees contracts end 
     public function HRContractRemainders() {
-        $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
+    $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
         $hr_officer = \App\Models\User::where(['role_id' => 16,'status' => 1])->first();
         if(!empty($users)){
             foreach ($users as $user) {
@@ -1170,13 +1170,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
-        try{
-            DB::beginTransaction();
-            DB::statement('select from admin.refresh_materialized_views()');
-            DB::commit();
-        } catch(Exception $e){
-            DB::rollBack();
-        }
+        DB::statement('select from admin.refresh_materialized_views()');
     }
 
     
