@@ -38,50 +38,44 @@
                <?= csrf_field() ?>
               </form>
             
-
-           <div class="card">
-            <div class="card-block">
-                 <h5><?= isset($first_day) && isset($end_week) ? 'FROM   ' .date('d-m-Y', strtotime($first_day)) . '        TO   '. date('d-m-Y', strtotime($end_week)) : ''  ?> </h5>
-                 <br>
-
-                <div class="table-responsive">
-                    <table id="example"  class="table dataTable table-mini table-striped table-bordered nowrap">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th> Error Message</th>
-                                <th class="text-center"> Error counts</th>
-                            </tr>
-                        </thead>
-                         <tbody>
-                            <?php $i = 1;
-                            if(count($weekly_errors) > 0){ 
-                            foreach ($weekly_errors as $error) {  ?>
-                            <tr>
-                                <td><?= $i ?></td>
-                                <td> <?= warp($error->error_message,50) ?></td>
-                                <td class="text-center"> <?= '<label class="badge badge-primary">' .$error->error_count. '</label>' ?></td>
-                            </tr>
-                            <?php 
-                            $i++; } } ?>
-                         </tbody>
-                       
-                      </table>
-                    </div>
-                   </div>
-                </div>
-             
-            {{-- <div class="row">
-             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-body container">
-                        <figure class="highcharts-figure">
-                                <div id="errors" style="height: 300px;"></div>
-                         </figure>
-                       </div>
-                  </div>
-                </div>
-            </div> --}}
+                    <div class="card-block">
+                         <h5><?= isset($first_day) && isset($end_week) ? 'FROM   ' .date('d-m-Y', strtotime($first_day)) . '        TO   '. date('d-m-Y', strtotime($end_week)) : ''  ?> </h5>
+                         <br>
+        
+                        <div class="table-responsive">
+                            <table id="example"  class="table dataTable table-mini table-striped table-bordered nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th> Error Message</th>
+                                        <th class="text-center"> Error counts</th>
+                                        <th class="text-center">Resolved Error counts</th>
+                                    </tr>
+                                </thead>
+                                 <tbody>
+                                    <?php $i = 1; if(isset($finals) > 0){  
+                                        foreach ($finals as $key => $final) { ?>
+                                        <tr>
+                                        <td><?= $i ?></td>
+                                        <td><strong> <?= ($final['message']) ?> </strong></td>
+                                        <td class="text-center"> 
+                                          <?= '<label class="badge badge-danger">' . ($final['error_count']) . '</label>' ?>
+                                        </td>
+                                        <td>
+                                          <?= '<label class="badge badge-primary">' . ($final['solved_error_count']) . '</label>' ?>
+                                        </td>
+                                    </tr>
+                                    <?php  $i++; } } ?>
+                                 </tbody>
+                               
+                              </table>
+                            </div>
+                           </div>
+                        </div>
+
+             
+          
         
         </div>
     </div>

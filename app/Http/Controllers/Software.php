@@ -789,10 +789,11 @@ class Software extends Controller {
 
     //   id	error_message	file	route	url	error_instance	request	schema_name	created_by	created_by_table	created_at
 
-    public function statistics(){
+    public function statisticsd(){
         $this->data['first_day'] = $first_day = date("Y-m-d", strtotime('monday this week'));
         $this->data['end_week']  = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days'));  
         $notIn =  $this->errorInstanceNotIn();
+
         $all_errors = "SELECT error_message,COUNT(error_message) as error_count FROM admin.error_logs WHERE created_at::date >= '{$first_day}' and created_at::date <= '{$end_week}' AND error_instance $notIn GROUP BY error_message";
         $this->data['weekly_errors'] = \DB::select($all_errors);
         
@@ -803,6 +804,57 @@ class Software extends Controller {
            $this->data['weekly_errors'] = \DB::select($all_errors);
          }
 
+        return view('software.error_statistics', $this->data);
+    }
+
+
+
+    public function statistics(){
+
+        $errors_array = [
+           'Invalid datetime format',
+            'Invalid text representation',
+            'Trying to get property',
+            'Deadlock detected',
+            'Undefined variable',
+            'Undefined function',
+            'Call to undefined function',
+            'Call to a member function',
+            'Datatype mismatch',
+            'Foreign key violation',
+            'Unique violation',
+            'Too Many Attempts',
+            'The given data was invalid',
+            'No query results for model',
+            'Argument 1 passed to',
+            'Parameter must be an array or an object',
+            'Division by zero',
+            'does not exist on this collection instance'
+        ];
+        
+        $this->data['first_day'] = $first_day = date("Y-m-d", strtotime('monday this week'));
+        $this->data['end_week']  = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days'));  
+
+        if($_POST){
+            $this->data['first_day'] = $first_day = date('Y-m-d',strtotime(request('week')));
+            $this->data['end_week'] = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days')); 
+
+            $final = [];
+            foreach($errors_array as $field => $value)
+            {   
+                $solved_error_count = DB::table('admin.error_logs')->where('created_at','>=',$first_day)->where('created_at','<=',$end_week)->where('error_message','ILIKE',"%${value}%")->whereNotNull('deleted_at')->count();
+                $error_count = DB::table('admin.error_logs')->where('created_at','>=',$first_day)->where('created_at','<=',$end_week)->where('error_message','ILIKE',"%${value}%")->whereNull('deleted_at')->count();
+
+                $data = [
+                    'message' => $value,
+                    'error_count' => $error_count,
+                    'solved_error_count' => $solved_error_count
+                ];
+                   array_push($final, $data);
+            }
+           $this->data['finals'] = $final;
+        }
+        
         return view('software.error_statistics', $this->data);
     }
 }

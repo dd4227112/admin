@@ -483,23 +483,19 @@ class Controller extends BaseController {
             ];
 
             $startDate = '2022-02-21';
-            $endDate = '2022-03-28';
-
-            
-            $errors = \DB::table('admin.error_logs')->where('created_at','>=',$startDate)->where('created_at','<=',$endDate);
-            $solved_errors = $errors;
+            $endDate = '2022-02-28';
 
             $final = [];
             foreach($errors_array as $field => $value)
             {   
-                $error_count = $errors->where('error_message','ILIKE',"%${value}%")->count();   
-              //  $solved_error_count = $solved_errors->where('error_message','ILIKE',"%${value}%")->whereNotNull('deleted_at')->count(); 
+                $solved_error_count = DB::table('admin.error_logs')->where('created_at','>=',$startDate)->where('created_at','<=',$endDate)->where('error_message','ILIKE',"%${value}%")->whereNotNull('deleted_at')->count();
+                $error_count = DB::table('admin.error_logs')->where('created_at','>=',$startDate)->where('created_at','<=',$endDate)->where('error_message','ILIKE',"%${value}%")->whereNull('deleted_at')->count();
+
                 $data = [
                     'Error message' => $value,
                     'error_count' => $error_count,
-                  //  'solved_error_count' => $solved_error_count
+                    'solved_error_count' => $solved_error_count
                 ];
-
                array_push($final, $data);
             }
 
