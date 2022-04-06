@@ -42,7 +42,7 @@
                                   <b style="font-size: 1.2em;"> https://</b>
                                </div>
                               <div id="col-sm-7">
-                                  <input style="max-width: 15em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= clean(strtolower($school->name)) ?>" maxlength="10" onkeyup="validateForm()"> 
+                                  <input style="max-width: 15em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= clean(strtolower($school->name)) ?>" maxlength="15" onkeyup="validateForm()"> 
                               </div>
                               <div id="col-sm-3">
                                   <b style="font-size: 1.2em;">.shulesoft.com</b>

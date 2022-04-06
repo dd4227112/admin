@@ -1034,7 +1034,6 @@ class Customer extends Controller {
        $this->send_sms($user->phone, $message, 1);
 
 
-     
         if (preg_match('/[0-9]/', $data->contact) && $action == 'Completed') {
             $message1 = 'Hello '
                     . chr(10) . 'Thanks for using Shulesoft Services'
@@ -1741,7 +1740,7 @@ class Customer extends Controller {
     private function createChurnSql($table, $year, $customer_other_sql = '') {
         return DB::select("select case when count is null then 0 else count end as count, extract(month from default_month)  as months  from ( SELECT count(distinct schema_name) as count,extract(month from created_at) as months from"
             . " admin." . $table . " where extract(year from created_at)=$year   "
-    . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months) a 
+    . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing','accounts') group by months) a 
     right JOIN admin.default_months b on months=extract(month from default_month)");
     }
 

@@ -436,27 +436,10 @@ class Controller extends BaseController {
         }
             
 
-    //   public function test(){
-    //           $errors = [
-    //                 'Invalid datetime format',
-    //                 'Invalid text representation',
-    //                 'Trying to get property',
-    //                 'Deadlock detected'
-    //             ];
-
-    //         $error_array = array();
-    //         $collection = collect($errors);
-    //         $filtered =  $collection->map(function($error)  {
-    //              $error_count = \collect(DB::select('select * from admin.error_logs where error_message ilike \'%' . $error . '%\' and deleted_at is not null and deleted_by is not null'))->count();
-    //             //\DB::enableQueryLog();
-    //                 $error_count =   \App\Models\ErrorLog::get()->limit(10);
-    //             // dd(\DB::getQueryLog());
-    //             // $error_count = DB::table('admin.error_logs')->where('error_message','ILIKE','%'.$error.'%')->where('deleted_at','<>',null)->where('deleted_by','<>',null)->count();
-    //              $error_array[$error] = $error_count;
-    //             return $error_array;
-    //         });
-    //        dd($filtered);
-    //   }
+      public function test2(){
+             $res = (float)preg_replace("/[^0-9.]/", "", "12.90 DEBE");
+            dd($res);
+      } 
     
 
       public function test(){

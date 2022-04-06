@@ -54,7 +54,7 @@
                                     </tr>
                                 </thead>
                                  <tbody>
-                                    <?php $i = 1; if(isset($finals) > 0){  
+                                    <?php $i = 1; if(isset($finals)){  
                                         foreach ($finals as $key => $final) { ?>
                                         <tr>
                                         <td><?= $i ?></td>
