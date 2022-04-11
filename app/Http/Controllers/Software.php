@@ -810,7 +810,6 @@ class Software extends Controller {
 
 
     public function statistics(){
-
         $errors_array = [
            'Invalid datetime format',
             'Invalid text representation',
@@ -854,7 +853,17 @@ class Software extends Controller {
             }
            $this->data['finals'] = $final;
         }
-        
         return view('software.error_statistics', $this->data);
+    }
+
+
+    public function createFile(){
+        $days = 30;
+
+        $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
+        $file = fopen( "/../../storage/logs/" . $filename, 'w');
+        fwrite($file, 'Helooooooooooooooooooooooooooooooooooooooooo world');
+        fclose($file);
+        echo 'Hello';
     }
 }

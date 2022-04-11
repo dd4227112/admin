@@ -436,10 +436,7 @@ class Controller extends BaseController {
         }
             
 
-      public function test2(){
-             
-            dd(12 > (float)10.98);
-      } 
+    
     
 
       public function test(){
