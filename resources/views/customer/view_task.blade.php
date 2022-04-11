@@ -166,6 +166,7 @@
                                                         <option value='Pending'>Pending</option>
                                                         <option value='on progress'>Progress</option>
                                                         <option value='Resolved'>Resolved</option>
+                                                        <option value='Cancelled'>Cancelled</option>
                                                     </select>
                                                 </p>
 

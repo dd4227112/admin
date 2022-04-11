@@ -651,7 +651,7 @@ class Customer extends Controller {
                                 . '<li>Type: ' . $task->taskType->name . '</li>'
                                 . '<li>Deadline: ' . $task->date . '</li>'
                                 . '</ul>';
-                        $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                       // $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
                     }
                 }
                 $school_id = request('school_id');
