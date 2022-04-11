@@ -643,7 +643,7 @@ class Background extends Controller {
 
     public function alerts(){
         $user_id = \Auth::user()->id;
-        $tasks_allocated = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id', $user_id)->whereYear('created_at', '>', date('Y')-1)->get(['task_id']))->whereYear('created_at', '>', date('Y')-1)->where('status','<>','complete')->latest->get();
+        $tasks_allocated = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id', $user_id)->whereYear('created_at', '=', date('Y'))->get(['task_id']))->whereYear('created_at', '=', date('Y'))->where('status','<>','complete')->get();
         $last_created_task = \collect(DB::select("select max(t.created_at) from admin.tasks t join admin.tasks_users u on u.task_id = t.id where t.status <> 'complete' and u.user_id = '$user_id'"))->first();
         $schools_to_approve = \collect(\DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,s.company_file_id FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a on a.client_id = c.id  where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status HAVING count(a.id) <= 0 ORDER BY c.created_at DESC"))->count();
 
@@ -671,7 +671,7 @@ class Background extends Controller {
 
     public function taskallocated(){
         $user_id = \Auth::user()->id;
-        $this->data['tasks_allocated'] = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id',$user_id)->whereYear('created_at','>', date('Y')-1)->get(['task_id']))->whereYear('created_at', '>', date('Y')-1)->where('status','<>','complete')->latest()->get();
+        $this->data['tasks_allocated'] = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id',$user_id)->whereYear('created_at','=', date('Y'))->get(['task_id']))->whereYear('created_at', '=', date('Y'))->where('status','<>','complete')->latest()->get();
         return view('sales.tasks_allocated',$this->data);
      }
 
