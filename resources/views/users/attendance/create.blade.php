@@ -3,7 +3,7 @@
 <?php
 $root = url('/') . '/public/';
 function tagEdit($column, $value) {
-      $type = null ? $type = '"text"' : $type = $type;
+    //  $type = null ? $type = '"text"' : $type = $type;
     if ((int) request('skip') == 1) {
         $return = $value;
     } else {
@@ -12,7 +12,6 @@ function tagEdit($column, $value) {
     return $return;
   }
  ?>
-  
   
          <div class="page-header">
             <div class="page-header-title">
@@ -80,8 +79,6 @@ function tagEdit($column, $value) {
                         <tr>
                           <th>Choose </th>
                           <th>Name</th>
-                          <th>Role</th>
-                          <th>Phone</th>
                           <th>TimeIn </th>
                           <th>TimeOut </th>
                           <th class="text-center">Absent reason</th>
@@ -98,9 +95,7 @@ function tagEdit($column, $value) {
                             <input class="form-control" type="checkbox" id="user<?= $user->id ?>"  value="<?= $user->id ?>"  onclick="pickuser('<?= $user->id ?>')" />
                           </td>
                           
-                          <td><?=$user->firstname. ' '.$user->lastname ?></td>
-                          <td><?=$user->role->display_name ?></td>
-                          <td><?=$user->phone ?></td>
+                          <td><?= $user->firstname. ' '.$user->lastname ?></td>
                           <td class="text-center">
                             <?php
                             // $method = '';
@@ -114,13 +109,11 @@ function tagEdit($column, $value) {
                             //     echo '<script type="text/javascript">$("#"+'.$user->id.').hide()</script>';
                             // }
                             ?>
-                            <input type="datetime" class="form-control" name="timein" id="timein<?= $user->id ?>" style="width: 135px;" value="<?= date('Y-m-d H:i:s') ?>" disabled="disabled"/>
+                            <input type="datetime" class="form-control timein" name="timein" id="timein<?= $user->id ?>" style="width: 135px;" value="<?= empty($user->uattendance->where('date',$date)->first()) ? date('Y-m-d H:i:s') : $user->uattendance->where('date',$date)->first()->timein ?>" disabled="disabled"/>
                           </td>
                            
                            <td class="text-center">
-                             {{-- <input type="datetime" class="form-control" name="timeout"  id="timeout<?= $user->id ?>" style="width: 135px;" value="<?= date('Y-m-d 17:00:00') ?>" disabled="disabled"/> --}}
-
-                              <?php echo tagEdit("timein<?= $user->id ?>,date('Y-m-d 17:00:00')") ?>
+                             <input type="datetime" class="form-control timeout" name="timeout"  id="timeout<?= $user->id ?>" style="width: 135px;" value="<?= empty($user->uattendance->where('date',$date)->first()) ? date('Y-m-d 17:00:00') : $user->uattendance->where('date',$date)->first()->timeout ?>" disabled="disabled"/>
                            </td>
                         
                           <td data-title="<?= ('Absent reason') ?>" class="text-center">
@@ -132,7 +125,7 @@ function tagEdit($column, $value) {
                                     $array_[$absent->id] = $absent->reason;
                                 }
                             }
-                          //  echo form_dropdown("absent_id", $array_, old("absent_id", $absent_id), "id='absent_id' user_id='" . $user->id . "' class='form-control absent' style='width:150px;height:18px;'");
+                            echo form_dropdown("absent_id", $array_, old("absent_id", $absent->id), "id='absent_id' user_id='" . $user->id . "' class='form-control absent' style='width:120px;height:18px;'");
                             ?>
                           </td>
 
@@ -225,15 +218,13 @@ function tagEdit($column, $value) {
 function addAttendance(id, day, status, absent_id = 0) {
 $.ajax({
   type: 'POST',
-  url: "<?= url('attendance/singl_add') ?>",
-   headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
+   url: "<?= url('attendance/singl_add') ?>",
+   headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
   data: {"id": id, "day": day, status: status, absent_id: absent_id},
   dataType: "html",
   success: function (data) {
       toastr.success(data);
-      window.location.reload();
+      //window.location.reload();
    }
   });
 }
@@ -241,8 +232,8 @@ $.ajax({
 $('.absent').change(function () {
 var absent_id = $(this).val();
 var user_id = $(this).attr("user_id");
- console.log(absent_id)
-var user_ids =   user_id;
+
+var user_ids = user_id;
 var date = "<?= $date ?>";
 if (absent_id === '0') {
   document.getElementById(user_id).checked = false;
@@ -250,9 +241,23 @@ if (absent_id === '0') {
   addAttendance(user_ids, date, 'false');
 }else {
   $('#' + user_id).hide();
-  document.getElementById( user_id).checked = false;
+ // document.getElementById(user_id).checked = false;
   addAttendance(user_ids, date, 'false', absent_id);
-}
+  }
 });
+
+
+$('.timein').click(function () {
+var timein = $(this).val();
+var user_id = $(this).attr("id");
+  addAttendance(user_id, timein, 'true');
+});
+
+$('.timeout').click(function () {
+var timeout = $(this).val();
+var user_id = $(this).attr("id");
+  addAttendance(user_id, timeout, 'true');
+});
+
 </script>
 @endsection

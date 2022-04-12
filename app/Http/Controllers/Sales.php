@@ -447,7 +447,7 @@ class Sales extends Controller {
                 'ownership' => request('ownership')
             ];
             DB::table('admin.schools')->insert($array);
-            return redirect('sales/school')->with('success', request('name') . ' successfully');
+            return redirect('sales/schools')->with('success', request('name') . ' successfully');
         }
         return view('sales.add_school',$this->data);
     }
