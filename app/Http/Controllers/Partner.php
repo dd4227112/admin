@@ -558,8 +558,7 @@ class Partner extends Controller {
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
-
-        echo isset(json_decode($response)->description) ? json_decode($response)->description : json_decode($response)->Message;
+        echo isset(json_decode($response)->description) ? json_decode($response)->description . ' - ' .json_decode($response)->reference : json_decode($response)->Message;
     }
 
 }

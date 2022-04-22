@@ -486,9 +486,6 @@ class Controller extends BaseController {
 
 
 
-        public function test2(){
-            dd(date('Y')-1);
-        }
 
 
 

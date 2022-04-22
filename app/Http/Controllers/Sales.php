@@ -465,9 +465,9 @@ class Sales extends Controller {
         $user_object = new \App\Http\Controllers\Users();
         $this->data['staffs'] =  $user_object->shulesoftUsers();
         if ($_POST) {
-            $file = request()->file('file');
+             $file = request()->file('file');
             if(filesize($file) > 2015110 ) {
-                return redirect()->back()->with('error', 'File must have less than 2MBs');
+                  return redirect()->back()->with('error', 'File must have less than 2MBs');
              }
              
              $this->validate(request(), 
