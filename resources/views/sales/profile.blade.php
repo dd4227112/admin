@@ -160,9 +160,9 @@
                             </div>
                             <div class="mail-body-content">
 
-                                <div class="timeline live_tabs" id="activities" style="margin-left:2em">
+                                <div class="timeline live_tabs mb-20" id="activities" style="margin-left:2em">
                                     <div class="row">
-                                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal"
+                                        <button type="button" class="btn btn-primary btn-sm btn-round" data-toggle="modal"
                                             data-target="#large-Modal">Create Task</button>
                                         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog"
                                             aria-hidden="true" style="z-index: 1050; display: none;">
@@ -285,16 +285,20 @@
                                                 <div class="row">
                                                     <div class="col-xs-2 col-sm-1">
                                                         <div class="social-timelines-left">
-                                                            <img class="img-circle timeline-icon"
-                                                                src="<?= Auth::user()->photo ?>" alt="">
+                                                                <?php 
+                                                                $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task->user->id}'"))->first(); 
+                                                                $local = $root . 'assets/images/user.png';
+                                                               ?>
+                                                              <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
+                                                                     width: 25px;
+                                                                     height: 25px;
+                                                                     border-radius: 50%;
+                                                                     overflow: hidden;">
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
                                                         <div class="card m-0">
-                                                            <span
-                                                                class="dropdown-toggle addon-btn text-muted f-right service-btn"
-                                                                data-toggle="dropdown" aria-haspopup="true"
-                                                                aria-expanded="true" role="tooltip">Actions</span>
+                                                           
                                                             <div
                                                                 class="dropdown-menu dropdown-menu-right b-none services-list">
                                                                 <a class="dropdown-item" href="#"
@@ -326,15 +330,20 @@
                                                             if (sizeof($comments) > 0) { ?>
                                                                 <div class="p-b-30"> <span class="f-14"><a
                                                                             href="#">Comments</a></span></div>
-                                                                <?php
-                                                                    foreach ($comments as $comment) {
-                                                                ?>
 
+                                                                <?php foreach ($comments as $comment) { ?>
                                                                 <div class="media" style="padding-bottom: 2px;">
                                                                     <a class="media-left" href="#">
-                                                                        <img class="media-object img-circle m-r-10"
-                                                                            src="<?=$root.'/assets/images/avatar-2.png'; ?>"
-                                                                            alt="Image">
+                                                                       
+                                                                        <?php 
+                                                                            $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$comment->user->id}'"))->first(); 
+                                                                            $local = $root . 'assets/images/user.png';
+                                                                           ?>
+                                                                          <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
+                                                                                 width: 25px;
+                                                                                 height: 25px;
+                                                                                 border-radius: 50%;
+                                                                                 overflow: hidden;">
                                                                     </a>
                                                                     <div
                                                                         class="media-body b-b-muted social-client-description">
@@ -352,7 +361,7 @@
                                                               ?>
                                                                 <div class="new_comment<?= $task->id ?>"></div>
                                                                 <div class="media">
-                                                                    <a href="#" class="btn btn-success btn-sm right"
+                                                                    <a href="#" class="btn btn-success btn-sm btn-round"
                                                                         onclick="return false"
                                                                         onmousedown="$('#comment_area<?= $task->id ?>').toggle()"><i
                                                                             class="ti-comment"></i> Comment </a>
@@ -641,6 +650,9 @@ function save_comment(id) {
     var task_id = $('#task_id' + id).val();
     $.ajax({
         type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
         url: "<?= url('customer/taskComment/null') ?>",
         data: {
             content: content,

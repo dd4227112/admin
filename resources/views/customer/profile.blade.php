@@ -388,13 +388,11 @@ foreach ($staffs as $staff) {
 </div>
 
 <div class="col-md-6"  id="remainder_date">
-   <strong> Remainder Date</strong>
+   <strong> Notification Date</strong>
    <input type="date"  name="remainder_date" class="form-control">
 </div>
 </div>
 </div>
-
-
 
 
 <div class="form-group">
@@ -530,6 +528,13 @@ foreach ($modules as $module) {
 <p>Start Date- <?= $task->start_date ?>
  &nbsp; &nbsp; | &nbsp; &nbsp; 
  <?= date('Y-m-d', strtotime($task->end_date)) == '1970-01-01' ? '' : 'End Date - '.$task->end_date  ?></p> 
+
+ <p>Assigned to - 
+     @foreach ($task->taskUsers as $value)
+     <?= '<label class="badge badge-inverse-primary">' . $value->user->name() . '</label>' ?>
+       &nbsp; &nbsp;
+    @endforeach
+</p>
 </div>
 
 <div class="user-box">
@@ -545,12 +550,9 @@ foreach ($comments as $comment) {
 ?>
 <div class="media" class="pb-1">
 <a class="media-left" href="#">
-<!-- <img class="media-object img-circle m-r-20"
-src="<?= $root . '/assets/images/avatar-2.png'; ?>"
-alt="Image"> -->
 <?php
 $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task->user->id}'"))->first(); 
-      $local = $root . '/assets/images/avatar-2.png';  ?>
+$local = $root . '/assets/images/avatar-2.png';  ?>
 <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
 width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
 </a>
@@ -2562,7 +2564,6 @@ if (!empty($profile)) {
             });
             
             $('.task_allocated_id').mousedown(function () {
-
                 var task_id = $(this).attr('task-id');
                 var start_date = $('#start_date' + task_id).val();
                 var school_person = $('#school_person' + task_id).text();

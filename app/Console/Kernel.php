@@ -1146,7 +1146,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                     $controller->send_whatsapp_sms($task->user->phone,$message);
                     $controller->send_sms($task->user->phone,$message,1);
 
-                if(!empty($task->taskUsers)) {
+                 if(!empty($task->taskUsers)) {
                     foreach($task->taskUsers as $task_user){
                         if($task->user->id != $task_user->user_id){
                         $user = \App\Models\User::find($task_user->user_id);
@@ -1163,7 +1163,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                         }
                       }
                     }
-                \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
+                   \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
                 }
              }
       }
