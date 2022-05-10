@@ -1131,11 +1131,10 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     // function to remaind school tasks created by users
-   public function setTaskRemainder() {
+    public function setTaskRemainder() {
     $tasks = \App\Models\Task::where('remainder', 0)->where('remainder_date', '=', date('Y-m-d'))->get();
     $controller = new \App\Http\Controllers\Controller();
-
-        if(!empty($tasks)){
+        if(!empty($tasks)){ 
             foreach ($tasks as $task) {
                     $message = 'Hello ' . $task->user->name . '.'
                                 . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
@@ -1144,7 +1143,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                                 . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
                                 . chr(10) . 'Thanks.';
                     $controller->send_whatsapp_sms($task->user->phone,$message);
-                    $controller->send_sms($task->user->phone,$message,1);
+                    $controller->send_sms($task->user->phone,$message);
+                   \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
 
                  if(!empty($task->taskUsers)) {
                     foreach($task->taskUsers as $task_user){
@@ -1159,14 +1159,15 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                                 . chr(10) . 'By: ' . $task->user->name . '.'
                                 . chr(10) . 'Thanks.';
                         $controller->send_whatsapp_sms($user->phone,$msg);
-                        $controller->send_sms($user->phone,$msg,1);
+                        $controller->send_sms($user->phone,$msg);
                         }
                       }
                     }
-                   \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
                 }
              }
-      }
+        }
+
+
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {

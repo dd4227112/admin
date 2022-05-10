@@ -16,8 +16,9 @@ class Task extends Model {
 
     //put your code here
     protected $table = 'tasks';
-    protected $fillable = ['id','activity', 'client_id', 'action', 'date', 'time', 'user_id','next_action', 'priority', 'created_at', 'updated_at',
-      'task_type_id','to_user_id','school_id','start_date','end_date','status','slot_id','ticket_no','budget','remainder_date','remainder'];
+    protected $fillable = ['id','activity', 'client_id', 'action', 'date', 'time', 'user_id','next_action', 'priority', 
+                           'created_at', 'updated_at','task_type_id','to_user_id','school_id','start_date','end_date',
+                           'status','slot_id','ticket_no','budget','remainder_date','remainder'];
 
 
     public function client() {

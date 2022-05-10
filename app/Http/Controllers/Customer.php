@@ -1130,7 +1130,6 @@ class Customer extends Controller {
     public function implementationReport() {
         $user_id = request()->segment(2);
       
-
         $where_user = (int) $user_id == 0 ? ' ' : ' user_id=' . $user_id . ' and ';
         $sql = 'select distinct b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, 
         a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id 
