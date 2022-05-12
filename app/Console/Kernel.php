@@ -1131,41 +1131,41 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     // function to remaind school tasks created by users
-    public function setTaskRemainder() {
-    $tasks = \App\Models\Task::where('remainder', 0)->where('remainder_date', '=', date('Y-m-d'))->get();
-    $controller = new \App\Http\Controllers\Controller();
-        if(!empty($tasks)){ 
-            foreach ($tasks as $task) {
-                    $message = 'Hello ' . $task->user->name . '.'
-                                . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
-                                . chr(10) . 'Type: ' . $task->taskType->name . '.'
-                                . chr(10) . 'From ' . $task->client->name . '' 
-                                . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
-                                . chr(10) . 'Thanks.';
-                    $controller->send_whatsapp_sms($task->user->phone,$message);
-                    $controller->send_sms($task->user->phone,$message);
-                   \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
+     public function setTaskRemainder() {
+        $tasks = \App\Models\Task::where('remainder', 0)->where('remainder_date', '=', date('Y-m-d'))->get();
+        $controller = new \App\Http\Controllers\Controller();
+            if(count($tasks)){
+                foreach ($tasks as $task) {
+                        $message = 'Hello ' . $task->user->name . '.'
+                                    . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
+                                    . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                                    . chr(10) . 'From ' . $task->client->name . '' 
+                                    . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
+                                    . chr(10) . 'Thanks.';
+                        $controller->send_whatsapp_sms($task->user->phone,$message);
+                        $controller->send_sms($task->user->phone,$message);
 
-                 if(!empty($task->taskUsers)) {
-                    foreach($task->taskUsers as $task_user){
-                        if($task->user->id != $task_user->user_id){
-                        $user = \App\Models\User::find($task_user->user_id);
-                        $msg = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
-                                . chr(10) . 'This is the remainder of a task allocated to you'
-                                . chr(10) . 'Task: ' . strip_tags($task->activity) . '.'
-                                . chr(10) . 'Type: ' . $task->taskType->name . '.'
-                                . chr(10) . 'From ' . $task->client->name . '' 
-                                . chr(10) . 'Deadline: ' . date('d-m-Y', strtotime($task->start_date)) . '.'
-                                . chr(10) . 'By: ' . $task->user->name . '.'
-                                . chr(10) . 'Thanks.';
-                        $controller->send_whatsapp_sms($user->phone,$msg);
-                        $controller->send_sms($user->phone,$msg);
+                     if($task->taskUsers()->count() > 0) {
+                        foreach($task->taskUsers()->get() as $task_user){
+                            if($task_user->user_id != $task->user->id){
+                            $user = \App\Models\User::find($task_user->user_id);
+                            $msg = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
+                                    . chr(10) . 'This is the remainder of a task allocated to you'
+                                    . chr(10) . 'Task: ' . strip_tags($task->activity) . '.'
+                                    . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                                    . chr(10) . 'From ' . $task->client->name . '' 
+                                    . chr(10) . 'Deadline: ' . date('d-m-Y', strtotime($task->start_date)) . '.'
+                                    . chr(10) . 'By: ' . $task->user->name . '.'
+                                    . chr(10) . 'Thanks.';
+                            $controller->send_whatsapp_sms($user->phone,$msg);
+                            $controller->send_sms($user->phone,$msg);
+                            }
+                          }
                         }
-                      }
+                      \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
                     }
                 }
-             }
-        }
+           }
 
 
 

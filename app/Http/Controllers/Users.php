@@ -207,7 +207,6 @@ class Users extends Controller {
                    $end_date = date('Y-m-d', strtotime(request('end_date')));
                  break;
                } 
-             //  dd($end_date);
           
             $file_id = $file ? $this->saveFile($file,TRUE) : 1;
             \App\Models\Absent::create(['date' => request('date'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
