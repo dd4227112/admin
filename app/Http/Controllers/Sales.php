@@ -510,7 +510,7 @@ class Sales extends Controller {
                     'trial' => request('check_trial'),
                     'owner_email' => request('owner_email'),
                     'owner_phone' => request('owner_phone'),  
-                    'price_per_student' => request('price'),
+                    'price_per_student' => remove_comma(request('price')),
                     'note' => nl2br(request('description'))
              ];  
            
