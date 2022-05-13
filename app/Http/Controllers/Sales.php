@@ -610,7 +610,7 @@ class Sales extends Controller {
                 . chr(10) .'School :' . $school->name . ' has been onboarded succesfully'
                 . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($user->phone, $message); 
-                $this->send_sms($user->phone, $message, 1);
+              //  $this->send_sms($user->phone, $message, 1);
                 
                 $finance = \App\Models\User::where('designation_id',2)->where('status',1)->first();
                 $sms = 'Hello '.$finance->firstname .' '. $finance->lastname 
@@ -618,7 +618,7 @@ class Sales extends Controller {
                 . chr(10) .'You are remainded to verify the invoice document'
                 . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($finance->phone, $sms); 
-                $this->send_sms($finance->phone, $sms, 1);
+              //  $this->send_sms($finance->phone, $sms, 1);
 
                 return redirect('sales/onboaredSchools');
            }
