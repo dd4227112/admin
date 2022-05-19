@@ -379,10 +379,31 @@ class Sales extends Controller {
             return false;
         }
 
-        $this->data['school'] = \App\Models\School::findOrFail($id);
+        // $this->data['school'] = \App\Models\School::findOrFail($id);
+        $this->data['school'] = DB::table('schools')->leftJoin('school_agreement', 'school_agreement.school_id', '=', 'schools.id')->where('schools.id', $id)->
+        get(['schools.id','school_agreement.id as agreement_id','schools.type','schools.ward', 'schools.name', 'schools.ownership','schools.nmb_school_name', 
+            'schools.account_number','schools.students', 'school_agreement.contact_person_name', 'school_agreement.contact_person_phone', 
+            'school_agreement.contact_person_designation','school_agreement.agreement_date','schools.nmb_branch',
+            'school_agreement.form_type','school_agreement.company_file_id'])->first();
         if ($_POST) {
+            $file = request()->file('agreement_file');
+            $company_file_id = $file ? $this->saveFile($file,TRUE) : 1;
+
+             $school_array = array('name'=>request('school_name'),'nmb_school_name'=>request('nmb_school_name'),'account_number'=>request('account_number'),
+                                   'students'=>request('students'),'type'=>request('school_type'));
+             $agreement_array = array('school_id'=>request('school_id'),'contact_person_name'=>request('contact_person_name'),'contact_person_phone'=>request('contact_person_phone'),
+                                     'contact_person_designation'=>request('contact_person_designation'),'company_file_id'=> $company_file_id,
+                                   'agreement_date'=> date('Y-m-d',strtotime(request('agreement_date'))),'form_type'=>request('form_type'),'created_by'=> Auth()->user()->id);
             if ((int) request('add_sale') == 1) {
-                \App\Models\School::findOrFail(request('client_id'))->update(request()->all());
+                \App\Models\School::findOrFail(request('school_id'))->update($school_array);
+
+                $check = \App\Models\SchoolAgreement::where('school_id',(int)request('school_id'))->first();
+                if(!empty($check)){
+                    \App\Models\SchoolAgreement::where('school_id',(int)request('school_id'))->update($agreement_array);
+                } else{
+                   \App\Models\SchoolAgreement::create($agreement_array);
+                }
+
                 return redirect()->back()->with('success', 'School record updated successfully');
             } else if ((int) request('add_user') == 1) {
                 \App\Models\SchoolContact::create([
@@ -1184,11 +1205,44 @@ class Sales extends Controller {
 
  
 
+      public function editAgreementDetails(){
+        $school_id = request()->segment(3);
+        $file = request()->file('agreement_file');
 
+        if(filesize($file) > 2015110 ) {
+            return redirect()->back()->with('error', 'File must have less than 2MBs');
+         }
+
+        $contact_person_name = request('contact_person_name');
+        $contact_person_phone = request('contact_person_phone');
+        $contact_person_designation = request('contact_person_designation');
+        $form_type = request('form_type');
+        $nmb_school_name = request('nmb_account_name');
+        $account_number = request('nmb_account');
+        $agreement_date = date('Y-m-d',strtotime(request('agreement_date')));
+
+        $company_file_id = $file ? $this->saveFile($file,TRUE) : 1;
+           
+        $array_data = ['school_id'=>$school_id,
+                         'form_type' => $form_type,
+                         'contact_person_name' => $contact_person_name,
+                         'contact_person_phone' => $contact_person_phone,
+                         'contact_person_designation' => $contact_person_designation,
+                         'company_file_id' => $company_file_id,
+                         'created_by' => \Auth::user()->id,
+                         'agreement_date' => $agreement_date
+                    ];
+
+          \App\Models\SchoolAgreement::create($array_data);
+
+          if(!is_null($account_number) && !is_null($nmb_school_name)){
+                 \App\Models\School::where('id',(int) $school_id)->update(['nmb_school_name'=>$nmb_school_name,'account_number'=>$account_number]);
+          }
+
+        return redirect()->back()->with('success', 'School record updated successfully');
+
+      }
 
      
-      
-
- 
 
 }

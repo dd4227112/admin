@@ -48,7 +48,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-
+           dd(request()->all());
         $this->validate($request, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
@@ -57,6 +57,31 @@ class Users extends Controller {
         ]);
         $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email')), 'created_by' => Auth::user()->id]));
         $user->save();
+        //  DB::table('accounts.user')->insert([
+        //             'name' => request('firstname').' '.request('lastname'),
+        //             'dob' => request('dob'),
+        //             'sex' => request('sex'),
+        //             'email' => request('email'),
+        //             'phone' => request('phone'),
+        //             'address' => request('address'),
+        //             'jod' => date('Y-m-d'),
+        //             'photo' => request('name'),
+        //             'username' => Auth::user()->id,
+        //             'password' => bcrypt(request('email')),
+        //             'usertype' => 'Student',
+        //             'signature' => Auth::user()->id,
+        //             'role_id' => Auth::user()->id,
+        //             'salary' => request('salary'),,
+        //             'id_number' => Auth::user()->id,
+        //             'default_password' => Auth::user()->id,
+        //             'status' => 1,
+        //             'bank_account_number' => request('bank_account_number'),
+        //             'bank_name' => request('bank_name'),,
+        //             'number' => Auth::user()->id,
+        //             'religion_id' => Auth::user()->id,
+        //             'town' => Auth::user()->id,
+        //             'country_id' => 1,
+        //         ]);
         $this->sendEmailAndSms($request);
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
     }
@@ -180,7 +205,7 @@ class Users extends Controller {
   
 
     public function shulesoftUsers(){
-        return \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+        return  DB::table('admin.users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
     }
 
     public function absent() {
@@ -319,36 +344,10 @@ class Users extends Controller {
                 'lastname' => 'required|max:255',
                 'phone' => 'required|max:255',
             ]);
-
-            // $filename = '';
-            // if (!empty(request('medical_report'))) {
-            //     $file = request()->file('medical_report');
-            //     $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/images/';
-            //     $file->move($filePath, $filename);
-            // }
-
-            // $filename1 = '';
-            // if (!empty(request('academic_certificates'))) {
-            //     $file = request()->file('academic_certificates');
-            //     $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/images/';
-            //     $file->move($filePath, $filename1);
-            // }
-
-            // $filename2 = '';
-            // if (!empty(request('employment_contract'))) {
-            //     $file = request()->file('employment_contract');
-            //     $filename2 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/images/';
-            //     $file->move($filePath, $filename2);
-            // }
            
              $data = request()->except('salary');
              $usedata = array_merge(['salary' => remove_comma(request('salary'))], $data);
              $user = User::find($id)->update($usedata);
-         //  $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates','employment_contract'));
-         //  User::find($id)->update(['medical_report' => $filename, 'academic_certificates' => $filename1,'employment_contract' => $filename2]);
             return redirect('/users/show/'.$id)->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
         }
         $this->data['id'] = $id;

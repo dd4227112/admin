@@ -489,8 +489,13 @@ class Customer extends Controller {
             if (empty($client)) {
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
-            $this->data['client_id'] = $client->id;
+            $this->data['client_id'] = $client->id; 
+        
+            $client_school = \App\Models\ClientSchool::where('client_id', $this->data['client_id'])->first();
+            $this->data['school_id'] = $client_school->school_id;
 
+            $this->data['agreement'] = \App\Models\SchoolAgreement::where('school_id',$this->data['school_id'])->first();
+         
             $zone_manager = $this->zonemanager($this->data['client_id']);
             if ($zone_manager) {
                 $this->data['manager'] = \App\Models\User::where(['id' =>$zone_manager->user_id,'status'=>1]);
@@ -1444,6 +1449,9 @@ class Customer extends Controller {
         } else if ($type == 'jobcard') {
             $contract = \App\Models\ClientJobCard::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
+        } else if ($type == 'agreement') {
+            $contract = \App\Models\SchoolAgreement::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
         } else {
             $contract = \App\Models\Contract::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
@@ -1457,33 +1465,7 @@ class Customer extends Controller {
         return view('layouts.file_view', $this->data);
     }
 
-    // method to share receipt link
-    public function ShareReceiptWhatsApp() {
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['invoice'] = \App\Models\Invoice::find($id);
-            $this->data["payment_types"] = \App\Models\PaymentType::all();
-            $this->data['banks'] = \App\Models\BankAccount::all();
-            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
-            return view('layouts.receipt_to_share', $this->data);
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
-
-    // Share receipt by email
-    public function ShareReceiptEmail() {
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['invoice'] = \App\Models\Invoice::find($id);
-            $this->data["payment_types"] = \App\Models\PaymentType::all();
-            $this->data['banks'] = \App\Models\BankAccount::all();
-            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
-            return view('layouts.receipt_to_share', $this->data);
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
+   
 
   
     public function deleteContract() {

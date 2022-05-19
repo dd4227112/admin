@@ -46,7 +46,8 @@
                                                 </thead>
                                                 
                                                 <tbody>
-                                                    <?php $i = 1; ?>
+                                                    <?php $i = 1;
+                                                    if(isset($users)) { ?>
                                                     @foreach ($users as $key => $user)
                                                     <tr>
                                                         <td><?= $i ?></td>
@@ -71,8 +72,9 @@
                                                         <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit employee">Edit  </a>
                                                       </td>
                                                     </tr>
-                                                    <?php $i++; ?>
                                                     @endforeach
+                                                    <?php $i++; } ?>
+
                                                 </tbody>
                                             </table>
                                         </div>
