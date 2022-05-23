@@ -48,40 +48,38 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-           dd(request()->all());
         $this->validate($request, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
             'phone' => 'required|max:255|unique:users',
-            'email' => 'required|max:255|unique:users'
+            'email' => 'required|max:255|unique:users',
+            'salary' => 'required',
         ]);
-        $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email')), 'created_by' => Auth::user()->id]));
+        $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email')), 'salary' => remove_comma(request('salary')), 'created_by' => Auth::user()->id]));
         $user->save();
-        //  DB::table('accounts.user')->insert([
-        //             'name' => request('firstname').' '.request('lastname'),
-        //             'dob' => request('dob'),
-        //             'sex' => request('sex'),
-        //             'email' => request('email'),
-        //             'phone' => request('phone'),
-        //             'address' => request('address'),
-        //             'jod' => date('Y-m-d'),
-        //             'photo' => request('name'),
-        //             'username' => Auth::user()->id,
-        //             'password' => bcrypt(request('email')),
-        //             'usertype' => 'Student',
-        //             'signature' => Auth::user()->id,
-        //             'role_id' => Auth::user()->id,
-        //             'salary' => request('salary'),,
-        //             'id_number' => Auth::user()->id,
-        //             'default_password' => Auth::user()->id,
-        //             'status' => 1,
-        //             'bank_account_number' => request('bank_account_number'),
-        //             'bank_name' => request('bank_name'),,
-        //             'number' => Auth::user()->id,
-        //             'religion_id' => Auth::user()->id,
-        //             'town' => Auth::user()->id,
-        //             'country_id' => 1,
-        //         ]);
+
+         DB::table('accounts.user')->insert([
+                    'name' => request('firstname').' '.request('lastname'),
+                    'dob' => date("Y-m-d", strtotime(request('date_of_birth'))),
+                    'sex' => request('sex'),
+                    'email' => request('email'),
+                    'phone' => validate_phone_number(str_replace('-', '', request("phone"))),
+                    'address' => request('town'),
+                    'jod' => date("Y-m-d", strtotime(request('joining_date'))),
+                    'username' => str_replace(" ", '', request("phone")),
+                    'password' => bcrypt(request('email')),
+                    'usertype' => 'student',
+                    'role_id' => 10, // student role
+                    'salary' => remove_comma(request('salary')),
+                    'default_password' => bcrypt(request('email')),
+                    'status' => 1,
+                    'photo' => 'defualt.png',
+                    'bank_account_number' => request('bank_account'),
+                    'bank_name' => request('bank_name'),
+                    'religion_id' => 1,
+                    'town' => request('town'),
+                    'country_id' => 1,
+                ]);
         $this->sendEmailAndSms($request);
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
     }
@@ -205,7 +203,9 @@ class Users extends Controller {
   
 
     public function shulesoftUsers(){
-        return  DB::table('admin.users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+        $array = array(7,15);
+         return  DB::table('admin.users')->where('status', 1)->whereNotIn('role_id',$array)->get();
+       // return  \App\Models\User::where(['status'=>1])->get();
     }
 
     public function absent() {

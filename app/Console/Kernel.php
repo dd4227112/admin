@@ -86,6 +86,12 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
+
+       $schedule->call(function () {
+        //send SMS to karibuSMS
+        $this->karibuSMS();
+       })->everyMinute();
+
         
     }
 
@@ -1293,6 +1299,17 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
     // } 
     return $curl; 
     }
+
+
+     public function karibuSMS(){
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "http://www.karibusms.com/check_pending");
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            $data = curl_exec($ch);
+        }
+
     
 
 }
