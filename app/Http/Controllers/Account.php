@@ -313,7 +313,6 @@ class Account extends Controller {
              }
         
             $this->data['invoice_name'] = $invoice->invoice_type == 1 ? 'Invoice' : 'Proforma Invoice';
-
             $client = \App\Models\Client::where('id',$invoice->client_id)->first();
 
             $start_usage_date = !empty($client->start_usage_date) ? date('Y-m-d',strtotime($client->start_usage_date)) : date('Y-m-d', strtotime('Jan 01'));

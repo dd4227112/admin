@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
 
   <div class="page-header">
       <div class="page-header-title">
@@ -200,7 +199,7 @@
 
               <div class="form-group row">
                 <div class="col-sm-12"> 
-                   Areas much interested
+                      Areas much interested
                     <textarea rows="4" cols="5" name="description" class="form-control" placeholder="Clarify if this client has any special needs or areas much interested to start ?"></textarea>
                 </div>
             </div>
@@ -287,30 +286,6 @@ function validateForm() {
   }
 }
 
-$('#region').change(function () {
-  var val = $(this).val();
-  $.ajax({
-    method: 'get',
-    url: '<?= url('Marketing/getDistrict/null') ?>',
-    data: {region: val},
-    dataType: 'html',
-    success: function (data) {
-      $('#district').html(data);
-    }
-  });
-});
-$('#district').change(function () {
-    var val = $(this).val();
-    $.ajax({
-        method: 'get',
-        url: '<?= url('Marketing/getWard/null') ?>',
-        data: {district: val},
-        dataType: 'html',
-        success: function (data) {
-            $('#ward').html(data);
-        }
-    });
-  });
 </script>
 </div>
 </div>

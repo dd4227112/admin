@@ -511,13 +511,15 @@ class Sales extends Controller {
              $schema_name = str_replace(' ','', request('username'));
              DB::table('admin.schools')->where('id', $school_id)->update(['name'=> request('school_name'),'students' => request('students'),'schema_name' => $schema_name]);
              $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
-
+             $school_name = empty(request('school_name')) ? $school->name : request('school_name');
+             $school_email = !empty($school_contact->email) ? $school_contact->email : request('owner_email');
+            
              $client_data = [
-                    'name' => empty(request('school_name')) ? $school->name : request('school_name'),
+                    'name' => $school_name,
                     'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
                     'created_at' => date('Y-m-d H:i:s'),
                     'phone' => !empty($school_contact->phone) ? $school_contact->phone : request('owner_phone'),
-                    'email' => !empty($school_contact->email) ? $school_contact->email : request('owner_email'),
+                    'email' => $school_email,
                     'estimated_students' => request('students'),
                     'status' => 1, // Unapproved application
                     'code' => $code,
@@ -535,11 +537,13 @@ class Sales extends Controller {
                     'note' => nl2br(request('description'))
              ];  
            
+            // $this->sendDataToAccounts($school_name,$schema_name,request('students'),$school_email);
             if(!empty($check_client)) {
                 $client_id = $check_client->id;
                  \DB::table('admin.clients')->where('id',$client_id)->update(Arr::except($client_data, ['username'])); 
             } else { 
                 $client_id = \DB::table('admin.clients')->insertGetId($client_data); 
+
                 // trial period
                 // if(request('check_trial') == 1 && !is_null(request('trial_period')) ) {
                 //       $start = date('Y-m-d', strtotime(request('implementation_date')));
@@ -612,12 +616,12 @@ class Sales extends Controller {
                 $year = \App\Models\AccountYear::where('name', date('Y'))->first();
                 $reference = time(); // to be changed for selcom ID
 
-                $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
+               // $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
 
                  $unit_price = remove_comma(request('price'));
                  $estimated_students = remove_comma(request('students'));
                  $amount = $unit_price * $estimated_students;
-                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $estimated_students, 'unit_price' => $unit_price]);
+              //  \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $estimated_students, 'unit_price' => $unit_price]);
 
            
                 $trial_code = $client_id . time();
@@ -631,7 +635,7 @@ class Sales extends Controller {
                 . chr(10) .'School :' . $school->name . ' has been onboarded succesfully'
                 . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($user->phone, $message); 
-              //  $this->send_sms($user->phone, $message, 1);
+                $this->send_sms($user->phone, $message, 1);
                 
                 $finance = \App\Models\User::where('designation_id',2)->where('status',1)->first();
                 $sms = 'Hello '.$finance->firstname .' '. $finance->lastname 
@@ -639,15 +643,59 @@ class Sales extends Controller {
                 . chr(10) .'You are remainded to verify the invoice document'
                 . chr(10) .'Thank you.';
                 $this->send_whatsapp_sms($finance->phone, $sms); 
-              //  $this->send_sms($finance->phone, $sms, 1);
+                $this->send_sms($finance->phone, $sms, 1);
 
-                return redirect('sales/onboaredSchools');
+                return redirect('sales/implementation/'.$client_id);
            }
     
-        return view('sales.add_new', $this->data);
+        return view('sales.add_new_client', $this->data);
     }
  
-    
+    // fx to send data to accounts system
+    public function sendDataToAccounts($school_name,$schema,$no_of_students,$email){
+
+        $classlevel =  DB::table('accounts.classlevel')->first();
+        $object = [
+            'classes' => $school_name,
+            'classes_numeric' => 2,
+            'teacherID' => 1,
+            'note' => clean($schema),
+            'classlevel_id' => $classlevel->id,
+            'target' => $no_of_students,
+          ];
+        $check = DB::table('accounts.classes')->where('note',clean($schema))->first();
+        
+        if(empty($check)){
+            $class_id = DB::table('accounts.classes')->insertGetId($object);
+        }else{
+            $class_id = $check->classesID;
+           DB::table('accounts.classes')->where('note',clean($schema))->update($object);
+        }
+
+        $derived_values = [
+            'name' => $school_name,
+            'sex' => 'Male',
+            'email' => $email,
+            'academic_year_id' => $academic_year_id,
+            'username' => $username,
+            'password' => bcrypt('abc123456'),
+            'usertype' => 'Student',
+            'roll' => $roll,
+            'jod' => date('Y-m-d', strtotime('Y-m-d')),
+            'dob' => date('Y-m-d', strtotime('Y-m-d')),
+            "physical_condition_id" => 1,
+            "health_insurance_id" => 1,
+            'health_condition_id' => 1,
+            'health_status_id' => 1,
+            'nationality' => 1,
+            'sectionID' => (int) DB::table('accounts.section')->first()->sectionID
+        ];
+        
+        DB::table('accounts.student')->where('note',clean($schema))->update($object);
+
+    }
+
+
      public function onboaredSchools(){
         $this->data['clients'] = \DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,s.company_file_id FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a on a.client_id = c.id   where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status HAVING count(a.id) <= 0
          ORDER BY c.created_at DESC");
@@ -655,10 +703,26 @@ class Sales extends Controller {
      }
 
 
+     public function implementation(){
+        $this->data['client_id'] = $client_id = request()->segment(3);
+        $this->data['client'] = \App\Models\Client::where('id', (int) $client_id)->first();
+        $this->data['trial_code'] = $trial_code = $client_id . time();
+        if($_POST){
+             $this->scheduleActivities($client_id,$trial_code); 
+              return view('sales.customer_success', $this->data);
+         }
+        $this->data['payments'] = DB::select('select *  from admin.payments where id = '.$client_id.' ');
+        $this->data['standing_order'] = DB::select('select *  from admin.standing_orders where id = '.$client_id.' ');
+        $this->data['not_approved'] = DB::select('select *  from admin.standing_orders where is_approved <> 1 and id = '.$client_id.' ');
+        
+       return view('sales.schedule_activities', $this->data);
+  }
+
 
      public function updateOnboardStatus(){
         $client_id = request()->segment(3);
         \App\Models\Client::where('id', (int)$client_id)->update(['status'=> 3]);
+        DB::table('admin.standing_orders')->where('client_id', (int)$client_id)->update(['is_approved'=> 1]);
 
         $user = \App\Models\User::find(761);  //Head of product Mr Paul --default 
         $client = \App\Models\Client::find($client_id);  
@@ -666,7 +730,7 @@ class Sales extends Controller {
         $message = 'Dear '.$user->firstname .' '. $user->lastname 
                 . chr(10) .'School of ' . $client->name . ' has been approved by finance officer for implementation'
                 . chr(10) .'Kindly proceeds with implementation plan'
-                . chr(10) .'Link  https://admin.shulesoft.com/sales/implemetation/'.$client_id
+                . chr(10) .'Link  https://admin.shulesoft.com/sales/implementation/'.$client_id
                 . chr(10) .'Thank you.';
          $this->send_whatsapp_sms($user->phone, $message); 
          $this->send_sms($user->phone,$message,1);
@@ -679,11 +743,8 @@ class Sales extends Controller {
 
 
     public function scheduleActivities($client_id,$trial_code) {
-        // if((int)$client_id == 0){
-        //     $client_id = request()->segment(3);
-        // }  
         $time = 0;
-        if((int)$client_id > 0){ 
+        if( (int) $client_id > 0){ 
             \App\Models\Client::where('id', (int) $client_id)->update(['data_type_id'=>request('data_type_id')]);
             $sections = \App\Models\TrainItem::where('status',1)->orderBy('id', 'asc')->get();
             $start_date = date('Y-m-d H:i');
@@ -810,7 +871,10 @@ class Sales extends Controller {
         
         $this->data['trial_code'] = $trial_code;
         $this->data['client'] = \App\Models\Client::where('id', (int) $client_id)->first();
-        $this->customerSuccess($trial_code,$this->data['client']);
+        // $this->customerSuccess($trial_code,$this->data['client']);
+        
+        // return view('sales.customer_success', $this->data);
+
     }
 
 
@@ -818,7 +882,7 @@ class Sales extends Controller {
         $client = (object) $client;
         $this->data['trial_code'] = $code;
         $this->data['client'] = \App\Models\Client::where('id', (int)$client->id)->first();
-        if (!empty($this->data['client'])) {
+        if (!empty($this->data['client'])) {             
            return view('sales.customer_success', $this->data);
         } else {
             die('Invalid URL');
@@ -881,21 +945,9 @@ class Sales extends Controller {
         }
     }
 
-    /**
-     * Redirect to this page to finalize onboarding
-     */
 
 
-    public function implemetation(){
-          $this->data['client_id'] = $client_id = request()->segment(3);
-          $this->data['client'] = \App\Models\Client::where('id', (int) $client_id)->first();
-          $this->data['trial_code'] = $trial_code = $client_id . time();
-          if($_POST){
-               $this->scheduleActivities($client_id,$trial_code); 
-              // $this->customerSuccess($client_id,$this->data['trial_code']); 
-           }
-         return view('sales.onboarding_school', $this->data);
-    }
+  
 
     public function curlPrivate($fields, $url = null) {
         // Open connection
