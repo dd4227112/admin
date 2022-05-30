@@ -680,7 +680,7 @@ class="social-user-name b-none">
     ?>
 </td>
 
-<?php if( can_access('reset_school_password') && isset($school->username) && !preg_match('/stfrancisgirlssecondaryschool/i', strtolower($school->username))) { ?>
+<?php if( can_access('reset_school_password') && isset($school->username) && !preg_match('/stfrancisgirls/i', strtolower($school->username))) { ?>
 <tr>
 <th class="social-label b-none p-b-0">School Access</th>
 <td class="social-user-name b-none p-t-10">

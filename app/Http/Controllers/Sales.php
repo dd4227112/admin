@@ -674,14 +674,14 @@ class Sales extends Controller {
             $class_id = $check->classesID;
            DB::table('accounts.classes')->where('note',clean($schema))->update($object);
         }
-        
+
 
         $derived_values = [
             'name' => $school_name,
             'dob' => date('Y-m-d'),
             'sex' => 'Male',
             'email' => $email,
-            'phone' => $phone,
+            'phone' => validate_phone_number($phone),
             'address' => $address,
             'classesID' => $class_id,
             'sectionID' => (int) DB::table('accounts.section')->first()->sectionID,

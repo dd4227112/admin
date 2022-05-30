@@ -93,7 +93,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                                         $array = array('0' => __("select expense"));
                                         if (!empty($category)) {
                                             foreach ($category as $categ) {
-                                                $array[$categ->id] = $categ->name;
+                                                $array[$categ->id] = $categ->name ?? '';
                                             }
                                         }
                                         echo form_dropdown("refer_expense_id", $array, old("refer_expense_id"), "id='refer_expense_id' class='form-control'");
@@ -113,7 +113,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                                 foreach($invoicefee as $value) { ?>
                                 <div class="form-group row">
                                     <label for="expense" class="col-sm-4 control-label">
-                                        <?= $value->service->name ?> 
+                                        <?= $value->service->name ?? '' ?> 
                                     </label>
 
                                     <div class="col-sm-6">
@@ -139,7 +139,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                                         if (!empty($payment_types)) {
                                             foreach ($payment_types as $payment_type) {
                                               ?>
-                                                <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?></option>
+                                                <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?? '' ?></option>
                                              <?php
                                             }
                                         }
@@ -190,7 +190,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                                 if (!empty($banks)) {
                                     foreach ($banks as $bank) {
                                      ?>
-                                        <option value="<?= $bank->id ?>"><?= $bank->name . ' (' . $bank->number . ')' ?></option>
+                                    <option value="<?= $bank->id ?>"><?= $bank->name . ' (' . $bank->number . ')' ?></option>
                                      <?php
                                     }
                                 }
