@@ -340,6 +340,16 @@ class Controller extends BaseController {
       }
 
 
+      public function sendFiless(){
+        $chatId = '255655007457@c.us';
+        $caption = 'Test';
+        $filename = 'TESTS';
+        $path = 'https://picsum.photos/id/237/200/300';
+        $this->sendMessageFile($chatId,$caption,$filename,$path);
+
+      }
+
+
     public function sendMessage($chatId, $text) {
         $data = array('chatId' => $chatId, 'body' => $text);
         $this->sendRequest('message', $data);

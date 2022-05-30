@@ -1327,7 +1327,7 @@ class Customer extends Controller {
 
     public function resetPassword() {
         $schema = request()->segment(3);
-        if ($schema != '') {
+        if ($schema != '' && $schema != 'accounts') {
             $pass = $schema . rand(5697, 33);
             $username = $schema . date('Hi');
             DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);

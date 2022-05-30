@@ -513,12 +513,14 @@ class Sales extends Controller {
              $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
              $school_name = empty(request('school_name')) ? $school->name : request('school_name');
              $school_email = !empty($school_contact->email) ? $school_contact->email : request('owner_email');
-            
+             $school_phone = !empty($school_contact->phone) ? $school_contact->phone : request('owner_phone');
+             $address = $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name;
+
              $client_data = [
                     'name' => $school_name,
-                    'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
+                    'address' => $address,
                     'created_at' => date('Y-m-d H:i:s'),
-                    'phone' => !empty($school_contact->phone) ? $school_contact->phone : request('owner_phone'),
+                    'phone' => $school_phone,
                     'email' => $school_email,
                     'estimated_students' => request('students'),
                     'status' => 1, // Unapproved application
@@ -537,7 +539,7 @@ class Sales extends Controller {
                     'note' => nl2br(request('description'))
              ];  
            
-            // $this->sendDataToAccounts($school_name,$schema_name,request('students'),$school_email);
+             $this->sendDataToAccounts($school_name,$schema_name,request('students'),$school_email,$school_phone,$address);
             if(!empty($check_client)) {
                 $client_id = $check_client->id;
                  \DB::table('admin.clients')->where('id',$client_id)->update(Arr::except($client_data, ['username'])); 
@@ -652,47 +654,87 @@ class Sales extends Controller {
     }
  
     // fx to send data to accounts system
-    public function sendDataToAccounts($school_name,$schema,$no_of_students,$email){
-
+    public function sendDataToAccounts($school_name,$schema,$no_of_students,$email,$phone,$address){
         $classlevel =  DB::table('accounts.classlevel')->first();
         $object = [
             'classes' => $school_name,
             'classes_numeric' => 2,
             'teacherID' => 1,
             'note' => clean($schema),
-            'classlevel_id' => $classlevel->id,
+            'classlevel_id' => $classlevel->classlevel_id,
             'target' => $no_of_students,
           ];
         $check = DB::table('accounts.classes')->where('note',clean($schema))->first();
         
         if(empty($check)){
-            $class_id = DB::table('accounts.classes')->insertGetId($object);
+            DB::table('accounts.classes')->insert($object);
+            $class_id = (int)DB::getPdo()->lastInsertId();
+
         }else{
             $class_id = $check->classesID;
            DB::table('accounts.classes')->where('note',clean($schema))->update($object);
         }
+        
 
         $derived_values = [
             'name' => $school_name,
+            'dob' => date('Y-m-d'),
             'sex' => 'Male',
             'email' => $email,
-            'academic_year_id' => $academic_year_id,
-            'username' => $username,
+            'phone' => $phone,
+            'address' => $address,
+            'classesID' => $class_id,
+            'sectionID' => (int) DB::table('accounts.section')->first()->sectionID,
+            'roll' => 1,
+            'create_date' => date('Y-m-d'),
+            'photo' => 'defualt.png',
+            'year' => date('Y'),
+            'username' => clean($schema),
             'password' => bcrypt('abc123456'),
             'usertype' => 'Student',
-            'roll' => $roll,
-            'jod' => date('Y-m-d', strtotime('Y-m-d')),
-            'dob' => date('Y-m-d', strtotime('Y-m-d')),
+            'academic_year_id' => (int) DB::table('accounts.academic_year')->whereYear('end_date',date('Y'))->first()->id,
+            'status' => 1,
+            'city_id' => 1,
             "physical_condition_id" => 1,
             "health_insurance_id" => 1,
             'health_condition_id' => 1,
             'health_status_id' => 1,
             'nationality' => 1,
-            'sectionID' => (int) DB::table('accounts.section')->first()->sectionID
+            'jod' => date("Y-m-d H:i:s")
         ];
-        
-        DB::table('accounts.student')->where('note',clean($schema))->update($object);
+        DB::table('accounts.student')->insert($derived_values);
 
+        $fees = DB::table('accounts.fees')->get();
+         foreach ($fees as $fee) {
+          $check_fee_class = DB::table('accounts.fees_classes')->where('class_id', $class_id)->where('fee_id', $fee->id)->first();
+            if (empty($check_fee_class)) {
+                $fee_class_id = DB::table('accounts.fees_classes')->insertGetId(['fee_id' => $fee->id, 'class_id' => $class_id]);
+                $this->addNewFeesInstallments($fee->id, $class_id);
+                   $banks = DB::table('accounts.bank_accounts')->get();
+                    foreach ($banks as $bank) {
+                          DB::table('accounts.bank_accounts_fees_classes')->insert([
+                                'bank_account_id' => $bank->id,
+                                'fees_classes_id' => $fee_class_id
+                        ]);
+                    }
+               }
+         }
+    }
+
+      // Function from shulesoft main project
+     public function addNewFeesInstallments($fee_id, $classes_id) {
+        $installments = DB::table('accounts.installments as u')->select('u.*')->join('accounts.academic_year as y','y.id','=','u.academic_year_id')->join('accounts.classes as c','c.classlevel_id','=','y.class_level_id')->where('c.classesID', $classes_id)->get();
+
+        if (!empty($installments)) {
+            foreach ($installments as $installment) {
+               $count = DB::table('accounts.fees_installments as f')->join('accounts.installments as a','a.id','=','f.installment_id')->where('f.installment_id', $installment->id)->where('f.fee_id', $fee_id)->count();
+                if ($count == 0) {
+                    DB::table('accounts.fees_installments')->insert([
+                        'fee_id' => $fee_id, 'installment_id' => $installment->id
+                    ]);
+                }
+            }
+        }
     }
 
 

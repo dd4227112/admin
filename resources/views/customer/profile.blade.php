@@ -685,7 +685,7 @@ class="social-user-name b-none">
 <th class="social-label b-none p-b-0">School Access</th>
 <td class="social-user-name b-none p-t-10">
         <?php
-        if (isset($school->username)) {
+        if (isset($school->username) && $schema != 'accounts') {
             echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-primary btn-sm btn-round">
                  Reset Password</a>';
         }
