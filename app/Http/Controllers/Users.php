@@ -57,8 +57,6 @@ class Users extends Controller {
         ]);
         $user = array_merge(request()->except('_token','location'), ['password' => bcrypt(request('email')), 
                            'salary' => remove_comma(request('salary')), 'created_by' => \Auth::user()->id]);
-        // $user->save();
-        //  $user_id = \App\Models\User::create($user);
          $user_id = DB::table('admin.users')->insertGetId($user);
 
          $user_data = DB::table('admin.users')->where('id',(int)$user_id)->first();
@@ -86,7 +84,9 @@ class Users extends Controller {
                     'town' => request('town'),
                     'country_id' => 1
                 ]);
+
         $this->sendEmailAndSms($request);
+
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
     }
 
@@ -108,6 +108,7 @@ class Users extends Controller {
         return redirect()->back()->with('success', 'Password sent successfully');
     } 
 
+
     public function sendEmailAndSms($requests, $content = null) {
         $request = (object) $requests;
         $message = $content == null ? 'Hello ' . $request->name . ' You have been added in ShuleSoft Administration panel. You can login for Administration of schools with username ' . $request->email . ' and password ' . $request->email : $content;
@@ -119,15 +120,15 @@ class Users extends Controller {
             'priority' => 1
         ]);
 
-       $this->send_whatsapp_sms($request->phone, $message,$request->name); 
+       $this->send_whatsapp_sms($request->phone, $message); 
 
-        \DB::table('public.email')->insert([
-            'body' => $message,
-            'subject' => 'ShuleSoft Administration Credentials',
-            'user_id' => 1,
-            'email' => $request->email,
-            'table' => 'setting'
-        ]);
+        // \DB::table('public.email')->insert([
+        //     'body' => $message,
+        //     'subject' => 'ShuleSoft Administration Credentials',
+        //     'user_id' => 1,
+        //     'email' => $request->email,
+        //     'table' => 'setting'
+        // ]);
     }
     /**
      * Display the specified resource.
