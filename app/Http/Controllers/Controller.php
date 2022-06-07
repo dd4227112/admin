@@ -146,9 +146,6 @@ class Controller extends BaseController {
     }
 
     
-   
-   
-
     public function curlPrivate($fields, $url = null) {
         // Open connection
         $url = 'http://75.119.140.177:8081/api/payment';
@@ -348,27 +345,26 @@ class Controller extends BaseController {
 
 
     public function sendRequest($method, $data) {
-        if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
-            $url = $this->APIurl . $method . '?token=' . $this->token;
-            if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
-                $url = $this->token . $method . '?token=' . $this->APIurl;
-            }
+        // if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
+        //     $url = $this->APIurl . $method . '?token=' . $this->token;
+        //     if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+        //         $url = $this->token . $method . '?token=' . $this->APIurl;
+        //     }
 
-            if (is_array($data)) {
-                $data = json_encode($data);
-            }
-            $options = stream_context_create(['http' => [
-                    'method' => 'POST',
-                    'header' => 'Content-type: application/json',
-                    'content' => $data]]);
-            $response = file_get_contents($url, false, $options);
-            // $response = $this->curlServer($body, $url);
-            $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
-           // echo $response;
-            // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
-        } else {
-            echo 'Wrong url supplied in whatsapp api';
-        }
+        //     if (is_array($data)) {
+        //         $data = json_encode($data);
+        //     }
+        //     $options = stream_context_create(['http' => [
+        //             'method' => 'POST',
+        //             'header' => 'Content-type: application/json',
+        //             'content' => $data]]);
+        //     $response = file_get_contents($url, false, $options);
+        //     // $response = $this->curlServer($body, $url);
+        //     $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
+        //    // echo $response;
+        // } else {
+        //     echo 'Wrong url supplied in whatsapp api';
+        // }
     }
 
 
