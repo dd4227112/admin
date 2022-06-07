@@ -365,6 +365,7 @@ class Controller extends BaseController {
         // } else {
         //     echo 'Wrong url supplied in whatsapp api';
         // }
+        return true;
     }
 
 

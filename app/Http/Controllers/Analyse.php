@@ -361,39 +361,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
       }
 
 
-//    public function sendMessage() {
-//        if ($_POST) {
-//            //dd(request()->all());
-//
-//            $body = request('message');
-//            $sms = request('sms');
-//            $email = request('email');
-//            request('lang') == 'swahili' ? $lang = 'Habari' : $lang = 'Hello';
-//            $schools = DB::table('all_setting')->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\ClientSchool::whereIn('school_id', \App\Models\UsersSchool::where('user_id', Auth::User()->id)->get(['school_id']))->get(['client_id']))->get(['username']))->get();
-//            $english = 'For More Details Contact: ' . chr(10) . 'Name: ' . Auth::User()->name . chr(10) . 'Phone: ' . Auth::User()->phone . chr(10) . 'Email: ' . Auth::User()->email;
-//            $swahili = 'Mawasiliano:' . chr(10) . 'Jina: ' . Auth::User()->name . chr(10) . 'Simu: ' . Auth::User()->phone . chr(10) . 'Barua Pepe: ' . Auth::User()->email;
-//            request('lang') == 'swahili' ? $footer = $swahili : $footer = $english;
-//            $phone = '';
-//            foreach ($schools as $school) {
-//                if ($school->phone != '') {
-//                    $numbers = str_replace(' ', '', $school->phone);
-//                    $number = str_replace('/', ',', $numbers);
-//                    $phones = explode(',', $number);
-//                    $phone = str_replace('+', null, validate_phone_number($phones[0])[1]);
-//                }
-//                if ($school->email != '' && (int) $email > 0) {
-//                    $message = '<h4>' . $lang . ', ' . $school->name . '</h4>'
-//                            . '<h4>' . $body . '</h4>'
-//                            . '<br><br>' . $footer;
-//                    DB::table('public.email')->insert(['body' => $message, 'subject' => 'ShuleSoft New Client Support Message', 'user_id' => 1, 'email' => $school->email]);
-//                }
-//                if ($phone != '' && (int) $sms > 0) {
-//                    $message1 = $lang . ', ' . $school->name . '.' . chr(10) . request('message') . chr(10) . chr(10) . $footer;
-//                    DB::table('public.sms')->insert(['body' => $message1, 'type' => 1, 'user_id' => 1, 'phone_number' => $phone]);
-//                }
-//            }
-//            return redirect()->back()->with('success', 'Message Sent successfully');
-//        }
-//    }
+
 
 }
