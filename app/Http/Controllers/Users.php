@@ -921,7 +921,6 @@ class Users extends Controller {
 
 
       public function updateAttendances(){
-          dd(request()->all());
       }
 
 }

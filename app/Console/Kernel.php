@@ -92,6 +92,12 @@ class Kernel extends ConsoleKernel {
         $this->karibuSMS();
        })->everyMinute();
 
+       $schedule->call(function () {
+        //test
+        $this->test();
+       })->dailyAt('16:05'); // Eq to 07:40 AM  
+
+
         
     }
 
@@ -1311,5 +1317,13 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
         }
 
     
+
+     public  function test(){
+            $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
+             $dir_name = storage_path()."/logs/" . $filename;
+            if (file_exists($dir_name)) {
+               unlink($dir_name);
+            }
+       }
 
 }

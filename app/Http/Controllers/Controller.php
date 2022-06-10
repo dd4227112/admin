@@ -442,52 +442,46 @@ class Controller extends BaseController {
     
     
 
-      public function test(){
-            $errors_array = [
-               'Invalid datetime format',
-                'Invalid text representation',
-                'Trying to get property',
-                'Deadlock detected',
-                'Undefined variable',
-                'Undefined function',
-                'Call to undefined function',
-                'Call to a member function',
-                'Datatype mismatch',
-                'Foreign key violation',
-                'Unique violation',
-                'Too Many Attempts',
-                'The given data was invalid',
-                'No query results for model',
-                'Argument 1 passed to',
-                'Parameter must be an array or an object',
-                'Division by zero',
-                'on line 162 of file',
-                'does not exist on this collection instance'
-            ];
+      public  function imartSMSAPIs()
+      {
+            $api_key = '262A04B6B5635A';
+            $contacts = '0655007457';
+            $from = 'Shule';
+            $sms_text = urlencode('Testing imartgroup sms API');
 
-            $startDate = '2022-02-21';
-            $endDate = '2022-02-28';
+            //Submit to server
 
-            $final = [];
-            foreach($errors_array as $field => $value)
-            {   
-                $solved_error_count = DB::table('admin.error_logs')->where('created_at','>=',$startDate)->where('created_at','<=',$endDate)->where('error_message','ILIKE',"%${value}%")->whereNotNull('deleted_at')->count();
-                $error_count = DB::table('admin.error_logs')->where('created_at','>=',$startDate)->where('created_at','<=',$endDate)->where('error_message','ILIKE',"%${value}%")->whereNull('deleted_at')->count();
-
-                $data = [
-                    'Error message' => $value,
-                    'error_count' => $error_count,
-                    'solved_error_count' => $solved_error_count
-                ];
-               array_push($final, $data);
-            }
-
-            dd($final);
-
-        }
+            $ch = curl_init();
+            curl_setopt($ch,CURLOPT_URL, "http://smsportal.imartgroup.co.tz/app/smsapi/index.php");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, "key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            echo $response;
+      }
 
 
-  
+
+      public function test2()
+      {
+        $api_key = '262A04B6B5635A';
+        $contacts = '655007457,753683801';
+        $from = 'Shule';
+        $sms_text = urlencode('Hello People, have a great day');
+
+        $api_url = "http://smsportal.imartgroup.co.tz/app/smsapi/index.php?key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text;
+
+        //Submit to server
+
+        $response = file_get_contents($api_url);
+        echo $response;
+      }
+
+    
+      
+
+     
    
 }
 
