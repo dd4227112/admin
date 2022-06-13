@@ -1320,7 +1320,7 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
     
     public function pushRevInvoice($invoice) {
         $token = $this->getToken($invoice);
-        if (strlen($token) > 4) {
+        if (strlen($token) > 4) { 
             $fields = array(
                 "reference" => trim($invoice->reference),
                 "student_name" => isset($invoice->payer_name) ? $invoice->payer_name : '',
