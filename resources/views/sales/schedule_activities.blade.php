@@ -47,9 +47,11 @@ if (request()->ajax() == FALSE) {
     </div>
 
 
+
+
 <div class="card">
     <div class="card-block">
-        <form action="<?= url('sales/implemetation/'. $client_id) ?>" method="POST" enctype="multipart/form-data">
+        <form action="<?= url('sales/implementation/'. $client_id) ?>" method="POST" enctype="multipart/form-data">
           
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Data Format Available</label>
@@ -101,12 +103,8 @@ if (request()->ajax() == FALSE) {
                             </tbody>
                         </table>
                     </div>
-
-                    
                 </div>
             </div>
-
-
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label"></label>
@@ -116,8 +114,6 @@ if (request()->ajax() == FALSE) {
                 </div>
             </div>
         </form>
-
-
     </div>
 </div>
 

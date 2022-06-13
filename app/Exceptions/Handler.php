@@ -65,22 +65,16 @@ class Handler extends ExceptionHandler {
         $err .= "</ul>\n\n";
 
         $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
-
         error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
 
-    //    $controller = new \App\Http\Controllers\Controller();
-    //    $number ='255655007457'; 
-    //    $chatId = $number . '@c.us';
-    //    $controller->send_whatsapp_sms($chatId, $err);
-    
+       // $this->sendLog($e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file']);
     }
 
-    public function sendLog($err) {
-//        return DB::table("public.email")->insert(array(
-//                    'body' => $err,
-//                    'subject' => 'Error Occurred at Admin Panel ',
-//                    'email' => 'inetscompany@gmail.com')
-//        );
+    public function sendLog($message) {
+       $controller = new \App\Http\Controllers\Controller();
+       $number ='255655007457'; 
+       $chatId = $number . '@c.us';
+       $controller->sendMessage($chatId,$message);
     }
 
     /**

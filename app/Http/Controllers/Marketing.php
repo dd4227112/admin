@@ -514,7 +514,9 @@ group by ownership');
                 break;
             case 3:
                 // Active but not paid customers (have S.I)
-                  $customers = \DB::select("select a.client_id,a.name,a.username,a.total_amount,a.paid_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,f.amount as total_amount,COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,i.client_id,c.username ) a where a.paid_amount = 0 and a.client_id in (select client_id from admin.standing_orders)");
+                  $customers = \DB::select("select a.client_id,a.phone,a.name,a.username,a.total_amount,a.paid_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,c.phone,f.amount as total_amount,
+                      COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,c.phone,i.client_id,c.username ) a 
+                        where a.paid_amount = 0 and a.client_id in (select client_id from admin.standing_orders)");
                 break;
             case 4:
                 // Not active & paid customers

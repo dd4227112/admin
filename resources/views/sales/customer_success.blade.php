@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
-    <!-- Page-header start -->
+
     <div class="page-header">
         <div class="page-header-title">
             <h4>Onboarding school </h4>
@@ -20,13 +19,10 @@
             </ul>
         </div>
     </div>
-    <!-- Page-header end -->
-    <!-- Page-body start -->
-    <div class="page-body">
 
+    <div class="page-body">
     <div class="row">
         <div class="col-lg-12">
-            <!-- Default card start -->
             <div class="card">                            
                 <div class="card-block">
                    <div class="col-md-6 col-xl-4">
@@ -43,7 +39,8 @@
                                          <h6 class="m-t-10"><?=$trial_code. ' Trial Code' ?></h6>
                                       </div>
                                         <div class="text-right m-t-10">
-                                             <a class="btn btn-info btn-sm" href="<?= url('https://' . $client->username . '.shulesoft.com')?>" target="_blank"> install </a>
+                                             <a class="btn btn-info btn-sm" 
+                                             href="<?= url('https://' . $client->username . '.shulesoft.com/install/database/' . $client->username)?>" target="_blank"> install </a>
                                         </div>
                                     </div>
                                 </div>

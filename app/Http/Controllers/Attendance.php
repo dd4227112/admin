@@ -26,7 +26,9 @@ class Attendance extends Controller {
 
     public function add(){
         $this->data['date'] = date("Y-m-d");
-        $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
+        $user_object = new \App\Http\Controllers\Users();
+        $this->data['users'] =  $user_object->shulesoftUsers();
+        
         return view('users.attendance.create', $this->data);
     }
 
@@ -36,31 +38,37 @@ class Attendance extends Controller {
     function singl_add() {
         $id = request('id');
         $day = request('day');
+      
         $absent_reason_id = (int) request('absent_id') > 0 ? (int) request('absent_id') : null;
         $user_id = preg_replace('/[^0-9]/i', '', $id);
         if ((int) $user_id) {
             $present = request('status') == 'false' ? 0 : 1;
-            $this->addSingleUser($user_id, $day, $present, $absent_reason_id);
+            if(preg_match('/timein/i', $id)){
+                $this->addSingleUser($user_id,'timein', $day, $present, $absent_reason_id);
+            } elseif(preg_match('/timeout/i', $id)){
+                $this->addSingleUser($user_id,'timeout', $day, $present, $absent_reason_id);
+            }
             echo ('success');
         }
     }
 
 
-    public function addSingleUser($id, $day, $present, $absent_reason_id=null) {
+    public function addSingleUser($id,$action, $day, $present, $absent_reason_id=null) {
         $where = ['user_id' => $id, 'date' =>date("Y-m-d", strtotime($day))];
         $found = \App\Models\Uattendance::where($where);
         if (!empty($found->first())) {
             //update              
             $data = array_merge($where, ['created_by' => Auth::user()->id,
+                $action => date("Y-m-d H:i:s", strtotime($day)),
                 'absent_reason_id'=>$absent_reason_id,
                 'present' => $present]);
             $found->update($data);
         } else {
             \App\Models\Uattendance::create(array_merge($where, [
-            'timein' => date("Y-m-d h:i:s"),
-            'created_by' => Auth::user()->id,
-            'absent_reason_id'=> $absent_reason_id,
-            'present' => $present]));
+                $action => date("Y-m-d h:i:s"),
+                'created_by' => Auth::user()->id,
+                'absent_reason_id'=> $absent_reason_id,
+                'present' => $present]));
         }
         return TRUE;
     }

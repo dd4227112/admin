@@ -13,11 +13,11 @@ class TrainingChecklist extends Model {
     protected $fillable = ['id', 'title', 'position', 'page_section', 'key_columns', 'key_table', 'created_by', 'training_section_id', 'created_at', 'updated_at'];
 
     public function trainingSection() {
-        return $this->belongsTo(\App\Model\TrainingSection::class);
+        return $this->belongsTo(\App\Models\TrainingSection::class);
     }
 
     public function training() {
-        return $this->hasMany(\App\Model\Training::class);
+        return $this->hasMany(\App\Models\Training::class);
     }
 
 }

@@ -61,11 +61,8 @@
                               </td>
                             
                               <td class="text-center">
-                              
                                     <?php if(can_access('approve_implementaion')) { ?>
                                       <a href="<?= url('sales/updateOnboardStatus/'. $value->id) ?>" class="btn btn-success btn-mini btn-round">Approve</a>
-
-                                    
                                 <?php } ?>
                               </td>
                           </tr>

@@ -388,13 +388,11 @@ foreach ($staffs as $staff) {
 </div>
 
 <div class="col-md-6"  id="remainder_date">
-   <strong> Remainder Date</strong>
+   <strong> Notification Date</strong>
    <input type="date"  name="remainder_date" class="form-control">
 </div>
 </div>
 </div>
-
-
 
 
 <div class="form-group">
@@ -469,11 +467,7 @@ id="removetag<?= $task->id ?>">
 </div>
 <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
 <div class="card m-0">
-<!-- <span
-class="dropdown-toggle addon-btn text-muted f-right service-btn"
-data-toggle="dropdown" aria-haspopup="true"
-aria-expanded="true"
-role="tooltip">Actions</span> -->
+
 <div
 class="dropdown-menu dropdown-menu-right b-none services-list">
 <a class="dropdown-item" href="#"
@@ -481,9 +475,7 @@ onmousedown="removeTag(<?= $task->id ?>)">Remove
 tag</a>
 <a class="dropdown-item" href="#">Report
 Photo</a>
-{{-- <button type="button" class="btn btn-primary waves-effect"
-data-toggle="modal" data-target="#edit-Modal-task">edit
-Task</button> --}}
+
 
 </div> 
 
@@ -530,6 +522,13 @@ foreach ($modules as $module) {
 <p>Start Date- <?= $task->start_date ?>
  &nbsp; &nbsp; | &nbsp; &nbsp; 
  <?= date('Y-m-d', strtotime($task->end_date)) == '1970-01-01' ? '' : 'End Date - '.$task->end_date  ?></p> 
+
+ <p>Assigned to - 
+     @foreach ($task->taskUsers as $value)
+     <?= '<label class="badge badge-inverse-primary">' . $value->user->name() . '</label>' ?>
+       &nbsp; &nbsp;
+    @endforeach
+</p>
 </div>
 
 <div class="user-box">
@@ -545,12 +544,9 @@ foreach ($comments as $comment) {
 ?>
 <div class="media" class="pb-1">
 <a class="media-left" href="#">
-<!-- <img class="media-object img-circle m-r-20"
-src="<?= $root . '/assets/images/avatar-2.png'; ?>"
-alt="Image"> -->
 <?php
 $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task->user->id}'"))->first(); 
-      $local = $root . '/assets/images/avatar-2.png';  ?>
+$local = $root . '/assets/images/avatar-2.png';  ?>
 <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
 width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
 </a>
@@ -622,6 +618,7 @@ data-icon=""></span>
 
 <div class="tab-pane" id="about" aria-expanded="true">
 <div class="row">
+
 <div class="col-sm-12">
 <div class="card">
 <div class="card-header">
@@ -648,6 +645,7 @@ School Name
 class="social-user-name b-none p-t-0">
 <?= $school->sname ?? '' ?></td>
 </tr>
+
 <tr>
 <th class="social-label b-none">
 Location</th>
@@ -682,12 +680,12 @@ class="social-user-name b-none">
     ?>
 </td>
 
-<?php if( can_access('reset_school_password') && isset($school->username) && !preg_match('/stfrancisgirlssecondaryschool/i', strtolower($school->username))) { ?>
+<?php if( can_access('reset_school_password') && isset($school->username) && !preg_match('/stfrancisgirls/i', strtolower($school->username))) { ?>
 <tr>
 <th class="social-label b-none p-b-0">School Access</th>
 <td class="social-user-name b-none p-t-10">
         <?php
-        if (isset($school->username)) {
+        if (isset($school->username) && $schema != 'accounts') {
             echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-primary btn-sm btn-round">
                  Reset Password</a>';
         }
@@ -743,6 +741,7 @@ class="social-user-name b-none">
 <div id="edit-info" class="row" style="display: none;">
 <div class="col-lg-12 col-md-12">
 <form>
+
 <div class="input-group">
 <input type="text" class="form-control"
 placeholder="Full Name">
@@ -772,6 +771,7 @@ class="md-check p-0">Gender</label>
 </div>
 </div>
 </div>
+
 <div class="input-group">
 <input id="dropper-default"
 class="form-control" type="text"
@@ -808,163 +808,102 @@ class="btn btn-default waves-effect waves-light">Cancel</a>
 
 
 
-{{-- 
+
+
 <div class="col-sm-12">
-<div class="card">
-<div class="card-header">
-<h5 class="card-header-text">School Allocation
-Information</h5>
-<button id="edit-Contact" type="button"
-class="btn btn-primary waves-effect waves-light f-right">
-<i class="icofont icofont-edit"></i>
-</button>
-</div>
-<div class="card-block">
-<div id="contact-info" class="row">
-<div class="col-lg-6 col-md-12">
-<table class="table m-b-0">
-<tbody>
-<?php
-if (isset($school->school_id) && $school->school_id == null) {
-?>
-<tr>
-<th class="social-label b-none">
-School Mapping </th>
-<td
-class="social-user-name b-none">
-<input class="form-control"
-    id="school_id"
-    name="school_id" type="text"
-    style="width:18em"
-    placeholder="Click here to Map">
-<span id="search_result"></span>
-</td>
-<td
-class="social-user-name b-none text-muted">
-Type at least 3 characters</td>
-</tr>
-<?php } ?>
-<tr>
-<th class="social-label b-none">
-Support Personnel </th>
-<td
-class="social-user-name b-none text-muted">
-<?php
-$school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
-?> <select class="form-control"
-id="support_id"
-name="support_id">
-    <?php
-    if (!empty($shulesoft_users)) {
-        foreach ($shulesoft_users as $user) {
-            ?>
-    <option
-        value="<?= $user->id ?>" <?php
-        if (!empty($school_allocations) && $user->id == $school_allocations->id) {
-            $support_person = $user->firstname . ' ' . $user->lastname;
-            echo 'selected="selected"';
-        } else {
-            echo '';
-        }
-        ?>>
-            <?= $user->firstname . ' ' . $user->lastname ?>
-    </option>
-    <?php
-}
-}
-?>
-</select>
-</td>
-<td
-class="social-user-name b-none text-muted">
-<input type="button"
-value="save"
-onmousedown="allocate($('#support_id').val(), 8)"
-class="btn btn-success btn-sm">
-<span id="supportl"> </span>
-</td>
-</tr>
-<tr>
-<th class="social-label b-none">
-Sales Personnel </th>
-<td
-class="social-user-name b-none text-muted">
-<?php
-$school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
-?> <select class="form-control"
-id="sales_id"
-name="sales_id">
+    <div class="card">
+    <div class="card-header">
+    <h2 class="card-header-text h5">School Agreement Information</h2>
+    <button id="edit-btn" type="button" class="btn btn-primary btn-round btn-sm float-right"
+       data-toggle="modal" data-target="#agreement_school_details">
+     Update info
+    </button>
+    </div>
+    <div class="card-block">
+    <div id="view-info" class="row">
+    <div class="col-lg-6 col-md-12">
+    <table class="table m-b-0">
+    <?php if(isset($agreement)) { ?>
+    <tbody>
+    <tr>
+    <th
+    class="social-label b-none p-t-0">
+      Contact person name
+    </th>
+    <td
+    class="social-user-name b-none p-t-0">
+      <?= $agreement->contact_person_name ?? '' ?>
+   </td>
 
-<?php
-if (!empty($school_sales_allocations)) {
-foreach ($shulesoft_users as $user) {
-    ?>
-    <option
-        value="<?= $user->id ?>" <?php
-        if (!empty($school_sales_allocations) && $user->id == $school_sales_allocations->id) {
-            $sales_person = $user->firstname . ' ' . $user->lastname;
-            echo 'selected="selected"';
-        } else {
-            echo '';
-        }
-        ?>>
-            <?= $user->firstname . ' ' . $user->lastname ?>
-    </option>
-    <?php
-}
-}
-?>
-</select>
+   <th
+    class="social-label b-none p-t-0">
+      NMB Account name
+    </th>
+    <td
+    class="social-user-name b-none p-t-0">
+      <?= $agreement->school->nmb_school_name ?? '' ?>
+   </td>
+    </tr>
+
+    <tr>
+    <th class="social-label b-none">
+        Contact person phone</th>
+    <td class="social-user-name b-none">
+        <?= $agreement->contact_person_phone ?? '' ?>
+    </td>
+
+    <th class="social-label b-none">
+        NMB Account</th>
+    <td class="social-user-name b-none">
+        <?= $agreement->school->account_number ?? '' ?>
+    </td>
+
+    </tr>
+
+    <tr>
+    <th class="social-label b-none"> Designation</th>
+    <td
+    class="social-user-name b-none">
+        <?= $agreement->contact_person_designation ?? '' ?>
+    </td>
+    </tr>
+
+    <tr>
+    <th class="social-label b-none">
+        Agreement date</th>
+    <td class="social-user-name b-none">
+       <?= isset($agreement->agreement_date) ? date('d-m-Y',strtotime($agreement->agreement_date)) : '' ?></td>
+    </tr>
+
+    <tr>
+        <th class="social-label b-none"> Agreement form type</th>
+        <td class="social-user-name b-none">
+           <?= $agreement->form_type ?? '' ?></td>
+
+        <th class="social-label b-none"> View file</th>
+           <td class="social-user-name b-none">
+              <?php $viw_url = isset($agreement) ?  "customer/viewContract/$agreement->id/agreement" : ''; ?>
+               <a  target="_blank" href="<?= url($viw_url)?>" class="btn btn-primary btn-mini btn-round">View</a>
+        </td>
+    </tr>
+
+    <tr>
+        <th class="social-label b-none">
+             Created by</th>
+        <td class="social-user-name b-none">
+           <?= isset($agreement) ? $agreement->user->name() : '' ?></td>
+    </tr>
+    </tbody>
+  <?php } ?>
+    </table>
+    </div>
+    </div>
+  
+    </div>
+    </div>
+    </div>
 
 
-</td>
-<td
-class="social-user-name b-none text-muted">
-<input type="button"
-value="save"
-onmousedown="allocate($('#sales_id').val(), 3)"
-class="btn btn-success btn-sm">
-</td>
-</tr>
-
-
-</tbody>
-</table>
-</div>
-</div>
-<div id="edit-contact-info" class="row"
-style="display: none;">
-<div class="col-lg-12 col-md-12">
-<form>
-<div class="input-group">
-<input type="text" class="form-control"
-placeholder="Mobile number">
-</div>
-<div class="input-group">
-<input type="text" class="form-control"
-placeholder="Email address">
-</div>
-<div class="input-group">
-<input type="text" class="form-control"
-placeholder="Twitter id">
-</div>
-<div class="input-group">
-<input type="text" class="form-control"
-placeholder="Skype id">
-</div>
-<div class="text-center m-t-20">
-<a href="javascript:;" id="contact-save"
-class="btn btn-primary waves-effect waves-light m-r-20">Save</a>
-<a href="javascript:;"
-id="contact-cancel"
-class="btn btn-default waves-effect waves-light">Cancel</a>
-</div>
-</form>
-</div>
-</div>
-</div>
-</div>
-</div> --}}
 
 
 
@@ -2318,6 +2257,91 @@ if (!empty($profile)) {
 
 </div>
 </div>
+
+
+
+<div class="modal fade" id="agreement_school_details" tabindex="-1" role="dialog" style="display: none;"aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <div class="modal-header"> 
+      <div class="card-block">
+        
+    <div class="row">
+        <h5> Edit Agreement Details </h5>
+         <br>
+         <br>
+         
+        <form action="<?= url('sales/editAgreementDetails/' . $school_id) ?>" method="POST" enctype="multipart/form-data">
+            <div class="form-group row">
+                <label class="col-sm-6">Contact Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="contact_person_name" value="<?= $agreement->contact_person_name ?? '' ?>">
+                </div>
+            </div>
+    
+             <div class="form-group row ">
+                <label class="col-sm-6">Contact Phone</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="contact_person_phone" value="<?= $agreement->contact_person_phone ?? '' ?>">
+                </div>
+            </div>
+
+            <div class="form-group row ">
+                <label class="col-sm-6">Contact person Designation</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="contact_person_designation" value="<?= $agreement->contact_person_designation ?? '' ?>">
+                </div>
+            </div>
+    
+    
+             <div class="form-group row">
+                <label class="col-sm-6 col-form-label">Agreement Date</label>
+                <div class="col-sm-6">
+                    <input type="date" class="form-control" name="agreement_date" value="<?= $agreement->agreement_date ?? '' ?>">
+                </div>
+            </div>
+    
+    
+              <div class="form-group row">
+                <div class="col-sm-6">
+                     <label for="type">Type</label>
+                     <select name="form_type" class="form-control"  required>
+                        <option value='0'> Choose</option>
+                        <option value='Shulesoft'> Shulesoft</option>
+                        <option value='NMB'> NMB </option>
+                    </select>
+                </div>
+    
+                  <div class="col-sm-6">
+                     <label for="">Document</label>
+                    <input type="file" class="form-control" name="agreement_file" >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-sm-6">
+                     <label for="">NMB School name</label>
+                    <input type="text" class="form-control" name="nmb_account_name" value="<?= $agreement->school->nmb_school_name ?? '' ?>">
+                </div>
+    
+                  <div class="col-sm-6">
+                     <label for="">NMB Account</label>
+                    <input type="text" class="form-control" name="nmb_account" value="<?= $agreement->school->account_number ?? '' ?>">
+                </div>
+              </div>
+    
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+            </div>
+       </form>
+      </div>
+    </div>
+    </div>
+    </div>
+    
+ </div>
+</div>
+
 <?php } ?>
                                                                                                                   <!-- notify js Fremwork -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
@@ -2562,7 +2586,6 @@ if (!empty($profile)) {
             });
             
             $('.task_allocated_id').mousedown(function () {
-
                 var task_id = $(this).attr('task-id');
                 var start_date = $('#start_date' + task_id).val();
                 var school_person = $('#school_person' + task_id).text();

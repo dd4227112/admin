@@ -91,6 +91,18 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
+
+       $schedule->call(function () {
+        //send SMS to karibuSMS
+        $this->karibuSMS();
+       })->everyMinute();
+
+       $schedule->call(function () {
+        //test
+        $this->test();
+       })->dailyAt('16:05'); // Eq to 07:40 AM  
+
+
         
     }
 
@@ -1155,42 +1167,43 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     // function to remaind school tasks created by users
-   public function setTaskRemainder() {
-    $tasks = \App\Models\Task::where('remainder', 0)->where('remainder_date', '=', date('Y-m-d'))->get();
-    $controller = new \App\Http\Controllers\Controller();
+     public function setTaskRemainder() {
+        $tasks = \App\Models\Task::where('remainder', 0)->where('remainder_date', '=', date('Y-m-d'))->get();
+        $controller = new \App\Http\Controllers\Controller();
+            if(count($tasks)){
+                foreach ($tasks as $task) {
+                        $message = 'Hello ' . $task->user->name . '.'
+                                    . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
+                                    . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                                    . chr(10) . 'From ' . $task->client->name . '' 
+                                    . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
+                                    . chr(10) . 'Thanks.';
+                        $controller->send_whatsapp_sms($task->user->phone,$message);
+                        $controller->send_sms($task->user->phone,$message);
 
-        if(!empty($tasks)){
-            foreach ($tasks as $task) {
-                    $message = 'Hello ' . $task->user->name . '.'
-                                . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
-                                . chr(10) . 'Type: ' . $task->taskType->name . '.'
-                                . chr(10) . 'From ' . $task->client->name . '' 
-                                . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
-                                . chr(10) . 'Thanks.';
-                    $controller->send_whatsapp_sms($task->user->phone,$message);
-                    $controller->send_sms($task->user->phone,$message,1);
-
-                if(!empty($task->taskUsers)) {
-                    foreach($task->taskUsers as $task_user){
-                        if($task->user->id != $task_user->user_id){
-                        $user = \App\Models\User::find($task_user->user_id);
-                        $msg = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
-                                . chr(10) . 'This is the remainder of a task allocated to you'
-                                . chr(10) . 'Task: ' . strip_tags($task->activity) . '.'
-                                . chr(10) . 'Type: ' . $task->taskType->name . '.'
-                                . chr(10) . 'From ' . $task->client->name . '' 
-                                . chr(10) . 'Deadline: ' . date('d-m-Y', strtotime($task->start_date)) . '.'
-                                . chr(10) . 'By: ' . $task->user->name . '.'
-                                . chr(10) . 'Thanks.';
-                        $controller->send_whatsapp_sms($user->phone,$msg);
-                        $controller->send_sms($user->phone,$msg,1);
+                     if($task->taskUsers()->count() > 0) {
+                        foreach($task->taskUsers()->get() as $task_user){
+                            if($task_user->user_id != $task->user->id){
+                            $user = \App\Models\User::find($task_user->user_id);
+                            $msg = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
+                                    . chr(10) . 'This is the remainder of a task allocated to you'
+                                    . chr(10) . 'Task: ' . strip_tags($task->activity) . '.'
+                                    . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                                    . chr(10) . 'From ' . $task->client->name . '' 
+                                    . chr(10) . 'Deadline: ' . date('d-m-Y', strtotime($task->start_date)) . '.'
+                                    . chr(10) . 'By: ' . $task->user->name . '.'
+                                    . chr(10) . 'Thanks.';
+                            $controller->send_whatsapp_sms($user->phone,$msg);
+                            $controller->send_sms($user->phone,$msg);
+                            }
+                          }
                         }
-                      }
+                      \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
                     }
-                \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
                 }
-             }
-      }
+           }
+
+
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
@@ -1316,6 +1329,17 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
     } 
     return $curl; 
     }
+
+
+     public function karibuSMS(){
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "http://www.karibusms.com/check_pending");
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            $data = curl_exec($ch);
+        }
+
     
     
     public function pushRevInvoice($invoice) {
@@ -1355,5 +1379,13 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
         }
     }
 
+
+     public  function test(){
+            $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
+             $dir_name = storage_path()."/logs/" . $filename;
+            if (file_exists($dir_name)) {
+               unlink($dir_name);
+            }
+       }
 
 }

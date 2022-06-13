@@ -489,8 +489,13 @@ class Customer extends Controller {
             if (empty($client)) {
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
-            $this->data['client_id'] = $client->id;
+            $this->data['client_id'] = $client->id; 
+        
+            $client_school = \App\Models\ClientSchool::where('client_id', $this->data['client_id'])->first();
+            $this->data['school_id'] = $client_school->school_id;
 
+            $this->data['agreement'] = \App\Models\SchoolAgreement::where('school_id',$this->data['school_id'])->first();
+         
             $zone_manager = $this->zonemanager($this->data['client_id']);
             if ($zone_manager) {
                 $this->data['manager'] = \App\Models\User::where(['id' =>$zone_manager->user_id,'status'=>1]);
@@ -651,7 +656,7 @@ class Customer extends Controller {
                                 . '<li>Type: ' . $task->taskType->name . '</li>'
                                 . '<li>Deadline: ' . $task->date . '</li>'
                                 . '</ul>';
-                        $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                       // $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
                     }
                 }
                 $school_id = request('school_id');
@@ -1034,7 +1039,6 @@ class Customer extends Controller {
        $this->send_sms($user->phone, $message, 1);
 
 
-     
         if (preg_match('/[0-9]/', $data->contact) && $action == 'Completed') {
             $message1 = 'Hello '
                     . chr(10) . 'Thanks for using Shulesoft Services'
@@ -1131,7 +1135,6 @@ class Customer extends Controller {
     public function implementationReport() {
         $user_id = request()->segment(2);
       
-
         $where_user = (int) $user_id == 0 ? ' ' : ' user_id=' . $user_id . ' and ';
         $sql = 'select distinct b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, 
         a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id 
@@ -1209,7 +1212,6 @@ class Customer extends Controller {
         $this->data['schema'] = request()->segment(3);
         $this->data['client'] = strlen($this->data['schema']) > 2 ? DB::table('clients')->where('username', $this->data['schema'])->first() : '';
         $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders) or id in (select client_id from admin.client_trials)');
-        // $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients');
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->whereNotIn('role_id', array(7, 15))->get();
 
 
@@ -1325,7 +1327,7 @@ class Customer extends Controller {
 
     public function resetPassword() {
         $schema = request()->segment(3);
-        if ($schema != '') {
+        if ($schema != '' && $schema != 'accounts') {
             $pass = $schema . rand(5697, 33);
             $username = $schema . date('Hi');
             DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
@@ -1446,6 +1448,9 @@ class Customer extends Controller {
         } else if ($type == 'jobcard') {
             $contract = \App\Models\ClientJobCard::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
+        } else if ($type == 'agreement') {
+            $contract = \App\Models\SchoolAgreement::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
         } else {
             $contract = \App\Models\Contract::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
@@ -1459,33 +1464,7 @@ class Customer extends Controller {
         return view('layouts.file_view', $this->data);
     }
 
-    // method to share receipt link
-    public function ShareReceiptWhatsApp() {
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['invoice'] = \App\Models\Invoice::find($id);
-            $this->data["payment_types"] = \App\Models\PaymentType::all();
-            $this->data['banks'] = \App\Models\BankAccount::all();
-            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
-            return view('layouts.receipt_to_share', $this->data);
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
-
-    // Share receipt by email
-    public function ShareReceiptEmail() {
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['invoice'] = \App\Models\Invoice::find($id);
-            $this->data["payment_types"] = \App\Models\PaymentType::all();
-            $this->data['banks'] = \App\Models\BankAccount::all();
-            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
-            return view('layouts.receipt_to_share', $this->data);
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
+   
 
   
     public function deleteContract() {
@@ -1741,7 +1720,7 @@ class Customer extends Controller {
     private function createChurnSql($table, $year, $customer_other_sql = '') {
         return DB::select("select case when count is null then 0 else count end as count, extract(month from default_month)  as months  from ( SELECT count(distinct schema_name) as count,extract(month from created_at) as months from"
             . " admin." . $table . " where extract(year from created_at)=$year   "
-    . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months) a 
+    . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing','accounts') group by months) a 
     right JOIN admin.default_months b on months=extract(month from default_month)");
     }
 

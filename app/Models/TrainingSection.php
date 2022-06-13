@@ -13,11 +13,11 @@ class TrainingSection extends Model {
     protected $fillable = ['id', 'title', 'position', 'created_by', 'training_module_id', 'created_at', 'updated_at','timeslot'];
 
     public function trainingModule() {
-        return $this->belongsTo(\App\Model\TrainingModule::class);
+        return $this->belongsTo(\App\Models\TrainingModule::class);
     }
 
     public function trainingChecklist() {
-        return $this->hasMany(\App\Model\TrainingChecklist::class);
+        return $this->hasMany(\App\Models\TrainingChecklist::class);
     }
 
 }

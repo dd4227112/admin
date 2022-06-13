@@ -107,8 +107,13 @@ class Controller extends BaseController {
 
     public function send_sms($phone_number, $message, $priority = 0) {
         if ((strlen($phone_number) > 6 && strlen($phone_number) < 20) && $message != '') {
-            $sms_keys_id = DB::table('public.sms_keys')->first()->id;
-            \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id));
+            $sms_key = DB::table('public.sms_keys')->first();
+            $sms_keys_id = !empty($sms_key) ? $sms_key->id : null;
+            if($sms_keys_id){
+               \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 
+                     'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id)); 
+            }
+            
         }
         return $this;
     }
@@ -141,9 +146,6 @@ class Controller extends BaseController {
     }
 
     
-   
-   
-
     public function curlPrivate($fields, $url = null) {
         // Open connection
         $url = 'http://75.119.140.177:8081/api/payment';
@@ -335,6 +337,7 @@ class Controller extends BaseController {
       }
 
 
+
     public function sendMessage($chatId, $text) {
         $data = array('chatId' => $chatId, 'body' => $text);
         $this->sendRequest('message', $data);
@@ -342,27 +345,27 @@ class Controller extends BaseController {
 
 
     public function sendRequest($method, $data) {
-        if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
-            $url = $this->APIurl . $method . '?token=' . $this->token;
-            if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
-                $url = $this->token . $method . '?token=' . $this->APIurl;
-            }
+        // if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
+        //     $url = $this->APIurl . $method . '?token=' . $this->token;
+        //     if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+        //         $url = $this->token . $method . '?token=' . $this->APIurl;
+        //     }
 
-            if (is_array($data)) {
-                $data = json_encode($data);
-            }
-            $options = stream_context_create(['http' => [
-                    'method' => 'POST',
-                    'header' => 'Content-type: application/json',
-                    'content' => $data]]);
-            $response = file_get_contents($url, false, $options);
-            // $response = $this->curlServer($body, $url);
-            $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
-           // echo $response;
-            // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
-        } else {
-            echo 'Wrong url supplied in whatsapp api';
-        }
+        //     if (is_array($data)) {
+        //         $data = json_encode($data);
+        //     }
+        //     $options = stream_context_create(['http' => [
+        //             'method' => 'POST',
+        //             'header' => 'Content-type: application/json',
+        //             'content' => $data]]);
+        //     $response = file_get_contents($url, false, $options);
+        //     // $response = $this->curlServer($body, $url);
+        //     $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
+        //    // echo $response;
+        // } else {
+        //     echo 'Wrong url supplied in whatsapp api';
+        // }
+        return true;
     }
 
 
@@ -436,76 +439,49 @@ class Controller extends BaseController {
         }
             
 
-    //   public function test(){
-    //           $errors = [
-    //                 'Invalid datetime format',
-    //                 'Invalid text representation',
-    //                 'Trying to get property',
-    //                 'Deadlock detected'
-    //             ];
-
-    //         $error_array = array();
-    //         $collection = collect($errors);
-    //         $filtered =  $collection->map(function($error)  {
-    //              $error_count = \collect(DB::select('select * from admin.error_logs where error_message ilike \'%' . $error . '%\' and deleted_at is not null and deleted_by is not null'))->count();
-    //             //\DB::enableQueryLog();
-    //                 $error_count =   \App\Models\ErrorLog::get()->limit(10);
-    //             // dd(\DB::getQueryLog());
-    //             // $error_count = DB::table('admin.error_logs')->where('error_message','ILIKE','%'.$error.'%')->where('deleted_at','<>',null)->where('deleted_by','<>',null)->count();
-    //              $error_array[$error] = $error_count;
-    //             return $error_array;
-    //         });
-    //        dd($filtered);
-    //   }
+    
     
 
-      public function test(){
-            $errors_array = [
-               'Invalid datetime format',
-                'Invalid text representation',
-                'Trying to get property',
-                'Deadlock detected',
-                'Undefined variable',
-                'Undefined function',
-                'Call to undefined function',
-                'Call to a member function',
-                'Datatype mismatch',
-                'Foreign key violation',
-                'Unique violation',
-                'Too Many Attempts',
-                'The given data was invalid',
-                'No query results for model',
-                'Argument 1 passed to',
-                'Parameter must be an array or an object',
-                'Division by zero',
-                'on line 162 of file',
-                'does not exist on this collection instance'
-            ];
+      public  function imartSMSAPIs()
+      {
+            $api_key = '262A04B6B5635A';
+            $contacts = '0655007457';
+            $from = 'Shule';
+            $sms_text = urlencode('Testing imartgroup sms API');
 
-            $startDate = '2022-02-21';
-            $endDate = '2022-02-28';
+            //Submit to server
 
-            $final = [];
-            foreach($errors_array as $field => $value)
-            {   
-                $solved_error_count = DB::table('admin.error_logs')->where('created_at','>=',$startDate)->where('created_at','<=',$endDate)->where('error_message','ILIKE',"%${value}%")->whereNotNull('deleted_at')->count();
-                $error_count = DB::table('admin.error_logs')->where('created_at','>=',$startDate)->where('created_at','<=',$endDate)->where('error_message','ILIKE',"%${value}%")->whereNull('deleted_at')->count();
-
-                $data = [
-                    'Error message' => $value,
-                    'error_count' => $error_count,
-                    'solved_error_count' => $solved_error_count
-                ];
-               array_push($final, $data);
-            }
-
-            dd($final);
-
-        }
+            $ch = curl_init();
+            curl_setopt($ch,CURLOPT_URL, "http://smsportal.imartgroup.co.tz/app/smsapi/index.php");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, "key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            echo $response;
+      }
 
 
 
-  
+      public function test2()
+      {
+        $api_key = '262A04B6B5635A';
+        $contacts = '655007457,753683801';
+        $from = 'Shule';
+        $sms_text = urlencode('Hello People, have a great day');
+
+        $api_url = "http://smsportal.imartgroup.co.tz/app/smsapi/index.php?key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text;
+
+        //Submit to server
+
+        $response = file_get_contents($api_url);
+        echo $response;
+      }
+
+    
+      
+
+     
    
 }
 

@@ -14,7 +14,7 @@ class AccountYear extends Model {
 
 
     public function invoices() {
-        return $this->hasMany(\App\Model\Invoice::class);
+        return $this->hasMany(\App\Models\Invoice::class);
     }
 
 }

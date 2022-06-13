@@ -313,7 +313,6 @@ class Account extends Controller {
              }
         
             $this->data['invoice_name'] = $invoice->invoice_type == 1 ? 'Invoice' : 'Proforma Invoice';
-
             $client = \App\Models\Client::where('id',$invoice->client_id)->first();
 
             $start_usage_date = !empty($client->start_usage_date) ? date('Y-m-d',strtotime($client->start_usage_date)) : date('Y-m-d', strtotime('Jan 01'));
@@ -559,27 +558,11 @@ class Account extends Controller {
         //generate a random link and include it in the email and 
         //in the sms
         if (preg_match('/invoice/i', $message)) {
-          //  $this->createSelcomControlNumber(request('invoice_id'));
             $invoice = Invoice::find(request('invoice_id'));
         }
-        // $replacements = array(
-        //     $invoice->client->name, money($invoice->invoiceFees()->sum('amount') - $invoice->payments()->sum('amount')), $invoice->token
-        // );
-        // $sms = preg_replace(array(
-        //     '/#name/i', '/#amount/i', '/#invoice/i'
-        //         ), $replacements, $message);
-
-        // if (preg_match('/#/', $sms)) {
-        //     //try to replace that character
-        //     $sms = preg_replace('/\#[a-zA-Z]+/i', '', $sms);
-        // }  
-
-      //  $button = '<p align="center"><a style="padding:8px 16px;color:#ffffff;white-space:nowrap;font-weight:500;display:inline-block;text-decoration:none;border-color:#0073b1;background-color:green;border-radius:2px;border-width:1px;border-style:solid;margin-bottom:4px" href="' . url('epayment/i/' . $invoice->id) . '" target="_blank">Click to View Your Invoice</a></p>';
-
+       
         $this->send_whatsapp_sms($phone_number, $newmessage,$company_file_id);
-       // $this->send_sms(validate_phone_number(request('phone_number'))[1], $sms . '. Open ' . url('epayment/i/' . $invoice->id) . ' to view Invoice');
-       // $this->send_email(request('email'), 'ShuleSoft Invoice of Service', nl2br($sms) . '<br/><br/>' . $button);
-        return redirect()->back()->with('success', 'Sent successfully');
+         return redirect()->back()->with('success', 'Sent successfully');
     }
 
     public function editShuleSoftInvoice() {

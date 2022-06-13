@@ -12,6 +12,5 @@ class SchoolKeys extends Model {
     protected $table = 'school_keys';
     protected $fillable = ['id', 'schema_name', 'api_key', 'last_active', 'created_at', 'updated_at'];
 
-   
 
 }

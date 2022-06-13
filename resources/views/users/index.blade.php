@@ -27,7 +27,7 @@
                         <div  class="card">
                               <div class="card-block">
                                   <a class="btn btn-primary btn-round btn-sm float-left text-light"  href="<?= url('users/create') ?>">Create New User</a>                   
-                                  <a class="btn btn-primary btn-round btn-sm float-right text-light" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                   
+                                  {{-- <a class="btn btn-primary btn-round btn-sm float-right text-light" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                    --}}
                               </div>
                                   
                                 <div  class="card">
@@ -46,10 +46,10 @@
                                                 </thead>
                                                 
                                                 <tbody>
-                                                    <?php $i = 1; ?>
+                                                   
                                                     @foreach ($users as $key => $user)
                                                     <tr>
-                                                        <td><?= $i ?></td>
+                                                        <td><?= $key+1 ?></td>
                                                         <td>
                                                            <?php
                                                             $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '$user->id'"))->first(); 
@@ -71,8 +71,8 @@
                                                         <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit employee">Edit  </a>
                                                       </td>
                                                     </tr>
-                                                    <?php $i++; ?>
                                                     @endforeach
+
                                                 </tbody>
                                             </table>
                                         </div>

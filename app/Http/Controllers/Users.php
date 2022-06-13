@@ -48,16 +48,45 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-
         $this->validate($request, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
             'phone' => 'required|max:255|unique:users',
-            'email' => 'required|max:255|unique:users'
+            'email' => 'required|max:255|unique:users',
+            'salary' => 'required',
         ]);
-        $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email')), 'created_by' => Auth::user()->id]));
-        $user->save();
+        $user = array_merge(request()->except('_token','location'), ['password' => bcrypt(request('email')), 
+                           'salary' => remove_comma(request('salary')), 'created_by' => \Auth::user()->id]);
+         $user_id = DB::table('admin.users')->insertGetId($user);
+
+         $user_data = DB::table('admin.users')->where('id',(int)$user_id)->first();
+
+         DB::table('accounts.user')->insert([
+                    'name' => request('firstname').' '.request('lastname'),
+                    'dob' => date("Y-m-d", strtotime(request('date_of_birth'))),
+                    'sex' => request('sex'),
+                    'email' => request('email'),
+                    'phone' => validate_phone_number(str_replace('-', '', request("phone"))),
+                    'address' => request('town'),
+                    'jod' => date("Y-m-d", strtotime(request('joining_date'))),
+                    'username' => str_replace(" ", '', request("phone")),
+                    'password' => bcrypt(request('email')),
+                    'usertype' => 'student',
+                    'role_id' => 10, // student role
+                    'salary' => remove_comma(request('salary')),
+                    'default_password' => bcrypt(request('email')),
+                    'status' => 1,
+                    'photo' => 'defualt.png',
+                    'bank_account_number' => request('bank_account'),
+                    'bank_name' => request('bank_name'),
+                    'sid' => $user_data->sid,
+                    'religion_id' => 1,
+                    'town' => request('town'),
+                    'country_id' => 1
+                ]);
+
         $this->sendEmailAndSms($request);
+
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
     }
 
@@ -73,10 +102,12 @@ class Users extends Controller {
         $pass = 'shulesoft_' . rand(32323, 443434344) . '';
         $user = User::find($id);
         $user->update(['password' => bcrypt($pass)]);
+
         $content = 'Hello ' . $user->name . ' Your password has been updated by administrator. Kindly login  with username ' . $user->email . ' and password ' . $pass;
         $this->sendEmailAndSms($user, $content);
         return redirect()->back()->with('success', 'Password sent successfully');
     } 
+
 
     public function sendEmailAndSms($requests, $content = null) {
         $request = (object) $requests;
@@ -89,15 +120,15 @@ class Users extends Controller {
             'priority' => 1
         ]);
 
-       $this->send_whatsapp_sms($request->phone, $message,$request->name); 
+       $this->send_whatsapp_sms($request->phone, $message); 
 
-        \DB::table('public.email')->insert([
-            'body' => $message,
-            'subject' => 'ShuleSoft Administration Credentials',
-            'user_id' => 1,
-            'email' => $request->email,
-            'table' => 'setting'
-        ]);
+        // \DB::table('public.email')->insert([
+        //     'body' => $message,
+        //     'subject' => 'ShuleSoft Administration Credentials',
+        //     'user_id' => 1,
+        //     'email' => $request->email,
+        //     'table' => 'setting'
+        // ]);
     }
     /**
      * Display the specified resource.
@@ -180,7 +211,9 @@ class Users extends Controller {
   
 
     public function shulesoftUsers(){
-        return \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+        $array = array(7,15);
+         return  DB::table('admin.users')->where('status', 1)->whereNotIn('role_id',$array)->get();
+       // return  \App\Models\User::where(['status'=>1])->get();
     }
 
     public function absent() {
@@ -207,7 +240,6 @@ class Users extends Controller {
                    $end_date = date('Y-m-d', strtotime(request('end_date')));
                  break;
                } 
-             //  dd($end_date);
           
             $file_id = $file ? $this->saveFile($file,TRUE) : 1;
             \App\Models\Absent::create(['date' => request('date'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
@@ -320,36 +352,35 @@ class Users extends Controller {
                 'lastname' => 'required|max:255',
                 'phone' => 'required|max:255',
             ]);
-
-            // $filename = '';
-            // if (!empty(request('medical_report'))) {
-            //     $file = request()->file('medical_report');
-            //     $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/images/';
-            //     $file->move($filePath, $filename);
-            // }
-
-            // $filename1 = '';
-            // if (!empty(request('academic_certificates'))) {
-            //     $file = request()->file('academic_certificates');
-            //     $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/images/';
-            //     $file->move($filePath, $filename1);
-            // }
-
-            // $filename2 = '';
-            // if (!empty(request('employment_contract'))) {
-            //     $file = request()->file('employment_contract');
-            //     $filename2 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/images/';
-            //     $file->move($filePath, $filename2);
-            // }
            
              $data = request()->except('salary');
              $usedata = array_merge(['salary' => remove_comma(request('salary'))], $data);
              $user = User::find($id)->update($usedata);
-         //  $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates','employment_contract'));
-         //  User::find($id)->update(['medical_report' => $filename, 'academic_certificates' => $filename1,'employment_contract' => $filename2]);
+
+             //update account package as well  
+             DB::table("accounts.user")->where('sid', (int)$this->data['user']->sid)->update([
+                    'name' => request('firstname').' '.request('lastname'),
+                    'dob' => date("Y-m-d", strtotime(request('date_of_birth'))),
+                    'sex' => request('sex'),
+                    'email' => request('email'),
+                    'phone' => validate_phone_number(str_replace('-', '', request("phone"))),
+                    'address' => request('town'),
+                    'jod' => date("Y-m-d", strtotime(request('joining_date'))),
+                    'username' => str_replace(" ", '', request("phone")),
+                    'password' => bcrypt(request('email')),
+                    'usertype' => 'student',
+                    'role_id' => 10, // student role
+                    'salary' => remove_comma(request('salary')),
+                    'default_password' => bcrypt(request('email')),
+                    'status' => 1,
+                    'photo' => 'defualt.png',
+                    'bank_account_number' => request('bank_account'),
+                    'bank_name' => request('bank_name'),
+                    'religion_id' => 1,
+                    'town' => request('town'),
+                    'country_id' => 1,
+                 ]);
+
             return redirect('/users/show/'.$id)->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
         }
         $this->data['id'] = $id;
@@ -367,8 +398,11 @@ class Users extends Controller {
     public function destroy() {
          $user_id = request('user_id');
          $reason_id = request('reason_id');
+         $user_data = DB::table("admin.users")->where('id', (int)$user_id)->first();
         
          DB::table("admin.users")->where('id', $user_id)->update(['status' => 0,'deleted_at'=>'now()']);
+
+         DB::table("accounts.user")->where('sid', (int)$user_data->sid)->update(['status' => 0,'expire_at'=>'now()']);
          $email = \App\Models\User::where('id',$user_id)->first()->email;
          DB::table("admin.user_turnover")->insert(['user_id' => $user_id,'reason_id' => $reason_id]);
 
@@ -378,7 +412,6 @@ class Users extends Controller {
            DB::table("public.user")->where('email', $email)->delete();
         }
         return redirect('users/index')->with('success', 'Removed successfully');
-
     }
 
     public function management() {
@@ -888,7 +921,6 @@ class Users extends Controller {
 
 
       public function updateAttendances(){
-          dd(request()->all());
       }
 
 }
