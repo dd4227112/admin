@@ -34,6 +34,11 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
+            //sync invoices 
+            $this->syncRevenueInvoice();
+        })->everyMinute();
+
+        $schedule->call(function () {
             //sync new messages 
             $this->whatsappMessage();
         })->everyMinute();
@@ -234,6 +239,13 @@ class Kernel extends ConsoleKernel {
         }
     }
 
+    public function syncRevenueInvoice() {
+        $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on(a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 and a.schema_name not in ('public') ");
+        foreach ($invoices as $invoice) {
+            $this->syncRevenuePerSchool($invoice->schema_name);
+        }
+    }
+
     /**
      * Temporarily only allows digital invoice but must support both
      */
@@ -258,6 +270,18 @@ class Kernel extends ConsoleKernel {
                 echo 'push Normal  invoices for ' . $invoice->schema_name . '' . chr(10) . chr(10);
                 $this->pushInvoice($invoice);
             }
+        }
+    }
+
+        /**
+     * Temporarily only allows digital invoice but must support both
+     */
+    public function syncRevenuePerSchool($schema = '') {
+
+        $invoices = DB::select("SELECT b.id, b.user_id, b.reference, b.status, (select invoice_prefix from  " . $schema . ".bank_accounts_integrations bi join  " . $schema . ".bank_accounts ba on bi.bank_account_id=ba.id where ba.refer_bank_id=22 limit 1) as prefix , b.date, b.created_at, b.updated_at, b.amount, b.payer_name, '" . $schema . "' as schema_name from  " . $schema . ".revenues b where status != 1 AND payment_type_id=6 order by random() limit 120");
+            foreach ($invoices as $invoice) {
+                echo 'push Normal  revenues for ' . $invoice->schema_name . '' . chr(10) . chr(10);
+                $this->pushRevInvoice($invoice);
         }
     }
 
@@ -1281,17 +1305,55 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
     $fields = json_decode($data);
     $curl = $background->curlServer($fields, $url, 'row'); 
     $status = json_decode($curl); 
-    // if(isset($status->status) && $status->status == 0){ 
-    //     $reference = isset($status->reference) ? $status->reference : ''; 
-    //     $message = isset($status->description) ? $status->description : ''; 
-    //     $sms = 'Hello Mr. Endobile this Invoice '. $reference . ' of '.$student.' from *'. strtoupper($schema) .'* with paid amount of '. $amount .' failed to be paid. With Error message: '.chr(10). chr(10).$message.' happened on '.$date.' Take a look';
-    //     $whatsapp_numbers = ['255744158016', '255754015554']; 
-    //     foreach ($whatsapp_numbers as $number) { 
-    //         $controller->sendMessage($number . '@c.us', $sms); 
-    //     } 
-    // } 
+    if(isset($status->status) && $status->status == 0){ 
+        $reference = isset($status->reference) ? $status->reference : ''; 
+        $message = isset($status->description) ? $status->description : ''; 
+        $sms = 'Hello Mr. Endobile this Invoice '. $reference . ' of '.$student.' from *'. strtoupper($schema) .'* with paid amount of '. $amount .' failed to be paid. With Error message: '.chr(10). chr(10).$message.' happened on '.$date.' Take a look';
+        $whatsapp_numbers = ['255744158016', '255754015554']; 
+        foreach ($whatsapp_numbers as $number) { 
+            $controller->sendMessage($number . '@c.us', $sms); 
+        } 
+    } 
     return $curl; 
     }
     
+    
+    public function pushRevInvoice($invoice) {
+        $token = $this->getToken($invoice);
+        if (strlen($token) > 4) {
+            $fields = array(
+                "reference" => trim($invoice->reference),
+                "student_name" => isset($invoice->payer_name) ? $invoice->payer_name : '',
+                "student_id" => $invoice->user_id,
+                "amount" => $invoice->amount,
+                "allow_partial" => "TRUE",
+                "type" => ucfirst($invoice->schema_name) . ' payment for Student other Transaction',
+                "code" => "10",
+                "callback_url" => "http://75.119.140.177:8081/api/init",
+                "token" => $token
+            );
+            echo 'Status no ' . $invoice->status . ' runs for schema ' . $invoice->schema_name . chr(10) . chr(10);
+            switch ($invoice->status) {
+                case 2:
+
+                    $this->updateInvoiceStatus($fields, $invoice, $token);
+                    break;
+                case 3:
+                    $this->deleteInvoice($invoice, $token);
+
+                    break;
+                case 4:
+                    $this->validateInvoice($invoice, $token);
+
+                    break;
+                default:
+                    $this->pushStudentInvoice($fields, $invoice, $token);
+                    break;
+            }
+        } else {
+            echo 'No token generated for ' . $invoice->schema_name . chr(10) . chr(10);
+        }
+    }
+
 
 }
