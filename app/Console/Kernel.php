@@ -375,10 +375,12 @@ class Kernel extends ConsoleKernel {
             }
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
-            if (isset($result) && !empty($result)) {
+            if (isset($result) && !empty($result) && isset($invoice->student_id)) {
                 //update invoice no
                 DB::table($invoice->schema_name . '.invoice_prefix')
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
+            }else{
+                DB::table($invoice->schema_name . '.revenues')->where('reference', $invoice->reference)->update(['status' => 0, 'updated_at' => 'now()']);
             }
 
             DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
@@ -440,7 +442,7 @@ class Kernel extends ConsoleKernel {
         print_r($result);
         echo chr(10);
 
-        if (isset($result) && !empty($result)) {
+        if (isset($result) && !empty($result) && isset($invoice->student_id)) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
                     ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
@@ -455,6 +457,8 @@ class Kernel extends ConsoleKernel {
                 }
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
+        }else{
+            DB::table($invoice->schema_name . '.revenues')->where('reference', $invoice->reference)->update(['status' => 1, 'updated_at' => 'now()']);
         }
         DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
@@ -474,7 +478,7 @@ class Kernel extends ConsoleKernel {
         $curl = $this->curlServer($fields, $url);
         $result = json_decode($curl);
 
-        if (isset($result) && !empty($result)) {
+        if (isset($result) && !empty($result) && isset($invoice->student_id)) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
                     ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
