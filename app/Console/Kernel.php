@@ -442,7 +442,7 @@ class Kernel extends ConsoleKernel {
         print_r($result);
         echo chr(10);
 
-        if (isset($result) && !empty($result) && isset($invoice->student_id)) {
+        if (isset($result) && !empty($result) && isset($invoice->student_id) && (int)$invoice->student_id > 0) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
                     ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
