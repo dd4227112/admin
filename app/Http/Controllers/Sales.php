@@ -1343,9 +1343,9 @@ class Sales extends Controller {
       {
         $sql2_ = 'select count(*) as schools, extract(month from created_at) as month from admin.website_join_shulesoft a where extract(year from a.created_at)= extract(year from current_date)  group by month order by month';
         $this->data['requests'] = \DB::select($sql2_);
-        $this->data['allrequests'] = DB::table('admin.website_join_shulesoft')->orderBy('created_at','DESC')->get();
-        
-     
+        $this->data['allrequests'] = \collect(\DB::select('select distinct school_name,school_registration_number,contact_name,contact_phone,contact_email,created_at::date from admin.website_join_shulesoft order by created_at desc'));
+
+    
         return view('sales.school_requests',$this->data);
       }
 
