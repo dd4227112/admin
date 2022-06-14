@@ -28,15 +28,15 @@ class Kernel extends ConsoleKernel {
 
     protected function schedule(Schedule $schedule) {
  
-        $schedule->call(function () {
-            //sync invoices 
-            $this->syncInvoice();
-        })->everyMinute();
+            $schedule->call(function () {
+                //sync invoices 
+                $this->syncInvoice();
+            })->everyMinute();
 
-        $schedule->call(function () {
-            //sync invoices 
-            $this->syncRevenueInvoice();
-        })->everyMinute();
+            $schedule->call(function () {
+                //sync invoices 
+                $this->syncRevenueInvoice();
+            })->everyMinute();
 
         $schedule->call(function () {
             //sync new messages 
@@ -1344,44 +1344,43 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
             $data = curl_exec($ch);
         }
 
-    
-    
-    public function pushRevInvoice($invoice) {
-        $token = $this->getToken($invoice);
-        if (strlen($token) > 4) { 
-            $fields = array(
-                "reference" => trim($invoice->reference),
-                "student_name" => isset($invoice->payer_name) ? $invoice->payer_name : '',
-                "student_id" => $invoice->user_id,
-                "amount" => $invoice->amount,
-                "allow_partial" => "TRUE",
-                "type" => ucfirst($invoice->schema_name) . ' payment for Student other Transaction',
-                "code" => "10",
-                "callback_url" => "http://75.119.140.177:8081/api/init",
-                "token" => $token
-            );
-            echo 'Status no ' . $invoice->status . ' runs for schema ' . $invoice->schema_name . chr(10) . chr(10);
-            switch ($invoice->status) {
-                case 2:
+        
+        public function pushRevInvoice($invoice) {
+            $token = $this->getToken($invoice);
+            if (strlen($token) > 4) { 
+                $fields = array(
+                    "reference" => trim($invoice->reference),
+                    "student_name" => isset($invoice->payer_name) ? $invoice->payer_name : '',
+                    "student_id" => $invoice->user_id,
+                    "amount" => $invoice->amount,
+                    "allow_partial" => "TRUE",
+                    "type" => ucfirst($invoice->schema_name) . ' payment for Student other Transaction',
+                    "code" => "10",
+                    "callback_url" => "http://75.119.140.177:8081/api/init",
+                    "token" => $token
+                );
+                echo 'Status no ' . $invoice->status . ' runs for schema ' . $invoice->schema_name . chr(10) . chr(10);
+                switch ($invoice->status) {
+                    case 2:
 
-                    $this->updateInvoiceStatus($fields, $invoice, $token);
-                    break;
-                case 3:
-                    $this->deleteInvoice($invoice, $token);
+                        $this->updateInvoiceStatus($fields, $invoice, $token);
+                        break;
+                    case 3:
+                        $this->deleteInvoice($invoice, $token);
 
-                    break;
-                case 4:
-                    $this->validateInvoice($invoice, $token);
+                        break;
+                    case 4:
+                        $this->validateInvoice($invoice, $token);
 
-                    break;
-                default:
-                    $this->pushStudentInvoice($fields, $invoice, $token);
-                    break;
+                        break;
+                    default:
+                        $this->pushStudentInvoice($fields, $invoice, $token);
+                        break;
+                }
+            } else {
+                echo 'No token generated for ' . $invoice->schema_name . chr(10) . chr(10);
             }
-        } else {
-            echo 'No token generated for ' . $invoice->schema_name . chr(10) . chr(10);
         }
-    }
 
 
      public  function test(){
