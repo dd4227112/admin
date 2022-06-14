@@ -292,8 +292,8 @@ class Kernel extends ConsoleKernel {
 
         $invoices = DB::select("SELECT b.id, b.user_id, b.reference, b.status, (select invoice_prefix from  " . $schema . ".bank_accounts_integrations bi join  " . $schema . ".bank_accounts ba on bi.bank_account_id=ba.id where ba.refer_bank_id=22 limit 1) as prefix , b.date, b.created_at, b.updated_at, b.amount, b.payer_name, '" . $schema . "' as schema_name from  " . $schema . ".revenues b where status != 1 AND payment_type_id=6 order by random() limit 120");
             foreach ($invoices as $invoice) {
-                echo 'push Normal  revenues for ' . $invoice->schema_name . '' . chr(10) . chr(10);
-                $this->pushRevInvoice($invoice);
+            echo 'push Normal  revenues for ' . $invoice->schema_name . '' . chr(10) . chr(10);
+            $this->pushRevInvoice($invoice);
         }
     }
 
@@ -1345,7 +1345,7 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
         }
 
         
-        public function pushRevInvoice($invoice) {
+    public function pushRevInvoice($invoice) {
             $token = $this->getToken($invoice);
             if (strlen($token) > 4) { 
                 $fields = array(
