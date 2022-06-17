@@ -79,7 +79,7 @@
                                                                 <td><?= $school->contact_email ?></td>
                                                             </tr>
                                                             <tr>
-                                                                <th scope="row">Email</th>
+                                                                <th scope="row">Date</th>
                                                                 <td><?= date('d-m-Y',strtotime($school->created_at)) ?></td>
                                                             </tr>
                                                         </tbody>
@@ -137,7 +137,7 @@
                                                             <tr>
                                                                 <th scope="row">School sales Profile</th>
                                                                 <td>
-                                                              <?php  echo '<a target="_blank" href="'.url('sales/profile/'. $school->id).'" class="btn btn-primary btn-sm btn-round" id="onboard_school">view</a>'; ?>
+                                                              <?php  echo '<a target="_blank" href="'.url('sales/profile/'. $school->school_id).'" class="btn btn-primary btn-sm btn-round" id="onboard_school">view</a>'; ?>
                                                                     
                                                             </tr>
                                                            
