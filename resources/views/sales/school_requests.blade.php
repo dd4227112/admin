@@ -31,11 +31,10 @@
                                         <tr>
                                             <th>#</th>
                                             <th>School Name</th>
-                                            <th>School Registration No</th>
                                             <th>Contact name</th>
                                             <th>Phone number</th>
                                             <th>Email</th>
-                                            <th>Date</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -45,11 +44,15 @@
                                             <tr>
                                                 <td> <?= $i ?> </td>
                                                 <td> <?= !empty($request->school_name) ? $request->school_name : '' ?></td>
-                                                <td> <?= $request->school_registration_number ?? '' ?></td>
                                                 <td> <?= $request->contact_name ?></td> 
                                                 <td> <?= $request->contact_phone ?></td> 
                                                 <td> <?= $request->contact_email ?></td> 
-                                                <td> <?= date('d-m-Y', strtotime($request->created_at)) ?></td> 
+                                                <td> 
+                                                    <?php $view_url="sales/viewRequest/$request->id"; ?>
+                                                 <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Request"> view </a>
+                                                    
+
+                                                </td> 
                                               
                                              </tr>
                                             <?php $i++; } ?>
@@ -60,7 +63,7 @@
                      </div>
 
 
-                    <!-- <div class="row">
+                    <div class="row">
                       <div class="col-xl-12">
                         <div class="card">
                             <div class="card-body">
@@ -70,7 +73,7 @@
                             </div>
                         </div>
                        </div>
-                    </div> -->
+                    </div>
 
 
                         </div>

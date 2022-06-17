@@ -325,7 +325,7 @@
                                                                 </div>
 
                                                                 <?php
-                                                          $comments = $task->taskComments()->get();
+                                                              $comments = $task->taskComments()->get();
                                                             if (sizeof($comments) > 0) { ?>
                                                                 <div class="p-b-30"> <span class="f-14"><a
                                                                             href="#">Comments</a></span></div>
@@ -348,7 +348,7 @@
                                                                         class="media-body b-b-muted social-client-description">
                                                                         <div class="chat-header">
                                                                             <?= $comment->user->name ?><span
-                                                                                class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span>
+                                                                                class="text-muted"><?= date('d/M/Y', strtotime($comment->created_at)) ?></span>
                                                                         </div>
                                                                         <p class="text-muted"><?= $comment->content ?>
                                                                         </p>
@@ -726,11 +726,7 @@
                         </div>
                     </div>
 
-                    {{-- <?php
-              }
-            }
-          }
-          ?> --}}
+        
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>

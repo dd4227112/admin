@@ -1343,8 +1343,18 @@ class Sales extends Controller {
       {
         $sql2_ = 'select count(*) as schools, extract(month from created_at) as month from admin.website_join_shulesoft a where extract(year from a.created_at)= extract(year from current_date)  group by month order by month';
         $this->data['requests'] = \DB::select($sql2_);
-        $this->data['allrequests'] = \collect(\DB::select('select distinct school_name,school_registration_number,contact_name,contact_phone,contact_email,created_at::date from admin.website_join_shulesoft order by created_at desc'));
+        $this->data['allrequests'] = \collect(\DB::select('select id, school_name,school_registration_number,contact_name,contact_phone,contact_email from admin.website_join_shulesoft order by id desc'));
         return view('sales.school_requests',$this->data);
       }
+
+
+      public  function viewRequest()
+      {
+        $request_id = request()->segment(3);
+        $this->data['school'] = \App\Models\WebsiteJoinShulesoft::where('id',$request_id)->first();
+        return view('sales.view_requests',$this->data);
+      }
+
+    
 
 }
