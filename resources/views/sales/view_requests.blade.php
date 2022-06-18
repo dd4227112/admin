@@ -109,7 +109,7 @@
                                                                 <td>
                                                                  <?php 
                                                                     $task = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']))->latest('created_at')->first();
-                                                                     echo   $task ? warp($task->activity,60) : '';
+                                                                     echo   $task ? warp($task->activity,60) : 'No activity';
                                                                   ?>
                                                               </td>
                                                             </tr>
@@ -119,7 +119,7 @@
                                                                 <?php 
                                                                    $comments = $task ?  $task->taskComments()->latest('created_at')->first() : '';
                                                                 ?>
-                                                               <td><?= isset($comments->content) ? warp($comments->content,10) : '' ?></td>
+                                                               <td><?= isset($comments->content) ? warp($comments->content,10) : 'No Comment' ?></td>
                                                             </tr>
                                                            
                                                         </tbody>
