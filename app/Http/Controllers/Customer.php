@@ -977,7 +977,7 @@ class Customer extends Controller {
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
-
+ 
                 $sms = 'Hello ' . $user->name . '.'
                         . chr(10) . 'There is ' . $new_req . '.'
                         . chr(10) . strip_tags($req->note)
@@ -990,7 +990,10 @@ class Customer extends Controller {
                     "current_state" => request('current_state'),
                     "name"  => 'Hello '. $user->name .' - '. $new_req,
                     "estimate" => 1,
-                    'story_priority' => request('story_priority'),
+                    "story_type" => request("feature"),
+                    "current_state" => request("accepted"),
+                    "requested_by_id" => request('requested_by_id'),
+                    "story_priority" => request('story_priority'),
                     "token"  => "c3c067a65948d99055ab1ac60891c174",
                     "description" => Auth::User()->name .' - '. strip_tags(request('note'))
                 ];

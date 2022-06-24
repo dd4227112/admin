@@ -52,6 +52,14 @@ class General extends Controller {
         $url = 'https://www.pivotaltracker.com/services/v5/projects?token='.$this->TokenAPI.'';
         $this->data['projectdata'] = $this->get($url);
         $str = "https://www.pivotaltracker.com/services/v5/projects/$this->projectID/stories?token=$this->TokenAPI";
+        
+        if(request('status') != ''){
+              $str = "https://www.pivotaltracker.com/services/v5/projects/$this->projectID/stories?with_state=".request('status')."&token=$this->TokenAPI";
+          }elseif(request('priority') != ''){
+              $str = "https://www.pivotaltracker.com/services/v5/projects/$this->projectID/stories?with_story_priority=".request('priority')."&token=$this->TokenAPI";
+          }elseif(request('type') != ''){
+              $str = "https://www.pivotaltracker.com/services/v5/projects/$this->projectID/stories?with_story_type=".request('type')."&token=$this->TokenAPI";
+          }
         $this->data['stories'] = $this->get($str);
        return view('general.minutes', $this->data);
     }
@@ -63,28 +71,22 @@ class General extends Controller {
      */
     public function stories() {
         // export TOKEN='your Pivotal Tracker API token'
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"name":"Exhaust ports are ray shielded 👹"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories"
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"after_id":555,"before_id":567,"name":"Replace the lining in Darth Vader's helmet"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories"
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"current_state":"accepted","estimate":1,"name":"Exhaust ports are ray shielded 👹"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories"
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"description":null,"name":"Exhaust ports are ray shielded 👹"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories"
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"comments":[{"text":"Just ray shielding? What about proton weapons?"}],"name":"Exhaust ports are ray shielded 👹"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories?fields=%3Adefault%2Ccomments"
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"comments":[{"text":"Make sure the stamp on the latest shipment of seals matches the new Imperial logo (attached).","file_attachments":[{"type":"file_attachment","id":20,"filename":"empire.png","created_at":1644321600000,"uploader_id":100,"thumbnailable":true,"height":804,"width":1000,"size":82382,"download_url":"/attachments/0000/0020/empire_big.png","thumbnail_url":"/attachments/0000/0020/empire_thumb.png"}]}],"name":"replace seals on trash compactors","story_type":"chore"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories"
-
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"label_ids":[2008],"name":"Exhaust ports are ray shielded 👹"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories"
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"labels":["plans","Inspected by TK-421"],"name":"Exhaust ports are ray shielded 👹"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories"
-
-        // curl -X POST -H "X-TrackerToken: $TOKEN" -H "Content-Type: application/json" -d '{"labels":["Inspected by TK-421",{"id":2009,"name":"plans"},{"name":"mnt"}],"name":"Exhaust ports are ray shielded 👹"}' "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories"
-    /*Bulk*/
-  //  curl -X GET -H "X-TrackerToken: $TOKEN" "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories/bulk?ids=552%2C553%2C2%2C0"
-    
+/*
+        with_story_type
+               Valid enumeration values: feature, bug, chore, release
+        
+       with_story_priority
+            —  A storys priority which all returned stories must match.
+       Valid enumeration values: p0, p1, p2, p3, none
+        
+       with_state
+        —  A story's current_state which all returned stories must match.
+       Valid enumeration values: accepted, delivered, finished, started, rejected, planned, unstarted, unscheduled
+       */
+     
+    dd($this->get($str));
+    $this->data['stories'] = $this->get($str);
+    return view('general.minutes', $this->data);    
 }
     
     public function singlestory() {
@@ -203,12 +205,18 @@ class General extends Controller {
     }
 
    
-    public function memberships($id) {
+    public function memberships() {
       //  export TOKEN='your Pivotal Tracker API token'
+        // Get list of all project Dev Members
 
-      //  export PROJECT_ID=99
-        
-      //  curl -X GET -H "X-TrackerToken: $TOKEN" "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/memberships"
+        $members = 'https://www.pivotaltracker.com/services/v5/projects/'.$this->projectID.'/memberships?token='.$this->TokenAPI;
+        $users = json_decode($this->get($members));
+
+       foreach ($users as $key => $value) {
+        dd($users);
+        dd($value->person->name);
+    }
+
     }
 
     public function projectMember(){
@@ -229,8 +237,13 @@ class General extends Controller {
     public function notifications($id) {
         // export TOKEN='your Pivotal Tracker API token'
 
-        // curl -X GET -H "X-TrackerToken: $TOKEN" "https://www.pivotaltracker.com/services/v5/my/notifications?envelope=true"
+        $not = 'https://www.pivotaltracker.com/services/v5/my/notifications?envelope=true&token='.$this->TokenAPI;
+        $notifications = json_decode($this->get($not));
 
+       foreach ($notifications as $key => $value) {
+            dd($value);
+            dd($value->person->name);
+        }
     }
 
    
@@ -335,6 +348,7 @@ class General extends Controller {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
 		    'Content-Type: application/json',                                                                                
+		    'X-TrackerToken: '.$this->TokenAPI,                                                                                
 		    'Content-Length: ' . strlen($data_string))                                                                       
 		);                                                                                                                   
 		 
@@ -377,10 +391,33 @@ class General extends Controller {
         <div class="modal-body">';
       
       echo isset($story->description) ? '<p>'. $story->description . '</p>' : '';
-
-      echo '<p> <strong>Current State - '.$story->current_state.'</strong></p>';
+   /*   echo '<div class="row"><div class="col-sm-6">
+      Current State
+      <select id="current_state" onchange="send_storyupdate('. $story->id.')" class="form-control">
+        <option value="'.$story->current_state.'">Current State - '.$story->current_state.'</option>
+        <option value="started">Started</option>
+        <option value="started">Unstarted</option>
+        <option value="finished">Finished</option>
+        <option value="delivered">Delivered</option>
+        <option value="rejected">Rejected</option>
+        <option value="accepted">Accepted</option>
+        <option value="unscheduled">Unscheduled</option>
+        <option value="planned">Planned</option>
+      </select>
+      </div>
+        <div class="col-sm-6">
+        Earned Point Rating
+        <select name="story_priority" id="estimate" onchange="send_storyupdate('. $story->id.')" class="form-control" >
+            <option value="'.$story->estimate.'">'.$story->estimate.' - Points</option>
+            <option value="0">0 - Point</option>
+            <option value="1">1 - Point</option>
+            <option value="2">2 - Points</option>
+            <option value="3">3 - Points</option>
+        </select>
+        </div>
+      </div>'; */
         if($tasks){
-            echo '<h5><b>List of Tasks</b></h5>';
+            echo '<h5><b>List of '.count($tasks).' Tasks</b></h5>';
             echo '<ol>';
             foreach ($tasks as $key => $value) {
              if($value->complete == true){
@@ -419,6 +456,18 @@ public function postComment(){
         $coment_url = 'https://www.pivotaltracker.com/services/v5/projects/'.$this->projectID.'/stories/'.$id.'/comments?token='.$this->TokenAPI;
        $data1 = $this->post($coment_url, $fields);
        
+}
+
+public function updateTask(){
+    $id = request('story_id');
+    $fields = [
+        "token"  => "c3c067a65948d99055ab1ac60891c174",
+        "current_state" => request('current_state'),
+        "estimate" => request('estimate')
+    ];
+    //Post story comments
+    $url = 'https://www.pivotaltracker.com/services/v5/projects/'.$this->projectID.'/stories/'.$id;
+   $data1 = $this->post($url, $fields);
 }
 
 }

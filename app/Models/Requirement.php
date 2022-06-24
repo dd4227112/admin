@@ -12,7 +12,7 @@ class Requirement extends Model {
 
     //use \App\Traits\BelongsToUser;
 
-    //put your code here
+    //put your code here 
     protected $table = 'requirements';
 
     protected $fillable = ['id', 'note','priority', 'user_id', 'contact', 'created_at', 'updated_at', 'to_user_id', 'school_id', 'status'];

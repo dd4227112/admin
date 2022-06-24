@@ -23,14 +23,14 @@
                 <nav class="navbar navbar-light bg-faded m-b-30 p-10">
                     <ul class="nav navbar-nav">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#!">Filter: <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="<?=url('general/create')?>/null?status=">Filter: <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#!" id="bydate" data-toggle="dropdown"
+                            <a class="nav-link dropdown-toggle" href="<?=url('general/create')?>" id="bydate" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-clock-time"></i> By
                                 Date</a>
                             <div class="dropdown-menu" aria-labelledby="bydate">
-                                <a class="dropdown-item" href="#!">Show all</a>
+                                <a class="dropdown-item" href="<?=url('general/create')?>/null?status=">Show all</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="date/{{ date('Y-m-d') }}">Today</a>
                                 <a class="dropdown-item" href="date/2">Yesterday</a>
@@ -41,35 +41,49 @@
                         </li>
                         <!-- end of by date dropdown -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#!" id="bystatus" data-toggle="dropdown"
+                            <a class="nav-link dropdown-toggle" href="#" id="bystatus" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false"><i
                                     class="icofont icofont-chart-histogram-alt"></i> By Status</a>
                             <div class="dropdown-menu" aria-labelledby="bystatus">
-                                <a class="dropdown-item" href="#!">Show all</a>
+                                <a class="dropdown-item" href="<?=url('general/create')?>">Show all</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#!" value="unstarted">Unstarted</a>
-                                      <a class="dropdown-item" href="#!" value="started">Started</a>
-                                      <a class="dropdown-item" href="#!" value="finished">Finished</a>
-                                      <a class="dropdown-item" href="#!" value="delivered">Delivered</a>
-                                      <a class="dropdown-item" href="#!" value="rejected">Rejected</a>
-                                      <a class="dropdown-item" href="#!" value="accepted">Accepted</a>
-                                      <a class="dropdown-item" href="#!" value="unscheduled">Unscheduled</a>
-                                      <a class="dropdown-item" href="#!" value="planned">Planned</a>
-                            </div>
+                                <a class="dropdown-item" href="<?=url('general/create')?>/null?status=unstarted" value="unstarted">Unstarted</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?status=started" value="started">Started</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?status=finished" value="finished">Finished</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?status=delivered" value="delivered">Delivered</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?status=rejected" value="rejected">Rejected</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?status=accepted" value="accepted">Accepted</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?status=unscheduled" value="unscheduled">Unscheduled</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?status=planned" value="planned">Planned</a>
+                            </div>  
                         </li>
                         <!-- end of by status dropdown -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#!" id="bypriority" data-toggle="dropdown"
+                            <a class="nav-link dropdown-toggle" href="#" id="bypriority" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-sub-listing"></i>
                                 By Priority</a>
                             <div class="dropdown-menu" aria-labelledby="bypriority">
-                                <a class="dropdown-item" href="#!">Show all</a>
+                                <a class="dropdown-item" href="#">Show all</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#!" value="null">None</a>
-                                <a class="dropdown-item" href="#!" value="P0">Critical</a>
-                                <a class="dropdown-item" href="#!" value="P1">High</a>
-                                <a class="dropdown-item" href="#!" value="P2">Medium</a>
-                                <a class="dropdown-item" href="#!" value="P3">Low</a>
+                                <a class="dropdown-item" href="<?=url('general/create')?>" value="null">None</a>
+                                <a class="dropdown-item" href="<?=url('general/create')?>/null?priority=p0" value="P0">Critical</a>
+                                <a class="dropdown-item" href="<?=url('general/create')?>/null?priority=p1" value="P1">High</a>
+                                <a class="dropdown-item" href="<?=url('general/create')?>/null?priority=p2" value="P2">Medium</a>
+                                <a class="dropdown-item" href="<?=url('general/create')?>/null?priority=p3" value="P3">Low</a>
+                            </div>
+                        </li>
+                        <!-- end of by date dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="bytype" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false"><i
+                                    class="icofont icofont-chart-histogram-alt"></i> Task Taypes</a>
+                            <div class="dropdown-menu" aria-labelledby="bytype">
+                                <a class="dropdown-item" href="<?=url('general/create')?>">Show all</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="<?=url('general/create')?>/null?type=feature" value="unstarted">New Feature</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?type=bug" value="started">Bug</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?type=chore" value="finished">Change Request</a>
+                                      <a class="dropdown-item" href="<?=url('general/create')?>/null?type=release" value="delivered">Release</a>
                             </div>
                         </li>
                     </ul>
@@ -86,6 +100,7 @@
         <?php
     
                 $all_stories = json_decode($stories);
+            if(count($all_stories)>0){
                 foreach ($all_stories as $key => $value) {
                 //  dd($value);
                 ?>
@@ -110,7 +125,7 @@
                 <div class="card-footer">
                     <div class="task-list-table">
 
-                        <a href="#!" class="btn btn-info btn-mini"><i class="icofont icofont-tags"></i><b>
+                        <a href="<?=url('general/create')?>/null?status=" class="btn btn-info btn-mini"><i class="icofont icofont-tags"></i><b>
                                 {{ $value->story_type  }}</b> </a>
                                 
                             <button class="btn btn-warning btn-mini" data-target=".bd-example-modal-sm" id="myBtn"
@@ -136,7 +151,7 @@
                 <!-- end of card-footer -->
             </div>
         </div>
-        <?php } ?>
+        <?php } } ?>
         @endif
     </div>
     <!-- Task board design block end -->
@@ -205,8 +220,25 @@
               $('#showcomment').hide();
             }
           });
+        }
+      }
+
+      send_storyupdate = function (id) {
+        var current_state = $('#current_state').val();
+        var estimate = $('#estimate').val();
+        if(storycomment !== ''){
+          $.ajax({
+            method: 'get',
+            url: '<?= url('General/updateTask/null') ?>',
+            data: {story_id: id, current_state: current_state, estimate: estimate},
+            dataType: 'html',
+            success: function (data) {
+              $('#sentcomment').show();
+            }
+          });
       }
       }
+
     });
 
 </script>
