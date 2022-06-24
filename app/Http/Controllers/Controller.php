@@ -345,26 +345,26 @@ class Controller extends BaseController {
 
 
     public function sendRequest($method, $data) {
-        // if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
-        //     $url = $this->APIurl . $method . '?token=' . $this->token;
-        //     if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
-        //         $url = $this->token . $method . '?token=' . $this->APIurl;
-        //     }
+        if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
+            $url = $this->APIurl . $method . '?token=' . $this->token;
+            if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+                $url = $this->token . $method . '?token=' . $this->APIurl;
+            }
 
-        //     if (is_array($data)) {
-        //         $data = json_encode($data);
-        //     }
-        //     $options = stream_context_create(['http' => [
-        //             'method' => 'POST',
-        //             'header' => 'Content-type: application/json',
-        //             'content' => $data]]);
-        //     $response = file_get_contents($url, false, $options);
-        //     // $response = $this->curlServer($body, $url);
-        //     $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
-        //    // echo $response;
-        // } else {
-        //     echo 'Wrong url supplied in whatsapp api';
-        // }
+            if (is_array($data)) {
+                $data = json_encode($data);
+            }
+            $options = stream_context_create(['http' => [
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/json',
+                    'content' => $data]]);
+            $response = file_get_contents($url, false, $options);
+            // $response = $this->curlServer($body, $url);
+            $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
+           // echo $response;
+        } else {
+            echo 'Wrong url supplied in whatsapp api';
+        }
         return true;
     }
 
@@ -473,12 +473,18 @@ class Controller extends BaseController {
         $api_url = "http://smsportal.imartgroup.co.tz/app/smsapi/index.php?key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text;
 
         //Submit to server
-
         $response = file_get_contents($api_url);
         echo $response;
       }
 
     
+      
+
+         public function checkf() {
+             $user_id = request('user_id');
+             $users = \DB::table('users')->select('*');
+         }
+
       
 
      
