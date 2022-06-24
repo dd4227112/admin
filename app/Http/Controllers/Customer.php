@@ -1329,6 +1329,7 @@ class Customer extends Controller {
     }
 
     public function resetPassword() {
+        return redirect()->back()->with('warning', 'Note: We No Longer allow you to change School password. Use demo system for reference');
         $schema = request()->segment(3);
         if ($schema != '' && $schema != 'accounts') {
             $pass = $schema . rand(5697, 33);
