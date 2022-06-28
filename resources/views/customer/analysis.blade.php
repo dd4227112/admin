@@ -223,18 +223,21 @@
                                        <input type="number" class="form-control" id="get_schools" name="school_id">
                                   </div>
                                   <div class="col-sm-12 col-xl-4">
-                                      <h4 class="sub-title">School Contact</h4>
-                                      <input type="text" required name="contact" style="text-transform:uppercase" class="form-control">
+                                      <h4 class="sub-title">Task Due Date</h4>
+                                      <input type="date" required name="due_date" style="text-transform:uppercase" class="form-control">
                                   </div>
                                   <div class="col-sm-12 col-xl-4">
-                                      <h4 class="sub-title">Allocated person</h4>
-                                        <select name="to_user_id" class="form-control select2" required>
+                                      <h4 class="sub-title">Task Type</h4>
+                                        <select name="story_type" class="form-control select2" required>
+                                              <option value="">Select Task Type</option>
+                                              <option value="bug">Bug</a>
+                                              <option value="feature">New Feature</a>
+                                              <option value="chore">Change Request</a>
+                                          <option value="Rrelease">Release</a>
                                           <?php
-                                          $staffs = DB::table('users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
-                                          foreach ($staffs as $staff) {
-                                            ?>
-                                            <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                          <?php } ?>
+                                          $staff = DB::table('users')->where('status', 1)->whereIn('id',array(812,770,38,23,817))->inRandomOrder()->first();
+                                         ?>
+                                            <input type="hidden"  value="<?= $staff->id ?>" name="to_user_id">
                                       </select>
                                   </div>
                                 
@@ -243,7 +246,7 @@
                               <div class="row">
                                 <div class="col-sm-12 col-md-4 m-b-30">
                                      <select name="story_priority" class="form-control" required>
-                                       <option value="">Requirement Priority</option>
+                                      <option value="">Requirement Priority</option>
                                       <option value="null">None</option>
                                       <option value="P0">Critical</option>
                                       <option value="P1">High</option>
@@ -556,7 +559,7 @@ get_schools = function () {
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '<?= url('customer/getschools/null') ?>',
+      url: '<?= url('customer/getCLientschools/null') ?>',
       dataType: 'json',
       type: "GET",
       quietMillis: 50,

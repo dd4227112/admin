@@ -715,6 +715,12 @@ class Customer extends Controller {
         die(json_encode(DB::select($sql)));
     }
 
+    public function getCLientschools() {
+        $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A JOIN admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE 
+        '%" . str_replace("'", null, strtolower(request('term'))) . "%' LIMIT 10";
+        die(json_encode(DB::select($sql)));
+    }
+
     public function choices() {
         $type = request('type');
         if ($type == 'year') {
@@ -963,6 +969,8 @@ class Customer extends Controller {
                 'school_id' => is_null(request('school_id')) ? '0' : request('school_id'),
              
                 'to_user_id' => request('to_user_id'),
+                'project_id' => 1,
+                'due_date' => request('due_date'),
                 'note' => request('note'),
             ];
 
@@ -977,7 +985,7 @@ class Customer extends Controller {
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
-
+ 
                 $sms = 'Hello ' . $user->name . '.'
                         . chr(10) . 'There is ' . $new_req . '.'
                         . chr(10) . strip_tags($req->note)
@@ -990,7 +998,10 @@ class Customer extends Controller {
                     "current_state" => request('current_state'),
                     "name"  => 'Hello '. $user->name .' - '. $new_req,
                     "estimate" => 1,
-                    'story_priority' => request('story_priority'),
+                    "story_type" => request("feature"),
+                    "current_state" => request("accepted"),
+                    "requested_by_id" => request('requested_by_id'),
+                    "story_priority" => request('story_priority'),
                     "token"  => "c3c067a65948d99055ab1ac60891c174",
                     "description" => Auth::User()->name .' - '. strip_tags(request('note'))
                 ];
@@ -1326,6 +1337,7 @@ class Customer extends Controller {
     }
 
     public function resetPassword() {
+        return redirect()->back()->with('warning', 'Note: We No Longer allow you to change School password. Use demo system for reference');
         $schema = request()->segment(3);
         if ($schema != '' && $schema != 'accounts') {
             $pass = $schema . rand(5697, 33);
