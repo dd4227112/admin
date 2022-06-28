@@ -223,8 +223,8 @@
                                        <input type="number" class="form-control" id="get_schools" name="school_id">
                                   </div>
                                   <div class="col-sm-12 col-xl-4">
-                                      <h4 class="sub-title">School Contact</h4>
-                                      <input type="text" required name="contact" style="text-transform:uppercase" class="form-control">
+                                      <h4 class="sub-title">Task Due Date</h4>
+                                      <input type="date" required name="due_date" style="text-transform:uppercase" class="form-control">
                                   </div>
                                   <div class="col-sm-12 col-xl-4">
                                       <h4 class="sub-title">Task Type</h4>
@@ -559,7 +559,7 @@ get_schools = function () {
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '<?= url('customer/getschools/null') ?>',
+      url: '<?= url('customer/getCLientschools/null') ?>',
       dataType: 'json',
       type: "GET",
       quietMillis: 50,

@@ -715,6 +715,12 @@ class Customer extends Controller {
         die(json_encode(DB::select($sql)));
     }
 
+    public function getCLientschools() {
+        $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A JOIN admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE 
+        '%" . str_replace("'", null, strtolower(request('term'))) . "%' LIMIT 10";
+        die(json_encode(DB::select($sql)));
+    }
+
     public function choices() {
         $type = request('type');
         if ($type == 'year') {
@@ -963,6 +969,8 @@ class Customer extends Controller {
                 'school_id' => is_null(request('school_id')) ? '0' : request('school_id'),
                 'contact' => request('contact'),
                 'to_user_id' => request('to_user_id'),
+                'project_id' => 1,
+                'due_date' => request('due_date'),
                 'note' => request('note'),
             ];
 
