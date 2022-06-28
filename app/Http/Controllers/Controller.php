@@ -365,7 +365,7 @@ class Controller extends BaseController {
         } else {
             echo 'Wrong url supplied in whatsapp api';
         }
-        return true;
+        
     }
 
 
@@ -411,22 +411,22 @@ class Controller extends BaseController {
         }
 
 
-                  public function syncMissingInv($data,$prefix,$schema_name){
-                   $trans = (object) $data;
-                    foreach ($trans as $tran) {
-                        if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
-                             $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
-                            if(empty($check)){
-                                $data= urlencode(json_encode($tran));
-                                $background = new \App\Http\Controllers\Background();
-                                $url = 'http://75.119.140.177:8081/api/init';
-                                $fields = json_decode(urldecode($data));
-                                $curl = $background->curlServer($fields, $url, 'row');
-                                return $curl;
-                           }
-                         }
-                       }
-                   }
+      public function syncMissingInv($data,$prefix,$schema_name){
+       $trans = (object) $data;
+        foreach ($trans as $tran) {
+            if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
+                 $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
+                if(empty($check)){
+                    $data= urlencode(json_encode($tran));
+                    $background = new \App\Http\Controllers\Background();
+                    $url = 'http://75.119.140.177:8081/api/init';
+                    $fields = json_decode(urldecode($data));
+                    $curl = $background->curlServer($fields, $url, 'row');
+                    return $curl;
+               }
+             }
+           }
+       }
 
            
            
@@ -477,17 +477,6 @@ class Controller extends BaseController {
         echo $response;
       }
 
-    
-      
-
-         public function checkf() {
-             $user_id = request('user_id');
-             $users = \DB::table('users')->select('*');
-         }
-
-      
-
-     
    
 }
 

@@ -94,17 +94,11 @@ class Kernel extends ConsoleKernel {
 
        $schedule->call(function () {
         //send SMS to karibuSMS
-        $this->karibuSMS();
+          $this->karibuSMS();
        })->everyMinute();
-
-       $schedule->call(function () {
-        //test
-        $this->test();
-       })->dailyAt('16:05'); // Eq to 07:40 AM  
-
-
-        
     }
+
+
 
    public function whatsappMessage() {        
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
@@ -1342,7 +1336,7 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
             curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             $data = curl_exec($ch);
-        }
+     }
 
         
     public function pushRevInvoice($invoice) {
@@ -1383,12 +1377,6 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
         }
 
 
-     public  function test(){
-            $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
-             $dir_name = storage_path()."/logs/" . $filename;
-            if (file_exists($dir_name)) {
-               unlink($dir_name);
-            }
-       }
+   
 
 }
