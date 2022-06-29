@@ -857,29 +857,24 @@ class Software extends Controller {
     }
 
 
-    public function createFile(){
-        $days = 30;
-
-        $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
-        $file = fopen( "/../../storage/logs/" . $filename, 'w');
-        fwrite($file, 'Helooooooooooooooooooooooooooooooooooooooooo world');
-        fclose($file);
-        echo 'Hello';
-    }
+  
 
 
     public function resetPassword() {
-        $schema = request()->segment(3);
-        if ($schema != '' && $schema != 'accounts') {
+        
+        if ($_POST) {
+            $schema = request('schema');
             $pass = $schema . rand(5697, 33);
             $username = $schema . date('Hi');
             DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
             $this->data['school'] = DB::table($schema . '.setting')->first();
-            $this->data['schema'] = $schema;
+            $this->data['schema_name'] = $schema;
             $this->data['pass'] = $pass;
-            return view('customer.view', $this->data)->with('success', 'Password Updated Successfully');
+            $this->data['username'] = $username;
+            return view('software.reset_pass', $this->data)->with('success', 'Password Updated Successfully');
         } else {
-            return redirect()->back()->with('warning', 'Please Define Specific School');
+            return view('software.reset_pass');
+
         }
     }
 }

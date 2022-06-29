@@ -962,12 +962,10 @@ class Customer extends Controller {
         if ($_POST) {
             $validated = request()->validate([
                 'note' => 'required|min:12',
-                
             ]); 
 
             $requirement = [
                 'school_id' => is_null(request('school_id')) ? '0' : request('school_id'),
-             
                 'to_user_id' => request('to_user_id'),
                 'project_id' => 1,
                 'due_date' => request('due_date'),
