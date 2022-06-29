@@ -256,7 +256,7 @@ class Kernel extends ConsoleKernel {
      * Temporarily only allows digital invoice but must support both
      */
     public function syncInvoicePerSchool($schema = '') {
-        $invoices = DB::select("select b.invoice_id as id, d.student_id, b.status, b.reference, b.prefix,d.date,b.sync,b.return_message,b.push_status,b.academic_year_id, "
+        $invoices = DB::select("select b.invoice_id as id, d.student_id, b.status, b.reference, b.prefix,d.date,b.sync,b.return_message,b.push_status,d.academic_year_id, "
                         . " b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from "
                         . "  " . $schema . ".setting limit 1) as sub_invoice   from   " . $schema . ".invoice_prefix b JOIN  " . $schema . ".invoices d on b.invoice_id=d.id  join " . $schema . ".student c on c.student_id=d.student_id join (select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a "
                         . " group by a.invoice_id ) a on a.invoice_id=d.id where b.sync <>1 and b.prefix in "
@@ -318,8 +318,7 @@ class Kernel extends ConsoleKernel {
                 if (strtolower($data->student_name) == strtolower($invoice->student_name) && strtolower($data->student_id) == strtolower($invoice->student_id) && strtolower($data->callback_url) == 'http://75.119.140.177:8081/api/init') {
 
                     //all is well, so just update status to be okay
-                    DB::table($invoice->schema_name . '.invoices')
-                            ->where('id', $invoice->id)->update(['sync' => 1, 'status' => 1, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
+                    DB::table($invoice->schema_name . '.invoice_prefix')->where('reference', $invoice->reference)->update(['sync' => 1, 'status' => 1, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
                 } else {
                     //update the whole invoice
                     $new_token = $this->getToken($invoice);
@@ -370,8 +369,7 @@ class Kernel extends ConsoleKernel {
             $result = json_decode($curl);
             if (isset($result) && !empty($result) && isset($invoice->student_id)) {
                 //update invoice no
-                DB::table($invoice->schema_name . '.invoice_prefix')
-                        ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
+                DB::table($invoice->schema_name . '.invoice_prefix')->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }else{
                 DB::table($invoice->schema_name . '.revenues')->where('reference', $invoice->reference)->update(['status' => 0, 'updated_at' => 'now()']);
             }
@@ -437,19 +435,7 @@ class Kernel extends ConsoleKernel {
 
         if (isset($result) && !empty($result) && isset($invoice->student_id) && (int)$invoice->student_id > 0) {
             //update invoice no
-            DB::table($invoice->schema_name . '.invoices')
-                    ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
-
-            $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
-            foreach ($users as $user) {
-                $message = 'Hello ' . $user->name . ','
-                        . 'Control Namba ya ' . $invoice->student_name . ', kwa malipo ya ' . $invoice->schema_name . ' ni ' . $invoice->reference . '.'
-                        . 'Unaweza lipa sasa kupitia mitandao ya simu au njia nyingine za bank ulizo elekezwa na shule. Asante';
-                if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                    //  DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Ada ya Shule','" . $message . "')");
-                }
-                // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
-            }
+            DB::table($invoice->schema_name . '.invoice_prefix')->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
       }else{
         DB::table($invoice->schema_name . '.revenues')->where('reference', $invoice->reference)->update(['status' => 1, 'updated_at' => 'now()']);
      }
@@ -473,19 +459,7 @@ class Kernel extends ConsoleKernel {
 
         if (isset($result) && !empty($result) && isset($invoice->student_id)) {
             //update invoice no
-            DB::table($invoice->schema_name . '.invoices')
-                    ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
-
-            $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
-            foreach ($users as $user) {
-                $message = 'Hello ' . $user->name . ','
-                        . 'Control Namba ya ' . $invoice->student_name . ', kwa malipo ya ' . $invoice->schema_name . ' imebadilishwa hivyo tumia control number: ' . $invoice->reference . '.'
-                        . 'Unaweza lipa sasa kupitia mitandao ya simu au njia nyingine za bank ulizo elekezwa na shule. Asante';
-                if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                    //DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Mpya Ya Malipo ya Ada ya Shule','" . $message . "')");
-                }
-                DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
-            }
+            DB::table($invoice->schema_name . '.invoice_prefix')->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
         }
         DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
