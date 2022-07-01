@@ -15,3 +15,6 @@ php artisan krlove:generate:model User --table-name=user
 
 #Limitations: Does not create relationships 
 --------------------------------------------------------------------------------
+
+git old commit url
+https://shulesoft@bitbucket.org/shulesoft/shulesoft.git
