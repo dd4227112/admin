@@ -107,12 +107,12 @@ class Analyse extends Controller {
     }
 
     public function setting() {
-        $this->data['association'] = \App\Model\Association::first();
+        $this->data['association'] = \App\Models\Association::first();
         return view('analyse.setting', $this->data);
     }
 
     public function accounts() {
-        $this->data['association'] = \App\Model\Association::first();
+        $this->data['association'] = \App\Models\Association::first();
         $sql_2 = "select sum(count) as count, month from (
         select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')." group by month
         UNION ALL select sum(amount) as count, extract(month from created_at) as month from admin.revenues a   where extract(year from created_at)=".date('Y')." group by month) a group by month order by month asc";
@@ -121,8 +121,7 @@ class Analyse extends Controller {
     }
 
     public function marketing() {
-        // $this->data['association'] = \App\Model\Association::first();
-        $this->data['breadcrumb'] = array('title' => 'Marketing dashboard','subtitle'=>'summary','head'=>'marketing');
+        $this->data['association'] = \App\Models\Association::first();
         return view('analyse.marketing', $this->data);
     }
 
@@ -139,7 +138,7 @@ class Analyse extends Controller {
         }
 
         $school_list = '';
-        $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%'  union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 10");
+        $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%' union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b order by is_schema asc limit 10");
         foreach ($schools as $school) {
             $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) : url('sales/profile/' . $school->is_schema);
             $type = $school->is_schema == 1 ? ' (Already Client)' : '';
@@ -350,7 +349,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
 
        public function ratings(){
-          $this->data['breadcrumb'] = array('title' => 'Users ratings','subtitle'=>'ratings','head'=>'marketing');
           $this->data['nps'] = \collect(\DB::select('select  (a.promoter/c.total::float)*100 - (b.detractor/c.total::float)*100 as NPS from (select sum(rate) as promoter from admin.rating where rate > 8) a,(select sum(rate) as detractor from admin.rating where rate < 7 ) b,(select sum(rate) as total from admin.rating) c'))->first();
           $this->data['ratings'] = \App\Models\Rating::latest()->get();
           $this->data['commentators'] = \collect(\DB::select("select distinct user_id from admin.rating"))->count();
@@ -363,39 +361,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
       }
 
 
-//    public function sendMessage() {
-//        if ($_POST) {
-//            //dd(request()->all());
-//
-//            $body = request('message');
-//            $sms = request('sms');
-//            $email = request('email');
-//            request('lang') == 'swahili' ? $lang = 'Habari' : $lang = 'Hello';
-//            $schools = DB::table('all_setting')->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\ClientSchool::whereIn('school_id', \App\Models\UsersSchool::where('user_id', Auth::User()->id)->get(['school_id']))->get(['client_id']))->get(['username']))->get();
-//            $english = 'For More Details Contact: ' . chr(10) . 'Name: ' . Auth::User()->name . chr(10) . 'Phone: ' . Auth::User()->phone . chr(10) . 'Email: ' . Auth::User()->email;
-//            $swahili = 'Mawasiliano:' . chr(10) . 'Jina: ' . Auth::User()->name . chr(10) . 'Simu: ' . Auth::User()->phone . chr(10) . 'Barua Pepe: ' . Auth::User()->email;
-//            request('lang') == 'swahili' ? $footer = $swahili : $footer = $english;
-//            $phone = '';
-//            foreach ($schools as $school) {
-//                if ($school->phone != '') {
-//                    $numbers = str_replace(' ', '', $school->phone);
-//                    $number = str_replace('/', ',', $numbers);
-//                    $phones = explode(',', $number);
-//                    $phone = str_replace('+', null, validate_phone_number($phones[0])[1]);
-//                }
-//                if ($school->email != '' && (int) $email > 0) {
-//                    $message = '<h4>' . $lang . ', ' . $school->name . '</h4>'
-//                            . '<h4>' . $body . '</h4>'
-//                            . '<br><br>' . $footer;
-//                    DB::table('public.email')->insert(['body' => $message, 'subject' => 'ShuleSoft New Client Support Message', 'user_id' => 1, 'email' => $school->email]);
-//                }
-//                if ($phone != '' && (int) $sms > 0) {
-//                    $message1 = $lang . ', ' . $school->name . '.' . chr(10) . request('message') . chr(10) . chr(10) . $footer;
-//                    DB::table('public.sms')->insert(['body' => $message1, 'type' => 1, 'user_id' => 1, 'phone_number' => $phone]);
-//                }
-//            }
-//            return redirect()->back()->with('success', 'Message Sent successfully');
-//        }
-//    }
+
 
 }

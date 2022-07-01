@@ -8,8 +8,11 @@ class InvoiceType extends Model {
      * Generated
      */
 
-    protected $table = 'invoice_types';
-    protected $fillable = ['id', 'name','created_at','updated_at'];
+    // protected $table = 'invoice_types';
+    // protected $fillable = ['id', 'name','created_at','updated_at'];
+
+    protected $table = 'constant.invoices_type';
+    protected $fillable = ['id', 'name','created_at','updated_at','description'];
 
 
 

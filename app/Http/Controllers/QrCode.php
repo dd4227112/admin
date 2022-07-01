@@ -13,9 +13,9 @@ class QrCode extends Controller
             $user_email = request()->segment(3);
             
             $qr_code = new \App\Http\Controllers\BarcodeQR();
-            $targetPath = "public/";
+            $targetPath = base_path() . '/public/';
             $user_url = 'https://admin.shulesoft.com/user-details/' . md5($user_email);
-            $qr_code->url($user_url);
+            $qr_code->url_format($user_url);
             if (!is_dir($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
@@ -33,4 +33,28 @@ class QrCode extends Controller
             }
         }
 
+        public function profile(){
+            $user_email = request()->segment(3);
+            
+            $qr_code = new \App\Http\Controllers\BarcodeQR();
+            $targetPath = base_path() . '/public/';
+            $user_url = 'https://admin.shulesoft.com/user-details/' . md5($user_email);
+            $qr_code->url_format($user_url);
+            if (!is_dir($targetPath)) {
+                mkdir($targetPath, 0777, true);
+            }
+
+            $qr_code_name = 'images/qrcode/'.md5($user_email). '.png';
+            $qr_code_push = $targetPath.$qr_code_name;
+            $generate_qr_code = $qr_code->draw(150, $qr_code_push);
+            DB::table('admin.all_users')->where('sid', $user_email)->first(); 
+            $update_user = User::where('email',$user_email)->update(['qr_code'=>$qr_code_name]);
+    
+            if ($generate_qr_code){
+                return redirect()->back()->with('success', 'QR code has been Generated');
+            }
+            else{
+                return redirect()->back()->with('error', 'Sorry failed Generate QR Code may be due to network problem,please try again');
+            }
+        }
 }

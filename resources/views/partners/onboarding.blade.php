@@ -3,13 +3,13 @@
 <?php $root = url('/') . '/public/' ?>
 
 <!-- Style.css -->
-<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/bars.css">
+<link rel="stylesheet" type="text/css" href="https://admin.shulesoft.com/public/assets/css/style.css">
+<link rel="stylesheet" type="text/css" href="https://admin.shulesoft.com/public/assets/css/bars.css">
 
-<link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
+<link rel="stylesheet" href="https://admin.shulesoft.com/public/assets/select2/css/select2.css">
 
-<link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
-<link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">
+<link rel="stylesheet" href="https://admin.shulesoft.com/public/assets/select2/css/select2-bootstrap.css">
+<link rel="stylesheet" href="https://admin.shulesoft.com/public/assets/select2/css/gh-pages.css">
 
   
 

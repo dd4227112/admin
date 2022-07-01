@@ -16,16 +16,21 @@ use Illuminate\Database\Eloquent\Model;
  * @author hp
  */
 class Design extends Model {
+
+   // use \App\Traits\BelongsToUser;
+
     //put your code here
     protected $table = 'designs';
     protected $fillable = ['id', 'name', 'note', 'attach', 'user_id', 'type', 'created_at', 'updated_at'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
-    }
+  
 
     public function task() {
         return $this->belongsTo(\App\Models\Task::class, 'task_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

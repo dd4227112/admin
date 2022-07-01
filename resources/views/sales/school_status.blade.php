@@ -1,9 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
-
-    
-        <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
                 <h4 class="box-title">Schools</h4>
@@ -28,8 +24,7 @@
                 </ul>
             </div>
         </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+
         <div class="page-body">
             <div class="row">
             <div class="col-lg-12">
@@ -80,6 +75,8 @@
                 </div>
             </div>
         </div>
+
+        
     </div>
 </div>
 <script type="text/javascript">

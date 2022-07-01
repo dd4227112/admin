@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 
 class IntegrationRequestComment extends Model {
+    
+   // use \App\Traits\BelongsToUser;
 
     /**
      *
@@ -15,13 +17,13 @@ class IntegrationRequestComment extends Model {
     protected $table = 'integration_request_comments';
     protected $fillable = ['id', 'user_id', 'integration_request_id', 'comment', 'status', 'created_at','updated_at'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'User Not Defined']);
-    }
 
     public function requests() {
         return $this->belongsTo(\App\Models\IntegrationRequest::class, 'integration_request_id', 'id');
     }
-
+   
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
+    }
  
 }

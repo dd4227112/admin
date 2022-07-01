@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-
-  
-
     <div class="page-header">
             <div class="page-header-title">
                 <h4>Standing orders</h4>
@@ -26,7 +23,6 @@
     <div class="page-body">
       <div class="row">
         <div class="col-sm-12">
-          <!-- Ajax data source (Arrays) table start -->
           <div class="card tab-card">
             <div class="card-block">
         
@@ -49,8 +45,7 @@
                       </thead>
                       <tbody>
                       <?php 
-                      if(sizeof($standingorders) > 0){
-                        $i = 1;
+                      if(sizeof($standingorders) > 0){$i = 1;
                         foreach($standingorders as $value){ ?>
                        <tr>
                         <td><?=$i ?></td>
@@ -65,7 +60,7 @@
                         </td>
 
                         <td>
-                           <?php $approve_url="account/approvestandingorder/$value->id";$reject_url="account/rejectstandingorder/$value->id";
+                           <?php $approve_url="account/approvestandingorder/$value->id";  $reject_url="account/rejectstandingorder/$value->id";
                            if(isset($value->payment_date)) {  ?>  
                             <?php if(isset($value->client)) {  ?>
                                 <?php if((int) $value->is_approved == 1) { ?>
@@ -95,6 +90,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>
 @endsection

@@ -69,7 +69,7 @@ class ImportExpense implements ToModel, WithHeadingRow
                 'expense_subcategories_id' => 3,
                 "expense" => $row['note'],
                 "depreciation" => 0,
-                'user_id' => Auth::user()->id,
+                'user_id' => \Auth::user()->id,
                 "bank_account_id" => !empty($bank) ? $bank->id : '2',
                 "amount" => remove_comma($row['amount']) 
             );

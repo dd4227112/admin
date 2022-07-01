@@ -17,16 +17,20 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MediaPost extends Model {
 
+   // use \App\Traits\BelongsToUser;
+
+
     //put your code here
     protected $table = 'mediapost';
     protected $fillable = ['id', 'note', 'title', 'category', 'user_id', 'type', 'created_at', 'updated_at'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
-    }
 
     public function medias() {
         return $this->hasMany(\App\Models\SocialMediaPost::class, 'post_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

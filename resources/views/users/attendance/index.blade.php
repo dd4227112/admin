@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
-  
-
         <div class="page-header">
             <div class="page-header-title">
                 <h4>Employees Attendances</h4>
@@ -31,15 +28,15 @@
               <div class="row">
                  <div class="col-sm-12">
                   <div class="card-header float-left">
-                    <a href="<?= url('attendance/add') ?>" class="btn btn-sm btn-primary">Create</a>
+                    <a href="<?= url('attendance/add') ?>" class="btn btn-sm btn-primary btn-round">Create</a>
                 </div> 
                 <div class="card-header float-right">
-                    <a href="<?= url('attendance/report') ?>" class="btn btn-sm btn-primary">View Report</a>
+                    <a href="<?= url('attendance/report') ?>" class="btn btn-sm btn-primary btn-round">View Report</a>
                 </div> 
 
                 <?php if(can_access('attendance_hr_report')) { ?>
                  <div class="card-header float-right">
-                    <a href="<?= url('attendance/hr_report') ?>" class="btn btn-sm btn-primary">HR Report</a>
+                    <a href="<?= url('attendance/hr_report') ?>" class="btn btn-sm btn-primary btn-round">HR Report</a>
                 </div> 
                 <?php } ?>
 

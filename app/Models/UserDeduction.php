@@ -3,6 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 
 class UserDeduction extends Model {
+    
+    //use \App\Traits\BelongsToUser;
 
     /**
      * Generated
@@ -12,9 +14,6 @@ class UserDeduction extends Model {
     protected $fillable = ['id', 'user_id', 'deduction_id', 'created_by', 'deadline', 'type', 'amount', 'percent', 'index_number',
     'loan_application_id','created_at','updated_at','employer_percent','employer_amount','member_id'];
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
-    }
 
     public function deduction() {
         return $this->belongsTo(\App\Models\Deduction::class, 'deduction_id', 'id');
@@ -22,6 +21,10 @@ class UserDeduction extends Model {
 
     public function loanApplication() {
         return $this->belongsTo(\App\Models\LoanApplication::class, 'loan_application_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

@@ -23,7 +23,6 @@ class Phone_call extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['breadcrumb'] = array('title' => 'Phone Calls','subtitle'=>'customer service','head'=>'operations');
         $this->data['phone_calls'] = PhoneCall::latest()->get();
 
         if($_POST){
@@ -55,7 +54,6 @@ class Phone_call extends Controller {
     }
 
     public function create() {
-        $this->data['breadcrumb'] = array('title' => 'Create phone Calls','subtitle'=>'customer service','head'=>'operations');
         return view('phonecalls.create',$this->data);
     }
 
@@ -178,7 +176,6 @@ class Phone_call extends Controller {
     public function CallsUpload() 
     {  
         Excel::import(new PhoneCall_Import, request()->file('call_file'));
-       
         return redirect('Phone_call/index')->with('success', 'All Call Histories Uploaded Successfully!');
     }
 

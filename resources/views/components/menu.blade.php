@@ -100,6 +100,11 @@
                                                     <span class="pcoded-mtext">Partner request</span>
                                                 </a>
                                                 </li>
+                                                <li class="">
+                                                <a href="<?= url('partner/transactions') ?>">
+                                                    <span class="pcoded-mtext">School Transactions</span>
+                                                </a>
+                                                </li>
                                             <?php } else { ?>
                                                 <li class="">
                                                     <a href="<?= url('sales/index') ?>">
@@ -108,10 +113,17 @@
                                                  </li>
                                              
                                                  <li class="">
-                                                    <a href="<?= url('sales/school') ?>">
+                                                    <a href="<?= url('sales/schools') ?>">
                                                         <span class="pcoded-mtext">List of Schools</span>
                                                     </a>
                                                   </li>
+
+                                                   <li class="">
+                                                    <a href="<?= url('sales/schoolrequests') ?>">
+                                                        <span class="pcoded-mtext">School Requests</span>
+                                                    </a>
+                                                  </li>
+
 
                                                 <?php if (can_access('sales_plan')) { ?>
                                                 <li class="">
@@ -120,6 +132,7 @@
                                                     </a>
                                                  </li>
                                                 <?php } ?>
+
                                                <?php } ?>
 
                                             </ul>
@@ -247,17 +260,9 @@
                                             <ul class="pcoded-submenu">
                                                 <li class="">
                                                     <a href="<?= url('Partner/index') ?>">
-                                                        <span class="pcoded-mtext">List of Partners</span>
+                                                    <span class="pcoded-mtext"> Integration Requests </span>
                                                     </a>
                                                 </li>
-
-                                               <?php if(can_access('integration_requests')) { ?>
-                                                 <li class="">
-                                                    <a href="<?= url('users/usergroup') ?>">
-                                                        <span class="pcoded-mtext"> Integration Requests </span>
-                                                    </a>
-                                                </li>
-                                                <?php } ?>
 
                                                <?php if(can_access('view_epayments')) { ?>
                                                  <li class=" ">
@@ -270,11 +275,26 @@
                                                  <?php if(can_access('nmb_integration')) { ?>
                                                    <li class=" ">
                                                     <a href="<?= url('software/banksetup') ?>">
-                                                        <span class="pcoded-mtext">Nmb integration</span>
+                                                        <span class="pcoded-mtext">NMB Bank Setup</span>
                                                     </a>
                                                   </li>
                                                 <?php } ?>
 
+                                                <?php if(can_access('reconciliation')) { ?>
+                                               <li class="">
+                                                <a href="<?= url('software/reconciliation') ?>">
+                                                    <span class="pcoded-mtext">NMB Payments </span>
+                                                </a>
+                                               </li>
+                                            <?php } ?>
+                                    
+                                            <?php if(can_access('integration_requests')) { ?>
+                                                   <li class=" ">
+                                                    <a href="<?= url('Partner/transactions') ?>">
+                                                        <span class="pcoded-mtext">CRDB Payments</span>
+                                                    </a>
+                                                  </li>
+                                                <?php } ?>
                                             </ul>
                                         </li>
                                       <?php } ?>
@@ -339,46 +359,10 @@
                                                 </li>
                                             <?php } ?>
 
-                                             <?php if(can_access('reconciliation')) { ?>
-                                               <li class="">
-                                                <a href="<?= url('software/reconciliation') ?>">
-                                                    <span class="pcoded-mtext">Reconciliation</span>
-                                                </a>
-                                               </li>
-                                            <?php } ?>
-
 
                                             </ul>
                                         </li>
                                       <?php } ?>
-                                    
-{{-- 
-                                        <li class=" pcoded-hasmenu">
-                                            <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Usage and analysis</span>
-                                            </a>
-                                            <ul class="pcoded-submenu">
-                                                <li class=" ">
-                                                    <a href="<?= url('marketing/moduleusage') ?>">
-                                                        <span class="pcoded-mtext">Usage analysis</span>
-                                                    </a>
-                                                </li>
-                                             
-
-                                               
-                                            </ul>
-                                        </li> --}}
-
-                                         {{--   <ul class="pcoded-submenu">
-                                             
-                                             
-                                                 <li class="">
-                                                    <a href="<?= url('customer/calls') ?>">
-                                                        <span class="pcoded-mtext">Call logs</span>
-                                                    </a>
-                                                </li> 
-                                                
-                                            </ul>  --}}
                                 
                                     </ul>
                                 </li>
@@ -574,10 +558,18 @@
                                  
                                         <ul class="pcoded-submenu">
                                             <li class=" ">
+                                                <a href="<?= url('general/create') ?>">
+                                                    <span class="pcoded-mtext">Task Management</span>
+                                                </a>
+                                            </li>
+
+                                            <li class=" ">
                                                 <a href="<?= url('software/template') ?>">
                                                     <span class="pcoded-mtext">Manuals</span>
                                                 </a>
                                             </li>
+
+
 
                                             <?php if (can_access('manage_database')) { ?>
                                             <li class=" pcoded-hasmenu">
@@ -609,21 +601,40 @@
                                                         </a>
                                                     </li>
                                                 </ul>
-                                            </li>
-                                        <?php } ?>
-                                           
-                                           <?php if(can_access('manage_errors')) { ?>
-                                            <li class="">
-                                                <a href="<?= url('software/logs') ?>">
-                                                    <span class="pcoded-mtext">Error Logs</span>
+                                               </li>
+                                           <?php } ?>
+
+                                           <?php if (can_access('manage_errors')) { ?>
+                                            <li class=" pcoded-hasmenu">
+                                                <a href="javascript:void(0)">
+                                                    <span class="pcoded-mtext">System errors</span>
                                                 </a>
-                                            </li>
-                                            <?php } ?>
+                                                <ul class="pcoded-submenu">
+                                                    <li class="">
+                                                        <a href="<?= url('software/logs') ?>">
+                                                            <span class="pcoded-mtext">Error Logs</span>
+                                                        </a>
+                                                    </li>
 
-
+                                                    <li class="">
+                                                        <a href="<?= url('software/statistics') ?>">
+                                                            <span class="pcoded-mtext">Error Statistics</span>
+                                                        </a>
+                                                    </li>
+                                                 
+                                                </ul>
+                                               </li>
+                                           <?php } ?>
+                                           
                                             <li class="">
                                                 <a href="<?= url('software/api') ?>">
                                                     <span class="pcoded-mtext">API Requests</span>
+                                                </a>
+                                            </li>
+
+                                            <li class=" ">
+                                                <a href="<?= url('software/resetPassword') ?>">
+                                                    <span class="pcoded-mtext">Reset school</span>
                                                 </a>
                                             </li>
                                      </ul>
@@ -801,8 +812,8 @@
                                                 </li>
 
                                                  <li class="">
-                                                    <a href="<?= url('account/project') ?>">
-                                                        <span class="pcoded-mtext">Company projects</span>
+                                                    <a href="<?= url('account/services') ?>">
+                                                        <span class="pcoded-mtext">Company services</span>
                                                     </a>
                                                 </li>
 

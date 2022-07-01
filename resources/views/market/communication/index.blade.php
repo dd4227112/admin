@@ -230,7 +230,7 @@
                                 <?php  $array = array(
                                      'select' => 'Select Template',
                                  );
-                                 $templates = DB::table('admin.mailandsmstemplates')->where('status', '1')->get();
+                                 $templates = DB::table('admin.mailandsmstemplates')->where('status', '1')->latest()->get();
                                 foreach ($templates as $etemplate) {
                                     strtolower($etemplate->type) == 'sms' ? $array[$etemplate->id] = $etemplate->name : '';
                                 }

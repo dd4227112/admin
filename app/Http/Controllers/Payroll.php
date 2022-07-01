@@ -24,7 +24,6 @@ class Payroll extends Controller {
     }
 
     public function pension() {
-        $this->data['breadcrumb'] = array('title' => 'Pensions','subtitle'=>'accounts','head'=>'payroll');
         $this->data['pensions'] = \App\Models\Pension::latest()->get();
         $id = request()->segment(3);
         $this->data['set'] = $id;
@@ -48,7 +47,6 @@ class Payroll extends Controller {
 
 
     function addPension(Request $request) {
-        $this->data['breadcrumb'] = array('title' => 'Pensions','subtitle'=>'accounts','head'=>'payroll');
         if (!empty($_POST)) {
             $request->validate([
             'name' => 'required|unique:pensions,name',
@@ -90,7 +88,6 @@ class Payroll extends Controller {
     }
 
     function editPension() {
-        $this->data['breadcrumb'] = array('title' => 'Edit pension','subtitle'=>'accounts','head'=>'payroll');
         $id = request()->segment(3);
         $this->data['pension'] = \App\Models\Pension::find($id);
         if (!empty($_POST)) {

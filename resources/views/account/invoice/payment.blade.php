@@ -2,82 +2,75 @@
 @section('content')
 <?php $root = url('/') . '/public/'; 
 $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as last_balance from admin.client_invoice_balances where extract(year from created_at) < ' $invoice->year' and client_id = ' $invoice->client_id '"))->first();
-  // dd($previous_amount->last_balance);                                                  
 ?>
 
-
-    
         <!-- Page-header start -->
-        <div class="page-header">
+       <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Invoices</h4>
-                <span>Show payments summary</span>
+                <h4>Invoices payment</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
+                    <a href="<?= url('/') ?>">
+                        <i class="feather icon-home"></i>
+                    </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item"><a href="#!">accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Invoices</a>
+                    <li class="breadcrumb-item"><a href="#!">payment</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="page-body">
+
+
+          <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
-                    <!-- Zero config.table start -->
-                    <div class="card">
-                 
-        <div class="card tab-card">
-                        <ul class="nav nav-tabs md-tabs" role="tablist">
+                    <div class="card tab-card">
+                          <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>Single Invoice Payment</strong> 
+                                    <strong>Payment Invoice #<?= $invoice->id ?></strong> 
                                 </a>
                                 <div class="slide"></div>
                             </li>
-                            <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Upload  Invoice Payments From Excel</a>
-                                <div class="slide"></div>
-                            </li>
                         </ul>
+
                         <div class="tab-content">
-                             <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
-                                 <br/>
-                                 <br/>
-                        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                         <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
+                           <div class="card-block">
+
+                         <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+
                           
                           <?php if($previous_amount->last_balance > 0) { ?>
                             <div class='form-group row'>
-                                <label for="amount" class="col-sm-2 control-label">
+                                <label for="amount" class="col-sm-4 control-label">
                                     Previous Amount
                                 </label>
                                 <div class="col-sm-6">
                                     <input type="text" disabled class="form-control" id="amount_topay" name="" value="<?= old('amount', number_format($previous_amount->last_balance)) ?>" required="true" >
                                 </div>
-                                <span class="col-sm-4 control-label">
+                                <span class="col-sm-2 control-label">
                                     <?php echo form_error($errors, 'amount_topay'); ?>
                                 </span>
                             </div>
                           <?php } ?>
 
                             <div class='form-group row'>
-                                <label for="amount" class="col-sm-2 control-label">
+                                <label for="amount" class="col-sm-4 control-label">
                                     Due Amount
                                 </label>
                                 <div class="col-sm-6">
                                     <input type="text" disabled class="form-control" id="amount_topay" name="amount_topay" value="<?= old('amount', number_format($invoice->invoiceFees()->sum('amount') - $invoice->payments()->sum('amount'))) ?>" required="true" >
                                 </div>
-                                <span class="col-sm-4 control-label">
+                                <span class="col-sm-2 control-label">
                                     <?php echo form_error($errors, 'amount_topay'); ?>
                                 </span>
                             </div>
-                            <div class='form-group row' >
+                            {{-- <div class='form-group row' >
                                 <label for="amount" class="col-sm-2 control-label">
                                    Paid Amount
                                 </label>
@@ -88,10 +81,10 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
 
                                     <?php echo form_error($errors, 'amount'); ?>
                                 </span>
-                            </div>
+                            </div> --}}
 
 <!--     This part is added to assist in reporting, it needs to be removed in the future to enable proper arrangement of data and avoid duplicates-->
-                            <div class='form-group row' >
+                            {{-- <div class='form-group row' >
                                     <label for="expense" class="col-sm-2 control-label">
                                         <?= __("Fee Type") ?><span class="red">*</span>
                                     </label>
@@ -100,7 +93,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                                         $array = array('0' => __("select expense"));
                                         if (!empty($category)) {
                                             foreach ($category as $categ) {
-                                                $array[$categ->id] = $categ->name;
+                                                $array[$categ->id] = $categ->name ?? '';
                                             }
                                         }
                                         echo form_dropdown("refer_expense_id", $array, old("refer_expense_id"), "id='refer_expense_id' class='form-control'");
@@ -113,10 +106,30 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                                     <span class="col-sm-4 control-label">
                                         <?php echo form_error($errors, 'refer_expense_id'); ?>
                                     </span>
+                                </div> --}}
+
+                                 <?php 
+                                if(isset($invoicefee)) { 
+                                foreach($invoicefee as $value) { ?>
+                                <div class="form-group row">
+                                    <label for="expense" class="col-sm-4 control-label">
+                                        <?= $value->service->name ?? '' ?> 
+                                    </label>
+
+                                    <div class="col-sm-6">
+                                        <input type="text" name="amounts[]"  class="form-control transaction_amount"/>
+                                    </div>
+                                    <span class="col-sm-2 control-label">
+                                         <?php echo form_error($errors, 'amounts'); ?>
+                                    </span>
+                                  <input type="hidden"  name="service_id[]"  value="<?= $value->service_id ?>">
+
                                 </div>
+                                <?php } }
+                                ?>
 
                                <div class='form-group row' >
-                                  <label for="payment_method" class="col-sm-2 control-label">
+                                  <label for="payment_method" class="col-sm-4 control-label">
                                    Payment Method
                                   </label>
                                 <div class="col-sm-6">
@@ -126,13 +139,13 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                                         if (!empty($payment_types)) {
                                             foreach ($payment_types as $payment_type) {
                                               ?>
-                                                <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?></option>
+                                                <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?? '' ?></option>
                                              <?php
                                             }
                                         }
                                     ?></select>
                             </div>
-                            <span class="col-sm-4 control-label">
+                            <span class="col-sm-2 control-label">
                                  <?php echo form_error($errors, 'payment_method'); ?>
                             </span>
                          </div>
@@ -140,13 +153,13 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
 
                             <div id="cheque_number_div" style="display: none;">
                                <div class='form-group row' >
-                                <label for="amount" class="col-sm-2 control-label">
+                                <label for="amount" class="col-sm-4 control-label">
                                    Cheque Number
                                 </label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" placeholder="Available in a cheque" id="cheque_number" name="cheque_number" value="<?= old('cheque_number') ?>" >
                                 </div>
-                                <span class="col-sm-4 control-label">
+                                <span class="col-sm-2 control-label">
                                     <?php echo form_error($errors, 'cheque_number'); ?>
                              </span>
                         </div>
@@ -154,13 +167,13 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
 
                     <div id="date">
                        <div class='form-group row' >
-                        <label for="amount" class="col-sm-2 control-label">
+                        <label for="amount" class="col-sm-4 control-label">
                             Date
                         </label>
                         <div class="col-sm-6">
                             <input class="form-control calendar" required type="date" placeholder="Date that payment was done" name="date" >
                         </div>
-                        <span class="col-sm-4 control-label">
+                        <span class="col-sm-2 control-label">
                             <?php echo form_error($errors, 'date'); ?>
                         </span>
                     </div>
@@ -169,7 +182,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                 <div id="bank_deposit_div" >
                     <div id="bank"  style="display: none;">
                       <div class='form-group row' >
-                        <label for="bank" class="col-sm-2 control-label"> Bank Name</label>
+                        <label for="bank" class="col-sm-4 control-label"> Bank Name</label>
                         <div class="col-sm-6">
                             <select class="form-control" required="true" name="bank_account_id" id="bank_name">
                                 <option value=" ">Select Bank</option>
@@ -177,7 +190,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                                 if (!empty($banks)) {
                                     foreach ($banks as $bank) {
                                      ?>
-                                        <option value="<?= $bank->id ?>"><?= $bank->name . ' (' . $bank->number . ')' ?></option>
+                                    <option value="<?= $bank->id ?>"><?= $bank->name . ' (' . $bank->number . ')' ?></option>
                                      <?php
                                     }
                                 }
@@ -185,7 +198,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
 
                             </select>
                         </div>
-                        <span class="col-sm-4 control-label">
+                        <span class="col-sm-2 control-label">
                             <?php echo form_error($errors, 'bank_name'); ?>
                         </span>
                     </div>
@@ -193,13 +206,13 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
 
                 <div id="bank_transaction_id"  style="display: none;">
                   <div class='form-group row' >
-                    <label for="amount" class="col-sm-2 control-label">
+                    <label for="amount" class="col-sm-4 control-label">
                        Transaction ID
                     </label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="transaction_id"  placeholder="From Bank/Mobile Paying Slip or message" name="transaction_id" value="<?= old('transaction_id',time()) ?>" >
                     </div>
-                    <span class="col-sm-4 control-label">
+                    <span class="col-sm-2 control-label">
                         <?php echo form_error($errors, 'transaction_id'); ?>
                     </span>
                 </div>
@@ -207,14 +220,14 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
 
             <div id="bankslip" style="display: none;">
                <div class='form-group row' >
-                <label for="amount" class="col-sm-2 control-label">
+                <label for="amount" class="col-sm-4 control-label">
                    Bank Slip Title
                 </label>
                 <div class="col-sm-6">
                     <input class="form-control" type="file" accept=".png,.jpg,.jpeg,.gif,.pdf" class="upload" name="image" >
 
                 </div>
-                <span class="col-sm-4 control-label">
+                <span class="col-sm-2 control-label">
                     <span class="info">Accepted files: .png,.jpg,.jpeg,.gif,.pdf </span>
                     <?php echo form_error($errors, 'bankslip'); ?>
                 </span>
@@ -231,61 +244,21 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
             <?php
             $enabled = ' ';
             ?>
-            <input  <?= $enabled ?> type="submit" class="btn btn-success" value="<?= __("add_payment") ?>" >
-                  </div>
-            </div>
+            <input  <?= $enabled ?>
+             type="submit" class="btn btn-round btn-primary btn-sm" value="Add payments" />
+        </div>
+     </div>
          <?= csrf_field() ?>
     </form>
-
-
-                             </div>
-                            <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
-                                <div class="card-block">
-
-                                    <div class="table-responsive dt-responsive">
-                                        <div class="card-header">
-                                            <div class="panel-body">
-                                                <div class="alert alert-info">If customer already exists in the system, just write customer email address, and if that customer has got an invoice arlready, then write invoice number correctly </div>
-                                                <p>Sample Excel Format. </p>
-                                                <img src="<?= url('storage/uploads/images/payments.JPG') ?>" width="80%"/>
-                                                <br/>
-                                                <div class=" form">
-                                                    <br/>
-                                                    <form class="cmxform form-horizontal " id="commentForm2" method="post" action="<?= url('account/uploadPayments') ?>" enctype="multipart/form-data">
-                                                    
-
-                                                        <div class="form-group ">
-                                                            <label for="cname" class="control-label col-lg-3">Choose Excel File (required)</label>
-                                                            <div class="col-lg-6">
-                                                                <input class=" form-control" id="fname" name="file" type="file" required="">
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="form-group">
-                                                            <div class="col-lg-offset-3 col-lg-6">
-                                                                <?= csrf_field() ?>
-                                                                <button class="btn btn-primary" type="submit">Upload Payments</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                       </div>
+ </div>
+                
+</div>
 <!-- start: PAGE HEADER -->
 </div>
 </div>
 
 </div>
 
-</div>
 </div>
 </div>
 
@@ -312,26 +285,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
         var name = $("#payment_type option:selected").val();
         //cash =1, mobile=2, bank=3, cheque=4
         if (name == 4) {
-            /*swal({
-             title: "Cheque",
-             text: 'Enter cheque number:',
-             type: 'input',
-             showCancelButton: true,
-             closeOnConfirm: false,
-             animation: "slide-from-top"
-             },
-             function (inputValue) {
-             if (inputValue === false)
-             return false;
-             
-             if (inputValue === "") {
-             swal.showInputError("You need to write cheque number!");
-             return false;
-             }
-             $('#number').val(inputValue);
-             swal("Nice!", 'You wrote: ' + inputValue, "success");
-             
-             }); */
+         
 
             $('#cheque_number_div').toggle();
             $('#bank').toggle();

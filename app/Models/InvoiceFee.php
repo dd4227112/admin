@@ -9,7 +9,7 @@ class InvoiceFee extends Model {
      */
     protected $table = 'invoice_fees';
     
-    protected $fillable = ['id', 'invoice_id', 'amount', 'status', 'note', 'item_name', 'project_id','quantity','unit_price','refer_expense_id'];
+    protected $fillable = ['id', 'invoice_id', 'amount', 'status', 'note', 'item_name', 'project_id','quantity','unit_price','service_id'];
 
     public function project() {
         return $this->belongsTo(\App\Models\Project::class, 'project_id', 'id');
@@ -25,6 +25,10 @@ class InvoiceFee extends Model {
 
     public function invoiceFeesPayments() {
         return $this->hasMany(\App\Models\InvoiceFeesPayment::class, 'invoice_fee_id', 'id');
+    }
+
+     public function service() {
+        return $this->belongsTo(\App\Models\CompanyService::class, 'service_id', 'id');
     }
 
 

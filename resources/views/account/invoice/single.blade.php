@@ -1,15 +1,9 @@
-@extends(!isset($balance) ? 'layouts.app' : 'layouts.nologin')
+ <?php if(!isset($export)) { ?>
+@extends('layouts.app')
 @section('content')
+<?php } ?>
 
-<title>Invoice</title>
-<link rel="SHORTCUT ICON" rel="icon" href="<?= url("storage/uploads/images/favicon.png") ?>">
-<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-<meta name="theme-color" content="#00acac">
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<link href="<?php echo url('public/assets/shulesoft/style.css'); ?>" rel="stylesheet" media="all">
-<link href="<?php echo url('public/assets/shulesoft/shulesoft.css'); ?>" rel="stylesheet">
-<link href="<?php echo url('public/assets/shulesoft/responsive.css'); ?>" rel="stylesheet">
-<link href="<?php echo url('public/assets/shulesoft/rid.css'); ?>" rel="stylesheet">
+<?php $root = url('/') . '/public/'; ?>
 
 <style>
     @media print {
@@ -22,75 +16,44 @@
         .invoice-title{
             float: right !important;
         }
-
+        #print_div{
+         top: 0;
+         bottom: 0;
+         margin-top: 0px;
+         }
 
     }
 
 </style>
 
-<style>
-    .btn-bs-file{
-        position:relative;
-    }
-    .btn-bs-file input[type="file"]{
-        position: absolute;
-        top: -9999999;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        width:0;
-        height:0;
-        outline: none;
-        cursor: inherit;
-    }
 
-</style>
 
     <div class="@if(!isset($balance))  page-wrapper @endif">
-        <style>
-            #valid-msg {
-                color: #00C900;
-            }
-            #error-msg {
-                color: red;
-            }
+     
 
-        </style>
-        <?php
-        $bn_number = 888999;
-        ?>
-
-        <?php
-        $message = '';
-        $message .= 'Habari ';
-        $message .= 'Fungua invoice ya malipo ya shulesoft';
-        $message .= ' ya tarehe '.date('d M Y',strtotime($invoice->date)).'';
-        $message .= chr(10);
-        $message .= 'https://admin.shulesoft/customer/shareinvoicewhatsapp/'.$invoice->id.'';
-        ?>
+      
         
-        <div class="page-body">
+      <?php if(!isset($export)) { ?>
             <div class="row">
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6">
                     <p class="text-right" align="right">
-                       
-                        <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
+                        <a href="#" id="printInvoice" class="btn btn-primary btn-mini btn-round"><i class="fa fa-print"></i> Print </a>
 
-                       
-                        <a href="whatsapp://send?text=<?=$message?>" data-action="share/whatsapp/share" 
-                            onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on whatsapp">
-                            <img width="50" src="https://web.whatsapp.com/favicon-64x64.ico">
-                        </a>
+                        <a href="<?= url('account/invoiceView/'.$invoice->id .'/send') ?>" id="printInvoice" class="btn btn-primary btn-mini btn-round mr-2"><i class="fa fa-print"></i> send </a>
 
-                        <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
+
+                        {{-- <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
                         <a href="mailto:?subject=Invoice kwa ajili ya malipo ya shulesoft &amp;body=Open this Link:<?= $link ?>"
                            title="Share by Email">
                               <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
-                        </a>
+                        </a> --}}
+
                     </p>
                 </div>
                 <div class="clearfix"></div>
             </div>
+        <?php } ?>
 
             
             <div class="row">
@@ -100,18 +63,21 @@
                             <div id="print_div">
 
                                 <!-- title row -->
-                                <div class="row" style="padding-top: 0px">
+                                <div class="row" style="margin-top: 0px">
                                     <div class="col-lg-12 col-sm-12">
+                                        <div>
+                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="180" height="80"/>
+                                        </div>
                                         
                                         <table class="table">
                                             <tbody>
                                                 <tr>
                                                     <td>
                                                         <ul>
-                                                            <li style="font-size: 1rem">From</li>
+                                                            <li style="font-size: 1rem">From  </li>
                                                             <li><strong>INETS COMPANY LIMITED</strong></li>
                                                             <li>P.o Box 32282 Dar es Salaam</li>
-                                                            <li>2nd Floor,Block NO. 576</li>
+                                                            <li>Shamo Park House, 3rd Floor</li>
                                                             <li>Mbezi Beach Bagamoyo Road</li>
                                                             <li>Mobile no: +255 655/754 406004</li>
                                                         </ul>
@@ -126,7 +92,7 @@
                                                         </ul>
                                                     </td>
                                                     <td>
-                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; ">Invoice</h1>
+                                                        <h1 class="pull-right invoice-title" style="font-size: rem; float: right; "><?= $invoice_name ?? '' ?></h1>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -171,6 +137,7 @@
                                         <table class="table table-bordered table-colapse">
                                             <thead>
                                                 <tr>
+                                                    <th>#</th>
                                                     <th>Description</th>
                                                     <th class="text-center">Quantity</th>
                                                     <th class="text-center">Unit Price</th>
@@ -183,28 +150,15 @@
                                                 foreach ($invoice_fee as $fees) {
                                                     ?>
                                                     <tr>
-                                                 <td><?= $fees->item_name ?>
-                                                    <?php if($invoicefee->project_id == 1){ ?>
-                                                    <li>Training and Support</li>
-                                                    <li>Unlimited Cloud hosting for School Information</li>
-                                                    <li>Unlimited bandwidth for users to access</li>
-
-                                                    <li>Customization of features based on school requests</li>
-                                                    <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
-                                                   <?php }  elseif ($invoicefee->project_id == 3){ ?>
-                                                    <li>School Bank Integration</li>
-                                                    <?php } elseif ($invoicefee->project_id == 2) { ?>
-                                                    <li> Android Based Fingerprint Handleld Terminal Device</li>
-                                                    <li> System installation </li>
-                                                    <li>Training and Support</li>
-
-                                                    <?php } ?>
-                                                </td>
-                                                    <td class="text-center"><?= $fees->quantity ?></td>
-                                                    <td class="text-center"><?= $fees->unit_price ?></td>
-                                                    <td class="text-center"><?= money($fees->amount) ?></td>
+                                                    <td><?= $i ?> </td>
+                                                    <td> <strong><?= $fees->item_name ?? '' ?></strong> <br>
+                                                        <?= warp($fees->note,70) ?? ''?>
+                                                    </td>
+                                                    <td class="text-right"><?= money($fees->quantity) ?></td>
+                                                    <td class="text-right"><?= money($fees->unit_price) ?></td>
+                                                    <td class="text-right"><?= money($fees->amount) ?></td>
                                                 </tr>
-                                            <?php } ?>
+                                            <?php $i++;} ?>
 
                                             </tbody>
                                         </table>
@@ -251,17 +205,7 @@
                                         <!-- <br/>
                                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
                                         <?php if(isset($diff_in_months)) { ?>
-                                        <?php if($diff_in_months <= 12) { ?>
-                                        <p class="text-muted well well-sm no-shadow">
-                                            {{--  --}}
-                                            We're always delighted to serve your school
-                                        </p>
-                                        <?php } else { ?>
-                                            <p class="text-muted well well-sm no-shadow">
-                                              We're always delighted to serve your school
-                                            </p>
-                                          <?php } ?>
-                                        <?php } else { ?>
+                                       
                                             <p class="text-muted well well-sm no-shadow">
                                                 We're always delighted to serve your school
                                             </p>
@@ -282,6 +226,9 @@
                                                     <tr>
                                                         <th>Grand Total :</th>
                                                         <th>Tsh <?= number_format($unpaid) ?></th>
+                                                        <th style="margin-left: 1px; z-index:1">
+                                                            <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
+                                                       </th>
                                                     </tr>
 
                                                 </tbody>
@@ -289,62 +236,20 @@
                                         </td>
                                       </tr>
                                     </table>
-                   
-                                   </div>
+                                </div>
                             </div>
+
+                            
                         </div>
                     </div>
                   </div>  
                </div>
-
-              </div>
+          </div>
                 
-
-              <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Edit This Invoice</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <?php
-                     //   $invoice_fee = $invoice->invoiceFees()->first();
-                        ?>
-                        <div class="modal-body">
-                      
-                                <form action="" method="post">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                Quantity
-                                                <input type="text" class="form-control"  name="quantity" value="">
-                                            </div>
-                                            <div class="col-md-6">
-                                                Price
-                                                <input type="text" class="form-control"  name="price" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="invoice_id" id="invoice_id" value="">
-                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Edit</button>
-                                    </div>
-                                    <?= csrf_field() ?>
-                                </form>
-           
-                            </div>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
+</div>
  
 
+<?php if(!isset($export)) { ?>
 
 <script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>
 <script type="text/javascript">
@@ -370,4 +275,8 @@ $(document).ready(function () {
 });
 </script>
 
-@endsection
+ @endsection 
+ <?php } ?>
+
+
+

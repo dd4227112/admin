@@ -15,13 +15,11 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $year = date('Y', strtotime(request('start')));
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
-$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and ' . $where))->first()->count;
+    $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and ' . $where))->first()->count;
     $yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and action=(\'Yes\') and ' . $where))->first()->count;
     $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and action=(\'No\') and ' . $where))->first()->count;
 ?>
 
-
-    
            <div class="page-header">
             <div class="page-header-title">
                 <h4><?= isset($start_date) && isset($end_date) ? 'Software Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Software Dashboard' ?></h4>
@@ -57,7 +55,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                 <div class="row">
                     <div class="col-md-12 col-xl-4">
                         <?php 
-                        $total_errors = \collect(DB::select('select count(*) from admin.error_logs a WHERE  a.deleted_at is null and  a.route is not null and  ' . $where))->first()->count;
+                        $total_errors = \collect(DB::select('select count(*) from admin.error_logs a WHERE a.deleted_at is null and a.deleted_by is null and  a.route is not null and  ' . $where))->first()->count;
                         ?>
                         <div class="card bg-c-pink text-white">
                                     <div class="card-block">
@@ -77,7 +75,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
 
                     <div class="col-md-6 col-xl-4">
                          <?php
-                        $resolved = \collect(DB::select('select count(*) from admin.error_logs a WHERE  a.deleted_at is not null and  a.route is not null and  ' . $where))->first()->count;
+                        $resolved = \collect(DB::select('select count(*) from admin.error_logs a WHERE  a.deleted_at is not null and a.deleted_by is not null and a.route is not null and  ' . $where))->first()->count;
                          ?>
                         <div class="card bg-c-yellow text-white">
                             <div class="card-block">
@@ -133,8 +131,8 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                                 <h5>Technical Tasks Activities</h5>
                             </div>
                             <div class="card-block">
-                                <?php
-                                $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE   a.user_id in (select id from admin.users where department=3) and " . $where . " group by task_name";
+                                <?php $user_id = \Auth()->user()->id;
+                                $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE a.user_id = {$user_id} and " . $where . " group by task_name";
                                 echo $insight->createChartBySql($sales_group, 'task_name', 'Technical Activity', 'bar', false);
                                 ?>
                             </div>

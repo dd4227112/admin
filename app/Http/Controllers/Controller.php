@@ -98,7 +98,6 @@ class Controller extends BaseController {
     }
 
     public function send_email($email, $subject, $message) {
-
         // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $obj = array('body' => $message, 'subject' => $subject, 'email' => $email);
         DB::table('public.email')->insert($obj);
@@ -108,18 +107,22 @@ class Controller extends BaseController {
 
     public function send_sms($phone_number, $message, $priority = 0) {
         if ((strlen($phone_number) > 6 && strlen($phone_number) < 20) && $message != '') {
-            // dd($phone_number);
-            $sms_keys_id = DB::table('public.sms_keys')->first()->id;
-            \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id));
+            $sms_key = DB::table('public.sms_keys')->first();
+            $sms_keys_id = !empty($sms_key) ? $sms_key->id : null;
+            if($sms_keys_id){
+               \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 
+                     'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id)); 
+            }
+            
         }
         return $this;
     }
 
 
   
- //Altenative function to store files on localstorage
-    public function saveFile($file, $subfolder = null, $local = null) {
-        if ($local == TRUE) { 
+ //Altenative function to store files locally
+    public function saveFile($file, $local = null) {
+            if($local == TRUE) { 
             $url = $this->uploadFileLocal($file);
             $file_id = DB::table('company_files')->insertGetId([
                 'extension' => $file->getClientOriginalExtension(),
@@ -130,7 +133,7 @@ class Controller extends BaseController {
                 'path' => $url
             ]);
             return $file_id;
-        } 
+        }
     }
 
     public function uploadFileLocal($file) {
@@ -142,6 +145,7 @@ class Controller extends BaseController {
         return url($destinationPath . '/' . $filename);
     }
 
+    
     public function curlPrivate($fields, $url = null) {
         // Open connection
         $url = 'http://75.119.140.177:8081/api/payment';
@@ -269,7 +273,6 @@ class Controller extends BaseController {
     //@param $chatId [string] [required] - the ID of chat where we send a message
     //@param $format [string] [required] - file format, from the params in the message body (text[1], etc)
     public function file($chatId, $format, $filename, $caption = null) {
-    
         $availableFiles = array(
             'doc' => 'document.doc',
             'gif' => 'gifka.gif',
@@ -289,6 +292,7 @@ class Controller extends BaseController {
             ); 
             $this->sendRequest('sendFile', $data);
         }
+
         if (strtolower($format) == 'ogg') {
             $data = array(
                 'audio' => $filename,
@@ -297,9 +301,6 @@ class Controller extends BaseController {
             $this->sendRequest('sendAudio', $data);
         }
     }
-
-
-
 
 
     //sends a voice message. it is called when the bot gets the command "ptt"
@@ -325,6 +326,17 @@ class Controller extends BaseController {
         $this->sendRequest('group', $data);
     }
 
+     public function sendMessageFile($chatId,$caption,$filename,$path){
+          $data = json_encode(array(
+              'chatId' => $chatId,
+              'body'   => $path,
+              'filename' => $filename,
+              'caption' => $caption
+             ));
+          $this->sendRequest('sendFile',$data);
+      }
+
+
 
     public function sendMessage($chatId, $text) {
         $data = array('chatId' => $chatId, 'body' => $text);
@@ -334,7 +346,6 @@ class Controller extends BaseController {
 
     public function sendRequest($method, $data) {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
-
             $url = $this->APIurl . $method . '?token=' . $this->token;
             if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
                 $url = $this->token . $method . '?token=' . $this->APIurl;
@@ -350,37 +361,23 @@ class Controller extends BaseController {
             $response = file_get_contents($url, false, $options);
             // $response = $this->curlServer($body, $url);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
-            // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
+           // echo $response;
         } else {
             echo 'Wrong url supplied in whatsapp api';
         }
+        
     }
 
 
-      public function send_whatsapp_sms($phone, $message) {
+      public function send_whatsapp_sms($phone, $message, $company_file_id = null) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
-            DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '" . $message . "','0',admin.whatsapp_phone('" .$phone. "')");
-        }
+            $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $phone . "')"))->first();
+            $data = array('message'=> $message,'phone'=> $phone->whatsapp_phone, 'company_file_id'=>$company_file_id);
+            \App\Models\WhatsAppMessages::create($data);
+           }
         return $this;
     }
-
-
-      public function whatsappMessage() {        
-        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
-        $controller = new \App\Http\Controllers\Controller();
-        foreach ($messages as $message) {
-            if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                $controller->sendMessage($message->phone, $message->message);
-                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
-                //   echo 'message sent to ' . $message->phone . '' . chr(10);
-             } else {
-                //this is invalid number, so update in db to show wrong return
-                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
-             }
-           }
-        }
-        
  
       public function syncMissingPayments(){
         $this->data['prefix'] = '';
@@ -414,34 +411,71 @@ class Controller extends BaseController {
         }
 
 
-           public function syncMissingInv($data,$prefix,$schema_name){
-                   $trans = (object) $data;
-                    foreach ($trans as $tran) {
-                        if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
-                             $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
-                             if(empty($check)){
-                                    $data= urlencode(json_encode($tran));
-                                    $background = new \App\Http\Controllers\Background();
-                                    $url = 'http://75.119.140.177:8081/api/init';
-                                    $fields = json_decode(urldecode($data));
-                                    $curl = $background->curlServer($fields, $url, 'row');
-                                    return $curl;
-                             }
-                         }
-                    }
-         }
+      public function syncMissingInv($data,$prefix,$schema_name){
+       $trans = (object) $data;
+        foreach ($trans as $tran) {
+            if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
+                 $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
+                if(empty($check)){
+                    $data= urlencode(json_encode($tran));
+                    $background = new \App\Http\Controllers\Background();
+                    $url = 'http://75.119.140.177:8081/api/init';
+                    $fields = json_decode(urldecode($data));
+                    $curl = $background->curlServer($fields, $url, 'row');
+                    return $curl;
+               }
+             }
+           }
+       }
+
+           
+           
+        public function action($action) {
+            if (request()->ajax()) {
+                return response()->json(['error' => 'Not Found'], 404);
+            } else {
+                return $action;
+            }
+        }
+            
+
+    
+    
+
+      public  function imartSMSAPIs()
+      {
+            $api_key = '262A04B6B5635A';
+            $contacts = '0655007457';
+            $from = 'Shule';
+            $sms_text = urlencode('Testing imartgroup sms API');
+
+            //Submit to server
+
+            $ch = curl_init();
+            curl_setopt($ch,CURLOPT_URL, "http://smsportal.imartgroup.co.tz/app/smsapi/index.php");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, "key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            echo $response;
+      }
 
 
 
+      public function test2()
+      {
+        $api_key = '262A04B6B5635A';
+        $contacts = '655007457,753683801';
+        $from = 'Shule';
+        $sms_text = urlencode('Hello People, have a great day');
 
-      
+        $api_url = "http://smsportal.imartgroup.co.tz/app/smsapi/index.php?key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text;
 
-
-      
-
-
-
-
+        //Submit to server
+        $response = file_get_contents($api_url);
+        echo $response;
+      }
 
    
 }

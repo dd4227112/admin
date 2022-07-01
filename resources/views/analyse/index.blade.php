@@ -3,8 +3,6 @@
 
 <?php $root = url('/') . '/public/';  ?>
 
-
-
   <div>
     <div class="page-header">
         <div class="page-header-title">
@@ -168,36 +166,13 @@
                         <div class="card">
                             <div class="card-body">
                                 <figure class="highcharts-figure">
-                                  <div id="containa" style="height: 300px;"></div>
+                                  <div id="containa" style="height: 400px;"></div>
                                 </figure>
                             </div>
                         </div>
                        </div>
                     </div>
                     
-               
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="card  mb-2">
-                                <div class="card-body">
-                                    <figure class="highcharts-figure">
-                                        <div id="onboardPie" style="height: 300px;"></div>
-                                    </figure>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6">
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <figure class="highcharts-figure">
-                                        <div id="onboardBar" style="height: 300px;"></div>
-                                    </figure>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                       
               <?php } ?>
 
                    <div class="card">
@@ -239,7 +214,6 @@
                         </div>
                     </div>
                   </div>
-
         </div>
     </div>
 

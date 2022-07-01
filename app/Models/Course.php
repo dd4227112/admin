@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model {
 
+    use \App\Traits\belongsTocompanyFile;
+
     /**
      * Generated
      */
@@ -14,10 +16,6 @@ class Course extends Model {
 
     public function createdBy() {
         return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');
-    }
-
-    public function companyFile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
     }
 
 

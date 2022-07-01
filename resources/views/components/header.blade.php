@@ -4,13 +4,17 @@
                         <a class="mobile-menu" id="mobile-collapse" href="#!">
                         <i class="icofont icofont-navigation-menu"></i>
                             
-                        </a>
-                        <a href="#">
-                            <img width="50" height="50" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
                         </a> 
-                        <a class="mobile-options">
-                            <i class="feather icon-more-horizontal"></i>
-                        </a>
+                        <?php
+                            if (strlen(request('token')) < 4) {?>
+                        <a class="main-search morphsearch-search  d-lg-none d-md-none" style="padding:80px" href="#!" style="color: white">
+                            <i class="feather icon-search"></i>
+                                    </a>
+                                    <?php } ?>
+                        <a href="#">
+                            <img width="50" height="50" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft"  >
+                        </a> 
+                       
                     </div>
 
                     <div class="navbar-container container-fluid mobile-menu">
@@ -40,31 +44,7 @@
 
                         </ul>
                         <ul class="nav-right">
-                            {{-- <li class="header-notification">
-                                <div class="dropdown-primary dropdown">
-                                    <div class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="feather icon-bell text-light"></i>
-                                        <span class="badge bg-c-pink">5</span>
-                                    </div>
-                                    <ul class="show-notification notification-view dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                        <li>
-                                            <h6>Notifications</h6>
-                                            <label class="label label-danger">New</label>
-                                        </li>
-                                        <li>
-                                            <div class="media">
-                                                <img class="d-flex align-self-center img-radius" src="..\files\assets\images\avatar-4.jpg" alt="Generic placeholder image">
-                                                <div class="media-body">
-                                                    <h5 class="notification-user">John Doe</h5>
-                                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                    <span class="notification-time">30 minutes ago</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    
-                                    </ul>
-                                </div>
-                            </li> --}}
+                            @include('components.notifications')
                           
                             <li class="user-profile header-notification">
                                 <div class="dropdown-primary dropdown">
@@ -118,7 +98,6 @@
                                         data: "q=" + val,
                                         dataType: 'JSON',
                                         success: function (data) {
-                                            console.log(data);
                                             $('#search_people').html(data.people);
                                             $('#search_schools').html(data.schools);
                                             $('#search_activities').html(data.activities);
@@ -152,3 +131,10 @@
                     </div>
                 </div>
             </nav>
+
+
+
+
+
+
+  

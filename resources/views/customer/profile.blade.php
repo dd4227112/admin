@@ -101,6 +101,16 @@ Message</a>
 </div>
 </div>
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="row">
 <div class="col-xl-3 col-lg-4 col-md-4 col-xs-12">
 
@@ -268,13 +278,13 @@ target="_blank"> Exams</a>
         aria-expanded="true">Staff Members</a>
         <div class="slide"></div>
         </li>
-        <?php if (can_access('add_si')) { ?>
+      
         <li class="nav-item">
         <a class="nav-link " data-toggle="tab" href="#payments" role="tab"
         aria-expanded="true">Invoice</a>
         <div class="slide"></div>
         </li>
-        <?php } ?>
+      
         </ul>
         </div>
 
@@ -284,13 +294,11 @@ target="_blank"> Exams</a>
 <div class="tab-pane active" id="timeline" aria-expanded="false">
 <div class="row">
 <div class="card-block">
-<button type="button" class="btn btn-primary waves-effect"
-data-toggle="modal" data-target="#large-Modal">Create
-Task</button>
-<!-- <a href="<?= url('Customer/activity/add') ?>" class="btn btn-primary waves-effect">Create Task</a> -->
+<button type="button" class="btn btn-primary btn-lg btn-round" data-toggle="modal" data-target="#large-Modal">Create Task</button>
+
 <div class="modal fade" id="large-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
-style="z-index: 1050; display: none;">
+style="z-index: 1050;  display: none;">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
@@ -308,9 +316,10 @@ Create a task for this school with
 implementation deadline</span>
 
 <div class="form-group">
-<textarea class="form-control" rows="4"
-placeholder="Create Task"
-name="activity"></textarea>
+<textarea class="form-control" rows="4"  placeholder="Create Task" name="activity">
+</textarea>
+
+
 </div>
 <div class="form-group">
 <div class="row"> 
@@ -318,9 +327,9 @@ name="activity"></textarea>
 <div class="col-md-6">
 Task Type
 <select name="task_type_id"
-class="form-control select2">
+class="select2">
 <?php
-$types = DB::table('task_types')->where('department', Auth::user()->department)->get();
+$types = Auth::user()->role_id == 1 ? DB::table('task_types')->get() : DB::table('task_types')->where('department', Auth::user()->department)->get();
 if (!empty($types)) {
 foreach ($types as $type) {
 ?>
@@ -332,20 +341,19 @@ value="<?= $type->id ?>">
 }
 }
 ?>
-
 </select>
 </div>
+
+
 <div class="col-md-6">
 Person Allocated to do
-<select name="to_user_id"
-class="form-control select2">
+<select name="to_user_id[]" class="select2"  multiple="">
 <?php
 $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
 if (!empty($staffs)) {
 foreach ($staffs as $staff) {
 ?>
-<option
-value="<?= $staff->id ?>">
+<option value="<?= $staff->id ?>">
 <?= $staff->firstname . ' ' . $staff->lastname ?>
 </option>
 <?php
@@ -357,16 +365,47 @@ value="<?= $staff->id ?>">
 </div>
 </div>
 </div>
+
+<div class="form-group">
+
+<div class="row">
+<div class="col-md-6">
+<strong> Task Executed Successfully</strong>
+<select name="status" class="form-control"  onchange="chooseValue(this.value);" id="task_executed" required>
+    <option value='new'> Select
+    Task Status Here...
+    </option>
+    <option value='complete'>
+    Yes and Completed
+    </option>
+    <option value='on progress'>
+    Yes but on Progress
+    </option>
+    <option value='schedule'>
+    Not yet (Schedule)
+    </option>
+</select>
+</div>
+
+<div class="col-md-6"  id="remainder_date">
+   <strong> Notification Date</strong>
+   <input type="date"  name="remainder_date" class="form-control">
+</div>
+</div>
+</div>
+
+
 <div class="form-group">
 <div class="row">
 <div class="col-md-6">
 <strong> Start Date</strong>
-<input type="datetime-local"
+<input type="datetime-local" required
 class="form-control" 
 placeholder="Deadline"
 name="start_date">
 </div>
-<div class="col-md-6">
+
+<div class="col-md-6" id="end_date">
 <strong> End Date </strong>
 <input type="datetime-local"
 class="form-control"
@@ -378,77 +417,29 @@ name="end_date">
 
 
 <div class="form-group">
-<strong> Pick Modules where task will be
-Performed</strong>
+<strong> Pick Modules where task will be Performed</strong>
 <hr>
+<select name="module_id[]" class="select2"  multiple="">
 <?php
 $modules = DB::table('modules')->get();
 if (!empty($modules)) {
 foreach ($modules as $module) {
 ?>
-<input type="checkbox"
-id="feature<?= $module->id ?>"
-value="{{$module->id}}"
-name="module_id[]">
-<?php echo $module->name; ?> &nbsp;
-&nbsp;
-
+<option value="<?= $module->id ?>">
+<?= $module->name ?>
+</option>
 <?php
 }
 }
 ?>
-</div>
-
-<div class="form-group">
-<div class="row">
-
-<div class="col-md-12">
-<strong> Task Executed
-Successfully</strong>
-<select name="status"
-class="form-control"
-required>
-
-<option value='new'> Select
-Task Status Here...
-</option>
-<option value='complete'>
-Yes and Completed
-</option>
-<option value='on progress'>
-Yes but on Progress
-</option>
-<option value='schedule'>
-Not yet (Schedule)
-</option>
 </select>
 </div>
-</div>
-</div>
-
-<hr>
-<div class="form-group">
- <div class="row">
-   <div class="col-md-4">
-      <strong> Set Remainder</strong>: <input type="checkbox"  id="supplied" name="remainder" checked>
-   </div>
-     <div id="idate" class="form-group col-md-4">
-        <strong>Remainder date</strong> : <input type="date"  name="remainder_date" class="form-control">
-    </div>
-
-  </div>
-</div>
-
 
 </div>
 
 <div class="modal-footer">
-<button type="button"
-class="btn btn-default waves-effect "
-data-dismiss="modal">Close</button>
-<button type="submit"
-class="btn btn-primary waves-effect waves-light ">Save
-changes</button>
+    <button type="button" class="btn btn-default btn-sm btn-round" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary btn-sm btn-round">Save changes</button>
 </div>
 <input type="hidden" value="<?= $client_id ?>"
 name="client_id" />
@@ -476,11 +467,7 @@ id="removetag<?= $task->id ?>">
 </div>
 <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
 <div class="card m-0">
-<span
-class="dropdown-toggle addon-btn text-muted f-right service-btn"
-data-toggle="dropdown" aria-haspopup="true"
-aria-expanded="true"
-role="tooltip">Actions</span>
+
 <div
 class="dropdown-menu dropdown-menu-right b-none services-list">
 <a class="dropdown-item" href="#"
@@ -488,21 +475,36 @@ onmousedown="removeTag(<?= $task->id ?>)">Remove
 tag</a>
 <a class="dropdown-item" href="#">Report
 Photo</a>
-{{-- <button type="button" class="btn btn-primary waves-effect"
-data-toggle="modal" data-target="#edit-Modal-task">edit
-Task</button> --}}
+
 
 </div> 
 
 <div class="card-block">
 <div class="timeline-details">
 <div class="chat-header">
-<?= $task->user->firstname ?> -
-<span
-class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span>
+    <?php 
+      $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task->user->id}'"))->first(); 
+      $local = $root . 'assets/images/user.png';
+     ?>
+    <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
+           width: 25px;
+           height: 25px;
+           border-radius: 50%;
+           overflow: hidden;">
+   &nbsp;&nbsp;<?= $task->user->firstname ?> -
+    <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span> &nbsp;&nbsp; <label class="badge badge-inverse-primary">{{ $task->status}}</label>
+    <?php if(can_access('delete_tasks')) { ?>
+       <a class="btn btn-mini btn-round btn-danger float-right text-light"   onclick="RemoveAttr(<?= $task->id ?>);"> delete </a>
+    <?php } ?>
 </div>
-<p class="text-muted">
-<?= $task->activity ?></p>
+<p class="text-muted editable" id="txt1<?= $task->id ?>">
+   {{-- <?= $task->activity ?> --}}
+
+   <span style="text-decoration: none;" <?= $task->user->id == \Auth::user()->id && date('Y-m-d H:i:s') < date('Y-m-d H:i:s', strtotime("+60 minutes", strtotime($task->created_at))) ? 'contenteditable="true"': 'contenteditable="false"' ?> 
+    onblur="save('<?= $task->id . 'activity' ?>', '<?= $task->id  ?>','activity')" 
+    id="<?= $task->id . 'activity' ?>"> <?= $task->activity == '' ? 'null' : $task->activity ?></span>
+    <span id="stat<?= $task->id .  'activity' ?>"></span>
+</p>
 <?php
 $modules = $task->modules()->get();
 if (count($modules) > 0) {
@@ -515,9 +517,18 @@ foreach ($modules as $module) {
 }
 }
 ?>
+
+
 <p>Start Date- <?= $task->start_date ?>
-{{-- &nbsp; &nbsp; | &nbsp; &nbsp; End
-Date - $task->end_date ?></p> --}}
+ &nbsp; &nbsp; | &nbsp; &nbsp; 
+ <?= date('Y-m-d', strtotime($task->end_date)) == '1970-01-01' ? '' : 'End Date - '.$task->end_date  ?></p> 
+
+ <p>Assigned to - 
+     @foreach ($task->taskUsers as $value)
+     <?= '<label class="badge badge-inverse-primary">' . $value->user->name() . '</label>' ?>
+       &nbsp; &nbsp;
+    @endforeach
+</p>
 </div>
 
 <div class="user-box">
@@ -533,14 +544,16 @@ foreach ($comments as $comment) {
 ?>
 <div class="media" class="pb-1">
 <a class="media-left" href="#">
-<img class="media-object img-circle m-r-20"
-src="<?= $root . '/assets/images/avatar-2.png'; ?>"
-alt="Image">
+<?php
+$path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task->user->id}'"))->first(); 
+$local = $root . '/assets/images/avatar-2.png';  ?>
+<img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
+width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
 </a>
 <div
 class="media-body b-b-muted social-client-description">
 <div class="chat-header">
-<?= $comment->user->name ?><span
+<?= $comment->user->name ?> &nbsp;&nbsp; <span 
 class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span>
 </div>
 <p class="text-muted">
@@ -557,7 +570,7 @@ class="new_comment<?= $task->id ?>">
 </div>
 <div class="media">
 <a href="#"
-class="btn btn-success btn-sm right"
+class="btn btn-success btn-mini btn-round m-1"
 onclick="return false"
 onmousedown="$('#comment_area<?= $task->id ?>').toggle()"><i
 class="ti-comment"></i>
@@ -577,10 +590,7 @@ value="<?= $task->id ?>"
 id="task_id<?= $task->id ?>" />
 <span
 class="input-group-btn">
-<button
-type="button"
-class="btn btn-primary"
-onmousedown="save_comment(<?= $task->id ?>)">Send</button>
+  <button type="button" class="btn btn-primary btn-sm btn-round"  onmousedown="save_comment(<?= $task->id ?>)">Send</button>
 </span>
 
 <span
@@ -608,6 +618,7 @@ data-icon=""></span>
 
 <div class="tab-pane" id="about" aria-expanded="true">
 <div class="row">
+
 <div class="col-sm-12">
 <div class="card">
 <div class="card-header">
@@ -634,6 +645,7 @@ School Name
 class="social-user-name b-none p-t-0">
 <?= $school->sname ?? '' ?></td>
 </tr>
+
 <tr>
 <th class="social-label b-none">
 Location</th>
@@ -668,19 +680,19 @@ class="social-user-name b-none">
     ?>
 </td>
 
-<?php if(can_access('reset_school_password') && !preg_match('/stfrancisgirlssecondaryschool/i', strtolower($school->username))) { ?>
+<?php /* if( can_access('reset_school_password') && isset($school->username) && !preg_match('/stfrancisgirls/i', strtolower($school->username))) { ?>
 <tr>
 <th class="social-label b-none p-b-0">School Access</th>
 <td class="social-user-name b-none p-t-10">
         <?php
-        if (isset($school->username)) {
+        if (isset($school->username) && $schema != 'accounts') {
             echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-primary btn-sm btn-round">
                  Reset Password</a>';
         }
         ?>
 </td>
 </tr>
-<?php } ?>
+<?php } */ ?>
 <?php } ?>
 
 </tbody>
@@ -729,6 +741,7 @@ class="social-user-name b-none">
 <div id="edit-info" class="row" style="display: none;">
 <div class="col-lg-12 col-md-12">
 <form>
+
 <div class="input-group">
 <input type="text" class="form-control"
 placeholder="Full Name">
@@ -758,6 +771,7 @@ class="md-check p-0">Gender</label>
 </div>
 </div>
 </div>
+
 <div class="input-group">
 <input id="dropper-default"
 class="form-control" type="text"
@@ -794,163 +808,102 @@ class="btn btn-default waves-effect waves-light">Cancel</a>
 
 
 
-{{-- 
+
+
 <div class="col-sm-12">
-<div class="card">
-<div class="card-header">
-<h5 class="card-header-text">School Allocation
-Information</h5>
-<button id="edit-Contact" type="button"
-class="btn btn-primary waves-effect waves-light f-right">
-<i class="icofont icofont-edit"></i>
-</button>
-</div>
-<div class="card-block">
-<div id="contact-info" class="row">
-<div class="col-lg-6 col-md-12">
-<table class="table m-b-0">
-<tbody>
-<?php
-if (isset($school->school_id) && $school->school_id == null) {
-?>
-<tr>
-<th class="social-label b-none">
-School Mapping </th>
-<td
-class="social-user-name b-none">
-<input class="form-control"
-    id="school_id"
-    name="school_id" type="text"
-    style="width:18em"
-    placeholder="Click here to Map">
-<span id="search_result"></span>
-</td>
-<td
-class="social-user-name b-none text-muted">
-Type at least 3 characters</td>
-</tr>
-<?php } ?>
-<tr>
-<th class="social-label b-none">
-Support Personnel </th>
-<td
-class="social-user-name b-none text-muted">
-<?php
-$school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
-?> <select class="form-control"
-id="support_id"
-name="support_id">
-    <?php
-    if (!empty($shulesoft_users)) {
-        foreach ($shulesoft_users as $user) {
-            ?>
-    <option
-        value="<?= $user->id ?>" <?php
-        if (!empty($school_allocations) && $user->id == $school_allocations->id) {
-            $support_person = $user->firstname . ' ' . $user->lastname;
-            echo 'selected="selected"';
-        } else {
-            echo '';
-        }
-        ?>>
-            <?= $user->firstname . ' ' . $user->lastname ?>
-    </option>
-    <?php
-}
-}
-?>
-</select>
-</td>
-<td
-class="social-user-name b-none text-muted">
-<input type="button"
-value="save"
-onmousedown="allocate($('#support_id').val(), 8)"
-class="btn btn-success btn-sm">
-<span id="supportl"> </span>
-</td>
-</tr>
-<tr>
-<th class="social-label b-none">
-Sales Personnel </th>
-<td
-class="social-user-name b-none text-muted">
-<?php
-$school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
-?> <select class="form-control"
-id="sales_id"
-name="sales_id">
+    <div class="card">
+    <div class="card-header">
+    <h2 class="card-header-text h5">School Agreement Information</h2>
+    <button id="edit-btn" type="button" class="btn btn-primary btn-round btn-sm float-right"
+       data-toggle="modal" data-target="#agreement_school_details">
+     Update info
+    </button>
+    </div>
+    <div class="card-block">
+    <div id="view-info" class="row">
+    <div class="col-lg-6 col-md-12">
+    <table class="table m-b-0">
+    <?php if(isset($agreement)) { ?>
+    <tbody>
+    <tr>
+    <th
+    class="social-label b-none p-t-0">
+      Contact person name
+    </th>
+    <td
+    class="social-user-name b-none p-t-0">
+      <?= $agreement->contact_person_name ?? '' ?>
+   </td>
 
-<?php
-if (!empty($school_sales_allocations)) {
-foreach ($shulesoft_users as $user) {
-    ?>
-    <option
-        value="<?= $user->id ?>" <?php
-        if (!empty($school_sales_allocations) && $user->id == $school_sales_allocations->id) {
-            $sales_person = $user->firstname . ' ' . $user->lastname;
-            echo 'selected="selected"';
-        } else {
-            echo '';
-        }
-        ?>>
-            <?= $user->firstname . ' ' . $user->lastname ?>
-    </option>
-    <?php
-}
-}
-?>
-</select>
+   <th
+    class="social-label b-none p-t-0">
+      NMB Account name
+    </th>
+    <td
+    class="social-user-name b-none p-t-0">
+      <?= $agreement->school->nmb_school_name ?? '' ?>
+   </td>
+    </tr>
+
+    <tr>
+    <th class="social-label b-none">
+        Contact person phone</th>
+    <td class="social-user-name b-none">
+        <?= $agreement->contact_person_phone ?? '' ?>
+    </td>
+
+    <th class="social-label b-none">
+        NMB Account</th>
+    <td class="social-user-name b-none">
+        <?= $agreement->school->account_number ?? '' ?>
+    </td>
+
+    </tr>
+
+    <tr>
+    <th class="social-label b-none"> Designation</th>
+    <td
+    class="social-user-name b-none">
+        <?= $agreement->contact_person_designation ?? '' ?>
+    </td>
+    </tr>
+
+    <tr>
+    <th class="social-label b-none">
+        Agreement date</th>
+    <td class="social-user-name b-none">
+       <?= isset($agreement->agreement_date) ? date('d-m-Y',strtotime($agreement->agreement_date)) : '' ?></td>
+    </tr>
+
+    <tr>
+        <th class="social-label b-none"> Agreement form type</th>
+        <td class="social-user-name b-none">
+           <?= $agreement->form_type ?? '' ?></td>
+
+        <th class="social-label b-none"> View file</th>
+           <td class="social-user-name b-none">
+              <?php $viw_url = isset($agreement) ?  "customer/viewContract/$agreement->id/agreement" : ''; ?>
+               <a  target="_blank" href="<?= url($viw_url)?>" class="btn btn-primary btn-mini btn-round">View</a>
+        </td>
+    </tr>
+
+    <tr>
+        <th class="social-label b-none">
+             Created by</th>
+        <td class="social-user-name b-none">
+           <?= isset($agreement) ? $agreement->user->name() : '' ?></td>
+    </tr>
+    </tbody>
+  <?php } ?>
+    </table>
+    </div>
+    </div>
+  
+    </div>
+    </div>
+    </div>
 
 
-</td>
-<td
-class="social-user-name b-none text-muted">
-<input type="button"
-value="save"
-onmousedown="allocate($('#sales_id').val(), 3)"
-class="btn btn-success btn-sm">
-</td>
-</tr>
-
-
-</tbody>
-</table>
-</div>
-</div>
-<div id="edit-contact-info" class="row"
-style="display: none;">
-<div class="col-lg-12 col-md-12">
-<form>
-<div class="input-group">
-<input type="text" class="form-control"
-placeholder="Mobile number">
-</div>
-<div class="input-group">
-<input type="text" class="form-control"
-placeholder="Email address">
-</div>
-<div class="input-group">
-<input type="text" class="form-control"
-placeholder="Twitter id">
-</div>
-<div class="input-group">
-<input type="text" class="form-control"
-placeholder="Skype id">
-</div>
-<div class="text-center m-t-20">
-<a href="javascript:;" id="contact-save"
-class="btn btn-primary waves-effect waves-light m-r-20">Save</a>
-<a href="javascript:;"
-id="contact-cancel"
-class="btn btn-default waves-effect waves-light">Cancel</a>
-</div>
-</form>
-</div>
-</div>
-</div>
-</div>
-</div> --}}
 
 
 
@@ -1334,7 +1287,7 @@ $x = 1;
 $customer = new \App\Http\Controllers\Customer();
 $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->whereIn('train_item_id',\App\Models\TrainItem::where('status',1)->get(['id']))->get();
 foreach ($trainings as $training) {
-$status=check_implementation($training->trainItem->content, $schema);
+$status  = check_implementation($training->trainItem->content, $schema);
 ?>
 <tr>
 <th scope="row"><input type="checkbox"/></th>
@@ -1904,10 +1857,10 @@ required>
 
 <div class="modal-footer">
 <button type="button"
-class="btn btn-default waves-effect "
+class="btn btn-default btn-mini btn-round"
 data-dismiss="modal">Close</button>
 <button type="submit"
-class="btn btn-primary waves-effect waves-light ">Save
+class="btn btn-primary btn-mini btn-round">Save
 changes</button>
 </div>
 <input type="hidden" value="<?= $client_id ?>"
@@ -1925,11 +1878,9 @@ name="client_id" />
 <div class="card-header">
 
 <div class="col-sm-4 my-2">
-<?php if (can_access('add_si')) { ?>
 <a class="btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#standing-order-Modal">
     Add Standing Orders
 </a>
-<?php } ?>
 </div>
  <div class="table-responsive">
  <table id="example"  class="table dataTable table-sm table-striped table-bordered nowrap">
@@ -2306,6 +2257,91 @@ if (!empty($profile)) {
 
 </div>
 </div>
+
+
+
+<div class="modal fade" id="agreement_school_details" tabindex="-1" role="dialog" style="display: none;"aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <div class="modal-header"> 
+      <div class="card-block">
+        
+    <div class="row">
+        <h5> Edit Agreement Details </h5>
+         <br>
+         <br>
+         
+        <form action="<?= url('sales/editAgreementDetails/' . $school_id) ?>" method="POST" enctype="multipart/form-data">
+            <div class="form-group row">
+                <label class="col-sm-6">Contact Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="contact_person_name" value="<?= $agreement->contact_person_name ?? '' ?>">
+                </div>
+            </div>
+    
+             <div class="form-group row ">
+                <label class="col-sm-6">Contact Phone</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="contact_person_phone" value="<?= $agreement->contact_person_phone ?? '' ?>">
+                </div>
+            </div>
+
+            <div class="form-group row ">
+                <label class="col-sm-6">Contact person Designation</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="contact_person_designation" value="<?= $agreement->contact_person_designation ?? '' ?>">
+                </div>
+            </div>
+    
+    
+             <div class="form-group row">
+                <label class="col-sm-6 col-form-label">Agreement Date</label>
+                <div class="col-sm-6">
+                    <input type="date" class="form-control" name="agreement_date" value="<?= $agreement->agreement_date ?? '' ?>">
+                </div>
+            </div>
+    
+    
+              <div class="form-group row">
+                <div class="col-sm-6">
+                     <label for="type">Type</label>
+                     <select name="form_type" class="form-control"  required>
+                        <option value='0'> Choose</option>
+                        <option value='Shulesoft'> Shulesoft</option>
+                        <option value='NMB'> NMB </option>
+                    </select>
+                </div>
+    
+                  <div class="col-sm-6">
+                     <label for="">Document</label>
+                    <input type="file" class="form-control" name="agreement_file" >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-sm-6">
+                     <label for="">NMB School name</label>
+                    <input type="text" class="form-control" name="nmb_account_name" value="<?= $agreement->school->nmb_school_name ?? '' ?>">
+                </div>
+    
+                  <div class="col-sm-6">
+                     <label for="">NMB Account</label>
+                    <input type="text" class="form-control" name="nmb_account" value="<?= $agreement->school->account_number ?? '' ?>">
+                </div>
+              </div>
+    
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+            </div>
+       </form>
+      </div>
+    </div>
+    </div>
+    </div>
+    
+ </div>
+</div>
+
 <?php } ?>
                                                                                                                   <!-- notify js Fremwork -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
@@ -2329,8 +2365,63 @@ if (!empty($profile)) {
         <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
 
       <script>
-     
 
+      
+
+
+    function RemoveAttr(a) {
+        var val = a;
+        if (val !== '') {
+            $.ajax({
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
+                url: "<?= base_url('customer/removeTag/null') ?>",
+                data: {"id": val},
+                dataType: "html",
+                success: function (data) {
+                     toastr.success(data);
+                     location.reload();
+                }
+            });
+          }
+        }
+     
+        function chooseValue(value){
+              if(value == 'complete'){
+                $('#end_date').hide();  
+                $('#remainder_date').hide();  
+              }else{
+                $('#end_date').show();
+                $('#remainder_date').show();
+              }
+            }
+
+
+     function save(a, id, column) {
+        var val = $('#' + a).text();
+        if (val !== '') {
+            $.ajax({
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
+                url: "<?= base_url('account/editSetting/null') ?>",
+                data: {"id": id, newvalue: val, column: column,table:'tasks'},
+                dataType: "html",
+                beforeSend: function (xhr) {
+                    $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
+                },
+                complete: function (xhr, status)  {
+                    $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
+                },
+                success: function (data) {
+                     toastr.success(data);
+                }
+            });
+          }
+        }
 
           $(document).ready(function() {
            $('#example').DataTable();
@@ -2427,20 +2518,9 @@ if (!empty($profile)) {
                 }
             });
         });
-        removeTag = function (a) {
-            $.ajax({
-                url: '<?= url('customer/removeTag') ?>/null',
-                method: 'get',
-                data: {
-                    id: a
-                },
-                success: function (data) {
-                    if (data == '1') {
-                        $('#removetag' + a).fadeOut();
-                    }
-                }
-            });
-        }
+
+  
+       
 
         task_group = function () {
             $('.task_groups').change(function () {
@@ -2506,7 +2586,6 @@ if (!empty($profile)) {
             });
             
             $('.task_allocated_id').mousedown(function () {
-
                 var task_id = $(this).attr('task-id');
                 var start_date = $('#start_date' + task_id).val();
                 var school_person = $('#school_person' + task_id).text();

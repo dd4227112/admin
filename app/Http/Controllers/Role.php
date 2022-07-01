@@ -12,7 +12,6 @@ class Role extends Controller
     }
 
     public function userpermission() {
-       $this->data['breadcrumb'] = array('title' => 'System roles','subtitle'=>'permissions','head'=>'operations');
         $id = request()->segment(3);
         $this->data['set']  = (int) $id;
         $this->data['roles']  = \App\Models\Role::orderBy('id', 'DESC')->paginate(12);

@@ -4,12 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model {
+    
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable {
+
+    //use \App\Traits\belongsTocompanyFile;
+
 
     /**
      * Generated
      */
     protected $table = 'admin.users';
+    
     protected $fillable = ['id', 'firstname', 'middlename', 'lastname', 'email', 'password', 'role_id', 'type', 'name', 
     'remember_token', 'dp', 'phone', 'town', 'created_by', 'photo','about','salary','sex','skills','marital','date_of_birth',
     'personal_email','tshirt_size','joining_date','contract_end_date','academic_certificates','medical_report','driving_license',
@@ -29,9 +36,6 @@ class User extends Model {
         return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
     }
 
-    public function location() {
-        return $this->hasMany('App\Model\Location');
-    }
 
     public function deductions() {
         return $this->belongsToMany(\App\Models\Deduction::class, 'user_deductions', 'user_id', 'deduction_id');
@@ -92,9 +96,6 @@ class User extends Model {
         return $this->belongsTo('App\Models\Role')->withDefault(['display_name' => 'unknown']);
     }
 
-    public function companyFile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
-    }
 
     public function uattendance() { 
         return $this->hasMany(\App\Models\Uattendance::class, 'user_id', 'id');
@@ -106,6 +107,10 @@ class User extends Model {
 
      public function department() {
         return $this->belongsTo(\App\Models\Department::class,'department','id')->withDefault(['display_name' => 'undefined']);
+    }
+
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
 
 }

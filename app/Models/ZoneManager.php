@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ZoneManager extends Model {
 
+  //  use \App\Traits\BelongsToUser;
+    
     /**
      * Generated
      */
@@ -16,7 +18,8 @@ class ZoneManager extends Model {
         return $this->belongsTo(\App\Models\Zone::class, 'zone_id', 'id');
     }
 
-    public function user() {
-        return $this->belongsTo(\App\Models\User::class,'user_id', 'id');
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
+
 }

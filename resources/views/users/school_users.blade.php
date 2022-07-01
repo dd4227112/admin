@@ -233,20 +233,20 @@
 <!-- Custom Theme JavaScript -->
 <script src="<?= $root ?>js/cbpFWTabs.js"></script>
 <script type="text/javascript">
-                                                        (function () {
-                                                            [].slice.call(document.querySelectorAll('.sttabs')).forEach(function (el) {
-                                                                new CBPFWTabs(el);
-                                                            });
-                                                        })();
+(function () {
+    [].slice.call(document.querySelectorAll('.sttabs')).forEach(function (el) {
+        new CBPFWTabs(el);
+    });
+})();
 </script>
 <script src="<?= $root ?>plugins/bower_components/sweetalert/sweetalert.min.js"></script>
 <script src="<?= $root ?>plugins/bower_components/sweetalert/jquery.sweet-alert.custom.js"></script>
 <script type="text/javascript">
-                                                        edit_records = function (tag, val, schema) {
-                                                            $.get('<?= url('profile/update') ?>', {schema: schema, table: 'setting', val: val, tag: tag, user_id: '1'}, function (data) {
-                                                                swal('success', data);
-                                                            });
-                                                        };
+edit_records = function (tag, val, schema) {
+    $.get('<?= url('profile/update') ?>', {schema: schema, table: 'setting', val: val, tag: tag, user_id: '1'}, function (data) {
+        swal('success', data);
+    });
+};
 </script>
 @include('layouts.datatable')
 @endsection

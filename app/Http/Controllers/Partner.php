@@ -125,7 +125,10 @@ class Partner extends Controller {
                 $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
                 if (empty($check_contract)) {
                     $file = request()->file('attachments')[0];
-                    $file_id = $this->saveFile($file, 'company/contracts');
+                    if(filesize($file) > 2015110 ) {
+                        return redirect()->back()->with('error', 'File must have less than 2MBs');
+                     }
+                    $file_id = $this->saveFile($file,TRUE);
                     //save contract
                     $contract_id = DB::table('admin.contracts')->insertGetId([
                         'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('implementation_date'), 'end_date' => date('Y-m-d', strtotime('+1 years')), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
@@ -188,7 +191,10 @@ class Partner extends Controller {
 
             $attachments = request()->file('attachments');
             foreach ($attachments as $file) {
-                $file_id = $this->saveFile($file, 'company/contracts');
+                if(filesize($file) > 2015110 ) {
+                    return redirect()->back()->with('error', 'File must have less than 2MBs');
+                 }
+                $file_id = $this->saveFile($file,TRUE);
                 // Integration requests documents
                 DB::table('admin.integration_requests_documents')->insertGetId(['company_file_id' => $file_id, 'integration_request_id' => $request_id]);
             } 
@@ -357,7 +363,6 @@ class Partner extends Controller {
     }
 
     public function partnerStaff() {
-        $this->data['breadcrumb'] = array('title' => 'Staff Members','subtitle'=>'partners','head'=>'operations');
         $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['staffs'] = \App\Models\PartnerUser::where('branch_id', $id)->get();
@@ -399,7 +404,6 @@ class Partner extends Controller {
     }
 
     public function addPartner() {
-        $this->data['breadcrumb'] = array('title' => 'Company Partners','subtitle'=>'add partners','head'=>'operations');
         $this->data['countries'] = \App\Models\Country::all();
         $id = request()->segment(3);
         if ((int) $id > 0) {
@@ -501,7 +505,10 @@ class Partner extends Controller {
             $file = request()->file('standing_order');
             $contract_id = 0;
             if($file){
-            $file_id = $this->saveFile($file, 'company/contracts');
+               if(filesize($file) > 2015110 ) {
+                return redirect()->back()->with('error', 'File must have less than 2MBs');
+                }
+            $file_id = $this->saveFile($file,TRUE);
             //save contract
             $contract_id = DB::table('admin.contracts')->insertGetId([
                 'name' => $request->client->name .' Standing Order', 'company_file_id' => $file_id, 'start_date' => date('Y-m-d'), 'end_date' => date("Y-m-d", strtotime('1 year')), 'contract_type_id' => 2, 'user_id' => Auth::user()->id, 'note' =>  $request->client->name .' Standing Order'
@@ -526,4 +533,32 @@ class Partner extends Controller {
             return redirect('Partner/index/');
         }
     }
+
+    public function transactions() {
+        $this->data['bank_accounts'] =  DB::table('admin.all_bank_accounts_integrations')->whereRaw('UPPER(invoice_prefix) LIKE ?', ['%SASA%'])->get();
+        $this->data['from_date'] = $from = request('from_date') != '' ? request('from_date') : date("Y-m-d", strtotime('-10 day'));
+        $this->data['to_date'] = $to = request('to_date') != '' ? request('to_date') : date("Y-m-d");
+        $reference = request('invoice_prefix') != '' ? 'PAYMENTREFERENCE":"'.request('invoice_prefix') : 'PAYMENTREFERENCE":"SASA80';
+        $this->data['payments'] = DB::table('api.requests')
+        ->select('content')->whereBetween('created_at', [$from, $to])->whereRaw('UPPER(content) LIKE ?', ['%' . strtoupper($reference) . '%'])
+        ->groupBy('content')->get();
+        $this->data['invoice_prefix'] = request('invoice_prefix');
+    return view('partners.payments', $this->data);
+
+    }
+    
+    
+    public function pushPayment() {
+        $url = 'http://51.91.251.252:8081/api/init';
+        $myvars = request('data');
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $myvars);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        echo isset(json_decode($response)->description) ? json_decode($response)->description . ' - ' .json_decode($response)->reference : json_decode($response)->Message;
+    }
+
 }

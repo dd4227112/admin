@@ -61,7 +61,6 @@ foreach ($payments as $payment) {
 $school_allocations = DB::select('select c.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.user_clients a join admin.users b on b.id=a.user_id join admin.clients z on z.id=a.client_id join admin.all_setting c on c."schema_name"=z."username" where a.status=1 and c.schema_name is not null');
 $allocation = [];
 $users_allocation = [];
-
 foreach ($school_allocations as $school_allocation) {
     $allocation[$school_allocation->schema_name] = $school_allocation->firstname . ' ' . $school_allocation->lastname;
 }

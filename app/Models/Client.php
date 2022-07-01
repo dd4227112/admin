@@ -12,7 +12,7 @@ class Client extends Model {
 
     protected $fillable = ['id', 'name', 'email', 'phone', 'address', 'lat', 'long', 'google_map', 'username',
     'status','code','email_verified','phone_verified','created_by','estimated_students','special_trial_code',
-    'price_per_student','start_usage_date'];
+    'price_per_student','start_usage_date','note'];
 
     public function invoices() {
         return $this->hasMany(\App\Models\Invoice::class, 'client_id', 'id');
@@ -30,18 +30,19 @@ class Client extends Model {
         return $this->hasMany(\App\Models\Payment::class, 'client_id', 'id');
     }
       public function createdBy() {
-        return $this->hasMany(\App\Models\User::class, 'created_by', 'id');
+        return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');
     }
-    public function user() {
-        
-    }
-
+   
     public function clientschool() { 
-        return $this->hasMany(\App\Models\ClientSchool::class,'client_id', 'id');
+        return $this->hasMany(\App\Models\ClientSchool::class,'school_id', 'id');
     }
 
     public function standingorder() { 
         return $this->hasMany(\App\Models\StandingOrder::class,'client_id', 'id');
+    }
+
+     public function clientContract() { 
+        return $this->hasMany(\App\Models\ClientContract::class,'contract_id', 'id');
     }
 
 }

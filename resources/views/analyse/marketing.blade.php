@@ -17,8 +17,6 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
 ?>
-
-
      <div class="page-header">
         <div class="page-header-title">
              <h4><?= isset($start_date) && isset($end_date) ? 'Analytic Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/Y', strtotime($end_date)) : ' Analytic Dashboard' ?></h4>
@@ -90,16 +88,16 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
                 
                   <div class="col-xl-3 col-md-6">
-                      <?php  $email_total_reacherd = \collect(DB::select('select count(*) from public.email a where ' . $where))->first()->count; ?>
+                      <?php  $whatsapp_sms = \collect(DB::select('select count(*) from admin.whatsapp_messages a where ' . $where))->first()->count; ?>
                      <div class="card shadow">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <p class="m-b-5">Email sent</p>
-                                                <h4 class="m-b-0">{{ number_format($email_total_reacherd) }}</h4>
+                                                <p class="m-b-5">Whatsapp messages </p>
+                                                <h4 class="m-b-0">{{ number_format($whatsapp_sms) }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
-                                                <i class="feather icon-mail f-50 text-c-light"></i>
+                                                <i class="feather icon-whatsapp f-50 text-c-light"></i>
                                             </div>
                                     </div>
                                 </div>
@@ -160,13 +158,13 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
               
                 <div class="col-md-12 col-xl-4">
-                    <?php $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count; ?>
+                    <?php $total_clients = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count; ?>
                       <div class="card">
                         <div class="card-block">
                             <div class="row align-items-center">
                                 <div class="col-8">
-                                    <h4 class="text-c-green f-w-700">{{ number_format($total_schools)}} </h4>
-                                    <h6 class="text-muted m-b-0">Total Contacts Reached</h6>
+                                    <h4 class="text-c-green f-w-700">{{ number_format($total_clients)}} </h4>
+                                    <h6 class="text-muted m-b-0">Onboarded Clients</h6>
                                 </div>
                                 <div class="col-4 text-right">
                                     <i class="feather icon-file f-40"></i>
@@ -299,7 +297,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
 
 <?php 
- $sql1 = "select count(*),created_at::date from (select distinct platform,user_agent,created_at::date from admin.website_logs a where " . $where . "  ) x  group by created_at::date ";
+ $sql1 = "select count(*),created_at::date from (select distinct platform,user_agent,created_at::date from admin.website_logs a where " . $where . "  ) x  group by created_at::date";
  $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
  $sql2 = "select count(id) as count, controller as date from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
 
@@ -424,7 +422,6 @@ Highcharts.chart('moduleusage', {
         data: [<?php foreach($modules as $value){ echo $value->count.','; }?>]
     }]
  });
-
 
 
     submit_search = function () {

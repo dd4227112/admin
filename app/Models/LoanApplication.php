@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class LoanApplication extends Model {
 
+   // use \App\Traits\BelongsToUser;
+
+
     /**
      * Generated
      */
@@ -20,14 +23,12 @@ class LoanApplication extends Model {
         return \App\Models\User::where('id', $this->attributes['approved_by'])->first();
     }
 
-    public function user() {
-        return \App\Models\User::where('id', $this->attributes['user_id'])->first();
-    }
-
- 
-
     public function loanType() {
         return $this->belongsTo(\App\Models\LoanType::class, 'loan_type_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Unknown']);
     }
 
 }

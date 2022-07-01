@@ -12,7 +12,7 @@ class TrainingModule extends Model {
     protected $fillable = ['id', 'name', 'description', 'created_by','specialist_id','created_at','updated_at'];
 
     public function trainingSection() {
-        return $this->hasMany(\App\Model\TrainingSection::class);
+        return $this->hasMany(\App\Models\TrainingSection::class);
     }
 
 

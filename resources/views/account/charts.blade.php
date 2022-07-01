@@ -29,16 +29,13 @@
                    
                     <div class="col-sm-12">
 
-                        &nbsp;  <h5 class="page-header">
-
+                        &nbsp;  
+                        <h5 class="page-header">
                             <a href="#" type="button" class="btn btn-primary btn-mini btn-round" data-toggle="modal" data-target="#large-Modal">
-                        
                                 Add New Account
                             </a>
                         </h5>
                         <div class="table-responsive dt-responsive "> 
-
-
                             <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                 <thead>
                                     <tr>
@@ -120,6 +117,9 @@
         </div>
     </div>
 </div>
+
+
+
 <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -241,6 +241,8 @@
         </div>
     </div>
 </div>
+
+
 <script type="text/javascript">
 
     function fill_form(id) {
