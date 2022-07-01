@@ -58,7 +58,7 @@ class Software extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function comparetable($schema = 'betatwo') {
-        $this->data['breadcrumb'] = array('title' => 'Compare tables','subtitle'=>'software','head'=>'database');
+        $this->data['breadcrumb'] = array('title' => 'Compare tables', 'subtitle' => 'software', 'head' => 'database');
         $this->data['data'] = $this->compareSchemaTables($schema);
         $view = 'software.database.' . strtolower('compareTable');
         if (view()->exists($view)) {
@@ -67,7 +67,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['breadcrumb'] = array('title' => 'Compare columns','subtitle'=>'software','head'=>'database');
+        $this->data['breadcrumb'] = array('title' => 'Compare columns', 'subtitle' => 'software', 'head' => 'database');
         $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')')
            AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
@@ -250,13 +250,30 @@ class Software extends Controller {
     }
 
     public function upgrade() {
-       $this->data['breadcrumb'] = array('title' => 'Create script','subtitle'=>'software','head'=>'database');
+        $this->data['breadcrumb'] = array('title' => 'Create script', 'subtitle' => 'software', 'head' => 'database');
         if (request('sql') != '') {
             $this->data['script'] = $this->createUpgradeScript();
         } else {
             $this->data['script'] = '';
         }
         return view('software.database.upgrade', $this->data);
+    }
+
+    public function change() {
+        $db_file = request('898uuhihdsdskjddereppok');
+        $schemas = $this->loadSchema();
+        foreach ($schemas as $schema_name) {
+            $schema = is_object($schema_name) ? $schema_name->table_schema : $schema_name;
+
+            $sql1 = str_replace('testing', $schema, $db_file);
+            $sql = preg_replace("/\--[^)]+\--/", "", $sql1);
+            $queries = explode(';', $sql);
+            foreach ($queries as $query) {
+                # code...
+              $statement=DB::statement($query);
+              print_r($statement);
+            }
+        }
     }
 
     public function createUpgradeScript($slave_schema = null) {
@@ -282,7 +299,7 @@ class Software extends Controller {
     }
 
     public function constrains() {
-       $this->data['breadcrumb'] = array('title' => 'Constrains','subtitle'=>'software','head'=>'database');
+        $this->data['breadcrumb'] = array('title' => 'Constrains', 'subtitle' => 'software', 'head' => 'database');
         $type = $this->data['sub'] = request()->segment(3);
         if ($type == 'CHECK') {
             $relations = DB::select('SELECT nspname as "table_schema",conname as constraint_name, replace( conrelid::regclass::text , nspname||\'.\', \'\') AS TABLE_NAME FROM   pg_constraint c JOIN   pg_namespace n ON n.oid = c.connamespace WHERE  contype IN (\'c\') ORDER  BY "nspname"');
@@ -331,20 +348,21 @@ class Software extends Controller {
 
     public function logs() {
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $year_start = date('Y-01-01'); $year_end = date('Y-12-01');
-        $notIn =  " not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') ";
-        $this->data['error_log_count'] =   strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first();
-        $this->data['error_log_resolved'] = strlen($schema) > 3 ?  \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and schema_name = '$schema' and error_instance $notIn) as resolved"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and error_instance $notIn) as resolved"))->first();
-        $this->data['fatal_errors'] = strlen($schema) > 3 ?  \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_message) as a where a.total > 10"))->first() :  \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_message) as a where a.total > 10"))->first();
-        $this->data['danger_schema'] =   \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1'))->first();
-        $all_errors = strlen($schema) > 3 ?  "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn  group by error_message) as a ) e
-                           join (select * from (SELECT distinct error_message,error_instance FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_instance,error_message,created_at::date) as a) t on e.error_message = t.error_message": 
-                           "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn  group by error_message) as a ) e
+        $year_start = date('Y-01-01');
+        $year_end = date('Y-12-01');
+        $notIn = " not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') ";
+        $this->data['error_log_count'] = strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first();
+        $this->data['error_log_resolved'] = strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and schema_name = '$schema' and error_instance $notIn) as resolved"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and error_instance $notIn) as resolved"))->first();
+        $this->data['fatal_errors'] = strlen($schema) > 3 ? \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_message) as a where a.total > 10"))->first() : \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_message) as a where a.total > 10"))->first();
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1'))->first();
+        $all_errors = strlen($schema) > 3 ? "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn  group by error_message) as a ) e
+                           join (select * from (SELECT distinct error_message,error_instance FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_instance,error_message,created_at::date) as a) t on e.error_message = t.error_message" :
+                "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn  group by error_message) as a ) e
                            join (select * from (SELECT distinct error_message,error_instance FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_instance,error_message,created_at::date) as a) t on e.error_message = t.error_message";
         $sql1 = strlen($schema) > 3 ? "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where extract(year from created_at) = extract(year from current_date) and schema_name = '$schema' and error_instance $notIn group by month ) s on mon.mon = s.month" : "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where extract(year from created_at) = extract(year from current_date) and error_instance $notIn group by month ) s on mon.mon = s.month";
         $sql2 = strlen($schema) > 3 ? "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is not null and deleted_by is not null and extract(year from created_at)= extract(year from current_date) and schema_name = '$schema' and error_instance $notIn group by month ) s on mon.mon = s.month" : "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is not null and deleted_by is not null and extract(year from created_at)= extract(year from current_date)  and error_instance $notIn group by month ) s on mon.mon = s.month";
         $sql3 = strlen($schema) > 3 ? "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and schema_name = '$schema' and error_instance $notIn group by month ) s on mon.mon = s.month" : "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date)  and error_instance $notIn group by month ) s on mon.mon = s.month";
-        
+
         $this->data['all_errors'] = \DB::select($all_errors);
         $this->data['monthly_errors'] = \DB::select($sql1);
         $this->data['monthly_solved'] = \DB::select($sql2);
@@ -369,22 +387,21 @@ class Software extends Controller {
         // if(isset($tag->error_message)) {
         //    DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
         //  } 
-         if(isset($tag->error_message)){
-            $update = \DB::table('admin.error_logs')->where('error_message','=',$tag->error_message)->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
+        if (isset($tag->error_message)) {
+            $update = \DB::table('admin.error_logs')->where('error_message', '=', $tag->error_message)->update(['deleted_at' => now(), 'deleted_by' => \Auth::user()->id]);
             echo $update > 0 ? 1 : 0;
-         }
+        }
     }
-
 
     public function Readlogs() {
         $this->data['id'] = $id = request()->segment(3);
         $this->data['schema'] = $schema = request()->segment(4);
-    
-        $this->data['breadcrumb'] = array('title' => 'Error log','subtitle'=>'software','head'=>'system errors');
+
+        $this->data['breadcrumb'] = array('title' => 'Error log', 'subtitle' => 'software', 'head' => 'system errors');
         $this->data['tag'] = $tag = \App\Models\ErrorLog::find($id);
-        $this->data['errors'] = $errors = strlen($schema) > 3 ? \App\Models\ErrorLog::where(['error_message'=>$tag->error_message,'schema_name'=>$tag->schema_name])->whereNull(['deleted_at','deleted_by'])->latest()->get() : \App\Models\ErrorLog::where('error_message',$tag->error_message)->whereNull(['deleted_at','deleted_by'])->latest()->get();
-        $this->data['school']  = strlen($schema) > 3 ? \collect(\DB::select("select name from admin.clients where username = '$schema' "))->first() : [];
-        
+        $this->data['errors'] = $errors = strlen($schema) > 3 ? \App\Models\ErrorLog::where(['error_message' => $tag->error_message, 'schema_name' => $tag->schema_name])->whereNull(['deleted_at', 'deleted_by'])->latest()->get() : \App\Models\ErrorLog::where('error_message', $tag->error_message)->whereNull(['deleted_at', 'deleted_by'])->latest()->get();
+        $this->data['school'] = strlen($schema) > 3 ? \collect(\DB::select("select name from admin.clients where username = '$schema' "))->first() : [];
+
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
         return view('software.logs', $this->data);
         //echo 1;   
@@ -397,11 +414,11 @@ class Software extends Controller {
     }
 
     public function api() {
-       $this->data['breadcrumb'] = array('title' => 'Payment Api Requests','subtitle'=>'API Requests','head'=>'software');
+        $this->data['breadcrumb'] = array('title' => 'Payment Api Requests', 'subtitle' => 'API Requests', 'head' => 'software');
         if (request('tag')) {
             return $this->ajaxTable('api.requests', ['id', 'content', 'created_at']);
         }
-        return view('software.api.requests',$this->data);
+        return view('software.api.requests', $this->data);
     }
 
     // public function banksetup() {
@@ -450,11 +467,10 @@ class Software extends Controller {
         }
     }
 
-
-      public function banksetup() {  
+    public function banksetup() {
         $this->data['settings'] = DB::table('admin.all_setting')->get();
-        $skip = ['beta_testing','betatwo','public','constant','api'];
-        $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name',$skip)->get();
+        $skip = ['beta_testing', 'betatwo', 'public', 'constant', 'api'];
+        $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name', $skip)->get();
         return view('software.api.bank_setup', $this->data);
     }
 
@@ -691,7 +707,7 @@ class Software extends Controller {
     }
 
     public function template() {
-       $this->data['breadcrumb'] = array('title' => 'Sofware materials','subtitle'=>'software','head'=>'materials');
+        $this->data['breadcrumb'] = array('title' => 'Sofware materials', 'subtitle' => 'software', 'head' => 'materials');
         $this->data['faqs'] = [];
         return view('software.index', $this->data);
     }
@@ -784,7 +800,7 @@ class Software extends Controller {
         }
         $and_where = '';
         if (isset($date_from) && strlen($date_from) > 4) {
-            $and_where = " AND a.actual_dt_created>='" . date('Y-m-d', strtotime($date_from))."'";
+            $and_where = " AND a.actual_dt_created>='" . date('Y-m-d', strtotime($date_from)) . "'";
         }
 
         $projects = DB::connection('project')->select("SELECT a.actual_dt_created as created_at, a.dt_created as last_updated_at,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
