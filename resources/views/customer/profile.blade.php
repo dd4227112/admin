@@ -483,7 +483,8 @@ Photo</a>
 <div class="timeline-details">
 <div class="chat-header">
     <?php 
-      $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task->user->id}'"))->first(); 
+      $task_user_id = $task->user->id === '' ? 1 : $task->user->id;
+      $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task_user_id}'"))->first(); 
       $local = $root . 'assets/images/user.png';
      ?>
     <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
