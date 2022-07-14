@@ -979,7 +979,7 @@ class Customer extends Controller {
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
-                $new_req = isset($req->school->name) ? ' New school requirement from ' . $req->school->name.' on ' . request('module') : ' New requirement on ' . request('module');
+                $new_req = isset($req->school->name) && (int)$req->school_id > 0 ? ' - from ' . $req->school->name.' on ' . request('module') : ' - ' . request('module');
                 $message = 'Hello ' . $user->name . '<br/>'
                         . 'There is ' . $new_req . '</p>'
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
