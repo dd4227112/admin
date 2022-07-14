@@ -27,7 +27,7 @@ class Analyse extends Controller {
         $this->data['users'] = [];
         $year = date('Y');
         if (Auth::user()->role_id == 7) {
-            return redirect('sales/school');
+            return redirect('sales/schools');
             exit;
             $id = Auth::user()->id;
             $this->data['refer_bank_id'] = $refer_bank_id = (new \App\Http\Controllers\Users())->getBankId();
@@ -37,7 +37,7 @@ class Analyse extends Controller {
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=" . $refer_bank_id))->first()->count;
             return view('analyse.bank', $this->data);
         } elseif (Auth::user()->department == 10 && \Auth::user()->id != 36) {
-            return redirect('sales/school');
+            return redirect('sales/schools');
             $id = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
             $this->data['use_shulesoft'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->count();
