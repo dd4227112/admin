@@ -103,7 +103,7 @@ class Kernel extends ConsoleKernel {
    public function whatsappMessage() {        
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
         $controller = new \App\Http\Controllers\Controller();
-        foreach ($messages as $message) {
+           foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 if(!empty($message->company_file_id)){
                     $file = \App\Models\CompanyFile::find($message->company_file_id);
