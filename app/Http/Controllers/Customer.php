@@ -409,7 +409,7 @@ class Customer extends Controller {
                 'release_date' => 'date'
             ]);
             DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for', 'subject']), ['for' => implode(',', request('for'))]));
-            $users = DB::table('all_users')->whereIn('usertype', request('for'))->where('table', '<>', 'setting')->where('status', 1)->get();
+        /*    $users = DB::table('all_users')->whereIn('usertype', request('for'))->where('table', '<>', 'setting')->where('status', 1)->get();
             foreach ($users as $user) {
                 $replacements = array(
                     $user->name
@@ -431,7 +431,7 @@ class Customer extends Controller {
                     'table' => $user->table,
                     'user_id' => $user->id,
                 ));
-            }
+            } */
 
             return redirect('customer/update')->with('success', 'success');
         }
