@@ -34,10 +34,10 @@
                                     <h4 class="sub-title">Select School</h4>
                                     <select name="schema" class="select2"  id="schema">
                                        <option value="0">Select</option>
-                                         <?php  $schemas = \App\Models\Client::get();
+                                         <?php  $schemas = DB::table('admin.all_setting')->get();
                                             foreach ($schemas as $schema) {
                                             ?>
-                                            <option value="<?= $schema->username ?>" selected><?= $schema->name ?></option>
+                                            <option value="<?= $schema->schema_name ?>" selected><?= $schema->sname ?></option>
                                         <?php  }
                                         ?>
                                      </select>
