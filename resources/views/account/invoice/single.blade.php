@@ -76,10 +76,12 @@
                                                         <ul>
                                                             <li style="font-size: 1rem">From  </li>
                                                             <li><strong>SHULESOFT LIMITED</strong></li>
-                                                            <li>P.o Box 32282 Dar es Salaam</li>
-                                                            <li>Shamo Towel, 6th Floor</li>
+                                                            <li>P.O Box 32282 Dar es Salaam</li>
+                                                            <li>Shamo Tower, 6th Floor</li>
                                                             <li>Mbezi Beac,h Bagamoyo Road</li>
                                                             <li>Mobile no: +255 655 406 004</li>
+                                                            <li></li>
+                                                            <li> <b>TIN <span style="margin-left: 8px;">156-316-911</span></b> </li>
                                                         </ul>
                                                     </td>
                                                     <td>
