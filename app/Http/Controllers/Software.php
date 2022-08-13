@@ -936,16 +936,25 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
                 if (in_array($table, $skip_poor_tables)) {
                     continue;
                 }
+                if ($table == 'allowances') {
+                    DB::statement('ALTER TABLE '.$schema->table_schema.'.deductions
+    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
+                }
+                if ($table == 'deductions') {
+                    DB::statement('ALTER TABLE '.$schema->table_schema.'.deductions
+    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
+                }
                 //show table
                 $sql = "SELECT * FROM admin.show_create_table('" . $table . "','" . $schema->table_schema . "')";
                 $check = DB::select($sql);
                 $show_create_table = \collect($check)->first()->show_create_table;
-                
+
                 if (strlen($show_create_table) > 10) {
                     //create a new table in a secondary table
                     DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
                     echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
                     //transfer data from old to new connection 
+
 
 
                     $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
