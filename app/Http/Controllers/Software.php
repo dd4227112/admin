@@ -906,6 +906,7 @@ class Software extends Controller {
     public $destination_connection = 'new_vps';
 
     public function transferDb() {
+        set_time_limit(0);
         $source_connection = 'pgsql';
         $destination_connection = $this->destination_connection;
 
