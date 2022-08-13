@@ -929,7 +929,7 @@ ini_set('memory_limit', '3000M');
                 'financial_category', 'migrations',
                 'student_other', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
-                'adjustments', 'journals', 'ledger', 'courses','portal_roles'];
+                'adjustments', 'journal', 'ledger', 'courses','portal_roles'];
             foreach ($tables as $table) {
 
                 if (in_array($table, $skip_poor_tables)) {
