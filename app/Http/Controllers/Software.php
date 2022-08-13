@@ -911,7 +911,7 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
     public function transferDb() {
         set_time_limit(0);
         ignore_user_abort(true);
-
+       
         $source_connection = 'pgsql';
         $destination_connection = $this->destination_connection;
 
@@ -950,26 +950,22 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
 
                 if (strlen($show_create_table) > 10) {
                     //create a new table in a secondary table
-
-                    if (DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->doesntExist()) {
-                        DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
-                        echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
-                        //transfer data from old to new connection 
-
+                    
+                    DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
+                    echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
+                    //transfer data from old to new connection 
 
 
-                        $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
 
-                        if (!empty($old_table_data)) {
-                            foreach ($old_table_data as $value) {
+                    $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
 
-                                DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
-                            }
+                    if (!empty($old_table_data)) {
+                        foreach ($old_table_data as $value) {
+
+                            DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
                         }
-                        echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
-                    } else {
-                        
                     }
+                    echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
                 } else {
                     echo '<p style="color:red">Table ' . $table . ' is Empty, and cannot generate a query</p><br/>';
                 }
