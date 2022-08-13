@@ -956,7 +956,7 @@ WHERE table_schema ='{$schema->table_schema}'
                         //transfer data from old to new connection 
 
                         if ($table == 'allowances') {
-                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.deductions
+                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.allowances
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                         }
                         if ($table == 'deductions') {
