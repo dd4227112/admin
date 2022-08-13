@@ -90,16 +90,21 @@ class Software extends Controller {
         return DB::select("SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = '$constrains' AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
-    public function getDefinedFunctions() {
-        $sql = DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
+    public function getDefinedFunctions($schema = 'public') {
+        return $sql = DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
         FROM information_schema.routines
             LEFT JOIN information_schema.parameters ON routines.specific_name=parameters.specific_name
-        WHERE routines.specific_schema='public'
+        WHERE routines.specific_schema='$schema'
         ORDER BY routines.routine_name, parameters.ordinal_position ) a");
     }
 
+    /**
+     * 
+     * @return type array: list of schemas
+     */
     public function loadSchema() {
-        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant', 'admin','api','app','skysat','dodoso','forum','academy','carryshop')");
+        //return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','api','app','skysat','dodoso','forum','academy','carryshop') order by table_schema asc");
+        return DB::select('SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022');
     }
 
     /**
@@ -113,6 +118,19 @@ class Software extends Controller {
      */
     public function loadTables($schema) {
         $tables = DB::select("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema= '" . $schema . "'  AND table_type='BASE TABLE'");
+        $table_names = array();
+        foreach ($tables as $table) {
+            array_push($table_names, $table->table_name);
+        }
+        return $table_names;
+    }
+
+    /**
+     * @var $schema : Schema name which we want to know its tables
+     * @return List of tables in that schema
+     */
+    public function loadViews($schema) {
+        $tables = DB::select("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema= '" . $schema . "'  AND table_type<>'BASE TABLE'");
         $table_names = array();
         foreach ($tables as $table) {
             array_push($table_names, $table->table_name);
@@ -167,7 +185,7 @@ class Software extends Controller {
             $stable .= '<hr/>';
         }
         return $stable;
-    } 
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -266,8 +284,8 @@ class Software extends Controller {
             $queries = explode(';', $sql);
             foreach ($queries as $query) {
                 # code...
-              $statement=DB::statement($query);
-              print_r($statement);
+                $statement = DB::statement($query);
+                print_r($statement);
             }
         }
     }
@@ -341,22 +359,23 @@ class Software extends Controller {
         }
     }
 
-    public function errorInstanceNotIn(){
-        return  " not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException',
+    public function errorInstanceNotIn() {
+        return " not in ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException','Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException',
         'BadMethodCallException') ";
     }
 
     public function logs() {
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $year_start = date('Y-01-01'); $year_end = date('Y-12-01');
-        $notIn =  $this->errorInstanceNotIn();
-        $this->data['error_log_count'] =   strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first();
-        $this->data['error_log_resolved'] = strlen($schema) > 3 ?  \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and schema_name = '$schema' and error_instance $notIn) as resolved"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and error_instance $notIn) as resolved"))->first();
-        $this->data['fatal_errors'] = strlen($schema) > 3 ?  \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_message) as a where a.total > 10"))->first() :  \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_message) as a where a.total > 10"))->first();
-        $this->data['danger_schema'] =   \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1'))->first();
-        $all_errors = strlen($schema) > 3 ?  "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn  group by error_message) as a ) e
-                           join (select * from (SELECT distinct error_message,error_instance FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_instance,error_message,created_at::date) as a) t on e.error_message = t.error_message": 
-                           "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn  group by error_message) as a ) e
+        $year_start = date('Y-01-01');
+        $year_end = date('Y-12-01');
+        $notIn = $this->errorInstanceNotIn();
+        $this->data['error_log_count'] = strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is null and deleted_by is null and extract(year from created_at)= extract(year from current_date) and error_instance $notIn ) as errors"))->first();
+        $this->data['error_log_resolved'] = strlen($schema) > 3 ? \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and schema_name = '$schema' and error_instance $notIn) as resolved"))->first() : \collect(DB::select("select count(*) as total from (SELECT DISTINCT error_message FROM admin.error_logs where deleted_at is not null and deleted_by is not null and error_instance $notIn) as resolved"))->first();
+        $this->data['fatal_errors'] = strlen($schema) > 3 ? \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_message) as a where a.total > 10"))->first() : \collect(\DB::select("select count(*) as total from (SELECT distinct error_message,count(id) as total FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_message) as a where a.total > 10"))->first();
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1'))->first();
+        $all_errors = strlen($schema) > 3 ? "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn  group by error_message) as a ) e
+                           join (select * from (SELECT distinct error_message,error_instance FROM admin.error_logs where deleted_at is null and deleted_by is null and schema_name = '$schema' and error_instance $notIn group by error_instance,error_message,created_at::date) as a) t on e.error_message = t.error_message" :
+                "select  e.error_message,e.max_id,t.error_message,e.total,t.error_instance from (select * from (select distinct error_message,max(id) as max_id,count(id) as total from admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn  group by error_message) as a ) e
                            join (select * from (SELECT distinct error_message,error_instance FROM admin.error_logs where deleted_at is null and deleted_by is null and error_instance $notIn group by error_instance,error_message,created_at::date) as a) t on e.error_message = t.error_message";
         $sql1 = strlen($schema) > 3 ? "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where extract(year from created_at) = extract(year from current_date) and schema_name = '$schema' and error_instance $notIn group by month ) s on mon.mon = s.month" : "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where extract(year from created_at) = extract(year from current_date) and error_instance $notIn group by month ) s on mon.mon = s.month";
         $sql2 = strlen($schema) > 3 ? "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is not null and deleted_by is not null and extract(year from created_at)= extract(year from current_date) and schema_name = '$schema' and error_instance $notIn group by month ) s on mon.mon = s.month" : "select mon.mon, coalesce(s.count, 0) as count from generate_series('{$year_start}'::timestamp, '{$year_end}'::timestamp, interval '1 month') as mon(mon) left join (select date_trunc('Month', created_at) as month,count(distinct error_message) as count from  admin.error_logs where deleted_at is not null and deleted_by is not null and extract(year from created_at)= extract(year from current_date)  and error_instance $notIn group by month ) s on mon.mon = s.month";
@@ -381,8 +400,8 @@ class Software extends Controller {
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
-         if(isset($tag->error_message)){
-            $update = \DB::table('admin.error_logs')->where('error_message','=',$tag->error_message)->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
+        if (isset($tag->error_message)) {
+            $update = \DB::table('admin.error_logs')->where('error_message', '=', $tag->error_message)->update(['deleted_at' => now(), 'deleted_by' => \Auth::user()->id]);
             echo $update > 0 ? 1 : 0;
         }
     }
@@ -692,8 +711,8 @@ class Software extends Controller {
     }
 
     public function whatsapp() {
-        $data = ['id'=>1, 'name'=>"albo"];
-      //  dd(json_encode($data));
+        $data = ['id' => 1, 'name' => "albo"];
+        //  dd(json_encode($data));
         $dr = '{"status":0,"reference":"SAS8003699","description":"This invoice does not exists in the ShuleSoft"}';
         $this->data['faqs'] = [];
         return view('software.whatsapp', $this->data);
@@ -803,29 +822,27 @@ class Software extends Controller {
 
     //   id	error_message	file	route	url	error_instance	request	schema_name	created_by	created_by_table	created_at
 
-    public function statisticsd(){
+    public function statisticsd() {
         $this->data['first_day'] = $first_day = date("Y-m-d", strtotime('monday this week'));
-        $this->data['end_week']  = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days'));  
-        $notIn =  $this->errorInstanceNotIn();
+        $this->data['end_week'] = $end_week = date('Y-m-d', strtotime($first_day . ' + 6 days'));
+        $notIn = $this->errorInstanceNotIn();
 
         $all_errors = "SELECT error_message,COUNT(error_message) as error_count FROM admin.error_logs WHERE created_at::date >= '{$first_day}' and created_at::date <= '{$end_week}' AND error_instance $notIn GROUP BY error_message";
         $this->data['weekly_errors'] = \DB::select($all_errors);
-        
-        if($_POST){
-           $this->data['first_day'] = $first_day = date('Y-m-d',strtotime(request('week')));
-           $this->data['end_week'] = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days')); 
-           $all_errors = "SELECT error_message,COUNT(error_message) as error_count FROM admin.error_logs WHERE created_at::date >= '{$first_day}' and created_at::date <= '{$end_week}' AND error_instance $notIn GROUP BY error_message";
-           $this->data['weekly_errors'] = \DB::select($all_errors);
-         }
+
+        if ($_POST) {
+            $this->data['first_day'] = $first_day = date('Y-m-d', strtotime(request('week')));
+            $this->data['end_week'] = $end_week = date('Y-m-d', strtotime($first_day . ' + 6 days'));
+            $all_errors = "SELECT error_message,COUNT(error_message) as error_count FROM admin.error_logs WHERE created_at::date >= '{$first_day}' and created_at::date <= '{$end_week}' AND error_instance $notIn GROUP BY error_message";
+            $this->data['weekly_errors'] = \DB::select($all_errors);
+        }
 
         return view('software.error_statistics', $this->data);
     }
 
-
-
-    public function statistics(){
+    public function statistics() {
         $errors_array = [
-           'Invalid datetime format',
+            'Invalid datetime format',
             'Invalid text representation',
             'Trying to get property',
             'Deadlock detected',
@@ -844,35 +861,30 @@ class Software extends Controller {
             'Division by zero',
             'does not exist on this collection instance'
         ];
-        
-        $this->data['first_day'] = $first_day = date("Y-m-d", strtotime('monday this week'));
-        $this->data['end_week']  = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days'));  
 
-        if($_POST){
-            $this->data['first_day'] = $first_day = date('Y-m-d',strtotime(request('week')));
-            $this->data['end_week'] = $end_week  = date('Y-m-d', strtotime($first_day. ' + 6 days')); 
+        $this->data['first_day'] = $first_day = date("Y-m-d", strtotime('monday this week'));
+        $this->data['end_week'] = $end_week = date('Y-m-d', strtotime($first_day . ' + 6 days'));
+
+        if ($_POST) {
+            $this->data['first_day'] = $first_day = date('Y-m-d', strtotime(request('week')));
+            $this->data['end_week'] = $end_week = date('Y-m-d', strtotime($first_day . ' + 6 days'));
 
             $final = [];
-            foreach($errors_array as $field => $value)
-            {   
-                $solved_error_count = DB::table('admin.error_logs')->where('created_at','>=',$first_day)->where('created_at','<=',$end_week)->where('error_message','ILIKE',"%${value}%")->whereNotNull('deleted_at')->count();
-                $error_count = DB::table('admin.error_logs')->where('created_at','>=',$first_day)->where('created_at','<=',$end_week)->where('error_message','ILIKE',"%${value}%")->whereNull('deleted_at')->count();
+            foreach ($errors_array as $field => $value) {
+                $solved_error_count = DB::table('admin.error_logs')->where('created_at', '>=', $first_day)->where('created_at', '<=', $end_week)->where('error_message', 'ILIKE', "%${value}%")->whereNotNull('deleted_at')->count();
+                $error_count = DB::table('admin.error_logs')->where('created_at', '>=', $first_day)->where('created_at', '<=', $end_week)->where('error_message', 'ILIKE', "%${value}%")->whereNull('deleted_at')->count();
 
                 $data = [
                     'message' => $value,
                     'error_count' => $error_count,
                     'solved_error_count' => $solved_error_count
                 ];
-                   array_push($final, $data);
+                array_push($final, $data);
             }
-           $this->data['finals'] = $final;
+            $this->data['finals'] = $final;
         }
         return view('software.error_statistics', $this->data);
     }
-
-
-  
-
 
     public function resetPassword() {
         if ($_POST) {
@@ -887,7 +899,98 @@ class Software extends Controller {
             return view('software.reset_pass', $this->data)->with('success', 'Password Updated Successfully');
         } else {
             return view('software.reset_pass');
-
         }
     }
+
+    public $source_connection = 'pgsql';
+    public $destination_connection = 'new_vps';
+
+    public function transferDb() {
+        $source_connection = 'pgsql';
+        $destination_connection = $this->destination_connection;
+
+        //load all schemas
+        $schemas = $this->loadSchema();
+
+        //loop throught schemas, and load all tables, views and functions
+        foreach ($schemas as $schema) {
+
+
+
+            DB::connection($destination_connection)->statement('create schema ' . $schema->table_schema);
+            echo 'Schema ' . $schema->table_schema . ' created successfully in new db ' . $destination_connection . '<br/>';
+
+            $tables = $this->loadTables($schema->table_schema);
+            $skip_poor_tables = ['school_sessions', 'financial_statement',
+                'financial_category', 'migrations',
+                'student_other', 'allschools', 'password_resets',
+                'phone_sms', 'reminder_template', 'permission_group'];
+            foreach ($tables as $table) {
+
+                if (in_array($table, $skip_poor_tables)) {
+                    continue;
+                }
+                //show table
+                $sql = "SELECT * FROM admin.show_create_table('" . $table . "','" . $schema->table_schema . "')";
+                $show_create_table = \collect(DB::select($sql))->first()->show_create_table;
+
+                //create a new table in a secondary table
+                DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
+                echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
+                //transfer data from old to new connection 
+
+
+                $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
+
+                foreach ($old_table_data as $value) {
+
+                    DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
+                }
+                echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
+            }
+
+            //lets deal with functions
+
+            $functions = $this->getDefinedFunctions($schema->table_schema);
+
+            foreach ($functions as $function) {
+
+                $sql = \collect(DB::select("SELECT pg_get_functiondef(( SELECT  oid FROM pg_proc  WHERE  proname = '{$function->routine_name}' and lower(prosrc) like '%public%' limit 1) )"))->first();
+                if ($sql->pg_get_functiondef <> '') {
+                    DB::connection($destination_connection)->statement(str_replace('public', $schema->table_schema, $sql->pg_get_functiondef));
+                    echo 'Function  ' . $function->routine_name . ' created successfully in new db ' . $destination_connection . ' for schema ' . $schema->table_schema . '<br/>';
+                }
+            }
+            echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
+        }
+    }
+
+    public function syncViews($schema, $destination_connection) {
+        $views = $this->loadViews($schema->table_schema);
+
+        foreach ($views as $view) {
+            //show table
+            $sq = "select pg_get_viewdef('$view')";
+            $sql = \collect(DB::statement($sq))->first();
+            dd($sql);
+            if ($sql->pg_get_viewdef <> '') {
+                $view_sql = 'CREATE OR REPLACE VIEW  ' . $schema->table_schema . '.' . $view . ' AS ' . $sql->pg_get_viewdef;
+                DB::connection($destination_connection)->statement($view_sql);
+                echo 'View   ' . $view . ' created successfully in new db ' . $destination_connection . ' for schema ' . $schema->table_schema . '<br/>';
+            }
+        }
+    }
+
+    public function resetSequence() {
+        //load all schemas
+        $schemas = $this->loadSchema();
+
+        //loop throught schemas, and load all tables, views and functions
+        foreach ($schemas as $schema) {
+            $sql = "select * from admin.reset_sequence('{$schema->table_schema}')";
+            DB::connection($this->destination_connection)->statement($sql);
+             echo 'SCHEMA ' . $schema->table_schema . ' sequence reset COMPLETELY <br/><br/><hr/>';
+        }
+    }
+
 }
