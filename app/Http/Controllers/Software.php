@@ -918,7 +918,7 @@ class Software extends Controller {
 
 
 
-            DB::connection($destination_connection)->statement('create schema ' . $schema->table_schema);
+            DB::connection($destination_connection)->statement('create schema IF NOT EXISTS ' . $schema->table_schema);
             echo 'Schema ' . $schema->table_schema . ' created successfully in new db ' . $destination_connection . '<br/>';
 
             $tables = $this->loadTables($schema->table_schema);
@@ -926,7 +926,7 @@ class Software extends Controller {
                 'financial_category', 'migrations',
                 'student_other', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
-                'adjustments','journals','ledger'];
+                'adjustments', 'journals', 'ledger'];
             foreach ($tables as $table) {
 
                 if (in_array($table, $skip_poor_tables)) {
@@ -944,9 +944,11 @@ class Software extends Controller {
 
                 $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
 
-                foreach ($old_table_data as $value) {
+                if (!empty($old_table_data)) {
+                    foreach ($old_table_data as $value) {
 
-                    DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
+                        DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
+                    }
                 }
                 echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
             }
@@ -991,7 +993,7 @@ class Software extends Controller {
         foreach ($schemas as $schema) {
             $sql = "select * from admin.reset_sequence('{$schema->table_schema}')";
             DB::connection($this->destination_connection)->statement($sql);
-             echo 'SCHEMA ' . $schema->table_schema . ' sequence reset COMPLETELY <br/><br/><hr/>';
+            echo 'SCHEMA ' . $schema->table_schema . ' sequence reset COMPLETELY <br/><br/><hr/>';
         }
     }
 
