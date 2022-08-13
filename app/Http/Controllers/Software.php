@@ -910,6 +910,7 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
 
     public function transferDb() {
         set_time_limit(0);
+        ignore_user_abort(true);
 
         $source_connection = 'pgsql';
         $destination_connection = $this->destination_connection;
@@ -928,7 +929,7 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
                 'financial_category', 'migrations',
                 'student_other', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
-                'adjustments', 'journals', 'ledger','courses'];
+                'adjustments', 'journals', 'ledger', 'courses'];
             foreach ($tables as $table) {
 
                 if (in_array($table, $skip_poor_tables)) {
@@ -949,21 +950,26 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
 
                 if (strlen($show_create_table) > 10) {
                     //create a new table in a secondary table
-                    DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
-                    echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
-                    //transfer data from old to new connection 
+
+                    if (DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->doesntExist()) {
+                        DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
+                        echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
+                        //transfer data from old to new connection 
 
 
 
-                    $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
+                        $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
 
-                    if (!empty($old_table_data)) {
-                        foreach ($old_table_data as $value) {
+                        if (!empty($old_table_data)) {
+                            foreach ($old_table_data as $value) {
 
-                            DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
+                                DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
+                            }
                         }
+                        echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
+                    } else {
+                        
                     }
-                    echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
                 } else {
                     echo '<p style="color:red">Table ' . $table . ' is Empty, and cannot generate a query</p><br/>';
                 }
@@ -1018,9 +1024,9 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
 
         //loop throught schemas, and load all tables, views and functions
         foreach ($schemas as $schema) {
-            
+
             $tables = $this->loadTables($schema->table_schema);
-   
+
             foreach ($tables as $table) {
                 $sql = "ALTER TABLE IF EXISTS {$schema->table_schema}.absents
     ADD CONSTRAINT {$table}_id_primary PRIMARY KEY (id)";
