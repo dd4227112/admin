@@ -911,7 +911,7 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
     public function transferDb() {
         set_time_limit(0);
         ignore_user_abort(true);
-ini_set('memory_limit', '3000M');
+        ini_set('memory_limit', '3000M');
         $source_connection = 'pgsql';
         $destination_connection = $this->destination_connection;
 
@@ -929,20 +929,13 @@ ini_set('memory_limit', '3000M');
                 'financial_category', 'migrations',
                 'student_other', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
-                'adjustments', 'journal', 'ledger', 'courses','portal_roles'];
+                'adjustments', 'journal', 'ledger', 'courses', 'portal_roles'];
             foreach ($tables as $table) {
 
                 if (in_array($table, $skip_poor_tables)) {
                     continue;
                 }
-//                if ($table == 'allowances') {
-//                    DB::statement('ALTER TABLE ' . $schema->table_schema . '.deductions
-//    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
-//                }
-//                if ($table == 'deductions') {
-//                    DB::statement('ALTER TABLE ' . $schema->table_schema . '.deductions
-//    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
-//                }
+
                 //show table
                 $sql = "SELECT * FROM admin.show_create_table('" . $table . "','" . $schema->table_schema . "')";
                 $check = DB::select($sql);
@@ -957,12 +950,19 @@ WHERE table_schema ='{$schema->table_schema}'
       AND table_name = '" . $table . "'"))->first();
 
                     if (empty($check_table)) {
-                      
+
                         DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
                         echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
                         //transfer data from old to new connection 
 
-
+                        if ($table == 'allowances') {
+                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.deductions
+    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
+                        }
+                        if ($table == 'deductions') {
+                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.deductions
+    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
+                        }
 
                         $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
 
