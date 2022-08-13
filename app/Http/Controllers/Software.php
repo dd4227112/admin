@@ -979,6 +979,7 @@ WHERE table_schema ='{$schema->table_schema}'
                 } else {
                     echo '<p style="color:red">Table ' . $table . ' is Empty, and cannot generate a query</p><br/>';
                 }
+                sleep(0.5);
             }
 
             //lets deal with functions
