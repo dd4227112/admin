@@ -66,7 +66,7 @@
                                 <div class="row" style="margin-top: 0px">
                                     <div class="col-lg-12 col-sm-12">
                                         <div>
-                                            <img src="<?= $root ?>/images/Inetslogo.png"  width="180" height="80"/>
+                                            <!-- <img src="<?= $root ?>/images/Inetslogo.png"  width="180" height="80"/> -->
                                         </div>
                                         
                                         <table class="table">
@@ -75,11 +75,13 @@
                                                     <td>
                                                         <ul>
                                                             <li style="font-size: 1rem">From  </li>
-                                                            <li><strong>INETS COMPANY LIMITED</strong></li>
-                                                            <li>P.o Box 32282 Dar es Salaam</li>
-                                                            <li>Shamo Park House, 3rd Floor</li>
-                                                            <li>Mbezi Beach Bagamoyo Road</li>
-                                                            <li>Mobile no: +255 655/754 406004</li>
+                                                            <li><strong>SHULESOFT LIMITED</strong></li>
+                                                            <li>P.O Box 32282 Dar es Salaam</li>
+                                                            <li>Shamo Tower, 6th Floor</li>
+                                                            <li>Mbezi Beac,h Bagamoyo Road</li>
+                                                            <li>Mobile no: +255 655 406 004</li>
+                                                            <li></li>
+                                                            <li> <b>TIN <span style="margin-left: 8px;">156-316-911</span></b> </li>
                                                         </ul>
                                                     </td>
                                                     <td>
@@ -181,18 +183,18 @@
                                                  if(!empty($a)){ ?>
                                                    <p>
                                                     <b>Account Details :</b><br/>
-                                                    <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                    <b>Account Name:</b> SHULESOFT LIMITED <br/> 
                                                     <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                     <b>Account Number:</b> 22510028669
+                                                     <b>Account Number:</b> 22510077805 
                                                     <br/>
                                                     <small>Please notify us after a deposit</small>
                                                   </p>
                                                   <?php }else { ?>
                                                     <p>
                                                         <b>Account Details :</b><br/>
-                                                        <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                        <b>Account Name:</b> SHULESOFT LIMITED <br/> 
                                                         <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                         <b>Account Number:</b> 22510028669
+                                                         <b>Account Number:</b> 22510077805 
                                                         <br/>
                                                         <small>Please notify us after a deposit</small>
                                                     </p>
@@ -227,7 +229,7 @@
                                                         <th>Grand Total :</th>
                                                         <th>Tsh <?= number_format($unpaid) ?></th>
                                                         <th style="margin-left: 1px; z-index:1">
-                                                            <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/>
+                                                            <!-- <img src="<?= $root ?>/images/company_seal.png"  width="200" height="130"/> -->
                                                        </th>
                                                     </tr>
 

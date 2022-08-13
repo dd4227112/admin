@@ -189,6 +189,8 @@ class Customer extends Controller {
         }
     }
 
+
+
     public function editTrain() {
         $ttask_id = request('task_id');
         $section_id = request('section_id');
@@ -196,7 +198,7 @@ class Customer extends Controller {
         $task_user = request('task_user');
         $attr = request('attr');
         $school_person = request('school_person');
-
+       
         if ((int) $task_user == 0) {
             $sales = new \App\Http\Controllers\Sales();
             $user_id = $sales->getSupportUser($section_id);
@@ -206,26 +208,26 @@ class Customer extends Controller {
 
         $train = \App\Models\TrainItemAllocation::find($ttask_id);
         $task_id = $train->task_id;
+        
         if ((int) $user_id > 0 && (int) $task_id > 0) {
+
             $section = \App\Models\TrainItem::find($section_id);
             $obj = [
-                'start_date' => date('Y-m-d H:i:s', strtotime($start_date)),
-                'end_date' => date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")),
-                'updated_at' => date('Y-m-d H:i:s'),
-                'user_id' => $user_id,
-                'is_allocated' => 1,
-                'school_person_allocated' => trim($school_person),
-            ];
+                    'start_date' => date('Y-m-d H:i:s', strtotime($start_date)),
+                    'end_date' => date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'user_id' => $user_id,
+                    'is_allocated' => 1,
+                    'school_person_allocated' => trim($school_person)
+               ];
 
-            DB::table('admin.train_items_allocations')->where('id', $ttask_id)->update($obj);
-
-            DB::table('tasks_users')->where('task_id', $task_id)->update([
+            DB::table('admin.train_items_allocations')->where('id', (int) $ttask_id)->update($obj);
+            DB::table('tasks_users')->where('task_id', (int) $task_id)->update([
                 'user_id' => $user_id,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
 
-
-            $user = \App\Models\User::where('id', $user_id)->first();
+            $user = \App\Models\User::where('id',(int) $user_id)->first();
             $start_date = date('d-m-Y', strtotime($start_date)) == '01-01-1970' ? date('Y-m-d') : date('d-m-Y', strtotime($start_date));
             // email to shulesoft personel
             $message = 'Hello ' . $user->firstname . '<br/>'
@@ -408,7 +410,7 @@ class Customer extends Controller {
                 'release_date' => 'date'
             ]);
             DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for', 'subject']), ['for' => implode(',', request('for'))]));
-            $users = DB::table('all_users')->whereIn('usertype', request('for'))->where('table', '<>', 'setting')->where('status', 1)->get();
+        /*    $users = DB::table('all_users')->whereIn('usertype', request('for'))->where('table', '<>', 'setting')->where('status', 1)->get();
             foreach ($users as $user) {
                 $replacements = array(
                     $user->name
@@ -430,7 +432,7 @@ class Customer extends Controller {
                     'table' => $user->table,
                     'user_id' => $user->id,
                 ));
-            }
+            } */
 
             return redirect('customer/update')->with('success', 'success');
         }
@@ -978,7 +980,7 @@ class Customer extends Controller {
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
-                $new_req = isset($req->school->name) ? ' New school requirement from ' . $req->school->name.' on ' . request('module') : ' New requirement on ' . request('module');
+                $new_req = isset($req->school->name) && (int)$req->school_id > 0 ? ' - from ' . $req->school->name.' on ' . request('module') : ' - ' . request('module');
                 $message = 'Hello ' . $user->name . '<br/>'
                         . 'There is ' . $new_req . '</p>'
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
@@ -1224,11 +1226,9 @@ class Customer extends Controller {
         $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders) or id in (select client_id from admin.client_trials)');
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->whereNotIn('role_id', array(7, 15))->get();
 
-
         //check allocation of trainings
         if (strlen($this->data['schema']) > 2) {
             $checks = DB::select('select * from admin.train_items where status=1');
-
             foreach ($checks as $check) {
                 $check_train = \App\Models\TrainItemAllocation::where('client_id', $this->data['client']->id)->where('train_item_id', $check->id)->first();
                 if (empty($check_train)) {

@@ -875,7 +875,6 @@ class Software extends Controller {
 
 
     public function resetPassword() {
-        
         if ($_POST) {
             $schema = request('schema');
             $pass = $schema . rand(5697, 33);

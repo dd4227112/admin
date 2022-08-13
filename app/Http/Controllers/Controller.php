@@ -477,6 +477,43 @@ class Controller extends BaseController {
         echo $response;
       }
 
+
+
+
+      public function test3()
+      {
+        $variable = '{""ack"":[{""id"":""gBEGJVdUVAEIAgl-OgngAw5QHR4"",""chatId"":""255754540108@c.us"",""status"":""read""}],""instanceId"":210904}';
+
+        $variable1 = '{""messages"":[{""id"":""gBEGJVdUVAEIAgl-OgngAw5QHR4"",""body"":""NOTREDAMESEC: Habari SHUMA MAZUNGU,  nenotumizi (username) lako ni: +255754540108 na nenosiri (password) ni : 613hgf. Kumbuka kubadili neno siri ukishaingia kwenye account yako ya notredamesec. Asante\n\n Download  Shulesoft Parent Experience App on\nPlayStore(Android)?? \nhttps:\/\/cutt.ly\/parentalApp\n\nAppStore(Iphone)??\nhttps:\/\/cutt.ly\/fT2Qn5f"",""self"":1,""type"":""chat"",""author"":""255655406004@c.us"",""chatId"":""255754540108@c.us"",""fromMe"":true,""caption"":null,""chatName"":""255754540108"",""senderName"":""255655406004@c.us"",""isForwarded"":false,""time"":""1657093119""}],""instanceId"":210904}';
+
+        $json = str_replace('""', '"', $variable);
+        $search_array = (array) json_decode($json);  
+       
+
+         if(array_key_exists('ack', $search_array)) {
+            $ack_object = (object) $search_array;
+            $ack_object = $ack_object->{'ack'}[0];
+          
+        \DB::table('admin.message_logs')->where('message_id',$ack_object->id)->update(['status'=>$ack_object->status,'updated_at'=>now()]);
+
+        } elseif(array_key_exists('messages', $search_array)) {
+             $message_object = (object) $search_array;
+             $message_object = $message_object->{'messages'}[0];
+
+             $phonenumber = validate_phone_number($message_object->chatName);
+             $schema = \DB::table('all_users')->where('phone',$phonenumber)->first();
+             $schema_name = $schema ? $schema->schema_name : 'public';
+            
+             $check_message = \DB::table('admin.message_logs')->where('message_id',$message_object->id)->first();
+
+             if(empty($check_message)){
+                $array_message = array('message_id'=>$message_object->id,'schema_name'=>$schema_name,'author'=>$message_object->author,'chatid'=> $message_object->chatId,'status'=>'Sent');
+              \DB::table('admin.message_logs')->insert($array_message);
+            }
+        }
+
+      }
+
    
 }
 
