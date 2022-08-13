@@ -907,6 +907,7 @@ class Software extends Controller {
 
     public function transferDb() {
         set_time_limit(0);
+
         $source_connection = 'pgsql';
         $destination_connection = $this->destination_connection;
 
@@ -935,9 +936,9 @@ class Software extends Controller {
                 //show table
                 $sql = "SELECT * FROM admin.show_create_table('" . $table . "','" . $schema->table_schema . "')";
                 $check = DB::select($sql);
-                if (!empty($check)) {
-                    $show_create_table = \collect($check)->first()->show_create_table;
-
+                $show_create_table = \collect($check)->first()->show_create_table;
+                
+                if (strlen($show_create_table) > 10) {
                     //create a new table in a secondary table
                     DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
                     echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
@@ -954,7 +955,7 @@ class Software extends Controller {
                     }
                     echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
                 } else {
-                    echo '<p style="color:red">Table '.$table.' is Empty, and cannot generate a query</p><br/>'; 
+                    echo '<p style="color:red">Table ' . $table . ' is Empty, and cannot generate a query</p><br/>';
                 }
             }
 
