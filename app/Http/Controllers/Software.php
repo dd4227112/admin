@@ -9,7 +9,7 @@ class Software extends Controller {
 
     public function __construct() {
         if (!preg_match('/fhodhkjkhdfhoidf/i', request()->segment(1))) {
-            $this->middleware('auth');
+            //$this->middleware('auth');
         }
     }
 
@@ -919,8 +919,6 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
 
         //loop throught schemas, and load all tables, views and functions
         foreach ($schemas as $schema) {
-
-
 
             DB::connection($destination_connection)->statement('create schema IF NOT EXISTS ' . $schema->table_schema);
             echo 'Schema ' . $schema->table_schema . ' created successfully in new db ' . $destination_connection . '<br/>';
