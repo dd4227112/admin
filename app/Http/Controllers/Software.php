@@ -911,7 +911,7 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
     public function transferDb() {
         set_time_limit(0);
         ignore_user_abort(true);
-
+ini_set('memory_limit', '3000M');
         $source_connection = 'pgsql';
         $destination_connection = $this->destination_connection;
 
