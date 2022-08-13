@@ -930,18 +930,18 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
                 'financial_category', 'migrations',
                 'student_other', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
-                'adjustments', 'journals', 'ledger'];
+                'adjustments', 'journals', 'ledger','courses'];
             foreach ($tables as $table) {
 
                 if (in_array($table, $skip_poor_tables)) {
                     continue;
                 }
                 if ($table == 'allowances') {
-                    DB::statement('ALTER TABLE '.$schema->table_schema.'.deductions
+                    DB::statement('ALTER TABLE ' . $schema->table_schema . '.deductions
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                 }
                 if ($table == 'deductions') {
-                    DB::statement('ALTER TABLE '.$schema->table_schema.'.deductions
+                    DB::statement('ALTER TABLE ' . $schema->table_schema . '.deductions
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                 }
                 //show table
@@ -1012,6 +1012,23 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
             $sql = "select * from admin.reset_sequence('{$schema->table_schema}')";
             DB::connection($this->destination_connection)->statement($sql);
             echo 'SCHEMA ' . $schema->table_schema . ' sequence reset COMPLETELY <br/><br/><hr/>';
+        }
+    }
+
+    public function createIndex() {
+        $schemas = $this->loadSchema();
+
+        //loop throught schemas, and load all tables, views and functions
+        foreach ($schemas as $schema) {
+            
+            $tables = $this->loadTables($schema->table_schema);
+   
+            foreach ($tables as $table) {
+                $sql = "ALTER TABLE IF EXISTS {$schema->table_schema}.absents
+    ADD CONSTRAINT {$table}_id_primary PRIMARY KEY (id)";
+                DB::connection($this->destination_connection)->statement($sql);
+                echo 'SCHEMA ' . $schema->table_schema . ' index reset COMPLETELY <br/><br/><hr/>';
+            }
         }
     }
 
