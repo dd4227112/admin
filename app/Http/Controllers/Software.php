@@ -929,7 +929,7 @@ select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_s
                 'financial_category', 'migrations',
                 'student_other', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
-                'adjustments', 'journals', 'ledger', 'courses'];
+                'adjustments', 'journals', 'ledger', 'courses','portal_roles'];
             foreach ($tables as $table) {
 
                 if (in_array($table, $skip_poor_tables)) {
