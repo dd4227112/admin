@@ -935,14 +935,14 @@ ini_set('memory_limit', '3000M');
                 if (in_array($table, $skip_poor_tables)) {
                     continue;
                 }
-                if ($table == 'allowances') {
-                    DB::statement('ALTER TABLE ' . $schema->table_schema . '.deductions
-    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
-                }
-                if ($table == 'deductions') {
-                    DB::statement('ALTER TABLE ' . $schema->table_schema . '.deductions
-    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
-                }
+//                if ($table == 'allowances') {
+//                    DB::statement('ALTER TABLE ' . $schema->table_schema . '.deductions
+//    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
+//                }
+//                if ($table == 'deductions') {
+//                    DB::statement('ALTER TABLE ' . $schema->table_schema . '.deductions
+//    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
+//                }
                 //show table
                 $sql = "SELECT * FROM admin.show_create_table('" . $table . "','" . $schema->table_schema . "')";
                 $check = DB::select($sql);
