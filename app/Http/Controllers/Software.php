@@ -925,7 +925,8 @@ class Software extends Controller {
             $skip_poor_tables = ['school_sessions', 'financial_statement',
                 'financial_category', 'migrations',
                 'student_other', 'allschools', 'password_resets',
-                'phone_sms', 'reminder_template', 'permission_group'];
+                'phone_sms', 'reminder_template', 'permission_group',
+                'adjustments','journals','ledger'];
             foreach ($tables as $table) {
 
                 if (in_array($table, $skip_poor_tables)) {
