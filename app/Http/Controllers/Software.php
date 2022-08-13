@@ -934,23 +934,28 @@ class Software extends Controller {
                 }
                 //show table
                 $sql = "SELECT * FROM admin.show_create_table('" . $table . "','" . $schema->table_schema . "')";
-                $show_create_table = \collect(DB::select($sql))->first()->show_create_table;
+                $check = DB::select($sql);
+                if (!empty($check)) {
+                    $show_create_table = \collect($check)->first()->show_create_table;
 
-                //create a new table in a secondary table
-                DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
-                echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
-                //transfer data from old to new connection 
+                    //create a new table in a secondary table
+                    DB::connection($destination_connection)->statement(str_replace('ARRAY', 'character varying[]', $show_create_table));
+                    echo 'Table  ' . $table . ' created successfully in new db ' . $destination_connection . '<br/>';
+                    //transfer data from old to new connection 
 
 
-                $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
+                    $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
 
-                if (!empty($old_table_data)) {
-                    foreach ($old_table_data as $value) {
+                    if (!empty($old_table_data)) {
+                        foreach ($old_table_data as $value) {
 
-                        DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
+                            DB::connection($destination_connection)->table($schema->table_schema . '.' . $table)->insert((array) $value);
+                        }
                     }
+                    echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
+                } else {
+                    echo '<p style="color:red">Table '.$table.' is Empty, and cannot generate a query</p><br/>'; 
                 }
-                echo 'Data inserted in a table  ' . $table . '  successfully in new db ' . $destination_connection . '<br/>';
             }
 
             //lets deal with functions
