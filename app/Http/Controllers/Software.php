@@ -104,7 +104,10 @@ class Software extends Controller {
      */
     public function loadSchema() {
         //return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','api','app','skysat','dodoso','forum','academy','carryshop') order by table_schema asc");
-        return DB::select('SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022');
+        return DB::select("select 'admin' as table_schema UNION ALL
+select 'constant' as table_schema UNION ALL
+select 'api' as table_schema UNION ALL
+select 'public' as table_schema UNION ALL SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022");
     }
 
     /**
