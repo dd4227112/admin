@@ -963,6 +963,18 @@ WHERE table_schema ='{$schema->table_schema}'
                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.deductions
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                         }
+                        if ($table == 'forum_discussion') {
+                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
+    ALTER COLUMN sticky TYPE integer USING is_percentage::integer;');
+                              DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
+    ALTER COLUMN answered TYPE integer USING is_percentage::integer;');
+                        }
+                        if ($table == 'forum_post') {
+                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
+    ALTER COLUMN markdown TYPE integer USING is_percentage::integer;');
+                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
+    ALTER COLUMN locked TYPE integer USING is_percentage::integer;');
+                        }
 
                         $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
 
