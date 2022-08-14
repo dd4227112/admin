@@ -914,11 +914,11 @@ class Software extends Controller {
 
         //load all schemas
         //$schemas = $this->loadSchema();
-        $schemas =(object) array('table_schema' =>['table_schema'=>request('s')] );
+        $schemas = (object) array('table_schema' => ['table_schema' => request('s')]);
         $skip_schemas = ['admin', 'api'];
         //loop throught schemas, and load all tables, views and functions
         foreach ($schemas as $schema_) {
-            $schema=(object) $schema_;
+            $schema = (object) $schema_;
             if (in_array($schema->table_schema, $skip_schemas)) {
                 continue;
             }
@@ -1055,7 +1055,11 @@ WHERE table_schema ='{$schema->table_schema}'
 
             $tables = $this->loadTables($schema->table_schema);
 
+            $skip_tables = ['track_invoices', 'track_payments', 'track_invoices_fees_installments'];
             foreach ($tables as $table) {
+                if (in_array($table, $skip_tables)) {
+                    continue;
+                }
 
                 $check_table_exists = DB::connection($this->destination_connection)->select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema->table_schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
                 $table_info = \collect($check_table_exists)->first();
