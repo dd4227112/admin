@@ -104,7 +104,7 @@ class Software extends Controller {
      */
     public function loadSchema() {
         //return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','api','app','skysat','dodoso','forum','academy','carryshop') order by table_schema asc");
-        return DB::select("SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022 offset 140");
+        return DB::select("SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022 offset 143");
     }
 
     /**
@@ -964,14 +964,14 @@ WHERE table_schema ='{$schema->table_schema}'
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                         }
                         if ($table == 'forum_discussion') {
-                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
-    ALTER COLUMN sticky TYPE integer USING sticky::integer;');
+                           /// DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
+    //ALTER COLUMN sticky TYPE integer USING sticky::integer;');
                               DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
     ALTER COLUMN answered TYPE integer USING answered::integer;');
                         }
                         if ($table == 'forum_post') {
-                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
-    ALTER COLUMN markdown TYPE integer USING markdown::integer;');
+                            //DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
+    //ALTER COLUMN markdown TYPE integer USING markdown::integer;');
                              DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
     ALTER COLUMN locked TYPE integer USING locked::integer;');
                         }
