@@ -966,14 +966,14 @@ WHERE table_schema ='{$schema->table_schema}'
                         if ($table == 'forum_discussion') {
                            /// DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
     //ALTER COLUMN sticky TYPE integer USING sticky::integer;');
-                              DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
-    ALTER COLUMN answered TYPE integer USING answered::integer;');
+//                              DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
+//    ALTER COLUMN answered TYPE integer USING answered::integer;');
                         }
                         if ($table == 'forum_post') {
                             //DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
     //ALTER COLUMN markdown TYPE integer USING markdown::integer;');
-                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
-    ALTER COLUMN locked TYPE integer USING locked::integer;');
+//                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
+//    ALTER COLUMN locked TYPE integer USING locked::integer;');
                         }
 
                         $old_table_data = DB::table($schema->table_schema . '.' . $table)->get();
