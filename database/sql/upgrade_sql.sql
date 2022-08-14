@@ -304,7 +304,67 @@ $BODY$;
 ALTER FUNCTION testing.distribute_payment()
     OWNER TO postgres;
 
+-- View: canossa.invoices_fees_installments_balance
 
+-- DROP VIEW canossa.invoices_fees_installments_balance;
+
+CREATE OR REPLACE VIEW canossa.invoices_fees_installments_balance
+ AS
+ SELECT COALESCE(a.amount, 0::numeric) AS total_amount,
+    COALESCE(c.total_payment_invoice_amount, 0::numeric) AS total_payment_invoice_fee_amount,
+    COALESCE(d.total_advance_invoice_fee_amount, 0::numeric) AS total_advance_invoice_fee_amount,
+    COALESCE(e.amount, 0::numeric) AS discount_amount,
+    f.student_id,
+    f.date AS created_at,
+    b.id,
+    b.fees_installment_id,
+    h.id AS installment_id,
+    h.start_date,
+    h.academic_year_id,
+    i.id AS fee_id,
+    f.id AS invoice_id,
+        CASE
+            WHEN (a.amount - COALESCE(c.total_payment_invoice_amount, 0::numeric) - COALESCE(d.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(e.amount, 0::numeric)) > 0::numeric THEN 0
+            ELSE 1
+        END AS status,
+    h.end_date
+   FROM canossa.fees_installments_classes a
+     JOIN canossa.invoices_fees_installments b ON b.fees_installment_id = a.fees_installment_id
+     JOIN canossa.invoices f ON f.id = b.invoice_id
+     JOIN canossa.fees_installments g ON g.id = a.fees_installment_id
+     JOIN canossa.installments h ON h.id = g.installment_id
+     JOIN canossa.fees i ON i.id = g.fee_id
+     JOIN canossa.student_archive s ON s.student_id = f.student_id AND (s.section_id IN ( SELECT section."sectionID"
+           FROM canossa.section
+          WHERE section."classesID" = a.class_id)) AND h.academic_year_id = s.academic_year_id
+     LEFT JOIN ( SELECT sum(payments_invoices_fees_installments.amount) AS total_payment_invoice_amount,
+            payments_invoices_fees_installments.invoices_fees_installment_id
+           FROM canossa.payments_invoices_fees_installments
+          WHERE (payments_invoices_fees_installments.payment_id IN ( SELECT payments.id
+                   FROM canossa.payments))
+          GROUP BY payments_invoices_fees_installments.invoices_fees_installment_id) c ON c.invoices_fees_installment_id = b.id
+     LEFT JOIN ( SELECT sum(advance_payments_invoices_fees_installments.amount) AS total_advance_invoice_fee_amount,
+            advance_payments_invoices_fees_installments.invoices_fees_installments_id
+           FROM canossa.advance_payments_invoices_fees_installments
+          GROUP BY advance_payments_invoices_fees_installments.invoices_fees_installments_id) d ON d.invoices_fees_installments_id = b.id
+     LEFT JOIN canossa.discount_fees_installments e ON e.fees_installment_id = a.fees_installment_id AND f.student_id = e.student_id
+  ORDER BY h.start_date, i.priority;
+
+ALTER TABLE canossa.invoices_fees_installments_balance
+    OWNER TO postgres;
+
+CREATE OR REPLACE VIEW canossa.mark_grade
+ AS
+ SELECT total_mark.student_id,
+    total_mark."classesID",
+    total_mark.year,
+    total_mark."examID",
+    total_mark.total,
+    row_number() OVER (ORDER BY total_mark.total DESC) AS rank
+   FROM canossa.total_mark;
+
+ALTER TABLE canossa.mark_grade
+    OWNER TO postgres;
 
 
 
@@ -315,8 +375,4 @@ select a.tables from (SELECT   table_name as tables FROM information_schema.tabl
 WHERE (tables.table_schema::name <> ALL (ARRAY['admin'::name, 'constant'::name, 'academy'::name, 'api'::name, 'forum'::name, 'pg_catalog'::name, 'information_schema'::name])) AND tables.table_type::text = 'BASE TABLE'::text AND table_schema = 'amka' ) a   EXCEPT ALL
 (select b.tables  from (SELECT   table_name as tables FROM information_schema.tables
  WHERE (tables.table_schema::name <> ALL (ARRAY['admin'::name, 'constant'::name, 'academy'::name, 'api'::name, 'forum'::name, 'pg_catalog'::name, 'information_schema'::name])) AND tables.table_type::text = 'BASE TABLE'::text AND table_schema = 'betatwo' )  b );
-
-
-
-
 
