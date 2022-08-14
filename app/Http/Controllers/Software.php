@@ -913,11 +913,12 @@ class Software extends Controller {
         $destination_connection = $this->destination_connection;
 
         //load all schemas
-        $schemas = $this->loadSchema();
-
+        //$schemas = $this->loadSchema();
+        $schemas =(object) array('table_schema' =>['table_schema'=>request('s')] );
         $skip_schemas = ['admin', 'api'];
         //loop throught schemas, and load all tables, views and functions
-        foreach ($schemas as $schema) {
+        foreach ($schemas as $schema_) {
+            $schema=(object) $schema_;
             if (in_array($schema->table_schema, $skip_schemas)) {
                 continue;
             }
@@ -995,18 +996,20 @@ WHERE table_schema ='{$schema->table_schema}'
             }
 
             //lets deal with functions
+            $s = 0;
+            if ($s == 1) {
+                $functions = $this->getDefinedFunctions($schema->table_schema);
 
-            $functions = $this->getDefinedFunctions($schema->table_schema);
+                foreach ($functions as $function) {
 
-            foreach ($functions as $function) {
-
-                $sql = \collect(DB::select("SELECT pg_get_functiondef(( SELECT  oid FROM pg_proc  WHERE  proname = '{$function->routine_name}' and lower(prosrc) like '%public%' limit 1) )"))->first();
-                if ($sql->pg_get_functiondef <> '') {
-                    DB::connection($destination_connection)->statement(str_replace('public', $schema->table_schema, $sql->pg_get_functiondef));
-                    echo 'Function  ' . $function->routine_name . ' created successfully in new db ' . $destination_connection . ' for schema ' . $schema->table_schema . '<br/>';
+                    $sql = \collect(DB::select("SELECT pg_get_functiondef(( SELECT  oid FROM pg_proc  WHERE  proname = '{$function->routine_name}' and lower(prosrc) like '%public%' limit 1) )"))->first();
+                    if ($sql->pg_get_functiondef <> '') {
+                        DB::connection($destination_connection)->statement(str_replace('public', $schema->table_schema, $sql->pg_get_functiondef));
+                        echo 'Function  ' . $function->routine_name . ' created successfully in new db ' . $destination_connection . ' for schema ' . $schema->table_schema . '<br/>';
+                    }
                 }
+                echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
             }
-            echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
         }
     }
 
@@ -1053,7 +1056,7 @@ WHERE table_schema ='{$schema->table_schema}'
             $tables = $this->loadTables($schema->table_schema);
 
             foreach ($tables as $table) {
-   
+
                 $check_table_exists = DB::connection($this->destination_connection)->select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema->table_schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
                 $table_info = \collect($check_table_exists)->first();
                 if (!empty($table_info)) {
