@@ -7,6 +7,9 @@ use DB;
 
 class Software extends Controller {
 
+    public $source_connection = 'pgsql';
+    public $destination_connection = 'new_vps';
+
     public function __construct() {
         if (!preg_match('/fhodhkjkhdfhoidf/i', request()->segment(1))) {
             //$this->middleware('auth');
@@ -103,8 +106,8 @@ class Software extends Controller {
      * @return type array: list of schemas
      */
     public function loadSchema() {
-        //return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','api','app','skysat','dodoso','forum','academy','carryshop') order by table_schema asc");
-        return DB::select("SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022 offset 143");
+        return DB::connection($this->destination_connection)->select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','app','skysat','dodoso','forum','academy','carryshop') order by table_schema asc");
+        //return DB::select("SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022 offset 143");
     }
 
     /**
@@ -902,9 +905,6 @@ class Software extends Controller {
         }
     }
 
-    public $source_connection = 'pgsql';
-    public $destination_connection = 'new_vps';
-
     public function transferDb() {
         set_time_limit(0);
         ignore_user_abort(true);
@@ -964,14 +964,14 @@ WHERE table_schema ='{$schema->table_schema}'
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                         }
                         if ($table == 'forum_discussion') {
-                           /// DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
-    //ALTER COLUMN sticky TYPE integer USING sticky::integer;');
+                            /// DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
+                            //ALTER COLUMN sticky TYPE integer USING sticky::integer;');
 //                              DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_discussion
 //    ALTER COLUMN answered TYPE integer USING answered::integer;');
                         }
                         if ($table == 'forum_post') {
                             //DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
-    //ALTER COLUMN markdown TYPE integer USING markdown::integer;');
+                            //ALTER COLUMN markdown TYPE integer USING markdown::integer;');
 //                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.forum_post
 //    ALTER COLUMN locked TYPE integer USING locked::integer;');
                         }
@@ -1028,6 +1028,9 @@ WHERE table_schema ='{$schema->table_schema}'
 
     public function resetSequence() {
         //load all schemas
+        set_time_limit(0);
+        ignore_user_abort(true);
+        ini_set('memory_limit', '3000M');
         $schemas = $this->loadSchema();
 
         //loop throught schemas, and load all tables, views and functions
@@ -1039,6 +1042,9 @@ WHERE table_schema ='{$schema->table_schema}'
     }
 
     public function createIndex() {
+        set_time_limit(0);
+        ignore_user_abort(true);
+        ini_set('memory_limit', '3000M');
         $schemas = $this->loadSchema();
 
         //loop throught schemas, and load all tables, views and functions
@@ -1047,10 +1053,19 @@ WHERE table_schema ='{$schema->table_schema}'
             $tables = $this->loadTables($schema->table_schema);
 
             foreach ($tables as $table) {
-                $sql = "ALTER TABLE IF EXISTS {$schema->table_schema}.absents
-    ADD CONSTRAINT {$table}_id_primary PRIMARY KEY (id)";
-                DB::connection($this->destination_connection)->statement($sql);
-                echo 'SCHEMA ' . $schema->table_schema . ' index reset COMPLETELY <br/><br/><hr/>';
+   
+                $check_table_exists = DB::connection($this->destination_connection)->select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema->table_schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
+                $table_info = \collect($check_table_exists)->first();
+                if (!empty($table_info)) {
+                    $key = '"' . $table_info->column_name . '"';
+
+                    $sql = "ALTER TABLE IF EXISTS {$schema->table_schema}.{$table}
+    ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
+
+                    DB::connection($this->destination_connection)->statement("ALTER TABLE {$schema->table_schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
+                    DB::connection($this->destination_connection)->statement($sql);
+                    echo 'SCHEMA ' . $schema->table_schema . ' index reset COMPLETELY <br/><br/><hr/>';
+                }
             }
         }
     }
