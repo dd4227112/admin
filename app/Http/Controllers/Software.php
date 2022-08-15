@@ -1028,7 +1028,7 @@ WHERE table_schema ='{$schema->table_schema}'
             $sq = "select pg_get_viewdef('$schema->table_schema.$view')";
             $sql = \collect(DB::statement($sq))->first();
             if (!empty($sql)) {
-                dd(DB::statement($sq));
+                dd(DB::select($sq));
                 $view_sql = 'CREATE OR REPLACE VIEW  ' . $schema->table_schema . '.' . $view . ' AS ' . $sql->pg_get_viewdef;
                 DB::connection($destination_connection)->statement($view_sql);
                 echo 'View   ' . $view . ' created successfully in new db ' . $destination_connection . ' for schema ' . $schema->table_schema . '<br/>';
