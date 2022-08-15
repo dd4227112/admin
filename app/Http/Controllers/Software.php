@@ -960,6 +960,11 @@ WHERE table_schema ='{$schema->table_schema}'
                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.allowances
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                         }
+                        
+                        if ($table == 'allowances1') {
+                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.allowances1
+    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
+                        }
                         if ($table == 'deductions') {
                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.deductions
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
