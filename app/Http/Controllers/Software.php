@@ -1060,7 +1060,7 @@ WHERE table_schema ='{$schema->table_schema}'
 
             $tables = $this->loadTables($schema->table_schema);
 
-            $skip_tables = ['track_invoices', 'track_payments', 'company_files', 'other_student', 'track_invoices_fees_installments'];
+            $skip_tables = ['track_invoices', 'track_payments', 'company_files', 'courses', 'other_student', 'track_invoices_fees_installments'];
             foreach ($tables as $table) {
                 if (in_array($table, $skip_tables)) {
                     continue;
