@@ -926,7 +926,7 @@ class Software extends Controller {
             echo 'Schema ' . $schema->table_schema . ' created successfully in new db ' . $destination_connection . '<br/>';
 
             $tables = $this->loadTables($schema->table_schema);
-            $skip_poor_tables = ['school_sessions', 'financial_statement',
+            $skip_poor_tables = ['school_sessions', 'financial_statement', 'student_other',
                 'financial_category', 'migrations', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
                 'adjustments', 'journal', 'ledger', 'courses', 'portal_roles'];
