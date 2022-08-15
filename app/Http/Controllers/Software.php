@@ -1025,7 +1025,7 @@ WHERE table_schema ='{$schema->table_schema}'
 
         foreach ($views as $view) {
             //show table
-            $sq = "select pg_get_viewdef('$view')";
+            $sq = "select pg_get_viewdef('$schema->table_schema.$view')";
             $sql = \collect(DB::statement($sq))->first();
             if ($sql->pg_get_viewdef <> '') {
                 $view_sql = 'CREATE OR REPLACE VIEW  ' . $schema->table_schema . '.' . $view . ' AS ' . $sql->pg_get_viewdef;
