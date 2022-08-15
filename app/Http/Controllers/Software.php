@@ -1015,6 +1015,8 @@ WHERE table_schema ='{$schema->table_schema}'
                 }
                 echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
             }
+
+            $this->syncViews($schema->table_schema, $destination_connection);
         }
     }
 
@@ -1025,7 +1027,6 @@ WHERE table_schema ='{$schema->table_schema}'
             //show table
             $sq = "select pg_get_viewdef('$view')";
             $sql = \collect(DB::statement($sq))->first();
-            dd($sql);
             if ($sql->pg_get_viewdef <> '') {
                 $view_sql = 'CREATE OR REPLACE VIEW  ' . $schema->table_schema . '.' . $view . ' AS ' . $sql->pg_get_viewdef;
                 DB::connection($destination_connection)->statement($view_sql);
