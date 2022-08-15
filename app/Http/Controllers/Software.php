@@ -1016,7 +1016,7 @@ WHERE table_schema ='{$schema->table_schema}'
                 echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
             }
 
-            $this->syncViews($schema, $destination_connection);
+          //  $this->syncViews($schema, $destination_connection);
         }
     }
 
