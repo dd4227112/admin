@@ -927,8 +927,7 @@ class Software extends Controller {
 
             $tables = $this->loadTables($schema->table_schema);
             $skip_poor_tables = ['school_sessions', 'financial_statement',
-                'financial_category', 'migrations',
-                'student_other', 'allschools', 'password_resets',
+                'financial_category', 'migrations', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
                 'adjustments', 'journal', 'ledger', 'courses', 'portal_roles'];
             foreach ($tables as $table) {
