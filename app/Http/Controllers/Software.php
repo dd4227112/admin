@@ -309,6 +309,8 @@ class Software extends Controller {
             $queries = explode(';', $sql);
             foreach ($queries as $query) {
                 # code...
+                $run_sql = str_replace(';', '', $query);
+                DB::statement("$query");
                 $q .= $query . '; ';
             }
         }
