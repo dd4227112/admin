@@ -530,7 +530,7 @@ class Software extends Controller {
                     . '<li>' . \App\Models\Client::where('id', $client->id)->first()->name . '</li>'
                     . ' zimekamilika tafadhali wasiliana na bank product associate kutoka'
                     . ' shulesoft aweze kuwapa taarifa shule husika na kuendelea'
-                    . ' nao katika hatua zinazofata,ASANTE.';
+                    . ' nao katika hatua zinazofata, ASANTE.';
             $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
 
             $fullname = $manager->firstname . " " . $manager->lastname;
@@ -1082,4 +1082,36 @@ WHERE table_schema ='{$schema->table_schema}'
         }
     }
 
+    
+    public function createIndexSchema() {
+        set_time_limit(0);
+        ignore_user_abort(true);
+        ini_set('memory_limit', '3000M');
+        $schema = request('schema');
+
+        //loop throught schemas, and load all tables, views and functions
+
+            $tables = $this->loadTables($schema);
+
+            $skip_tables = ['track_invoices', 'track_payments', 'company_files', 'courses', 'other_student', 'track_invoices_fees_installments'];
+            foreach ($tables as $table) {
+                if (in_array($table, $skip_tables)) {
+                    continue;
+                }
+
+                $check_table_exists = DB::connection($this->destination_connection)->select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
+                $table_info = \collect($check_table_exists)->first();
+                if (!empty($table_info)) {
+                    $key = '"' . $table_info->column_name . '"';
+
+                    $sql = "ALTER TABLE IF EXISTS {$schema}.{$table}
+    ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
+
+                    DB::connection($this->destination_connection)->statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
+                    DB::connection($this->destination_connection)->statement($sql);
+                    echo 'SCHEMA ' . $schema . ' for table ' . $table. ' index reset COMPLETELY <br/><br/><hr/>';
+                }
+            }
+        }
+    
 }
