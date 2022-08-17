@@ -1002,7 +1002,7 @@ WHERE table_schema ='{$schema->table_schema}'
             }
 
             //lets deal with functions
-            $s = 0;
+            $s = 1;
             if ($s == 1) {
                 $functions = $this->getDefinedFunctions($schema->table_schema);
 
@@ -1017,7 +1017,8 @@ WHERE table_schema ='{$schema->table_schema}'
                 echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
             }
 
-          //  $this->syncViews($schema, $destination_connection);
+            $this->resetSequence();
+            $this->createIndexSchema(request('s'));
         }
     }
 
@@ -1085,11 +1086,11 @@ WHERE table_schema ='{$schema->table_schema}'
     }
 
     
-    public function createIndexSchema() {
+    public function createIndexSchema($this_schema = null) {
         set_time_limit(0);
         ignore_user_abort(true);
         ini_set('memory_limit', '3000M');
-        $schema = request('schema');
+        $schema = $this_schema != '' ? $this_schema : request('schema');
 
         //loop throught schemas, and load all tables, views and functions
 
