@@ -45,6 +45,7 @@ foreach ($smsstatus as $smss) {
     $sms_status_count[$smss->schema_name] = $smss->count;
 }
 
+
 $expenses = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_expense   ' . $where . '  group by schema_name');
 $expense_status = [];
 $expense_status_count = [];
@@ -183,9 +184,10 @@ foreach ($schools_data as $value) {
 }
 
 $invoice_issued = [];
-$invoices_current = DB::select('select * from admin.invoices_sent where extract(year from created_at)=' . $year);
-foreach ($invoices_current as $invoice_info) {
-    $invoice_issued[$invoice_info->schema_name] = 'Due: ' . date('d M Y', strtotime('30 days', strtotime($invoice_info->date)));
+$invoices_current = DB::select('select distinct "schema_name", max(date) as created_at, count(*) from admin.all_invoices  ' . $where . '  group by schema_name');
+foreach ($invoices_current as $invoice_info) {    
+    $invoice_issued[$invoice_info->schema_name] = $invoice_info->created_at;
+    $invoice_issued_count[$invoice_info->schema_name] = $invoice_info->count;
 }
 
 function select($value, $schema, $sources) {
