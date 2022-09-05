@@ -348,7 +348,7 @@ class Software extends Controller {
         //select from information schema where column name is that which is missing
         //selectfrom information schema table and know data type, default value for that column name
         //complete sql below by adding correct datatype at the end and default column
-        $table = request('table');
+        $table = request('table'); 
         $schema = request('slave');
         $constrain = request('constrain');
 
