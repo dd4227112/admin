@@ -1101,7 +1101,7 @@ WHERE table_schema ='{$schema->table_schema}'
                     continue;
                 }
 
-                $check_table_exists = DB::connection($this->destination_connection)->select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
+                $check_table_exists = DB::select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
                 $table_info = \collect($check_table_exists)->first();
                 if (!empty($table_info)) {
                     $key = '"' . $table_info->column_name . '"';
@@ -1109,8 +1109,8 @@ WHERE table_schema ='{$schema->table_schema}'
                     $sql = "ALTER TABLE IF EXISTS {$schema}.{$table}
     ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
 
-                    DB::connection($this->destination_connection)->statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
-                    DB::connection($this->destination_connection)->statement($sql);
+                    DB::statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
+                    DB::statement($sql);
                     echo 'SCHEMA ' . $schema . ' for table ' . $table. ' index reset COMPLETELY <br/><br/><hr/>';
                 }
             }
