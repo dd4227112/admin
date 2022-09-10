@@ -1062,7 +1062,7 @@ class Customer extends Controller {
             $this->send_whatsapp_sms($data->contact, $message1);
             $this->send_sms($data->contact, $message1, 1);
         }
-      
+       
         echo $action;
     }
 
@@ -1073,7 +1073,8 @@ class Customer extends Controller {
                 ->whereNotIn('schema_name', $skip);
         strlen(request('schools')) > 3 ? $sql->whereIn('schema_name', explode(',', request('schools'))) : '';
         strlen(request('regions')) > 3 ? $sql->whereIn('regions', explode(',', request('regions'))) : '';
-        (int) request('is_client') == 1 ? $sql->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', 2021)->get(['client_id']))->get(['username'])) : '';
+   
+        (int) request('is_client') == 1 ? $sql->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', '>=', 2021)->get(['client_id']))->get(['username'])) : '';
         $this->data['schools'] = $sql->get();
         return view('customer.usage.modules', $this->data);
     }

@@ -70,8 +70,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')')
-           AS ct (table_schema text, views text, tables text)");
+        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')') AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
         if (view()->exists($view)) {
             return view($view, $this->data);
@@ -310,6 +309,8 @@ class Software extends Controller {
             $queries = explode(';', $sql);
             foreach ($queries as $query) {
                 # code...
+                $run_sql = str_replace(';', '', $query);
+              //  DB::statement("$query");
                 $q .= $query . '; ';
             }
         }
@@ -348,7 +349,7 @@ class Software extends Controller {
         //select from information schema where column name is that which is missing
         //selectfrom information schema table and know data type, default value for that column name
         //complete sql below by adding correct datatype at the end and default column
-        $table = request('table');
+        $table = request('table'); 
         $schema = request('slave');
         $constrain = request('constrain');
 
@@ -531,7 +532,7 @@ class Software extends Controller {
                     . '<li>' . \App\Models\Client::where('id', $client->id)->first()->name . '</li>'
                     . ' zimekamilika tafadhali wasiliana na bank product associate kutoka'
                     . ' shulesoft aweze kuwapa taarifa shule husika na kuendelea'
-                    . ' nao katika hatua zinazofata,ASANTE.';
+                    . ' nao katika hatua zinazofata, ASANTE.';
             $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
 
             $fullname = $manager->firstname . " " . $manager->lastname;
@@ -927,9 +928,8 @@ class Software extends Controller {
             echo 'Schema ' . $schema->table_schema . ' created successfully in new db ' . $destination_connection . '<br/>';
 
             $tables = $this->loadTables($schema->table_schema);
-            $skip_poor_tables = ['school_sessions', 'financial_statement',
-                'financial_category', 'migrations',
-                'student_other', 'allschools', 'password_resets',
+            $skip_poor_tables = ['school_sessions', 'financial_statement', 'student_other',
+                'financial_category', 'migrations', 'allschools', 'password_resets',
                 'phone_sms', 'reminder_template', 'permission_group',
                 'adjustments', 'journal', 'ledger', 'courses', 'portal_roles'];
             foreach ($tables as $table) {
@@ -959,6 +959,11 @@ WHERE table_schema ='{$schema->table_schema}'
 
                         if ($table == 'allowances') {
                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.allowances
+    ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
+                        }
+                        
+                        if ($table == 'allowances1') {
+                            DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.allowances1
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                         }
                         if ($table == 'deductions') {
@@ -997,7 +1002,7 @@ WHERE table_schema ='{$schema->table_schema}'
             }
 
             //lets deal with functions
-            $s = 0;
+            $s = 1;
             if ($s == 1) {
                 $functions = $this->getDefinedFunctions($schema->table_schema);
 
@@ -1011,6 +1016,9 @@ WHERE table_schema ='{$schema->table_schema}'
                 }
                 echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
             }
+
+            $this->resetSequence();
+            $this->createIndexSchema(request('s'));
         }
     }
 
@@ -1019,10 +1027,9 @@ WHERE table_schema ='{$schema->table_schema}'
 
         foreach ($views as $view) {
             //show table
-            $sq = "select pg_get_viewdef('$view')";
-            $sql = \collect(DB::statement($sq))->first();
-            dd($sql);
-            if ($sql->pg_get_viewdef <> '') {
+            $sq = "select pg_get_viewdef('$schema->table_schema.$view')";
+            $sql = \collect(DB::select($sq))->first();
+            if (!empty($sql)) {
                 $view_sql = 'CREATE OR REPLACE VIEW  ' . $schema->table_schema . '.' . $view . ' AS ' . $sql->pg_get_viewdef;
                 DB::connection($destination_connection)->statement($view_sql);
                 echo 'View   ' . $view . ' created successfully in new db ' . $destination_connection . ' for schema ' . $schema->table_schema . '<br/>';
@@ -1056,7 +1063,7 @@ WHERE table_schema ='{$schema->table_schema}'
 
             $tables = $this->loadTables($schema->table_schema);
 
-            $skip_tables = ['track_invoices', 'track_payments', 'track_invoices_fees_installments'];
+            $skip_tables = ['track_invoices', 'track_payments', 'company_files', 'courses', 'other_student', 'track_invoices_fees_installments'];
             foreach ($tables as $table) {
                 if (in_array($table, $skip_tables)) {
                     continue;
@@ -1077,6 +1084,7 @@ WHERE table_schema ='{$schema->table_schema}'
             }
         }
     }
+
 
     public function migration() {
         /**
@@ -1180,4 +1188,36 @@ WHERE table_schema ='{$schema->table_schema}'
         }
     }
 
+    
+    public function createIndexSchema($this_schema = null) {
+        set_time_limit(0);
+        ignore_user_abort(true);
+        ini_set('memory_limit', '3000M');
+        $schema = $this_schema != '' ? $this_schema : request('schema');
+
+        //loop throught schemas, and load all tables, views and functions
+
+            $tables = $this->loadTables($schema);
+
+            $skip_tables = ['track_invoices', 'track_payments', 'company_files', 'courses', 'other_student', 'track_invoices_fees_installments'];
+            foreach ($tables as $table) {
+                if (in_array($table, $skip_tables)) {
+                    continue;
+                }
+
+                $check_table_exists = DB::select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
+                $table_info = \collect($check_table_exists)->first();
+                if (!empty($table_info)) {
+                    $key = '"' . $table_info->column_name . '"';
+
+                    $sql = "ALTER TABLE IF EXISTS {$schema}.{$table}
+    ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
+
+                    DB::statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
+                    DB::statement($sql);
+                    echo 'SCHEMA ' . $schema . ' for table ' . $table. ' index reset COMPLETELY <br/><br/><hr/>';
+                }
+            }
+        }
+    
 }
