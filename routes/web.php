@@ -115,3 +115,4 @@ Route::get('/application', 'Recruitments@index');
 Route::post('/addrecruiment', 'Recruitments@register'); 
 Route::get('/nda_form/{id}', 'Recruitments@nda');
 Route::post('/sendndaform','Recruitments@uploadnda');
+Route::get('/migration', 'Software@migration');
