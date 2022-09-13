@@ -8,7 +8,7 @@ use DB;
 class Software extends Controller {
 
     public $source_connection = 'pgsql';
-    public $destination_connection = 'vps';
+    public $destination_connection = 'new_vps';
 
     public function __construct() {
         if (!preg_match('/fhodhkjkhdfhoidf/i', request()->segment(1))) {
