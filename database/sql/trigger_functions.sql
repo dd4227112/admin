@@ -24,17 +24,7 @@ ALTER FUNCTION activetots.create_revenue_reference()
     OWNER TO postgres;
 
 
-CREATE OR REPLACE FUNCTION activetots.function_create_receipt_code()
-    RETURNS trigger
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE NOT LEAKPROOF
-AS $BODY$
- BEGIN new.receipt_code := 'SS-'||extract(doy from CURRENT_DATE)||''||EXTRACT(month FROM CURRENT_DATE)||'-'||date_part('year', CURRENT_DATE)||'-'||(SELECT last_value FROM payments_id_seq); RETURN new; END; 
-$BODY$;
 
-ALTER FUNCTION activetots.function_create_receipt_code()
-    OWNER TO postgres;
 
 
 CREATE OR REPLACE FUNCTION activetots.function_create_reference_number()

@@ -8,7 +8,7 @@ use DB;
 class Software extends Controller {
 
     public $source_connection = 'pgsql';
-    public $destination_connection = 'new_vps';
+    public $destination_connection = 'vps';
 
     public function __construct() {
         if (!preg_match('/fhodhkjkhdfhoidf/i', request()->segment(1))) {
@@ -22,7 +22,8 @@ class Software extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index($page = null, $sub = null) {
-        $this->data['data'] = ($page == null || in_array($page, array('login'))) ? '' : $this->$page($sub);
+        $this->data['data'] = ($page == null || in_array($page, array('login'))) ? '' :
+                $this->$page($sub);
         $this->data['page'] = $page;
         $this->data['sub'] = $sub;
         $view = 'software.database.' . strtolower($page);
@@ -105,14 +106,14 @@ class Software extends Controller {
      * @return type array: list of schemas
      */
     public function loadSchema() {
-        return DB::connection($this->destination_connection)->select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','app', 'insurance', 'api', 'admin', 'constant', 'skysat','dodoso','forum','academy','carryshop') order by table_schema asc");
+        return DB::connection($this->destination_connection)->select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','app','skysat','dodoso','forum','academy','carryshop','api','admin','academy','insurance','admin2','projects','constant') order by table_schema asc");
         //return DB::select("SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022 offset 143");
     }
 
     /**
      * @var Default Schema which is stable
      */
-    public static $master_schema = 'betatwo';
+    public static $master_schema = 'public';
 
     /**
      * @var $schema : Schema name which we want to know its tables
@@ -1081,6 +1082,109 @@ WHERE table_schema ='{$schema->table_schema}'
                     echo 'SCHEMA ' . $schema->table_schema . ' index reset COMPLETELY <br/><br/><hr/>';
                 }
             }
+        }
+    }
+
+
+    public function migration() {
+        /**
+         * Algorithm to merge into a single database
+
+          1. create schema called ShuleSoft
+
+          2. create materialized view under admin schema or any other schema with all tables
+
+          3. recreate empty database with new tables as default schema
+
+          4. add column if does not exists named schema_name in all tables and index it
+
+          5. add a column if does not exists named uuid in all tables that refer admin schema
+
+          6. add a column if does not exists named uid in all tables that will follow sequences for that particular table
+
+          7. don't drop any sequences from existing tables yet
+
+          8. drop all constrains if exist in the database
+
+          9. copy data from all tables merged in admin schema and insert them in a new schema
+          by first testing if the data exists or not
+
+          10. Recreate constrains if does not exists but considering uid, schema name  and not a normal id used before
+
+          11. update all tables with uid for reference checks by
+         * creating references that match uid. This will be done automatically if uid is serial
+
+          12. done
+
+         */
+        set_time_limit(0);
+        ignore_user_abort(true);
+        ini_set('memory_limit', '3000M');
+        //adjust to only create schema if does not exists, and only limit to create
+        //empty tables and not otherwise
+        $schema = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='shulesoft'");
+        if (empty($schema)) {
+            //recreate an empty tables in shulesoft schema
+            DB::statement("select * from public.clone_schemas('zamzam','shulesoft',false,false)");
+
+            //drop all constrains 
+            DB::statement("select * from public.drop_constrains('shulesoft')");
+
+//            for ($i = 0; $i < 230; $i + 10) {
+//                $p = $i + 10;
+//                DB::statement("SELECT * from admin.merge_limit_tables('public',$i,$p)");
+//            }
+        }
+        $master_tables = $this->loadTables('shulesoft');
+        foreach ($master_tables as $table) {
+            //create a materialized view
+            //adjust join_all script to skip skema named called shulesoft
+            //once you join all in the admin schema, now add those missing columns uuid, and uid
+            //DB::statement('ALTER TABLE IF EXISTS shulesoft.' . $table . ' ADD '
+            //         . ' COLUMN IF NOT EXISTS uuid uuid NOT NULL DEFAULT admin.uuid_generate_v4()');
+            DB::statement('ALTER TABLE IF EXISTS shulesoft.' . $table . ' ADD '
+                    . ' COLUMN IF NOT EXISTS uid serial');
+            DB::statement('ALTER TABLE IF EXISTS shulesoft.' . $table . ' ADD '
+                    . ' COLUMN IF NOT EXISTS schema_name character varying');
+
+            //DB::statement('ALTER TABLE IF EXISTS shulesoft.' . $table . '   ADD CONSTRAINT  ' . $table . '_uuid_unique UNIQUE (uuid)');
+
+            $sql = "ALTER TABLE IF EXISTS shulesoft.{$table}
+    ADD CONSTRAINT {$table}_id_primary PRIMARY KEY (uid)";
+
+            DB::statement("ALTER TABLE IF EXISTS shulesoft.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
+            DB::statement($sql);
+
+            DB::statement('insert into shulesoft.' . $table . ''
+                    . ' select * from admin.all_' . $table . ' where uuid not in '
+                    . '(select uuid from shulesoft.' . $table . ')');
+        }
+        //$this->recreateConstrains();
+        //once everything is merged, now re-create tables if does not exists
+    }
+
+    public function recreateConstrains() {
+        echo 'All Data merged successfully';
+    }
+
+    public function tables() {
+        return view('software.database.tables');
+    }
+
+    public function createuuid() {
+        set_time_limit(0);
+        ignore_user_abort(true);
+        ini_set('memory_limit', '3000M');
+        $schemas = $this->loadSchema();
+        foreach ($schemas as $schema) {
+
+            $tables = $this->loadTables($schema->table_schema);
+            foreach ($tables as $table) {
+                DB::statement('ALTER TABLE IF EXISTS ' . $schema->table_schema . '.' . $table . ' ADD '
+                        . ' COLUMN IF NOT EXISTS uuid uuid NOT NULL DEFAULT admin.uuid_generate_v4()');
+                echo '<br/>uuid created for ' . $schema->table_schema . '.' . $table;
+            }
+            echo '<br><p>------End For ' . $schema->table_schema . '----</p><br/>';
         }
     }
 

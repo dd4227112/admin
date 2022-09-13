@@ -2780,4 +2780,3 @@ UNION ALL
 
 ALTER TABLE loyola.wallet_usage
     OWNER TO postgres;
-
