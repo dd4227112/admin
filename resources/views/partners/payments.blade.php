@@ -177,7 +177,7 @@
                                                 if(!empty($bank1)){
                                                     $bank_accounts =  DB::table($bank1->schema_name.'.bank_accounts')->where('id', $bank1->bank_account_id)->first();
                                                     $setting =  DB::table($bank1->schema_name.'.setting')->first();
-                                                    echo '<h2>'. $setting->sname.'</h2>';
+                                                    echo !empty($setting) ? '<h2>'. $setting->sname.'</h2>' : $bank1->schema_name;
                                                 }
                                             }
 
