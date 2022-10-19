@@ -549,7 +549,7 @@ class Partner extends Controller {
     
     
     public function pushPayment() {
-        $url = 'http://51.91.251.252:8081/api/init';
+        $url = 'http://75.119.140.177:8081/api/init';
         $myvars = request('data');
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_POST, 1);

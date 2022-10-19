@@ -47,7 +47,7 @@
                                                              foreach ($bank_accounts as $bank) {
                                                                 $array[$bank->invoice_prefix] = $bank->schema_name . ' (' . $bank->invoice_prefix . ')';
                                                              }
-                                                            echo form_dropdown("invoice_prefix", $array, old("invoice_prefix"), "id='bank_account_id' required class='form-control'");
+                                                            echo form_dropdown("invoice_prefix", $array, old("invoice_prefix"), "id='bank_account_id' required class='form-control select2'");
                                                             ?>
                                                         </div>
                                                     </div>
@@ -116,9 +116,11 @@
                                                         if(!empty($school)){
                                                             if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->paymentReference))) {
                                                                 $check = DB::table($school->schema_name.'.payments')->where('transaction_id', $payment->transactionRef)->first();
+                                                                $check_ = DB::table($school->schema_name.'.wallets')->where('transaction_id', $payment->transactionRef)->first();
                                                             }
                                                         }else{
                                                             $check = [];
+                                                            $check_ = [];
                                                         }
                                                     ?>
                                                     <tr>
@@ -153,7 +155,7 @@
                                                 
                                                         <td id="payment<?=$payment->payerID?>" data-title="<?= ('action') ?>">
                                                         <?php
-                                                        if (empty($check)) {
+                                                        if (empty($check) && empty($check_)) {
                                                             ?>
                                                             <a href="#" onclick="return false" class="btn btn-primary btn-mini btn-round" onmousedown="reconcile('<?= url('Partner/pushPayment/null?data=' . urlencode(json_encode($payment))) ?>', <?=$payment->payerID?>)">Sync</a>
                                                         <?php } ?>
