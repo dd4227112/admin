@@ -549,6 +549,14 @@ class Partner extends Controller {
     
     
     public function pushPayment() {
+        $background = new \App\Http\Controllers\Background();
+        $url = 'http://75.119.140.177:8081/api/init';
+        $fields = json_decode(urldecode(request('data')));
+        $curl = $background->curlServer($fields, $url, 'row');
+        return $curl;
+    }
+    
+    public function pushPaymentd() {
         $url = 'http://75.119.140.177:8081/api/init';
         $myvars = request('data');
         $ch = curl_init($url);
