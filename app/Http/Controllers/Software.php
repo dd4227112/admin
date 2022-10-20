@@ -1017,7 +1017,7 @@ WHERE table_schema ='{$schema->table_schema}'
                 echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
             }
 
-            $this->resetSequence();
+           // $this->resetSequence();
             $this->createIndexSchema(request('s'));
         }
     }
@@ -1210,8 +1210,7 @@ WHERE table_schema ='{$schema->table_schema}'
                 if (!empty($table_info)) {
                     $key = '"' . $table_info->column_name . '"';
 
-                    $sql = "ALTER TABLE IF EXISTS {$schema}.{$table}
-    ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
+                    $sql = "ALTER TABLE IF EXISTS {$schema}.{$table} ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
 
                     DB::statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
                     DB::statement($sql);
