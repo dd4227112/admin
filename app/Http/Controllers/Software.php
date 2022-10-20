@@ -70,7 +70,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')') AS ct (table_schema text, views text, tables text)");
+        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''accounts12'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')') AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
         if (view()->exists($view)) {
             return view($view, $this->data);
