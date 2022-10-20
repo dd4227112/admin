@@ -106,7 +106,7 @@ class Software extends Controller {
      * @return type array: list of schemas
      */
     public function loadSchema() {
-        return DB::connection($this->destination_connection)->select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','app','skysat','dodoso','forum','academy','carryshop','api','admin','academy','insurance','admin2','projects','constant') order by table_schema asc");
+        return DB::connection($this->destination_connection)->select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','app','skysat','dodoso','forum','academy','accounts12','api','admin','academy','insurance','admin2','projects','constant') order by table_schema asc");
         //return DB::select("SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022 offset 143");
     }
 
