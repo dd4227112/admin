@@ -1341,7 +1341,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             $r = DB::statement($sync_sql_);
             print_r($r);
             echo 'success round=' . $i . chr(10);
-            //sleep(1);
+            sleep(2);
             $i += $limit - 1;
         }
     }
