@@ -310,7 +310,7 @@ class Software extends Controller {
             foreach ($queries as $query) {
                 # code...
                 $run_sql = str_replace(';', '', $query);
-              //  DB::statement("$query");
+                //  DB::statement("$query");
                 $q .= $query . '; ';
             }
         }
@@ -349,7 +349,7 @@ class Software extends Controller {
         //select from information schema where column name is that which is missing
         //selectfrom information schema table and know data type, default value for that column name
         //complete sql below by adding correct datatype at the end and default column
-        $table = request('table'); 
+        $table = request('table');
         $schema = request('slave');
         $constrain = request('constrain');
 
@@ -961,7 +961,7 @@ WHERE table_schema ='{$schema->table_schema}'
                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.allowances
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
                         }
-                        
+
                         if ($table == 'allowances1') {
                             DB::connection($destination_connection)->statement('ALTER TABLE ' . $schema->table_schema . '.allowances1
     ALTER COLUMN is_percentage TYPE integer USING is_percentage::integer;');
@@ -1085,7 +1085,6 @@ WHERE table_schema ='{$schema->table_schema}'
         }
     }
 
-
     public function migration() {
         /**
          * Algorithm to merge into a single database
@@ -1188,7 +1187,18 @@ WHERE table_schema ='{$schema->table_schema}'
         }
     }
 
-    
+    public function reversecreateuuid() {
+
+        set_time_limit(0);
+        ignore_user_abort(true);
+        ini_set('memory_limit', '3000M');
+
+        for ($index = 342; $index > 0; $index -= 3) {
+            DB::statement('select * from admin.createuuid(' . $index . ',3)');
+            echo '<br><p>------uuid created, remais ' . $index . '----</p><br/>';
+        }
+    }
+
     public function createIndexSchema($this_schema = null) {
         set_time_limit(0);
         ignore_user_abort(true);
@@ -1197,27 +1207,27 @@ WHERE table_schema ='{$schema->table_schema}'
 
         //loop throught schemas, and load all tables, views and functions
 
-            $tables = $this->loadTables($schema);
+        $tables = $this->loadTables($schema);
 
-            $skip_tables = ['track_invoices', 'track_payments', 'company_files', 'courses', 'other_student', 'track_invoices_fees_installments'];
-            foreach ($tables as $table) {
-                if (in_array($table, $skip_tables)) {
-                    continue;
-                }
+        $skip_tables = ['track_invoices', 'track_payments', 'company_files', 'courses', 'other_student', 'track_invoices_fees_installments'];
+        foreach ($tables as $table) {
+            if (in_array($table, $skip_tables)) {
+                continue;
+            }
 
-                $check_table_exists = DB::select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
-                $table_info = \collect($check_table_exists)->first();
-                if (!empty($table_info)) {
-                    $key = '"' . $table_info->column_name . '"';
+            $check_table_exists = DB::select("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema . "' AND table_name='" . $table . "' and column_default like '%nextval%'");
+            $table_info = \collect($check_table_exists)->first();
+            if (!empty($table_info)) {
+                $key = '"' . $table_info->column_name . '"';
 
-                    $sql = "ALTER TABLE IF EXISTS {$schema}.{$table}
+                $sql = "ALTER TABLE IF EXISTS {$schema}.{$table}
     ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
 
-                    DB::statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
-                    DB::statement($sql);
-                    echo 'SCHEMA ' . $schema . ' for table ' . $table. ' index reset COMPLETELY <br/><br/><hr/>';
-                }
+                DB::statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
+                DB::statement($sql);
+                echo 'SCHEMA ' . $schema . ' for table ' . $table . ' index reset COMPLETELY <br/><br/><hr/>';
             }
         }
-    
+    }
+
 }
