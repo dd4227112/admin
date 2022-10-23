@@ -549,7 +549,15 @@ class Partner extends Controller {
     
     
     public function pushPayment() {
-        $url = 'http://51.91.251.252:8081/api/init';
+        $background = new \App\Http\Controllers\Background();
+        $url = 'http://75.119.140.177:8081/api/init';
+        $fields = json_decode(urldecode(request('data')));
+        $curl = $background->curlServer($fields, $url, 'row');
+        return $curl;
+    }
+    
+    public function pushPaymentd() {
+        $url = 'http://75.119.140.177:8081/api/init';
         $myvars = request('data');
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -558,7 +566,7 @@ class Partner extends Controller {
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
-        echo isset(json_decode($response)->description) ? json_decode($response)->description . ' - ' .json_decode($response)->reference : json_decode($response)->Message;
+        echo isset(json_decode($response)->description) ? json_decode($response)->description . ' - ' .json_decode($response)->reference : json_decode($response)->description;
     }
 
 }

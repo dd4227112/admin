@@ -1262,27 +1262,30 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                 }
             }
         }
-        echo 'success';
     }
 
-    public function syncMissingPayments($data, $schema, $student = null, $amount = null, $date = '') {
-        $controller = new \App\Http\Controllers\Controller();
-        $background = new \App\Http\Controllers\Background();
-        $url = 'http://75.119.140.177:8081/api/init';
-        $fields = json_decode($data);
-        $curl = $background->curlServer($fields, $url, 'row');
-        $status = json_decode($curl);
-        if (isset($status->status) && $status->status == 0) {
-            $reference = isset($status->reference) ? $status->reference : '';
-            $message = isset($status->description) ? $status->description : '';
-            $sms = 'Hello Mr. Endobile this Invoice ' . $reference . ' of ' . $student . ' from *' . strtoupper($schema) . '* with paid amount of ' . $amount . ' failed to be paid. With Error message: ' . chr(10) . chr(10) . $message . ' happened on ' . $date . ' Take a look';
-            $whatsapp_numbers = ['255744158016', '255754015554'];
-            foreach ($whatsapp_numbers as $number) {
-                $controller->sendMessage($number . '@c.us', $sms);
-            }
-        }
-        return $curl;
+ 
+ 
+public function syncMissingPayments($data, $schema, $student = null, $amount = null, $date = '') {
+    $controller = new \App\Http\Controllers\Controller();
+    $background = new \App\Http\Controllers\Background();
+    $url = 'http://75.119.140.177:8081/api/init';
+    $fields = json_decode($data);
+    $curl = $background->curlServer($fields, $url, 'row'); 
+    $status = json_decode($curl); 
+    if(isset($status->status) && $status->status == 0){ 
+        $reference = isset($status->reference) ? $status->reference : ''; 
+        $message = isset($status->description) ? $status->description : ''; 
+        $sms = 'Hello Mr. Albo this Invoice '. $reference . ' of '.$student.' from *'. strtoupper($schema) .'* with paid amount of '. $amount .' failed to be paid. With Error message: '.chr(10). chr(10).$message.' happened on '.$date.' Take a look';
+        $whatsapp_numbers = ['255744158016']; 
+        foreach ($whatsapp_numbers as $number) { 
+            $controller->sendMessage($number . '@c.us', $sms); 
+        } 
+    } 
+    return $curl; 
     }
+
+
 
     public function karibuSMS() {
         $ch = curl_init();

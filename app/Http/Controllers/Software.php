@@ -8,7 +8,7 @@ use DB;
 class Software extends Controller {
 
     public $source_connection = 'pgsql';
-    public $destination_connection = 'vps';
+    public $destination_connection = 'new_vps';
 
     public function __construct() {
         if (!preg_match('/fhodhkjkhdfhoidf/i', request()->segment(1))) {
@@ -70,7 +70,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')') AS ct (table_schema text, views text, tables text)");
+        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''accounts12'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')') AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
         if (view()->exists($view)) {
             return view($view, $this->data);
@@ -106,7 +106,7 @@ class Software extends Controller {
      * @return type array: list of schemas
      */
     public function loadSchema() {
-        return DB::connection($this->destination_connection)->select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','app','skysat','dodoso','forum','academy','carryshop','api','admin','academy','insurance','admin2','projects','constant') order by table_schema asc");
+        return DB::connection($this->destination_connection)->select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','app','skysat','dodoso','forum','academy','accounts12','api','admin','academy','insurance','admin2','projects','constant') order by table_schema asc");
         //return DB::select("SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022 offset 143");
     }
 
@@ -1017,7 +1017,7 @@ WHERE table_schema ='{$schema->table_schema}'
                 echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
             }
 
-            $this->resetSequence();
+           // $this->resetSequence();
             $this->createIndexSchema(request('s'));
         }
     }
@@ -1220,9 +1220,8 @@ WHERE table_schema ='{$schema->table_schema}'
             if (!empty($table_info)) {
                 $key = '"' . $table_info->column_name . '"';
 
-                $sql = "ALTER TABLE IF EXISTS {$schema}.{$table}
-    ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
 
+                    $sql = "ALTER TABLE IF EXISTS {$schema}.{$table} ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
                 DB::statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
                 DB::statement($sql);
                 echo 'SCHEMA ' . $schema . ' for table ' . $table . ' index reset COMPLETELY <br/><br/><hr/>';
