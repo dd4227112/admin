@@ -1330,6 +1330,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function syncData() {
+        return false;
         $limit = 2;
         for ($i = 0; $i < 250; $i++) {
 
