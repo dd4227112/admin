@@ -1264,28 +1264,24 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
- 
- 
-public function syncMissingPayments($data, $schema, $student = null, $amount = null, $date = '') {
-    $controller = new \App\Http\Controllers\Controller();
-    $background = new \App\Http\Controllers\Background();
-    $url = 'http://75.119.140.177:8081/api/init';
-    $fields = json_decode($data);
-    $curl = $background->curlServer($fields, $url, 'row'); 
-    $status = json_decode($curl); 
-    if(isset($status->status) && $status->status == 0){ 
-        $reference = isset($status->reference) ? $status->reference : ''; 
-        $message = isset($status->description) ? $status->description : ''; 
-        $sms = 'Hello Mr. Albo this Invoice '. $reference . ' of '.$student.' from *'. strtoupper($schema) .'* with paid amount of '. $amount .' failed to be paid. With Error message: '.chr(10). chr(10).$message.' happened on '.$date.' Take a look';
-        $whatsapp_numbers = ['255744158016']; 
-        foreach ($whatsapp_numbers as $number) { 
-            $controller->sendMessage($number . '@c.us', $sms); 
-        } 
-    } 
-    return $curl; 
+    public function syncMissingPayments($data, $schema, $student = null, $amount = null, $date = '') {
+        $controller = new \App\Http\Controllers\Controller();
+        $background = new \App\Http\Controllers\Background();
+        $url = 'http://75.119.140.177:8081/api/init';
+        $fields = json_decode($data);
+        $curl = $background->curlServer($fields, $url, 'row');
+        $status = json_decode($curl);
+        if (isset($status->status) && $status->status == 0) {
+            $reference = isset($status->reference) ? $status->reference : '';
+            $message = isset($status->description) ? $status->description : '';
+            $sms = 'Hello Mr. Albo this Invoice ' . $reference . ' of ' . $student . ' from *' . strtoupper($schema) . '* with paid amount of ' . $amount . ' failed to be paid. With Error message: ' . chr(10) . chr(10) . $message . ' happened on ' . $date . ' Take a look';
+            $whatsapp_numbers = ['255744158016'];
+            foreach ($whatsapp_numbers as $number) {
+                $controller->sendMessage($number . '@c.us', $sms);
+            }
+        }
+        return $curl;
     }
-
-
 
     public function karibuSMS() {
         $ch = curl_init();
@@ -1334,15 +1330,14 @@ public function syncMissingPayments($data, $schema, $student = null, $amount = n
     }
 
     public function syncData() {
-        $limit = 3;
+        $limit = 2;
         for ($i = 0; $i < 250; $i++) {
 
             //  echo $merge_sql="select * from admin.merge_limit_tables('public',{$i},{$limit})";
             //  $s= DB::statement($merge_sql);
             //print_r($s);
             $sync_sql_ = "select * from admin.sync_data_to_shulesoft({$i},{$limit})";
-            $r = DB::statement($sync_sql_);
-            print_r($r);
+            DB::statement($sync_sql_);
             echo 'success round=' . $i . chr(10);
             sleep(2);
             $i += $limit - 1;
