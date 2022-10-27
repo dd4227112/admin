@@ -1,8 +1,8 @@
--- View: loyola.users
+-- View: beta.users
 
--- DROP VIEW loyola.users;
+-- DROP VIEW beta.users;
 
-CREATE OR REPLACE VIEW loyola.users
+CREATE OR REPLACE VIEW beta.users
  AS
  SELECT a."userID" AS id,
     a.email,
@@ -24,7 +24,7 @@ CREATE OR REPLACE VIEW loyola.users
     a.dob,
     a.sex,
     a.country_id
-   FROM loyola."user" a
+   FROM beta."user" a
 UNION ALL
  SELECT t."teacherID" AS id,
     t.email,
@@ -46,7 +46,7 @@ UNION ALL
     t.dob,
     t.sex,
     t.country_id
-   FROM loyola.teacher t
+   FROM beta.teacher t
 UNION ALL
  SELECT s.student_id AS id,
     s.email,
@@ -58,7 +58,7 @@ UNION ALL
     'student'::character varying AS "table",
     s.name,
     ( SELECT role.id
-           FROM loyola.role
+           FROM beta.role
           WHERE lower(role.name::text) = 'student'::text) AS role_id,
     s.status,
     s.photo,
@@ -70,7 +70,7 @@ UNION ALL
     s.dob,
     s.sex,
     s.country_id
-   FROM loyola.student s
+   FROM beta.student s
 UNION ALL
  SELECT p."parentID" AS id,
     p.email,
@@ -82,7 +82,7 @@ UNION ALL
     'parent'::character varying AS "table",
     p.name,
     ( SELECT role.id
-           FROM loyola.role
+           FROM beta.role
           WHERE lower(role.name::text) = 'parent'::text) AS role_id,
     p.status,
     p.photo,
@@ -94,7 +94,7 @@ UNION ALL
     p.dob,
     p.sex,
     p.country_id
-   FROM loyola.parent p
+   FROM beta.parent p
 UNION ALL
  SELECT b."settingID" AS id,
     b.email,
@@ -106,7 +106,7 @@ UNION ALL
     'setting'::character varying AS "table",
     b.name,
     ( SELECT role.id
-           FROM loyola.role
+           FROM beta.role
           WHERE lower(role.name::text) = 'admin'::text) AS role_id,
     1 AS status,
     b.photo,
@@ -118,44 +118,44 @@ UNION ALL
     CURRENT_DATE AS dob,
     'Male'::character varying AS sex,
     b.country_id
-   FROM loyola.setting b;
+   FROM beta.setting b;
 
-ALTER TABLE loyola.users
+ALTER TABLE beta.users
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.wallet_usage
+CREATE OR REPLACE VIEW beta.wallet_usage
  AS
  SELECT sum(COALESCE(wallets.amount, 0::numeric::double precision))::numeric AS amount,
     wallets.student_id,
     0 AS used_amount
-   FROM loyola.wallets
+   FROM beta.wallets
   GROUP BY wallets.student_id
 UNION ALL
  SELECT 0 AS amount,
     wallet_uses.user_id AS student_id,
     sum(COALESCE(wallet_uses.amount, 0::numeric)) AS used_amount
-   FROM loyola.wallet_uses
+   FROM beta.wallet_uses
   WHERE wallet_uses.user_table::text = 'student'::text
   GROUP BY wallet_uses.user_id;
 
-ALTER TABLE loyola.wallet_usage
+ALTER TABLE beta.wallet_usage
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.total_mark
+CREATE OR REPLACE VIEW beta.total_mark
  AS
  SELECT sum(mark.mark) AS total,
     mark.student_id,
     mark."examID",
     mark.year,
     mark."classesID"
-   FROM loyola.mark
+   FROM beta.mark
   GROUP BY mark.student_id, mark."examID", mark."classesID", mark.year;
 
-ALTER TABLE loyola.total_mark
+ALTER TABLE beta.total_mark
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.total_revenues
+CREATE OR REPLACE VIEW beta.total_revenues
  AS
  SELECT a.id,
     a.amount,
@@ -189,14 +189,14 @@ CREATE OR REPLACE VIEW loyola.total_revenues
             revenues.payer_name,
             revenues.note,
             revenues.reconciled
-           FROM loyola.revenues
+           FROM beta.revenues
         UNION
          SELECT payments.id,
             payments.amount,
             payments.created_at,
             payments.date AS payment_date,
             ( SELECT payment_types.name
-                   FROM loyola.payment_types
+                   FROM beta.payment_types
                   WHERE payment_types.id = payments.payment_type_id) AS payments_method,
             payments.transaction_id,
             1 AS is_payment,
@@ -205,38 +205,38 @@ CREATE OR REPLACE VIEW loyola.total_revenues
             payments.payment_type_id,
             'student'::character varying AS user_table,
             ( SELECT student.name
-                   FROM loyola.student
+                   FROM beta.student
                   WHERE student.student_id = payments.student_id
                  LIMIT 1) AS payer_name,
             payments.payer_name,
             payments.reconciled
-           FROM loyola.payments) a
-     LEFT JOIN loyola.bank_accounts b ON b.id = a.bank_account_id;
+           FROM beta.payments) a
+     LEFT JOIN beta.bank_accounts b ON b.id = a.bank_account_id;
 
-ALTER TABLE loyola.total_revenues
+ALTER TABLE beta.total_revenues
     OWNER TO postgres;
-CREATE OR REPLACE VIEW loyola.advance_payment_balance
+CREATE OR REPLACE VIEW beta.advance_payment_balance
  AS
  SELECT sum(p.amount) AS total_amount,
     sum(COALESCE(p.amount, 0::numeric) - COALESCE(r.total_advance_invoice_fee_amount, 0::numeric)) AS reminder,
     p.fee_id,
     p.student_id
-   FROM loyola.advance_payments p
+   FROM beta.advance_payments p
      LEFT JOIN ( SELECT sum(advance_payments_invoices_fees_installments.amount) AS total_advance_invoice_fee_amount,
             advance_payments_invoices_fees_installments.advance_payment_id
-           FROM loyola.advance_payments_invoices_fees_installments
+           FROM beta.advance_payments_invoices_fees_installments
           GROUP BY advance_payments_invoices_fees_installments.advance_payment_id) r ON r.advance_payment_id = p.id
   GROUP BY p.fee_id, p.student_id;
 
-ALTER TABLE loyola.advance_payment_balance
+ALTER TABLE beta.advance_payment_balance
     OWNER TO postgres;
 
 
--- View: loyola.assessment_info
+-- View: beta.assessment_info
 
--- DROP VIEW loyola.assessment_info;
+-- DROP VIEW beta.assessment_info;
 
-CREATE OR REPLACE VIEW loyola.assessment_info
+CREATE OR REPLACE VIEW beta.assessment_info
  AS
  SELECT a.id AS character_category_id,
     a.character_category,
@@ -277,14 +277,14 @@ CREATE OR REPLACE VIEW loyola.assessment_info
   WHERE g.grade1 IS NOT NULL
   ORDER BY e.classlevel_id, d."classesID", f.id, j.id, l."sectionID" DESC;
 
-ALTER TABLE loyola.assessment_info
+ALTER TABLE beta.assessment_info
     OWNER TO postgres;
 
--- View: loyola.bank_transactions
+-- View: beta.bank_transactions
 
--- DROP VIEW loyola.bank_transactions;
+-- DROP VIEW beta.bank_transactions;
 
-CREATE OR REPLACE VIEW loyola.bank_transactions
+CREATE OR REPLACE VIEW beta.bank_transactions
  AS
  SELECT payments.bank_account_id,
     payments.payment_type_id,
@@ -293,8 +293,8 @@ CREATE OR REPLACE VIEW loyola.bank_transactions
     payments.date,
     payments.transaction_id,
     student.name AS recipient
-   FROM loyola.payments
-     JOIN loyola.student ON student.student_id = payments.student_id
+   FROM beta.payments
+     JOIN beta.student ON student.student_id = payments.student_id
 UNION ALL
  SELECT d.bank_account_id,
     d.payment_type_id,
@@ -314,8 +314,8 @@ UNION ALL
                     WHEN b.financial_category_id = ANY (ARRAY[2, 3, 4]) THEN 0::numeric - COALESCE(a.amount, 0::numeric)
                     ELSE a.amount
                 END) AS amount
-           FROM loyola.expense a
-             JOIN loyola.refer_expense b ON b.id = a.refer_expense_id
+           FROM beta.expense a
+             JOIN beta.refer_expense b ON b.id = a.refer_expense_id
           GROUP BY a.bank_account_id, a.date, a.expense, a.payment_type_id, a.transaction_id, a.recipient) d
 UNION ALL
  SELECT revenues.bank_account_id,
@@ -325,16 +325,16 @@ UNION ALL
     revenues.date,
     revenues.transaction_id,
     revenues.payer_name AS recipient
-   FROM loyola.revenues;
+   FROM beta.revenues;
 
-ALTER TABLE loyola.bank_transactions
+ALTER TABLE beta.bank_transactions
     OWNER TO postgres;
 
--- View: loyola.college_semester_report
+-- View: beta.college_semester_report
 
--- DROP VIEW loyola.college_semester_report;
+-- DROP VIEW beta.college_semester_report;
 
-CREATE OR REPLACE VIEW loyola.college_semester_report
+CREATE OR REPLACE VIEW beta.college_semester_report
  AS
  SELECT g.id,
     g.name,
@@ -343,38 +343,38 @@ CREATE OR REPLACE VIEW loyola.college_semester_report
     c.subject,
     a.semester_id,
     sum(round(d.mark * b.mark / 100::numeric, 1)) AS sum
-   FROM loyola.exam a
-     JOIN loyola.mark b ON a."examID" = b."examID"
-     JOIN loyola.subject c ON b."subjectID" = c."subjectID"
-     JOIN loyola.exam_subject_mark d ON d."examID" = a."examID"
-     JOIN loyola.refer_exam f ON f.id = a.refer_exam_id
-     JOIN loyola.exam_groups g ON g.id = f.exam_group_id
+   FROM beta.exam a
+     JOIN beta.mark b ON a."examID" = b."examID"
+     JOIN beta.subject c ON b."subjectID" = c."subjectID"
+     JOIN beta.exam_subject_mark d ON d."examID" = a."examID"
+     JOIN beta.refer_exam f ON f.id = a.refer_exam_id
+     JOIN beta.exam_groups g ON g.id = f.exam_group_id
   WHERE b."examID" = d."examID" AND c."subjectID" = d."subjectID" AND b."subjectID" = d."subjectID"
   GROUP BY g.id, g.name, b.student_id, c."subjectID", c.subject, a.semester_id
   ORDER BY b.student_id, c."subjectID";
 
-ALTER TABLE loyola.college_semester_report
+ALTER TABLE beta.college_semester_report
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.core_option_subject_count
+CREATE OR REPLACE VIEW beta.core_option_subject_count
  AS
  SELECT count(DISTINCT a.subject_id) AS core_subjects,
     b.student_id,
     count(DISTINCT c.subject_id) AS option_subjects,
     count(DISTINCT a.subject_id) + count(DISTINCT c.subject_id) AS total_subjects
-   FROM loyola.subject_section a
-     JOIN loyola.student b ON b."sectionID" = a.section_id
-     LEFT JOIN loyola.subject_student c ON c.student_id = b.student_id
+   FROM beta.subject_section a
+     JOIN beta.student b ON b."sectionID" = a.section_id
+     LEFT JOIN beta.subject_student c ON c.student_id = b.student_id
   GROUP BY b.student_id;
 
-ALTER TABLE loyola.core_option_subject_count
+ALTER TABLE beta.core_option_subject_count
     OWNER TO postgres;
 
--- View: loyola.current_asset_transactions
+-- View: beta.current_asset_transactions
 
--- DROP VIEW loyola.current_asset_transactions;
+-- DROP VIEW beta.current_asset_transactions;
 
-CREATE OR REPLACE VIEW loyola.current_asset_transactions
+CREATE OR REPLACE VIEW beta.current_asset_transactions
  AS
  SELECT d.amount,
     d.refer_expense_id,
@@ -396,8 +396,8 @@ CREATE OR REPLACE VIEW loyola.current_asset_transactions
             a.recipient,
             b.name,
             b.code
-           FROM loyola.current_assets a
-             JOIN loyola.refer_expense b ON b.id = a.to_refer_expense_id) d
+           FROM beta.current_assets a
+             JOIN beta.refer_expense b ON b.id = a.to_refer_expense_id) d
 UNION ALL
  SELECT e.amount,
     e.refer_expense_id,
@@ -423,15 +423,15 @@ UNION ALL
             a.recipient,
             b.name,
             b.code
-           FROM loyola.current_assets a
-             JOIN loyola.refer_expense b ON b.id = a.from_refer_expense_id) e;
+           FROM beta.current_assets a
+             JOIN beta.refer_expense b ON b.id = a.from_refer_expense_id) e;
 
-ALTER TABLE loyola.current_asset_transactions
+ALTER TABLE beta.current_asset_transactions
     OWNER TO postgres;
 
 
 
-CREATE OR REPLACE VIEW loyola.dues_balance
+CREATE OR REPLACE VIEW beta.dues_balance
  AS
  SELECT COALESCE(a.amount, 0::numeric) AS amount,
     a.id,
@@ -442,19 +442,19 @@ CREATE OR REPLACE VIEW loyola.dues_balance
             WHEN (COALESCE(a.amount, 0::numeric) - COALESCE(b.due_paid_amount, 0::numeric)) > 0::numeric THEN 0
             ELSE 1
         END AS status
-   FROM loyola.due_amounts a
+   FROM beta.due_amounts a
      LEFT JOIN ( SELECT sum(COALESCE(due_amounts_payments.amount, 0::numeric)) AS due_paid_amount,
             due_amounts_payments.due_amount_id
-           FROM loyola.due_amounts_payments
+           FROM beta.due_amounts_payments
           GROUP BY due_amounts_payments.due_amount_id) b ON b.due_amount_id = a.id;
 
-ALTER TABLE loyola.dues_balance
+ALTER TABLE beta.dues_balance
     OWNER TO postgres;
--- View: loyola.exam_mark_info
+-- View: beta.exam_mark_info
 
--- DROP VIEW loyola.exam_mark_info;
+-- DROP VIEW beta.exam_mark_info;
 
-CREATE OR REPLACE VIEW loyola.exam_mark_info
+CREATE OR REPLACE VIEW beta.exam_mark_info
  AS
  SELECT sum(a.mark) AS mark,
     e.id,
@@ -468,28 +468,28 @@ CREATE OR REPLACE VIEW loyola.exam_mark_info
     s.name AS student,
     s.sex,
     s.roll
-   FROM loyola.mark a
-     JOIN loyola.subject d ON d."subjectID" = a."subjectID"
-     JOIN loyola.exam b ON b."examID" = a."examID"
-     JOIN loyola.refer_exam c ON b.refer_exam_id = c.id
-     JOIN loyola.exam_groups e ON c.exam_group_id = e.id
-     JOIN loyola.student s ON s.student_id = a.student_id
-     JOIN loyola.academic_year x ON x.id = a.academic_year_id
-     JOIN loyola.student_archive f ON s.student_id = f.student_id
+   FROM beta.mark a
+     JOIN beta.subject d ON d."subjectID" = a."subjectID"
+     JOIN beta.exam b ON b."examID" = a."examID"
+     JOIN beta.refer_exam c ON b.refer_exam_id = c.id
+     JOIN beta.exam_groups e ON c.exam_group_id = e.id
+     JOIN beta.student s ON s.student_id = a.student_id
+     JOIN beta.academic_year x ON x.id = a.academic_year_id
+     JOIN beta.student_archive f ON s.student_id = f.student_id
   WHERE f.academic_year_id = a.academic_year_id AND a.mark IS NOT NULL
   GROUP BY e.id, e.name, d."subjectID", d.subject, d."classesID", a.academic_year_id, b.semester_id, f.student_id, s.name, s.sex, s.roll;
 
-ALTER TABLE loyola.exam_mark_info
+ALTER TABLE beta.exam_mark_info
     OWNER TO postgres;
 
-GRANT ALL ON TABLE loyola.exam_mark_info TO postgres;
-GRANT ALL ON TABLE loyola.exam_mark_info TO azure_admin;
+GRANT ALL ON TABLE beta.exam_mark_info TO postgres;
+GRANT ALL ON TABLE beta.exam_mark_info TO azure_admin;
 
--- View: loyola.expense_view
+-- View: beta.expense_view
 
--- DROP VIEW loyola.expense_view;
+-- DROP VIEW beta.expense_view;
 
-CREATE OR REPLACE VIEW loyola.expense_view
+CREATE OR REPLACE VIEW beta.expense_view
  AS
  SELECT a."expenseID",
     a.created_at,
@@ -515,7 +515,7 @@ CREATE OR REPLACE VIEW loyola.expense_view
     a.recipient,
     a.payment_type_id,
     a.refer_expense_id
-   FROM loyola.expense a
+   FROM beta.expense a
      JOIN refer_expense b ON b.id = a.refer_expense_id AND (b.financial_category_id <> ALL (ARRAY[2, 3]))
 UNION ALL
  SELECT a."expenseID",
@@ -542,8 +542,8 @@ UNION ALL
     a.recipient,
     a.payment_type_id,
     b.refer_expense_id
-   FROM loyola.expense a
-     JOIN loyola.expense_cart b ON b.expense_id = a."expenseID"
+   FROM beta.expense a
+     JOIN beta.expense_cart b ON b.expense_id = a."expenseID"
 UNION ALL
  SELECT a."expenseID",
     a.created_at,
@@ -569,36 +569,36 @@ UNION ALL
     a.recipient,
     a.payment_type_id,
     c.refer_expense_id
-   FROM loyola.expense a
-     JOIN loyola.product_purchases b ON b.expense_id = a."expenseID"
-     JOIN loyola.product_alert_quantity c ON c.id = b.product_alert_id;
+   FROM beta.expense a
+     JOIN beta.product_purchases b ON b.expense_id = a."expenseID"
+     JOIN beta.product_alert_quantity c ON c.id = b.product_alert_id;
 
-ALTER TABLE loyola.expense_view
+ALTER TABLE beta.expense_view
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.fees_installments_amounts
+CREATE OR REPLACE VIEW beta.fees_installments_amounts
  AS
  SELECT a.fees_installment_id,
     a.amount
-   FROM loyola.fees_installments_classes a
+   FROM beta.fees_installments_classes a
 UNION
  SELECT b.fees_installment_id,
     b.amount
-   FROM loyola.transport_routes_fees_installments b
+   FROM beta.transport_routes_fees_installments b
 UNION
  SELECT c.fees_installment_id,
     c.amount
-   FROM loyola.hostel_fees_installments c;
+   FROM beta.hostel_fees_installments c;
 
-ALTER TABLE loyola.fees_installments_amounts
+ALTER TABLE beta.fees_installments_amounts
     OWNER TO postgres;
 
 
--- View: loyola.financial_year_expense
+-- View: beta.financial_year_expense
 
--- DROP VIEW loyola.financial_year_expense;
+-- DROP VIEW beta.financial_year_expense;
 
-CREATE OR REPLACE VIEW loyola.financial_year_expense
+CREATE OR REPLACE VIEW beta.financial_year_expense
  AS
  SELECT a."expenseID",
     a.create_date,
@@ -628,19 +628,19 @@ CREATE OR REPLACE VIEW loyola.financial_year_expense
     a.updated_at,
     a.payment_type_id,
     a.voucher
-   FROM loyola.expense a
-     JOIN loyola.refer_expense b ON b.id = a.refer_expense_id
+   FROM beta.expense a
+     JOIN beta.refer_expense b ON b.id = a.refer_expense_id
   WHERE a.date > (( SELECT max(closing_year_balance.date) AS max
-           FROM loyola.closing_year_balance));
+           FROM beta.closing_year_balance));
 
-ALTER TABLE loyola.financial_year_expense
+ALTER TABLE beta.financial_year_expense
     OWNER TO postgres;
 
--- View: loyola.financial_year_payments
+-- View: beta.financial_year_payments
 
--- DROP VIEW loyola.financial_year_payments;
+-- DROP VIEW beta.financial_year_payments;
 
-CREATE OR REPLACE VIEW loyola.financial_year_payments
+CREATE OR REPLACE VIEW beta.financial_year_payments
  AS
  SELECT payments.id,
     payments.student_id,
@@ -669,14 +669,14 @@ CREATE OR REPLACE VIEW loyola.financial_year_payments
     payments.sid,
     payments.priority,
     payments.comment
-   FROM loyola.payments
+   FROM beta.payments
   WHERE payments.date > (( SELECT max(closing_year_balance.date) AS max
-           FROM loyola.closing_year_balance));
+           FROM beta.closing_year_balance));
 
-ALTER TABLE loyola.financial_year_payments
+ALTER TABLE beta.financial_year_payments
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.financial_year_product_cart
+CREATE OR REPLACE VIEW beta.financial_year_product_cart
  AS
  SELECT product_cart.id,
     product_cart.name,
@@ -687,14 +687,14 @@ CREATE OR REPLACE VIEW loyola.financial_year_product_cart
     product_cart.quantity,
     product_cart.amount,
     product_cart.date
-   FROM loyola.product_cart
+   FROM beta.product_cart
   WHERE product_cart.date > (( SELECT max(closing_year_balance.date) AS max
-           FROM loyola.closing_year_balance));
+           FROM beta.closing_year_balance));
 
-ALTER TABLE loyola.financial_year_product_cart
+ALTER TABLE beta.financial_year_product_cart
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.financial_year_product_purchases
+CREATE OR REPLACE VIEW beta.financial_year_product_purchases
  AS
  SELECT product_purchases.id,
     product_purchases.created_by,
@@ -710,14 +710,14 @@ CREATE OR REPLACE VIEW loyola.financial_year_product_purchases
     product_purchases.date,
     product_purchases.unit_price,
     product_purchases.status
-   FROM loyola.product_purchases
+   FROM beta.product_purchases
   WHERE product_purchases.date > (( SELECT max(closing_year_balance.date) AS max
-           FROM loyola.closing_year_balance));
+           FROM beta.closing_year_balance));
 
-ALTER TABLE loyola.financial_year_product_purchases
+ALTER TABLE beta.financial_year_product_purchases
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.financial_year_revenues
+CREATE OR REPLACE VIEW beta.financial_year_revenues
  AS
  SELECT a.id,
     a.payer_name,
@@ -742,16 +742,16 @@ CREATE OR REPLACE VIEW loyola.financial_year_revenues
     a.number,
     a.payment_type_id,
     a.loan_application_id
-   FROM loyola.revenues a
-     JOIN loyola.refer_expense b ON b.id = a.refer_expense_id
+   FROM beta.revenues a
+     JOIN beta.refer_expense b ON b.id = a.refer_expense_id
   WHERE a.date > (( SELECT max(closing_year_balance.date) AS max
-           FROM loyola.closing_year_balance));
+           FROM beta.closing_year_balance));
 
-ALTER TABLE loyola.financial_year_revenues
+ALTER TABLE beta.financial_year_revenues
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.hostel_info
+CREATE OR REPLACE VIEW beta.hostel_info
  AS
  SELECT b.hostel_id,
     a.student_id,
@@ -761,40 +761,40 @@ CREATE OR REPLACE VIEW loyola.hostel_info
     COALESCE(c.amount, 0::numeric(10,2)) AS discount,
     d.name,
     a.installment_id
-   FROM loyola.hmembers a
-     JOIN loyola.fees_installments f ON f.installment_id = a.installment_id AND f.fee_id = 2000
-     JOIN loyola.hostel_fees_installments b ON b.fees_installment_id = f.id AND b.hostel_id = a.hostel_id
-     LEFT JOIN loyola.discount_fees_installments c ON c.fees_installment_id = b.fees_installment_id AND a.student_id = c.student_id
-     JOIN loyola.hostels d ON d.id = a.hostel_id
+   FROM beta.hmembers a
+     JOIN beta.fees_installments f ON f.installment_id = a.installment_id AND f.fee_id = 2000
+     JOIN beta.hostel_fees_installments b ON b.fees_installment_id = f.id AND b.hostel_id = a.hostel_id
+     LEFT JOIN beta.discount_fees_installments c ON c.fees_installment_id = b.fees_installment_id AND a.student_id = c.student_id
+     JOIN beta.hostels d ON d.id = a.hostel_id
   GROUP BY b.hostel_id, a.student_id, b.amount, b.fees_installment_id, c.amount, d.name, a.id, a.installment_id
   ORDER BY a.student_id DESC;
 
-ALTER TABLE loyola.hostel_info
+ALTER TABLE beta.hostel_info
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.hostel_installment_detail
+CREATE OR REPLACE VIEW beta.hostel_installment_detail
  AS
  SELECT a.student_id,
     a.hostel_category_id,
     b.amount,
     b.fees_installment_id
-   FROM loyola.hmembers a
-     JOIN loyola.hostels d ON d.id = a.hostel_id
-     JOIN loyola.hostel_fees_installments b ON a.hostel_id = b.hostel_id
-     JOIN loyola.fees_installments c ON c.id = b.fees_installment_id
-     JOIN loyola.installments e ON e.id = c.installment_id AND a.installment_id = e.id
-     JOIN loyola.student_archive s ON s.student_id = a.student_id AND e.academic_year_id = s.academic_year_id
+   FROM beta.hmembers a
+     JOIN beta.hostels d ON d.id = a.hostel_id
+     JOIN beta.hostel_fees_installments b ON a.hostel_id = b.hostel_id
+     JOIN beta.fees_installments c ON c.id = b.fees_installment_id
+     JOIN beta.installments e ON e.id = c.installment_id AND a.installment_id = e.id
+     JOIN beta.student_archive s ON s.student_id = a.student_id AND e.academic_year_id = s.academic_year_id
   GROUP BY a.student_id, a.hostel_category_id, b.fees_installment_id, e.id, b.amount;
 
-ALTER TABLE loyola.hostel_installment_detail
+ALTER TABLE beta.hostel_installment_detail
     OWNER TO postgres;
 
--- View: loyola.hostel_invoices_fees_installments_balance
+-- View: beta.hostel_invoices_fees_installments_balance
 
--- DROP VIEW loyola.hostel_invoices_fees_installments_balance;
+-- DROP VIEW beta.hostel_invoices_fees_installments_balance;
 
-CREATE OR REPLACE VIEW loyola.hostel_invoices_fees_installments_balance
+CREATE OR REPLACE VIEW beta.hostel_invoices_fees_installments_balance
  AS
  SELECT COALESCE(f.amount, 0::numeric) AS total_amount,
     COALESCE(c.total_payment_invoice_amount, 0::numeric) AS total_payment_invoice_fee_amount,
@@ -815,28 +815,28 @@ CREATE OR REPLACE VIEW loyola.hostel_invoices_fees_installments_balance
             ELSE 1
         END AS status,
     h.end_date
-   FROM loyola.invoices_fees_installments b
-     JOIN loyola.invoices g ON g.id = b.invoice_id
-     JOIN loyola.hostel_installment_detail f ON b.fees_installment_id = f.fees_installment_id AND f.student_id = g.student_id
-     JOIN loyola.fees_installments k ON k.id = b.fees_installment_id
-     JOIN loyola.installments h ON h.id = k.installment_id
+   FROM beta.invoices_fees_installments b
+     JOIN beta.invoices g ON g.id = b.invoice_id
+     JOIN beta.hostel_installment_detail f ON b.fees_installment_id = f.fees_installment_id AND f.student_id = g.student_id
+     JOIN beta.fees_installments k ON k.id = b.fees_installment_id
+     JOIN beta.installments h ON h.id = k.installment_id
      LEFT JOIN ( SELECT sum(payments_invoices_fees_installments.amount) AS total_payment_invoice_amount,
             payments_invoices_fees_installments.invoices_fees_installment_id
-           FROM loyola.payments_invoices_fees_installments
+           FROM beta.payments_invoices_fees_installments
           GROUP BY payments_invoices_fees_installments.invoices_fees_installment_id) c ON c.invoices_fees_installment_id = b.id
      LEFT JOIN ( SELECT sum(advance_payments_invoices_fees_installments.amount) AS total_advance_invoice_fee_amount,
             advance_payments_invoices_fees_installments.invoices_fees_installments_id
-           FROM loyola.advance_payments_invoices_fees_installments
+           FROM beta.advance_payments_invoices_fees_installments
           GROUP BY advance_payments_invoices_fees_installments.invoices_fees_installments_id) d ON d.invoices_fees_installments_id = b.id
-     LEFT JOIN loyola.discount_fees_installments e ON e.fees_installment_id = b.fees_installment_id AND g.student_id = e.student_id
-     LEFT JOIN loyola.advance_payment_balance r ON r.fee_id = 2000 AND r.student_id = g.student_id
+     LEFT JOIN beta.discount_fees_installments e ON e.fees_installment_id = b.fees_installment_id AND g.student_id = e.student_id
+     LEFT JOIN beta.advance_payment_balance r ON r.fee_id = 2000 AND r.student_id = g.student_id
   WHERE k.fee_id = 2000
   ORDER BY h.start_date;
 
 
 
 
-CREATE OR REPLACE VIEW loyola.invoices_fees_installments_balance
+CREATE OR REPLACE VIEW beta.invoices_fees_installments_balance
  AS
  SELECT COALESCE(a.amount, 0::numeric) AS total_amount,
     COALESCE(c.total_payment_invoice_amount, 0::numeric) AS total_payment_invoice_fee_amount,
@@ -856,32 +856,32 @@ CREATE OR REPLACE VIEW loyola.invoices_fees_installments_balance
             ELSE 1
         END AS status,
     h.end_date
-   FROM loyola.fees_installments_classes a
-     JOIN loyola.invoices_fees_installments b ON b.fees_installment_id = a.fees_installment_id
-     JOIN loyola.invoices f ON f.id = b.invoice_id
-     JOIN loyola.fees_installments g ON g.id = a.fees_installment_id
-     JOIN loyola.installments h ON h.id = g.installment_id
-     JOIN loyola.fees i ON i.id = g.fee_id
-     JOIN loyola.student_archive s ON s.student_id = f.student_id AND (s.section_id IN ( SELECT section."sectionID"
-           FROM loyola.section
+   FROM beta.fees_installments_classes a
+     JOIN beta.invoices_fees_installments b ON b.fees_installment_id = a.fees_installment_id
+     JOIN beta.invoices f ON f.id = b.invoice_id
+     JOIN beta.fees_installments g ON g.id = a.fees_installment_id
+     JOIN beta.installments h ON h.id = g.installment_id
+     JOIN beta.fees i ON i.id = g.fee_id
+     JOIN beta.student_archive s ON s.student_id = f.student_id AND (s.section_id IN ( SELECT section."sectionID"
+           FROM beta.section
           WHERE section."classesID" = a.class_id)) AND h.academic_year_id = s.academic_year_id
      LEFT JOIN ( SELECT sum(payments_invoices_fees_installments.amount) AS total_payment_invoice_amount,
             payments_invoices_fees_installments.invoices_fees_installment_id
-           FROM loyola.payments_invoices_fees_installments
+           FROM beta.payments_invoices_fees_installments
           WHERE (payments_invoices_fees_installments.payment_id IN ( SELECT payments.id
-                   FROM loyola.payments))
+                   FROM beta.payments))
           GROUP BY payments_invoices_fees_installments.invoices_fees_installment_id) c ON c.invoices_fees_installment_id = b.id
      LEFT JOIN ( SELECT sum(advance_payments_invoices_fees_installments.amount) AS total_advance_invoice_fee_amount,
             advance_payments_invoices_fees_installments.invoices_fees_installments_id
-           FROM loyola.advance_payments_invoices_fees_installments
+           FROM beta.advance_payments_invoices_fees_installments
           GROUP BY advance_payments_invoices_fees_installments.invoices_fees_installments_id) d ON d.invoices_fees_installments_id = b.id
-     LEFT JOIN loyola.discount_fees_installments e ON e.fees_installment_id = a.fees_installment_id AND f.student_id = e.student_id
+     LEFT JOIN beta.discount_fees_installments e ON e.fees_installment_id = a.fees_installment_id AND f.student_id = e.student_id
   ORDER BY h.start_date, i.priority;
 
 
 
 
-CREATE OR REPLACE VIEW loyola.transport_installment_detail
+CREATE OR REPLACE VIEW beta.transport_installment_detail
  AS
  SELECT a.student_id,
     a.vehicle_id,
@@ -891,17 +891,17 @@ CREATE OR REPLACE VIEW loyola.transport_installment_detail
             ELSE b.amount * 0.5::numeric(10,2)
         END AS amount,
     b.fees_installment_id
-   FROM loyola.tmembers a
-     JOIN loyola.transport_routes d ON d.id = a.transport_route_id
-     JOIN loyola.transport_routes_fees_installments b ON a.transport_route_id = b.transport_route_id
-     JOIN loyola.fees_installments c ON c.id = b.fees_installment_id
-     JOIN loyola.installments e ON e.id = c.installment_id AND a.installment_id = e.id
-     JOIN loyola.student_archive s ON s.student_id = a.student_id AND e.academic_year_id = s.academic_year_id
+   FROM beta.tmembers a
+     JOIN beta.transport_routes d ON d.id = a.transport_route_id
+     JOIN beta.transport_routes_fees_installments b ON a.transport_route_id = b.transport_route_id
+     JOIN beta.fees_installments c ON c.id = b.fees_installment_id
+     JOIN beta.installments e ON e.id = c.installment_id AND a.installment_id = e.id
+     JOIN beta.student_archive s ON s.student_id = a.student_id AND e.academic_year_id = s.academic_year_id
   GROUP BY a.student_id, a.vehicle_id, a.is_oneway, b.amount, b.fees_installment_id, e.id;
 
 
 
-CREATE OR REPLACE VIEW loyola.transport_invoices_fees_installments_balance
+CREATE OR REPLACE VIEW beta.transport_invoices_fees_installments_balance
  AS
  SELECT COALESCE(f.amount, 0::numeric) AS total_amount,
     COALESCE(c.total_payment_invoice_amount, 0::numeric) AS total_payment_invoice_fee_amount,
@@ -922,28 +922,28 @@ CREATE OR REPLACE VIEW loyola.transport_invoices_fees_installments_balance
             ELSE 1
         END AS status,
     h.end_date
-   FROM loyola.invoices_fees_installments b
-     JOIN loyola.invoices g ON g.id = b.invoice_id
-     JOIN loyola.transport_installment_detail f ON b.fees_installment_id = f.fees_installment_id AND f.student_id = g.student_id
-     JOIN loyola.fees_installments k ON k.id = b.fees_installment_id
-     JOIN loyola.installments h ON h.id = k.installment_id
+   FROM beta.invoices_fees_installments b
+     JOIN beta.invoices g ON g.id = b.invoice_id
+     JOIN beta.transport_installment_detail f ON b.fees_installment_id = f.fees_installment_id AND f.student_id = g.student_id
+     JOIN beta.fees_installments k ON k.id = b.fees_installment_id
+     JOIN beta.installments h ON h.id = k.installment_id
      LEFT JOIN ( SELECT sum(payments_invoices_fees_installments.amount) AS total_payment_invoice_amount,
             payments_invoices_fees_installments.invoices_fees_installment_id
-           FROM loyola.payments_invoices_fees_installments
+           FROM beta.payments_invoices_fees_installments
           GROUP BY payments_invoices_fees_installments.invoices_fees_installment_id) c ON c.invoices_fees_installment_id = b.id
      LEFT JOIN ( SELECT sum(advance_payments_invoices_fees_installments.amount) AS total_advance_invoice_fee_amount,
             advance_payments_invoices_fees_installments.invoices_fees_installments_id
-           FROM loyola.advance_payments_invoices_fees_installments
+           FROM beta.advance_payments_invoices_fees_installments
           GROUP BY advance_payments_invoices_fees_installments.invoices_fees_installments_id) d ON d.invoices_fees_installments_id = b.id
-     LEFT JOIN loyola.discount_fees_installments e ON e.fees_installment_id = b.fees_installment_id AND g.student_id = e.student_id
-     LEFT JOIN loyola.advance_payment_balance r ON r.fee_id = 1000 AND r.student_id = g.student_id
+     LEFT JOIN beta.discount_fees_installments e ON e.fees_installment_id = b.fees_installment_id AND g.student_id = e.student_id
+     LEFT JOIN beta.advance_payment_balance r ON r.fee_id = 1000 AND r.student_id = g.student_id
   WHERE k.fee_id = 1000
   ORDER BY h.start_date;
 
 
 
 
-CREATE OR REPLACE VIEW loyola.next_year_invoices_fees_installments_balance
+CREATE OR REPLACE VIEW beta.next_year_invoices_fees_installments_balance
  AS
  SELECT COALESCE(a.amount, 0::numeric) AS total_amount,
     COALESCE(c.total_payment_invoice_amount, 0::numeric) AS total_payment_invoice_fee_amount,
@@ -963,27 +963,27 @@ CREATE OR REPLACE VIEW loyola.next_year_invoices_fees_installments_balance
             WHEN (a.amount - COALESCE(c.total_payment_invoice_amount, 0::numeric) - COALESCE(d.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(e.amount, 0::numeric)) > 0::numeric THEN 0
             ELSE 1
         END AS status
-   FROM loyola.fees_installments_classes a
-     JOIN loyola.invoices_fees_installments b ON b.fees_installment_id = a.fees_installment_id
-     JOIN loyola.invoices f ON f.id = b.invoice_id
-     JOIN loyola.fees_installments g ON g.id = a.fees_installment_id
-     JOIN loyola.installments h ON h.id = g.installment_id
-     JOIN loyola.fees i ON i.id = g.fee_id
-     JOIN loyola.student s ON s.student_id = f.student_id AND s.academic_year_id <> h.academic_year_id AND a.class_id = s."classesID"
+   FROM beta.fees_installments_classes a
+     JOIN beta.invoices_fees_installments b ON b.fees_installment_id = a.fees_installment_id
+     JOIN beta.invoices f ON f.id = b.invoice_id
+     JOIN beta.fees_installments g ON g.id = a.fees_installment_id
+     JOIN beta.installments h ON h.id = g.installment_id
+     JOIN beta.fees i ON i.id = g.fee_id
+     JOIN beta.student s ON s.student_id = f.student_id AND s.academic_year_id <> h.academic_year_id AND a.class_id = s."classesID"
      LEFT JOIN ( SELECT sum(payments_invoices_fees_installments.amount) AS total_payment_invoice_amount,
             payments_invoices_fees_installments.invoices_fees_installment_id
-           FROM loyola.payments_invoices_fees_installments
+           FROM beta.payments_invoices_fees_installments
           GROUP BY payments_invoices_fees_installments.invoices_fees_installment_id) c ON c.invoices_fees_installment_id = b.id
      LEFT JOIN ( SELECT sum(advance_payments_invoices_fees_installments.amount) AS total_advance_invoice_fee_amount,
             advance_payments_invoices_fees_installments.invoices_fees_installments_id
-           FROM loyola.advance_payments_invoices_fees_installments
+           FROM beta.advance_payments_invoices_fees_installments
           GROUP BY advance_payments_invoices_fees_installments.invoices_fees_installments_id) d ON d.invoices_fees_installments_id = b.id
-     LEFT JOIN loyola.discount_fees_installments e ON e.fees_installment_id = a.fees_installment_id AND f.student_id = e.student_id
+     LEFT JOIN beta.discount_fees_installments e ON e.fees_installment_id = a.fees_installment_id AND f.student_id = e.student_id
   ORDER BY h.start_date, i.priority;
 
 
 
-CREATE OR REPLACE VIEW loyola.invoice_balances
+CREATE OR REPLACE VIEW beta.invoice_balances
  AS
  SELECT transport_invoices_fees_installments_balance.student_id,
     transport_invoices_fees_installments_balance.created_at,
@@ -1000,7 +1000,7 @@ CREATE OR REPLACE VIEW loyola.invoice_balances
     transport_invoices_fees_installments_balance.invoice_id,
     COALESCE(transport_invoices_fees_installments_balance.total_amount, 0::numeric) - COALESCE(transport_invoices_fees_installments_balance.total_payment_invoice_fee_amount, 0::numeric) - COALESCE(transport_invoices_fees_installments_balance.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(transport_invoices_fees_installments_balance.discount_amount, 0::numeric) AS balance,
     transport_invoices_fees_installments_balance.end_date
-   FROM loyola.transport_invoices_fees_installments_balance
+   FROM beta.transport_invoices_fees_installments_balance
 UNION ALL
  SELECT invoices_fees_installments_balance.student_id,
     invoices_fees_installments_balance.created_at,
@@ -1017,7 +1017,7 @@ UNION ALL
     invoices_fees_installments_balance.invoice_id,
     COALESCE(invoices_fees_installments_balance.total_amount, 0::numeric) - COALESCE(invoices_fees_installments_balance.total_payment_invoice_fee_amount, 0::numeric) - COALESCE(invoices_fees_installments_balance.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(invoices_fees_installments_balance.discount_amount, 0::numeric) AS balance,
     invoices_fees_installments_balance.end_date
-   FROM loyola.invoices_fees_installments_balance
+   FROM beta.invoices_fees_installments_balance
 UNION ALL
  SELECT hostel_invoices_fees_installments_balance.student_id,
     hostel_invoices_fees_installments_balance.created_at,
@@ -1034,9 +1034,9 @@ UNION ALL
     hostel_invoices_fees_installments_balance.invoice_id,
     COALESCE(hostel_invoices_fees_installments_balance.total_amount, 0::numeric) - COALESCE(hostel_invoices_fees_installments_balance.total_payment_invoice_fee_amount, 0::numeric) - COALESCE(hostel_invoices_fees_installments_balance.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(hostel_invoices_fees_installments_balance.discount_amount, 0::numeric) AS balance,
     hostel_invoices_fees_installments_balance.end_date
-   FROM loyola.hostel_invoices_fees_installments_balance;
+   FROM beta.hostel_invoices_fees_installments_balance;
 
-CREATE OR REPLACE VIEW loyola.installment_reminders
+CREATE OR REPLACE VIEW beta.installment_reminders
  AS
  SELECT a.student_id,
     b.name AS student,
@@ -1050,101 +1050,101 @@ CREATE OR REPLACE VIEW loyola.installment_reminders
             WHEN f.end_date <= now() THEN 0
             ELSE 1
         END AS status
-   FROM loyola.invoice_balances a
-     JOIN loyola.student b ON b.student_id = a.student_id
-     JOIN loyola.student_parents d ON b.student_id = d.student_id
-     JOIN loyola.parent c ON c."parentID" = d.parent_id
-     JOIN loyola.installments f ON f.id = a.installment_id
+   FROM beta.invoice_balances a
+     JOIN beta.student b ON b.student_id = a.student_id
+     JOIN beta.student_parents d ON b.student_id = d.student_id
+     JOIN beta.parent c ON c."parentID" = d.parent_id
+     JOIN beta.installments f ON f.id = a.installment_id
   WHERE a.balance > 0::numeric
   ORDER BY a.student_id;
 
-ALTER TABLE loyola.installment_reminders
+ALTER TABLE beta.installment_reminders
     OWNER TO postgres;
 
 
 
 
 
-CREATE OR REPLACE VIEW loyola.amount_receivable
+CREATE OR REPLACE VIEW beta.amount_receivable
  AS
  SELECT sum(a.total_amount - a.discount_amount) AS total_amount,
     b.name,
     b.student_id,
     a.created_at::date AS created_at
-   FROM loyola.invoice_balances a
-     JOIN loyola.student b ON b.student_id = a.student_id
+   FROM beta.invoice_balances a
+     JOIN beta.student b ON b.student_id = a.student_id
   GROUP BY b.name, b.student_id, a.created_at
 UNION ALL
  SELECT sum(a.amount) AS total_amount,
     b.name,
     b.student_id,
     a.created_at::date AS created_at
-   FROM loyola.due_amounts a
-     JOIN loyola.student b ON b.student_id = a.student_id
+   FROM beta.due_amounts a
+     JOIN beta.student b ON b.student_id = a.student_id
   GROUP BY b.name, b.student_id, a.created_at
 UNION ALL
  SELECT sum(0::numeric - a.amount) AS total_amount,
     b.name,
     b.student_id,
     a.date AS created_at
-   FROM loyola.payments a
-     JOIN loyola.student b ON b.student_id = a.student_id
+   FROM beta.payments a
+     JOIN beta.student b ON b.student_id = a.student_id
   GROUP BY b.name, b.student_id, a.date
 UNION ALL
  SELECT sum(0::numeric - a.amount) AS total_amount,
     b.name,
     b.student_id,
     a.created_at::date AS created_at
-   FROM loyola.advance_payments a
-     JOIN loyola.student b ON b.student_id = a.student_id AND a.payment_id IS NULL
+   FROM beta.advance_payments a
+     JOIN beta.student b ON b.student_id = a.student_id AND a.payment_id IS NULL
   GROUP BY b.name, b.student_id, a.created_at;
 
-ALTER TABLE loyola.amount_receivable
+ALTER TABLE beta.amount_receivable
     OWNER TO postgres;
 
--- View: loyola.amount_receivable_per_date
+-- View: beta.amount_receivable_per_date
 
--- DROP VIEW loyola.amount_receivable_per_date;
+-- DROP VIEW beta.amount_receivable_per_date;
 
-CREATE OR REPLACE VIEW loyola.amount_receivable_per_date
+CREATE OR REPLACE VIEW beta.amount_receivable_per_date
  AS
  SELECT sum(a.total_amount - a.discount_amount) AS total_amount,
     b.name,
     b.student_id,
     a.created_at::date AS created_at
-   FROM loyola.invoice_balances a
-     JOIN loyola.student b ON b.student_id = a.student_id
+   FROM beta.invoice_balances a
+     JOIN beta.student b ON b.student_id = a.student_id
   GROUP BY b.name, b.student_id, a.created_at
 UNION ALL
  SELECT sum(a.amount) AS total_amount,
     b.name,
     b.student_id,
     a.created_at::date AS created_at
-   FROM loyola.due_amounts a
-     JOIN loyola.student b ON b.student_id = a.student_id
+   FROM beta.due_amounts a
+     JOIN beta.student b ON b.student_id = a.student_id
   GROUP BY b.name, b.student_id, a.created_at
 UNION ALL
  SELECT sum(0::numeric - a.amount) AS total_amount,
     b.name,
     b.student_id,
     a.created_at::date AS created_at
-   FROM loyola.payments a
-     JOIN loyola.student b ON b.student_id = a.student_id
+   FROM beta.payments a
+     JOIN beta.student b ON b.student_id = a.student_id
   GROUP BY b.name, b.student_id, a.created_at
 UNION ALL
  SELECT sum(0::numeric - a.amount) AS total_amount,
     b.name,
     b.student_id,
     a.created_at::date AS created_at
-   FROM loyola.advance_payments a
-     JOIN loyola.student b ON b.student_id = a.student_id AND a.payment_id IS NULL
+   FROM beta.advance_payments a
+     JOIN beta.student b ON b.student_id = a.student_id AND a.payment_id IS NULL
   GROUP BY b.name, b.student_id, a.created_at;
 
-ALTER TABLE loyola.amount_receivable_per_date
+ALTER TABLE beta.amount_receivable_per_date
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.invoice_subviews
+CREATE OR REPLACE VIEW beta.invoice_subviews
  AS
  SELECT b.id,
     b.student_id,
@@ -1161,15 +1161,15 @@ CREATE OR REPLACE VIEW loyola.invoice_subviews
     c.name,
     1 AS sub_invoice,
     a.fee_id
-   FROM loyola.invoices b
-     JOIN loyola.student c ON c.student_id = b.student_id
-     JOIN loyola.invoice_balances a ON a.invoice_id = b.id;
+   FROM beta.invoices b
+     JOIN beta.student c ON c.student_id = b.student_id
+     JOIN beta.invoice_balances a ON a.invoice_id = b.id;
 
-ALTER TABLE loyola.invoice_subviews
+ALTER TABLE beta.invoice_subviews
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.invoice_summary
+CREATE OR REPLACE VIEW beta.invoice_summary
  AS
  SELECT COALESCE(COALESCE(sum(a.total_amount), 0::numeric) - sum(a.discount_amount), 0::numeric) AS amount,
     COALESCE(COALESCE(sum(a.total_payment_invoice_fee_amount), 0::numeric) + COALESCE(sum(a.total_advance_invoice_fee_amount)), 0::numeric) AS paid_amount,
@@ -1186,18 +1186,18 @@ CREATE OR REPLACE VIEW loyola.invoice_summary
     c.due_date,
     d.section_id,
     e."classesID"
-   FROM loyola.invoice_balances a
-     JOIN loyola.student b ON a.student_id = b.student_id
-     JOIN loyola.invoices c ON c.id = a.invoice_id
-     JOIN loyola.student_archive d ON d.academic_year_id = c.academic_year_id AND d.student_id = b.student_id
-     JOIN loyola.section e ON e."sectionID" = d.section_id
+   FROM beta.invoice_balances a
+     JOIN beta.student b ON a.student_id = b.student_id
+     JOIN beta.invoices c ON c.id = a.invoice_id
+     JOIN beta.student_archive d ON d.academic_year_id = c.academic_year_id AND d.student_id = b.student_id
+     JOIN beta.section e ON e."sectionID" = d.section_id
   WHERE b.status = 1
   GROUP BY a.invoice_id, a.created_at, b.name, d.section_id, e."classesID", b.roll, a.student_id, c.reference, c.sync, c.academic_year_id, c.date, c.due_date;
 
-ALTER TABLE loyola.invoice_summary
+ALTER TABLE beta.invoice_summary
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.invoice_views
+CREATE OR REPLACE VIEW beta.invoice_views
  AS
  SELECT b.id,
     b.student_id,
@@ -1213,18 +1213,18 @@ CREATE OR REPLACE VIEW loyola.invoice_views
     a.amount,
     c.name,
     ( SELECT setting.sub_invoice
-           FROM loyola.setting
+           FROM beta.setting
          LIMIT 1) AS sub_invoice,
     0 AS fee_id
-   FROM loyola.invoices b
-     JOIN loyola.student c ON c.student_id = b.student_id
+   FROM beta.invoices b
+     JOIN beta.student c ON c.student_id = b.student_id
      JOIN ( SELECT sum(y.balance) AS amount,
             y.invoice_id
-           FROM loyola.invoice_balances y
+           FROM beta.invoice_balances y
           GROUP BY y.invoice_id) a ON a.invoice_id = b.id;
 
 
-CREATE OR REPLACE VIEW loyola.mark_grade
+CREATE OR REPLACE VIEW beta.mark_grade
  AS
  SELECT total_mark.student_id,
     total_mark."classesID",
@@ -1232,17 +1232,17 @@ CREATE OR REPLACE VIEW loyola.mark_grade
     total_mark."examID",
     total_mark.total,
     row_number() OVER (ORDER BY total_mark.total DESC) AS rank
-   FROM loyola.total_mark;
+   FROM beta.total_mark;
 
-ALTER TABLE loyola.mark_grade
+ALTER TABLE beta.mark_grade
     OWNER TO postgres;
 
 
--- View: loyola.mark_info
+-- View: beta.mark_info
 
--- DROP VIEW loyola.mark_info;
+-- DROP VIEW beta.mark_info;
 
-CREATE OR REPLACE VIEW loyola.mark_info
+CREATE OR REPLACE VIEW beta.mark_info
  AS
  SELECT a.student_id,
     d.name,
@@ -1264,39 +1264,39 @@ CREATE OR REPLACE VIEW loyola.mark_info
     d.status AS student_status,
     d.sex,
     ( SELECT setting.region
-           FROM loyola.setting
+           FROM beta.setting
          LIMIT 1) AS region
-   FROM loyola.mark a
-     JOIN loyola.subject b ON b."subjectID" = a."subjectID"
-     JOIN loyola.refer_subject c ON c.subject_id = b.subject_id
-     JOIN loyola.student d ON d.student_id = a.student_id
-     JOIN loyola.classes f ON f."classesID" = a."classesID"
-     JOIN loyola.exam p ON p."examID" = a."examID"
-     JOIN loyola.academic_year x ON x.id = a.academic_year_id
-     JOIN loyola.student_archive e ON a.student_id = e.student_id AND a.academic_year_id = e.academic_year_id
+   FROM beta.mark a
+     JOIN beta.subject b ON b."subjectID" = a."subjectID"
+     JOIN beta.refer_subject c ON c.subject_id = b.subject_id
+     JOIN beta.student d ON d.student_id = a.student_id
+     JOIN beta.classes f ON f."classesID" = a."classesID"
+     JOIN beta.exam p ON p."examID" = a."examID"
+     JOIN beta.academic_year x ON x.id = a.academic_year_id
+     JOIN beta.student_archive e ON a.student_id = e.student_id AND a.academic_year_id = e.academic_year_id
   WHERE a.mark IS NOT NULL AND (d.status = 1 OR d.status = 2);
 
-ALTER TABLE loyola.mark_info
+ALTER TABLE beta.mark_info
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.mark_ranking
+CREATE OR REPLACE VIEW beta.mark_ranking
  AS
  SELECT mark.student_id,
     mark.mark,
     rank() OVER (PARTITION BY mark."subjectID" ORDER BY mark.mark DESC) AS dense_rank,
     mark."examID",
     mark."subjectID"
-   FROM loyola.mark;
+   FROM beta.mark;
 
-ALTER TABLE loyola.mark_ranking
+ALTER TABLE beta.mark_ranking
     OWNER TO postgres;
 
--- View: loyola.media_videos
+-- View: beta.media_videos
 
--- DROP VIEW loyola.media_videos;
+-- DROP VIEW beta.media_videos;
 
-CREATE OR REPLACE VIEW loyola.media_videos
+CREATE OR REPLACE VIEW beta.media_videos
  AS
  SELECT a.media_id,
     b.title,
@@ -1317,16 +1317,16 @@ CREATE OR REPLACE VIEW loyola.media_videos
     a.source,
     a.date,
     a.created_at
-   FROM loyola.medias b
-     JOIN loyola.media_live a ON a.media_id = b.id
-     JOIN loyola.syllabus_topics c ON b.syllabus_topic_id = c.id
-     JOIN loyola.subject d ON d."subjectID" = c.subject_id
-     JOIN loyola.teacher e ON e."teacherID" = b.created_by
-     JOIN loyola.classes f ON f."classesID" = d."classesID"
-     JOIN loyola.refer_subject g ON d.subject_id = g.subject_id;
+   FROM beta.medias b
+     JOIN beta.media_live a ON a.media_id = b.id
+     JOIN beta.syllabus_topics c ON b.syllabus_topic_id = c.id
+     JOIN beta.subject d ON d."subjectID" = c.subject_id
+     JOIN beta.teacher e ON e."teacherID" = b.created_by
+     JOIN beta.classes f ON f."classesID" = d."classesID"
+     JOIN beta.refer_subject g ON d.subject_id = g.subject_id;
 
 
-CREATE OR REPLACE VIEW loyola.digital_invoices
+CREATE OR REPLACE VIEW beta.digital_invoices
  AS
  SELECT a.reference,
     a.student_id,
@@ -1336,13 +1336,13 @@ CREATE OR REPLACE VIEW loyola.digital_invoices
     c.total_amount AS amount,
     c.balance,
     a.status
-   FROM loyola.invoices a
-     JOIN loyola.student b ON a.student_id = b.student_id
-     JOIN loyola.invoice_balances c ON c.student_id = a.student_id
+   FROM beta.invoices a
+     JOIN beta.student b ON a.student_id = b.student_id
+     JOIN beta.invoice_balances c ON c.student_id = a.student_id
   WHERE c.fee_id = 3000;
 
 
-CREATE OR REPLACE VIEW loyola.next_year_transport_installment_detail
+CREATE OR REPLACE VIEW beta.next_year_transport_installment_detail
  AS
  SELECT a.student_id,
     a.vehicle_id,
@@ -1352,17 +1352,17 @@ CREATE OR REPLACE VIEW loyola.next_year_transport_installment_detail
             ELSE b.amount * 0.5::numeric(10,2)
         END AS amount,
     b.fees_installment_id
-   FROM loyola.tmembers a
-     JOIN loyola.transport_routes d ON d.id = a.transport_route_id
-     JOIN loyola.transport_routes_fees_installments b ON a.transport_route_id = b.transport_route_id
-     JOIN loyola.fees_installments c ON c.id = b.fees_installment_id
-     JOIN loyola.installments e ON e.id = c.installment_id
-     JOIN loyola.student_archive s ON s.student_id = a.student_id AND e.academic_year_id <> s.academic_year_id
+   FROM beta.tmembers a
+     JOIN beta.transport_routes d ON d.id = a.transport_route_id
+     JOIN beta.transport_routes_fees_installments b ON a.transport_route_id = b.transport_route_id
+     JOIN beta.fees_installments c ON c.id = b.fees_installment_id
+     JOIN beta.installments e ON e.id = c.installment_id
+     JOIN beta.student_archive s ON s.student_id = a.student_id AND e.academic_year_id <> s.academic_year_id
   GROUP BY a.student_id, a.vehicle_id, a.is_oneway, b.amount, b.fees_installment_id, e.id;
 
 
 
-CREATE OR REPLACE VIEW loyola.next_year_transport_invoices_fees_installments_balance
+CREATE OR REPLACE VIEW beta.next_year_transport_invoices_fees_installments_balance
  AS
  SELECT COALESCE(f.amount, 0::numeric) AS total_amount,
     COALESCE(c.total_payment_invoice_amount, 0::numeric) AS total_payment_invoice_fee_amount,
@@ -1382,29 +1382,29 @@ CREATE OR REPLACE VIEW loyola.next_year_transport_invoices_fees_installments_bal
             WHEN (f.amount - COALESCE(c.total_payment_invoice_amount, 0::numeric) - COALESCE(d.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(e.amount, 0::numeric)) > 0::numeric THEN 0
             ELSE 1
         END AS status
-   FROM loyola.invoices_fees_installments b
-     JOIN loyola.invoices g ON g.id = b.invoice_id
-     JOIN loyola.next_year_transport_installment_detail f ON b.fees_installment_id = f.fees_installment_id AND f.student_id = g.student_id
-     JOIN loyola.fees_installments k ON k.id = b.fees_installment_id
-     JOIN loyola.installments h ON h.id = k.installment_id
+   FROM beta.invoices_fees_installments b
+     JOIN beta.invoices g ON g.id = b.invoice_id
+     JOIN beta.next_year_transport_installment_detail f ON b.fees_installment_id = f.fees_installment_id AND f.student_id = g.student_id
+     JOIN beta.fees_installments k ON k.id = b.fees_installment_id
+     JOIN beta.installments h ON h.id = k.installment_id
      LEFT JOIN ( SELECT sum(payments_invoices_fees_installments.amount) AS total_payment_invoice_amount,
             payments_invoices_fees_installments.invoices_fees_installment_id
-           FROM loyola.payments_invoices_fees_installments
+           FROM beta.payments_invoices_fees_installments
           GROUP BY payments_invoices_fees_installments.invoices_fees_installment_id) c ON c.invoices_fees_installment_id = b.id
      LEFT JOIN ( SELECT sum(advance_payments_invoices_fees_installments.amount) AS total_advance_invoice_fee_amount,
             advance_payments_invoices_fees_installments.invoices_fees_installments_id
-           FROM loyola.advance_payments_invoices_fees_installments
+           FROM beta.advance_payments_invoices_fees_installments
           GROUP BY advance_payments_invoices_fees_installments.invoices_fees_installments_id) d ON d.invoices_fees_installments_id = b.id
-     LEFT JOIN loyola.discount_fees_installments e ON e.fees_installment_id = b.fees_installment_id AND g.student_id = e.student_id
-     LEFT JOIN loyola.advance_payment_balance r ON r.fee_id = 1000 AND r.student_id = g.student_id
+     LEFT JOIN beta.discount_fees_installments e ON e.fees_installment_id = b.fees_installment_id AND g.student_id = e.student_id
+     LEFT JOIN beta.advance_payment_balance r ON r.fee_id = 1000 AND r.student_id = g.student_id
   WHERE k.fee_id = 1000
   ORDER BY h.start_date;
 
-ALTER TABLE loyola.next_year_transport_invoices_fees_installments_balance
+ALTER TABLE beta.next_year_transport_invoices_fees_installments_balance
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.next_year_invoice_balances
+CREATE OR REPLACE VIEW beta.next_year_invoice_balances
  AS
  SELECT next_year_transport_invoices_fees_installments_balance.student_id,
     next_year_transport_invoices_fees_installments_balance.created_at,
@@ -1420,7 +1420,7 @@ CREATE OR REPLACE VIEW loyola.next_year_invoice_balances
     next_year_transport_invoices_fees_installments_balance.id,
     next_year_transport_invoices_fees_installments_balance.invoice_id,
     COALESCE(next_year_transport_invoices_fees_installments_balance.total_amount, 0::numeric) - COALESCE(next_year_transport_invoices_fees_installments_balance.total_payment_invoice_fee_amount, 0::numeric) - COALESCE(next_year_transport_invoices_fees_installments_balance.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(next_year_transport_invoices_fees_installments_balance.discount_amount, 0::numeric) AS balance
-   FROM loyola.next_year_transport_invoices_fees_installments_balance
+   FROM beta.next_year_transport_invoices_fees_installments_balance
 UNION ALL
  SELECT next_year_invoices_fees_installments_balance.student_id,
     next_year_invoices_fees_installments_balance.created_at,
@@ -1436,16 +1436,16 @@ UNION ALL
     next_year_invoices_fees_installments_balance.id,
     next_year_invoices_fees_installments_balance.invoice_id,
     COALESCE(next_year_invoices_fees_installments_balance.total_amount, 0::numeric) - COALESCE(next_year_invoices_fees_installments_balance.total_payment_invoice_fee_amount, 0::numeric) - COALESCE(next_year_invoices_fees_installments_balance.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(next_year_invoices_fees_installments_balance.discount_amount, 0::numeric) AS balance
-   FROM loyola.next_year_invoices_fees_installments_balance;
+   FROM beta.next_year_invoices_fees_installments_balance;
 
-ALTER TABLE loyola.next_year_invoice_balances
+ALTER TABLE beta.next_year_invoice_balances
     OWNER TO postgres;
 
 
 
 
 
-CREATE OR REPLACE VIEW loyola.next_year_transport_installment_detail
+CREATE OR REPLACE VIEW beta.next_year_transport_installment_detail
  AS
  SELECT a.student_id,
     a.vehicle_id,
@@ -1455,23 +1455,23 @@ CREATE OR REPLACE VIEW loyola.next_year_transport_installment_detail
             ELSE b.amount * 0.5::numeric(10,2)
         END AS amount,
     b.fees_installment_id
-   FROM loyola.tmembers a
-     JOIN loyola.transport_routes d ON d.id = a.transport_route_id
-     JOIN loyola.transport_routes_fees_installments b ON a.transport_route_id = b.transport_route_id
-     JOIN loyola.fees_installments c ON c.id = b.fees_installment_id
-     JOIN loyola.installments e ON e.id = c.installment_id
-     JOIN loyola.student_archive s ON s.student_id = a.student_id AND e.academic_year_id <> s.academic_year_id
+   FROM beta.tmembers a
+     JOIN beta.transport_routes d ON d.id = a.transport_route_id
+     JOIN beta.transport_routes_fees_installments b ON a.transport_route_id = b.transport_route_id
+     JOIN beta.fees_installments c ON c.id = b.fees_installment_id
+     JOIN beta.installments e ON e.id = c.installment_id
+     JOIN beta.student_archive s ON s.student_id = a.student_id AND e.academic_year_id <> s.academic_year_id
   GROUP BY a.student_id, a.vehicle_id, a.is_oneway, b.amount, b.fees_installment_id, e.id;
 
-ALTER TABLE loyola.next_year_transport_installment_detail
+ALTER TABLE beta.next_year_transport_installment_detail
     OWNER TO postgres;
 
 
--- View: loyola.payment_distribution_status
+-- View: beta.payment_distribution_status
 
--- DROP VIEW loyola.payment_distribution_status;
+-- DROP VIEW beta.payment_distribution_status;
 
-CREATE OR REPLACE VIEW loyola.payment_distribution_status
+CREATE OR REPLACE VIEW beta.payment_distribution_status
  AS
  SELECT
         CASE
@@ -1484,28 +1484,28 @@ CREATE OR REPLACE VIEW loyola.payment_distribution_status
     a.amount AS original_amount,
     a.date,
     a.amount - (COALESCE(b.amount, 0::numeric) + COALESCE(c.amount, 0::numeric) + COALESCE(d.amount, 0::numeric)) AS undistributed_amount
-   FROM loyola.payments a
+   FROM beta.payments a
      LEFT JOIN ( SELECT sum(advance_payments.amount) AS amount,
             advance_payments.payment_id
-           FROM loyola.advance_payments
+           FROM beta.advance_payments
           GROUP BY advance_payments.payment_id) b ON b.payment_id = a.id
      LEFT JOIN ( SELECT sum(due_amounts_payments.amount) AS amount,
             due_amounts_payments.payment_id
-           FROM loyola.due_amounts_payments
+           FROM beta.due_amounts_payments
           GROUP BY due_amounts_payments.payment_id) c ON c.payment_id = a.id
      LEFT JOIN ( SELECT sum(payments_invoices_fees_installments.amount) AS amount,
             payments_invoices_fees_installments.payment_id
-           FROM loyola.payments_invoices_fees_installments
+           FROM beta.payments_invoices_fees_installments
           GROUP BY payments_invoices_fees_installments.payment_id) d ON d.payment_id = a.id;
 
-ALTER TABLE loyola.payment_distribution_status
+ALTER TABLE beta.payment_distribution_status
     OWNER TO postgres;
 
--- View: loyola.product_items_balance
+-- View: beta.product_items_balance
 
--- DROP VIEW loyola.product_items_balance;
+-- DROP VIEW beta.product_items_balance;
 
-CREATE OR REPLACE VIEW loyola.product_items_balance
+CREATE OR REPLACE VIEW beta.product_items_balance
  AS
  SELECT
         CASE
@@ -1516,24 +1516,24 @@ CREATE OR REPLACE VIEW loyola.product_items_balance
     b.warehouse_id,
     a.date,
     2 AS status
-   FROM loyola.warehouse_transfers a
-     JOIN loyola.product_alert_quantity b ON b.id = a.product_alert_quantity_id
+   FROM beta.warehouse_transfers a
+     JOIN beta.product_alert_quantity b ON b.id = a.product_alert_quantity_id
 UNION ALL
  SELECT a.quantity,
     b.id AS product_alert_quantity_id,
     b.warehouse_id,
     a.date,
     1 AS status
-   FROM loyola.product_purchases a
-     JOIN loyola.product_alert_quantity b ON b.id = a.product_alert_id
+   FROM beta.product_purchases a
+     JOIN beta.product_alert_quantity b ON b.id = a.product_alert_id
 UNION ALL
  SELECT 0::double precision - a.quantity AS quantity,
     b.id AS product_alert_quantity_id,
     b.warehouse_id,
     a.date,
     3 AS status
-   FROM loyola.product_sales a
-     JOIN loyola.product_alert_quantity b ON b.id = a.product_alert_id
+   FROM beta.product_sales a
+     JOIN beta.product_alert_quantity b ON b.id = a.product_alert_id
 UNION ALL
  SELECT
         CASE
@@ -1544,16 +1544,16 @@ UNION ALL
     b.warehouse_id,
     b.created_at AS date,
     4 AS status
-   FROM loyola.product_alert_quantity b;
+   FROM beta.product_alert_quantity b;
 
-ALTER TABLE loyola.product_items_balance
+ALTER TABLE beta.product_items_balance
     OWNER TO postgres;
 
--- View: loyola.product_quantities
+-- View: beta.product_quantities
 
--- DROP VIEW loyola.product_quantities;
+-- DROP VIEW beta.product_quantities;
 
-CREATE OR REPLACE VIEW loyola.product_quantities
+CREATE OR REPLACE VIEW beta.product_quantities
  AS
  SELECT b.id,
     a.name AS category,
@@ -1566,26 +1566,26 @@ CREATE OR REPLACE VIEW loyola.product_quantities
     e.name AS metrics,
     e.abbreviation,
     b.open_blance + COALESCE(( SELECT sum(product_purchases.quantity) AS sum
-           FROM loyola.product_purchases
+           FROM beta.product_purchases
           WHERE product_purchases.product_alert_id = b.id), 0::bigint::double precision) AS total_quantity,
     b.open_blance + COALESCE(( SELECT sum(product_purchases.quantity) AS sum
-           FROM loyola.product_purchases
+           FROM beta.product_purchases
           WHERE product_purchases.product_alert_id = b.id), 0::bigint::double precision) - COALESCE(( SELECT sum(product_sales.quantity) AS sum
-           FROM loyola.product_sales
+           FROM beta.product_sales
           WHERE product_sales.product_alert_id = b.id), 0::bigint::double precision) AS remain_quantity
-   FROM loyola.product_alert_quantity b
+   FROM beta.product_alert_quantity b
      LEFT JOIN constant.product_registers a ON a.id = b.product_register_id
-     LEFT JOIN loyola.refer_expense c ON c.id = b.refer_expense_id
+     LEFT JOIN beta.refer_expense c ON c.id = b.refer_expense_id
      LEFT JOIN constant.metrics e ON e.id = b.metric_id;
 
-ALTER TABLE loyola.product_quantities
+ALTER TABLE beta.product_quantities
     OWNER TO postgres;
 
--- View: loyola.revenue_view
+-- View: beta.revenue_view
 
--- DROP VIEW loyola.revenue_view;
+-- DROP VIEW beta.revenue_view;
 
-CREATE OR REPLACE VIEW loyola.revenue_view
+CREATE OR REPLACE VIEW beta.revenue_view
  AS
  SELECT a.id,
     a.created_at,
@@ -1604,8 +1604,8 @@ CREATE OR REPLACE VIEW loyola.revenue_view
     a.payer_phone,
     a.payment_type_id,
     b.refer_expense_id
-   FROM loyola.revenues a
-     JOIN loyola.revenue_cart b ON b.revenue_id = a.id
+   FROM beta.revenues a
+     JOIN beta.revenue_cart b ON b.revenue_id = a.id
 UNION ALL
  SELECT a.id,
     a.created_at,
@@ -1624,74 +1624,74 @@ UNION ALL
     a.payer_phone,
     a.payment_type_id,
     c.refer_expense_id
-   FROM loyola.revenues a
-     JOIN loyola.product_cart b ON a.id = b.revenue_id
-     JOIN loyola.product_alert_quantity c ON c.id = b.product_alert_id;
+   FROM beta.revenues a
+     JOIN beta.product_cart b ON a.id = b.revenue_id
+     JOIN beta.product_alert_quantity c ON c.id = b.product_alert_id;
 
-ALTER TABLE loyola.revenue_view
+ALTER TABLE beta.revenue_view
     OWNER TO postgres;
 
--- View: loyola.school_fees
+-- View: beta.school_fees
 
--- DROP VIEW loyola.school_fees;
+-- DROP VIEW beta.school_fees;
 
-CREATE OR REPLACE VIEW loyola.school_fees
+CREATE OR REPLACE VIEW beta.school_fees
  AS
  SELECT a.round,
     a.class_id,
     b.classes
    FROM ( SELECT round(sum(fees_installments_classes.amount), 0) AS round,
             fees_installments_classes.class_id
-           FROM loyola.fees_installments_classes
+           FROM beta.fees_installments_classes
           WHERE (fees_installments_classes.fees_installment_id IN ( SELECT fees_installments.id
-                   FROM loyola.fees_installments
+                   FROM beta.fees_installments
                   WHERE (fees_installments.installment_id IN ( SELECT installments.id
-                           FROM loyola.installments
+                           FROM beta.installments
                           WHERE (installments.academic_year_id IN ( SELECT academic_year.id
-                                   FROM loyola.academic_year
+                                   FROM beta.academic_year
                                   WHERE academic_year.name::text = '2020'::text))))))
           GROUP BY fees_installments_classes.class_id) a
-     JOIN loyola.classes b ON b."classesID" = a.class_id;
+     JOIN beta.classes b ON b."classesID" = a.class_id;
 
-ALTER TABLE loyola.school_fees
+ALTER TABLE beta.school_fees
     OWNER TO postgres;
 
-CREATE OR REPLACE VIEW loyola.school_price
+CREATE OR REPLACE VIEW beta.school_price
  AS
  SELECT count(a.*)::numeric * b.price_per_student::numeric
-   FROM loyola.student a,
-    loyola.setting b
+   FROM beta.student a,
+    beta.setting b
   WHERE a.status = 1
   GROUP BY b.price_per_student;
 
-ALTER TABLE loyola.school_price
+ALTER TABLE beta.school_price
     OWNER TO postgres;
 
--- View: loyola.student_ages
+-- View: beta.student_ages
 
--- DROP VIEW loyola.student_ages;
+-- DROP VIEW beta.student_ages;
 
-CREATE OR REPLACE VIEW loyola.student_ages
+CREATE OR REPLACE VIEW beta.student_ages
  AS
  SELECT upper("left"(b.sex::text, 1)) AS sex,
     a."classesID",
     a.classes,
     count(date_part('year'::text, b.dob)) AS total,
     date_part('year'::text, age(b.dob::timestamp with time zone)) AS age
-   FROM loyola.classes a
-     JOIN loyola.student b ON a."classesID" = b."classesID"
+   FROM beta.classes a
+     JOIN beta.student b ON a."classesID" = b."classesID"
   WHERE b.status = 1
   GROUP BY (upper("left"(b.sex::text, 1))), (date_part('year'::text, age(b.dob::timestamp with time zone))), a."classesID", a.classes
   ORDER BY a.classes;
 
-ALTER TABLE loyola.student_ages
+ALTER TABLE beta.student_ages
     OWNER TO postgres;
 
--- View: loyola.student_all_fees_subscribed
+-- View: beta.student_all_fees_subscribed
 
--- DROP VIEW loyola.student_all_fees_subscribed;
+-- DROP VIEW beta.student_all_fees_subscribed;
 
-CREATE OR REPLACE VIEW loyola.student_all_fees_subscribed
+CREATE OR REPLACE VIEW beta.student_all_fees_subscribed
  AS
  SELECT a.id AS fees_installment_id,
     a.fee_id,
@@ -1699,55 +1699,55 @@ CREATE OR REPLACE VIEW loyola.student_all_fees_subscribed
     b.class_id,
     e.student_id,
     e.academic_year_id
-   FROM loyola.fees_installments a
-     JOIN loyola.fees_installments_classes b ON a.id = b.fees_installment_id
-     JOIN loyola.installments c ON c.id = a.installment_id
-     JOIN loyola.section d ON d."classesID" = b.class_id
-     JOIN loyola.student_archive e ON e.section_id = d."sectionID"
+   FROM beta.fees_installments a
+     JOIN beta.fees_installments_classes b ON a.id = b.fees_installment_id
+     JOIN beta.installments c ON c.id = a.installment_id
+     JOIN beta.section d ON d."classesID" = b.class_id
+     JOIN beta.student_archive e ON e.section_id = d."sectionID"
   WHERE NOT (EXISTS ( SELECT 1
-           FROM loyola.student_fees_installments_unsubscriptions f
+           FROM beta.student_fees_installments_unsubscriptions f
           WHERE f.fees_installment_id = a.id AND f.student_id = e.student_id));
 
-ALTER TABLE loyola.student_all_fees_subscribed
+ALTER TABLE beta.student_all_fees_subscribed
     OWNER TO postgres;
 
--- View: loyola.student_classes
+-- View: beta.student_classes
 
--- DROP VIEW loyola.student_classes;
+-- DROP VIEW beta.student_classes;
 
-CREATE OR REPLACE VIEW loyola.student_classes
+CREATE OR REPLACE VIEW beta.student_classes
  AS
  SELECT count(a.*) AS count,
     b.classes
-   FROM loyola.student a
-     JOIN loyola.classes b ON b."classesID" = a."classesID"
+   FROM beta.student a
+     JOIN beta.classes b ON b."classesID" = a."classesID"
   WHERE a.status = 1
   GROUP BY b.classes;
 
-ALTER TABLE loyola.student_classes
+ALTER TABLE beta.student_classes
     OWNER TO postgres;
 
--- View: loyola.student_exams
+-- View: beta.student_exams
 
--- DROP VIEW loyola.student_exams;
+-- DROP VIEW beta.student_exams;
 
-CREATE OR REPLACE VIEW loyola.student_exams
+CREATE OR REPLACE VIEW beta.student_exams
  AS
  SELECT DISTINCT mark."examID",
     mark.academic_year_id,
     mark."classesID",
     mark.student_id
-   FROM loyola.mark
+   FROM beta.mark
   WHERE mark.mark IS NOT NULL;
 
-ALTER TABLE loyola.student_exams
+ALTER TABLE beta.student_exams
     OWNER TO postgres;
 
--- View: loyola.student_gps
+-- View: beta.student_gps
 
--- DROP VIEW loyola.student_gps;
+-- DROP VIEW beta.student_gps;
 
-CREATE OR REPLACE VIEW loyola.student_gps
+CREATE OR REPLACE VIEW beta.student_gps
  AS
  SELECT c.parent_id,
     g.phone,
@@ -1756,23 +1756,23 @@ CREATE OR REPLACE VIEW loyola.student_gps
     b.lng,
     a.transport_route_id,
     d.imeis
-   FROM loyola.tmembers a
-     JOIN loyola.student b ON b.student_id = a.student_id
-     JOIN loyola.student_parents c ON c.student_id = b.student_id
-     JOIN loyola.vehicles d ON d.id = a.vehicle_id
-     JOIN loyola.installments e ON e.id = a.installment_id
-     JOIN loyola.academic_year f ON f.id = e.academic_year_id
-     JOIN loyola.parent g ON g."parentID" = c.parent_id
+   FROM beta.tmembers a
+     JOIN beta.student b ON b.student_id = a.student_id
+     JOIN beta.student_parents c ON c.student_id = b.student_id
+     JOIN beta.vehicles d ON d.id = a.vehicle_id
+     JOIN beta.installments e ON e.id = a.installment_id
+     JOIN beta.academic_year f ON f.id = e.academic_year_id
+     JOIN beta.parent g ON g."parentID" = c.parent_id
   WHERE date_part('year'::text, f.start_date) = date_part('year'::text, CURRENT_DATE);
 
-ALTER TABLE loyola.student_gps
+ALTER TABLE beta.student_gps
     OWNER TO postgres;
 
--- View: loyola.student_next_class
+-- View: beta.student_next_class
 
--- DROP VIEW loyola.student_next_class;
+-- DROP VIEW beta.student_next_class;
 
-CREATE OR REPLACE VIEW loyola.student_next_class
+CREATE OR REPLACE VIEW beta.student_next_class
  AS
  SELECT a.student_id,
     ( SELECT academic_year.id
@@ -1822,14 +1822,14 @@ CREATE OR REPLACE VIEW loyola.student_next_class
    FROM student_archive a
   WHERE a.status = 1;
 
-ALTER TABLE loyola.student_next_class
+ALTER TABLE beta.student_next_class
     OWNER TO postgres;
 
--- View: loyola.student_next_year_all_fees_subscribed
+-- View: beta.student_next_year_all_fees_subscribed
 
--- DROP VIEW loyola.student_next_year_all_fees_subscribed;
+-- DROP VIEW beta.student_next_year_all_fees_subscribed;
 
-CREATE OR REPLACE VIEW loyola.student_next_year_all_fees_subscribed
+CREATE OR REPLACE VIEW beta.student_next_year_all_fees_subscribed
  AS
  SELECT a.id AS fees_installment_id,
     a.fee_id,
@@ -1838,23 +1838,23 @@ CREATE OR REPLACE VIEW loyola.student_next_year_all_fees_subscribed
     b.class_id,
     c.academic_year_id,
     d.student_id
-   FROM loyola.fees_installments a
-     JOIN loyola.fees_installments_classes b ON a.id = b.fees_installment_id
-     JOIN loyola.installments c ON c.id = a.installment_id
-     JOIN loyola.student d ON d."classesID" = b.class_id AND d.status = 1
-     JOIN loyola.classes e ON e."classesID" = d."classesID"
+   FROM beta.fees_installments a
+     JOIN beta.fees_installments_classes b ON a.id = b.fees_installment_id
+     JOIN beta.installments c ON c.id = a.installment_id
+     JOIN beta.student d ON d."classesID" = b.class_id AND d.status = 1
+     JOIN beta.classes e ON e."classesID" = d."classesID"
   WHERE NOT (EXISTS ( SELECT 1
-           FROM loyola.student_fees_installments_unsubscriptions f
+           FROM beta.student_fees_installments_unsubscriptions f
           WHERE f.fees_installment_id = a.id AND f.student_id = d.student_id));
 
-ALTER TABLE loyola.student_next_year_all_fees_subscribed
+ALTER TABLE beta.student_next_year_all_fees_subscribed
     OWNER TO postgres;
 
--- View: loyola.student_parents_info
+-- View: beta.student_parents_info
 
--- DROP VIEW loyola.student_parents_info;
+-- DROP VIEW beta.student_parents_info;
 
-CREATE OR REPLACE VIEW loyola.student_parents_info
+CREATE OR REPLACE VIEW beta.student_parents_info
  AS
  SELECT a.name AS student_name,
     b.classes,
@@ -1865,52 +1865,52 @@ CREATE OR REPLACE VIEW loyola.student_parents_info
     a.username AS student_username,
     c.username AS parent_username,
     c.default_password
-   FROM loyola.student a
-     JOIN loyola.classes b ON b."classesID" = a."classesID"
-     JOIN loyola.student_parents d ON d.student_id = a.student_id
-     JOIN loyola.parent c ON c."parentID" = d.parent_id;
+   FROM beta.student a
+     JOIN beta.classes b ON b."classesID" = a."classesID"
+     JOIN beta.student_parents d ON d.student_id = a.student_id
+     JOIN beta.parent c ON c."parentID" = d.parent_id;
 
-ALTER TABLE loyola.student_parents_info
+ALTER TABLE beta.student_parents_info
     OWNER TO postgres;
 
--- View: loyola.student_remain_balances
+-- View: beta.student_remain_balances
 
--- DROP VIEW loyola.student_remain_balances;
+-- DROP VIEW beta.student_remain_balances;
 
-CREATE OR REPLACE VIEW loyola.student_remain_balances
+CREATE OR REPLACE VIEW beta.student_remain_balances
  AS
  SELECT COALESCE(a.amount, 0::numeric) - COALESCE(c.total_payment_invoice_amount, 0::numeric) - COALESCE(d.total_advance_invoice_fee_amount, 0::numeric) - COALESCE(e.amount, 0::numeric) AS amount_remain,
     f.student_id,
     i.id AS fee_id,
     f.id AS invoice_id,
     h.academic_year_id
-   FROM loyola.fees_installments_classes a
-     JOIN loyola.invoices_fees_installments b ON b.fees_installment_id = a.fees_installment_id
-     JOIN loyola.invoices f ON f.id = b.invoice_id
-     JOIN loyola.fees_installments g ON g.id = a.fees_installment_id
-     JOIN loyola.installments h ON h.id = g.installment_id
-     JOIN loyola.fees i ON i.id = g.fee_id
+   FROM beta.fees_installments_classes a
+     JOIN beta.invoices_fees_installments b ON b.fees_installment_id = a.fees_installment_id
+     JOIN beta.invoices f ON f.id = b.invoice_id
+     JOIN beta.fees_installments g ON g.id = a.fees_installment_id
+     JOIN beta.installments h ON h.id = g.installment_id
+     JOIN beta.fees i ON i.id = g.fee_id
      LEFT JOIN ( SELECT sum(x.amount) AS total_payment_invoice_amount,
             x.invoices_fees_installment_id
-           FROM loyola.payments_invoices_fees_installments x
+           FROM beta.payments_invoices_fees_installments x
           WHERE (x.payment_id IN ( SELECT payments.id
-                   FROM loyola.payments))
+                   FROM beta.payments))
           GROUP BY x.invoices_fees_installment_id) c ON c.invoices_fees_installment_id = b.id
      LEFT JOIN ( SELECT sum(y.amount) AS total_advance_invoice_fee_amount,
             y.invoices_fees_installments_id
-           FROM loyola.advance_payments_invoices_fees_installments y
+           FROM beta.advance_payments_invoices_fees_installments y
           GROUP BY y.invoices_fees_installments_id) d ON d.invoices_fees_installments_id = b.id
-     LEFT JOIN loyola.discount_fees_installments e ON e.fees_installment_id = a.fees_installment_id AND f.student_id = e.student_id
+     LEFT JOIN beta.discount_fees_installments e ON e.fees_installment_id = a.fees_installment_id AND f.student_id = e.student_id
   ORDER BY h.start_date, i.priority;
 
-ALTER TABLE loyola.student_remain_balances
+ALTER TABLE beta.student_remain_balances
     OWNER TO postgres;
 
--- View: loyola.student_statisctical_report
+-- View: beta.student_statisctical_report
 
--- DROP VIEW loyola.student_statisctical_report;
+-- DROP VIEW beta.student_statisctical_report;
 
-CREATE OR REPLACE VIEW loyola.student_statisctical_report
+CREATE OR REPLACE VIEW beta.student_statisctical_report
  AS
  SELECT a.academic_year_id,
     b.name,
@@ -1918,21 +1918,21 @@ CREATE OR REPLACE VIEW loyola.student_statisctical_report
     d.id AS status_id,
     d.reason,
     count(a.student_id) AS total_student
-   FROM loyola.student a
+   FROM beta.student a
      JOIN constant.student_status d ON d.id = a.status_id
-     JOIN loyola.academic_year b ON b.id = a.academic_year_id
-     JOIN loyola.classes c ON c."classesID" = a."classesID"
+     JOIN beta.academic_year b ON b.id = a.academic_year_id
+     JOIN beta.classes c ON c."classesID" = a."classesID"
   GROUP BY a.academic_year_id, b.name, d.reason, c.classes, d.id
   ORDER BY a.academic_year_id;
 
-ALTER TABLE loyola.student_statisctical_report
+ALTER TABLE beta.student_statisctical_report
     OWNER TO postgres;
 
--- View: loyola.student_subject_option
+-- View: beta.student_subject_option
 
--- DROP VIEW loyola.student_subject_option;
+-- DROP VIEW beta.student_subject_option;
 
-CREATE OR REPLACE VIEW loyola.student_subject_option
+CREATE OR REPLACE VIEW beta.student_subject_option
  AS
  SELECT DISTINCT m.subject_id,
     m.student_id,
@@ -1947,33 +1947,33 @@ CREATE OR REPLACE VIEW loyola.student_subject_option
     s.is_counted_indivision,
     c.section_id,
     ( SELECT d."teacherID" AS teacher_id
-           FROM loyola.section_subject_teacher d
+           FROM beta.section_subject_teacher d
           WHERE d.subject_id = m.subject_id AND d.academic_year_id = c.academic_year_id AND d."sectionID" = c.section_id
          LIMIT 1) AS teacher_id,
     r.arrangement,
     r.code,
     ma."examID"
-   FROM loyola.subject_student m
-     JOIN loyola.subject s ON s."subjectID" = m.subject_id
-     JOIN loyola.refer_subject r ON r.subject_id = s.subject_id
-     JOIN loyola.student_archive c ON c.student_id = m.student_id
-     JOIN loyola.mark ma ON s."subjectID" = ma."subjectID"
-     JOIN loyola.exam ex ON ex."examID" = ma."examID"
-     JOIN loyola.semester se ON ex.semester_id = se.id AND se.academic_year_id = ma.academic_year_id AND m.academic_year_id = c.academic_year_id AND ma.student_id = m.student_id AND ma.academic_year_id = c.academic_year_id AND ma.student_id = c.student_id AND ma.student_id = m.student_id AND ma."classesID" = s."classesID" AND ma.mark IS NOT NULL;
+   FROM beta.subject_student m
+     JOIN beta.subject s ON s."subjectID" = m.subject_id
+     JOIN beta.refer_subject r ON r.subject_id = s.subject_id
+     JOIN beta.student_archive c ON c.student_id = m.student_id
+     JOIN beta.mark ma ON s."subjectID" = ma."subjectID"
+     JOIN beta.exam ex ON ex."examID" = ma."examID"
+     JOIN beta.semester se ON ex.semester_id = se.id AND se.academic_year_id = ma.academic_year_id AND m.academic_year_id = c.academic_year_id AND ma.student_id = m.student_id AND ma.academic_year_id = c.academic_year_id AND ma.student_id = c.student_id AND ma.student_id = m.student_id AND ma."classesID" = s."classesID" AND ma.mark IS NOT NULL;
 
-ALTER TABLE loyola.student_subject_option
+ALTER TABLE beta.student_subject_option
     OWNER TO postgres;
 
--- View: loyola.student_total_subject
+-- View: beta.student_total_subject
 
--- DROP VIEW loyola.student_total_subject;
+-- DROP VIEW beta.student_total_subject;
 
 
--- View: loyola.subject_count
+-- View: beta.subject_count
 
--- DROP VIEW loyola.subject_count;
+-- DROP VIEW beta.subject_count;
 
-CREATE OR REPLACE VIEW loyola.subject_count
+CREATE OR REPLACE VIEW beta.subject_count
  AS
  SELECT m.subject_id,
     m.student_id,
@@ -1988,16 +1988,16 @@ CREATE OR REPLACE VIEW loyola.subject_count
     s.is_counted_indivision,
     c.section_id,
     ( SELECT d."teacherID" AS teacher_id
-           FROM loyola.section_subject_teacher d
+           FROM beta.section_subject_teacher d
           WHERE d.subject_id = m.subject_id AND d.academic_year_id = c.academic_year_id AND d."sectionID" = c.section_id
          LIMIT 1) AS teacher_id,
     r.arrangement,
     r.code
-   FROM loyola.subject_student m
-     JOIN loyola.subject s ON s."subjectID" = m.subject_id
-     JOIN loyola.refer_subject r ON r.subject_id = s.subject_id
-     JOIN loyola.student_archive c ON c.student_id = m.student_id AND m.academic_year_id = c.academic_year_id
-     JOIN loyola.section t ON t."sectionID" = c.section_id AND s."classesID" = t."classesID"
+   FROM beta.subject_student m
+     JOIN beta.subject s ON s."subjectID" = m.subject_id
+     JOIN beta.refer_subject r ON r.subject_id = s.subject_id
+     JOIN beta.student_archive c ON c.student_id = m.student_id AND m.academic_year_id = c.academic_year_id
+     JOIN beta.section t ON t."sectionID" = c.section_id AND s."classesID" = t."classesID"
 UNION
  SELECT a.subject_id,
     c.student_id,
@@ -2012,34 +2012,34 @@ UNION
     s.is_counted_indivision,
     a.section_id,
     ( SELECT d."teacherID" AS teacher_id
-           FROM loyola.section_subject_teacher d
+           FROM beta.section_subject_teacher d
           WHERE d.subject_id = a.subject_id AND d.academic_year_id = c.academic_year_id AND d."sectionID" = a.section_id
          LIMIT 1) AS teacher_id,
     r.arrangement,
     r.code
-   FROM loyola.subject_section a
-     JOIN loyola.student_archive c ON c.section_id = a.section_id
-     JOIN loyola.subject s ON s."subjectID" = a.subject_id AND (a.section_id IN ( SELECT section."sectionID"
-           FROM loyola.section
+   FROM beta.subject_section a
+     JOIN beta.student_archive c ON c.section_id = a.section_id
+     JOIN beta.subject s ON s."subjectID" = a.subject_id AND (a.section_id IN ( SELECT section."sectionID"
+           FROM beta.section
           WHERE (section."classesID" IN ( SELECT subject."classesID"
-                   FROM loyola.subject
+                   FROM beta.subject
                   WHERE subject."subjectID" = a.subject_id))))
-     JOIN loyola.refer_subject r ON r.subject_id = s.subject_id;
+     JOIN beta.refer_subject r ON r.subject_id = s.subject_id;
 
-CREATE OR REPLACE VIEW loyola.student_total_subject
+CREATE OR REPLACE VIEW beta.student_total_subject
  AS
  SELECT count(*) AS subject_count,
     a.student_id,
     a.academic_year_id,
     a.class_id
-   FROM loyola.subject_count a
+   FROM beta.subject_count a
   GROUP BY a.student_id, a.academic_year_id, a.class_id;
 
-ALTER TABLE loyola.student_total_subject
+ALTER TABLE beta.student_total_subject
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.subject_mark_info
+CREATE OR REPLACE VIEW beta.subject_mark_info
  AS
  SELECT a.student_id,
     d.name,
@@ -2057,40 +2057,40 @@ CREATE OR REPLACE VIEW loyola.subject_mark_info
     b.is_penalty,
     b.pass_mark,
     a.academic_year_id
-   FROM loyola.subject_mark a
-     JOIN loyola.subject b ON b."subjectID" = a."subjectID"
-     JOIN loyola.refer_subject c ON c.subject_id = b.subject_id
-     JOIN loyola.student d ON d.student_id = a.student_id
-     JOIN loyola.student_archive e ON a.student_id = e.student_id AND a.academic_year_id = e.academic_year_id
+   FROM beta.subject_mark a
+     JOIN beta.subject b ON b."subjectID" = a."subjectID"
+     JOIN beta.refer_subject c ON c.subject_id = b.subject_id
+     JOIN beta.student d ON d.student_id = a.student_id
+     JOIN beta.student_archive e ON a.student_id = e.student_id AND a.academic_year_id = e.academic_year_id
   WHERE a.grade_mark IS NOT NULL AND a.effort_mark IS NOT NULL AND a.achievement_mark IS NOT NULL;
 
-ALTER TABLE loyola.subject_mark_info
+ALTER TABLE beta.subject_mark_info
     OWNER TO postgres;
 
--- View: loyola.subjects_excluded
+-- View: beta.subjects_excluded
 
--- DROP VIEW loyola.subjects_excluded;
+-- DROP VIEW beta.subjects_excluded;
 
-CREATE OR REPLACE VIEW loyola.subjects_excluded
+CREATE OR REPLACE VIEW beta.subjects_excluded
  AS
  SELECT a.student_id,
     a."examID" AS exam_id,
     count(a."subjectID") AS subjects_excluded,
     sum(a.mark) AS total
-   FROM loyola.mark a
-     JOIN loyola.subject b ON b."subjectID" = a."subjectID"
+   FROM beta.mark a
+     JOIN beta.subject b ON b."subjectID" = a."subjectID"
   WHERE b.is_counted = 0
   GROUP BY a.student_id, a."examID"
   ORDER BY a.student_id;
 
-ALTER TABLE loyola.subjects_excluded
+ALTER TABLE beta.subjects_excluded
     OWNER TO postgres;
 
--- View: loyola.sum_exam_average
+-- View: beta.sum_exam_average
 
--- DROP VIEW loyola.sum_exam_average;
+-- DROP VIEW beta.sum_exam_average;
 
-CREATE OR REPLACE VIEW loyola.sum_exam_average
+CREATE OR REPLACE VIEW beta.sum_exam_average
  AS
  SELECT sum(a.mark) -
         CASE
@@ -2115,20 +2115,20 @@ CREATE OR REPLACE VIEW loyola.sum_exam_average
         END::numeric), 1) AS average,
     b.academic_year_id,
     a."classesID"
-   FROM loyola.mark_info a
-     JOIN loyola.student_total_subject b ON b.student_id = a.student_id
-     LEFT JOIN loyola.subjects_excluded s ON s.exam_id = a."examID" AND s.student_id = a.student_id
+   FROM beta.mark_info a
+     JOIN beta.student_total_subject b ON b.student_id = a.student_id
+     LEFT JOIN beta.subjects_excluded s ON s.exam_id = a."examID" AND s.student_id = a.student_id
   WHERE a.academic_year_id = b.academic_year_id
   GROUP BY a."examID", a.student_id, b.subject_count, b.academic_year_id, a."classesID", s.subjects_excluded, s.total;
 
-ALTER TABLE loyola.sum_exam_average
+ALTER TABLE beta.sum_exam_average
     OWNER TO postgres;
 
--- View: loyola.sum_exam_average_done
+-- View: beta.sum_exam_average_done
 
--- DROP VIEW loyola.sum_exam_average_done;
+-- DROP VIEW beta.sum_exam_average_done;
 
-CREATE OR REPLACE VIEW loyola.sum_exam_average_done
+CREATE OR REPLACE VIEW beta.sum_exam_average_done
  AS
  SELECT count(mark_info."subjectID") AS subject_count,
     mark_info.student_id,
@@ -2139,18 +2139,18 @@ CREATE OR REPLACE VIEW loyola.sum_exam_average_done
     mark_info."classesID",
     mark_info.global_exam_id,
     mark_info.refer_class_id
-   FROM loyola.mark_info
+   FROM beta.mark_info
   WHERE mark_info.is_counted = 1 AND mark_info.mark IS NOT NULL
   GROUP BY mark_info."examID", mark_info.academic_year_id, mark_info.student_id, mark_info."classesID", mark_info.global_exam_id, mark_info.refer_class_id;
 
-ALTER TABLE loyola.sum_exam_average_done
+ALTER TABLE beta.sum_exam_average_done
     OWNER TO postgres;
 
--- View: loyola.sum_rank
+-- View: beta.sum_rank
 
--- DROP VIEW loyola.sum_rank;
+-- DROP VIEW beta.sum_rank;
 
-CREATE OR REPLACE VIEW loyola.sum_rank
+CREATE OR REPLACE VIEW beta.sum_rank
  AS
  SELECT a."examID",
     a."classesID",
@@ -2160,37 +2160,37 @@ CREATE OR REPLACE VIEW loyola.sum_rank
     c.is_penalty,
     sum(a.mark) AS sum,
     rank() OVER (ORDER BY (sum(a.mark)) DESC) AS rank
-   FROM loyola.mark a
-     JOIN loyola.subject c ON c."subjectID" = a."subjectID"
+   FROM beta.mark a
+     JOIN beta.subject c ON c."subjectID" = a."subjectID"
   WHERE a.mark IS NOT NULL
   GROUP BY a."examID", a."classesID", a.student_id, a."subjectID", c.is_counted, c.is_penalty;
 
-ALTER TABLE loyola.sum_rank
+ALTER TABLE beta.sum_rank
     OWNER TO postgres;
 
--- View: loyola.teacher_on_duty
+-- View: beta.teacher_on_duty
 
--- DROP VIEW loyola.teacher_on_duty;
+-- DROP VIEW beta.teacher_on_duty;
 
-CREATE OR REPLACE VIEW loyola.teacher_on_duty
+CREATE OR REPLACE VIEW beta.teacher_on_duty
  AS
  SELECT a.name,
     a.phone,
     a.email,
     b.duty_id
-   FROM loyola.teacher a
-     JOIN loyola.teacher_duties b ON b.teacher_id = a."teacherID"
-     JOIN loyola.duties c ON c.id = b.duty_id
+   FROM beta.teacher a
+     JOIN beta.teacher_duties b ON b.teacher_id = a."teacherID"
+     JOIN beta.duties c ON c.id = b.duty_id
   WHERE c.start_date <= now() AND c.end_date >= now();
 
-ALTER TABLE loyola.teacher_on_duty
+ALTER TABLE beta.teacher_on_duty
     OWNER TO postgres;
 
--- View: loyola.total_current_assets
+-- View: beta.total_current_assets
 
--- DROP VIEW loyola.total_current_assets;
+-- DROP VIEW beta.total_current_assets;
 
-CREATE OR REPLACE VIEW loyola.total_current_assets
+CREATE OR REPLACE VIEW beta.total_current_assets
  AS
  SELECT p.id,
     p.amount,
@@ -2220,7 +2220,7 @@ CREATE OR REPLACE VIEW loyola.total_current_assets
             a."userID" AS user_id,
             'user'::text AS user_table,
             ( SELECT "user".name
-                   FROM loyola."user"
+                   FROM beta."user"
                   WHERE "user"."userID" = a."userID") AS payer_name,
             a.note,
             0 AS reconciled,
@@ -2228,9 +2228,9 @@ CREATE OR REPLACE VIEW loyola.total_current_assets
             d.number AS account_number,
             d.currency,
             d.name AS account_name
-           FROM loyola.current_assets a
-             LEFT JOIN loyola.refer_expense b ON a.to_refer_expense_id = b.id
-             LEFT JOIN loyola.bank_accounts d ON d.id = b.predefined) p
+           FROM beta.current_assets a
+             LEFT JOIN beta.refer_expense b ON a.to_refer_expense_id = b.id
+             LEFT JOIN beta.bank_accounts d ON d.id = b.predefined) p
 UNION ALL
  SELECT e.id,
     e.amount,
@@ -2243,7 +2243,7 @@ UNION ALL
     e."userID" AS user_id,
     'user'::text AS user_table,
     ( SELECT "user".name
-           FROM loyola."user"
+           FROM beta."user"
           WHERE "user"."userID" = e."userID") AS payer_name,
     e.note,
     e.reconciled,
@@ -2269,18 +2269,18 @@ UNION ALL
             d.number AS account_number,
             d.currency,
             d.name AS account_name
-           FROM loyola.current_assets a
-             JOIN loyola.refer_expense b ON b.id = a.from_refer_expense_id
-             JOIN loyola.bank_accounts d ON d.id = b.predefined) e;
+           FROM beta.current_assets a
+             JOIN beta.refer_expense b ON b.id = a.from_refer_expense_id
+             JOIN beta.bank_accounts d ON d.id = b.predefined) e;
 
-ALTER TABLE loyola.total_current_assets
+ALTER TABLE beta.total_current_assets
     OWNER TO postgres;
 
--- View: loyola.total_expenses
+-- View: beta.total_expenses
 
--- DROP VIEW loyola.total_expenses;
+-- DROP VIEW beta.total_expenses;
 
-CREATE OR REPLACE VIEW loyola.total_expenses
+CREATE OR REPLACE VIEW beta.total_expenses
  AS
  SELECT a."expenseID" AS id,
     a.amount,
@@ -2293,7 +2293,7 @@ CREATE OR REPLACE VIEW loyola.total_expenses
     a."userID" AS user_id,
     'user'::text AS user_table,
     ( SELECT "user".name
-           FROM loyola."user"
+           FROM beta."user"
           WHERE "user"."userID" = a."userID") AS payer_name,
     a.note,
     a.reconciled,
@@ -2302,18 +2302,18 @@ CREATE OR REPLACE VIEW loyola.total_expenses
     b.number AS account_number,
     b.currency,
     b.name AS account_name
-   FROM loyola.expense a
-     LEFT JOIN loyola.bank_accounts b ON b.id = a.bank_account_id
+   FROM beta.expense a
+     LEFT JOIN beta.bank_accounts b ON b.id = a.bank_account_id
      JOIN constant.refer_banks r ON r.id = b.refer_bank_id;
 
-ALTER TABLE loyola.total_expenses
+ALTER TABLE beta.total_expenses
     OWNER TO postgres;
 
--- View: loyola.total_financial_categories
+-- View: beta.total_financial_categories
 
--- DROP VIEW loyola.total_financial_categories;
+-- DROP VIEW beta.total_financial_categories;
 
-CREATE OR REPLACE VIEW loyola.total_financial_categories
+CREATE OR REPLACE VIEW beta.total_financial_categories
  AS
  SELECT d.bank_account_id,
     d.payment_type_id,
@@ -2331,8 +2331,8 @@ CREATE OR REPLACE VIEW loyola.total_financial_categories
                     WHEN b.financial_category_id = ANY (ARRAY[4, 5, 6, 7]) THEN 0::numeric - COALESCE(a.amount, 0::numeric)
                     ELSE a.amount
                 END) AS amount
-           FROM loyola.expense a
-             JOIN loyola.refer_expense b ON b.id = a.refer_expense_id
+           FROM beta.expense a
+             JOIN beta.refer_expense b ON b.id = a.refer_expense_id
           GROUP BY a.bank_account_id, a.date, a.note, a.payment_type_id, b.financial_category_id) d
 UNION ALL
  SELECT rev.bank_account_id,
@@ -2341,17 +2341,17 @@ UNION ALL
     rev.note,
     re.financial_category_id,
     rev.date
-   FROM loyola.revenues rev
-     JOIN loyola.refer_expense re ON rev.refer_expense_id = re.id;
+   FROM beta.revenues rev
+     JOIN beta.refer_expense re ON rev.refer_expense_id = re.id;
 
-ALTER TABLE loyola.total_financial_categories
+ALTER TABLE beta.total_financial_categories
     OWNER TO postgres;
 
--- View: loyola.total_fixed_assets
+-- View: beta.total_fixed_assets
 
--- DROP VIEW loyola.total_fixed_assets;
+-- DROP VIEW beta.total_fixed_assets;
 
-CREATE OR REPLACE VIEW loyola.total_fixed_assets
+CREATE OR REPLACE VIEW beta.total_fixed_assets
  AS
  SELECT b."expenseID" AS id,
     b.amount,
@@ -2364,7 +2364,7 @@ CREATE OR REPLACE VIEW loyola.total_fixed_assets
     b."userID" AS user_id,
     'user'::text AS user_table,
     ( SELECT "user".name
-           FROM loyola."user"
+           FROM beta."user"
           WHERE "user"."userID" = b."userID") AS payer_name,
     a.note,
     b.reconciled,
@@ -2373,19 +2373,19 @@ CREATE OR REPLACE VIEW loyola.total_fixed_assets
     c.number AS account_number,
     c.currency,
     c.name AS account_name
-   FROM loyola.refer_expense a
-     JOIN loyola.expense b ON b.refer_expense_id = a.id
-     LEFT JOIN loyola.bank_accounts c ON b.bank_account_id = c.id
+   FROM beta.refer_expense a
+     JOIN beta.expense b ON b.refer_expense_id = a.id
+     LEFT JOIN beta.bank_accounts c ON b.bank_account_id = c.id
   WHERE a.financial_category_id = 4;
 
-ALTER TABLE loyola.total_fixed_assets
+ALTER TABLE beta.total_fixed_assets
     OWNER TO postgres;
 
--- View: loyola.total_liabilities
+-- View: beta.total_liabilities
 
--- DROP VIEW loyola.total_liabilities;
+-- DROP VIEW beta.total_liabilities;
 
-CREATE OR REPLACE VIEW loyola.total_liabilities
+CREATE OR REPLACE VIEW beta.total_liabilities
  AS
  SELECT b."expenseID" AS id,
     b.amount,
@@ -2398,7 +2398,7 @@ CREATE OR REPLACE VIEW loyola.total_liabilities
     b."userID" AS user_id,
     'user'::text AS user_table,
     ( SELECT "user".name
-           FROM loyola."user"
+           FROM beta."user"
           WHERE "user"."userID" = b."userID") AS payer_name,
     a.note,
     b.reconciled,
@@ -2407,36 +2407,36 @@ CREATE OR REPLACE VIEW loyola.total_liabilities
     c.number AS account_number,
     c.currency,
     c.name AS account_name
-   FROM loyola.refer_expense a
-     JOIN loyola.expense b ON b.refer_expense_id = a.id
-     LEFT JOIN loyola.bank_accounts c ON b.bank_account_id = c.id
+   FROM beta.refer_expense a
+     JOIN beta.expense b ON b.refer_expense_id = a.id
+     LEFT JOIN beta.bank_accounts c ON b.bank_account_id = c.id
   WHERE a.financial_category_id = 6;
 
-ALTER TABLE loyola.total_liabilities
+ALTER TABLE beta.total_liabilities
     OWNER TO postgres;
 
--- View: loyola.total_mark
+-- View: beta.total_mark
 
--- DROP VIEW loyola.total_mark;
+-- DROP VIEW beta.total_mark;
 
-CREATE OR REPLACE VIEW loyola.total_mark
+CREATE OR REPLACE VIEW beta.total_mark
  AS
  SELECT sum(mark.mark) AS total,
     mark.student_id,
     mark."examID",
     mark.year,
     mark."classesID"
-   FROM loyola.mark
+   FROM beta.mark
   GROUP BY mark.student_id, mark."examID", mark."classesID", mark.year;
 
-ALTER TABLE loyola.total_mark
+ALTER TABLE beta.total_mark
     OWNER TO postgres;
 
--- View: loyola.total_revenues
+-- View: beta.total_revenues
 
--- DROP VIEW loyola.total_revenues;
+-- DROP VIEW beta.total_revenues;
 
-CREATE OR REPLACE VIEW loyola.total_revenues
+CREATE OR REPLACE VIEW beta.total_revenues
  AS
  SELECT a.id,
     a.amount,
@@ -2470,14 +2470,14 @@ CREATE OR REPLACE VIEW loyola.total_revenues
             revenues.payer_name,
             revenues.note,
             revenues.reconciled
-           FROM loyola.revenues
+           FROM beta.revenues
         UNION
          SELECT payments.id,
             payments.amount,
             payments.created_at,
             payments.date AS payment_date,
             ( SELECT payment_types.name
-                   FROM loyola.payment_types
+                   FROM beta.payment_types
                   WHERE payment_types.id = payments.payment_type_id) AS payments_method,
             payments.transaction_id,
             1 AS is_payment,
@@ -2486,22 +2486,22 @@ CREATE OR REPLACE VIEW loyola.total_revenues
             payments.payment_type_id,
             'student'::character varying AS user_table,
             ( SELECT student.name
-                   FROM loyola.student
+                   FROM beta.student
                   WHERE student.student_id = payments.student_id
                  LIMIT 1) AS payer_name,
             payments.payer_name,
             payments.reconciled
-           FROM loyola.payments) a
-     LEFT JOIN loyola.bank_accounts b ON b.id = a.bank_account_id;
+           FROM beta.payments) a
+     LEFT JOIN beta.bank_accounts b ON b.id = a.bank_account_id;
 
-ALTER TABLE loyola.total_revenues
+ALTER TABLE beta.total_revenues
     OWNER TO postgres;
 
--- View: loyola.total_transactions
+-- View: beta.total_transactions
 
--- DROP VIEW loyola.total_transactions;
+-- DROP VIEW beta.total_transactions;
 
-CREATE OR REPLACE VIEW loyola.total_transactions
+CREATE OR REPLACE VIEW beta.total_transactions
  AS
  SELECT total_expenses.id,
     total_expenses.amount,
@@ -2521,7 +2521,7 @@ CREATE OR REPLACE VIEW loyola.total_transactions
     total_expenses.currency,
     total_expenses.account_name,
     1 AS is_expense
-   FROM loyola.total_expenses
+   FROM beta.total_expenses
 UNION ALL
  SELECT total_revenues.id,
     total_revenues.amount,
@@ -2541,7 +2541,7 @@ UNION ALL
     total_revenues.currency,
     total_revenues.account_name,
     0 AS is_expense
-   FROM loyola.total_revenues
+   FROM beta.total_revenues
 UNION ALL
  SELECT total_current_assets.id,
     total_current_assets.amount,
@@ -2561,7 +2561,7 @@ UNION ALL
     total_current_assets.currency,
     total_current_assets.account_name,
     5 AS is_expense
-   FROM loyola.total_current_assets
+   FROM beta.total_current_assets
 UNION ALL
  SELECT total_liabilities.id,
     total_liabilities.amount,
@@ -2581,7 +2581,7 @@ UNION ALL
     total_liabilities.currency,
     total_liabilities.account_name,
     6 AS is_expense
-   FROM loyola.total_liabilities
+   FROM beta.total_liabilities
 UNION ALL
  SELECT total_fixed_assets.id,
     total_fixed_assets.amount,
@@ -2601,16 +2601,16 @@ UNION ALL
     total_fixed_assets.currency,
     total_fixed_assets.account_name,
     7 AS is_expense
-   FROM loyola.total_fixed_assets;
+   FROM beta.total_fixed_assets;
 
-ALTER TABLE loyola.total_transactions
+ALTER TABLE beta.total_transactions
     OWNER TO postgres;
 
--- View: loyola.transport_info
+-- View: beta.transport_info
 
--- DROP VIEW loyola.transport_info;
+-- DROP VIEW beta.transport_info;
 
-CREATE OR REPLACE VIEW loyola.transport_info
+CREATE OR REPLACE VIEW beta.transport_info
  AS
  SELECT b.transport_route_id,
     a.student_id,
@@ -2624,20 +2624,20 @@ CREATE OR REPLACE VIEW loyola.transport_info
     a.is_oneway,
     a.vehicle_id,
     a.installment_id
-   FROM loyola.tmembers a
-     JOIN loyola.fees_installments f ON f.installment_id = a.installment_id AND f.fee_id = 1000
-     JOIN loyola.transport_routes_fees_installments b ON b.fees_installment_id = f.id AND b.transport_route_id = a.transport_route_id
-     JOIN loyola.vehicles e ON e.id = a.vehicle_id
-     LEFT JOIN loyola.discount_fees_installments c ON c.fees_installment_id = b.fees_installment_id AND a.student_id = c.student_id
-     JOIN loyola.transport_routes d ON d.id = a.transport_route_id
+   FROM beta.tmembers a
+     JOIN beta.fees_installments f ON f.installment_id = a.installment_id AND f.fee_id = 1000
+     JOIN beta.transport_routes_fees_installments b ON b.fees_installment_id = f.id AND b.transport_route_id = a.transport_route_id
+     JOIN beta.vehicles e ON e.id = a.vehicle_id
+     LEFT JOIN beta.discount_fees_installments c ON c.fees_installment_id = b.fees_installment_id AND a.student_id = c.student_id
+     JOIN beta.transport_routes d ON d.id = a.transport_route_id
   GROUP BY b.transport_route_id, a.student_id, b.amount, b.fees_installment_id, c.amount, d.name, e.name, e.plate_number, a.is_oneway, a.id, a.vehicle_id, a.installment_id
   ORDER BY a.student_id DESC;
 
-ALTER TABLE loyola.transport_info
+ALTER TABLE beta.transport_info
     OWNER TO postgres;
 
 
-CREATE OR REPLACE VIEW loyola.users
+CREATE OR REPLACE VIEW beta.users
  AS
  SELECT a."userID" AS id,
     a.email,
@@ -2659,7 +2659,7 @@ CREATE OR REPLACE VIEW loyola.users
     a.dob,
     a.sex,
     a.country_id
-   FROM loyola."user" a
+   FROM beta."user" a
 UNION ALL
  SELECT t."teacherID" AS id,
     t.email,
@@ -2681,7 +2681,7 @@ UNION ALL
     t.dob,
     t.sex,
     t.country_id
-   FROM loyola.teacher t
+   FROM beta.teacher t
 UNION ALL
  SELECT s.student_id AS id,
     s.email,
@@ -2693,7 +2693,7 @@ UNION ALL
     'student'::character varying AS "table",
     s.name,
     ( SELECT role.id
-           FROM loyola.role
+           FROM beta.role
           WHERE lower(role.name::text) = 'student'::text) AS role_id,
     s.status,
     s.photo,
@@ -2705,7 +2705,7 @@ UNION ALL
     s.dob,
     s.sex,
     s.country_id
-   FROM loyola.student s
+   FROM beta.student s
 UNION ALL
  SELECT p."parentID" AS id,
     p.email,
@@ -2717,7 +2717,7 @@ UNION ALL
     'parent'::character varying AS "table",
     p.name,
     ( SELECT role.id
-           FROM loyola.role
+           FROM beta.role
           WHERE lower(role.name::text) = 'parent'::text) AS role_id,
     p.status,
     p.photo,
@@ -2729,7 +2729,7 @@ UNION ALL
     p.dob,
     p.sex,
     p.country_id
-   FROM loyola.parent p
+   FROM beta.parent p
 UNION ALL
  SELECT b."settingID" AS id,
     b.email,
@@ -2741,7 +2741,7 @@ UNION ALL
     'setting'::character varying AS "table",
     b.name,
     ( SELECT role.id
-           FROM loyola.role
+           FROM beta.role
           WHERE lower(role.name::text) = 'admin'::text) AS role_id,
     1 AS status,
     b.photo,
@@ -2753,30 +2753,30 @@ UNION ALL
     CURRENT_DATE AS dob,
     'Male'::character varying AS sex,
     b.country_id
-   FROM loyola.setting b;
+   FROM beta.setting b;
 
-ALTER TABLE loyola.users
+ALTER TABLE beta.users
     OWNER TO postgres;
 
 
--- View: loyola.wallet_usage
+-- View: beta.wallet_usage
 
--- DROP VIEW loyola.wallet_usage;
+-- DROP VIEW beta.wallet_usage;
 
-CREATE OR REPLACE VIEW loyola.wallet_usage
+CREATE OR REPLACE VIEW beta.wallet_usage
  AS
  SELECT sum(COALESCE(wallets.amount, 0::numeric::double precision))::numeric AS amount,
     wallets.student_id,
     0 AS used_amount
-   FROM loyola.wallets
+   FROM beta.wallets
   GROUP BY wallets.student_id
 UNION ALL
  SELECT 0 AS amount,
     wallet_uses.user_id AS student_id,
     sum(COALESCE(wallet_uses.amount, 0::numeric)) AS used_amount
-   FROM loyola.wallet_uses
+   FROM beta.wallet_uses
   WHERE wallet_uses.user_table::text = 'student'::text
   GROUP BY wallet_uses.user_id;
 
-ALTER TABLE loyola.wallet_usage
+ALTER TABLE beta.wallet_usage
     OWNER TO postgres;
