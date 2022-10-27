@@ -27,16 +27,13 @@ class Kernel extends ConsoleKernel {
     public $emails;
 
     protected function schedule(Schedule $schedule) {
- 
-            $schedule->call(function () {
-                //sync invoices 
-                $this->syncInvoice();
-            })->everyMinute();
 
-            $schedule->call(function () {
-                //sync invoices 
-                $this->syncRevenueInvoice();
-            })->everyMinute();
+        $schedule->call(function () {
+            //sync invoices 
+            $this->syncInvoice();
+
+            $this->syncData();
+        })->everyMinute();
 
         $schedule->call(function () {
             //sync new messages 
@@ -49,7 +46,7 @@ class Kernel extends ConsoleKernel {
         })->hourly();
 
         $schedule->call(function () {
-          //  (new Message())->sendEmail();
+            (new Message())->sendEmail();
         })->everyMinute();
 
         $schedule->call(function () {
@@ -64,17 +61,17 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('04:40'); // Eq to 07:40 AM    
 
 
-        $schedule->call(function () { 
+        $schedule->call(function () {
             $this->findMissingPayments();
-            })->everyTwoHours();
+        })->everyTwoHours();
 
         $schedule->call(function () {
-             $this->standingOrderRemainder();
+            $this->standingOrderRemainder();
         })->dailyAt('03:40'); // Eq to 06:40 AM   
 
         $schedule->call(function () {
             $this->HRContractRemainders();
-          //  $this->HRLeaveRemainders();
+            //  $this->HRLeaveRemainders();
         })->dailyAt('04:40'); // Eq to 07:40 AM   
 
 
@@ -84,7 +81,7 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-          (new Customer())->createTodayReport();
+            (new Customer())->createTodayReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
 
 
@@ -92,38 +89,48 @@ class Kernel extends ConsoleKernel {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
 
-       $schedule->call(function () {
-        //send SMS to karibuSMS
-          $this->karibuSMS();
-       })->everyMinute();
+        $schedule->call(function () {
+            //send SMS to karibuSMS
+            $this->karibuSMS();
+        })->everyMinute();
     }
 
-
-
-   public function whatsappMessage() {        
+    public function whatsappMessage() {
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
         $controller = new \App\Http\Controllers\Controller();
-           foreach ($messages as $message) {
+        foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                if(!empty($message->company_file_id)){
+                if (!empty($message->company_file_id)) {
                     $file = \App\Models\CompanyFile::find($message->company_file_id);
-                    $controller->sendMessageFile($message->phone,$message->message,$file->name,$file->path);
-                  }else{
-                   $controller->sendMessage($message->phone, $message->message);
-                  }
+                    $controller->sendMessageFile($message->phone, $message->message, $file->name, $file->path);
+                } else {
+                    $controller->sendMessage($message->phone, $message->message);
+                }
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
-             } else {
+            } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
-             }
-           }
+            }
+        }
     }
 
     function checkPaymentPattern($user, $schema) {
         $pattern = [0, 0, 0];
         if ($user->table == 'parent') {
-            $sql = 'select  coalesce(coalesce(sum(a.total_amount),0)-sum(a.discount_amount),0) as amount, coalesce(coalesce(sum(a.total_payment_invoice_fee_amount),0)+ coalesce(sum(a.total_advance_invoice_fee_amount)),0) as paid_amount, sum(a.balance) as balance, a.invoice_id as id,a.student_id, c.reference, b.name as student_name, a.created_at,f.phone,f.name as parent_name,f.username from ' . $schema . '. invoice_balances a join ' . $schema . '.student b on a.student_id=b.student_id JOIN  ' . $schema . '.student_parents e on e.student_id=b.student_id join ' . $schema . '.parent f on f."parentID"=e.parent_id JOIN  ' . $schema . '.invoices c on c.id=a.invoice_id where e.parent_id=' . $user->id . ' and  a.student_id in (select student_id from ' . $schema . '.student_archive where section_id in (select "sectionID" FROM ' . $schema . '.section ) )  group by a.invoice_id,a.created_at,b.name ,a.student_id,c.reference,f.phone,f.name,f.username ';
+            $sql = 'select  coalesce(coalesce(sum(a.total_amount),0)-sum(a.discount_amount),0) as amount, '
+                    . 'coalesce(coalesce(sum(a.total_payment_invoice_fee_amount),0)+ coalesce(sum(a.total_advance_invoice_fee_amount)),0) as paid_amount, '
+                    . 'sum(a.balance) as balance, a.invoice_id as id,a.student_id, c.reference, '
+                    . 'b.name as student_name, a.created_at,f.phone,f.name as parent_name,f.username'
+                    . ' from shulesoft.invoice_balances a join shulesoft.student b on'
+                    . ' (a.student_id=b.student_id and a.schema_name=b.schema_name)'
+                    . ' JOIN  shulesoft.student_parents e on '
+                    . ' (e.student_id=b.student_id and e.schema_name=b.schema_name) join'
+                    . ' shulesoft.parent f on (f."parentID"=e.parent_id and f.schema_name=e.schema_name) JOIN'
+                    . '  shulesoft.invoices c on c.id=a.invoice_id where e.schema_name=\'' . $schema . '\' and e.parent_id=' . $user->id . ' and'
+                    . '  a.student_id in (select student_id from shulesoft.student_archive where schema_name=\'' . $schema . '\' and section_id in '
+                    . ' (select "sectionID" FROM shulesoft.section where schema_name=\'' . $schema . '\' ) )'
+                    . '  group by a.invoice_id,a.created_at,b.name ,a.student_id,c.reference,f.phone,f.name,f.username ';
             $parent = \collect(DB::select($sql))->first();
             if (!empty($parent)) {
                 $pattern = [$parent->balance, $parent->student_name, $parent->reference];
@@ -133,15 +140,17 @@ class Kernel extends ConsoleKernel {
     }
 
     public function saveSms($schema, $phone, $body, $user_id) {
-        return DB::table($schema . '.sms')->insert(array('phone_number' => $phone,
+        return DB::table('shulesoft.sms')->insert(array('phone_number' => $phone,
                     'body' => $body,
+                    'schema_name' => $schema,
                     'user_id' => $user_id,
                     'type' => 0));
     }
 
     public function saveEmail($schema, $email, $body, $user_id, $title) {
-        return DB::table($schema . '.email')->insert(array('email' => $email,
+        return DB::table('shulesoft.email')->insert(array('email' => $email,
                     'body' => $body,
+                    'schema_name' => $schema,
                     'user_id' => $user_id,
                     'subject' => $title));
     }
@@ -219,8 +228,6 @@ class Kernel extends ConsoleKernel {
         }
     }
 
- 
-
     function getFeeNames($invoice_id, $schema_name) {
         $fees = DB::table($schema_name . '.invoices')
                 ->where('invoices.id', $invoice_id)
@@ -245,12 +252,12 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-        public function syncRevenueInvoice() {
-            $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on(a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 and a.schema_name not in ('public') ");
-            foreach ($invoices as $invoice) {
-                $this->syncRevenuePerSchool($invoice->schema_name);
-            }
+    public function syncRevenueInvoice() {
+        $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on(a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 and a.schema_name not in ('public') ");
+        foreach ($invoices as $invoice) {
+            $this->syncRevenuePerSchool($invoice->schema_name);
         }
+    }
 
     /**
      * Temporarily only allows digital invoice but must support both
@@ -278,13 +285,13 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-        /**
+    /**
      * Temporarily only allows digital invoice but must support both
      */
     public function syncRevenuePerSchool($schema = '') {
 
         $invoices = DB::select("SELECT b.id, b.user_id, b.reference, b.status, (select invoice_prefix from  " . $schema . ".bank_accounts_integrations bi join  " . $schema . ".bank_accounts ba on bi.bank_account_id=ba.id where ba.refer_bank_id=22 limit 1) as prefix , b.date, b.created_at, b.updated_at, b.amount, b.payer_name, '" . $schema . "' as schema_name from  " . $schema . ".revenues b where status != 1 AND payment_type_id=6 order by random() limit 120");
-            foreach ($invoices as $invoice) {
+        foreach ($invoices as $invoice) {
             echo 'push Normal  revenues for ' . $invoice->schema_name . '' . chr(10) . chr(10);
             $this->pushRevInvoice($invoice);
         }
@@ -370,7 +377,7 @@ class Kernel extends ConsoleKernel {
             if (isset($result) && !empty($result) && isset($invoice->student_id)) {
                 //update invoice no
                 DB::table($invoice->schema_name . '.invoice_prefix')->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
-            }else{
+            } else {
                 DB::table($invoice->schema_name . '.revenues')->where('reference', $invoice->reference)->update(['status' => 0, 'updated_at' => 'now()']);
             }
 
@@ -433,12 +440,12 @@ class Kernel extends ConsoleKernel {
         print_r($result);
         echo chr(10);
 
-        if (isset($result) && !empty($result) && isset($invoice->student_id) && (int)$invoice->student_id > 0) {
+        if (isset($result) && !empty($result) && isset($invoice->student_id) && (int) $invoice->student_id > 0) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoice_prefix')->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
-      }else{
-        DB::table($invoice->schema_name . '.revenues')->where('reference', $invoice->reference)->update(['status' => 1, 'updated_at' => 'now()']);
-     }
+        } else {
+            DB::table($invoice->schema_name . '.revenues')->where('reference', $invoice->reference)->update(['status' => 1, 'updated_at' => 'now()']);
+        }
         DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
 
@@ -500,10 +507,10 @@ class Kernel extends ConsoleKernel {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 0, 'updated_at' => 'now()']);
-                                //update invoice no
-                        if($result->description == 'Duplicate Invoice Number'){
+                        //update invoice no
+                        if ($result->description == 'Duplicate Invoice Number') {
                             DB::table($invoice->schema_name . '.invoice_prefix')
-                            ->where('id', $invoice->id)->update(['sync' => 0, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 3, 'updated_at' => 'now()']);
+                                    ->where('id', $invoice->id)->update(['sync' => 0, 'return_message' => $curl, 'push_status' => $push_status, 'status' => 3, 'updated_at' => 'now()']);
                         }
                     }
 
@@ -594,7 +601,6 @@ class Kernel extends ConsoleKernel {
                 'user_pwd_md5' => $track_key->user_pwd_md5,
                 'format' => 'json'], 'http://open.10000track.com/route/rest');
 
-
             $obj_content = json_decode($request, true);
 
             if ($obj_content['code'] == 0) {
@@ -612,7 +618,6 @@ class Kernel extends ConsoleKernel {
         $sql = 'select  * from ' . $schema . '.car_tracker_key';
         $track_key = \collect(DB::select($sql))->first();
 
-
         $request = $this->JimiServer([
             'method' => 'jimi.user.device.location.list',
             'sign_method' => 'md5',
@@ -628,7 +633,6 @@ class Kernel extends ConsoleKernel {
             'target' => 'shulesoft',
                 ], 'http://open.10000track.com/route/rest');
 
-
         $obj_content = json_decode($request, true);
 
         if ($obj_content['code'] == 0) {
@@ -639,16 +643,13 @@ class Kernel extends ConsoleKernel {
                 $lng = $device['lng'];
                 $imeis = $device['imei'];
 
-
                 $distance_sql = 'select * from (select parent_id, phone,name,imeis, 6371 * acos(cos(radians(' . $lat . '))
      * cos(radians(student_gps.lat)) 
      * cos(radians(student_gps.lng) - radians(' . $lng . ')) 
      + sin(radians(' . $lat . ')) 
      * sin(radians(student_gps.lat))) AS distance from ' . $schema . '.student_gps) as gps_query where imeis=\'' . $imeis . '\' and distance >0 and distance <=0.78 ';
 
-
                 $near_by_students = DB::select($distance_sql);
-
 
                 if (count($near_by_students) > 0) {
                     $table = "table";
@@ -675,7 +676,6 @@ class Kernel extends ConsoleKernel {
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
 
         $result = curl_exec($ch);
         curl_close($ch);
@@ -787,7 +787,7 @@ class Kernel extends ConsoleKernel {
 
     public function sendTaskReminder() {
         $users = DB::select('select a.activity,a.time,b.email,b.phone, b.name, c.name as client_name from admin.tasks a join admin.users b on a.user_id=b.id join admin.clients c on c.id=a.client_id where date::date=CURRENT_DATE and b.status=1');
-          if(!empty($users)){
+        if (!empty($users)) {
             foreach ($users as $user) {
                 $message = 'Hello  ' . $user->name . ' ,'
                         . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kindly remember to write all activities in respective profile.  Thanks';
@@ -797,7 +797,6 @@ class Kernel extends ConsoleKernel {
             }
         }
     }
-
 
     public function getCleanSms($replacements, $message) {
         $patterns = array(
@@ -865,9 +864,9 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                     if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                         DB::statement("insert into " . $notice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Calender Reminder : " . $notice->title . "','" . $message . "')");
                     }
-                    if(!empty($user->sms_keys_id)){
+                    if (!empty($user->sms_keys_id)) {
                         DB::statement("insert into " . $notice->schema_name . ".sms (phone_number,body,type,sms_keys_id) values ('" . $user->phone . "','" . $message . "',0," . $user->sms_keys_id . " )");
-                   }
+                    }
                 }
             }
         }
@@ -879,7 +878,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     public function sendBirthdayWish() {
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin','anazak','atlasschool', 'canaanhigh', 'barbrojohannson','jknyerere'))) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'anazak', 'atlasschool', 'canaanhigh', 'barbrojohannson', 'jknyerere'))) {
                 //Remind parents,class and section teachers to wish their students
 
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
@@ -925,7 +924,6 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
         $sql_updated = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Habari '|| p.name|| ',ungana nasi siku ya jumatano (11/07/2018), TBC-1 kwanzia saa 1 kamili usiku tutawafundisha wazazi wote jinsi ya kutumia 
 ShuleSoft vizuri kupata ripoti mbalimbali kutoka shuleni. Usikose kushiriki nasi ujifunze zaidi. Karibu', p.phone, 0,0, p.id,\"table\" FROM " . $schema->table_schema . ".users p where p.phone is not null and \"table\" in ('parent','teacher','user') ";
-
 
         //return DB::statement($sql_updated);
     }
@@ -1033,30 +1031,25 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-  
-
-     //Send notification remainder on matured standing orders, ie designation_id = 2  C.O.O
+    //Send notification remainder on matured standing orders, ie designation_id = 2  C.O.O
     public function standingOrderRemainder() {
         $controller = new \App\Http\Controllers\Controller();
         $users = \App\Models\User::where('designation_id', 2)->where('status', 1)->get();
-        if(!empty($users)) {
+        if (!empty($users)) {
             foreach ($users as $user) {
                 $standingorders = \App\Models\StandingOrder::whereDate('payment_date', \Carbon\Carbon::today())->get();
-                if(!empty($standingorders)) {
+                if (!empty($standingorders)) {
                     foreach ($standingorders as $standing) {
-                    $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
-                                . chr(10) .'Remember to check matured standing order from ' . $standing->client->name 
+                        $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
+                                . chr(10) . 'Remember to check matured standing order from ' . $standing->client->name
                                 . chr(10) . 'Thanks.';
-                    $controller->send_sms($user->phone,$message,1);
-                    $controller->send_whatsapp_sms($user->phone, $message);
+                        $controller->send_sms($user->phone, $message, 1);
+                        $controller->send_whatsapp_sms($user->phone, $message);
                     }
                 }
             }
         }
     }
-
-    
-
 
     // F(x) to send text remainder to keep phone active to school admins
     public function SMSStatusToSchoolsAdmin() {
@@ -1072,21 +1065,17 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             . chr(10) . 'Asante';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($contact->phone, $message);
-                    $controller->send_sms($contact->phone,$message,1);
+                    $controller->send_sms($contact->phone, $message, 1);
                 }
             }
         }
     }
 
- 
-
- 
-
     // function to remaind HRO on employees contracts end 
     public function HRContractRemainders() {
-    $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
-        $hr_officer = \App\Models\User::where(['role_id' => 16,'status' => 1])->first();
-        if(!empty($users)){
+        $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
+        $hr_officer = \App\Models\User::where(['role_id' => 16, 'status' => 1])->first();
+        if (!empty($users)) {
             foreach ($users as $user) {
                 if ($user->contract_end_date < date('Y-m-d')) {
                     $message = 'Hello ' . $hr_officer->firstname . ' ' . $hr_officer->lastname . '.'
@@ -1094,16 +1083,16 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             . chr(10) . 'Thanks.';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($hr_officer->phone, $message);
-                    $controller->send_sms($hr_officer->phone,$message,1);
-                    $controller->send_email($hr_officer->email,'Employee Contract',$message);
+                    $controller->send_sms($hr_officer->phone, $message, 1);
+                    $controller->send_email($hr_officer->email, 'Employee Contract', $message);
                 } else {
                     $message = 'Hello HR,' . $hr_officer->firstname . ' ' . $hr_officer->lastname . '.'
                             . chr(10) . 'Employment contract of ' . $user->firstname . ' ' . $user->lastname . ' expected to expire on  ' . date('d-m-Y', strtotime($user->contract_end_date)) . '.'
                             . chr(10) . 'Thanks.';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($hr_officer->phone, $message);
-                    $controller->send_sms($hr_officer->phone,$message,1);
-                    $controller->send_email($hr_officer->email,'Employee Contract',$message);
+                    $controller->send_sms($hr_officer->phone, $message, 1);
+                    $controller->send_email($hr_officer->email, 'Employee Contract', $message);
                 }
             }
         }
@@ -1122,7 +1111,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         foreach ($annual as $value) {
             if (!is_null($value->annual_date) && date('Y-m-d') == date('Y-m-d', strtotime($value->annual_date . ' - 30 days'))) {
                 $users = \App\Models\User::whereIn('id', $ids)->where('status', 1)->whereNotIn('role_id', array(7, 15))->get();
-                $hr_officer = \App\Models\User::where(['role_id' => 16,'status' => 1])->first();
+                $hr_officer = \App\Models\User::where(['role_id' => 16, 'status' => 1])->first();
                 foreach ($users as $user) {
                     $message = 'Hello '
                             . chr(10) . 'This is the remainder of : ' . $user->firstname . ' ' . $user->lastname . ' is expected to start the annual leave on'
@@ -1130,147 +1119,141 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             . chr(10) . 'Thanks.';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($hr_officer->phone, $message);
-                    $controller->send_sms($hr_officer->phone,$message,1);
-                    $controller->send_email($hr_officer->email,'Employee Annual leave',$message);
+                    $controller->send_sms($hr_officer->phone, $message, 1);
+                    $controller->send_email($hr_officer->email, 'Employee Annual leave', $message);
                 }
             }
         }
     }
 
     // function to remaind school tasks created by users
-     public function setTaskRemainder() {
+    public function setTaskRemainder() {
         $tasks = \App\Models\Task::where('remainder', 0)->where('remainder_date', '=', date('Y-m-d'))->get();
         $controller = new \App\Http\Controllers\Controller();
-            if(count($tasks)){
-                foreach ($tasks as $task) {
-                        $message = 'Hello ' . $task->user->name . '.'
-                                    . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
-                                    . chr(10) . 'Type: ' . $task->taskType->name . '.'
-                                    . chr(10) . 'From ' . $task->client->name . '' 
-                                    . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
-                                    . chr(10) . 'Thanks.';
-                        $controller->send_whatsapp_sms($task->user->phone,$message);
-                        $controller->send_sms($task->user->phone,$message);
+        if (count($tasks)) {
+            foreach ($tasks as $task) {
+                $message = 'Hello ' . $task->user->name . '.'
+                        . chr(10) . 'This is the remainder of : ' . strip_tags($task->activity) . '.'
+                        . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                        . chr(10) . 'From ' . $task->client->name . ''
+                        . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
+                        . chr(10) . 'Thanks.';
+                $controller->send_whatsapp_sms($task->user->phone, $message);
+                $controller->send_sms($task->user->phone, $message);
 
-                     if($task->taskUsers()->count() > 0) {
-                        foreach($task->taskUsers()->get() as $task_user){
-                            if($task_user->user_id != $task->user->id){
+                if ($task->taskUsers()->count() > 0) {
+                    foreach ($task->taskUsers()->get() as $task_user) {
+                        if ($task_user->user_id != $task->user->id) {
                             $user = \App\Models\User::find($task_user->user_id);
                             $msg = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
                                     . chr(10) . 'This is the remainder of a task allocated to you'
                                     . chr(10) . 'Task: ' . strip_tags($task->activity) . '.'
                                     . chr(10) . 'Type: ' . $task->taskType->name . '.'
-                                    . chr(10) . 'From ' . $task->client->name . '' 
+                                    . chr(10) . 'From ' . $task->client->name . ''
                                     . chr(10) . 'Deadline: ' . date('d-m-Y', strtotime($task->start_date)) . '.'
                                     . chr(10) . 'By: ' . $task->user->name . '.'
                                     . chr(10) . 'Thanks.';
-                            $controller->send_whatsapp_sms($user->phone,$msg);
-                            $controller->send_sms($user->phone,$msg);
-                            }
-                          }
+                            $controller->send_whatsapp_sms($user->phone, $msg);
+                            $controller->send_sms($user->phone, $msg);
                         }
-                      \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
                     }
                 }
-           }
-
-
+                \App\Models\Task::where('id', $task->id)->update(['remainder' => 1]);
+            }
+        }
+    }
 
     // function to refresh materialized views twice per day
     public function RefreshMaterializedView() {
         DB::statement('select from admin.refresh_materialized_views()');
     }
 
-    
-    public function weeklyAccountsReports(){
+    public function weeklyAccountsReports() {
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
-                $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
-                $weekly_amount = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema  . " . total_revenues where date_trunc('week', date) = date_trunc('week', current_date)"))->first();
-                $weekly_expenditure = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema  . " . expense where date_trunc('week', date) = date_trunc('week', current_date)"))->first();
+                $directors = DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
+                $weekly_amount = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema . " . total_revenues where date_trunc('week', date) = date_trunc('week', current_date)"))->first();
+                $weekly_expenditure = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema . " . expense where date_trunc('week', date) = date_trunc('week', current_date)"))->first();
                 $total_revenues = $weekly_amount->sum;
                 $total_expenditure = $weekly_expenditure->sum;
 
-                if(!empty($directors)){
-                      foreach ($directors as $director) {
-                              $message = 'Dear sir/madam'
-                                . chr(10) . 'The following is account report for your school this week starts at ' .date( 'F, d Y', strtotime( 'monday this week' ))
-                                . chr(10) . 'Total collection Tsh ' . money($total_revenues) .''
-                                . chr(10) . 'Total expenditure Tsh ' . money($total_expenditure) .''
+                if (!empty($directors)) {
+                    foreach ($directors as $director) {
+                        $message = 'Dear sir/madam'
+                                . chr(10) . 'The following is account report for your school this week starts at ' . date('F, d Y', strtotime('monday this week'))
+                                . chr(10) . 'Total collection Tsh ' . money($total_revenues) . ''
+                                . chr(10) . 'Total expenditure Tsh ' . money($total_expenditure) . ''
                                 . chr(10) . 'Thanks.';
-                              $controller = new \App\Http\Controllers\Controller();
-                              $controller->send_whatsapp_sms($director->phone, $message);
-                              $controller->send_sms($director->phone,$message,1);
-                      }
-                }
-            }
-        }
-     }
-
-
-       public function monthlyAccountsReports(){
-        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
-        foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
-                $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
-                  
-               $monthly_amount= \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema . " . total_revenues where date_trunc('month', date) = date_trunc('month', current_date)"))->first();
-               $monthly_expenditure = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema . " . expense where date_trunc('month', date) = date_trunc('month', current_date)"))->first();
-               $total_revenues = $monthly_amount->sum;
-               $total_expenditure = $monthly_expenditure->sum;
-
-                if(!empty($directors)){
-                      foreach ($directors as $director) {
-                              $message = 'Dear sir/madam'
-                                . chr(10) . 'Kindly find the reports on the fees for your school this month starts at ' .date('m-01-Y')
-                                . chr(10) . 'Total collection Tsh ' . money($total_revenues) .''
-                                . chr(10) . 'Total expenditure Tsh ' . money($total_expenditure) .''
-                                . chr(10) . 'Thanks.';
-                              $controller = new \App\Http\Controllers\Controller();
-                              $controller->send_whatsapp_sms($director->phone, $message);
-                              $controller->send_sms($director->phone,$message,1);
-
-                      }
+                        $controller = new \App\Http\Controllers\Controller();
+                        $controller->send_whatsapp_sms($director->phone, $message);
+                        $controller->send_sms($director->phone, $message, 1);
+                    }
                 }
             }
         }
     }
 
-        public function findMissingPayments(){
-            $invoices = DB::select('SELECT "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null');
-            $returns = [];
-            $background = new \App\Http\Controllers\Background();
-            //Find All Payment on This Dates
-            $dates = new \DatePeriod(
-                    new \DateTime(date('Y-m-d', strtotime('-30 days'))), new \DateInterval('P1D'), new \DateTime(date('Y-m-d', strtotime('2 days')))
-            );
-            //To iterate
-            foreach ($dates as $key => $value) {
-                foreach ($invoices as $invoice) {
-                    $token = $background->getToken($invoice);
-                    $prefix = $invoice->prefix;
-                    if (strlen($token) > 4) {
-                        $fields = array(
-                            "reconcile_date" => $value->format('d-m-Y'),
-                            "token" => $token
-                        );
-                        $push_status = 'reconcilliation';
-                        $url = $invoice->schema_name == 'beta_testing' ?
-                                'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
-                        $curl = $background->curlServer($fields, $url);
-                        array_push($returns, json_decode($curl));
-                        foreach ($returns as $return) {
-                            $data = $return->transactions;
-                            if (!empty($data)) {
-                                $trans = (object) $data;
-                                $i = 1;
-                                foreach ($trans as $tran) {
-                                    if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
-                                        $check = DB::table($invoice->schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
-                                        if (empty($check)) {
-                                            $this->syncMissingPayments(json_encode($tran), $invoice->schema_name, $tran->customer_name, $tran->amount, $tran->timestamp);
-                                        }
+    public function monthlyAccountsReports() {
+        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
+        foreach ($schemas as $schema) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
+                $directors = DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
+
+                $monthly_amount = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema . " . total_revenues where date_trunc('month', date) = date_trunc('month', current_date)"))->first();
+                $monthly_expenditure = \collect(DB::select("select COALESCE(sum(amount),0) as sum from " . $schema->table_schema . " . expense where date_trunc('month', date) = date_trunc('month', current_date)"))->first();
+                $total_revenues = $monthly_amount->sum;
+                $total_expenditure = $monthly_expenditure->sum;
+
+                if (!empty($directors)) {
+                    foreach ($directors as $director) {
+                        $message = 'Dear sir/madam'
+                                . chr(10) . 'Kindly find the reports on the fees for your school this month starts at ' . date('m-01-Y')
+                                . chr(10) . 'Total collection Tsh ' . money($total_revenues) . ''
+                                . chr(10) . 'Total expenditure Tsh ' . money($total_expenditure) . ''
+                                . chr(10) . 'Thanks.';
+                        $controller = new \App\Http\Controllers\Controller();
+                        $controller->send_whatsapp_sms($director->phone, $message);
+                        $controller->send_sms($director->phone, $message, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    public function findMissingPayments() {
+        $invoices = DB::select('SELECT "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null');
+        $returns = [];
+        $background = new \App\Http\Controllers\Background();
+        //Find All Payment on This Dates
+        $dates = new \DatePeriod(
+                new \DateTime(date('Y-m-d', strtotime('-30 days'))), new \DateInterval('P1D'), new \DateTime(date('Y-m-d', strtotime('2 days')))
+        );
+        //To iterate
+        foreach ($dates as $key => $value) {
+            foreach ($invoices as $invoice) {
+                $token = $background->getToken($invoice);
+                $prefix = $invoice->prefix;
+                if (strlen($token) > 4) {
+                    $fields = array(
+                        "reconcile_date" => $value->format('d-m-Y'),
+                        "token" => $token
+                    );
+                    $push_status = 'reconcilliation';
+                    $url = $invoice->schema_name == 'beta_testing' ?
+                            'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                    $curl = $background->curlServer($fields, $url);
+                    array_push($returns, json_decode($curl));
+                    foreach ($returns as $return) {
+                        $data = $return->transactions;
+                        if (!empty($data)) {
+                            $trans = (object) $data;
+                            $i = 1;
+                            foreach ($trans as $tran) {
+                                if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
+                                    $check = DB::table($invoice->schema_name . '.payments')->where('transaction_id', $tran->receipt)->first();
+                                    if (empty($check)) {
+                                        $this->syncMissingPayments(json_encode($tran), $invoice->schema_name, $tran->customer_name, $tran->amount, $tran->timestamp);
                                     }
                                 }
                             }
@@ -1278,78 +1261,88 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                     }
                 }
             }
-            echo 'success';
         }
- 
- 
-public function syncMissingPayments($data, $schema, $student = null, $amount = null, $date = '') {
-    $controller = new \App\Http\Controllers\Controller();
-    $background = new \App\Http\Controllers\Background();
-    $url = 'http://75.119.140.177:8081/api/init';
-    $fields = json_decode($data);
-    $curl = $background->curlServer($fields, $url, 'row'); 
-    $status = json_decode($curl); 
-    if(isset($status->status) && $status->status == 0){ 
-        $reference = isset($status->reference) ? $status->reference : ''; 
-        $message = isset($status->description) ? $status->description : ''; 
-        $sms = 'Hello Mr. Albo this Invoice '. $reference . ' of '.$student.' from *'. strtoupper($schema) .'* with paid amount of '. $amount .' failed to be paid. With Error message: '.chr(10). chr(10).$message.' happened on '.$date.' Take a look';
-        $whatsapp_numbers = ['255744158016']; 
-        foreach ($whatsapp_numbers as $number) { 
-            $controller->sendMessage($number . '@c.us', $sms); 
-        } 
-    } 
-    return $curl; 
     }
 
-
-     public function karibuSMS(){
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "http://www.karibusms.com/check_pending");
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-            curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            $data = curl_exec($ch);
-     }
-
-        
-    public function pushRevInvoice($invoice) {
-            $token = $this->getToken($invoice);
-            if (strlen($token) > 4) { 
-                $fields = array(
-                    "reference" => trim($invoice->reference),
-                    "student_name" => isset($invoice->payer_name) ? $invoice->payer_name : '',
-                    "student_id" => $invoice->user_id,
-                    "amount" => $invoice->amount,
-                    "allow_partial" => "TRUE",
-                    "type" => ucfirst($invoice->schema_name) . ' payment for Student other Transaction',
-                    "code" => "10",
-                    "callback_url" => "http://75.119.140.177:8081/api/init",
-                    "token" => $token
-                );
-                echo 'Status no ' . $invoice->status . ' runs for schema ' . $invoice->schema_name . chr(10) . chr(10);
-                switch ($invoice->status) {
-                    case 2:
-
-                        $this->updateInvoiceStatus($fields, $invoice, $token);
-                        break;
-                    case 3:
-                        $this->deleteInvoice($invoice, $token);
-
-                        break;
-                    case 4:
-                        $this->validateInvoice($invoice, $token);
-
-                        break;
-                    default:
-                        $this->pushStudentInvoice($fields, $invoice, $token);
-                        break;
-                }
-            } else {
-                echo 'No token generated for ' . $invoice->schema_name . chr(10) . chr(10);
+    public function syncMissingPayments($data, $schema, $student = null, $amount = null, $date = '') {
+        $controller = new \App\Http\Controllers\Controller();
+        $background = new \App\Http\Controllers\Background();
+        $url = 'http://75.119.140.177:8081/api/init';
+        $fields = json_decode($data);
+        $curl = $background->curlServer($fields, $url, 'row');
+        $status = json_decode($curl);
+        if (isset($status->status) && $status->status == 0) {
+            $reference = isset($status->reference) ? $status->reference : '';
+            $message = isset($status->description) ? $status->description : '';
+            $sms = 'Hello Mr. Albo this Invoice ' . $reference . ' of ' . $student . ' from *' . strtoupper($schema) . '* with paid amount of ' . $amount . ' failed to be paid. With Error message: ' . chr(10) . chr(10) . $message . ' happened on ' . $date . ' Take a look';
+            $whatsapp_numbers = ['255744158016'];
+            foreach ($whatsapp_numbers as $number) {
+                $controller->sendMessage($number . '@c.us', $sms);
             }
         }
+        return $curl;
+    }
 
+    public function karibuSMS() {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "http://www.karibusms.com/check_pending");
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $data = curl_exec($ch);
+    }
 
-   
+    public function pushRevInvoice($invoice) {
+        $token = $this->getToken($invoice);
+        if (strlen($token) > 4) {
+            $fields = array(
+                "reference" => trim($invoice->reference),
+                "student_name" => isset($invoice->payer_name) ? $invoice->payer_name : '',
+                "student_id" => $invoice->user_id,
+                "amount" => $invoice->amount,
+                "allow_partial" => "TRUE",
+                "type" => ucfirst($invoice->schema_name) . ' payment for Student other Transaction',
+                "code" => "10",
+                "callback_url" => "http://75.119.140.177:8081/api/init",
+                "token" => $token
+            );
+            echo 'Status no ' . $invoice->status . ' runs for schema ' . $invoice->schema_name . chr(10) . chr(10);
+            switch ($invoice->status) {
+                case 2:
+
+                    $this->updateInvoiceStatus($fields, $invoice, $token);
+                    break;
+                case 3:
+                    $this->deleteInvoice($invoice, $token);
+
+                    break;
+                case 4:
+                    $this->validateInvoice($invoice, $token);
+
+                    break;
+                default:
+                    $this->pushStudentInvoice($fields, $invoice, $token);
+                    break;
+            }
+        } else {
+            echo 'No token generated for ' . $invoice->schema_name . chr(10) . chr(10);
+        }
+    }
+
+    public function syncData() {
+        return false;
+        $limit = 2;
+        for ($i = 0; $i < 250; $i++) {
+
+            //  echo $merge_sql="select * from admin.merge_limit_tables('public',{$i},{$limit})";
+            //  $s= DB::statement($merge_sql);
+            //print_r($s);
+            $sync_sql_ = "select * from admin.sync_data_to_shulesoft({$i},{$limit})";
+            DB::statement($sync_sql_);
+            echo 'success round=' . $i . chr(10);
+            sleep(2);
+            $i += $limit - 1;
+        }
+    }
 
 }
