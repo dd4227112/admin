@@ -1220,8 +1220,7 @@ WHERE table_schema ='{$schema->table_schema}'
             if (!empty($table_info)) {
                 $key = '"' . $table_info->column_name . '"';
 
-
-                    $sql = "ALTER TABLE IF EXISTS {$schema}.{$table} ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
+                $sql = "ALTER TABLE IF EXISTS {$schema}.{$table} ADD CONSTRAINT {$table}_id_primary PRIMARY KEY ($key)";
                 DB::statement("ALTER TABLE {$schema}.{$table} DROP CONSTRAINT IF EXISTS {$table}_id_primary");
                 DB::statement($sql);
                 echo 'SCHEMA ' . $schema . ' for table ' . $table . ' index reset COMPLETELY <br/><br/><hr/>';
