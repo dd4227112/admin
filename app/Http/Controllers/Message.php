@@ -360,6 +360,7 @@ class Message extends Controller {
 
 
     public function sendEmail() {
+        return true;
         //loop through schema names and push emails
       //  DB::select('REFRESH MATERIALIZED VIEW  public.email');
         $this->emails = DB::select('select * from public.email limit 8');
