@@ -361,7 +361,7 @@ class Message extends Controller {
 
     public function sendEmail() {
         //loop through schema names and push emails
-        DB::select('REFRESH MATERIALIZED VIEW  public.email');
+      //  DB::select('REFRESH MATERIALIZED VIEW  public.email');
         $this->emails = DB::select('select * from public.email limit 8');
         if (count($this->emails) > 0) {
             foreach ($this->emails as $message) {
