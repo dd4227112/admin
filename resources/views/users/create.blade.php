@@ -1,9 +1,5 @@
 @extends('layouts.app')
-
 @section('content')
-
-    
-       
          <div class="page-header">
             <div class="page-header-title">
                 <h4> Create user</h4>
@@ -22,7 +18,6 @@
                 </ul>
             </div>
         </div> 
-
         <div class="page-body">
             <div class="row">
                 <div class="card">
