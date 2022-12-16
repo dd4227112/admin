@@ -27,7 +27,8 @@
                         <div  class="card">
                               <div class="card-block">
                                   <a class="btn btn-primary btn-round btn-sm float-left text-light"  href="<?= url('users/create') ?>">Create New User</a>                   
-                                  {{-- <a class="btn btn-primary btn-round btn-sm float-right text-light" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                    --}}
+                                   <a class="btn btn-success btn-round btn-sm float-left text-light"  href="<?= url('users/createBasic') ?>">Create Basic New User</a>                   
+                                 {{-- <a class="btn btn-primary btn-round btn-sm float-right text-light" data-toggle="modal"  role="button" data-target="#status-Modal">Upload users</a>                    --}}
                               </div>
                                   
                                 <div  class="card">
@@ -69,7 +70,10 @@
                                                         <?php $view_url = "users/show/$user->id"; $edit_url = "users/edit/$user->id"; ?>
                                                         <a href="<?= url($view_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="View employee">view  </a>
                                                         <a href="<?= url($edit_url) ?>" class="btn btn-info btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Edit employee">Edit  </a>
-                                                      </td>
+                                                        <?php if(Auth::user()->role_id==1){ ?>
+                                                        <a href="<?= url("users/destroy/null?user_id=$user->id") ?>" class="btn btn-danger btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Delete employee">Delete  </a>
+                                                        <?php } ?>
+                                                        </td>
                                                     </tr>
                                                     @endforeach
 
