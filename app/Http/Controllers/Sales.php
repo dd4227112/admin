@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Charts\SimpleChart;
 use DB;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 
@@ -1026,16 +1026,25 @@ class Sales extends Controller {
             $end_date = date('Y-m-d', strtotime(request('end')));
             $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
         }
-         $user_id = \Auth::User()->id;
+         $user_id = Auth::User()->id;
       //   $this->data['schools'] = DB::select("select * from admin.tasks where user_id = $user_id  and  (start_date, end_date) OVERLAPS ('$start_date'::date, '$end_date'::date)");
+    if((int)Auth::User()->type == 0){
         $this->data['schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         $this->data['new_schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         $this->data['pipelines'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         $this->data['closeds'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         $this->data['query'] = 'SELECT count(next_action), next_action from admin.tasks a where  a.user_id='.Auth::User()->id.' and ' . $where . ' group by next_action order by count(next_action) desc';
         $this->data['types'] = 'SELECT count(b.name), b.name as type from admin.tasks a, admin.task_types b  where a.task_type_id=b.id AND a.user_id ='.Auth::User()->id.' and ' . $where . ' group by b.name order by count(b.name) desc';
-        return view('sales.sales_status.index', $this->data);
+    }else{
+        $this->data['schools'] = \App\Models\Task::whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['new_schools'] = \App\Models\Task::where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['pipelines'] = \App\Models\Task::where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['closeds'] = \App\Models\Task::where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['query'] = 'SELECT count(next_action), next_action from admin.tasks a where ' . $where . ' group by next_action order by count(next_action) desc';
+        $this->data['types'] = 'SELECT count(b.name), b.name as type from admin.tasks a, admin.task_types b  where a.task_type_id=b.id AND ' . $where . ' group by b.name order by count(b.name) desc';
     }
+    return view('sales.sales_status.index', $this->data);
+}
 
     public function addLead() {
         if ($_POST) {
