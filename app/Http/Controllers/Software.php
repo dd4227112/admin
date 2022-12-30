@@ -11,6 +11,7 @@ class Software extends Controller {
     public $destination_connection = 'new_vps';
 
     public function __construct() {
+        return false;
         if (!preg_match('/fhodhkjkhdfhoidf/i', request()->segment(1))) {
             //$this->middleware('auth');
         }
@@ -228,7 +229,7 @@ class Software extends Controller {
         $master_table_name = request('table');
         $slave_schema = request('slave');
         $sql = "SELECT FROM admin.show_create_table('" . $master_table_name . "','" . $slave_schema . "')";
-        return DB::statement($sql);
+      //  return DB::statement($sql);
         // return DB::statement(str_replace('ARRAY', 'character varying[]', $sql->result));
     }
 
