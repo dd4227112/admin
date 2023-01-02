@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::middleware(['blockIP'])->group(function () {
+//Route::middleware(['blockIP'])->group(function () {
 
 
     /*
@@ -115,4 +115,4 @@ Route::middleware(['blockIP'])->group(function () {
     Route::post('/sendndaform', 'Recruitments@uploadnda');
     Route::get('/migration', 'Software@migration');
 
-});
+//});

@@ -17,8 +17,8 @@ class BlockIpMiddleware {
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next) {
-       
-        if (!in_array($request->ip(), $this->blockIps)) {
+      
+        if (in_array($request->ip(), $this->blockIps)) {
             abort(403, "You are restricted to access the site.");
         }
     }

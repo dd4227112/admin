@@ -512,6 +512,11 @@ class Customer extends Controller {
         $this->data['is_client'] = $is_client;
  
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+        if(empty($year)){
+          $year =   \App\Models\AccountYear::create(['name'=> date('Y'), 'status'=>1,
+                'start_date'=> date('Y').'-01-01', 
+                'end_date'=> date('Y').'-12-31']);
+        }
     
         $this->data['invoices'] =\App\Models\Invoice::where('client_id', (int)$client->id)->where('account_year_id', (int) $year->id)->get();
         $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->latest()->get();
