@@ -1330,17 +1330,18 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function syncData() {
-        return false;
-        $limit = 2;
+
+        $limit = 10;
         for ($i = 0; $i < 250; $i++) {
 
             //  echo $merge_sql="select * from admin.merge_limit_tables('public',{$i},{$limit})";
             //  $s= DB::statement($merge_sql);
             //print_r($s);
+            DB::statement("select * from admin.refresh_materialized_views_limit({$i},{$limit})");
             $sync_sql_ = "select * from admin.sync_data_to_shulesoft({$i},{$limit})";
             DB::statement($sync_sql_);
             echo 'success round=' . $i . chr(10);
-            sleep(2);
+            sleep(1);
             $i += $limit - 1;
         }
     }

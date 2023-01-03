@@ -1335,8 +1335,8 @@ class Customer extends Controller {
             if ($schema != '' && $schema != 'accounts') {
                 $pass = $schema . rand(5697, 33);
                 $username = $schema . date('Hi');
-                DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
-                $this->data['school'] = DB::table($schema . '.setting')->first();
+                DB::table('shulesoft.setting')->where('schema_name',$schema)->update(['password' => bcrypt($pass), 'username' => $username]);
+                $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name',$schema)->first();
                 $this->data['schema'] = $schema;
                 $this->data['pass'] = $pass;
                 return view('customer.view', $this->data)->with('success', 'Password Updated Successfully');
