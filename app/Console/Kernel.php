@@ -1331,7 +1331,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     public function syncData() {
 
-        $limit = 10;
+        $limit = 3;
         for ($i = 0; $i < 250; $i++) {
 
             //  echo $merge_sql="select * from admin.merge_limit_tables('public',{$i},{$limit})";
@@ -1341,7 +1341,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             $sync_sql_ = "select * from admin.sync_data_to_shulesoft({$i},{$limit})";
             DB::statement($sync_sql_);
             echo 'success round=' . $i . chr(10);
-            sleep(1);
+            sleep(0.5);
             $i += $limit - 1;
         }
     }
