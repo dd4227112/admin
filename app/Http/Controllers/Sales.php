@@ -672,7 +672,13 @@ class Sales extends Controller {
         $academic_year = DB::table('accounts.academic_year')->whereYear('end_date', date('Y'))->first();
 
         if (empty($academic_year)) {
-            $academic_year_id =DB::table('accounts.academic_year')->insertGetId(['name'=>date('Y'),'start_date'=>date('Y').'-01-01','end_date'=>date('Y').'-12-31']);
+            
+            $academic_year_id =DB::table('accounts.academic_year')
+                    ->insertGetId([
+                        'name'=>date('Y'),
+                        'classlevel_id' => $classlevel->classlevel_id,
+                        'start_date'=>date('Y').'-01-01',
+                        'end_date'=>date('Y').'-12-31']);
         } else {
             $academic_year_id = $academic_year->id;
         }
