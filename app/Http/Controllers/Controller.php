@@ -148,7 +148,7 @@ class Controller extends BaseController {
     
     public function curlPrivate($fields, $url = null) {
         // Open connection
-        $url = 'http://75.119.140.177:8081/api/payment';
+        $url =$url==null ? 'http://75.119.140.177:8081/api/payment': $url;
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
 
