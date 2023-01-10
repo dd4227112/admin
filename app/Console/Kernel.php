@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Customer;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Background;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Mail\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -39,6 +39,11 @@ class Kernel extends ConsoleKernel {
             //sync new messages 
             $this->whatsappMessage();
         })->everyMinute();
+
+        $schedule->call(function () {
+            //Optimize Payments 
+            $this->optimizeInvoice();
+        })->everyFiveMinutes();
 
         $schedule->call(function () {
             //remaind tasks to users and allocated users
@@ -1344,6 +1349,14 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             sleep(0.5);
             $i += $limit - 1;
         }
+    }
+
+    public function optimizeInvoice() {
+        $students = DB::select('SELECT distinct student_id FROM canossa.student WHERE status=1 AND "classesID"=2');
+        foreach($students as $stu){
+            DB::SELECT('SELECT * FROM canossa.redistribute_student_payments(' . $stu->student_id . ')');
+        }
+        echo 'done';
     }
 
 }
