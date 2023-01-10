@@ -40,11 +40,7 @@ class Kernel extends ConsoleKernel {
             $this->whatsappMessage();
         })->everyMinute();
 
-        $schedule->call(function () {
-            //Optimize Payments 
-            $this->optimizeInvoice();
-        })->everyMinute();
-
+     
         $schedule->call(function () {
             //remaind tasks to users and allocated users
             $this->setTaskRemainder();
@@ -1353,12 +1349,6 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
        
     }
 
-    public function optimizeInvoice() {
-        $students = DB::select('SELECT distinct student_id FROM canossa.student WHERE status=1 AND "classesID"=2');
-        foreach($students as $stu){
-            DB::SELECT('SELECT * FROM canossa.redistribute_student_payments(' . $stu->student_id . ')');
-        }
-        echo 'done';
-    }
+    
 
 }
