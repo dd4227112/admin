@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Charts\SimpleChart;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,9 +31,9 @@ class Analyse extends Controller {
             exit;
             $id = Auth::user()->id;
             $this->data['refer_bank_id'] = $refer_bank_id = (new \App\Http\Controllers\Users())->getBankId();
-            $this->data['use_shulesoft'] = \DB::table('admin.all_setting')->count() - 5;
-            $this->data['nmb_schools'] = $refer_bank_id == 22 ? \DB::table('nmb_schools')->get() : [];
-            $this->data['schools'] = \DB::table('admin.schools')->where('ownership', '<>', 'Government')->get();
+            $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
+            $this->data['nmb_schools'] = $refer_bank_id == 22 ? DB::table('nmb_schools')->get() : [];
+            $this->data['schools'] = DB::table('admin.schools')->where('ownership', '<>', 'Government')->get();
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=" . $refer_bank_id))->first()->count;
             return view('analyse.bank', $this->data);
         } elseif (Auth::user()->department == 10 && \Auth::user()->id != 36) {
@@ -41,9 +41,9 @@ class Analyse extends Controller {
             $id = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
             $this->data['use_shulesoft'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->count();
-            $this->data['nmb_schools'] = \DB::table('admin.partner_schools')->where('branch_id', $branch->branch_id)->count();
+            $this->data['nmb_schools'] = DB::table('admin.partner_schools')->where('branch_id', $branch->branch_id)->count();
             $this->data['schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
-            $this->data['nmb_shulesoft_schools'] = \collect(\DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . '))'))->first()->count;
+            $this->data['nmb_shulesoft_schools'] = \collect(DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . '))'))->first()->count;
             return view('analyse.nmb', $this->data);
         } elseif (Auth::user()->department == 9) {
             $this->data['refer_bank_id'] = (new \App\Http\Controllers\Users())->getBankId();
@@ -56,10 +56,10 @@ class Analyse extends Controller {
         } else {
             $user = Auth::user()->id;
             $sql = "select a.id, a.end_date,f.name as school,a.activity as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id join admin.clients f on f.id = c.client_id WHERE a.user_id = $user order by a.created_at::date desc";
-            $this->data['activities'] = \DB::select($sql);
+            $this->data['activities'] = DB::select($sql);
             $this->data['summary'] = $this->summary();
         }
-        $this->data['new_schools'] = \DB::select("select count(distinct schema_name) as schools,date_trunc('month', created_at) AS month from admin.all_setting a where extract(year from a.created_at)= extract(year from current_date) group by month order by month");
+        $this->data['new_schools'] = DB::select("select count(distinct schema_name) as schools,date_trunc('month', created_at) AS month from admin.all_setting a where extract(year from a.created_at)= extract(year from current_date) group by month order by month");
         return view('analyse.index', $this->data);
     }
 
@@ -80,29 +80,29 @@ class Analyse extends Controller {
 
     public function sales() {
         $this->data['days'] = request()->segment(3);
-        $this->data['shulesoft_schools'] = \collect(\DB::select("select count(*) as count from admin.all_classlevel where lower(name) NOT like '%nursery%' and schema_name not in ('public','accounts')"))->first()->count;
-        $this->data['schools'] = \collect(\DB::select("select count(*) as count from admin.schools where lower(ownership)<>'government'"))->first()->count;
-        $this->data['nmb_schools'] = \collect(\DB::select('select count(*) as count from admin.nmb_schools'))->first()->count;
-        $this->data['shulesoft_nmb_schools'] = \collect(\DB::select('select count(distinct "schema_name") from admin.all_bank_accounts where refer_bank_id=22'))->first()->count;
-        $this->data['clients'] = \collect(\DB::select('select count(*) as count from admin.clients'))->first()->count;
+        $this->data['shulesoft_schools'] = \collect(DB::select("select count(*) as count from admin.all_classlevel where lower(name) NOT like '%nursery%' and schema_name not in ('public','accounts')"))->first()->count;
+        $this->data['schools'] = \collect(DB::select("select count(*) as count from admin.schools where lower(ownership)<>'government'"))->first()->count;
+        $this->data['nmb_schools'] = \collect(DB::select('select count(*) as count from admin.nmb_schools'))->first()->count;
+        $this->data['shulesoft_nmb_schools'] = \collect(DB::select('select count(distinct "schema_name") from admin.all_bank_accounts where refer_bank_id=22'))->first()->count;
+        $this->data['clients'] = \collect(DB::select('select count(*) as count from admin.clients'))->first()->count;
         $sql_ = 'select count(*) as count, created_at as month from admin.all_setting a where extract(year from a.created_at)= extract(year from current_date)  group by month order by month';
         $sql2_ = 'select count(*) as count, extract(month from created_at) as month from admin.website_join_shulesoft a where extract(year from a.created_at)= extract(year from current_date)  group by month order by month';
-        $this->data['requests'] = \DB::select($sql2_);
-        $this->data['new_schools'] = \DB::select($sql_);
+        $this->data['requests'] = DB::select($sql2_);
+        $this->data['new_schools'] = DB::select($sql_);
         return view('analyse.sales', $this->data);
     }
 
     public function summary() {
-        $this->data['parents'] = \collect(\DB::select('select count(*) as count from admin.all_parent'))->first()->count;
-        $this->data['students'] = \collect(\DB::select('select count(*) as count from admin.all_student'))->first()->count;
+        $this->data['parents'] = \collect(DB::select('select count(*) as count from admin.all_parent'))->first()->count;
+        $this->data['students'] = \collect(DB::select('select count(*) as count from admin.all_student'))->first()->count;
         $this->data['teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
-        $this->data['users'] = \collect(\DB::select('select count(*) as count from admin.all_users'))->first()->count;
-        $this->data['total_schools'] = \collect(\DB::select("select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema','pg_catalog')"))->first()->aggregate;
-        $this->data['schools_with_students'] =  \collect(\DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
-        $this->data['active_parents'] = \collect(\DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
-        $this->data['active_students'] = \collect(\DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
-        $this->data['active_teachers'] = \collect(\DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
-        $this->data['active_users'] = \collect(\DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
+        $this->data['users'] = \collect(DB::select('select count(*) as count from admin.all_users'))->first()->count;
+        $this->data['total_schools'] = \collect(DB::select("select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema','pg_catalog')"))->first()->aggregate;
+        $this->data['schools_with_students'] =  \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
+        $this->data['active_parents'] = \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
+        $this->data['active_students'] = \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
+        $this->data['active_teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
+        $this->data['active_users'] = \collect(DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
         return $this->data;
     }
 
@@ -116,7 +116,7 @@ class Analyse extends Controller {
         $sql_2 = "select sum(count) as count, month from (
         select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')." group by month
         UNION ALL select sum(amount) as count, extract(month from created_at) as month from admin.revenues a   where extract(year from created_at)=".date('Y')." group by month) a group by month order by month asc";
-        $this->data['pay_collection'] = \DB::select($sql_2);
+        $this->data['pay_collection'] = DB::select($sql_2);
         return view('analyse.accounts', $this->data);
     }
 
@@ -349,10 +349,10 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
 
        public function ratings(){
-          $this->data['nps'] = \collect(\DB::select('select  (a.promoter/c.total::float)*100 - (b.detractor/c.total::float)*100 as NPS from (select sum(rate) as promoter from admin.rating where rate > 8) a,(select sum(rate) as detractor from admin.rating where rate < 7 ) b,(select sum(rate) as total from admin.rating) c'))->first();
+          $this->data['nps'] = \collect(DB::select('select  (a.promoter/c.total::float)*100 - (b.detractor/c.total::float)*100 as NPS from (select sum(rate) as promoter from admin.rating where rate > 8) a,(select sum(rate) as detractor from admin.rating where rate < 7 ) b,(select sum(rate) as total from admin.rating) c'))->first();
           $this->data['ratings'] = \App\Models\Rating::latest()->get();
-          $this->data['commentators'] = \collect(\DB::select("select distinct user_id from admin.rating"))->count();
-          $this->data['comments'] = \collect(\DB::select("select * from admin.rating where comment is not null"))->count();
+          $this->data['commentators'] = \collect(DB::select("select distinct user_id from admin.rating"))->count();
+          $this->data['comments'] = \collect(DB::select("select * from admin.rating where comment is not null"))->count();
           $sql1 = "select a.module_id,b.name as module,round(avg(a.rate::integer),1) as count from admin.rating a join admin.modules b on a.module_id = b.id group by a.module_id,b.name";
           $sql_ = "select TO_CHAR(a.created_at::date,'dd-mm-yyyy') as created_at, count(a.rate::integer) as count from admin.rating a join admin.modules b on a.module_id = b.id group by a.created_at::date";
           $this->data['avg'] = DB::select($sql1);

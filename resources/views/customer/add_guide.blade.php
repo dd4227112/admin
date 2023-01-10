@@ -1,8 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.main')
 @section('content')
-
-    
-        
         <div class="page-header">
             <div class="page-header-title">
                 <h4> Add guide</h4>
