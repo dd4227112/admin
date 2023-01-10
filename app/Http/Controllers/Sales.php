@@ -6,7 +6,7 @@ use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Charts\SimpleChart;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -273,7 +273,7 @@ class Sales extends Controller {
                 return $this->ajaxTable('all_setting', ['sname', 'phone', 'address', 'email', 'payment_integrated', 'created_at']);
                 break;
             case 'errors':
-                $sql = "SELECT id,error_message,error_instance,created_at::date,schema_name,file, url  from (select * from admin.error_logs where deleted_at is null  AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null";
+                $sql = "SELECT id,error_message,error_instance,created_at::date,schema_name,file, url  from (select * from admin.error_logs where deleted_at is null  AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','IlluminateAuthAuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null";
                 return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at::date', 'schema_name'], $sql);
                 break;
             case 'errors_resolved':
@@ -415,11 +415,11 @@ class Sales extends Controller {
                 return redirect()->back()->with('success', 'user recorded successfully');
             } else {
                 $school_id = request('client_id');
-                $data = array_merge(request()->all(), ['user_id' => \Auth::user()->id, 'school_id' => request('client_id')]);
+                $data = array_merge(request()->all(), ['user_id' => Auth::user()->id, 'school_id' => request('client_id')]);
                 DB::transaction(function () use ($data, $school_id) {
                     $task = \App\Models\Task::create($data);
                     \App\Models\UsersSchool::create([
-                        'user_id' => Auth::user()->id, 'school_id' => (int) $school_id, 'role_id' => \Auth::user()->role_id, 'status' => 1,
+                        'user_id' => Auth::user()->id, 'school_id' => (int) $school_id, 'role_id' => Auth::user()->role_id, 'status' => 1,
                     ]);
                     DB::table('tasks_schools')->insert([
                         'task_id' => $task->id,
@@ -501,7 +501,7 @@ class Sales extends Controller {
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (empty($school_contact)) {
                 DB::table('admin.school_contacts')->insert([
-                    'name' => request('school_name'), 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school_id, 'user_id' => \Auth::user()->id, 'title' => request('title')
+                    'name' => request('school_name'), 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school_id, 'user_id' => Auth::user()->id, 'title' => request('title')
                 ]);
                 $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             }
@@ -526,7 +526,7 @@ class Sales extends Controller {
                 'region_id' => $school->wards->district->region->id,
                 'email_verified' => 0,
                 'phone_verified' => 0,
-                'created_by' => \Auth::user()->id,
+                'created_by' => Auth::user()->id,
                 'username' => clean($schema_name),
                 'payment_option' => request('payment_option'),
                 'start_usage_date' => date('Y-m-d'),
@@ -540,9 +540,9 @@ class Sales extends Controller {
             $this->sendDataToAccounts($school_name, $schema_name, request('students'), $school_email, $school_phone, $address);
             if (!empty($check_client)) {
                 $client_id = $check_client->id;
-                \DB::table('admin.clients')->where('id', $client_id)->update(Arr::except($client_data, ['username']));
+                DB::table('admin.clients')->where('id', $client_id)->update(Arr::except($client_data, ['username']));
             } else {
-                $client_id = \DB::table('admin.clients')->insertGetId($client_data);
+                $client_id = DB::table('admin.clients')->insertGetId($client_data);
 
                 // trial period
                 // if(request('check_trial') == 1 && !is_null(request('trial_period')) ) {
@@ -569,7 +569,7 @@ class Sales extends Controller {
                     'school_id' => $school_id, 'client_id' => $client_id, 'user_id' => Auth::user()->id, 'role_id' => 8, 'status' => 1
                 ]);
                 //post task, onboarded
-                $data = ['user_id' => Auth::user()->id, 'school_id' => $school_id, 'activity' => 'Onboarding', 'task_type_id' => request('task_type_id'), 'user_id' => \Auth::user()->id];
+                $data = ['user_id' => Auth::user()->id, 'school_id' => $school_id, 'activity' => 'Onboarding', 'task_type_id' => request('task_type_id'), 'user_id' => Auth::user()->id];
                 $task = \App\Models\Task::create($data);
                 DB::table('tasks_schools')->insert([
                     'task_id' => $task->id,
@@ -581,7 +581,7 @@ class Sales extends Controller {
                 $file = request()->file('file');
                 $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
                 $contract_id = DB::table('admin.contracts')->insertGetId([
-                    'name' => 'Shulesoft service fee', 'company_file_id' => $company_file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => \Auth::user()->id
+                    'name' => 'Shulesoft service fee', 'company_file_id' => $company_file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
                 ]);
                 //client contracts
                 DB::table('admin.client_contracts')->insert([
@@ -596,7 +596,7 @@ class Sales extends Controller {
                 $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
 
                 $contract_id = DB::table('admin.standing_orders')->insertGetId(array(
-                    'type' => request('which_basis'), 'created_by' => \Auth::user()->id,
+                    'type' => request('which_basis'), 'created_by' => Auth::user()->id,
                     'client_id' => $client_id, 'contract_type_id' => 8,
                     'is_approved' => '0', 'company_file_id' => $company_file_id,
                     'payment_date' => request('maturity_date'), 'occurance_amount' => remove_comma(request('occurance_amount')),
@@ -745,7 +745,7 @@ class Sales extends Controller {
     }
 
     public function onboaredSchools() {
-        $this->data['clients'] = \DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,s.company_file_id FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a on a.client_id = c.id   where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status HAVING count(a.id) <= 0
+        $this->data['clients'] = DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,s.company_file_id FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a on a.client_id = c.id   where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status HAVING count(a.id) <= 0
          ORDER BY c.created_at DESC");
         return view('sales.onboard', $this->data);
     }
@@ -869,7 +869,7 @@ class Sales extends Controller {
                 $sms = 'Hello ' . $user->firstname . ' ' . $user->lastname
                         . chr(10) . 'A task of : ' . $section->content . ' at ' . \App\Models\Client::where('id', $client_id)->first()->name . ' has been allocated to you'
                         . chr(10) . 'A task is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' and end ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
-                        . chr(10) . 'By :' . \Auth::user()->name
+                        . chr(10) . 'By :' . Auth::user()->name
                         . chr(10) . 'Thank you';
                 $this->send_whatsapp_sms($user->phone, $sms);
                 $this->send_sms($user->phone, $sms, 1);
@@ -1320,7 +1320,7 @@ class Sales extends Controller {
             'contact_person_phone' => $contact_person_phone,
             'contact_person_designation' => $contact_person_designation,
             'company_file_id' => $company_file_id,
-            'created_by' => \Auth::user()->id,
+            'created_by' => Auth::user()->id,
             'agreement_date' => $agreement_date
         ];
 
@@ -1335,8 +1335,8 @@ class Sales extends Controller {
 
     public function schoolrequests() {
         $sql2_ = 'select count(*) as schools, extract(month from created_at) as month from admin.website_join_shulesoft a where extract(year from a.created_at)= extract(year from current_date)  group by month order by month';
-        $this->data['requests'] = \DB::select($sql2_);
-        $this->data['allrequests'] = \collect(\DB::select('select id, school_name,school_registration_number,contact_name,contact_phone,contact_email from admin.website_join_shulesoft order by id desc'));
+        $this->data['requests'] = DB::select($sql2_);
+        $this->data['allrequests'] = \collect(DB::select('select id, school_name,school_registration_number,contact_name,contact_phone,contact_email from admin.website_join_shulesoft order by id desc'));
         return view('sales.school_requests', $this->data);
     }
 
