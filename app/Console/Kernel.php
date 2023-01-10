@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             //Optimize Payments 
             $this->optimizeInvoice();
-        })->everyFiveMinutes();
+        })->everyMinute();
 
         $schedule->call(function () {
             //remaind tasks to users and allocated users
