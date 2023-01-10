@@ -1335,7 +1335,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function syncData() {
-
+        $filename='http:://75.119.140.177/shulesoft_staging/api/accountsync';
+        @file($filename);
         $limit = 3;
         for ($i = 0; $i < 250; $i++) {
 
@@ -1349,8 +1350,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             sleep(0.5);
             $i += $limit - 1;
         }
-        $filename='http:://75.119.140.177/shulesoft_staging/api/accountsync';
-        @file($filename);
+       
     }
 
     public function optimizeInvoice() {
