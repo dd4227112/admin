@@ -50,6 +50,7 @@
                           <th># </th>
                           <th>Name</th>
                           <th>Phone</th>
+                          <th>Email</th>
                           <th>Role </th>
                           <th>SID </th>
                           <th class="text-center">Action</th>
@@ -62,6 +63,7 @@
                           <td><?=$i++?> </td>
                           <td><?=$user->firstname. ' ' .$user->lastname ?></td>
                           <td><?=$user->phone ?></td>
+                          <td><?=$user->email ?></td>
                           <td><?=$user->role->display_name ?></td>
                           <td><?=$user->sid ?></td>
                           <td class="text-center">
