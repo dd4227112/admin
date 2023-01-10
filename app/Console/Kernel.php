@@ -1332,8 +1332,9 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     public function syncData() {
         $filename='http:://75.119.140.177/shulesoft_staging/api/accountsync';
-        fopen($filename,'+r');
-        
+        $controller=new Controller();
+        $obj=$controller->curlPrivate([],$filename);
+        print_r($obj);
         $limit = 3;
         for ($i = 0; $i < 250; $i++) {
 
