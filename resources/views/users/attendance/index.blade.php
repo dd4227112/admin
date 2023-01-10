@@ -51,6 +51,7 @@
                           <th>Name</th>
                           <th>Phone</th>
                           <th>Role </th>
+                          <th>SID </th>
                           <th class="text-center">Action</th>
                         </tr>
                       </thead>
@@ -62,8 +63,9 @@
                           <td><?=$user->firstname. ' ' .$user->lastname ?></td>
                           <td><?=$user->phone ?></td>
                           <td><?=$user->role->display_name ?></td>
+                          <td><?=$user->sid ?></td>
                           <td class="text-center">
-                          <a class="btn btn-primary btn-mini btn-round" href="{{ url('attendance/index/'.$user->id) }}">View </a>
+                            <a class="btn btn-primary btn-mini btn-round" href="{{ url('attendance/index/'.$user->id) }}">View </a>
                           </td>
                         </tr>
                         <?php } } ?>
