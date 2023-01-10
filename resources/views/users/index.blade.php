@@ -42,6 +42,7 @@
                                                         <th>Name</th>
                                                         <th>Phone</th>
                                                         <th>Email</th>
+                                                        <th>SID</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -65,6 +66,7 @@
                                                         <td>{{ $user->firstname }} {{ $user->lastname }}</td>
                                                         <td>{{ $user->phone }}</td>
                                                         <td>{{ $user->email }}</td>
+                                                        <td>{{ $user->sid }}</td>
                                                   
                                                         <td class="text-center">
                                                         <?php $view_url = "users/show/$user->id"; $edit_url = "users/edit/$user->id"; ?>
