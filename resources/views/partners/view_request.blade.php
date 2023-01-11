@@ -350,7 +350,8 @@
                                         </td>
                                         <td style="width: 60% !important;">
                                             <span>
-                                                INETS is a Private Company Limited by shares and registered <br/>under the Company Act 2012 with registration number 9216.<br/> INETS deals solely with Software Development. <br/>Currently focused on <a href="http://shulesoft.com" target="_blank" rel="noopener noreferrer"> <b>ShuleSoft</b></a>, a School Management System  </span></td>
+                                            ShuleSoft Limited to provide ShuleSoft Services to the client which is integrated with CRDB 
+                                            Bank System to accept Electronic Payments via CRDB Bank channels</span>
                                     </tr>
                                 </table>
                             </div>
