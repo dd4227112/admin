@@ -4,15 +4,17 @@
 <?php
 $root = url('/') . '/public/';
 define('SCHEMA', $schema);
+$username = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}' "))->first();
 
 function check_status($table, $where = null) {
 $schema = SCHEMA;
+$username = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}' "))->first();
 if ($table == 'admin.vendors') {
-$report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
+    $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 } elseif ($table == 'invoices') {
-$report = \collect(DB::select('select date::date as created_at from ' . $schema . '.' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first();
+    $report =  !empty($username) ? \collect(DB::select('select date::date as created_at from ' . $schema . '.' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first() : \collect(DB::select('select date::date as created_at from shulesoft.' . $table . '  ' . $where . ' AND schema_name='.$schema.' order by date::date desc limit 1'))->first();
 } else {
-$report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
+    $report =  !empty($username) ? \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first() : \collect(DB::select('select created_at::date from shulesoft.' . $table . '  ' . $where . ' AND schema_name=='.$schema.' order by created_at::date desc limit 1'))->first();
 }
 if (!empty($report)) {
 $echo = '<label class="badge badge-success">' . date('d M Y', strtotime($report->created_at)) . '</label>';
