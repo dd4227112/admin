@@ -132,13 +132,12 @@ src="https://demo.shulesoft.com/<?= $image ?>" alt="">
 <div class="card-block">
 <?php
 if ($is_client == 1) {
-$username = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}'");
-//    count($username) > 0 ? dd('uongo') : dd('Normal');
+    $username = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}'");
 ?>
 <div class="">
 <div class="row m-2">
 <label class="badge badge-inverse-primary">
-     count($username) > 0 ? \DB::table($schema . '.student')->where('status', 1)->count() :  \DB::table('shulesoft.student')->where('schema_name', $schema)->where('status', 1)->count() ?>
+    <?= count($username) > 0 ? \DB::table($schema . '.student')->where('status', 1)->count() :  \DB::table('shulesoft.student')->where('schema_name', $schema)->where('status', 1)->count() ?>
 </label>
 <label>Students</label>
 </div>
