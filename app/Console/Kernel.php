@@ -1331,10 +1331,24 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function syncData() {
-        $filename='http:://75.119.140.177/shulesoft_staging/api/accountsync';
-        $controller=new Controller();
-        $obj=$controller->curlPrivate([],$filename);
-        print_r($obj);
+        $url='http:://75.119.140.177/shulesoft_staging/api/accountsync';
+    
+        $ch = curl_init();
+// Set the url, number of POST vars, POST data
+$fields=[];
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'application/x-www-form-urlencoded'
+        ));
+
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        print_r($result);
         $limit = 3;
         for ($i = 0; $i < 250; $i++) {
 
