@@ -10,11 +10,11 @@ function check_status($table, $where = null) {
 $schema = SCHEMA;
 $username = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}' "))->first();
 if ($table == 'admin.vendors') {
-    $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
+$report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 } elseif ($table == 'invoices') {
-    $report =  !empty($username) ? \collect(DB::select('select date::date as created_at from ' . $schema . '.' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first() : \collect(DB::select('select date::date as created_at from shulesoft.' . $table . '  ' . $where . ' AND schema_name='.$schema.' order by date::date desc limit 1'))->first();
+$report =  !empty($username) ? \collect(DB::select('select date::date as created_at from ' . $schema . '.' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first() : \collect(DB::select('select date::date as created_at from shulesoft.' . $table . '  ' . $where . ' AND schema_name='.$schema.' order by date::date desc limit 1'))->first();
 } else {
-    $report =  !empty($username) ? \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first() : \collect(DB::select('select created_at::date from shulesoft.' . $table . '  ' . $where . ' AND schema_name=='.$schema.' order by created_at::date desc limit 1'))->first();
+$report =  !empty($username) ? \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first() : \collect(DB::select('select created_at::date from shulesoft.' . $table . '  ' . $where . ' AND schema_name=='.$schema.' order by created_at::date desc limit 1'))->first();
 }
 if (!empty($report)) {
 $echo = '<label class="badge badge-success">' . date('d M Y', strtotime($report->created_at)) . '</label>';
@@ -28,32 +28,32 @@ return $echo;
 
 
 <?php $school_name = isset($school->sname) ? $school->sname : '';
-      $numbers=isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '';
-      $s_address = isset($school->address) ? $school->address : '';
- ?>
-    <div class="page-header">
-            <div class="page-header-title">
-                <h4><?= $school_name ?></h4>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                    <a href="<?= url('/') ?>">
-                        <i class="feather icon-home"></i>
-                    </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!"><?=$numbers?></a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!"><?=$s_address?></a>
-                    </li>
-                </ul>
-            </div>
-        </div> 
+    $numbers=isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '';
+    $s_address = isset($school->address) ? $school->address : '';
+?>
+<div class="page-header">
+        <div class="page-header-title">
+            <h4><?= $school_name ?></h4>
+        </div>
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                <a href="<?= url('/') ?>">
+                    <i class="feather icon-home"></i>
+                </a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!"><?=$numbers?></a>
+                </li>
+                <li class="breadcrumb-item"><a href="#!"><?=$s_address?></a>
+                </li>
+            </ul>
+        </div>
+    </div> 
 
- <?php if(isset($client->trial) && $client->trial == 1) { ?>
-    <label class="badge badge-warning"> School on trial period  <?= isset($trial->end_date) ? 'Until '. date("d-m-Y", strtotime($trial->end_date)) : ''  ?></label>
+<?php if(isset($client->trial) && $client->trial == 1) { ?>
+<label class="badge badge-warning"> School on trial period  <?= isset($trial->end_date) ? 'Until '. date("d-m-Y", strtotime($trial->end_date)) : ''  ?></label>
 <?php } ?>
-    
+
 
 <div class="page-body">
 <div class="row">
@@ -104,13 +104,13 @@ Message</a>
 </div>
 
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
 <div class="row">
@@ -132,20 +132,20 @@ src="https://demo.shulesoft.com/<?= $image ?>" alt="">
 <div class="card-block">
 <?php
 if ($is_client == 1) {
-    $username = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}'");
-    count($username) > 0 ? dd('uongo') : 'Normal';
+$username = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}'");
+count($username) > 0 ? dd('uongo') : dd('Normal');
 ?>
 <div class="">
 <div class="row m-2">
 <label class="badge badge-inverse-primary">
-      <?= count($username) > 0 ? \DB::table($schema . '.student')->where('status', 1)->count() :  \DB::table('shulesoft.student')->where('schema_name', $schema)->where('status', 1)->count() ?>
+    <?= count($username) > 0 ? \DB::table($schema . '.student')->where('status', 1)->count() :  \DB::table('shulesoft.student')->where('schema_name', $schema)->where('status', 1)->count() ?>
 </label>
 <label>Students</label>
 </div>
 
 <div class="row m-2">
 <label class="badge badge-inverse-primary">
-    <?= count($username) > 0 ? \DB::table($schema . '.parent')->where('status', 1)->count() : \DB::table('shulesoft.parent')->where('schema_name', $schema)->where('status', 1)->count()?>
+<?= count($username) > 0 ? \DB::table($schema . '.parent')->where('status', 1)->count() : \DB::table('shulesoft.parent')->where('schema_name', $schema)->where('status', 1)->count()?>
 </label>
 <label>Parents</label>
 </div>
@@ -159,14 +159,14 @@ if ($is_client == 1) {
 
 <div class="row m-1">
 <label class="badge badge-inverse-primary">
-   <?= count($username) > 0 ? \DB::table($schema . '.teacher')->where('status', 1)->count() :  \DB::table('shulesoft.teacher')->where('schema_name', $schema)->where('status', 1)->count()?>
+<?= count($username) > 0 ? \DB::table($schema . '.teacher')->where('status', 1)->count() :  \DB::table('shulesoft.teacher')->where('schema_name', $schema)->where('status', 1)->count()?>
 </label>
 <label>Teacher</label>
 </div> 
 
 <div class="col-md-12 col-lg-12">
 <hr>
- <h6 class="">School Status</h6>
+<h6 class="">School Status</h6>
 <?php
 $st = count($username) > 0 ? DB::table($schema . '.setting')->first() :  \DB::table('shulesoft.setting')->where('schema_name', $schema)->first();
 if (!empty($st)) {
@@ -195,7 +195,7 @@ if ($is_client == 1) {
 ?>
 <div class="card">
 <div class="card-header">
-    <h6 class="card-header-text">Top user Logins</h6>
+<h6 class="card-header-text">Top user Logins</h6>
 </div>
 <div class="card-block user-box">
 <?php
@@ -211,9 +211,9 @@ src="https://demo.shulesoft.com/<?= $user_image ?>"
 alt="Image">
 </a>
 <div class="media-body">
-  <div class="text-info social-designation"><?= $log->name ?></div>
-  <div class="text-muted social-designation">
-  <?= $log->usertype ?></div>
+<div class="text-info social-designation"><?= $log->name ?></div>
+<div class="text-muted social-designation">
+<?= $log->usertype ?></div>
 </div>
 </div>
 <?php
@@ -255,42 +255,42 @@ target="_blank"> Exams</a>
 
 <div class="col-lg-9">
 <!-- Nav tabs -->
-        <div class="card mt-4">
-        <ul class="nav nav-tabs md-tabs nav-justified tab-timeline" role="tablist">
-        <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#timeline"
-        role="tab" aria-expanded="false">Activities</a>
-        <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#about" role="tab"
-        aria-expanded="false">About</a>
-        <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#implementation"
-        role="tab" aria-expanded="false"> Implementation</a>
-        <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#photos" role="tab"
-        aria-expanded="false"> Usage</a>
-        <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link " data-toggle="tab" href="#friends" role="tab"
-        aria-expanded="true">Staff Members</a>
-        <div class="slide"></div>
-        </li>
-      
-        <li class="nav-item">
-        <a class="nav-link " data-toggle="tab" href="#payments" role="tab"
-        aria-expanded="true">Invoice</a>
-        <div class="slide"></div>
-        </li>
-      
-        </ul>
-        </div>
+    <div class="card mt-4">
+    <ul class="nav nav-tabs md-tabs nav-justified tab-timeline" role="tablist">
+    <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#timeline"
+    role="tab" aria-expanded="false">Activities</a>
+    <div class="slide"></div>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#about" role="tab"
+    aria-expanded="false">About</a>
+    <div class="slide"></div>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#implementation"
+    role="tab" aria-expanded="false"> Implementation</a>
+    <div class="slide"></div>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#photos" role="tab"
+    aria-expanded="false"> Usage</a>
+    <div class="slide"></div>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link " data-toggle="tab" href="#friends" role="tab"
+    aria-expanded="true">Staff Members</a>
+    <div class="slide"></div>
+    </li>
+    
+    <li class="nav-item">
+    <a class="nav-link " data-toggle="tab" href="#payments" role="tab"
+    aria-expanded="true">Invoice</a>
+    <div class="slide"></div>
+    </li>
+    
+    </ul>
+    </div>
 
 <!-- Tab panes -->
 <div class="tab-content">
@@ -376,24 +376,24 @@ foreach ($staffs as $staff) {
 <div class="col-md-6">
 <strong> Task Executed Successfully</strong>
 <select name="status" class="form-control"  onchange="chooseValue(this.value);" id="task_executed" required>
-    <option value='new'> Select
-    Task Status Here...
-    </option>
-    <option value='complete'>
-    Yes and Completed
-    </option>
-    <option value='on progress'>
-    Yes but on Progress
-    </option>
-    <option value='schedule'>
-    Not yet (Schedule)
-    </option>
+<option value='new'> Select
+Task Status Here...
+</option>
+<option value='complete'>
+Yes and Completed
+</option>
+<option value='on progress'>
+Yes but on Progress
+</option>
+<option value='schedule'>
+Not yet (Schedule)
+</option>
 </select>
 </div>
 
 <div class="col-md-6"  id="remainder_date">
-   <strong> Notification Date</strong>
-   <input type="date"  name="remainder_date" class="form-control">
+<strong> Notification Date</strong>
+<input type="date"  name="remainder_date" class="form-control">
 </div>
 </div>
 </div>
@@ -442,8 +442,8 @@ foreach ($modules as $module) {
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-default btn-sm btn-round" data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-primary btn-sm btn-round">Save changes</button>
+<button type="button" class="btn btn-default btn-sm btn-round" data-dismiss="modal">Close</button>
+<button type="submit" class="btn btn-primary btn-sm btn-round">Save changes</button>
 </div>
 <input type="hidden" value="<?= $client_id ?>"
 name="client_id" />
@@ -486,29 +486,29 @@ Photo</a>
 <div class="card-block">
 <div class="timeline-details">
 <div class="chat-header">
-    <?php 
-      $task_user_id = $task->user->id == '' ? 1 : $task->user->id;
-      $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task_user_id}'"))->first(); 
-      $local = $root . 'assets/images/user.png';
-     ?>
-    <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
-           width: 25px;
-           height: 25px;
-           border-radius: 50%;
-           overflow: hidden;">
-   &nbsp;&nbsp;<?= $task->user->firstname ?> -
-    <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span> &nbsp;&nbsp; <label class="badge badge-inverse-primary">{{ $task->status}}</label>
-    <?php if(can_access('delete_tasks')) { ?>
-       <a class="btn btn-mini btn-round btn-danger float-right text-light"   onclick="RemoveAttr(<?= $task->id ?>);"> delete </a>
-    <?php } ?>
+<?php 
+    $task_user_id = $task->user->id == '' ? 1 : $task->user->id;
+    $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task_user_id}'"))->first(); 
+    $local = $root . 'assets/images/user.png';
+    ?>
+<img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        overflow: hidden;">
+&nbsp;&nbsp;<?= $task->user->firstname ?> -
+<span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span> &nbsp;&nbsp; <label class="badge badge-inverse-primary">{{ $task->status}}</label>
+<?php if(can_access('delete_tasks')) { ?>
+    <a class="btn btn-mini btn-round btn-danger float-right text-light"   onclick="RemoveAttr(<?= $task->id ?>);"> delete </a>
+<?php } ?>
 </div>
 <p class="text-muted editable" id="txt1<?= $task->id ?>">
-   {{-- <?= $task->activity ?> --}}
+{{-- <?= $task->activity ?> --}}
 
-   <span style="text-decoration: none;" <?= $task->user->id == \Auth::user()->id && date('Y-m-d H:i:s') < date('Y-m-d H:i:s', strtotime("+60 minutes", strtotime($task->created_at))) ? 'contenteditable="true"': 'contenteditable="false"' ?> 
-    onblur="save('<?= $task->id . 'activity' ?>', '<?= $task->id  ?>','activity')" 
-    id="<?= $task->id . 'activity' ?>"> <?= $task->activity == '' ? 'null' : $task->activity ?></span>
-    <span id="stat<?= $task->id .  'activity' ?>"></span>
+<span style="text-decoration: none;" <?= $task->user->id == \Auth::user()->id && date('Y-m-d H:i:s') < date('Y-m-d H:i:s', strtotime("+60 minutes", strtotime($task->created_at))) ? 'contenteditable="true"': 'contenteditable="false"' ?> 
+onblur="save('<?= $task->id . 'activity' ?>', '<?= $task->id  ?>','activity')" 
+id="<?= $task->id . 'activity' ?>"> <?= $task->activity == '' ? 'null' : $task->activity ?></span>
+<span id="stat<?= $task->id .  'activity' ?>"></span>
 </p>
 <?php
 $modules = $task->modules()->get();
@@ -525,14 +525,14 @@ foreach ($modules as $module) {
 
 
 <p>Start Date- <?= $task->start_date ?>
- &nbsp; &nbsp; | &nbsp; &nbsp; 
- <?= date('Y-m-d', strtotime($task->end_date)) == '1970-01-01' ? '' : 'End Date - '.$task->end_date  ?></p> 
+&nbsp; &nbsp; | &nbsp; &nbsp; 
+<?= date('Y-m-d', strtotime($task->end_date)) == '1970-01-01' ? '' : 'End Date - '.$task->end_date  ?></p> 
 
- <p>Assigned to - 
-     @foreach ($task->taskUsers as $value)
-     <?= '<label class="badge badge-inverse-primary">' . $value->user->name() . '</label>' ?>
-       &nbsp; &nbsp;
-    @endforeach
+<p>Assigned to - 
+    @foreach ($task->taskUsers as $value)
+    <?= '<label class="badge badge-inverse-primary">' . $value->user->name() . '</label>' ?>
+    &nbsp; &nbsp;
+@endforeach
 </p>
 </div>
 
@@ -596,7 +596,7 @@ value="<?= $task->id ?>"
 id="task_id<?= $task->id ?>" />
 <span
 class="input-group-btn">
-  <button type="button" class="btn btn-primary btn-sm btn-round"  onmousedown="save_comment(<?= $task->id ?>)">Send</button>
+<button type="button" class="btn btn-primary btn-sm btn-round"  onmousedown="save_comment(<?= $task->id ?>)">Send</button>
 </span>
 
 <span
@@ -632,7 +632,7 @@ data-icon=""></span>
 <?php if(can_access('update_school_data')) { ?>                                                                                                                 
 <button id="edit-btn" type="button" class="btn btn-primary btn-round btn-sm float-right"
 data-toggle="modal" data-target="#school_details">
- Update
+Update
 </button>
 <?php }  ?>
 </div>
@@ -665,7 +665,7 @@ class="social-user-name b-none">
 Date On boarded</th>
 <td
 class="social-user-name b-none">
-    <?= isset($school->created_at) ? date('d M Y h:i', strtotime($school->created_at)) : '' ?>
+<?= isset($school->created_at) ? date('d M Y h:i', strtotime($school->created_at)) : '' ?>
 </td>
 </tr>
 <tr>
@@ -678,24 +678,24 @@ class="social-user-name b-none">
 <tr>
 <th class="social-label b-none p-b-0">School Level</th>
 <td class="social-user-name b-none p-b-0"><?php
-    if (!empty($levels)) {
-        foreach ($levels as $level) {
-            echo $level->name . ' - ' . $level->result_format . '<br/>';
-        }
+if (!empty($levels)) {
+    foreach ($levels as $level) {
+        echo $level->name . ' - ' . $level->result_format . '<br/>';
     }
-    ?>
+}
+?>
 </td>
 
 <?php /* if( can_access('reset_school_password') && isset($school->username) && !preg_match('/stfrancisgirls/i', strtolower($school->username))) { ?>
 <tr>
 <th class="social-label b-none p-b-0">School Access</th>
 <td class="social-user-name b-none p-t-10">
-        <?php
-        if (isset($school->username) && $schema != 'accounts') {
-            echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-primary btn-sm btn-round">
-                 Reset Password</a>';
-        }
-        ?>
+    <?php
+    if (isset($school->username) && $schema != 'accounts') {
+        echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-primary btn-sm btn-round">
+                Reset Password</a>';
+    }
+    ?>
 </td>
 </tr>
 <?php } */ ?>
@@ -760,18 +760,18 @@ class="md-check p-0">Gender</label>
 <div class="radio radio-inline">
 <label>
 <input type="radio"
-        name="radio"
-        checked="checked">
+    name="radio"
+    checked="checked">
 <i
-    class="helper"></i>Male
+class="helper"></i>Male
 </label>
 </div>
 <div class="radio radio-inline">
 <label>
 <input type="radio"
-        name="radio">
+    name="radio">
 <i
-    class="helper"></i>Female
+class="helper"></i>Female
 </label>
 </div>
 </div>
@@ -817,97 +817,97 @@ class="btn btn-default waves-effect waves-light">Cancel</a>
 
 
 <div class="col-sm-12">
-    <div class="card">
-    <div class="card-header">
-    <h2 class="card-header-text h5">School Agreement Information</h2>
-    <button id="edit-btn" type="button" class="btn btn-primary btn-round btn-sm float-right"
-       data-toggle="modal" data-target="#agreement_school_details">
-     Update info
-    </button>
-    </div>
-    <div class="card-block">
-    <div id="view-info" class="row">
-    <div class="col-lg-6 col-md-12">
-    <table class="table m-b-0">
-    <?php if(isset($agreement)) { ?>
-    <tbody>
-    <tr>
-    <th
-    class="social-label b-none p-t-0">
-      Contact person name
-    </th>
-    <td
-    class="social-user-name b-none p-t-0">
-      <?= $agreement->contact_person_name ?? '' ?>
-   </td>
+<div class="card">
+<div class="card-header">
+<h2 class="card-header-text h5">School Agreement Information</h2>
+<button id="edit-btn" type="button" class="btn btn-primary btn-round btn-sm float-right"
+    data-toggle="modal" data-target="#agreement_school_details">
+    Update info
+</button>
+</div>
+<div class="card-block">
+<div id="view-info" class="row">
+<div class="col-lg-6 col-md-12">
+<table class="table m-b-0">
+<?php if(isset($agreement)) { ?>
+<tbody>
+<tr>
+<th
+class="social-label b-none p-t-0">
+    Contact person name
+</th>
+<td
+class="social-user-name b-none p-t-0">
+    <?= $agreement->contact_person_name ?? '' ?>
+</td>
 
-   <th
-    class="social-label b-none p-t-0">
-      NMB Account name
-    </th>
-    <td
-    class="social-user-name b-none p-t-0">
-      <?= $agreement->school->nmb_school_name ?? '' ?>
-   </td>
-    </tr>
+<th
+class="social-label b-none p-t-0">
+    NMB Account name
+</th>
+<td
+class="social-user-name b-none p-t-0">
+    <?= $agreement->school->nmb_school_name ?? '' ?>
+</td>
+</tr>
 
-    <tr>
-    <th class="social-label b-none">
-        Contact person phone</th>
+<tr>
+<th class="social-label b-none">
+    Contact person phone</th>
+<td class="social-user-name b-none">
+    <?= $agreement->contact_person_phone ?? '' ?>
+</td>
+
+<th class="social-label b-none">
+    NMB Account</th>
+<td class="social-user-name b-none">
+    <?= $agreement->school->account_number ?? '' ?>
+</td>
+
+</tr>
+
+<tr>
+<th class="social-label b-none"> Designation</th>
+<td
+class="social-user-name b-none">
+    <?= $agreement->contact_person_designation ?? '' ?>
+</td>
+</tr>
+
+<tr>
+<th class="social-label b-none">
+    Agreement date</th>
+<td class="social-user-name b-none">
+    <?= isset($agreement->agreement_date) ? date('d-m-Y',strtotime($agreement->agreement_date)) : '' ?></td>
+</tr>
+
+<tr>
+    <th class="social-label b-none"> Agreement form type</th>
     <td class="social-user-name b-none">
-        <?= $agreement->contact_person_phone ?? '' ?>
-    </td>
+        <?= $agreement->form_type ?? '' ?></td>
 
-    <th class="social-label b-none">
-        NMB Account</th>
-    <td class="social-user-name b-none">
-        <?= $agreement->school->account_number ?? '' ?>
-    </td>
-
-    </tr>
-
-    <tr>
-    <th class="social-label b-none"> Designation</th>
-    <td
-    class="social-user-name b-none">
-        <?= $agreement->contact_person_designation ?? '' ?>
-    </td>
-    </tr>
-
-    <tr>
-    <th class="social-label b-none">
-        Agreement date</th>
-    <td class="social-user-name b-none">
-       <?= isset($agreement->agreement_date) ? date('d-m-Y',strtotime($agreement->agreement_date)) : '' ?></td>
-    </tr>
-
-    <tr>
-        <th class="social-label b-none"> Agreement form type</th>
+    <th class="social-label b-none"> View file</th>
         <td class="social-user-name b-none">
-           <?= $agreement->form_type ?? '' ?></td>
+            <?php $viw_url = isset($agreement) ?  "customer/viewContract/$agreement->id/agreement" : ''; ?>
+            <a  target="_blank" href="<?= url($viw_url)?>" class="btn btn-primary btn-mini btn-round">View</a>
+    </td>
+</tr>
 
-        <th class="social-label b-none"> View file</th>
-           <td class="social-user-name b-none">
-              <?php $viw_url = isset($agreement) ?  "customer/viewContract/$agreement->id/agreement" : ''; ?>
-               <a  target="_blank" href="<?= url($viw_url)?>" class="btn btn-primary btn-mini btn-round">View</a>
-        </td>
-    </tr>
+<tr>
+    <th class="social-label b-none">
+            Created by</th>
+    <td class="social-user-name b-none">
+        <?= isset($agreement) ? $agreement->user->name() : '' ?></td>
+</tr>
+</tbody>
+<?php } ?>
+</table>
+</div>
+</div>
 
-    <tr>
-        <th class="social-label b-none">
-             Created by</th>
-        <td class="social-user-name b-none">
-           <?= isset($agreement) ? $agreement->user->name() : '' ?></td>
-    </tr>
-    </tbody>
-  <?php } ?>
-    </table>
-    </div>
-    </div>
-  
-    </div>
-    </div>
-    </div>
+</div>
+</div>
+</div>
 
 
 
@@ -917,13 +917,13 @@ class="btn btn-default waves-effect waves-light">Cancel</a>
 <div class="card">
 
 <div class="card-header">
-   <h5 class="card-header-text">Customer Contracts</h5>
-   <button id="edit-Contact" type="button"class="btn btn-primary btn-round btn-sm float-right" data-toggle="modal" data-target="#customer_contracts_model">Add Contract </button>
+<h5 class="card-header-text">Customer Contracts</h5>
+<button id="edit-Contact" type="button"class="btn btn-primary btn-round btn-sm float-right" data-toggle="modal" data-target="#customer_contracts_model">Add Contract </button>
 </div>
 
 <div class="card-block">
 <div class="card">
-   <span class="text-primary">All customer legal documents are included in this part </span>
+<span class="text-primary">All customer legal documents are included in this part </span>
 <div class="card-block">
 <div class="table-responsive">
 <table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
@@ -958,13 +958,13 @@ foreach ($client_contracts as $client_contract) {
 <td><?= isset($client_contract->username) ? $client_contract->username : '' ?>
 </td>
 <td>
- <a type="button"
-        class="btn btn-primary btn-sm btn-round"
-        target="_blank"
-        href="<?= isset($client_contract->contract_id) ? url('customer/viewContract/' . $client_contract->contract_id) : '' ?>">View</a>
+<a type="button"
+    class="btn btn-primary btn-sm btn-round"
+    target="_blank"
+    href="<?= isset($client_contract->contract_id) ? url('customer/viewContract/' . $client_contract->contract_id) : '' ?>">View</a>
 <?php if(can_access('delete_contract')) { ?>
- <a type="button" class="btn btn-danger btn-sm btn-round"
-        href="<?= isset($client_contract->contract_id) ? url('customer/deleteContract/' . $client_contract->contract_id) : '' ?>">Delete</a>
+<a type="button" class="btn btn-danger btn-sm btn-round"
+    href="<?= isset($client_contract->contract_id) ? url('customer/deleteContract/' . $client_contract->contract_id) : '' ?>">Delete</a>
 <?php }  ?>
 </td>
 </tr>
@@ -991,11 +991,11 @@ $i++;
 
 <div class="card">
 <div class="card-header">
-   <h5 class="h3 m-b-3">JOB CARD</h5>
+<h5 class="h3 m-b-3">JOB CARD</h5>
 
 <div class="card-block d-flex justify-content-between">
-   <button type="button" class="float-right btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#jobcard-Modal">Create Job card </button>
-   <button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#uploadjobcard-Modal">Upload Job card</button>
+<button type="button" class="float-right btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#jobcard-Modal">Create Job card </button>
+<button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#uploadjobcard-Modal">Upload Job card</button>
 </div>
 
 
@@ -1041,7 +1041,7 @@ foreach ($modules as $module) {
 <input type="checkbox"
 id="features<?= $module->id ?>"
 value="{{$module->id}}"
-                name="module_ids[]">
+            name="module_ids[]">
 <?php echo $module->name; ?> &nbsp;
 &nbsp;
 <?php
@@ -1055,7 +1055,7 @@ value="{{$module->id}}"
 <button type="button"
 class="btn btn-default btn-mini btn-round"
 data-dismiss="modal">Close</button>
-   <button type="submit" class="btn btn-primary btn-mini btn-round">Save changes</button>
+<button type="submit" class="btn btn-primary btn-mini btn-round">Save changes</button>
 </div>
 <input type="hidden" value="<?= $client_id ?>"
 name="client_id" />
@@ -1089,7 +1089,7 @@ foreach ($jobcards as $jobcard) {
 <td><?= date('d-m-Y', strtotime($jobcard->date)) ?></td>
 <td><?= $jobcard->name ?? '' ?></td>
 <td class="text-center">
- <a  target="_break" href="<?= url('customer/viewContract/' . $jobcard->id . '/jobcard') ?>" class="btn btn-sm btn-primary btn-round">View </a> 
+<a  target="_break" href="<?= url('customer/viewContract/' . $jobcard->id . '/jobcard') ?>" class="btn btn-sm btn-primary btn-round">View </a> 
 </td>
 </tr>
 <?php
@@ -1263,13 +1263,13 @@ name="client_id" />
 
 <?php if(date('Y-m-d', strtotime($client->created_at. " + 7 days")) > date('Y-m-d')) { ?>
 <p class="float-left">
-   <button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#Update-trial">Update trial</button>
+<button type="button" class="float-left user_dialog btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#Update-trial">Update trial</button>
 </p>
 <?php } ?>
 
 <p class="float-right">
 <?php $i_url = "customer/download/$client_id"; ?>
- <a href="<?= url($i_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Initial Implementation Plan">Implementation plan  </a>
+<a href="<?= url($i_url) ?>" class="btn btn-primary btn-mini  btn-round" data-placement="top"  data-toggle="tooltip" data-original-title="Initial Implementation Plan">Implementation plan  </a>
 
 </p>
 </div>
@@ -1397,7 +1397,7 @@ reach the highest stage. </span>
 </div>
 <div class="card-block">
 <div class="table-responsive">
- <table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
+<table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
 
 <thead>
 <tr>
@@ -1647,8 +1647,8 @@ Teacher on Duty:
 <tr>
 <th scope="row">4</th>
 <td>General Character assessment</td>
-     <td> <?=  check_status('general_character_assessment');  ?> 
-     </td>
+    <td> <?=  check_status('general_character_assessment');  ?> 
+    </td>
 </tr>
 <tr>
 <th scope="row">5</th>
@@ -1697,37 +1697,37 @@ Teacher on Duty:
 
 <div class="tab-pane" id="friends" aria-expanded="false">
 <div class="card"> 
-  <div class="card-block">
-    <div class="table-responsive">
-        <table id="example"  class="table dataTable table-mini table-striped table-bordered nowrap">
-        <thead>
-        <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th>Title</th>
-        </tr>
-        </thead>
-        <tbody> 
-        <?php $i = 1;
-        $users = DB::table($schema . '.user')->where('status', 1)->get();
-        if (!empty($users)) {
-        foreach ($users as $user) {
-        ?>
-        <tr>
-        <td><?= $i ?></td>
-        <td><?= $user->name ?></td>
-        <td><?= $user->phone ?></td>
-        <td><?= $user->email ?></td>
-        <td><?= $user->usertype ?></td>
-        </tr>
-        <?php
-        $i++;  }
-        }
-        ?>
-        </tbody>
-        </table>
+<div class="card-block">
+<div class="table-responsive">
+    <table id="example"  class="table dataTable table-mini table-striped table-bordered nowrap">
+    <thead>
+    <tr>
+    <th>#</th>
+    <th>Name</th>
+    <th>Phone</th>
+    <th>Email</th>
+    <th>Title</th>
+    </tr>
+    </thead>
+    <tbody> 
+    <?php $i = 1;
+    $users = DB::table($schema . '.user')->where('status', 1)->get();
+    if (!empty($users)) {
+    foreach ($users as $user) {
+    ?>
+    <tr>
+    <td><?= $i ?></td>
+    <td><?= $user->name ?></td>
+    <td><?= $user->phone ?></td>
+    <td><?= $user->email ?></td>
+    <td><?= $user->usertype ?></td>
+    </tr>
+    <?php
+    $i++;  }
+    }
+    ?>
+    </tbody>
+    </table>
 </div>
 </div>
 </div>
@@ -1757,12 +1757,12 @@ data-dismiss="modal" aria-label="Close">
 <div class="form-group">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 <div class="row">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 <div class="col-md-6">                                                                                                                                                                                                                                                                                                                                      
-   <strong> Branch name </strong>
-   <input type="text" placeholder="Bank branch name"  class="form-control"  name="branch_name" required>
+<strong> Branch name </strong>
+<input type="text" placeholder="Bank branch name"  class="form-control"  name="branch_name" required>
 </div>
 <div class="col-md-6">
 <strong> Contact person </strong>
-   <input type="text" placeholder="Contact person"  class="form-control"  name="contact_person" required>
+<input type="text" placeholder="Contact person"  class="form-control"  name="contact_person" required>
 </div>
 </div>
 </div>
@@ -1830,11 +1830,11 @@ class="f select2">
 <?php
 $banks = DB::table('constant.refer_banks')->get();
 if (!empty($banks)) {
-    foreach ($banks as $bank) {
-        ?>
+foreach ($banks as $bank) {
+    ?>
 <option
-    value="<?= $bank->id ?>">
-        <?= $bank->name ?>
+value="<?= $bank->id ?>">
+    <?= $bank->name ?>
 </option>
 <?php
 }
@@ -1885,49 +1885,49 @@ name="client_id" />
 
 <div class="col-sm-4 my-2">
 <a class="btn btn-primary btn-sm btn-round" data-toggle="modal" data-target="#standing-order-Modal">
-    Add Standing Orders
+Add Standing Orders
 </a>
 </div>
- <div class="table-responsive">
- <table id="example"  class="table dataTable table-sm table-striped table-bordered nowrap">
+<div class="table-responsive">
+<table id="example"  class="table dataTable table-sm table-striped table-bordered nowrap">
 <thead>
 <tr>
-    <th>#</th>
-    <th>Type</th>
-    <th>Occurance Amount </th>
-    <th>Total Amount</th>
-    <th>Maturity date</th>
-    <th>Contact</th>
+<th>#</th>
+<th>Type</th>
+<th>Occurance Amount </th>
+<th>Total Amount</th>
+<th>Maturity date</th>
+<th>Contact</th>
 
-    <th colspan="1">Action</th>
+<th colspan="1">Action</th>
 </tr>
 </thead>
 <tbody>
 <?php if (count($standingorders) > 0) { ?>
-    <?php
-    $i = 1;
-    foreach ($standingorders as $order) {
-        ?>
-        <tr>
-            <td><?= $i ?></td>
-            <td><?= $order->type ?? '' ?></td>
-            <td><?= money($order->occurance_amount) ?? '' ?></td>
-            <td><?= money($order->total_amount) ?? '' ?></td>
-            <td><?= date('d/m/Y', strtotime($order->payment_date)) ?? '' ?></td>
-            <td><?= $order->schoolcontact->name ?? '' ?></td>
-
-            <td><a target="_break" href="<?= url('customer/viewContract/' . $order->id . '/standing') ?>" class="btn btn-mini btn-round btn-primary btn-sm">View</a> 
-
-            <?php if (!isset($order->payment_date) || !isset($order->type)) { ?>
-                <a  href="<?= url('account/editStandingOrder/' . $order->id) ?>" class="btn btn-mini btn-round btn-info btn-sm">edit</a>
-            <?php } ?>
-            </td>
-        </tr>
-        <?php
-        $i++;
-    }
+<?php
+$i = 1;
+foreach ($standingorders as $order) {
     ?>
- <?php } ?>
+    <tr>
+        <td><?= $i ?></td>
+        <td><?= $order->type ?? '' ?></td>
+        <td><?= money($order->occurance_amount) ?? '' ?></td>
+        <td><?= money($order->total_amount) ?? '' ?></td>
+        <td><?= date('d/m/Y', strtotime($order->payment_date)) ?? '' ?></td>
+        <td><?= $order->schoolcontact->name ?? '' ?></td>
+
+        <td><a target="_break" href="<?= url('customer/viewContract/' . $order->id . '/standing') ?>" class="btn btn-mini btn-round btn-primary btn-sm">View</a> 
+
+        <?php if (!isset($order->payment_date) || !isset($order->type)) { ?>
+            <a  href="<?= url('account/editStandingOrder/' . $order->id) ?>" class="btn btn-mini btn-round btn-info btn-sm">edit</a>
+        <?php } ?>
+        </td>
+    </tr>
+    <?php
+    $i++;
+}
+?>
+<?php } ?>
 </tbody>
 
 </table>
@@ -1949,13 +1949,13 @@ name="client_id" />
 <table id="example" class="table table-striped table-bordered nowrap dataTable">
 <thead>
 <tr>
-    <th>Client Name</th>
-    <th>Reference #</th>
-    <th>Amount</th>
-    <th>Paid Amount</th>
-    <th>Remained Amount</th>
-    <th>Due Date</th>
-    <th>Action</th>
+<th>Client Name</th>
+<th>Reference #</th>
+<th>Amount</th>
+<th>Paid Amount</th>
+<th>Remained Amount</th>
+<th>Due Date</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody>
@@ -1965,83 +1965,83 @@ $total_paid = 0;
 $total_unpaid = 0;
 $i = 1;
 foreach ($invoices as $invoice) {
-    $amount = $invoice->invoiceFees()->sum('amount');
-    $paid = $invoice->payments()->sum('amount');
-    $unpaid = $amount - $paid;
-    $total_paid += $paid;
-    $total_amount += $amount;
-    $total_unpaid += $unpaid;
-    ?>
+$amount = $invoice->invoiceFees()->sum('amount');
+$paid = $invoice->payments()->sum('amount');
+$unpaid = $amount - $paid;
+$total_paid += $paid;
+$total_amount += $amount;
+$total_unpaid += $unpaid;
+?>
 
-    <tr>
-        <td><?= $invoice->client->username ?></td>
-        <td><?= $invoice->reference ?></td>
-        <td><?= money($amount) ?></td>
-        <td><?= money($paid) ?></td>
-        <td><?= money($unpaid) ?></td>
-        <td><?= date('d M Y', strtotime($invoice->due_date)) ?>
-        </td>
-        <td>
+<tr>
+    <td><?= $invoice->client->username ?></td>
+    <td><?= $invoice->reference ?></td>
+    <td><?= money($amount) ?></td>
+    <td><?= money($paid) ?></td>
+    <td><?= money($unpaid) ?></td>
+    <td><?= date('d M Y', strtotime($invoice->due_date)) ?>
+    </td>
+    <td>
 
-            <div
-                class="dropdown-secondary dropdown f-right">
-                <button
-                    class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light"
-                    type="button" id="dropdown"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false">Options</button>
-                <div class="dropdown-menu"
-                        aria-labelledby="dropdown6"
-                        data-dropdown-in="fadeIn"
-                        data-dropdown-out="fadeOut"><a
-                        class="dropdown-item waves-light waves-effect"
-                        href="<?= url('account/invoiceView/' . $invoice->id) ?>"><span
-                            class="point-marker bg-danger"></span>View</a>
-                    <a class="dropdown-item waves-light waves-effect"
-                        href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span
-                            class="point-marker bg-warning"></span>Edit</a>
-                            {{-- <a
-                        class="dropdown-item waves-light waves-effect"
-                        href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
-                            class="point-marker bg-warning"></span>Delete</a> --}}
-                        <?php if ((int) $unpaid > 0) { ?>
-                        <hr />
-                        <a class="dropdown-item waves-light waves-effect"
-                            href="<?= url('account/payment/' . $invoice->id) ?>"><span
-                                class="point-marker bg-warning"></span>Add
-                            Payments</a>
-                    <?php } ?>
+        <div
+            class="dropdown-secondary dropdown f-right">
+            <button
+                class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light"
+                type="button" id="dropdown"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">Options</button>
+            <div class="dropdown-menu"
+                    aria-labelledby="dropdown6"
+                    data-dropdown-in="fadeIn"
+                    data-dropdown-out="fadeOut"><a
+                    class="dropdown-item waves-light waves-effect"
+                    href="<?= url('account/invoiceView/' . $invoice->id) ?>"><span
+                        class="point-marker bg-danger"></span>View</a>
+                <a class="dropdown-item waves-light waves-effect"
+                    href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span
+                        class="point-marker bg-warning"></span>Edit</a>
+                        {{-- <a
+                    class="dropdown-item waves-light waves-effect"
+                    href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
+                        class="point-marker bg-warning"></span>Delete</a> --}}
                     <?php if ((int) $unpaid > 0) { ?>
-                        <a class="dropdown-item waves-light waves-effect"
-                            href="#" data-toggle="modal"
-                            data-target="#large-Modal"
-                            onclick="$('#invoice_id').val('<?= $invoice->id ?>')"><span
-                                class="point-marker bg-warning"></span>Send Invoice</a>
-                        <?php } ?>
-                        <?php if ((int) $paid > 0) { ?>
-                        <a class="dropdown-item waves-light waves-effect"
-                            href="<?= url('account/receipts/' . $invoice->id) ?>"
-                            target="_blank"><span
-                                class="point-marker bg-warning"></span>Receipt</a>
-                        <?php }
-                        ?>
-                </div>
+                    <hr />
+                    <a class="dropdown-item waves-light waves-effect"
+                        href="<?= url('account/payment/' . $invoice->id) ?>"><span
+                            class="point-marker bg-warning"></span>Add
+                        Payments</a>
+                <?php } ?>
+                <?php if ((int) $unpaid > 0) { ?>
+                    <a class="dropdown-item waves-light waves-effect"
+                        href="#" data-toggle="modal"
+                        data-target="#large-Modal"
+                        onclick="$('#invoice_id').val('<?= $invoice->id ?>')"><span
+                            class="point-marker bg-warning"></span>Send Invoice</a>
+                    <?php } ?>
+                    <?php if ((int) $paid > 0) { ?>
+                    <a class="dropdown-item waves-light waves-effect"
+                        href="<?= url('account/receipts/' . $invoice->id) ?>"
+                        target="_blank"><span
+                            class="point-marker bg-warning"></span>Receipt</a>
+                    <?php }
+                    ?>
             </div>
-        </td>
-    </tr>
-    <?php
-    $i++;
+        </div>
+    </td>
+</tr>
+<?php
+$i++;
 }
 ?>
 </tbody>
 <tfoot>
 <tr>
-    <td colspan="2">Total</td>
-    <td><?= money($total_amount) ?></td>
-    <td><?= money($total_paid) ?></td>
-    <td><?= money($total_unpaid) ?></td>
-    <td colspan="2"></td>
+<td colspan="2">Total</td>
+<td><?= money($total_amount) ?></td>
+<td><?= money($total_paid) ?></td>
+<td><?= money($total_unpaid) ?></td>
+<td colspan="2"></td>
 </tr>
 </tfoot>
 </table>
@@ -2083,17 +2083,17 @@ style="z-index: 1050; display: none;">
 <form action="<?= url('customer/schoolStatus') ?>" method="post">
 <div class="modal-body">
 <div class="form-group">
-    <input type="hidden" value="<?= $schema ?>" name="schema_name" />
+<input type="hidden" value="<?= $schema ?>" name="schema_name" />
 </div>
 <div class="form-group">
-    School <?= ucfirst($schema) ?> status
-    <select name="status" class="form-control select2">
-        <option value="">Select status</option>
-        <option value="1">Active Paid</option>
-        <option value="2">Active</option>
-        <option value="3">Resale</option>
-        <option value="4">Inactive</option>
-    </select>
+School <?= ucfirst($schema) ?> status
+<select name="status" class="form-control select2">
+    <option value="">Select status</option>
+    <option value="1">Active Paid</option>
+    <option value="2">Active</option>
+    <option value="3">Resale</option>
+    <option value="4">Inactive</option>
+</select>
 </div>
 
 </div>
@@ -2126,7 +2126,7 @@ enctype="multipart/form-data">
 <div class="form-group row">
 <label class="col-sm-2 col-form-label">Contract Name</label>
 <div class="col-sm-10">
-    <input type="text" class="form-control" name="name" required="">
+<input type="text" class="form-control" name="name" required="">
 </div>
 </div>
 
@@ -2134,53 +2134,53 @@ enctype="multipart/form-data">
 <div class="form-group row">
 <label class="col-sm-2 col-form-label">Agreement Type</label>
 <div class="col-sm-10">
-    <select name="contract_type_id" class="form-control">
+<select name="contract_type_id" class="form-control">
 
-        <?php
-        $ctypes = DB::table('admin.contracts_types')->where('id', '!=', '8')->get();
-        if (!empty($ctypes)) {
-            foreach ($ctypes as $ctype) {
-                ?>
-                <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
-                <?php
-            }
+    <?php
+    $ctypes = DB::table('admin.contracts_types')->where('id', '!=', '8')->get();
+    if (!empty($ctypes)) {
+        foreach ($ctypes as $ctype) {
+            ?>
+            <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
+            <?php
         }
-        ?>
+    }
+    ?>
 
-    </select>
+</select>
 </div>
 </div>
 <div class="form-group row">
 <label class="col-sm-2 col-form-label">Contract Start Date</label>
 <div class="col-sm-10">
-    <input type="date" class="form-control" value="" name="start_date" required="">
+<input type="date" class="form-control" value="" name="start_date" required="">
 </div>
 </div>
 <div class="form-group row">
 <label class="col-sm-2 col-form-label">Contract End Date</label>
 <div class="col-sm-10">
-    <input type="date" class="form-control" name="end_date" required="">
+<input type="date" class="form-control" name="end_date" required="">
 </div>
 </div>
 <div class="form-group row">
 <label class="col-sm-2 col-form-label">Upload Document</label>
 <div class="col-sm-10">
-    <input type="file" class="form-control" accept=".pdf" name="file" required="">
+<input type="file" class="form-control" accept=".pdf" name="file" required="">
 </div>
 </div>
 <div class="form-group row">
 <label class="col-sm-2 col-form-label">Notes</label>
 <div class="col-sm-10">
-    <textarea rows="5" cols="5" name="description" class="form-control"
-                placeholder="Any important details about this document"></textarea>
+<textarea rows="5" cols="5" name="description" class="form-control"
+            placeholder="Any important details about this document"></textarea>
 </div>
 </div>
 
 <div class="form-group row">
 <label class="col-sm-2 col-form-label"></label>
 <div class="col-sm-10">
-    <?= csrf_field() ?>
-    <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
+<?= csrf_field() ?>
+<button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
 </div>
 </div>
 </form>
@@ -2204,58 +2204,58 @@ if (!empty($profile)) {
 <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style=" display: none;"aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
- <div class="modal-header">
-  <div class="card-block">
-    
+<div class="modal-header">
+<div class="card-block">
+
 <div class="row">
-    <form action="<?= url('customer/editdetails/' . $client_id) ?>" method="POST">
-        <div class="form-group row">
-            <label class="col-sm-4">School Name</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" name="name" value="<?= $profile->name ?>">
-            </div>
+<form action="<?= url('customer/editdetails/' . $client_id) ?>" method="POST">
+    <div class="form-group row">
+        <label class="col-sm-4">School Name</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="name" value="<?= $profile->name ?>">
         </div>
+    </div>
 
-         <div class="form-group row justify-content-center">
-            <label class="col-sm-4 col-form-label">Estimated students</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">
-            </div>
+        <div class="form-group row justify-content-center">
+        <label class="col-sm-4 col-form-label">Estimated students</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">
         </div>
+    </div>
 
-
-         <div class="form-group row">
-            <label class="col-sm-4 col-form-label">School Address</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" name="address" value="<?= $profile->address ?>">
-            </div>
-        </div>
 
         <div class="form-group row">
-            <label class="col-sm-4 col-form-label">School Email</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
-            </div>
+        <label class="col-sm-4 col-form-label">School Address</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="address" value="<?= $profile->address ?>">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">School Email</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
+        </div>
+    </div>
+
+
+    <label class="">School Owner Contacts</label>
+        <div class="form-group row">
+        <div class="col-sm-6">
+                <label for="">Phone</label>
+            <input type="text" class="form-control" name="owner_phone" value="<?= $profile->owner_phone ?>">
         </div>
 
-
-        <label class="">School Owner Contacts</label>
-          <div class="form-group row">
             <div class="col-sm-6">
-                 <label for="">Phone</label>
-                <input type="text" class="form-control" name="owner_phone" value="<?= $profile->owner_phone ?>">
-            </div>
-
-              <div class="col-sm-6">
-                 <label for="">Email</label>
-                <input type="text" class="form-control" name="owner_email" value="<?= $profile->owner_email ?>">
-            </div>
-          </div>
-
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+                <label for="">Email</label>
+            <input type="text" class="form-control" name="owner_email" value="<?= $profile->owner_email ?>">
         </div>
-   </form>
+        </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+    </div>
+</form>
 </div>
 </div>
 </div>
@@ -2267,361 +2267,361 @@ if (!empty($profile)) {
 
 
 <div class="modal fade" id="agreement_school_details" tabindex="-1" role="dialog" style="display: none;"aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-     <div class="modal-header"> 
-      <div class="card-block">
-        
-    <div class="row">
-        <h5> Edit Agreement Details </h5>
-         <br>
-         <br>
-         
-        <form action="<?= url('sales/editAgreementDetails/' . $school_id) ?>" method="POST" enctype="multipart/form-data">
-            <div class="form-group row">
-                <label class="col-sm-6">Contact Name</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="contact_person_name" value="<?= $agreement->contact_person_name ?? '' ?>">
-                </div>
-            </div>
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+    <div class="modal-header"> 
+    <div class="card-block">
     
-             <div class="form-group row ">
-                <label class="col-sm-6">Contact Phone</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="contact_person_phone" value="<?= $agreement->contact_person_phone ?? '' ?>">
-                </div>
+<div class="row">
+    <h5> Edit Agreement Details </h5>
+        <br>
+        <br>
+        
+    <form action="<?= url('sales/editAgreementDetails/' . $school_id) ?>" method="POST" enctype="multipart/form-data">
+        <div class="form-group row">
+            <label class="col-sm-6">Contact Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="contact_person_name" value="<?= $agreement->contact_person_name ?? '' ?>">
             </div>
+        </div>
 
             <div class="form-group row ">
-                <label class="col-sm-6">Contact person Designation</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="contact_person_designation" value="<?= $agreement->contact_person_designation ?? '' ?>">
-                </div>
+            <label class="col-sm-6">Contact Phone</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="contact_person_phone" value="<?= $agreement->contact_person_phone ?? '' ?>">
             </div>
-    
-    
-             <div class="form-group row">
-                <label class="col-sm-6 col-form-label">Agreement Date</label>
-                <div class="col-sm-6">
-                    <input type="date" class="form-control" name="agreement_date" value="<?= $agreement->agreement_date ?? '' ?>">
-                </div>
-            </div>
-    
-    
-              <div class="form-group row">
-                <div class="col-sm-6">
-                     <label for="type">Type</label>
-                     <select name="form_type" class="form-control"  required>
-                        <option value='0'> Choose</option>
-                        <option value='Shulesoft'> Shulesoft</option>
-                        <option value='NMB'> NMB </option>
-                    </select>
-                </div>
-    
-                  <div class="col-sm-6">
-                     <label for="">Document</label>
-                    <input type="file" class="form-control" name="agreement_file" >
-                </div>
-              </div>
+        </div>
 
-              <div class="form-group row">
-                <div class="col-sm-6">
-                     <label for="">NMB School name</label>
-                    <input type="text" class="form-control" name="nmb_account_name" value="<?= $agreement->school->nmb_school_name ?? '' ?>">
-                </div>
-    
-                  <div class="col-sm-6">
-                     <label for="">NMB Account</label>
-                    <input type="text" class="form-control" name="nmb_account" value="<?= $agreement->school->account_number ?? '' ?>">
-                </div>
-              </div>
-    
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+        <div class="form-group row ">
+            <label class="col-sm-6">Contact person Designation</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="contact_person_designation" value="<?= $agreement->contact_person_designation ?? '' ?>">
             </div>
-       </form>
-      </div>
+        </div>
+
+
+            <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Agreement Date</label>
+            <div class="col-sm-6">
+                <input type="date" class="form-control" name="agreement_date" value="<?= $agreement->agreement_date ?? '' ?>">
+            </div>
+        </div>
+
+
+            <div class="form-group row">
+            <div class="col-sm-6">
+                    <label for="type">Type</label>
+                    <select name="form_type" class="form-control"  required>
+                    <option value='0'> Choose</option>
+                    <option value='Shulesoft'> Shulesoft</option>
+                    <option value='NMB'> NMB </option>
+                </select>
+            </div>
+
+                <div class="col-sm-6">
+                    <label for="">Document</label>
+                <input type="file" class="form-control" name="agreement_file" >
+            </div>
+            </div>
+
+            <div class="form-group row">
+            <div class="col-sm-6">
+                    <label for="">NMB School name</label>
+                <input type="text" class="form-control" name="nmb_account_name" value="<?= $agreement->school->nmb_school_name ?? '' ?>">
+            </div>
+
+                <div class="col-sm-6">
+                    <label for="">NMB Account</label>
+                <input type="text" class="form-control" name="nmb_account" value="<?= $agreement->school->account_number ?? '' ?>">
+            </div>
+            </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+        </div>
+    </form>
     </div>
-    </div>
-    </div>
-    
- </div>
+</div>
+</div>
+</div>
+
+</div>
 </div>
 
 <?php } ?>
-                                                                                                                  <!-- notify js Fremwork -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
+                                                                                                                <!-- notify js Fremwork -->
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
 
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
-        <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyBgc2zYiUzXGjZ277annFVhIXkrpXdOoXw"></script>
-        <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+    <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyBgc2zYiUzXGjZ277annFVhIXkrpXdOoXw"></script>
+    <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
 
-      <script>
+    <script>
 
-      
+    
 
 
-    function RemoveAttr(a) {
-        var val = a;
-        if (val !== '') {
-            $.ajax({
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                 },
-                url: "<?= base_url('customer/removeTag/null') ?>",
-                data: {"id": val},
-                dataType: "html",
-                success: function (data) {
-                     toastr.success(data);
-                     location.reload();
-                }
-            });
-          }
-        }
-     
-        function chooseValue(value){
-              if(value == 'complete'){
-                $('#end_date').hide();  
-                $('#remainder_date').hide();  
-              }else{
-                $('#end_date').show();
-                $('#remainder_date').show();
-              }
+function RemoveAttr(a) {
+    var val = a;
+    if (val !== '') {
+        $.ajax({
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            url: "<?= base_url('customer/removeTag/null') ?>",
+            data: {"id": val},
+            dataType: "html",
+            success: function (data) {
+                    toastr.success(data);
+                    location.reload();
             }
-
-
-     function save(a, id, column) {
-        var val = $('#' + a).text();
-        if (val !== '') {
-            $.ajax({
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                 },
-                url: "<?= base_url('account/editSetting/null') ?>",
-                data: {"id": id, newvalue: val, column: column,table:'tasks'},
-                dataType: "html",
-                beforeSend: function (xhr) {
-                    $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
-                },
-                complete: function (xhr, status)  {
-                    $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
-                },
-                success: function (data) {
-                     toastr.success(data);
-                }
-            });
-          }
+        });
+        }
+    }
+    
+    function chooseValue(value){
+            if(value == 'complete'){
+            $('#end_date').hide();  
+            $('#remainder_date').hide();  
+            }else{
+            $('#end_date').show();
+            $('#remainder_date').show();
+            }
         }
 
-          $(document).ready(function() {
-           $('#example').DataTable();
-          });
 
-       $(".select2").select2({
-            theme: "bootstrap",
-            dropdownAutoWidth: false,
-            allowClear: false,
-            debug: true
+    function save(a, id, column) {
+    var val = $('#' + a).text();
+    if (val !== '') {
+        $.ajax({
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            url: "<?= base_url('account/editSetting/null') ?>",
+            data: {"id": id, newvalue: val, column: column,table:'tasks'},
+            dataType: "html",
+            beforeSend: function (xhr) {
+                $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
+            },
+            complete: function (xhr, status)  {
+                $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
+            },
+            success: function (data) {
+                    toastr.success(data);
+            }
+        });
+        }
+    }
+
+        $(document).ready(function() {
+        $('#example').DataTable();
+        });
+
+    $(".select2").select2({
+        theme: "bootstrap",
+        dropdownAutoWidth: false,
+        allowClear: false,
+        debug: true
+    });
+    
+    $('#supplied').click(function() {
+            $('#idate')[this.checked ? "show" : "hide"]();
+        });
+
+    function calculate() {
+        var myBox1 = document.getElementById('box1').value;
+        var myBox2 = document.getElementById('box2').value;
+        ue;
+        var result = document.getElementById('result');
+        var myResult = myBox1 * myBox2;
+        x2;
+        result.value = myResult;
+    }
+
+
+    function save_comment(id) {
+        var content = $('#task_comment' + id).val();
+        var task_id = $('#task_id' + id).val();
+        $.ajax({
+            type: 'POST',
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            url: "<?= url('customer/taskComment/null') ?>",
+            data: {
+                content: content,
+                task_id: task_id
+            },
+            dataType: "html",
+            success: function (data) {
+                $('input[type="text"],textarea').val('');
+                $('.new_comment' + id).after(data);
+            }
+        });
+    }
+
+    notify = function (title, message, type) {
+        new PNotify({
+            title: title,
+            text: message,
+            type: type,
+            hide: 'false',
+            icon: 'icofont icofont-info-circle'
+        });
+    }
+
+    allocate = function (a, role_id) {
+        $.ajax({
+            url: '<?= url('customer/allocate/null') ?>',
+            data: {
+                user_id: a,
+                school_id: '<?= $school->school_id ?? '' ?>',
+                role_id: role_id,
+                schema: '<?= $schema ?>'
+            },
+            dataType: 'html',
+            success: function (data) {
+                $('#supportl').html(data);
+            }
+        });
+    }
+
+    show_tabs = function (a) {
+        $('.live_tabs').hide(function () {
+            $('#' + a).show();
+        });
+    }
+
+    $('#school_id').click(function () {
+        var val = $(this).val();
+        $.ajax({
+            url: '<?= url('customer/search/null') ?>',
+            data: {
+                val: val,
+                type: 'school',
+                schema: '<?= $schema ?>'
+            },
+            dataType: 'html',
+            success: function (data) {
+
+                $('#search_result').html(data);
+            }
+        });
+    });
+
+
+    
+
+    task_group = function () {
+        $('.task_groups').change(function () {
+            var val = $(this).val();
+            var task_id = $(this).attr('data-task-id');
+            var data_attr = $('#task_user' + task_id).val();
+            $.ajax({
+                url: '<?= url('customer/getAvailableSlot') ?>/null',
+                method: 'get',
+                data: {
+                    start_date: val,
+                    user_id: data_attr
+                },
+                success: function (data) {
+                    $('#start_slot' + task_id).html(data);
+                }
+            });
+        });
+        $('.task_school_group').blur(function () {
+            var val = $(this).text();
+            var data_attr = $(this).attr('data-attr');
+            var task_id = $(this).attr('task-id');
+            // var date=$('#'+task_id).val();
+            $.ajax({
+                url: '<?= url('customer/editTrain') ?>/null',
+                method: 'get',
+                dataType: 'html',
+                data: {
+                    task_id: task_id,
+                    value: val,
+                    attr: data_attr
+                },
+                success: function (data) {
+                    // $(this).after(data).addClass('label label-success');
+                    notify('Success', 'Success', 'success');
+                }
+            });
+        });
+        $(document).on("click", ".user_dialog", function () {
+            var UserName = $(this).data('id');
+            $(".modal-body #job_date").val(UserName);
+        });
+        $('.slot').change(function () {
+            var val = $(this).val();
+            //var data_attr = $(this).attr('data-attr');
+            var task_id = $(this).attr('data-id');
+            var date = $('#' + task_id).val();
+            $.ajax({
+                url: '<?= url('customer/editTrain') ?>/null',
+                method: 'get',
+                dataType: 'json',
+                data: {
+                    task_id: task_id,
+                    value: date,
+                    slot_id: val,
+                    attr: 'start_date'
+                },
+                success: function (data) {
+                    $('#task_end_date_id' + data.task_id).html(data.end_date);
+                    notify('Success', 'Success', 'success');
+                }
+            });
         });
         
-        $('#supplied').click(function() {
-             $('#idate')[this.checked ? "show" : "hide"]();
-         });
-
-        function calculate() {
-            var myBox1 = document.getElementById('box1').value;
-            var myBox2 = document.getElementById('box2').value;
-            ue;
-            var result = document.getElementById('result');
-            var myResult = myBox1 * myBox2;
-            x2;
-            result.value = myResult;
-        }
-
- 
-        function save_comment(id) {
-            var content = $('#task_comment' + id).val();
-            var task_id = $('#task_id' + id).val();
+        $('.task_allocated_id').mousedown(function () {
+            var task_id = $(this).attr('task-id');
+            var start_date = $('#start_date' + task_id).val();
+            var school_person = $('#school_person' + task_id).text();
+            var section_id = $(this).attr('section_id');
             $.ajax({
-                type: 'POST',
-                 headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                 },
-                url: "<?= url('customer/taskComment/null') ?>",
+                url: '<?= url('customer/editTrain') ?>/null',
+                method: 'get',
                 data: {
-                    content: content,
-                    task_id: task_id
+                    task_id: task_id,
+                    start_date: start_date,
+                    school_person: school_person,
+                    section_id: section_id
                 },
-                dataType: "html",
                 success: function (data) {
-                    $('input[type="text"],textarea').val('');
-                    $('.new_comment' + id).after(data);
-                }
-            });
-        }
-
-        notify = function (title, message, type) {
-            new PNotify({
-                title: title,
-                text: message,
-                type: type,
-                hide: 'false',
-                icon: 'icofont icofont-info-circle'
-            });
-        }
-
-        allocate = function (a, role_id) {
-            $.ajax({
-                url: '<?= url('customer/allocate/null') ?>',
-                data: {
-                    user_id: a,
-                    school_id: '<?= $school->school_id ?? '' ?>',
-                    role_id: role_id,
-                    schema: '<?= $schema ?>'
-                },
-                dataType: 'html',
-                success: function (data) {
-                    $('#supportl').html(data);
-                }
-            });
-        }
-
-        show_tabs = function (a) {
-            $('.live_tabs').hide(function () {
-                $('#' + a).show();
-            });
-        }
-
-        $('#school_id').click(function () {
-            var val = $(this).val();
-            $.ajax({
-                url: '<?= url('customer/search/null') ?>',
-                data: {
-                    val: val,
-                    type: 'school',
-                    schema: '<?= $schema ?>'
-                },
-                dataType: 'html',
-                success: function (data) {
-
-                    $('#search_result').html(data);
+                    notify('Success', data, 'success');
                 }
             });
         });
-
-  
-       
-
-        task_group = function () {
-            $('.task_groups').change(function () {
-                var val = $(this).val();
-                var task_id = $(this).attr('data-task-id');
-                var data_attr = $('#task_user' + task_id).val();
-                $.ajax({
-                    url: '<?= url('customer/getAvailableSlot') ?>/null',
-                    method: 'get',
-                    data: {
-                        start_date: val,
-                        user_id: data_attr
-                    },
-                    success: function (data) {
-                        $('#start_slot' + task_id).html(data);
-                    }
-                });
+    }
+    $(document).ready(task_group);
+    $("#town").geocomplete()
+            .bind("geocode:result", function (event, result) {
+                var loc = result.geometry.location;
+                $("#location").val(loc.lng() + ", " + loc.lat());
+            })
+            .bind("geocode:error", function (event, status) {
+                console.log("ERROR: " + status);
+            })
+            .bind("geocode:multiple", function (event, results) {
+                console.log("Multiple: " + results.length + " results found");
             });
-            $('.task_school_group').blur(function () {
-                var val = $(this).text();
-                var data_attr = $(this).attr('data-attr');
-                var task_id = $(this).attr('task-id');
-                // var date=$('#'+task_id).val();
-                $.ajax({
-                    url: '<?= url('customer/editTrain') ?>/null',
-                    method: 'get',
-                    dataType: 'html',
-                    data: {
-                        task_id: task_id,
-                        value: val,
-                        attr: data_attr
-                    },
-                    success: function (data) {
-                        // $(this).after(data).addClass('label label-success');
-                        notify('Success', 'Success', 'success');
-                    }
-                });
-            });
-            $(document).on("click", ".user_dialog", function () {
-                var UserName = $(this).data('id');
-                $(".modal-body #job_date").val(UserName);
-            });
-            $('.slot').change(function () {
-                var val = $(this).val();
-                //var data_attr = $(this).attr('data-attr');
-                var task_id = $(this).attr('data-id');
-                var date = $('#' + task_id).val();
-                $.ajax({
-                    url: '<?= url('customer/editTrain') ?>/null',
-                    method: 'get',
-                    dataType: 'json',
-                    data: {
-                        task_id: task_id,
-                        value: date,
-                        slot_id: val,
-                        attr: 'start_date'
-                    },
-                    success: function (data) {
-                        $('#task_end_date_id' + data.task_id).html(data.end_date);
-                        notify('Success', 'Success', 'success');
-                    }
-                });
-            });
-            
-            $('.task_allocated_id').mousedown(function () {
-                var task_id = $(this).attr('task-id');
-                var start_date = $('#start_date' + task_id).val();
-                var school_person = $('#school_person' + task_id).text();
-                var section_id = $(this).attr('section_id');
-                $.ajax({
-                    url: '<?= url('customer/editTrain') ?>/null',
-                    method: 'get',
-                    data: {
-                        task_id: task_id,
-                        start_date: start_date,
-                        school_person: school_person,
-                        section_id: section_id
-                    },
-                    success: function (data) {
-                        notify('Success', data, 'success');
-                    }
-                });
-            });
-        }
-        $(document).ready(task_group);
-        $("#town").geocomplete()
-                .bind("geocode:result", function (event, result) {
-                    var loc = result.geometry.location;
-                    $("#location").val(loc.lng() + ", " + loc.lat());
-                })
-                .bind("geocode:error", function (event, status) {
-                    console.log("ERROR: " + status);
-                })
-                .bind("geocode:multiple", function (event, results) {
-                    console.log("Multiple: " + results.length + " results found");
-                });
-        </script>
-         @endsection
+    </script>
+@endsection
