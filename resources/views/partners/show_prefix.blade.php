@@ -36,9 +36,9 @@ $integration = '';
     }
 } else {
         $refer_bank = 'Bank';
-        $number = $bank->number;
-        $user_name = $bank->requests->user->name;
-        $integration = $bank->invoice_prefix;
+        $number = '';
+        $user_name = '';
+        $integration = '';
         $usertype = 'Sales Manager';
         $type = 10;
     }
