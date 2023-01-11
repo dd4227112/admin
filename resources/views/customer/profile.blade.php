@@ -132,6 +132,8 @@ src="https://demo.shulesoft.com/<?= $image ?>" alt="">
 <div class="card-block">
 <?php
 if ($is_client == 1) {
+    $username = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}' "))->first();
+
 ?>
 <div class="">
 <div class="row m-2">
