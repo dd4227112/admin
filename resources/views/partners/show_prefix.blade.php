@@ -8,12 +8,12 @@ $integration = '';
             $bank = \DB::table('shulesoft.bank_accounts')->where('id', $partner->bank_account_id)->where('schema_name', $partner->client->username)->first();
              
                 if(!empty($bank)){
-                    $banks =  \DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $request->client->username)->where('bank_account_id', $bank->id)->first();
+                    $banks =  \DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $partner->client->username)->where('bank_account_id', $bank->id)->first();
                     $type = $banks->payment_type;
                     $integration = $banks->invoice_prefix;
                     $refer_bank = $bank->name;
                     $number = $bank->number;
-                    $user =  \DB::table('shulesoft.users')->where('schema_name', $request->client->username)->where("table", $partner->table)->where('id', $partner->user_id)->first();
+                    $user =  \DB::table('shulesoft.users')->where('schema_name', $partner->client->username)->where("table", $partner->table)->where('id', $partner->user_id)->first();
                     if(!empty($user)){
                         $user_name = $user->name;
                         $usertype = ucfirst($user->usertype);
