@@ -4,45 +4,43 @@
 $integration = '';
     $checksystem = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='".$partner->client->username."'"))->first();
     $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $partner->id)->first();
-        if (!empty($partner)) {
-            $bank = \DB::table('shulesoft.bank_accounts')->where('id', $partner->bank_account_id)->where('schema_name', $partner->client->username)->first();
-             
-                if(!empty($bank) && empty($checksystem)){
-                    $banks =  \DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $partner->client->username)->where('bank_account_id', $bank->id)->first();
-                    $type = $banks->payment_type;
-                    $integration = $banks->invoice_prefix;
-                    $refer_bank = $bank->name;
-                    $number = $bank->number;
-                    $user =  \DB::table('shulesoft.users')->where('schema_name', $partner->client->username)->where("table", $partner->table)->where('id', $partner->user_id)->first();
-                    if(!empty($user)){
-                        $user_name = $user->name;
-                        $usertype = ucfirst($user->usertype);
-                    }
+        $bank = \DB::table('shulesoft.bank_accounts')->where('id', $partner->bank_account_id)->where('schema_name', $partner->client->username)->first();
+            
+            if(!empty($bank) && empty($checksystem)){
+                $banks =  \DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $partner->client->username)->where('bank_account_id', $bank->id)->first();
+                $type = $banks->payment_type;
+                $integration = $banks->invoice_prefix;
+                $refer_bank = $bank->name;
+                $number = $bank->number;
+                $user =  \DB::table('shulesoft.users')->where('schema_name', $partner->client->username)->where("table", $partner->table)->where('id', $partner->user_id)->first();
+                if(!empty($user)){
+                    $user_name = $user->name;
+                    $usertype = ucfirst($user->usertype);
                 }
-        }elseif (!empty($checksystem)){
-              
-        $bank = DB::table($partner->client->username . '.bank_accounts')->where('id', $partner->bank_account_id)->first();
+            }elseif (!empty($checksystem)){
+            
+            $bank = DB::table($partner->client->username . '.bank_accounts')->where('id', $partner->bank_account_id)->first();
 
         if(!empty($bank)){ 
-        $banks = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first();
-        $type = $banks->payment_type;
-        $integration = $banks->invoice_prefix;
-        $refer_bank = $bank->name;
-        $number = $bank->number;
-        $user = DB::table($partner->client->username . '.users')->where("table", $partner->table)->where('id', $partner->user_id)->first();
-        if(!empty($user)){
-            $user_name = $user->name;
-            $usertype = ucfirst($user->usertype);
+            $banks = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first();
+            $type = $banks->payment_type;
+            $integration = $banks->invoice_prefix;
+            $refer_bank = $bank->name;
+            $number = $bank->number;
+            $user = DB::table($partner->client->username . '.users')->where("table", $partner->table)->where('id', $partner->user_id)->first();
+            if(!empty($user)){
+                $user_name = $user->name;
+                $usertype = ucfirst($user->usertype);
+            }
         }
-    }
-} else {
-        $refer_bank = 'Bank';
-        $number = '';
-        $user_name = '';
-        $integration = '';
-        $usertype = 'Sales Manager';
-        $type = 10;
-    }
+    } else {
+            $refer_bank = 'Bank';
+            $number = '';
+            $user_name = '';
+            $integration = '';
+            $usertype = 'Sales Manager';
+            $type = 10;
+        }
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -52,6 +50,7 @@ $integration = '';
         <div class="page-header">
             <div class="page-header-title">
                 <h4>Shulesoft API Integration</h4>
+                <br>
                 <span>Map these parameters to ensure fully integration between ShuleSoft and the bank</span>
 
             </div>
