@@ -51,7 +51,7 @@
                                                             <th>
                                                                 <?php
                                                                 if ($request->user_id != '') {
-                                                                    echo isset($client->school) && !empty($client->school) ? $client->school->district . ' - ' . $client->school->region : '';
+                                                                    echo isset($client->school) && !empty($client->school) ? $client->school->district . ' - ' . $client->school->region :  $request->client->address;
                                                                 }
                                                                 ?>
                                                         </tr>
@@ -59,7 +59,7 @@
                                                             <th> Registration No. </th>
                                                             <th>
                                                                 <?php
-                                                                echo isset($client->school) && !empty($client->school) ? $client->school->ownership : '';
+                                                                echo isset($client->school) && !empty($client->school) ? $client->school->ownership : 'Private';
                                                                 ?>
                                                             </th>
                                                         </tr>
