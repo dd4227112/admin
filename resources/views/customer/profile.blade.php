@@ -133,7 +133,7 @@ src="https://demo.shulesoft.com/<?= $image ?>" alt="">
 <?php
 if ($is_client == 1) {
     $username = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}'");
-
+    count($username) > 0 ? dd('uongo') : 'Normal';
 ?>
 <div class="">
 <div class="row m-2">
