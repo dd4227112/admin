@@ -180,7 +180,7 @@
                                 }
                             }
                         } elseif(!empty($bank)) {
-                            $refer_bank = $bank->referBank->name;
+                            $refer_bank = 'Bank';
                             $number = $bank->number;
                             $branch = $bank->branch;
                             $user_name = $bank->requests->user->name;
