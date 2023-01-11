@@ -350,7 +350,7 @@
                                         </td>
                                         <td style="width: 60% !important;">
                                             <span>
-                                            ShuleSoft Limited to provide ShuleSoft Services to the client which is integrated with CRDB 
+                                            ShuleSoft Limited to provide ShuleSoft Services to the client which is integrated with CRDB <br>
                                             Bank System to accept Electronic Payments via CRDB Bank channels</span>
                                     </tr>
                                 </table>
