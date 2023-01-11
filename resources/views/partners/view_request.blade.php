@@ -158,11 +158,24 @@
                                 $number = $bank->number;
                                 $branch = $bank->branch;
 
+                            }else{
+                                $bank = \DB::table('shulesoft.bank_accounts')->where('id', $request->bank_account_id)->where('schema_name', $request->client->username)->first();
+                                if(!empty($bank)){
+                                    $refer_bank = $bank->name;
+                                    $number = $bank->number;
+                                    $branch = $bank->branch;
+                                }
                             }
                             $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
                             if(!empty($user)){
                                 $user_name = $user->name;
                                 $usertype = ucfirst($user->usertype);
+                            }else{
+                                $user = \DB::table('shulesoft.users')->where("table", $request->table)->where('id', $request->user_id)->where('schema_name', $request->client->username)->first();
+                                if(!empty($user)){
+                                    $user_name = $user->name;
+                                    $usertype = ucfirst($user->usertype);
+                                }
                             }
                         } elseif(!empty($bank)) {
                             $refer_bank = $bank->referBank->name;
@@ -211,7 +224,10 @@
                                                         ?>
                                                 <?php 
 
-                                                     $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
+                                                    $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
+                                                    if(!empty($integrated)){
+                                                        $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->where('schema_name', $request->client->username)->first();
+                                                    }
                                                     ?>
                                                     <tr>
                                                         <th>Invoice Prefix</th>
