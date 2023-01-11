@@ -4,9 +4,9 @@
 $integration = '';
     $checksystem = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='".$partner->client->username."'"))->first();
     $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $partner->id)->first();
-        if (!empty($request)) {
+        if (!empty($partner)) {
             $bank = \DB::table('shulesoft.bank_accounts')->where('id', $partner->bank_account_id)->where('schema_name', $partner->client->username)->first();
-            
+             
                 if(!empty($bank)){
                     $banks =  \DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $request->client->username)->where('bank_account_id', $bank->id)->first();
                     $type = $banks->payment_type;
