@@ -455,7 +455,8 @@ class Customer extends Controller {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
         $this->data['shulesoft_users'] = (new \App\Http\Controllers\Users)->shulesoftUsers();
-        $status = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
+        $schema = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
+        $status =  DB::table('admin.all_setting')->where('schema_name', $school)->first();
 
         if (empty($status)) {
             return redirect('https://' . $school . '.shulesoft.com');
@@ -474,8 +475,8 @@ class Customer extends Controller {
             return view('customer.checkinstallation', $this->data);
         } else {
             $is_client = 1;
-            $this->data['school'] = DB::table($school . '.setting')->first();
-            $this->data['levels'] = DB::table($school . '.classlevel')->get();
+            $this->data['school'] = !empty($schema) ? DB::table($school . '.setting')->first() : \DB::table('shulesoft.setting')->where('schema_name', $school)->first(); 
+            $this->data['levels'] = !empty($schema) ? DB::table($school . '.classlevel')->get() : \DB::table('shulesoft.classlevel')->where('schema_name', $school)->get();
             $this->data['client'] = $client = \App\Models\Client::where('username', $school)->first();
             $this->data['trial'] = DB::table('admin.client_trials')->where('client_id', $client->id)->first();
 
@@ -493,11 +494,10 @@ class Customer extends Controller {
             if ($zone_manager) {
                 $this->data['manager'] = \App\Models\User::where(['id' => $zone_manager->user_id, 'status' => 1]);
             }
-            $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
+            $this->data['top_users'] = !empty($school) ? DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5') :  DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table") where schema_name=' . $school . ' user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
 
 
-        // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
         $this->data['is_client'] = $is_client;
 
