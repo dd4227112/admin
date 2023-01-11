@@ -149,7 +149,7 @@
                         $branch = '';
                         $user_name = '';
                         $usertype = '';
-                    $checksystem = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema=".$request->client->username))->first();
+                    $checksystem = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='".$request->client->username."'"))->first();
                   //  table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
                         if (!empty($request)) {
