@@ -494,7 +494,7 @@ class Customer extends Controller {
             if ($zone_manager) {
                 $this->data['manager'] = \App\Models\User::where(['id' => $zone_manager->user_id, 'status' => 1]);
             }
-            $this->data['top_users'] = !empty($school) ? DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5') :  DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table") where schema_name=' . $school . ' user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
+            $this->data['top_users'] = !empty($schema) ? DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5') :  DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table") where schema_name=' . $school . ' user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
 
 
