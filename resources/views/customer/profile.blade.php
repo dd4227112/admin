@@ -132,35 +132,34 @@ src="https://demo.shulesoft.com/<?= $image ?>" alt="">
 <div class="card-block">
 <?php
 if ($is_client == 1) {
-    $username = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}'"))->first();
+    $username = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}'");
 
 ?>
 <div class="">
 <div class="row m-2">
 <label class="badge badge-inverse-primary">
-        {{ dd($username) }}
-      <?= !empty($username) ? \DB::table($schema . '.student')->where('status', 1)->count() :  \DB::table('shulesoft.student')->where('schema_name', $schema)->where('status', 1)->count() ?>
+      <?= count($username) > 0 ? \DB::table($schema . '.student')->where('status', 1)->count() :  \DB::table('shulesoft.student')->where('schema_name', $schema)->where('status', 1)->count() ?>
 </label>
 <label>Students</label>
 </div>
 
 <div class="row m-2">
 <label class="badge badge-inverse-primary">
-    <?= !empty($username) ? \DB::table($schema . '.parent')->where('status', 1)->count() : \DB::table('shulesoft.parent')->where('schema_name', $schema)->where('status', 1)->count()?>
+    <?= count($username) > 0 ? \DB::table($schema . '.parent')->where('status', 1)->count() : \DB::table('shulesoft.parent')->where('schema_name', $schema)->where('status', 1)->count()?>
 </label>
 <label>Parents</label>
 </div>
 
 <div class="row m-2">
 <label class="badge badge-inverse-primary">
-<?= !empty($username) ? \DB::table($schema . '.user')->where('status', 1)->count() :  \DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->count() ?>
+<?= count($username) > 0 ? \DB::table($schema . '.user')->where('status', 1)->count() :  \DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->count() ?>
 </label>
 <label>Staff</label>
 </div>
 
 <div class="row m-1">
 <label class="badge badge-inverse-primary">
-   <?= !empty($username) ? \DB::table($schema . '.teacher')->where('status', 1)->count() :  \DB::table('shulesoft.teacher')->where('schema_name', $schema)->where('status', 1)->count()?>
+   <?= count($username) > 0 ? \DB::table($schema . '.teacher')->where('status', 1)->count() :  \DB::table('shulesoft.teacher')->where('schema_name', $schema)->where('status', 1)->count()?>
 </label>
 <label>Teacher</label>
 </div> 
@@ -169,7 +168,7 @@ if ($is_client == 1) {
 <hr>
  <h6 class="">School Status</h6>
 <?php
-$st = !empty($username) ? DB::table($schema . '.setting')->first() :  \DB::table('shulesoft.setting')->where('schema_name', $schema)->first();
+$st = count($username) > 0 ? DB::table($schema . '.setting')->first() :  \DB::table('shulesoft.setting')->where('schema_name', $schema)->first();
 if (!empty($st)) {
 echo '<a data-toggle="modal" data-target="#status-Modal">';
 if ($st->school_status == 1) {
