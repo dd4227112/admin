@@ -316,11 +316,11 @@
                                                     <tr  style="border-bottom: 5px solid #8CDDCD;">
                                                         <th colspan="2" style="background:#8CDDCD;text-align: center;
                                                             font-size: 18px;
-                                                            color: white;">INETS COMPANY LIMITED</th>
+                                                            color: white;">SHULESOFT LIMITED</th>
                                                     </tr>
                                                     <tr>
                                                         <th>
-                                                            <p>On behalf of <b>INETS Company Limited</b>, the aforementioned services headed by</p>
+                                                            <p>On behalf of <b>SHULESOFT Limited</b>, the aforementioned services headed by</p>
                                                         </th>
                                                     </tr>
                                                 </thead>
