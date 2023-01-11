@@ -180,14 +180,14 @@
                                 }
                             }
                         } elseif(!empty($bank)) {
-                            $refer_bank = 'Bank';
+                            $refer_bank = 'Bank'; 
                             $number = $bank->number;
                             $branch = $bank->branch;
                             $user_name = $bank->requests->user->name;
                             $usertype = 'Sales Manager';
                         }else{
                             $refer_bank = 'Not Defined';
-                        }
+                        } 
                         ?>
                         <div class="card-block user-desc">
                             <div class="view-desc">
