@@ -94,7 +94,7 @@
                                                     if(!empty($check_school)){  
                                                         $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $request->bank_account_id)->first();
                                                     }else{
-                                                        $bank = DB::table('bank_accounts_integrations')->where('integration_request_id', $request->id)->first();
+                                                        $bank = DB::table('shulesoft.bank_accounts')->where('id', $request->bank_account_id)->where('schema_name', $request->client->username)->first();
                                                     }
                                                     if(!empty($bank)){
                                                         $bank_number = $bank->number;
