@@ -149,15 +149,16 @@
                         $branch = '';
                         $user_name = '';
                         $usertype = '';
-                    $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
+                    $checksystem = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema=".$request->client->username))->first();
+                  //  table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
-                        if (!empty($checksystem)) {
+                        if (!empty($request)) {
                             $bank = \DB::table('shulesoft.bank_accounts')->where('id', $request->bank_account_id)->where('schema_name', $request->client->username)->first();
                             if(!empty($bank)){
                                 $refer_bank = $bank->name;
                                 $number = $bank->number;
                                 $branch = $bank->branch;
-                            }else{
+                            }elseif (!empty($checksystem)){
                               
                             $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $request->bank_account_id)->first();
                             if(!empty($bank)){
@@ -171,7 +172,7 @@
                             if(!empty($user)){
                                 $user_name = $user->name;
                                 $usertype = ucfirst($user->usertype);
-                            }else{
+                            }elseif(!empty($integrated) && !empty($checksystem)){
                                 $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
                                 if(!empty($user)){
                                     $user_name = $user->name;
@@ -221,12 +222,12 @@
                                                 </tr>
                                                 <?php
                                                 if ((int) $request->bank_approved == 1) {
-                                                    if(!empty($checksystem)){
+                                                    if(!empty($request)){
                                                         ?>
                                                 <?php 
                                                         $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->where('schema_name', $request->client->username)->first();
 
-                                                    if(!empty($integrated)){
+                                                    if(!empty($integrated) && !empty($checksystem)){
                                                         $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
                                                     }
                                                     ?>
