@@ -22,7 +22,7 @@
 
 $month = request()->segment(3);
 $year = request()->segment(4);
-$where = (int) $month > 0 && (int) $year > 0 ? ' WHERE extract(year from created_at)=' . $year . ' AND extract(month from created_at) >=' . $month : '';
+$where = (int) $month > 0 && (int) $year > 0 ? ' WHERE extract(year from created_at)>=' . $year . ' AND extract(month from created_at) >=' . $month : '';
 $marks = DB::select('select distinct "schema_name", max(created_at) as created_at from admin.all_mark ' . $where . ' group by schema_name');
 $mark_status = [];
 foreach ($marks as $mark) {
