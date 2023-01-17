@@ -1066,8 +1066,8 @@ class Customer extends Controller {
                 ->whereNotIn('schema_name', $skip);
         strlen(request('schools')) > 3 ? $sql->whereIn('schema_name', explode(',', request('schools'))) : '';
         strlen(request('regions')) > 3 ? $sql->whereIn('regions', explode(',', request('regions'))) : '';
-
-        (int) request('is_client') == 1 ? $sql->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', '>=', date('Y'))->get(['client_id']))->get(['username'])) : '';
+        $year = date('Y') - 1;
+        (int) request('is_client') == 1 ? $sql->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', '>=', $year)->get(['client_id']))->get(['username'])) : '';
         $this->data['schools'] = $sql->get();
         return view('customer.usage.modules', $this->data);
     }
