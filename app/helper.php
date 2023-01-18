@@ -69,7 +69,7 @@ function check_implementation($activity, $schema_name) {
         //track no of users
         $client = DB::table('admin.clients')->where('username', $schema_name)->first();
         $students = DB::table($schema_name . '.student')->count();
-        if ($students >= (int) $client->estimated_students) {
+        if ($students > 0) { 
             $status = 'Implemented';
         } else {
             $status = ' Not Implemented';
