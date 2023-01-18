@@ -4,6 +4,7 @@
 <?php
 $client_id = $profile->id;
 $client = $profile;
+$schema = $profile->username;
 
 $root = url('/') . '/public/';
 define('SCHEMA', $schema);
@@ -16,9 +17,9 @@ function check_status($table, $where = null)
     if ($table == 'admin.vendors') {
         $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
     } elseif ($table == 'invoices') {
-        $report =  !empty($username) ? \collect(DB::select('select date::date as created_at from ' . $schema . '.' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first() : \collect(DB::select('select date::date as created_at from shulesoft.' . $table . '  ' . $where . ' AND schema_name=' . $schema . ' order by date::date desc limit 1'))->first();
+        $report =  !empty($username) ? \collect(DB::select('select date::date as created_at from ' . $schema . '.' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first() : \collect(DB::select('select date::date as created_at from shulesoft.' . $table . '  ' . $where . '  order by date::date desc limit 1'))->first();
     } else {
-        $report =  !empty($username) ? \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first() : \collect(DB::select('select created_at::date from shulesoft.' . $table . '  ' . $where . ' AND schema_name==' . $schema . ' order by created_at::date desc limit 1'))->first();
+        $report =  !empty($username) ? \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first() : \collect(DB::select('select created_at::date from shulesoft.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
     }
     if (!empty($report)) {
         $echo = '<label class="badge badge-success">' . date('d M Y', strtotime($report->created_at)) . '</label>';
@@ -1285,7 +1286,9 @@ width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
                                                                 <td>
                                                                     <?php
                                                                     //classlevel
-                                                                    $levels = DB::table($schema . '.classlevel')->get();
+                                                                    $username = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema}' "))->first();
+
+                                                                    $levels = !empty($username) ? DB::table($schema . '.classlevel')->get() :  DB::table('shulesoft.classlevel')->where('schema_name', $schema)->get();
                                                                     if (empty($levels)) {
                                                                         echo '<label class="badge badge-warning">Class Level Not Defined</label>';
                                                                     }
@@ -1295,7 +1298,7 @@ width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
                                                                     if (!empty($levels)) {
                                                                         foreach ($levels as $level) {
 
-                                                                            $academic_year = DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
+                                                                            $academic_year =!empty($username) ?  DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first() :  DB::table('shulesoft.academic_year')->where('schema_name', $schema)->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
                                                                             if (empty($academic_year)) {
                                                                                 echo '<label class="badge badge-inverse-warning">Academic Year Not Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
                                                                             }
@@ -1310,12 +1313,12 @@ width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
                                                                     if (!empty($levels)) {
                                                                         foreach ($levels as $level) {
 
-                                                                            $academic_year = DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
+                                                                            $academic_year = !empty($username) ? DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first() : DB::table('shulesoft.academic_year')->where('schema_name', $schema)->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
                                                                             if (empty($academic_year)) {
                                                                                 echo '<label class="badge badge-inverse-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
                                                                             } else {
                                                                                 //check terms for this defined year
-                                                                                $terms = DB::table($schema . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
+                                                                                $terms =!empty($username) ?  DB::table($schema . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count() : DB::table('shulesoft.semester')->where('schema_name', $schema)->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
 
                                                                                 echo $terms == 0 ? '<label class="badge badge-inverse-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>' : '<label class="badge badge-inverse-success">' . $level->name . ' (' . $academic_year->name . ') at ' . date('d M Y', strtotime($academic_year->created_at)) . '</label>';
                                                                             }
@@ -1417,7 +1420,7 @@ Last Seen <label class="label label-info">
                                                             <tr>
                                                                 <th scope="row">7</th>
                                                                 <td>Expenses</td>
-                                                                <td> <?= check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id in (2,3)) '); ?>
+                                                                <td> <?= !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from '.  $schema  .'.refer_expense where financial_category_id in (2,3)) ') : check_status("expense", " WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND financial_category_id in (2,3)) "); ?>
                                                                     <br />
                                                                 </td>
                                                             </tr>
@@ -1459,15 +1462,15 @@ Last Seen <label class="label label-info">
                                                                 <td>Other Transactions</td>
                                                                 <td>
                                                                     Revenue:
-                                                                    <?= check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=1) '); ?>
+                                                                    <?=  !empty($username) ? check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=1) ') :  check_status('revenues', "WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND financial_category_id=1) "); ?>
                                                                     <br />
 
                                                                     Capital :
-                                                                    <?= check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) '); ?><br />
+                                                                    <?=  !empty($username) ? check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) ') : check_status('revenues', " WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND  financial_category_id=7) "); ?><br />
                                                                     Fixed Assets:
-                                                                    <?= check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=4) '); ?><br />
+                                                                    <?=  !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=4) ') : check_status('expense', " WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND  financial_category_id=4) "); ?><br />
                                                                     Liabilities :
-                                                                    <?= check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=6) '); ?><br />
+                                                                    <?=  !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=6) ') : check_status('expense', " WHERE refer_expense_id in (select id from shulesoft.refer_expense where financial_category_id=6) "); ?><br />
                                                                 </td>
                                                                 <td></td>
                                                             </tr>
@@ -1533,31 +1536,6 @@ Last Seen <label class="label label-info">
                                             </div>
                                         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-                                        {{--
-
-<div class="card">
-<br>
-<br>                                                
-<div id="container_log" style="min-width: 80%;  height: 480px; margin: 0 auto">
-</div>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/data.js"></script>
-<hr/>
-<div id="contain" style="min-width: 70%;  height: 480px; margin: 0 auto">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-</div>
-</div> --}}
-
                                     </div>
 
                                     <div class="tab-pane" id="friends" aria-expanded="false">
@@ -1576,7 +1554,7 @@ Last Seen <label class="label label-info">
                                                         </thead>
                                                         <tbody>
                                                             <?php $i = 1;
-                                                            $users = DB::table($schema . '.user')->where('status', 1)->get();
+                                                            $users = !empty($username) ? DB::table($schema . '.user')->where('status', 1)->get() : DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->get();
                                                             if (!empty($users)) {
                                                                 foreach ($users as $user) {
                                                             ?>
