@@ -7,11 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use \App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 
 class Customer extends Controller {
 
@@ -452,32 +450,35 @@ class Customer extends Controller {
     }
 
     public function profile() {
-        $school = $this->data['schema'] = request()->segment(3);
+        $school =  request()->segment(3);
+        $schema = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
         $id = request()->segment(4);
         $this->data['shulesoft_users'] = (new \App\Http\Controllers\Users)->shulesoftUsers();
-        $schema = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
         $status =  DB::table('admin.all_setting')->where('schema_name', $school)->first();
-
-        if (empty($status)) {
-            return redirect('https://' . $school . '.shulesoft.com');
+        $shulesoft =  DB::table('shulesoft.setting')->where('schema_name', $school)->first();
+        $this->data['schema'] = empty($schema) ? 'shulesoft' : request()->segment(3);
+        if (empty($status) && empty($shulesoft)) {
+          //  return redirect('https://' . $school . '.shulesoft.com');
         }
 
         $client = \App\Models\Client::where('username', $school)->first();
+        $this->data['school_id'] = 1;
 
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        } elseif (empty($status) && isset($client->username)) {
-            return redirect('https://' . $school . '.shulesoft.com');
-        } elseif (empty($status) && empty($client->username)) {
-            return view('customer.checkinstallation', $this->data);
-        } else {
+        // } elseif (empty($status) && isset($client->username) || empty($shulesoft)) {
+        // //    return redirect('https://' . $school . '.shulesoft.com');
+        // } elseif (empty($status) && empty($client->username)) {
+        //     return view('customer.checkinstallation', $this->data);
+        // } else {
             $is_client = 1;
             $this->data['school'] = !empty($schema) ? DB::table($school . '.setting')->first() : \DB::table('shulesoft.setting')->where('schema_name', $school)->first(); 
             $this->data['levels'] = !empty($schema) ? DB::table($school . '.classlevel')->get() : \DB::table('shulesoft.classlevel')->where('schema_name', $school)->get();
             $this->data['client'] = $client = \App\Models\Client::where('username', $school)->first();
+            $this->data['client_id'] = $client->id; // = \App\Models\Client::where('username', $school)->first();
             $this->data['trial'] = DB::table('admin.client_trials')->where('client_id', $client->id)->first();
 
             if (empty($client)) {
@@ -500,7 +501,7 @@ class Customer extends Controller {
 
 
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
-        $this->data['is_client'] = $is_client;
+        $this->data['is_client'] = 1;
 
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         if (empty($year)) {
