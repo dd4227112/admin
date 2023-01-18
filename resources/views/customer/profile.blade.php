@@ -429,6 +429,8 @@ $s_address = isset($school->address) ? $school->address : '';
 
                                             <div class="col-md-12 timeline-dot">
                                                 <?php
+                                                $client_id = $profile->id;
+
                                                 $tasks_ids = \App\Models\TaskSchool::whereIn('school_id', \App\Models\ClientSchool::where('client_id', $client_id)->get(['school_id']))->get(['task_id']);
                                                 $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskClient::where('client_id', $client_id)->get(['task_id']))->orWhereIn('id', $tasks_ids)->orderBy('created_at', 'desc')->get();
                                                 if (!empty($tasks)) {
@@ -825,10 +827,6 @@ width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
-
 
                                             <div class="col-sm-12">
                                                 <div class="card">
