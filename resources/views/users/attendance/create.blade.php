@@ -232,7 +232,6 @@ $.ajax({
 $('.absent').change(function () {
 var absent_id = $(this).val();
 var user_id = $(this).attr("user_id");
-
 var user_ids = user_id;
 var date = "<?= $date ?>";
 if (absent_id === '0') {

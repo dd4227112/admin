@@ -38,7 +38,6 @@ class Attendance extends Controller {
     function singl_add() {
         $id = request('id');
         $day = request('day');
-      
         $absent_reason_id = (int) request('absent_id') > 0 ? (int) request('absent_id') : null;
         $user_id = preg_replace('/[^0-9]/i', '', $id);
         if ((int) $user_id) {
@@ -47,8 +46,9 @@ class Attendance extends Controller {
                 $this->addSingleUser($user_id,'timein', $day, $present, $absent_reason_id);
             } elseif(preg_match('/timeout/i', $id)){
                 $this->addSingleUser($user_id,'timeout', $day, $present, $absent_reason_id);
+            }elseif((int)$id >0){
+                $this->addSingleUser($user_id,'timeout', $day, 0, $absent_reason_id);
             }
-            echo ('success');
         }
     }
 
@@ -63,13 +63,15 @@ class Attendance extends Controller {
                 'absent_reason_id'=>$absent_reason_id,
                 'present' => $present]);
             $found->update($data);
+            echo ('Success Added');
         } else {
             \App\Models\Uattendance::create(array_merge($where, [
                 $action => date("Y-m-d h:i:s"),
                 'created_by' => Auth::user()->id,
                 'absent_reason_id'=> $absent_reason_id,
                 'present' => $present]));
-        }
+                echo ('Success Updated');
+            }
         return TRUE;
     }
 
