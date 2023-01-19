@@ -135,7 +135,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                             <div class="">
                                                 <div class="row m-2">
                                                     <label class="badge badge-inverse-primary">
-                                                        <?php !empty($username) ? \DB::table($schema . '.student')->where('status', 1)->count() :  \DB::table('shulesoft.student')->where('schema_name', $schema)->where('status', 1)->count() ?>
+                                                        <?= !empty($username) ? \DB::table($schema . '.student')->where('status', 1)->count() : \DB::table('shulesoft.student')->where('schema_name', $schema)->where('status', 1)->count() ?>
                                                     </label>
                                                     <label>Students</label>
                                                 </div>
