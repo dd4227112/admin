@@ -219,7 +219,15 @@ table td {
                                                       $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
                                                     if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat') || (date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
                                                           $att = '<label class="badge badge-default">S</label>';
-                                                    } elseif (!empty($att) && $att->present == 1) {
+                                                    } elseif(!empty($att->absent_reason_id)) {
+                                                        $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
+                                                        if (!empty($reason)) {
+                                                            $att = substr($reason->reason, 0, 4);
+                                                            $total_per++;
+                                                        }else{
+                                                            $att = 'AB';
+                                                        }
+                                                    }elseif (!empty($att) && $att->present == 1) {
                                                           if(date("H:i:s",strtotime($att->timein)) > $the_timein){
                                                              $att = '<label class="badge badge-warning">P</label>';
                                                           }elseif(!empty($att->timeout) && date("H:i:s",strtotime($att->timeout)) < $the_timeout){
@@ -227,15 +235,7 @@ table td {
                                                           }else{
                                                              $att = '<label class="badge badge-info">P</label>';
                                                           }
-                                                } elseif(!empty($att->absent_reason_id)) {
-                                                    $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
-                                                    if (!empty($reason)) {
-                                                        $att = substr($reason->reason, 0, 4);
-                                                        $total_per++;
-                                                    }else{
-                                                        $att = 'AB';
-                                                    }
-                                                }else {
+                                                } else {
                                                     $att = '';
                                                     $total_abs++;
                                                 }
@@ -249,7 +249,15 @@ table td {
                                            // $early_leaves = $user->uattendance()->where('date', $value->format('Y-m-d'))->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->first();
                                              if( (date('D', strtotime($value->format('Y-m-d'))) == 'Sat') || (date('D', strtotime($value->format('Y-m-d'))) == 'Sun') ){
                                                 $att = '<label class="badge badge-default">S</label>';
-                                              }elseif (!empty($att) && $att->present == 1) {
+                                              } elseif(!empty($att->absent_reason_id)) {
+                                                $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
+                                                if (!empty($reason)) {
+                                                    $att = substr($reason->reason, 0,4);
+                                                    $total_per++;
+                                                }else{
+                                                    $att = 'AB';
+                                                }
+                                            }elseif (!empty($att) && $att->present == 1) {
                                                     if(date('H:i:s',strtotime($att->timein)) > $the_timein){
                                                       $att = '<label class="badge badge-warning">P</label>';
                                                       $total_lates++;
@@ -261,14 +269,6 @@ table td {
                                                     }
                                                        $total_press++;
                                           
-                                            } elseif(!empty($att->absent_reason_id)) {
-                                                $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
-                                                if (!empty($reason)) {
-                                                    $att = substr($reason->reason, 0,4);
-                                                    $total_per++;
-                                                }else{
-                                                    $att = 'AB';
-                                                }
                                             }else {
                                                 $att = '';
                                                 $total_abs++;
