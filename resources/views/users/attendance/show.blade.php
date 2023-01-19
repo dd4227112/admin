@@ -123,11 +123,11 @@
                             for ($m = 1; $m <= (int) date('m'); $m++) {
                                 $dateObj = DateTime::createFromFormat('!m', $m);
                                 $monthName = $dateObj->format('F');
-                                $att = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present', 1)->count();
+                                $att = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present', 1)->count();
                                 $permissions = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNotNull('absent_reason_id')->count();
-                                $absents = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNull('absent_reason_id')->where('present',0)->count();
-                                $late_comming = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->count();
-                                $early_leave = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->count();
+                                $absents = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNull('absent_reason_id')->where('present',0)->count();
+                                $late_comming = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->count();
+                                $early_leave = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->count();
 
                                 ?>
                                 <tr>
@@ -179,7 +179,7 @@
                                           <tbody>
       
                                               <tr>
-                                                  <?php  $the_timein = "08:00:00";$the_timeout = "17:00:00";
+                                                  <?php  $the_timein = "08:00:00"; $the_timeout = "17:00:00";
                                                   for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) { 
                                                       $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
                                                       if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat') || (date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
