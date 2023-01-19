@@ -130,7 +130,7 @@ function tagEdit($column, $value) {
                           </td>
 
                         </tr>
-                        <?php } } ?>
+                        <?php } }  ?>
                       </tbody>
                     </table>
                       </div>
