@@ -2,10 +2,6 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-
-
-  
-
        <div class="page-header">
             <div class="page-header-title">
                 <h4><?= $user->name()."'s Attendances "?></h4>
@@ -188,27 +184,27 @@
                                                       $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
                                                       if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat') || (date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
                                                           $att = '<label class="badge badge-default">S</label>';
-                                                      } elseif (!empty($att) && $att->present == 1) {
+                                                      } elseif(!empty($att->absent_reason_id)) {
+                                                        $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
+                                                        if (!empty($reason)) {
+                                                          //   $att = $reason->reason;
+                                                             if(preg_match('/Sick/', $reason->reason)){
+                                                                  $att = '<label class="badge badge-danger">S</label>';
+                                                             }elseif(preg_match('/Permission/', $reason->reason)){
+                                                                  $att = '<label class="badge badge-info">PM</label>';
+                                                             }elseif(preg_match('/other reasons/', $reason->reason)) {
+                                                                  $att = '<label class="badge badge-info">O</label>';
+                                                             }
+                                                        }else{
+                                                            $att = '<strong>ABS</strong>';
+                                                        }
+                                                    } elseif (!empty($att) && $att->present == 1) {
                                                           if(date("H:i:s",strtotime($att->timein)) > $the_timein){
                                                              $att = '<label class="badge badge-warning">P</label>';
                                                           }elseif(!empty($att->timeout) && date("H:i:s",strtotime($att->timeout)) < $the_timeout){
                                                              $att = '<label class="badge badge-danger">P</label>';
                                                           }else{
                                                              $att = '<label class="badge badge-info">P</label>';
-                                                          }
-                                                      } elseif(!empty($att->absent_reason_id)) {
-                                                          $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
-                                                          if (!empty($reason)) {
-                                                            //   $att = $reason->reason;
-                                                               if(preg_match('/Sick/', $reason->reason)){
-                                                                    $att = '<label class="badge badge-danger">S</label>';
-                                                               }elseif(preg_match('/Permission/', $reason->reason)){
-                                                                    $att = '<label class="badge badge-info">PM</label>';
-                                                               }elseif(preg_match('/other reasons/', $reason->reason)) {
-                                                                    $att = '<label class="badge badge-info">O</label>';
-                                                               }
-                                                          }else{
-                                                              $att = '<strong>ABS</strong>';
                                                           }
                                                       }else{
                                                          $att = '';
