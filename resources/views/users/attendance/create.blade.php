@@ -97,18 +97,7 @@ function tagEdit($column, $value) {
                           
                           <td><?= $user->firstname. ' '.$user->lastname ?></td>
                           <td class="text-center">
-                            <?php
-                            // $method = '';
-                            // $att = $user->uattendance()->where('date', date("Y-m-d", strtotime($date)))->first();
-                            // if (!empty($att)  && $att->present == 1) {
-                            //     $method = "checked";
-                            // }
-                            // $absent_id = !empty($att) == True ? $att->absent_reason_id : null;
-                            // echo btn_attendance($user->id, $method, 'attendance btn btn-warning',('add_title'));
-                            // if ((int) $absent_id > 0) {
-                            //     echo '<script type="text/javascript">$("#"+'.$user->id.').hide()</script>';
-                            // }
-                            ?>
+                          
                             <input type="datetime" class="form-control timein" name="timein" id="timein<?= $user->id ?>" style="width: 135px;" value="<?= empty($user->uattendance->where('date',$date)->first()) ? date('Y-m-d H:i:s') : $user->uattendance->where('date',$date)->first()->timein ?>" disabled="disabled"/>
                           </td>
                            
@@ -233,7 +222,7 @@ $('.absent').change(function () {
 var absent_id = $(this).val();
 var user_id = $(this).attr("user_id");
 var user_ids = user_id;
-var date = "<?= $date ?>";
+var date =  $('#timein' + user_id).val();
 if (absent_id === '0') {
   document.getElementById(user_id).checked = false;
   $('#' + user_id).show();

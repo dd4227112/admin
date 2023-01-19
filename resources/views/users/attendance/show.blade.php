@@ -124,7 +124,7 @@
                                 $dateObj = DateTime::createFromFormat('!m', $m);
                                 $monthName = $dateObj->format('F');
                                 $att = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present', 1)->count();
-                                $permissions = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present','=', 1)->whereNotNull('absent_reason_id')->count();
+                                $permissions = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNotNull('absent_reason_id')->count();
                                 $absents = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNull('absent_reason_id')->where('present',0)->count();
                                 $late_comming = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->count();
                                 $early_leave = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->count();

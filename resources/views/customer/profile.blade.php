@@ -523,7 +523,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                                 $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '{$task_user_id}'"))->first();
                                                                                                 $local = $root . '/assets/images/avatar-2.png';  ?>
                                                                                                 <img src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" class="img-circle" style="position: relative;
-width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
+                                                                                                    width: 22px; height: 22px;border-radius: 50%;overflow: hidden;">
                                                                                             </a>
                                                                                             <div class="media-body b-b-muted social-client-description">
                                                                                                 <div class="chat-header">
