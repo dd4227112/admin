@@ -1331,7 +1331,22 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function syncData() {
-        $url='http:://75.119.140.177/shulesoft_staging/api/accountsync';
+       
+        $limit = 3;
+        for ($i = 0; $i < 250; $i++) {
+
+            //  echo $merge_sql="select * from admin.merge_limit_tables('public',{$i},{$limit})";
+            //  $s= DB::statement($merge_sql);
+            //print_r($s);
+            //DB::statement("select * from admin.refresh_materialized_views_limit({$i},{$limit})");
+            $sync_sql_ = "select * from admin.sync_data_to_shulesoft({$i},{$limit})";
+            DB::statement($sync_sql_);
+            echo 'success round=' . $i . chr(10);
+            sleep(0.5);
+            $i += $limit - 1;
+        }
+       
+         $url='http://75.119.140.177/shulesoft_staging/api/accountsync';
     
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
@@ -1349,20 +1364,6 @@ $fields=[];
         $result = curl_exec($ch);
         curl_close($ch);
         print_r($result);
-        $limit = 3;
-        for ($i = 0; $i < 250; $i++) {
-
-            //  echo $merge_sql="select * from admin.merge_limit_tables('public',{$i},{$limit})";
-            //  $s= DB::statement($merge_sql);
-            //print_r($s);
-            //DB::statement("select * from admin.refresh_materialized_views_limit({$i},{$limit})");
-            $sync_sql_ = "select * from admin.sync_data_to_shulesoft({$i},{$limit})";
-            DB::statement($sync_sql_);
-            echo 'success round=' . $i . chr(10);
-            sleep(0.5);
-            $i += $limit - 1;
-        }
-       
     }
 
     

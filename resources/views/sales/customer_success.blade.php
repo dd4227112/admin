@@ -40,7 +40,7 @@
                                       </div>
                                         <div class="text-right m-t-10">
                                              <a class="btn btn-info btn-sm" 
-                                             href="<?= url('https://' . $client->username . '.shulesoft.com/install/database/' . $client->username)?>" target="_blank"> install </a>
+                                             href="<?= url('http://' . $client->username . '.shulesoft.africa')?>" target="_blank"> install </a>
                                         </div>
                                     </div>
                                 </div>
