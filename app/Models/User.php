@@ -42,7 +42,7 @@ class User extends Authenticatable {
     }
 
     public function pensions() {
-        return $this->belongsToMany(\App\Models\Constant . pension::class, 'user_pensions', 'user_id', 'pension_id');
+        return $this->belongsToMany(\App\Models\Pension::class, 'user_pensions', 'user_id', 'pension_id');
     }
 
     public function allowances() {

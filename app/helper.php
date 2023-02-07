@@ -2,10 +2,12 @@
 
 function check_implementation($activity, $schema_name) {
     $status = '';
+    $username = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$schema_name}' "))->first();
+
     if (preg_match('/exam/i', strtolower($activity))) {
         //all classes have published an exam
-        $classes = DB::table($schema_name . '.classes')->count();
-        $exams = DB::table($schema_name . '.exam_report')->whereYear('created_at', date('Y'))->count();
+        $classes = !empty($username) ? DB::table($schema_name . '.classes')->count() :  DB::table('shulesoft.classes')->where('schema_name', $schema_name)->count();
+        $exams = !empty($username) ? DB::table($schema_name . '.exam_report')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.exam_report')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();;
         if ($exams >= $classes) {
             $status = ' Implemented';
         } else {
@@ -14,7 +16,7 @@ function check_implementation($activity, $schema_name) {
     } else if (preg_match('/invoice/i', strtolower($activity))) {
         //receive at least 10 payments
 
-        $payments = DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->count();
+        $payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();;
         if ($payments >= 10) {
             $status = 'Implemented';
         } else {
@@ -22,8 +24,8 @@ function check_implementation($activity, $schema_name) {
         }
     } else if (preg_match('/nmb/i', strtolower($activity))) {
         //receive at least 10 payments
-        $nmb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
-        $mappend = DB::table($schema_name . '.bank_accounts_integrations')->join($schema_name . '.bank_accounts', $schema_name . '.bank_accounts.id', '=', $schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count();
+        $nmb_payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->where('schema_name', $schema_name)->count();;
+        $mappend = !empty($username) ? DB::table($schema_name . '.bank_accounts_integrations')->join($schema_name . '.bank_accounts', $schema_name . '.bank_accounts.id', '=', $schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count() : DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $schema_name)->count();
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
         if ($nmb_payments >= 10) {
             $status = $is_mappend . 'Implemented';
@@ -32,8 +34,8 @@ function check_implementation($activity, $schema_name) {
         }
     } else if (preg_match('/crdb/i', strtolower($activity))) {
         //receive at least 10 payments
-        $crdb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
-        $mappend = DB::table($schema_name . '.bank_accounts_integrations')->join($schema_name . '.bank_accounts', $schema_name . '.bank_accounts.id', '=', $schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '8'])->count();
+        $crdb_payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->where('schema_name', $schema_name)->count();;
+        $mappend = !empty($username) ? DB::table($schema_name . '.bank_accounts_integrations')->join($schema_name . '.bank_accounts', $schema_name . '.bank_accounts.id', '=', $schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '8'])->count() : DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $schema_name)->count();;
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
         if ($crdb_payments >= 10) {
             $status = $is_mappend . 'Implemented';
@@ -42,7 +44,7 @@ function check_implementation($activity, $schema_name) {
         }
     } else if (preg_match('/transaction/i', strtolower($activity))) {
         //receive at least 10 payments
-        $expense = DB::table($schema_name . '.expense')->whereYear('created_at', date('Y'))->count();
+        $expense = !empty($username) ?  DB::table($schema_name . '.expense')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.expense')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();;
         if ($expense >= 10) {
             $status = 'Implemented';
         } else {
@@ -51,7 +53,7 @@ function check_implementation($activity, $schema_name) {
     } else if (preg_match('/payroll/i', strtolower($activity))) {
         //receive at least 10 payments
 
-        $salary = DB::table($schema_name . '.salaries')->whereYear('created_at', date('Y'))->count();
+        $salary = !empty($username) ? DB::table($schema_name . '.salaries')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.salaries')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
         if ($salary > 0) {
             $status = 'Implemented';
         } else {
@@ -59,7 +61,7 @@ function check_implementation($activity, $schema_name) {
         }
     } else if (preg_match('/inventory/i', strtolower($activity))) {
 
-        $inventory = DB::table($schema_name . '.product_alert_quantity')->whereYear('created_at', date('Y'))->count();
+        $inventory = !empty($username) ? DB::table($schema_name . '.product_alert_quantity')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.product_alert_quantity')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
         if ($inventory >= 10) {
             $status = 'Implemented';
         } else {
@@ -68,16 +70,16 @@ function check_implementation($activity, $schema_name) {
     } elseif (preg_match('/onboarding/i', strtolower($activity))) {
         //track no of users
         $client = DB::table('admin.clients')->where('username', $schema_name)->first();
-        $students = DB::table($schema_name . '.student')->count();
-        if ($students >= (int) $client->estimated_students) {
+        $students = 1; !empty($username) ?  DB::table($schema_name . '.student')->count() :   DB::table('shulesoft.student')->where('schema_name', $schema_name)->whereYear('created_at', date('Y'))->count();
+        if ($students > 0) { 
             $status = 'Implemented';
         } else {
             $status = ' Not Implemented';
         }
     } else if (preg_match('/transport/i', strtolower($activity))) {
         //check transport and hostel
-        $tmembers = DB::table($schema_name . '.tmembers')->whereYear('created_at', date('Y'))->count();
-        $hmembers = DB::table($schema_name . '.hmembers')->whereYear('created_at', date('Y'))->count();
+        $tmembers = !empty($username) ? DB::table($schema_name . '.tmembers')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.tmembers')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $hmembers = !empty($username) ? DB::table($schema_name . '.hmembers')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.hmembers')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
         if ($tmembers >= 20 || $hmembers >= 20) {
             $status = 'Transport/Hostel Implemented';
         } else {
@@ -86,10 +88,10 @@ function check_implementation($activity, $schema_name) {
          
     } else if (preg_match('/attendance/i', strtolower($activity))) {
       
-        $students = DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count();
-        $sattendances = DB::table($schema_name . '.sattendances')->whereYear('created_at', date('Y'))->count();
-        $teachers = DB::table($schema_name . '.teacher')->whereYear('created_at', date('Y'))->count();
-        $tattendances = DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count();
+        $students = !empty($username) ? DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.student')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $sattendances = !empty($username) ? DB::table($schema_name . '.sattendances')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.sattendances')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $teachers = !empty($username) ? DB::table($schema_name . '.teacher')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.teacher')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $tattendances = !empty($username) ? DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.tattendance')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
 
         if ($students >= $sattendances || $teachers >= $tattendances ) {
             $status = 'Attendance Implemented';

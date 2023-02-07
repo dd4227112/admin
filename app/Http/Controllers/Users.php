@@ -257,7 +257,7 @@ class Users extends Controller {
 
     public function shulesoftUsers() {
         $array = array(7, 15);
-        return DB::table('admin.users')->where('status', 1)->whereNotIn('role_id', $array)->get();
+        return \App\Models\User::where('status', 1)->whereNotIn('role_id', $array)->get();
         // return  \App\Models\User::where(['status'=>1])->get();
     }
 

@@ -220,7 +220,7 @@
                                                     <b>Account Details :</b><br/>
                                                     <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
                                                     <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                     <b>Account Number:</b> 22510028669
+                                                     <b>Account Number:</b> 22510077805
                                                     <br/>
                                                     <small>Please notify us after a deposit</small>
                                                   </p>
@@ -229,7 +229,7 @@
                                                         <b>Account Details :</b><br/>
                                                         <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
                                                         <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                         <b>Account Number:</b> 22510028669
+                                                         <b>Account Number:</b> 22510077805
                                                         <br/>
                                                         <small>Please notify us after a deposit</small>
                                                     </p>

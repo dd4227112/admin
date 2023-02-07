@@ -51,7 +51,7 @@
                                                             <th>
                                                                 <?php
                                                                 if ($request->user_id != '') {
-                                                                    echo isset($client->school) && !empty($client->school) ? $client->school->district . ' - ' . $client->school->region : '';
+                                                                    echo isset($client->school) && !empty($client->school) ? $client->school->district . ' - ' . $client->school->region :  $request->client->address;
                                                                 }
                                                                 ?>
                                                         </tr>
@@ -59,7 +59,7 @@
                                                             <th> Registration No. </th>
                                                             <th>
                                                                 <?php
-                                                                echo isset($client->school) && !empty($client->school) ? $client->school->ownership : '';
+                                                                echo isset($client->school) && !empty($client->school) ? $client->school->ownership : 'Private';
                                                                 ?>
                                                             </th>
                                                         </tr>
@@ -149,30 +149,45 @@
                         $branch = '';
                         $user_name = '';
                         $usertype = '';
-                    $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
+                    $checksystem = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='".$request->client->username."'"))->first();
+                  //  table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
-                        if (!empty($checksystem)) {
+                        if (!empty($request)) {
+                            $bank = \DB::table('shulesoft.bank_accounts')->where('id', $request->bank_account_id)->where('schema_name', $request->client->username)->first();
+                            if(!empty($bank)){
+                                $refer_bank = $bank->name;
+                                $number = $bank->number;
+                                $branch = $bank->branch;
+                            }elseif (!empty($checksystem)){
+                              
                             $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $request->bank_account_id)->first();
                             if(!empty($bank)){
                                 $refer_bank = $bank->name;
                                 $number = $bank->number;
                                 $branch = $bank->branch;
 
+                            } 
                             }
-                            $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
+                            $user = \DB::table('shulesoft.users')->where("table", $request->table)->where('id', $request->user_id)->where('schema_name', $request->client->username)->first();
                             if(!empty($user)){
                                 $user_name = $user->name;
                                 $usertype = ucfirst($user->usertype);
+                            }elseif(!empty($integrated) && !empty($checksystem)){
+                                $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
+                                if(!empty($user)){
+                                    $user_name = $user->name;
+                                    $usertype = ucfirst($user->usertype);
+                                }
                             }
                         } elseif(!empty($bank)) {
-                            $refer_bank = $bank->referBank->name;
+                            $refer_bank = 'Bank'; 
                             $number = $bank->number;
                             $branch = $bank->branch;
                             $user_name = $bank->requests->user->name;
                             $usertype = 'Sales Manager';
                         }else{
                             $refer_bank = 'Not Defined';
-                        }
+                        } 
                         ?>
                         <div class="card-block user-desc">
                             <div class="view-desc">
@@ -207,11 +222,14 @@
                                                 </tr>
                                                 <?php
                                                 if ((int) $request->bank_approved == 1) {
-                                                    if(!empty($checksystem)){
+                                                    if(!empty($request)){
                                                         ?>
                                                 <?php 
+                                                        $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->where('schema_name', $request->client->username)->first();
 
-                                                     $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
+                                                    if(!empty($integrated) && !empty($checksystem)){
+                                                        $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
+                                                    }
                                                     ?>
                                                     <tr>
                                                         <th>Invoice Prefix</th>
@@ -298,11 +316,11 @@
                                                     <tr  style="border-bottom: 5px solid #8CDDCD;">
                                                         <th colspan="2" style="background:#8CDDCD;text-align: center;
                                                             font-size: 18px;
-                                                            color: white;">INETS COMPANY LIMITED</th>
+                                                            color: white;">SHULESOFT LIMITED</th>
                                                     </tr>
                                                     <tr>
                                                         <th>
-                                                            <p>On behalf of <b>INETS Company Limited</b>, the aforementioned services headed by</p>
+                                                            <p>On behalf of <b>SHULESOFT Limited</b>, the aforementioned services headed by</p>
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -332,7 +350,8 @@
                                         </td>
                                         <td style="width: 60% !important;">
                                             <span>
-                                                INETS is a Private Company Limited by shares and registered <br/>under the Company Act 2012 with registration number 9216.<br/> INETS deals solely with Software Development. <br/>Currently focused on <a href="http://shulesoft.com" target="_blank" rel="noopener noreferrer"> <b>ShuleSoft</b></a>, a School Management System  </span></td>
+                                            ShuleSoft Limited to provide ShuleSoft Services to the client which is integrated with CRDB <br>
+                                            Bank System to accept Electronic Payments via CRDB Bank channels</span>
                                     </tr>
                                 </table>
                             </div>

@@ -91,10 +91,11 @@
                                                     $bank = null;
                                                     foreach ($requests as $request) {
                                                     $check_school = DB::table('all_setting')->where('schema_name', $request->client->username)->first();
+                                                    $check_school = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='".$request->client->username."'"))->first();
                                                     if(!empty($check_school)){  
                                                         $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $request->bank_account_id)->first();
                                                     }else{
-                                                        $bank = DB::table('bank_accounts_integrations')->where('integration_request_id', $request->id)->first();
+                                                        $bank = DB::table('shulesoft.bank_accounts')->where('id', $request->bank_account_id)->where('schema_name', $request->client->username)->first();
                                                     }
                                                     if(!empty($bank)){
                                                         $bank_number = $bank->number;

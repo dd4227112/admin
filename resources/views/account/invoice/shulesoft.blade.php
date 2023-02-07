@@ -276,7 +276,7 @@
                                             <img src="<?= url('public/assets/images/account/airtel.jpg') ?>" alt="Airtel Money" width="50" height="60"></a>-->
                                             <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
                                                 <b>Account Details :</b><br/>
-                                                <b>Account Name:</b> INETS COMPANY LIMITED <br/> <b>Bank Name:</b> NMB BANK PLC <br/>  <b>Account Number:</b> 22510028669
+                                                <b>Account Name:</b> INETS COMPANY LIMITED <br/> <b>Bank Name:</b> NMB BANK PLC <br/>  <b>Account Number:</b> 22510077805
                                                 <br/>
                                             </p>
                                             <d>Or Pay Electronically here <a href="<?= url('epayment/i/' . $booking->id) ?>" target="_blank"><?= url('epayment/i/' . ($booking->id)) ?></a></d>

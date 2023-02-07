@@ -2,10 +2,6 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-
-
-  
-
        <div class="page-header">
             <div class="page-header-title">
                 <h4><?= $user->name()."'s Attendances "?></h4>
@@ -127,11 +123,11 @@
                             for ($m = 1; $m <= (int) date('m'); $m++) {
                                 $dateObj = DateTime::createFromFormat('!m', $m);
                                 $monthName = $dateObj->format('F');
-                                $att = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present', 1)->count();
-                                $permissions = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present','=', 1)->whereNotNull('absent_reason_id')->count();
-                                $absents = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNull('absent_reason_id')->where('present',0)->count();
-                                $late_comming = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->count();
-                                $early_leave = $user->uattendance()->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->count();
+                                $att = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where('present', 1)->count();
+                                $permissions = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNotNull('absent_reason_id')->count();
+                                $absents = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->whereNull('absent_reason_id')->where('present',0)->count();
+                                $late_comming = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timein::timestamp as time) '), '>', $the_timein)->where('present',1)->count();
+                                $early_leave = $user->uattendance()->whereDate('date', '>', date('Y-01-01'))->where(DB::raw('EXTRACT(MONTH FROM date) '), $m)->where(DB::raw('CAST(timeout::timestamp as time) '), '<', $the_timeout)->where('present',1)->count();
 
                                 ?>
                                 <tr>
@@ -183,32 +179,32 @@
                                           <tbody>
       
                                               <tr>
-                                                  <?php  $the_timein = "08:00:00";$the_timeout = "17:00:00";
+                                                  <?php  $the_timein = "08:00:00"; $the_timeout = "17:00:00";
                                                   for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) { 
                                                       $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
                                                       if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat') || (date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
                                                           $att = '<label class="badge badge-default">S</label>';
-                                                      } elseif (!empty($att) && $att->present == 1) {
+                                                      } elseif(!empty($att->absent_reason_id)) {
+                                                        $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
+                                                        if (!empty($reason)) {
+                                                          //   $att = $reason->reason;
+                                                             if(preg_match('/Sick/', $reason->reason)){
+                                                                  $att = '<label class="badge badge-danger">S</label>';
+                                                             }elseif(preg_match('/Permission/', $reason->reason)){
+                                                                  $att = '<label class="badge badge-info">PM</label>';
+                                                             }elseif(preg_match('/other reasons/', $reason->reason)) {
+                                                                  $att = '<label class="badge badge-info">O</label>';
+                                                             }
+                                                        }else{
+                                                            $att = '<strong>ABS</strong>';
+                                                        }
+                                                    } elseif (!empty($att) && $att->present == 1) {
                                                           if(date("H:i:s",strtotime($att->timein)) > $the_timein){
                                                              $att = '<label class="badge badge-warning">P</label>';
                                                           }elseif(!empty($att->timeout) && date("H:i:s",strtotime($att->timeout)) < $the_timeout){
                                                              $att = '<label class="badge badge-danger">P</label>';
                                                           }else{
                                                              $att = '<label class="badge badge-info">P</label>';
-                                                          }
-                                                      } elseif(!empty($att->absent_reason_id)) {
-                                                          $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
-                                                          if (!empty($reason)) {
-                                                            //   $att = $reason->reason;
-                                                               if(preg_match('/Sick/', $reason->reason)){
-                                                                    $att = '<label class="badge badge-danger">S</label>';
-                                                               }elseif(preg_match('/Permission/', $reason->reason)){
-                                                                    $att = '<label class="badge badge-info">PM</label>';
-                                                               }elseif(preg_match('/other reasons/', $reason->reason)) {
-                                                                    $att = '<label class="badge badge-info">O</label>';
-                                                               }
-                                                          }else{
-                                                              $att = '<strong>ABS</strong>';
                                                           }
                                                       }else{
                                                          $att = '';
