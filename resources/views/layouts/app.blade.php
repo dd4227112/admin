@@ -21,54 +21,54 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Required Fremwork -->
 
         {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">   --}}
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css">  
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css?v=3">  
 
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css?v=4">
 
 
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/icofont/css/icofont.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/jquery.mCustomScrollbar.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css?v=4">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/icofont/css/icofont.css?v=4">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css?v=4">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/jquery.mCustomScrollbar.css?v=4">
 
 
         {{-- databables --}}
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/data-table/css/buttons.dataTables.min.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css?v=4">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/data-table/css/buttons.dataTables.min.css?v=4">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css?v=4">
  
 
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css"> 
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css?v=4">
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css?v=4"> 
 
-        <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
+        <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css?v=4" rel="stylesheet">
 
-        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script>  
+        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js?v=4"></script>
+        <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js?v=4"></script>  
 
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.js?v=4delivr.net/npm/daterangepicker/daterangepicker.css?v=4" />
+        <script type="text/javascript" src="https://cdn.js?v=4delivr.net/momentjs/latest/moment.min.js?v=4"></script>
+        <script type="text/javascript" src="https://cdn.js?v=4delivr.net/npm/daterangepicker/daterangepicker.min.js?v=4"></script>
        
         {{-- highcharts --}}
-         <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/modules/series-label.js"></script>
-        <script src="https://code.highcharts.com/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/modules/export-data.js"></script>
-        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+         <script src="https://code.highcharts.com/highcharts.js?v=4"></script>
+        <script src="https://code.highcharts.com/modules/series-label.js?v=4"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js?v=4"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js?v=4"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js?v=4"></script>
+        <script src="https://code.highcharts.com/highcharts-3d.js?v=4"></script>
 
          {{-- select 2 --}}
-        <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script> 
+        <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js?v=4'); ?>"></script> 
 
-       <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
+       <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css?v=4">
         <!-- Multi Select css -->
-       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
-       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css">
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css?v=4">
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/multiselect/css/multi-select.css?v=4">
 
         {{--  alert --}}
-       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> 
+       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js?v=4/latest/toastr.min.css?v=4">
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js?v=4/latest/js/toastr.min.js?v=4"></script> 
      </head>
     <body>
       <!-- Pre-loader start -->
