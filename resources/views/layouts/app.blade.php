@@ -1,4 +1,4 @@
-<?php $root =  '/public/';
+<?php $root =  'http://admin.shulesoft.co/public/';
 $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 //isset($value) ? dd($value) : 'vaaaaaaaa' 
 ?>
