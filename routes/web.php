@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Route;
   |
  */
 
-
-
 //Route::middleware(['blockIP'])->group(function () {
 
 
