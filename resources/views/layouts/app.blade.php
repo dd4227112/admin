@@ -21,7 +21,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Required Fremwork -->
 
         {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">   --}}
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css">  
+        <link rel="stylesheet" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css">  
 
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
 
