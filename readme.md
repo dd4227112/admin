@@ -23,4 +23,5 @@ https://shulesoft@bitbucket.org/shulesoft/shulesoft.git
 Sync files btn servers
  rsync -azvr /home/schema_backups/* root@75.119.138.7:/home/sbackup/
 
-
+#update duplicates
+UPDATE t SET phoneid=userid FROM (SELECT count(*),phoneid FROM t GROUP BY phoneid HAVING count(*)>1) AS foo WHERE t.phoneid=foo.phoneid;

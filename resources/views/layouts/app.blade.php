@@ -135,11 +135,3 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
             </div>
         </div>  
         @include('components.footer')
-          
- 
-            
-            
-            
-            
-            
-

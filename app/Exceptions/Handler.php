@@ -64,7 +64,7 @@ class Handler extends ExceptionHandler {
         $err .= "\t<li>Error from username: " . session('username') . "</li>\n";
         $err .= "</ul>\n\n";
 
-        $filename = 'admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
+        $filename = 'admin_logs.html';
         error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
 
        // $this->sendLog($e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file']);
@@ -72,7 +72,7 @@ class Handler extends ExceptionHandler {
 
     public function sendLog($message) {
        $controller = new \App\Http\Controllers\Controller();
-       $number ='255655007457'; 
+       $number ='255714825469'; 
        $chatId = $number . '@c.us';
        $controller->sendMessage($chatId,$message);
     }
