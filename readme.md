@@ -25,3 +25,6 @@ Sync files btn servers
 
 #update duplicates
 UPDATE t SET phoneid=userid FROM (SELECT count(*),phoneid FROM t GROUP BY phoneid HAVING count(*)>1) AS foo WHERE t.phoneid=foo.phoneid;
+
+ALTER USER postgres PASSWORD 'myPassword';
+ALTER ROLE
