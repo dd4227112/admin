@@ -18,7 +18,7 @@ class Workshop extends Controller {
     }
 
     public function register() {
-        $this->data['event'] = \App\Models\Events::where('category','event')->latest()->first();
+        $this->data['event'] = \App\Models\Events::where('category', 'event')->latest()->first();
         return view('registerworkshop', $this->data);
     }
 
@@ -61,17 +61,17 @@ class Workshop extends Controller {
                     . chr(10) . ' Call: +255 655 406 004 ';
 
             \DB::table('public.sms')->insert([
-                'body'=>$message1,
-                'user_id'=>1,
-                'type'=>0,
+                'body' => $message1,
+                'user_id' => 1,
+                'type' => 0,
                 'priority' => 1,
                 'sent_from' => 'whatsapp',
-                'phone_number'=>$phonenumber
+                'phone_number' => $phonenumber
             ]);
             $chatId = $phonenumber . '@c.us';
             $this->sendMessage($chatId, $message1);
-         //   $this->sendEmail($phonenumber, $workshop);
-            return redirect('morepage/'.request('status'));
+            //   $this->sendEmail($phonenumber, $workshop);
+            return redirect('morepage/' . request('status'));
 //            $link = 'https://www.shulesoft.com';
 //            echo "<h3>Conglatulations for registering!!! We glad to have you.'); </h3>";
 //            echo '<a href="#" onclick="window.location.href=\'' . $link . '\'>Close</a>';
@@ -114,30 +114,31 @@ class Workshop extends Controller {
         $id = request();
         $pass = rand(1, 999) . substr(str_shuffle('abcdefghkmnpl'), 0, 3);
         $password = bcrypt($pass);
-        $user = DB::table(request('schema').'.'.request('table'))->where(request('table').'ID', request('id'))->first();
-        if(!empty($user)){
-            $link = request('table') == 'parent' ? 'You can download Parent Experience app here : Android: https://cutt.ly/XRKSSZF'. chr(10).' IOS: https://cutt.ly/fT2Qn5f' : 'https://'.request('schema').'.shulesoft.com/';
-            $message = 'Habari '.$user->name.',  nenotumizi (username) lako ni: '.$user->username.' na nenosiri (password) ni : '.$pass.' Kumbuka kubadili password yako ukishaingia kwenye mfumo ShuleSoft. Asante'.chr(10).chr(10).$link;
-        DB::table(request('schema').'.'.request('table'))->where(request('table').'ID', request('id'))->update(['default_password' => $pass, 'password' => $password]);
-        echo 'success';
+        $user = DB::table(request('schema') . '.' . request('table'))->where(request('table') . 'ID', request('id'))->first();
+        if (!empty($user)) {
+            //$link = request('table') == 'parent' ? 'You can download Parent Experience app here : Android: https://cutt.ly/XRKSSZF'. chr(10).' IOS: https://cutt.ly/fT2Qn5f' : 'https://'.request('schema').'.shulesoft.com/';
+            $link = '';
+            $message = 'Habari ' . $user->name . ',  nenotumizi (username) lako ni: ' . $user->username . ' na nenosiri (password) ni : ' . $pass . ' Kumbuka kubadili password yako ukishaingia kwenye mfumo ShuleSoft. Asante' . chr(10) . chr(10) . $link;
+            DB::table(request('schema') . '.' . request('table'))->where(request('table') . 'ID', request('id'))->update(['default_password' => $pass, 'password' => $password]);
+            echo 'success';
 
-        $id = str_replace('+', NULL, $user->phone) . '@c.us';
-        $this->sendMessage($id, $message);
-        \DB::table(request('schema').'.sms')->insert(array('phone_number' => $user->phone, 'body' => $message, 'type' => 1, 'priority' => 1, 'source' => 0, 'sent_from' => 'phonesms'));
+            $id = str_replace('+', NULL, $user->phone) . '@c.us';
+            $this->sendMessage($id, $message);
+            \DB::table(request('schema') . '.sms')->insert(array('phone_number' => $user->phone, 'body' => $message, 'type' => 1, 'priority' => 1, 'source' => 0, 'sent_from' => 'phonesms'));
 
-        DB::statement('refresh materialized view admin.all_users');
-    }else{
-        echo 'failed';
+            DB::statement('refresh materialized view admin.all_users');
+        } else {
+            echo 'failed';
+        }
     }
-}
 
     public function userdata() {
         $this->data['returns'] = [];
         $this->data['prefix'] = '';
-          if($_POST) {
-            $this->data['users'] = DB::table('admin.all_users')->where('schema_name', request('schema_name'))->where('table',  request('table'))->where('status', 1)->get();
-          }
+        if ($_POST) {
+            $this->data['users'] = DB::table('admin.all_users')->where('schema_name', request('schema_name'))->where('table', request('table'))->where('status', 1)->get();
+        }
         return view('market.userdata', $this->data);
-    }    
+    }
 
 }

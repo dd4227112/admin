@@ -6,8 +6,9 @@ function check_implementation($activity, $schema_name) {
 
     if (preg_match('/exam/i', strtolower($activity))) {
         //all classes have published an exam
-        $classes = !empty($username) ? DB::table($schema_name . '.classes')->count() :  DB::table('shulesoft.classes')->where('schema_name', $schema_name)->count();
-        $exams = !empty($username) ? DB::table($schema_name . '.exam_report')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.exam_report')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();;
+        $classes = !empty($username) ? DB::table($schema_name . '.classes')->count() : DB::table('shulesoft.classes')->where('schema_name', $schema_name)->count();
+        $exams = !empty($username) ? DB::table($schema_name . '.exam_report')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.exam_report')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        ;
         if ($exams >= $classes) {
             $status = ' Implemented';
         } else {
@@ -16,7 +17,8 @@ function check_implementation($activity, $schema_name) {
     } else if (preg_match('/invoice/i', strtolower($activity))) {
         //receive at least 10 payments
 
-        $payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();;
+        $payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        ;
         if ($payments >= 10) {
             $status = 'Implemented';
         } else {
@@ -24,7 +26,8 @@ function check_implementation($activity, $schema_name) {
         }
     } else if (preg_match('/nmb/i', strtolower($activity))) {
         //receive at least 10 payments
-        $nmb_payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->where('schema_name', $schema_name)->count();;
+        $nmb_payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->where('schema_name', $schema_name)->count();
+        ;
         $mappend = !empty($username) ? DB::table($schema_name . '.bank_accounts_integrations')->join($schema_name . '.bank_accounts', $schema_name . '.bank_accounts.id', '=', $schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count() : DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $schema_name)->count();
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
         if ($nmb_payments >= 10) {
@@ -34,8 +37,10 @@ function check_implementation($activity, $schema_name) {
         }
     } else if (preg_match('/crdb/i', strtolower($activity))) {
         //receive at least 10 payments
-        $crdb_payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->where('schema_name', $schema_name)->count();;
-        $mappend = !empty($username) ? DB::table($schema_name . '.bank_accounts_integrations')->join($schema_name . '.bank_accounts', $schema_name . '.bank_accounts.id', '=', $schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '8'])->count() : DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $schema_name)->count();;
+        $crdb_payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->where('schema_name', $schema_name)->count();
+        ;
+        $mappend = !empty($username) ? DB::table($schema_name . '.bank_accounts_integrations')->join($schema_name . '.bank_accounts', $schema_name . '.bank_accounts.id', '=', $schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '8'])->count() : DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $schema_name)->count();
+        ;
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
         if ($crdb_payments >= 10) {
             $status = $is_mappend . 'Implemented';
@@ -44,7 +49,8 @@ function check_implementation($activity, $schema_name) {
         }
     } else if (preg_match('/transaction/i', strtolower($activity))) {
         //receive at least 10 payments
-        $expense = !empty($username) ?  DB::table($schema_name . '.expense')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.expense')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();;
+        $expense = !empty($username) ? DB::table($schema_name . '.expense')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.expense')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        ;
         if ($expense >= 10) {
             $status = 'Implemented';
         } else {
@@ -53,7 +59,7 @@ function check_implementation($activity, $schema_name) {
     } else if (preg_match('/payroll/i', strtolower($activity))) {
         //receive at least 10 payments
 
-        $salary = !empty($username) ? DB::table($schema_name . '.salaries')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.salaries')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $salary = !empty($username) ? DB::table($schema_name . '.salaries')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.salaries')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
         if ($salary > 0) {
             $status = 'Implemented';
         } else {
@@ -61,7 +67,7 @@ function check_implementation($activity, $schema_name) {
         }
     } else if (preg_match('/inventory/i', strtolower($activity))) {
 
-        $inventory = !empty($username) ? DB::table($schema_name . '.product_alert_quantity')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.product_alert_quantity')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $inventory = !empty($username) ? DB::table($schema_name . '.product_alert_quantity')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.product_alert_quantity')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
         if ($inventory >= 10) {
             $status = 'Implemented';
         } else {
@@ -70,35 +76,34 @@ function check_implementation($activity, $schema_name) {
     } elseif (preg_match('/onboarding/i', strtolower($activity))) {
         //track no of users
         $client = DB::table('admin.clients')->where('username', $schema_name)->first();
-        $students = 1; !empty($username) ?  DB::table($schema_name . '.student')->count() :   DB::table('shulesoft.student')->where('schema_name', $schema_name)->whereYear('created_at', date('Y'))->count();
-        if ($students > 0) { 
+        $students = 1;
+        !empty($username) ? DB::table($schema_name . '.student')->count() : DB::table('shulesoft.student')->where('schema_name', $schema_name)->whereYear('created_at', date('Y'))->count();
+        if ($students > 0) {
             $status = 'Implemented';
         } else {
             $status = ' Not Implemented';
         }
     } else if (preg_match('/transport/i', strtolower($activity))) {
         //check transport and hostel
-        $tmembers = !empty($username) ? DB::table($schema_name . '.tmembers')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.tmembers')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
-        $hmembers = !empty($username) ? DB::table($schema_name . '.hmembers')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.hmembers')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $tmembers = !empty($username) ? DB::table($schema_name . '.tmembers')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.tmembers')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $hmembers = !empty($username) ? DB::table($schema_name . '.hmembers')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.hmembers')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
         if ($tmembers >= 20 || $hmembers >= 20) {
             $status = 'Transport/Hostel Implemented';
         } else {
             $status = 'Transport/Hostel  Not Implemented';
         }
-         
     } else if (preg_match('/attendance/i', strtolower($activity))) {
-      
-        $students = !empty($username) ? DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.student')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
-        $sattendances = !empty($username) ? DB::table($schema_name . '.sattendances')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.sattendances')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
-        $teachers = !empty($username) ? DB::table($schema_name . '.teacher')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.teacher')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
-        $tattendances = !empty($username) ? DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count() :  DB::table('shulesoft.tattendance')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
 
-        if ($students >= $sattendances || $teachers >= $tattendances ) {
+        $students = !empty($username) ? DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.student')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $sattendances = !empty($username) ? DB::table($schema_name . '.sattendances')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.sattendances')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $teachers = !empty($username) ? DB::table($schema_name . '.teacher')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.teacher')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+        $tattendances = !empty($username) ? DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.tattendance')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
+
+        if ($students >= $sattendances || $teachers >= $tattendances) {
             $status = 'Attendance Implemented';
         } else {
             $status = 'Attendance  Not Implemented';
         }
-
     } else if (preg_match('/sms/i', strtolower($activity))) {
         //check transport and hostel
         $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '6664567894')->where('schema_name', $schema_name)->count();
@@ -110,7 +115,7 @@ function check_implementation($activity, $schema_name) {
         }
     }
     return $status;
-    }
+}
 
 function customdate($datatime) {
     $newTZ = new DateTimeZone('America/New_York');
@@ -136,8 +141,6 @@ function json_call($array = null) {
         return request('callback') . '(' . (json_encode($array)) . ')';
     }
 }
-
-
 
 function money($amount, $decimal = 0) {
     return number_format($amount, $decimal);
@@ -208,14 +211,23 @@ function number_to_words($number) {
 
 function userAccessRole() {
     $user_id = \Auth::user()->id;
+
     if ((int) $user_id > 0) {
         $user = \App\Models\User::where('id', (int) $user_id)->first();
+        $objet = array();
         if ($user) {
-            $permission = \App\Models\PermissionRole::where('role_id',  (int) $user->role_id)->get();
-            $objet = array();
-            if (count($permission) > 0) {
+            if ((int) $user_id == 2) {
+                $permission = \App\Models\Permission::all();
                 foreach ($permission as $perm) {
-                    array_push($objet, $perm->permission->name);
+                    array_push($objet, $perm->name);
+                }
+            } else {
+                $permission = \App\Models\PermissionRole::where('role_id', (int) $user->role_id)->get();
+
+                if (count($permission) > 0) {
+                    foreach ($permission as $perm) {
+                        array_push($objet, $perm->permission->name);
+                    }
                 }
             }
             return $objet;
@@ -265,6 +277,7 @@ function timeAgo($datetime, $full = false) {
  * @return  string
  */
 if (!function_exists('form_dropdown')) {
+
     function form_dropdown($name = '', $options = array(), $selected = array(), $extra = '') {
         if (!is_array($selected)) {
             $selected = array($selected);
@@ -317,7 +330,7 @@ if (!function_exists('form_dropdown')) {
  * @param type $phone_number
  * @return array($country_name, $valid_number) or not array if wrong number
  */
-function validate_phone_number($number,$country_code=NULL) {
+function validate_phone_number($number, $country_code = NULL) {
     $phone_number = preg_replace("/[^0-9]/", '', $number);
     $phone = preg_replace('/' . $country_code . '/', '', $phone_number, 1);
     return $valid_number = $country_code . $phone;
@@ -325,44 +338,36 @@ function validate_phone_number($number,$country_code=NULL) {
 
 function btn_attendance($id, $method, $class, $name) {
     return "<input type='checkbox' class='" . $class . "' $method id='" . $id . "' data-placement='top' data-toggle='tooltip' data-original-title='" . $name . "' > ";
-
 }
 
-
-  function createCode($last_code = 12345) {
+function createCode($last_code = 12345) {
     $number_part = substr($last_code, -3);
     return strtoupper(substr('SHULESOFT', 0, 2)) . '-' . ((int) $number_part + 1);
 }
 
+function timeZones($value) {
+    $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+    $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
+    return $date->format('Y-m-d H:i:s');
+}
 
- function timeZones($value)
-    {
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
-        $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
-        return $date->format('Y-m-d H:i:s');
-    }
+function cdate($date) {
+    return date('d-m-Y H:i:s');
+}
 
-    
-   function cdate($date){
-        return date('d-m-Y H:i:s');
-    }
+function remove_comma($string_number) {
+    return trim(str_replace(',', '', $string_number));
+}
 
-
-    function remove_comma($string_number) {
-        return trim(str_replace(',', '', $string_number));
-    }
-
-
-    function school_full_name($schema_name = null){
-        return \App\Models\Client::where('username',$schema_name)->first()->name;
-    }
+function school_full_name($schema_name = null) {
+    return \App\Models\Client::where('username', $schema_name)->first()->name;
+}
 
 function warp($word, $size) {
     return wordwrap($word, $size, "<br />\n");
 }
 
-
-    function base_url($url = '/') {
+function base_url($url = '/') {
     return ($_POST && request('b_url') != '') ? url(request('b_url')) : url($url);
 }
 
@@ -418,20 +423,17 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
     return $remaindays - $holidays->count;
 }
 
-  // clean string from special characters
-    function clean($string) {
-         $string = str_replace(' ', '', $string); // Replaces all spaces with empty.
-         return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-    }
+// clean string from special characters
+function clean($string) {
+    $string = str_replace(' ', '', $string); // Replaces all spaces with empty.
+    return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+}
 
+function fullName($schema, $table, $user_id) {
+    return \collect(\DB::select("select * from admin.all_users where id = $user_id and 'table' = '$table' and schema_name = '$schema' "))->first();
+}
 
-    function fullName($schema,$table,$user_id){
-        return \collect(\DB::select("select * from admin.all_users where id = $user_id and 'table' = '$table' and schema_name = '$schema' "))->first();
-    }
-
-
-
-    function validate_phone($number) {
+function validate_phone($number) {
     $phone_number = preg_replace("/[^0-9]/", '', $number);
     ;
     if (strlen(preg_replace('#[^0-9]#i', '', $phone_number)) < 7 || strlen(preg_replace('#[^0-9]#i', '', $phone_number)) > 14) {
@@ -458,7 +460,6 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
             672 => " Australian External Territories",
             43 => " Austria ", 994 => " Azerbaijani Republic", 1 => " Bahamas ", 973 => " Bahrain", 880 => " Bangladesh ", 1 => " Barbados ", 375 => " Belarus ", 32 => " Belgium ", 501 => " Belize", 229 => " Benin ", 1 => " Bermuda ", 975 => " Bhutan", 591 => " Bolivia", 387 => " Bosnia and Herzegovina ", 267 => " Botswana", 55 => " Brazil (Federative Republic of)", 1 => " British Virgin Islands", 673 => " Brunei Darussalam ", 359 => " Bulgaria (Republic of)", 226 => " Burkina Faso", 257 => " Burundi (Republic of)", 855 => " Cambodia (Kingdom of)", 237 => " Cameroon (Republic of)", 1 => " Canada", 238 => " Cape Verde (Republic of)", 1 => " Cayman Islands ", 236 => " Central African Republic ", 235 => " Chad (Republic of)", 56 => " Chile ", 86 => " China ( Republic of)", 57 => " Colombia (Republic of)", 269 => " Comoros (Union of the)", 242 => " Congo (Republic of the)", 682 => " Cook Islands", 506 => " Costa Rica", 225 => " Côte d \"Ivoire (Republic of)", 385 => " Croatia (Republic of)", 53 => " Cuba", 357 => " Cyprus (Republic of)", 420 => " Czech Republic ", 850 => " Democratic People\"s Republic of Korea ", 243 => " Democratic Republic of the Congo", 670 => " Democratic Republic of Timor-Leste", 45 => " Denmark", 246 => " Diego Garcia ", 253 => " Djibouti (Republic of) ", 1 => " Dominica (Commonwealth of)", 1 => " Dominican Republic", 593 => " Ecuador", 20 => " Egypt (Arab Republic of)", 503 => " El Salvador (Republic of)", 240 => " Equatorial Guinea (Republic of)", 291 => " Eritrea", 372 => " Estonia (Republic of)", 251 => " Ethiopia (Federal Democratic Republic of) ", 500 => " Falkland Islands (Malvinas) ", 298 => " Faroe Islands", 679 => " Fiji (Republic of)", 358 => " Finland ", 33 => " France", 262 => " French Departments and Territories in the Indian Ocean ", 594 => " French Guiana (French Department of)", 689 => " French Polynesia (Territoire français \"outre-mer)", 241 => " Gabonese Republic", 220 => " Gambia (Republic of the)", 995 => " Georgia", 49 => " Germany (Federal Republic of)", 233 => " Ghana", 350 => " Gibraltar", 881 => " Global Mobile Satellite System (GMSS) shared code", 30 => " Greece ", 299 => " Greenland (Denmark)", 1 => " Grenada", 388 => " Group of countries shared code", 590 => " Guadeloupe (French Department of)", 1 => " Guam ", 502 => " Guatemala (Republic of)", 224 => " Guinea (Republic of)", 245 => " Guinea-Bissau (Republic of)", 592 => " Guyana", 509 => " Haiti (Republic of)", 504 => " Honduras (Republic of)", 852 => " Hong Kong China", 36 => " Hungary (Republic of)", 354 => " Iceland", 91 => " India (Republic of)", 62 => " Indonesia (Republic of)", 870 => " Inmarsat SNAC ", 98 => " Iran (Islamic Republic of)", 964 => " Iraq (Republic of)", 353 => " Ireland", 972 => " Israel (State of)", 39 => " Italy", 1 => " Jamaica", 81 => " Japan", 962 => " Jordan (Hashemite Kingdom of)", 7 => " Kazakhstan (Republic of)", 254 => " Kenya (Republic of)", 686 => " Kiribati (Republic of)", 82 => " Korea (Republic of)", 965 => " Kuwait (State of)", 996 => " Kyrgyz Republic ", 856 => " Lao People\"s Democratic Republic", 371 => " Latvia (Republic of)", 961 => " Lebanon ", 266 => " Lesotho (Kingdom of)", 231 => " Liberia (Republic of)", 218 => " Libya (Socialist People\"s Libyan Arab Jamahiriya)", 423 => " Liechtenstein (Principality of)", 370 => " Lithuania (Republic of) ", 352 => " Luxembourg", 853 => " Macao China", 261 => " Madagascar (Republic of)", 265 => " Malawi", 60 => " Malaysia", 960 => " Maldives (Republic of)", 223 => " Mali (Republic of)", 356 => " Malta", 692 => " Marshall Islands (Republic of the)", 596 => " Martinique (French Department of)", 222 => " Mauritania (Islamic Republic of)", 230 => " Mauritius (Republic of)", 269 => " Mayotte", 52 => " Mexico", 691 => " Micronesia (Federated States of)", 373 => " Moldova (Republic of) ", 377 => " Monaco (Principality of)", 976 => " Mongolia ", 382 => " Montenegro (Republic of)", 1 => " Montserrat", 212 => " Morocco (Kingdom of)", 258 => " Mozambique (Republic of) ", 95 => " Myanmar (Union of)", 264 => " Namibia (Republic of)", 674 => " Nauru (Republic of)", 977 => " Nepal (Federal Democratic Republic of)", 31 => " Netherlands (Kingdom of the)", 599 => " Netherlands Antilles", 687 => " New Caledonia (Territoire français d\"outre-mer)", 64 => " New Zealand", 505 => " Nicaragua", 227 => "Niger (Republic of the)", 234 => " Nigeria (Federal Republic of)", 683 => " Niue ", 1 => " Northern Mariana Islands (Commonwealth of the)", 47 => " Norway", 968 => " Oman (Sultanate of)", 92 => " Pakistan (Islamic Republic of)", 680 => " Palau (Republic of)", 507 => " Panama (Republic of)", 675 => " Papua New Guinea", 595 => " Paraguay (Republic of)", 51 => "Peru", 63 => "Philippines (Republic of the)", 48 => " Poland (Republic of)", 351 => " Portugal", 1 => " Puerto Rico", 974 => " Qatar (State of)", 40 => " Romania ", 7 => " Russian Federation", 250 => " Rwanda (Republic of)", 290 => " Saint Helena", 1 => " Saint Kitts and Nevis", 1 => " Saint Lucia", 508 => " Saint Pierre and Miquelon (Collectivité territoriale de la République française)", 1 => " Saint Vincent and the Grenadines", 685 => " Samoa (Independent State of)", 378 => " San Marino (Republic of) ", 239 => " Sao Tome and Principe (Democratic Republic of)", 966 => " Saudi Arabia (Kingdom of)", 221 => " Senegal (Republic of)", 381 => " Serbia (Republic of)", 248 => " Seychelles (Republic of)", 232 => " Sierra Leone", 65 => " Singapore (Republic of)", 421 => " Slovak Republic", 386 => " Slovenia (Republic of)", 677 => " Solomon Islands", 252 => " Somali Democratic Republic", 27 => " South Africa (Republic of)", 34 => " Spain", 94 => " Sri Lanka (Democratic Socialist Republic of)", 249 => " Sudan (Republic of the)", 597 => " Suriname (Republic of)", 268 => " Swaziland (Kingdom of)", 46 => " Sweden", 41 => " Switzerland (Confederation of)", 963 => " Syrian Arab Republic", 886 => " Taiwan China", 992 => " Tajikistan (Republic of)", 255 => " Tanzania (United Republic of)", 66 => " Thailand", 389 => " The Former Yugoslav Republic of Macedonia", 228 => " Togolese Republic", 690 => " Tokelau", 676 => " Tonga (Kingdom of)", 1 => " Trinidad and Tobago", 290 => " Tristan da Cunha", 216 => " Tunisia", 90 => " Turkey", 993 => " Turkmenistan", 1 => " Turks and Caicos Islands", 688 => " Tuvalu", 256 => " Uganda (Republic of)", 380 => " Ukraine", 971 => " United Arab Emirates", 44 => " United Kingdom of Great Britain and Northern Ireland ", 1 => " United States of America", 1 => " United States Virgin Islands", 598 => " Uruguay (Eastern Republic of)", 998 => " Uzbekistan (Republic of)", 678 => " Vanuatu (Republic of)", 379 => " Vatican City State", 39 => " Vatican City State", 58 => " Venezuela (Bolivarian Republic of)", 84 => " Viet Nam (Socialist Republic of)", 681 => " Wallis and Futuna (Territoire français d\"outre-mer)", 967 => " Yemen (Republic of)", 260 => "Zambia (Republic of)", 263 => " Zimbabwe");
 
-
         foreach ($x as $key => $value) {
             if ($p == $key) {
                 $country_name = $value;
@@ -474,9 +475,8 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
         $valid = array($country_name, $valid_number);
         return $valid;
     }
-
 }
 
-    function percent($number){
-        return number_format($number, 2, '.', ''). '%';
-    }
+function percent($number) {
+    return number_format($number, 2, '.', '') . '%';
+}
