@@ -235,7 +235,7 @@
                                               <option value="chore">Change Request</a>
                                           <option value="Rrelease">Release</a>
                                           <?php
-                                          $staff = DB::table('users')->where('status', 1)->whereIn('id',array(812,770,38,23,817))->inRandomOrder()->first();
+                                          $staff = DB::table('users')->where('status', 1)->inRandomOrder()->first();
                                          ?>
                                             <input type="hidden"  value="<?= $staff->id ?>" name="to_user_id">
                                       </select>
