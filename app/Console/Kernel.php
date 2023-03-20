@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel {
             //sync invoices 
            // $this->syncInvoice();
 
-            $this->syncData();
+          //  $this->syncData();
         })->everyMinute();
 
         $schedule->call(function () {
@@ -1275,8 +1275,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         if (isset($status->status) && $status->status == 0) {
             $reference = isset($status->reference) ? $status->reference : '';
             $message = isset($status->description) ? $status->description : '';
-            $sms = 'Hello Mr. Albo this Invoice ' . $reference . ' of ' . $student . ' from *' . strtoupper($schema) . '* with paid amount of ' . $amount . ' failed to be paid. With Error message: ' . chr(10) . chr(10) . $message . ' happened on ' . $date . ' Take a look';
-            $whatsapp_numbers = ['255744158016'];
+            $sms = 'Hello, this Invoice ' . $reference . ' of ' . $student . ' from *' . strtoupper($schema) . '* with paid amount of ' . $amount . ' failed to be paid. With Error message: ' . chr(10) . chr(10) . $message . ' happened on ' . $date . ' Take a look';
+            $whatsapp_numbers = ['255714825469'];
             foreach ($whatsapp_numbers as $number) {
                 $controller->sendMessage($number . '@c.us', $sms);
             }

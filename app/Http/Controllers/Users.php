@@ -186,10 +186,10 @@ class Users extends Controller {
     public function show() {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
         $this->data['user'] = $user = User::findOrFail($id);
-        $find=$this->findEmptyKey($this->data['user']);
-        if((int)$find==1){
-            return redirect('users/edit/'.$id)->with('finish','finish');
-        }
+//        $find=$this->findEmptyKey($this->data['user']);
+//        if((int)$find==1){
+//            return redirect('users/edit/'.$id)->with('finish','finish');
+//        }
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
         $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->latest()->get();
         $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->latest()->get();

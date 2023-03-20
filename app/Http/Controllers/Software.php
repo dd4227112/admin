@@ -434,6 +434,7 @@ class Software extends Controller {
         if (request('tag')) {
             return $this->ajaxTable('api.requests', ['id', 'content', 'created_at']);
         }
+        $this->data['status']=[];
         return view('software.api.requests', $this->data);
     }
 
