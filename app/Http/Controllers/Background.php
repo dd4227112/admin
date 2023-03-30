@@ -131,7 +131,7 @@ class Background extends Controller {
                     $push_status = 'invoice_update';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
-                        $setting = DB::table('beta_testing.setting')->first();
+                        $setting = DB::table('public.setting')->first();
 
                         $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
                     } else {
@@ -155,7 +155,7 @@ class Background extends Controller {
     public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
-            //  $setting = DB::table('beta_testing.setting')->first();
+            //  $setting = DB::table('public.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
             $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
             if (!empty($credentials)) {

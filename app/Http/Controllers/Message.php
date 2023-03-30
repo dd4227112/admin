@@ -371,7 +371,7 @@ class Message extends Controller {
                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
                         $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
                         $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
-                                    $m->from('noreply@shulesoft.com', $message->sitename);
+                                    $m->from('noreply@shulesoft.africa', $message->sitename);
                                     $m->to($message->email)->subject($message->subject);
                                 });
 
@@ -409,7 +409,7 @@ class Message extends Controller {
                         $link = 'www.karibusms.com';
                         $data = ['content' => $message->content, 'link' => $link, 'name' => ''];
                         \Mail::send('email.karibusms', $data, function ($m) use ($message) {
-                            $m->from('noreply@shulesoft.com', 'karibuSMS');
+                            $m->from('noreply@shulesoft.africa', 'karibuSMS');
                             $m->to($message->email)->subject($message->subject);
                         });
 

@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             //sync invoices 
-           // $this->syncInvoice();
+            $this->syncInvoice();
 
           //  $this->syncData();
         })->everyMinute();
@@ -90,10 +90,10 @@ class Kernel extends ConsoleKernel {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
 
-        $schedule->call(function () {
+        //$schedule->call(function () {
             //send SMS to karibuSMS
-            $this->karibuSMS();
-        })->everyMinute();
+           // $this->karibuSMS();
+       // })->everyMinute();
     }
 
     public function whatsappMessage() {
@@ -308,7 +308,7 @@ class Kernel extends ConsoleKernel {
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
-            $setting = DB::table('beta_testing.setting')->first();
+            $setting = DB::table('public.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
         } else {
             //live invoice
@@ -366,7 +366,7 @@ class Kernel extends ConsoleKernel {
             echo $push_status . $invoice->schema_name;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
-                $setting = DB::table('beta_testing.setting')->first();
+                $setting = DB::table('public.setting')->first();
                 $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
             } else {
                 //live invoice
@@ -429,7 +429,7 @@ class Kernel extends ConsoleKernel {
         echo $push_status . $invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
-            $setting = DB::table('beta_testing.setting')->first();
+            $setting = DB::table('public.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
         } else {
             //live invoice
@@ -454,7 +454,7 @@ class Kernel extends ConsoleKernel {
         $push_status = 'invoice_update';
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
-            $setting = DB::table('beta_testing.setting')->first();
+            $setting = DB::table('public.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
         } else {
             //live invoice
@@ -494,7 +494,7 @@ class Kernel extends ConsoleKernel {
                     // $push_status = 'invoice_update';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
-                        $setting = DB::table('beta_testing.setting')->first();
+                        $setting = DB::table('public.setting')->first();
 
                         $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
                     } else {
@@ -534,7 +534,7 @@ class Kernel extends ConsoleKernel {
     public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
-            //  $setting = DB::table('beta_testing.setting')->first();
+            //  $setting = DB::table('public.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
             $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
             if (!empty($credentials)) {
@@ -890,7 +890,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                 //get students with birthday, with their section teacher names
                 //get count total number of students with birthday today and send to admin
                 $sql_for_teachers = "insert into shulesoft.sms (schema_name,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
-                        . "SELECT " . $schema->table_schema . ", 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher',(select id from " . $schema->table_schema . ".sms_keys limit 1 ) from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE  a.status=1 and  t.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
+                        . "SELECT '" . $schema->table_schema . "', 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher',(select id from " . $schema->table_schema . ".sms_keys limit 1 ) from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE  a.status=1 and  t.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
                 DB::statement($sql_for_teachers);
             }
         }
@@ -1284,14 +1284,14 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         return $curl;
     }
 
-    public function karibuSMS() {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://www.karibusms.com/check_pending");
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        $data = curl_exec($ch);
-    }
+//    public function karibuSMS() {
+//        $ch = curl_init();
+//        curl_setopt($ch, CURLOPT_URL, "http://www.karibusms.com/check_pending");
+//        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+//        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+//        $data = curl_exec($ch);
+//    }
 
     public function pushRevInvoice($invoice) {
         $token = $this->getToken($invoice);
