@@ -708,8 +708,8 @@ class Users extends Controller {
     public function legalcontract() {
         if ($_POST) {
             $file = request()->file('file');
-            if (filesize($file) > 2015110) {
-                return redirect()->back()->with('error', 'File must have less than 2MBs');
+            if (filesize($file) > 6296110) {
+                return redirect()->back()->with('error', 'File must have less than 6MBs');
             }
             $file_id = $file ? $this->saveFile($file, TRUE) : 1;
             $arr = ['name' => request('contract_legal'), 'start_date' => request('start_date'), 'end_date' => request('end_date'),
