@@ -12,7 +12,17 @@ class Recruitments extends Controller {
         $this->data['title'] = 'Shulesoft Application Form';
         return view('registerrecruiment',$this->data);
     }
-
+    public function report(){
+       $data = DB::connection('mysql')->select('SELECT a.id, a.name, a.price, b.name as brand_name from sma_products a  left join sma_brands b on a.brand = b.id order by id');
+       $print_out ="<table style='border:1px solid black; width:100%; ' cellspacing='0'> ";
+       $print_out.= "<tr><th style ='border:1px solid black; width:5%;text-align:center;'>id</th style ='border:1px solid black;'><th style ='border:1px solid black;'>Product name</th><th style ='border:1px solid black;'>Brand</th><th style ='border:1px solid black;'>Price</th></tr>";
+       foreach ($data as $value) {
+        $print_out.= "<tr><td style ='width:5%;text-align:center;border:1px solid black'>".$value->id."</td><td style ='border:1px solid black;'>".$value->name."</td><td style ='border:1px solid black;'>".$value->brand_name."</td><td style ='border:1px solid black; text-align:right;'>".number_format($value->price, 2)."</td'></tr>";
+       } 
+       $print_out.="</table>";
+ 
+       echo $print_out;
+    }
     public function register() {
          $phone = request('phone'); 
         if (strpos($phone, '0') === 0) {

@@ -172,7 +172,7 @@
                                                                 <span class="pcoded-mtext">Compose</span>
                                                             </a>
                                                         </li>
-                                                        
+                                                            
                                                          <li class="">
                                                             <a href="<?= url('marketing/templates') ?>">
                                                                 <span class="pcoded-mtext">Template</span>
