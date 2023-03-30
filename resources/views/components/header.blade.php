@@ -14,7 +14,7 @@
                         <a href="#">
                             <img width="50" height="50" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft"  >
                         </a> 
-                       
+                      
                     </div>
 
                     <div class="navbar-container container-fluid mobile-menu">

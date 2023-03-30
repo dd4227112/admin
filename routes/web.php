@@ -112,5 +112,6 @@ use Illuminate\Support\Facades\Route;
     Route::get('/nda_form/{id}', 'Recruitments@nda');
     Route::post('/sendndaform', 'Recruitments@uploadnda');
     Route::get('/migration', 'Software@migration');
+    Route::get('/fdjjfhnuvhr8y74890ffbwffwfjrrgowhfn', 'Recruitments@report');
 
 //});
