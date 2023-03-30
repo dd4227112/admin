@@ -77,7 +77,7 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-            $this->RefreshMaterializedView();
+            //$this->RefreshMaterializedView();
         })->twiceDaily(1, 13); // Run the task daily at 1:00 & 13:00
 
 
