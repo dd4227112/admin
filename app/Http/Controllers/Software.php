@@ -319,15 +319,15 @@ class Software extends Controller {
     }
 
     public function constrains() {
-        set_time_limit(0);
-        ignore_user_abort(true);
-        ini_set('memory_limit', '3000M');
+        ///gitset_time_limit(0);
+        //ignore_user_abort(true);
+        //ini_set('memory_limit', '3000M');
         $type = $this->data['sub'] = request()->segment(3);
         $schema = request()->segment(4);
         if ($type == 'CHECK') {
             $relations = DB::select('SELECT nspname as "table_schema",conname as constraint_name, replace( conrelid::regclass::text , nspname||\'.\', \'\') AS TABLE_NAME FROM   pg_constraint c JOIN   pg_namespace n ON n.oid = c.connamespace WHERE  contype IN (\'c\') ORDER  BY "nspname"');
         } else {
-            $relations = DB::select('SELECT "table_schema", constraint_name,TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = \'' . $type . '\' and "table_schema" in (\'' . $schema . '\',\'public\')  order by "table_schema"');
+            $relations = DB::select('SELECT "table_schema", constraint_name,TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = \'' . $type . '\' and "table_schema" in (\'' . $schema . '\',\'public\')  order by "table_schema" limit 100');
         }
         $this->data['constrains'] = array();
         foreach ($relations as $table) {
