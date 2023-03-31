@@ -229,7 +229,7 @@ class Software extends Controller {
         $master_table_name = request('table');
         $slave_schema = request('slave');
         $sql = "SELECT FROM admin.show_create_table('" . $master_table_name . "','" . $slave_schema . "')";
-      //  return DB::statement($sql);
+        //  return DB::statement($sql);
         // return DB::statement(str_replace('ARRAY', 'character varying[]', $sql->result));
     }
 
@@ -319,12 +319,15 @@ class Software extends Controller {
     }
 
     public function constrains() {
+        set_time_limit(0);
+        ignore_user_abort(true);
+        ini_set('memory_limit', '3000M');
         $type = $this->data['sub'] = request()->segment(3);
-        $schema= request()->segment(4);
+        $schema = request()->segment(4);
         if ($type == 'CHECK') {
             $relations = DB::select('SELECT nspname as "table_schema",conname as constraint_name, replace( conrelid::regclass::text , nspname||\'.\', \'\') AS TABLE_NAME FROM   pg_constraint c JOIN   pg_namespace n ON n.oid = c.connamespace WHERE  contype IN (\'c\') ORDER  BY "nspname"');
         } else {
-            $relations = DB::select('SELECT "table_schema", constraint_name,TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = \'' . $type . '\' and "table_schema" in (\'' .$schema.'\',\'public\')  order by "table_schema"');
+            $relations = DB::select('SELECT "table_schema", constraint_name,TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = \'' . $type . '\' and "table_schema" in (\'' . $schema . '\',\'public\')  order by "table_schema"');
         }
         $this->data['constrains'] = array();
         foreach ($relations as $table) {
@@ -435,7 +438,7 @@ class Software extends Controller {
         if (request('tag')) {
             return $this->ajaxTable('api.requests', ['id', 'content', 'created_at']);
         }
-        $this->data['status']=[];
+        $this->data['status'] = [];
         return view('software.api.requests', $this->data);
     }
 
@@ -1020,7 +1023,7 @@ WHERE table_schema ='{$schema->table_schema}'
                 echo 'SCHEMA ' . $schema->table_schema . ' TRANSFERRED COMPLETELY <br/><br/><hr/>';
             }
 
-           // $this->resetSequence();
+            // $this->resetSequence();
             $this->createIndexSchema(request('s'));
         }
     }
