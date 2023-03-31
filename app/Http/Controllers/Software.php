@@ -8,7 +8,7 @@ use DB;
 class Software extends Controller {
 
     public $source_connection = 'pgsql';
-    public $destination_connection = 'new_vps';
+    public $destination_connection = 'pgsql';
 
     public function __construct() {
         return false;
