@@ -451,12 +451,18 @@ class Customer extends Controller {
 
     public function profile() {
         $school =  request()->segment(3);
+        
         $schema = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
         $id = request()->segment(4);
+        
         $this->data['shulesoft_users'] = (new \App\Http\Controllers\Users)->shulesoftUsers();
-        $status =  DB::table('admin.all_setting')->where('schema_name', $school)->first();
-        $shulesoft =  DB::table('shulesoft.setting')->where('schema_name', $school)->first();
-        $this->data['schema'] = empty($schema) ? 'shulesoft' : request()->segment(3);
+       
+        // $status =  DB::table('admin.all_setting')->where('schema_name', $school)->first();
+        // $shulesoft =  DB::table('shulesoft.setting')->where('schema_name', $school)->first();
+         
+        // $this->data['schema'] = empty($schema) ? 'shulesoft' : request()->segment(3);
+        $this->data['schema'] = 'shulesoft';
+
         if (empty($status) && empty($shulesoft)) {
           //  return redirect('https://' . $school . '.shulesoft.com');
         }
@@ -475,7 +481,9 @@ class Customer extends Controller {
         //     return view('customer.checkinstallation', $this->data);
         // } else {
             $is_client = 1;
-            $this->data['levels'] = !empty($schema) ? DB::table($school . '.classlevel')->get() : \DB::table('shulesoft.classlevel')->where('schema_name', $school)->get();
+            // $this->data['levels'] = !empty($schema) ? DB::table($school . '.classlevel')->get() : \DB::table('shulesoft.classlevel')->where('schema_name', $school)->get();
+            $this->data['levels'] = DB::table('shulesoft.classlevel')->where('schema_name', $school)->get();
+
             $this->data['client'] = $client = \App\Models\Client::where('username', $school)->first();
             $this->data['client_id'] = $client->id; // = \App\Models\Client::where('username', $school)->first();
             $this->data['trial'] = DB::table('admin.client_trials')->where('client_id', $client->id)->first();
@@ -495,10 +503,14 @@ class Customer extends Controller {
                 $this->data['manager'] = \App\Models\User::where(['id' => $zone_manager->user_id, 'status' => 1]);
             }
             $school_ = "'".$school."'";
-            $this->data['top_users'] = !empty($schema) ? DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5') :  DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table" and a.schema_name=b.schema_name) where a.schema_name='.$school_.' AND user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
+            // $this->data['top_users'] = !empty($schema) ? DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5') :  DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table" and a.schema_name=b.schema_name) where a.schema_name='.$school_.' AND user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
+            $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null and a.schema_name ='.$school.' group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
+
         }
 
-        $this->data['school'] = !empty($schema) ? DB::table($school . '.setting')->first() : \DB::table('shulesoft.setting')->where('schema_name', $school)->first(); 
+        // $this->data['school'] = !empty($schema) ? DB::table($school . '.setting')->first() : \DB::table('shulesoft.setting')->where('schema_name', $school)->first(); 
+        $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name', $school)->first(); 
+
 
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
         $this->data['is_client'] = 1;
