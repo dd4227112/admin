@@ -161,7 +161,7 @@ $d = $database->loadSchema();
 <script type="text/javascript">
     $('#check_key').change(function () {
         var val = $(this).val();
-        window.location.href = "<?= url('software/constrains') ?>/" + val;
+        window.location.href = "<?= url('software/constrains') ?>/" + val+'/amka';
     })
 
     sync_relation = function () {
@@ -199,7 +199,7 @@ $d = $database->loadSchema();
                 success: function (data) {
                     $(this).hide();
                     toastr.success('Sync success')
-                    window.location.reload();
+                   // window.location.reload();
                 }
             });
 
