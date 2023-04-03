@@ -608,7 +608,7 @@ group by ownership');
 
 
     public function sendCustomSmsToAll($message,$customer_criteria){
-        $customers = DB::select("select * from admin.all_users where \"table\" not in ('parent','setting','student') and status=1 and usertype not in ('Student','Parent','Driver','Matron','Cooks','Cleaner','Secreatry','Conductor','Gardener','Normal')");
+        $customers = DB::select("select * from admin.all_users where \"table\" not in ('parent','setting','student') and status=1 and schema_name in (select username from admin.clients where status=1) and  usertype not in ('Student','Parent','Driver','Matron','Cooks','Cleaner','Secreatry','Conductor','Gardener','Normal','Nurse','Dormitory','Cook','Gatekeeper','Sanitation','Doctor','Attendant','Janitor','Security guard')");
         if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
@@ -732,6 +732,7 @@ group by ownership');
  
         if(in_array("quick-sms", $channels)) {
               // Send messages by quick sms
+             $this->send_sms($phonenumber,$message,1);
          }
 
         if(in_array("whatsapp", $channels)) { 
