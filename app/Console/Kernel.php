@@ -105,9 +105,10 @@ class Kernel extends ConsoleKernel {
 
             if (!empty($messages)) {
                 foreach ($messages as $message) {
-                    $this->beem_sms($message->phone, $message->body, $schema);
+                    $beem=$this->beem_sms($message->phone, $message->body, $schema);
                     DB::table($schema . ".sms")->where('sms_id', $message->id)->update([
                         'status' => 1,
+                        'return_code'=> json_encode($beem),
                         'updated_at' => 'now()'
                     ]);
                 }
@@ -183,6 +184,83 @@ class Kernel extends ConsoleKernel {
 
         return $return;
     }
+    
+      private function status_code($result) {
+
+        switch ($result) {
+            case '1701':
+                $status = array(
+                    'success' => 1,
+                    'message' => 'Message sent successful'
+                );
+                break;
+            case '1702':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'Invalid URL Error,one of the parameters was not provided or left blank'
+                );
+                break;
+            case '1703':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'Invalid value'
+                );
+                break;
+            case '1704':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'Invalid value type'
+                );
+                break;
+            case '1705':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'Invalid message'
+                );
+                break;
+            case '1706':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'Invalid destination'
+                );
+                break;
+            case '1707':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'Invalid Source (Sender)'
+                );
+                break;
+            case '1709':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'User validation failed'
+                );
+                break;
+            case '1710':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'Internal error'
+                );
+                break;
+            case '1025':
+                $status = array(
+                    'success' => 0,
+                    'message' => 'Insufficient credit, contact sales@karibusms.com to recharge your account'
+                );
+                break;
+            default :
+                $status = array(
+                    'success' => 0,
+                    'message' => 'No format results specified'
+                );
+                break;
+        }
+        $code = array('code' => $result);
+        $results = array_merge($status, $code);
+
+        return json_encode($results);
+    }
+
 
     public function whatsappMessage() {
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
