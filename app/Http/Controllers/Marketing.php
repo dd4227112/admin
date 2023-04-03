@@ -608,7 +608,7 @@ group by ownership');
 
 
     public function sendCustomSmsToAll($message,$customer_criteria){
-        $customers = DB::select("select * from admin.all_users where usertype not in ('Student','Parent','Driver','Matron','Cooks','Cleaner','Secreatry','Conductor','Gardener','Normal')");
+        $customers = DB::select("select * from admin.all_users where \"table\" not in ('parent','setting','student') and status=1 and usertype not in ('Student','Parent','Driver','Matron','Cooks','Cleaner','Secreatry','Conductor','Gardener','Normal')");
         if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
@@ -749,7 +749,7 @@ group by ownership');
 
         if(in_array("email", $channels)) {
             // Send messages by Email
-              $user = \collect(DB::select("select * from admin.all_users where phone = '" .$phonenumber. "' "))->first();
+              $user = \collect(DB::select("select * from admin.all_users where phone = '" .$phonenumber. "' and status=1 and email not like '%@shulesoft.%'"))->first();
               if(isset($user) && !empty($user->email)){
                   $this->send_email($user->email, 'ShuleSoft', $message);
               }
