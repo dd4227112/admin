@@ -30,9 +30,10 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             //sync invoices 
+            $this->sendQuickSms();
             $this->syncInvoice();
 
-          //  $this->syncData();
+            //  $this->syncData();
         })->everyMinute();
 
         $schedule->call(function () {
@@ -40,7 +41,6 @@ class Kernel extends ConsoleKernel {
             $this->whatsappMessage();
         })->everyMinute();
 
-     
         $schedule->call(function () {
             //remaind tasks to users and allocated users
             $this->setTaskRemainder();
@@ -91,9 +91,96 @@ class Kernel extends ConsoleKernel {
         })->monthlyOn(28, '06:36');
 
         //$schedule->call(function () {
-            //send SMS to karibuSMS
-           // $this->karibuSMS();
-       // })->everyMinute();
+        //send SMS to karibuSMS
+        // $this->karibuSMS();
+        // })->everyMinute();
+    }
+
+    public function sendQuickSms() {
+        $schemas = DB::select('select schema_name from admin.sms_status');
+        foreach ($schemas as $schema_) {
+            $schema = $schema_->schema_name;
+
+            $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from " . $schema . ".sms a where a.status = 0 and a.type = 1 order by priority DESC limit 30");
+
+            if (!empty($messages)) {
+                foreach ($messages as $message) {
+                    $this->beem_sms($message->phone, $message->body, $schema);
+                    DB::table($schema . ".sms")->where('sms_id', $message->id)->update([
+                        'status' => 1,
+                        'updated_at' => 'now()'
+                    ]);
+                }
+            }
+        }
+    }
+
+    function beem_sms($phone_number, $message, $schema_ = null) {
+        if ($phone_number != '') {
+            $secret_key = 'MDI2ZGVlMWExN2NlNzlkYzUyYWE2NTlhOGE0MjgyMDRmMjFlMDFjODkwYjU2NjA4OTY4NzZlY2Y3NGZjY2Y0Yw==';
+            $api_key = '5e0b7f1a911dd411';
+
+            $schema = $schema_ == null ? str_replace('.', null, set_schema_name()) : $schema_;
+
+            if ($schema == 'annagamazo') {
+                $sender_name = 'ANNAGAMAZO';
+            } elseif ($schema == 'rahma') {
+                $sender_name = 'RAHMASCHOOL';
+            } elseif ($schema == 'capricorninstitute') {
+                $sender_name = 'CAPRICORN';
+            } elseif ($schema == 'mgutwasec') {
+                $sender_name = 'MGUTWA SECONDARY';
+            } else {
+                $sender_name = 'SHULESOFT';
+            }
+
+            // The data to send to the API
+            $posthData = array(
+                'source_addr' => $sender_name,
+                'encoding' => 0,
+                'schedule_time' => '',
+                'message' => $message,
+                'recipients' => [array('recipient_id' => '1', 'dest_addr' => str_replace('+', null, $phone_number))]
+            );
+
+            //.... Api url
+            $Url = 'https://apisms.beem.africa/v1/send';
+            // Setup cURL
+            $ch = curl_init($Url);
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_setopt_array($ch, array(
+                CURLOPT_POST => TRUE,
+                CURLOPT_RETURNTRANSFER => TRUE,
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization:Basic ' . base64_encode("$api_key:$secret_key"),
+                    'Content-Type: application/json'
+                ),
+                CURLOPT_POSTFIELDS => json_encode($posthData)
+            ));
+
+// Send the request
+            $response = curl_exec($ch);
+            // response of the POST request
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $responseBody = json_decode($response);
+            curl_close($ch);
+
+            if ($httpCode >= 200 && $httpCode < 300) {
+                $return = $this->status_code('1701');
+            } else {
+                $return = $this->status_code(1700);
+            }
+
+
+            // Check for errors
+        } else {
+            $return = $this->status_code(1700);
+        }
+
+        return $return;
     }
 
     public function whatsappMessage() {
@@ -877,9 +964,9 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
      * Only paid users
      */
     public function sendBirthdayWish() {
-        $schemas =DB::select('select distinct schema_name as table_schema from  shulesoft.setting where schema_name in (select username from admin.clients where status=1 )');
+        $schemas = DB::select('select distinct schema_name as table_schema from  shulesoft.setting where schema_name in (select username from admin.clients where status=1 )');
         foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public','betatwo', 'api', 'admin'))) {
+            if (!in_array($schema->table_schema, array('public', 'betatwo', 'api', 'admin'))) {
                 //Remind parents,class and section teachers to wish their students
 
                 $sql = "insert into shulesoft.sms (schema_name,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
@@ -1331,7 +1418,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function syncData() {
-       
+
         $limit = 3;
         for ($i = 0; $i < 250; $i++) {
 
@@ -1345,12 +1432,12 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             sleep(0.5);
             $i += $limit - 1;
         }
-       
-         $url='http://75.119.140.177/shulesoft_staging/api/accountsync';
-    
+
+        $url = 'http://75.119.140.177/shulesoft_staging/api/accountsync';
+
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
-$fields=[];
+        $fields = [];
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'application/x-www-form-urlencoded'
@@ -1365,7 +1452,5 @@ $fields=[];
         curl_close($ch);
         print_r($result);
     }
-
-    
 
 }
