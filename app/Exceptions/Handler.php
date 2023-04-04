@@ -64,9 +64,8 @@ class Handler extends ExceptionHandler {
         $err .= "\t<li>Error from username: " . session('username') . "</li>\n";
         $err .= "</ul>\n\n";
 
-        $filename = 'admin_logs'.date('Y-m-d').'.html';
+        $filename = 'admin_logs.html';
         error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
-
        // $this->sendLog($e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file']);
     }
 
