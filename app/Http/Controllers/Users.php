@@ -952,5 +952,8 @@ class Users extends Controller {
     public function updateAttendances() {
         
     }
+    public function staffreports(){
+       return view('users.hr.staffsreports');
+    }
 
 }

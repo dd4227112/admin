@@ -430,6 +430,13 @@
                                                         </a>
                                                     </li>
                                                 <?php } ?>
+                                                <?php if (Auth::user()->role_id == 1) { ?>
+                                                    <li class=" ">
+                                                        <a href="<?= url('report/staffs') ?>">
+                                                            <span class="pcoded-mtext">Staff Reports</span>
+                                                        </a>
+                                                    </li>
+                                                <?php } ?>
 
                                             </ul>
                                         </li>
