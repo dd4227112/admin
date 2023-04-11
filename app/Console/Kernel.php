@@ -7,7 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\Message;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Customer;
-use App\Http\Controllers\HomeController;
+
 use App\Http\Controllers\Background;
 use Illuminate\Support\Facades\DB;
 use App\Mail\EmailTemplate;

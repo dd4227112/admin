@@ -612,7 +612,7 @@ group by ownership');
         if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
-                    $customer->name, $customer->schema_name
+                    $customer->name, $customer->schema_name, $customer->schema_name
                 );
                 $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i','/#schema_name/i','/#username/i'

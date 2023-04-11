@@ -35,7 +35,7 @@ class Controller extends BaseController {
      * @var y axis 
      */
     public $y_axis = '';
-    var $APIurl = 'https://eu4.chat-api.com/instance210904/';
+    var $APIurl = 'https://api.1msg.io/210904/';
     var $token = 'h67ddfj89j8pm4o8';
     public $bot;
     public $main_menu = '';

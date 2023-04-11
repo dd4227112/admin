@@ -376,3 +376,16 @@ WHERE (tables.table_schema::name <> ALL (ARRAY['admin'::name, 'constant'::name, 
 (select b.tables  from (SELECT   table_name as tables FROM information_schema.tables
  WHERE (tables.table_schema::name <> ALL (ARRAY['admin'::name, 'constant'::name, 'academy'::name, 'api'::name, 'forum'::name, 'pg_catalog'::name, 'information_schema'::name])) AND tables.table_type::text = 'BASE TABLE'::text AND table_schema = 'betatwo' )  b );
 
+CREATE MATERIALIZED VIEW IF NOT EXISTS admin.all_table_merge
+TABLESPACE pg_default
+AS
+ SELECT x.table_name,
+    ( SELECT string_agg((('"'::text || columns.column_name::text) || '"::'::text) || columns.data_type::text, ','::text) AS string_agg
+           FROM information_schema.columns
+          WHERE columns.table_name::text = x.table_name::text AND columns.table_schema::text = 'canossa'::text) AS lists
+   FROM information_schema.tables x
+  WHERE x.table_schema::text = 'canossa'::text AND lower(x.table_type::text) <> 'view'::text
+WITH DATA;
+
+ALTER TABLE IF EXISTS admin.all_table_merge
+    OWNER TO postgres;
