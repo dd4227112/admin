@@ -263,7 +263,7 @@ class Kernel extends ConsoleKernel {
 
 
     public function whatsappMessage() {
-        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
+        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 29');
         $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
@@ -275,6 +275,7 @@ class Kernel extends ConsoleKernel {
                 }
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
+                sleep(0.8);
             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);

@@ -389,3 +389,14 @@ WITH DATA;
 
 ALTER TABLE IF EXISTS admin.all_table_merge
     OWNER TO postgres;
+
+
+insert into public.sms (body, phone_number, type,sms_keys_id)
+select 'Hello '||schema_name||' 
+
+Leo (11/04/2023), saa 6 na nusu mchana,  ShuleSoft tutafanya training fupi kwa wahasibu wote ya namna ya kuandaa invoice za quarter.
+
+Ili kuhudhuria, fungua hii link: https://meet.google.com/ukg-svtc-qef
+
+Usipange kukosa', admin.format_phone_number(phone),1, (select id from public.sms_keys limit 1) from admin.all_users where "table" not in ('parent','setting','student') and status=1 and schema_name in (select username from admin.clients where status=1) and  usertype not in ('Student','Parent','Driver','Matron','Cooks','Cleaner','Secreatry','Conductor','Gardener','Normal','Nurse','Dormitory','Cook','Gatekeeper','Sanitation','Doctor','Attendant','Janitor','Security guard','Usafi','Watchman','cook','Cow boy','Cowboy','Cooker','DRIVER','Driver and carpenter','Farmer','Nesi','Mpishi','Mlinzi','Maids','Garden','Gate keeper','Gaderner') and lower(usertype) not like '%academic%' and lower(usertype) not like '%teacher%' 
+        and lower(usertype) not like '%cleaner%'  and lower(usertype) not like '%driver%'   and lower(usertype) not like '%matron%'  and lower(usertype) not like '%patron%'  and lower(usertype) not like '%aunt%'   and lower(usertype) not like '%car%'  and lower(usertype) not like '%cook%'  and lower(usertype) not like '%clean%'  and lower(usertype) not like '%doct%'   and lower(usertype) not like '%fund%' and lower(usertype) not like '%tay%'  and lower(usertype) not like '%shamba%'  and lower(usertype) not like '%security%'  and lower(usertype) not like '%plumb%'  and lower(usertype) not like '%nurse%'   and lower(usertype) not like '%exam%'  and lower(usertype) not like '%env%' --limit 5

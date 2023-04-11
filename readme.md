@@ -28,3 +28,6 @@ UPDATE t SET phoneid=userid FROM (SELECT count(*),phoneid FROM t GROUP BY phonei
 
 ALTER USER postgres PASSWORD 'myPassword';
 ALTER ROLE
+
+#limit idle connections in postgres
+SET SESSION idle_in_transaction_session_timeout = '3s';
