@@ -114,7 +114,7 @@ class Kernel extends ConsoleKernel {
                 }
             }
         }
-     DB::select('refresh  materialized view  admin.all_sms ');
+     //DB::select('refresh  materialized view  admin.all_sms ');
     }
 
     function beem_sms($phone_number, $message, $schema_ = null) {
