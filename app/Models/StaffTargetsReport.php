@@ -11,7 +11,7 @@ class StaffTargetsReport extends Model {
      */
     public $table = 'shulesoft.staff_targets_reports';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'staff_report_id', 'staff_target_id', 'date', 'current_value', 'is_approved'];
+    protected $fillable = ['id', 'staff_report_id', 'staff_target_id', 'date', 'current_value', 'is_approved', 'schema_name'];
 
     public function staffReport() {
         return $this->belongsTo(\App\Models\StaffReport::class, 'staff_report_id', 'id');

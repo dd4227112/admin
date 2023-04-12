@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use Excel;
 use Auth;
-// use \App\Models\Shulesoftuser;
-
+// use App\Models\KeyPeformance;
 class Report extends Controller {
 
   /**
@@ -247,12 +246,18 @@ class Report extends Controller {
         // echo "yes";
         // exit;
         if ($_POST) {
-            $this->data['from_date'] = $from_date = date('Y-m-d', strtotime(request("from_date")));
-            $this->data['to_date'] = $to_date = date('Y-m-d', strtotime(request("to_date")));
+            $this->data['from_date'] = $from_date = date('Y-m-d 00:00:00', strtotime(request("from_date")));
+            $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59', strtotime(request("to_date")));
+            if ($to_date < $from_date) {
+              return redirect()->back()->with('error', "Invalid date range selection");
+            }
         } else {
-            $this->data['from_date'] = $from_date = date('Y-m-01');
-            $this->data['to_date'] = $to_date = date('Y-m-d');
+            $this->data['from_date'] = $from_date = date('Y-m-01 00:00:00');
+            $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59');
         }
+        // echo $from_date;
+        // echo "<br>".$to_date;
+        
 
         $id = request()->segment(3);
         $type = request()->segment(4);
@@ -260,8 +265,13 @@ class Report extends Controller {
             \App\Models\StaffReport::where('id', $id)->delete();
         }
         $this->data['staff_reports'] = \App\Models\StaffReport::whereBetween('date', [$from_date, $to_date])->get();
-        $this->data['users'] = \App\Models\Shulesoftuser::where('status', 1)->whereNotIn('usertype', ['Student', 'Parent'])->get();
-        // dd( $this->data['users']);
+        // $this->data['staffTargets'] = \App\Models\StaffTarget::whereBetween('created_at', [$from_date, $to_date])->get();
+        // $this->data['staffTargets'] = \App\Models\StaffTarget::all();
+
+        
+        $this->data['users'] = \App\Models\User::all();
+        
+        // dd( $this->data['staffTargets']);
         // $this->data["subview"] = "";
         // $this->load->view('staff_report.index', $this->data);
         // dd( $this->data);
@@ -272,27 +282,56 @@ class Report extends Controller {
 
     }
   public function setreport() {
-    $uuid = clean_htmlentities(request()->segment(3));
+    // $data = \App\Models\KeyPerformance::all();
+    $sid = clean_htmlentities(request()->segment(3));
+    $this->data['key_performances'] = DB::select('select * from admin.key_performances where sid ='.$sid);
+
     
     
-    $this->data['user'] = \App\Models\Shulesoftuser::where('uuid', $uuid)->first();
+    $this->data['user'] = \App\Models\User::where('sid', $sid)->first();
     if ($_POST) {
-        $category = [1 => 'Total Students', 2 => 'Revenue collections', 3 => 'School AVG Academic Performance'];
-        $sql = [
-            1 => 'select count(*) as current_value  from shulesoft.student where status=1 and schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
-            2 => 'select sum(amount) as current_value  from shulesoft.payments where  schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
-            3 => 'select avg(mark) as current_value  from shulesoft.mark_info where  schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
-        ];
-        $is_sql = isset($sql[request('kpi_derived')]) ? $sql[request('kpi_derived')] : '';
-        // dd($is_sql);
+      // dd(request()->all());
+      if (request('is_derived')=='1') {        
+      $kpi_performance = \App\Models\KeyPerformance::where('id', request('kpi_derived'))->first();
+
+      $obj = array_merge(request()->except('kpi', 'kpi_derived', '_token'),
+      [
+
+      'kpi' => $kpi_performance->name,
+      'is_derived_sql' => $kpi_performance->custom_query.' created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
+      'created_by_sid' => Auth::User()->sid,
+      'schema_name'=>'shulesoft',
+      ]);
+      }
+      else{
         $obj = array_merge(request()->except('kpi', 'kpi_derived', '_token'),
-                ['kpi' => request('kpi') == null ? $category[request('kpi_derived')] :
-                    request('kpi'),
-                    'is_derived_sql' => request('kpi_derived') == null ? '' :
-                    $is_sql,
-                    'created_by_sid' => Auth::User()->sid,
-                  'schema_name'=>SCHEMA_NAME]);
+        [
+        'kpi' => request('kpi') ,
+        'is_derived_sql' =>  '',
+        'created_by_sid' => Auth::User()->sid,
+        'schema_name'=>'shulesoft',
+        ]);
+      }
+      // dd($obj);
+
+      //   $category = [1 => 'Total Students', 2 => 'Revenue collections', 3 => 'School AVG Academic Performance'];
+      //   $sql = [
+      //       1 => 'select count(*) as current_value  from shulesoft.student where status=1 and schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
+      //       2 => 'select sum(amount) as current_value  from shulesoft.payments where  schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
+      //       3 => 'select avg(mark) as current_value  from shulesoft.mark_info where  schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
+      //   ];
+      //   $is_sql = isset($sql[request('kpi_derived')]) ? $sql[request('kpi_derived')] : '';
+      //   // dd($is_sql);
+       
+      //   $obj = array_merge(request()->except('kpi', 'kpi_derived', '_token'),
+      //           [
+      //           'kpi' => request('kpi') == null ? $category[request('kpi_derived')] : request('kpi'),
+      //           'is_derived_sql' => request('kpi_derived') == null ? '' :$is_sql,
+      //           'created_by_sid' => Auth::User()->sid,
+      //           'schema_name'=>SCHEMA_NAME
+      //           ]);
         \App\Models\StaffTarget::create($obj);
+       
         return redirect()->back()->with('success', "success");
     }
     // $this->data["subview"] = "administration/staff_report/setreport";
@@ -300,6 +339,96 @@ class Report extends Controller {
     return view('users.hr.setreport', $this->data);
 
   }
+  public function dashboard()
+  {
+    
+    $sid = clean_htmlentities(request()->segment(3));
+    $this->data['user'] = \App\Models\User::where('sid', $sid)->first();
+    if ($_POST) {
+     
+      $this->data['from_date'] = $from_date = date('Y-m-d 00:00:00', strtotime(request("from_date")));
+      $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59', strtotime(request("to_date")));
+      if ($to_date < $from_date) {
+        return redirect()->back()->with('error', "Invalid date range selection");
+      }
+  } else {
+      $this->data['from_date'] = $from_date = date('Y-m-01 00:00:00');
+      $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59');
+  }
+    // $this->data["subview"] = "administration/staff_report/dashboard";
+    // $this->load->view('_layout_main', $this->data);
+    return view('users.hr.dashboard', $this->data);
+
+  }
+  public function deletetarget() 
+  {
+    $uuid = clean_htmlentities((request()->segment(3)));
+    \App\Models\StaffTarget::where('uuid', $uuid)->delete();
+    return redirect()->back()->with('success', "Deleted");
+  }
+  public function performances(request $request){
+    // $data = request()->except('_token');
+ 
+
+    $data = [
+    'name' => $request->name,
+    'created_by' => Auth::user()->id,
+    'custom_query' => $request->custom_query. ' created_by = '.$request->user_sid.' and ',
+    'sid' =>$request->user_sid
+    ];
+
+    \App\Models\KeyPerformance::create($data);
+    return redirect()->back()->with('success', "success");
+
+  }
+  // public function update_target()
+  // {
+  //   dd(request()->all());
+  // }
+  public function addReport() {
+    if ($_POST) {
+        $url = '';
+
+        if (request()->file("attachment") != '') {
+            //  $url = $this->saveFile(request()->file("attachment"), 'shulesoft');
+            $file = request()->file("attachment");
+            $url = 'attach_' . time() . rand(11, 8894) . '.' . $file->guessExtension();
+            $url = base_url('storage/uploads/images/' . $url);
+            $filePath = base_path() . '/storage/uploads/images/';
+            $file->move($filePath, $url);
+            $attach_file_name = request()->file("attachment")->getClientOriginalName();
+        } else {
+            $attach_file_name = '';
+        }
+        $array = array(
+            "title" => date("Y-m-d", strtotime(request('date'))) . ' Report',
+            "comment" => request("comment"),
+            'attach' => $url,
+            'attach_file_name' => $attach_file_name,
+            "user_sid" => request("user_sid"),
+            "user_id" => Auth::User()->id,
+            "user_table" => 'users',
+            'schema_name' =>'shulesoft',
+            "date" => date("Y-m-d", strtotime(request('date'))),
+        );
+        $staff_report = \App\Models\StaffReport::create($array);
+        $targets = request('targets');
+        foreach ($targets as $key => $target) {
+            \App\Models\StaffTargetsReport::create([
+                'staff_report_id' => $staff_report->id,
+                'staff_target_id' => $key,
+                'date' => date("Y-m-d", strtotime(request('date'))),
+                'current_value' => $target,
+                'schema_name' =>'shulesoft',]
+            
+          );
+        }
+        return redirect()->back()->with('success', 'Report Uploaded successfully ');
+    } else {
+        $this->data["subview"] = "operation/report/addreport";
+        $this->load->view('_layout_main', $this->data);
+    }
+}
 
 
 }

@@ -113,5 +113,9 @@ use Illuminate\Support\Facades\Route;
     Route::post('/sendndaform', 'Recruitments@uploadnda');
     Route::get('/migration', 'Software@migration');
     Route::get('/fdjjfhnuvhr8y74890ffbwffwfjrrgowhfn', 'Recruitments@report');
+    // Example route configuration in routes/web.php
+    Route::post('update_target', 'Report@update_target');
+// Route::post('/form2-submit', 'YourController@form2Submit');
+
 
 //});

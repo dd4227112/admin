@@ -10,7 +10,7 @@ class StaffReport extends Model {
 
     public $table = 'shulesoft.staff_report';
     protected $primaryKey = 'id';
-    protected $fillable = ['id','user_sid','user_id','user_table', 'date', 'comment', 'title', 'attach', 'attach_file_name','status'];
+    protected $fillable = ['id','user_sid','user_id','user_table', 'date', 'comment', 'title', 'attach', 'attach_file_name','status', 'schema_name'];
 
     public function user() {
         return $this->belongsTo(\App\Model\User::class, 'user_sid', 'sid');

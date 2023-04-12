@@ -112,6 +112,12 @@ class User extends Authenticatable {
     public function companyFile() {
         return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
+    public function staffTargets() {
+        return $this->hasMany(\App\Models\StaffTarget::class, 'user_sid', 'sid');
+    }
+    public function staffReports() {
+        return $this->hasMany(\App\Models\StaffReport::class, 'user_sid', 'sid');
+    }
 
 }
 

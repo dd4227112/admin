@@ -20,25 +20,8 @@
         </div>
     </div>
     <div class="page-body">
-    <!-- <form style="" class="my-4 form-horizontal" role="form" method="post">  
-                    <div class="row">
-                        <div class="col-sm-5 mx-auto">
-                            <div class="input-group row"> 
-                                <div class="col-sm-4">
-                                    <input type="date" required class=" calendar" id="from_date" name="from_date" value="<?= $from_date ?>"  >
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="date" required class=" calendar" id="to_date" name="to_date" value="<?= $to_date?>" >
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="submit" class="btn btn-primary btn-block" value="view_report" >
-                                </div>
-                            </div>
-                            <?= csrf_field() ?>
-                        </div>
-                    </div>
-                </form> -->
-                <div class="container">
+
+             <div class="row">
                 <form class="my-4 form-horizontal" role="form" method="POST">
                     @csrf
                     <div class="form-row align-items-center">
@@ -55,13 +38,13 @@
                         <input type="date" class="form-control mb-2"  id="to_date" name="to_date" value="<?=$to_date?>" placeholder="End Date">
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-sm btn-primary mb-2">View Report</button>
+                        <button type="submit" class="btn btn-sm btn-success mb-2">View Report</button>
                     </div>
                     </div>
                 </form>
-                </div>
 
-        
+            </div>
+
             <div class="row">
             <?php if (!empty($users)) { ?>
                     <div class="col-sm-12">
@@ -70,14 +53,14 @@
                             <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                 <thead>
                                     <tr>
-                                        <th>slno</th>
-                                        <th>photo</th>
-                                        <th>name</th>
-                                        <th>usertype</th>
-                                        <th>total_kpi</th>
-                                        <th>reports_submitted</th>
-                                        <th>avarage_performance</th>
-                                        <th>action</th>
+                                        <th>s/no</th>
+                                        <th>Photo</th>
+                                        <th>Name</th>
+                                        <th>Usertype</th>
+                                        <th>Total KPI</th>
+                                        <th>Reports Submitted</th>
+                                        <th>Avarage Performance</th>
+                                        <th style="text-align:center;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -102,25 +85,25 @@
                                                 </td>
                                                 <td data-title="student_sex">
                                                     <?php
-                                                    echo $user->staffTargets()->count();
+                                                    echo $user->staffTargets()->whereBetween('created_at', [$from_date, $to_date])->count();
                                                     ?>
                                                 </td>
 
                                                 <td data-title="student_sex">
                                                     <?php
-                                                    echo $user->staffReports()->count();
+                                                    echo $user->staffReports()->whereBetween('created_at', [$from_date, $to_date])->count();
                                                     ?>
                                                 </td>
                                                 <td data-title="student_sex">
                                                     <?php
                                                     $r = 1;
                                                     $avg_performance = 0;
-                                                    foreach ($user->staffTargets()->get() as $target) {
+                                                    foreach ($user->staffTargets()->whereBetween('created_at', [$from_date, $to_date])->get() as $target) {
                                                         if ((int) $target->is_derived == 1) {
                                                             $cur_value = \collect(DB::select($target->is_derived_sql))->first();
                                                            $performance =  $cur_value->current_value;
                                                         } else {
-                                                            $performance = $target->staffTargetsReports()->max('current_value');
+                                                            $performance = $target->staffTargetsReports()->sum('current_value');
                                                         }
                                                       
                                                         $avg_performance += (float) $target->value > 0 ? round($performance * 100 / $target->value) : 0;
@@ -134,9 +117,9 @@
                                                 <td data-title="action">
 
 
-                                                            <a  href="<?=url('report/setreport/' . $user->uuid)?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"> </i> Set Report </a> 
+                                                            <a  href="<?=url('report/setreport/' . $user->sid)?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"> </i> Set Report </a> 
 
-                                                            <a  href="<?=url('report/dashboard/' . $user->uuid)?>" class="btn btn-success btn-sm"><i class="fa fa-folder"> </i>View </a>
+                                                            <a  href="<?=url('report/dashboard/' . $user->sid)?>" class="btn btn-success btn-sm"><i class="fa fa-folder"> </i>View </a>
 
                                                 </td>
                                             </tr>
@@ -158,6 +141,46 @@
         </div>
     </div>
     <!-- Main-body end -->
+<!-- Modal content start here -->
+<div class="modal fade" id="set_key_performance">
+    <div class="modal-dialog">
+        <form action="performances" method="post" class="form-horizontal group_form" role="form">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    Set Key Performances for all staffs
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group row" id="name">
+
+                        <div class="col-sm-12">
+                        <label for="name" class="control-label required">Name</label>
+                            <input type="text" name="name" id="name" class="form-control ">  
+                        </div>
+                    </div>
+                    <div class="form-group row"  id="custom_query">
+                        <div class="col-sm-12">
+                        <label for="custom_query" class="control-label required"> Custom Query</label>
+                            <input type="text" name="custom_query" id="custom_query" class="form-control ">
+
+                        </div>
+                    </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" >close</button>
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+                <input type="hidden" name="user_sid" value="<?= $user->sid ?>">
+                <?= csrf_field() ?>
+            </div>
+        </form>
+    </div>
+</div>
+
+    
     @endsection
     @section('footer')
     <!-- data-table js -->
@@ -185,4 +208,4 @@
 // $(document).ready(check);
 // $(document).ready(submit_search);
 </script>
-    @endsection
+

@@ -766,6 +766,8 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                     <div class="card">
                                         <div class="card-header">
                                             <h5 class="card-header-text">Custom Reports</h5>
+                                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addReport" style="color: #ffff; font-weight: bold;" href="<?php echo base_url('wallet/addSell') ?>">
+                                        Add Report <i class="icofont icofont-plus-circle"></i></button>
                                         </div>
                                         <div class="card-block">
                                       
@@ -774,14 +776,25 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                             <thead>
                                             <tr>
                                                 <th>Id </th>
-                                                <th>Title</th>
                                                 <th>Date</th>
+                                                <th>Title</th>
+                                                <th>Comment</th>
                                                 <th>Value</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                          
+                                                <?php foreach($reports as $report):?>
+                                                <tr>
+                                                    <td><?=$report->id?> </td>
+                                                    <td><?=$report->created_at?> </td>
+                                                    <td><?=$report->title?> </td>
+                                                    <td><?=$report->comment?> </td>
+                                                    <td><?=$report->current_value?> </td>
+                                                    <td>Action </td>
+                                                    
+                                                </tr> 
+                                                <?php endforeach;?>
                                             </tbody>
 
                                         </table>
@@ -1359,6 +1372,66 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
         </div>
     </form>
 </div>
+
+        <!-- email modal starts here -->
+        <div class="modal fade" id="addReport">
+            <div class="container">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Staff Daily Report</h4>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+                    </div>
+                    <form action="<?= base_url('Report/addReport'); ?>" method="post"  enctype="multipart/form-data">
+                    @csrf
+                        <div class="modal-body">
+                            <?php
+                            $r = 1;
+                            foreach ($user->staffTargets()->where('is_derived',0)->get() as $target) {
+                                ?>
+                                <div class='form-group row'>
+                                    <label for="subject" class="col-sm-6 control-label">
+                                        <?=$target->kpi?>.
+                                    </label>
+                                    <input type="text" class="form-control" placeholder="Enters Current Value" id="" name="targets[<?=$target->id?>]"/>
+
+                                </div>
+                                <?php
+                                $r++;
+                            }
+                            ?>
+
+                            <div class='form-group row'>
+                                <label for="subject" class="col-sm-6 control-label">
+                                    Select Date.
+                                </label>
+                                <input type="date" class="form-control" value="<?=date('Y-m-d')?>" id="documents" name="date"/>
+                                <input type ="hidden" name ="user_sid" value ="<?=$user->sid?>">
+
+                            </div>
+                            <div class='form-group row'>
+                                <label for="message" class="col-sm-6 control-label">
+                                    Attach Document Here
+                                </label>
+                                <input type="file" class="form-control" id="documents" name="attachment"/>
+                            </div>
+                            <div class='form-group row'>
+                                <br>
+                                <textarea name="comment" class="form-control"  rows="5" placeholder="Write Your Report Comment Here...."></textarea>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" style="margin-bottom:0px;" data-dismiss="modal">close</button>
+                            <input type="submit" class="btn btn-success" value="Save" />
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
 
 
 

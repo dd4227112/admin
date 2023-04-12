@@ -97,7 +97,7 @@ class Users extends Controller {
 
         $user_data = DB::table('admin.users')->where('id', (int) $user_id)->first();
 
-        DB::table('accounts.user')->insert([
+        DB::table('accounts.users')->insert([
             'name' => request('firstname') . ' ' . request('lastname'),
             'dob' => date("Y-m-d", strtotime(request('date_of_birth'))),
             'sex' => request('sex'),
@@ -195,7 +195,8 @@ class Users extends Controller {
         $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->latest()->get();
         $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->latest()->get();
         $this->data['learnings'] = \App\Models\Course::whereIn('id', \App\Models\UserCourse::where('user_id', $id)->get(['course_id']))->latest()->get();
-
+        $this->data['reports'] =DB::select('select a.*, b.current_value from shulesoft.staff_report a join shulesoft.staff_targets_reports b on a.id =b.staff_report_id where a.user_sid ='.$id);
+// dd($this->data['reports']);
         //default number of days 22 to minutes
         $this->data['minutes'] = 22 * 24 * 60;
 

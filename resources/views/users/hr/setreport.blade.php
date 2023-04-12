@@ -1,17 +1,19 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
+<?php $chart_files = base_url('public/theme/default/clearbar'); ?>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="page-title-box">
             <div class="float-right">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">menu_dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0);"><?= ucwords(str_replace('_', ' ', request()->segment(1))) ?></a></li>
-                    <li class="breadcrumb-item active"><?= ucwords(str_replace('_', ' ', request()->segment(2))) ?></li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Users</a></li>
+                    <li class="breadcrumb-item"><a href="<?=base_url(ucwords(request()->segment(1)).'/staffs')?>"><?= ucwords(str_replace('_', ' ', request()->segment(1))) ?></a></li>
+                    <li class="breadcrumb-item active">Set Report</li>
                 </ol>
             </div>
-            <h4 class="page-title">Set KPI Targets</h4>
+            <h4 class="page-title">Set KPI Targets for user: <?=$user->name?></h4>
         </div><!--end page-title-box-->
     </div><!--end col-->
 </div>
@@ -24,21 +26,21 @@
                 <h5 class="page-header">
 
                     <button class="btn btn-success btn-square btn-skew waves-effect waves-light" data-toggle="modal" data-target="#group"><span class="fa fa-plus"></span>Add KPI Target</button>
-
-                </h5>
+                       <button class="btn btn-primary btn-square btn-skew waves-effect waves-light" data-toggle="modal" data-target="#set_key_performance"><span class="fa fa-plus"></span>Add Key Performance</button>
+                    </h5> 
                 <div class="alert alert-info">
                     KPI helps you to manage your staff </div>
                 <div id="hide-table">
                     <table id="example1" class="table dataTable">
                         <thead>
                             <tr>
-                                <th>slno</th>
+                                <th>S/No</th>
                                 <th>KPI</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Target</th>  
                                 <th>Is Derived</th>
-                                <th>Action</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,11 +55,9 @@
                                         <td><?= $target->start_date ?></td>
                                         <td><?= $target->end_date ?></td>
                                         <td><?= $target->value ?></td>
-                                        <td><?= $target->is_derived == 1 ? 'Yes' : 'No' ?></td>
-                                        <td> 
-                                                                                                
-                                            <!--<a href="#" class="mr-2"><i class="las la-pen text-info font-18"></i></a>-->
-                                            <a class="btn btn-sm btn-danger" href="<?= url('report/deletetarget/' . $target->uuid) ?>">delete</a>
+                                       <td><?= $target->is_derived == 1 ? 'Yes' : 'No' ?></td>
+                                        <td class="text-center"> 
+                                            <a title="Delete KPI"  href="<?= url('report/deletetarget/' . $target->uuid) ?>"><i class="icofont icofont-trash text-danger"></i></a>
                                         </td>
                                     </tr><!--end tr-->   
                                     <?php
@@ -101,16 +101,12 @@
 
                         <div class="col-sm-12">
                             <label class="control-label">KPI Name</label>
-                            <?php
-                            $array = array('0' => 'Select Type');
-                            $category = [1 => 'Total Students', 2 => 'Revenue collections', 3 => 'School AVG Academic Performance'];
-
-                            foreach ($category as $key => $categ) {
-                                $array[$key] = $categ;
-                            }
-                            echo form_dropdown("kpi_derived", $array, old("kpi_derived"), "id='kpi' class='form-control'");
-                            ?>
-
+                            <select name="kpi_derived" id='kpi' class='form-control'>
+                                <option value=""> Select Type</option>
+                                <?php foreach ($key_performances as $key => $categ) {?>
+                                    <option value="<?=$categ->id?>"> <?=$categ->name?></option>
+                            <?php }?>
+                            </select>
                             <span class="col-sm-4 control-label">
                                 <?php echo form_error($errors, 'kpi'); ?>
                             </span>   </div>
@@ -157,5 +153,44 @@
         </form>
     </div>
 </div>
-</script>
-    @endsection
+
+<!-- Modal content start here -->
+<div class="modal fade" id="set_key_performance">
+    <div class="modal-dialog">
+        <form action="<?=base_url('report/performances')?>" method="post" class="form-horizontal group_form" role="form">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    Set Key Performances for all staffs
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group row" id="name">
+
+                        <div class="col-sm-12">
+                        <label for="name" class="control-label required">Name</label>
+                            <input type="text" name="name" id="name" class="form-control ">  
+                        </div>
+                    </div>
+                    <div class="form-group row"  id="custom_query">
+                        <div class="col-sm-12">
+                        <label for="custom_query" class="control-label required"> Custom Query</label>
+                            <input type="text" name="custom_query" id="custom_query" class="form-control ">
+
+                        </div>
+                    </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" >close</button>
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+                <input type="hidden" name="user_sid" value="<?= $user->sid ?>">
+                <?= csrf_field() ?>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
+
