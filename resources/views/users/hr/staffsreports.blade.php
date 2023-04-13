@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/public/' ;
+$start =date('Y-m-d', strtotime($from_date));
+$end =date('Y-m-d', strtotime($to_date)); ?>
     <div class="page-header">
         <div class="page-header-title">
             <h4>Staff Reports</h4>
@@ -29,13 +31,13 @@
                         <label for="start-date">From</label>
                     </div>
                     <div class="col-auto">
-                        <input type="date" class="form-control mb-2" id="from_date" name="from_date" value="<?=$from_date?>"  placeholder="Start Date">
+                        <input type="date" class="form-control mb-2" id="from_date" name="from_date" value="<?=$start?>"  placeholder="Start Date">
                     </div>
                     <div class="col-auto">
                         <label for="end-date">To</label>
                     </div>
                     <div class="col-auto">
-                        <input type="date" class="form-control mb-2"  id="to_date" name="to_date" value="<?=$to_date?>" placeholder="End Date">
+                        <input type="date" class="form-control mb-2"  id="to_date" name="to_date" value="<?=$end?>" placeholder="End Date">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-success mb-2">View Report</button>
@@ -117,9 +119,11 @@
                                                 <td data-title="action">
 
 
-                                                            <a  href="<?=url('report/setreport/' . $user->sid)?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"> </i> Set Report </a> 
+                                                          <?php  if (Auth::user()->role_id == 1) 
+                                                                 { ?>  <a  href="<?=url('report/setreport/' . $user->id)?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"> </i> Set Report </a> 
+                                                                 <?php } ?>
 
-                                                            <a  href="<?=url('report/dashboard/' . $user->sid)?>" class="btn btn-success btn-sm"><i class="fa fa-folder"> </i>View </a>
+                                                            <a  href="<?=url('report/dashboard/' . $user->id)?>" class="btn btn-success btn-sm"><i class="fa fa-folder"> </i>View </a>
 
                                                 </td>
                                             </tr>

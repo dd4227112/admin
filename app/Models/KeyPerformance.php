@@ -14,7 +14,7 @@ class KeyPerformance extends Model {
     public $incrementing = true;
     protected $keyType = 'int';
 
-    protected $fillable = ['name', 'created_by', 'custom_query', 'sid'];
+    protected $fillable = ['name', 'created_by', 'custom_query', 'user_id'];
 
 
 

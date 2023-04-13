@@ -268,8 +268,16 @@ class Report extends Controller {
         // $this->data['staffTargets'] = \App\Models\StaffTarget::whereBetween('created_at', [$from_date, $to_date])->get();
         // $this->data['staffTargets'] = \App\Models\StaffTarget::all();
 
-        
-        $this->data['users'] = \App\Models\User::all();
+        if (Auth::user()->role_id == 1) 
+        { 
+
+          $this->data['users'] = \App\Models\User::all();
+        }
+        else
+        {
+          $this->data['users'] = \App\Models\User::where('id', Auth::user()->id )->get();
+        }
+       
         
         // dd( $this->data['staffTargets']);
         // $this->data["subview"] = "";
@@ -283,12 +291,12 @@ class Report extends Controller {
     }
   public function setreport() {
     // $data = \App\Models\KeyPerformance::all();
-    $sid = clean_htmlentities(request()->segment(3));
-    $this->data['key_performances'] = DB::select('select * from admin.key_performances where sid ='.$sid);
+    $id = clean_htmlentities(request()->segment(3));
+    $this->data['key_performances'] = DB::select('select * from admin.key_performances where user_id ='.$id);
 
     
     
-    $this->data['user'] = \App\Models\User::where('sid', $sid)->first();
+    $this->data['user'] = \App\Models\User::where('id', $id)->first();
     if ($_POST) {
       // dd(request()->all());
       if (request('is_derived')=='1') {        
@@ -342,8 +350,8 @@ class Report extends Controller {
   public function dashboard()
   {
     
-    $sid = clean_htmlentities(request()->segment(3));
-    $this->data['user'] = \App\Models\User::where('sid', $sid)->first();
+    $id = clean_htmlentities(request()->segment(3));
+    $this->data['user'] = \App\Models\User::where('id', $id)->first();
     if ($_POST) {
      
       $this->data['from_date'] = $from_date = date('Y-m-d 00:00:00', strtotime(request("from_date")));
@@ -374,7 +382,7 @@ class Report extends Controller {
     'name' => $request->name,
     'created_by' => Auth::user()->id,
     'custom_query' => $request->custom_query. ' created_by = '.$request->user_sid.' and ',
-    'sid' =>$request->user_sid
+    'user_id' =>$request->user_sid
     ];
 
     \App\Models\KeyPerformance::create($data);

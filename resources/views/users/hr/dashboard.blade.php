@@ -128,7 +128,7 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
                             Reports Submitted
                         </span>
 
-                        <a href="" class="avatar-box thumb-xs align-self-center">
+                        <a href="<?=base_url('users/show/'.$user->id)?>" class="avatar-box thumb-xs align-self-center">
                             <span class="avatar-title bg-soft-info rounded-circle font-13 font-weight-normal">
                                 <?=$user->staffReports()->whereBetween('created_at', [$from_date, $to_date])->count()?></span>
                         </a>    
@@ -353,7 +353,7 @@ for ($m = 1; $m <= 12; $m++) {
     $start_date = date('Y') . '-' . $m . '-01';
     $date = new DateTime('last day of ' . date('Y') . '-' . $m);
     $end_date = $date->format('Y-m-d');
-    $sql = 'select count(distinct staff_report_id) as total_reports from shulesoft.staff_targets_reports a where a.staff_report_id in (select id from shulesoft.staff_report where user_sid=' . $user->sid . ' and date between \'' . $start_date . '\' and \'' . $end_date . '\')';
+    $sql = 'select count(distinct staff_report_id) as total_reports from shulesoft.staff_targets_reports a where a.staff_report_id in (select id from shulesoft.staff_report where user_id=' . $user->id . ' and date between \'' . $start_date . '\' and \'' . $end_date . '\')';
 
     $month_reports = \collect(DB::select($sql))->first();
 

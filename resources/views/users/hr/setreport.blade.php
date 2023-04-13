@@ -147,7 +147,7 @@
                     <button type="button" class="btn btn-primary" data-dismiss="modal" >close</button>
                     <button type="submit" class="btn btn-success">Save</button>
                 </div>
-                <input type="hidden" name="user_sid" value="<?= $user->sid ?>">
+                <input type="hidden" name="user_sid" value="<?= $user->id ?>">
                 <?= csrf_field() ?>
             </div>
         </form>
@@ -186,7 +186,7 @@
                     <button type="button" class="btn btn-primary" data-dismiss="modal" >close</button>
                     <button type="submit" class="btn btn-success">Save</button>
                 </div>
-                <input type="hidden" name="user_sid" value="<?= $user->sid ?>">
+                <input type="hidden" name="user_sid" value="<?= $user->id ?>">
                 <?= csrf_field() ?>
             </div>
         </form>

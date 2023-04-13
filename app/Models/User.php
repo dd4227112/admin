@@ -113,10 +113,10 @@ class User extends Authenticatable {
         return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
     public function staffTargets() {
-        return $this->hasMany(\App\Models\StaffTarget::class, 'user_sid', 'sid');
+        return $this->hasMany(\App\Models\StaffTarget::class, 'user_sid', 'id');
     }
     public function staffReports() {
-        return $this->hasMany(\App\Models\StaffReport::class, 'user_sid', 'sid');
+        return $this->hasMany(\App\Models\StaffReport::class, 'user_id', 'id');
     }
 
 }
