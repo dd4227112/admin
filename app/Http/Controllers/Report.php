@@ -271,7 +271,7 @@ class Report extends Controller {
         if (Auth::user()->role_id == 1) 
         { 
 
-          $this->data['users'] = \App\Models\User::all();
+          $this->data['users'] = \App\Models\User::where('status',1)->get();
         }
         else
         {
