@@ -766,8 +766,13 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                     <div class="card">
                                         <div class="card-header">
                                             <h5 class="card-header-text">Custom Reports</h5>
-                                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addReport" style="color: #ffff; font-weight: bold;" href="<?php echo base_url('wallet/addSell') ?>">
+                                            <?php if(Auth::User()->id == request()->segment('3')): ?>
+                                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addReport" style="color: #ffff; font-weight: bold;">
                                         Add Report <i class="icofont icofont-plus-circle"></i></button>
+                                        <?php endif ?>
+
+                                        <a href="<?=base_url('report/dashboard/'.$user->id)?>" class="btn btn-success btn-sm" style="color: #ffff; font-weight: bold;">
+                                        View Performance <i class="icofont icofont-eye"></i></a>
                                         </div>
                                         <div class="card-block">
                                       
@@ -791,7 +796,10 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                                     <td><?=$report->title?> </td>
                                                     <td><?=$report->comment?> </td>
                                                     <td><?=$report->current_value?> </td>
-                                                    <td>Action </td>
+                                                    <td class="text-center">
+                                                        <!-- <a href="<?=base_url('users/editReport/'.$report->uuid)?>" class="btn btn-sm btn-primary text-white"><i class="icofont icofont-pencil">Edit</i></a>  -->
+                                                        <a href="<?=base_url('users/deleteReport/'.$report->id)?>" onclick="return confirm('Are you sure, you want to delete this report?\n This affect your performance report')" class="btn btn-sm btn-danger text-white"><i class="icofont icofont-trash"></i> Delete</a> 
+                                                    </td>
                                                     
                                                 </tr> 
                                                 <?php endforeach;?>
@@ -1373,7 +1381,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
     </form>
 </div>
 
-        <!-- email modal starts here -->
+        <!-- Staff Daily Report modal -->
         <div class="modal fade" id="addReport">
             <div class="container">
             <div class="modal-dialog">
@@ -1433,7 +1441,65 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
             </div>
         </div>
 
+            <!-- Edit Staff Daily Report modal -->
+            <!-- <div class="modal fade" id="EditReport">
+            <div class="container">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Staff Daily Report</h4>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
+                    </div>
+                    <form action="<?= base_url('Report/addReport'); ?>" method="post"  enctype="multipart/form-data">
+                    @csrf
+                        <div class="modal-body">
+                            <?php
+                            $r = 1;
+                            foreach ($user->staffTargets()->where('is_derived',0)->get() as $target) {
+                                ?>
+                                <div class='form-group row'>
+                                    <label for="subject" class="col-sm-6 control-label">
+                                        <?=$target->kpi?>.
+                                    </label>
+                                    <input type="text" class="form-control" placeholder="Enters Current Value" id="" name="targets[<?=$target->id?>]"/>
+
+                                </div>
+                                <?php
+                                $r++;
+                            }
+                            ?>
+
+                            <div class='form-group row'>
+                                <label for="subject" class="col-sm-6 control-label">
+                                    Select Date.
+                                </label>
+                                <input type="date" class="form-control" value="<?=date('Y-m-d')?>" id="documents" name="date"/>
+                                <input type ="hidden" name ="user_sid" value ="<?=$user->sid?>">
+
+                            </div>
+                            <div class='form-group row'>
+                                <label for="message" class="col-sm-6 control-label">
+                                    Attach Document Here
+                                </label>
+                                <input type="file" class="form-control" id="documents" name="attachment"/>
+                            </div>
+                            <div class='form-group row'>
+                                <br>
+                                <textarea name="comment" class="form-control"  rows="5" placeholder="Write Your Report Comment Here...."></textarea>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" style="margin-bottom:0px;" data-dismiss="modal">close</button>
+                            <input type="submit" class="btn btn-success" value="Save" />
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div> -->
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>

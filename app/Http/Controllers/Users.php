@@ -14,7 +14,8 @@ use App\Mail\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use App\Models\StaffReport;
+use \App\Models\StaffTargetsReport;
 class Users extends Controller {
 
     public function __construct() {
@@ -956,6 +957,20 @@ class Users extends Controller {
     }
     public function staffreports(){
        return view('users.hr.staffsreports');
+    }
+    // public function editReport(){
+    //     $uuid = request()->segment('3');
+    //     if(!empty(DB::table('shulesoft.staff_report')->where('uuid', $uuid)->get())){
+    //      $data = DB::select("select a.*, b.current_value from shulesoft.staff_report a join shulesoft.staff_targets_reports b on a.id =b.staff_report_id where a.uuid ='".$uuid."'");
+    //     }
+    //     echo json_encode($data);
+    // }
+    public function deleteReport(){
+        $id= request()->segment('3');
+        StaffTargetsReport::where('staff_report_id', $id)->delete();
+        DB::table('shulesoft.staff_report')->delete($id);
+        return redirect()->back()->with('success', 'Report deleted');
+        
     }
 
 }

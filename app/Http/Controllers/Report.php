@@ -421,20 +421,22 @@ class Report extends Controller {
         );
         $staff_report = \App\Models\StaffReport::create($array);
         $targets = request('targets');
+
         foreach ($targets as $key => $target) {
+          if($target != null){
             \App\Models\StaffTargetsReport::create([
-                'staff_report_id' => $staff_report->id,
-                'staff_target_id' => $key,
-                'date' => date("Y-m-d", strtotime(request('date'))),
-                'current_value' => $target,
-                'schema_name' =>'shulesoft',]
-            
-          );
+              'staff_report_id' => $staff_report->id,
+              'staff_target_id' => $key,
+              'date' => date("Y-m-d", strtotime(request('date'))),
+              'current_value' => $target,
+              'schema_name' =>'shulesoft',]
+            );
+          }
         }
         return redirect()->back()->with('success', 'Report Uploaded successfully ');
     } else {
-        $this->data["subview"] = "operation/report/addreport";
-        $this->load->view('_layout_main', $this->data);
+       echo 'Error!!!!!!!';
+       exit;
     }
 }
 
