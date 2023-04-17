@@ -100,31 +100,28 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
                                                     <?php
                                                     $r = 1;
                                                     $avg_performance = 0;
-                                                    foreach ($user->staffTargets()->whereBetween('created_at', [$from_date, $to_date])->get() as $target) {
-                                                        if ((int) $target->is_derived == 1) {
-                                                            $cur_value = \collect(DB::select($target->is_derived_sql))->first();
-                                                           $performance =  $cur_value->current_value;
-                                                        } else {
-                                                            $performance = $target->staffTargetsReports()->sum('current_value');
-                                                        }
-                                                      
+                                                    $r1 = 1;
+                                                    $avg_performance1 = 0;
+                                                    foreach ($user->staffTargets()->whereBetween('created_at', [$from_date, $to_date])->where('is_derived', 1)->get() as $target) {
+                                                        $cur_value = DB::connection($target->connection)->select($target->is_derived_sql);
+                                                        $performance =  $cur_value['0']->current_value;
                                                         $avg_performance += (float) $target->value > 0 ? round($performance * 100 / $target->value) : 0;
                                                         $r++;
                                                     }
-                                                    $avg = (int) $r == 1 ? 0 : round($avg_performance / ($r - 1));
-                                                    echo $avg . '%';
+                                                    foreach ($user->staffTargets()->whereBetween('created_at', [$from_date, $to_date])->where('is_derived', 0)->get() as $target) {
+                                                    $performance1 =  $target->staffTargetsReports()->sum('current_value');
+                                                    $avg_performance1 += (float) $target->value > 0 ? round($performance1 * 100 / $target->value) : 0;
+                                                    $r1++;
+                                                }
+                                                    echo ($r-1)+($r1-1)!=0 ? round(($avg_performance+$avg_performance1)/(($r-1)+($r1-1))).'%' :'0%';
                                                     ?>
                                                 </td>
 
                                                 <td data-title="action">
-
-
-                                                          <?php  if (Auth::user()->role_id == 1) 
-                                                                 { ?>  <a  href="<?=url('report/setreport/' . $user->id)?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"> </i> Set Report </a> 
-                                                                 <?php } ?>
-
-                                                            <a  href="<?=url('report/dashboard/' . $user->id)?>" class="btn btn-success btn-sm"><i class="fa fa-folder"> </i>View </a>
-
+                                                    <?php  if (Auth::user()->role_id == 1){
+                                                            ?>  <a  href="<?=url('report/setreport/' . $user->id)?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"> </i> Set Report </a> 
+                                                    <?php } ?>
+                                                    <a  href="<?=url('report/dashboard/' . $user->id)?>" class="btn btn-success btn-sm"><i class="fa fa-folder"> </i>View </a>
                                                 </td>
                                             </tr>
                                             <?php
@@ -187,29 +184,5 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
     
     @endsection
     @section('footer')
-    <!-- data-table js -->
-    
-<script type="text/javascript">
 
-// check = function () {
-
-//     $('#check_custom_date').change(function () {
-//         var val = $(this).val();
-//         if (val == 'today') {
-//             window.location.href = '<?= url('Sales/salesStatus/') ?>/1';
-//         } else {
-//             $('#show_date').show();
-//         }
-//     });
-// }
-// submit_search = function () {
-//     $('#search_custom').mousedown(function () {
-//         var start_date = $('#start_date').val();
-//         var end_date = $('#end_date').val();
-//         window.location.href = '<?= url('users/hrrequest/') ?>/5?start=' + start_date + '&end=' + end_date;
-//     });
-// }
-// $(document).ready(check);
-// $(document).ready(submit_search);
-</script>
 
