@@ -11,9 +11,8 @@ class Software extends Controller {
     public $destination_connection = 'pgsql';
 
     public function __construct() {
-        return false;
         if (!preg_match('/fhodhkjkhdfhoidf/i', request()->segment(1))) {
-            //$this->middleware('auth');
+            $this->middleware('auth');
         }
     }
 
