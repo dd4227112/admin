@@ -174,6 +174,18 @@
                             <input type="text" name="name" id="name" class="form-control ">  
                         </div>
                     </div>
+                    <div class="form-group row"  id="connection">
+                        <div class="col-sm-12">
+                        <label for="connection" class="control-label required"> Connection</label>
+                            <select  name="connection" id="connection" class="form-control ">
+                                <?php 
+                                 foreach ($connection as $key => $value) {?>
+                                 <option value="<?=$key?>"><?=$key?></option>
+                                <?php } ?>
+                            </select>
+
+                        </div>
+                    </div>
                     <div class="form-group row"  id="custom_query">
                         <div class="col-sm-12">
                         <label for="custom_query" class="control-label required"> Custom Query</label>

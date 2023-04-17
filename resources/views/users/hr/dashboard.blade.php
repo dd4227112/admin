@@ -66,8 +66,10 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
    
     $derived_targets = $user->staffTargets()->where('is_derived', 1)->whereBetween('created_at', [$from_date, $to_date])->get();
     foreach ($derived_targets as $targ) {
-        $cur_value = \collect(DB::select($targ->is_derived_sql))->first();
-        $performance = !empty($cur_value) && (int) $cur_value->current_value > 0 ? round($cur_value->current_value * 100 / $targ->value) : 0;
+        // $cur_value = \collect(DB::select($targ->is_derived_sql))->first();
+        $cur_value = DB::connection($targ->connection)->select($targ->is_derived_sql);
+
+        $performance = !empty($cur_value) && (int) $cur_value['0']->current_value > 0 ? round($cur_value['0']->current_value * 100 / $targ->value) : 0;
         ?>
         <div class="col-lg-3">
             <div class="card">
@@ -84,7 +86,7 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
                                 <h3 class="mt-0 mb-1 font-weight-semibold"><?= $performance ?>%</h3>  
                                 <p style="font-size: 20px;"><span class="badge badge-primary">Target: <?= number_format(round($targ->value)) ?></span><br/>
     
-                                        <span class="badge badge-success mt-1 shadow-none">Reached: <?= !empty($cur_value) ? number_format(round($cur_value->current_value)) : 0 ?></span></p>
+                                        <span class="badge badge-success mt-1 shadow-none">Reached: <?= !empty($cur_value) ? number_format(round($cur_value['0']->current_value)) : 0 ?></span></p>
                             </div>
                         </div>                    
                     </div>
@@ -167,8 +169,10 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
                             $avg_performance = 0;
                             foreach ($user->staffTargets()->whereBetween('created_at', [$from_date, $to_date])->get() as $target) {
                                 if ((int) $target->is_derived == 1) {
-                                    $cur_value = \collect(DB::select($target->is_derived_sql))->first();
-                                    $performance =  $cur_value->current_value;
+                                    // $cur_value = \collect(DB::select($target->is_derived_sql))->first();
+                                    $cur_value = DB::connection($target->connection)->select($target->is_derived_sql);
+
+                                    $performance =  $cur_value['0']->current_value;
                                 } else {
                                     $performance = $target->staffTargetsReports()->sum('current_value');
                                 }

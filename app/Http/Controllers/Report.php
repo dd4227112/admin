@@ -255,19 +255,12 @@ class Report extends Controller {
             $this->data['from_date'] = $from_date = date('Y-m-01 00:00:00');
             $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59');
         }
-        // echo $from_date;
-        // echo "<br>".$to_date;
-        
-
         $id = request()->segment(3);
         $type = request()->segment(4);
         if ($type == 'delete' && (int) $id > 0) {
-            \App\Models\StaffReport::where('id', $id)->delete();
+          \App\Models\StaffReport::where('id', $id)->delete();
         }
         $this->data['staff_reports'] = \App\Models\StaffReport::whereBetween('date', [$from_date, $to_date])->get();
-        // $this->data['staffTargets'] = \App\Models\StaffTarget::whereBetween('created_at', [$from_date, $to_date])->get();
-        // $this->data['staffTargets'] = \App\Models\StaffTarget::all();
-
         if (Auth::user()->role_id == 1) 
         { 
 
@@ -277,25 +270,14 @@ class Report extends Controller {
         {
           $this->data['users'] = \App\Models\User::where('id', Auth::user()->id )->get();
         }
-       
-        
-        // dd( $this->data['staffTargets']);
-        // $this->data["subview"] = "";
-        // $this->load->view('staff_report.index', $this->data);
-        // dd( $this->data);
-        // $this->data['users'] = "";
-        
         return view('users.hr.staffsreports', $this->data);
-        //  return view('users.hr.staffsreports');
-
+   
     }
   public function setreport() {
-    // $data = \App\Models\KeyPerformance::all();
+    $this->data['connection'] = config('database.connections');
+    // $data = \App\Models\KeyPerformance::where($id)->first();
     $id = clean_htmlentities(request()->segment(3));
-    $this->data['key_performances'] = DB::select('select * from admin.key_performances where user_id ='.$id);
-
-    
-    
+    $this->data['key_performances'] = DB::select('select * from admin.key_performances where user_id ='.$id);  
     $this->data['user'] = \App\Models\User::where('id', $id)->first();
     if ($_POST) {
       // dd(request()->all());
@@ -309,6 +291,7 @@ class Report extends Controller {
       'is_derived_sql' => $kpi_performance->custom_query.' created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
       'created_by_sid' => Auth::User()->sid,
       'schema_name'=>'shulesoft',
+      'connection' =>$kpi_performance->connection,
       ]);
       }
       else{
@@ -318,55 +301,32 @@ class Report extends Controller {
         'is_derived_sql' =>  '',
         'created_by_sid' => Auth::User()->sid,
         'schema_name'=>'shulesoft',
+        'connection' =>'',
         ]);
       }
-      // dd($obj);
-
-      //   $category = [1 => 'Total Students', 2 => 'Revenue collections', 3 => 'School AVG Academic Performance'];
-      //   $sql = [
-      //       1 => 'select count(*) as current_value  from shulesoft.student where status=1 and schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
-      //       2 => 'select sum(amount) as current_value  from shulesoft.payments where  schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
-      //       3 => 'select avg(mark) as current_value  from shulesoft.mark_info where  schema_name=\'' . SCHEMA_NAME . '\' and created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
-      //   ];
-      //   $is_sql = isset($sql[request('kpi_derived')]) ? $sql[request('kpi_derived')] : '';
-      //   // dd($is_sql);
-       
-      //   $obj = array_merge(request()->except('kpi', 'kpi_derived', '_token'),
-      //           [
-      //           'kpi' => request('kpi') == null ? $category[request('kpi_derived')] : request('kpi'),
-      //           'is_derived_sql' => request('kpi_derived') == null ? '' :$is_sql,
-      //           'created_by_sid' => Auth::User()->sid,
-      //           'schema_name'=>SCHEMA_NAME
-      //           ]);
-        \App\Models\StaffTarget::create($obj);
-       
-        return redirect()->back()->with('success', "success");
+      \App\Models\StaffTarget::create($obj);
+      return redirect()->back()->with('success', "success");
     }
-    // $this->data["subview"] = "administration/staff_report/setreport";
-    // $this->load->view('_layout_main', $this->data);
     return view('users.hr.setreport', $this->data);
 
   }
   public function dashboard()
   {
-    
+
     $id = clean_htmlentities(request()->segment(3));
     $this->data['user'] = \App\Models\User::where('id', $id)->first();
     if ($_POST) {
-     
+      
       $this->data['from_date'] = $from_date = date('Y-m-d 00:00:00', strtotime(request("from_date")));
       $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59', strtotime(request("to_date")));
       if ($to_date < $from_date) {
         return redirect()->back()->with('error', "Invalid date range selection");
       }
-  } else {
+    } else {
       $this->data['from_date'] = $from_date = date('Y-m-01 00:00:00');
       $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59');
-  }
-    // $this->data["subview"] = "administration/staff_report/dashboard";
-    // $this->load->view('_layout_main', $this->data);
+    }
     return view('users.hr.dashboard', $this->data);
-
   }
   public function deletetarget() 
   {
@@ -376,23 +336,18 @@ class Report extends Controller {
   }
   public function performances(request $request){
     // $data = request()->except('_token');
- 
-
     $data = [
     'name' => $request->name,
     'created_by' => Auth::user()->id,
     'custom_query' => $request->custom_query. ' created_by = '.$request->user_sid.' and ',
-    'user_id' =>$request->user_sid
+    'user_id' =>$request->user_sid,
+    'connection' =>$request->connection,
     ];
 
     \App\Models\KeyPerformance::create($data);
     return redirect()->back()->with('success', "success");
 
   }
-  // public function update_target()
-  // {
-  //   dd(request()->all());
-  // }
   public function addReport() {
     if ($_POST) {
         $url = '';
@@ -439,6 +394,5 @@ class Report extends Controller {
        exit;
     }
 }
-
-
 }
+

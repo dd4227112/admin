@@ -11,7 +11,7 @@ class StaffTarget extends Model {
      */
     public $table = 'shulesoft.staff_targets';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'kpi', 'user_sid', 'value', 'start_date', 'end_date', 'is_derived', 'is_derived_sql', 'created_by_sid', 'schema_name'];
+    protected $fillable = ['id', 'kpi', 'user_sid', 'value', 'start_date', 'end_date', 'is_derived', 'is_derived_sql', 'created_by_sid', 'schema_name', 'connection'];
 
     public function createdBy() {
         return $this->belongsTo(\App\Models\Shulesoftuser::class, 'created_by_sid', 'sid');
