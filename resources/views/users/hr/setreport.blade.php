@@ -76,7 +76,7 @@
 <!-- Modal content start here -->
 <div class="modal fade" id="group">
     <div class="modal-dialog">
-        <form action="" method="post" class="form-horizontal group_form" role="form">
+        <form action="" method="post" class="form-horizontal group_form set_performance" role="form">
 
             <div class="modal-content">
 
@@ -92,7 +92,7 @@
 
                             <label class="control-label required">KPI Type</label>
                             <div class="row">
-                                <div class="col-lg-4 offset-3"><input type="radio" checked="" onmousedown="$('#kpi_not_derived').hide(); $('#kpi_derived').show();" value="1" name="is_derived" class="form-control " required> Derived</div>
+                                <div class="col-lg-4 offset-3"><input type="radio" checked="" onmousedown="$('#kpi_not_derived').hide(); $('#kpi_derived').show();" value="1" name="is_derived" class="form-control  " required> Derived</div>
                                 <div class="col-lg-4"> <input type="radio" onmousedown="$('#kpi_not_derived').show(); $('#kpi_derived').hide();"  value="0" name="is_derived" class="form-control " required> Not Derived</div>
                             </div>
                         </div>
@@ -101,13 +101,13 @@
 
                         <div class="col-sm-12">
                             <label class="control-label">KPI Name</label>
-                            <select name="kpi_derived" id='kpi' class='form-control'>
+                            <select name="kpi_derived" id='kpi' class='form-control kpi_derived'>
                                 <option value=""> Select Type</option>
                                 <?php foreach ($key_performances as $key => $categ) {?>
                                     <option value="<?=$categ->id?>"> <?=$categ->name?></option>
                             <?php }?>
                             </select>
-                            <span class="col-sm-4 control-label">
+                            <span class="col-sm-4 control-label kpi_derived_alert text-danger">
                                 <?php echo form_error($errors, 'kpi'); ?>
                             </span>   </div>
                     </div>
@@ -115,21 +115,20 @@
                         <div class="col-sm-12">
                             <label class="control-label required">KPI Name</label>
                             <input type="text" name="kpi" class="form-control ">
-
+                            <span class="col-sm-4 control-label kpi_alert text-danger">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label class="control-label required">Target Value</label>
-                            <input type="text" name="value" class="form-control " required>
-
+                            <input type="text" name="value" class="form-control ">
+                            <span class="col-sm-4 control-label value_alert text-danger">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label class="control-label required">Start Date</label>
                             <input type="date" name="start_date" class="form-control " required>
-
                         </div>
                     </div>
                     <div class="form-group row">
@@ -204,5 +203,27 @@
         </form>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        $('.set_performance').on('submit', function(){
+            var is_derived =  $('input[name="is_derived"]:checked').val();
+            var kpi =  $('input[name="kpi"]').val();
+            var kpi_derived = $('.kpi_derived').val();
+            var target_value = $('input[name ="value"]').val();
+           if (is_derived == 1 && kpi_derived =='') {
+            $('.kpi_derived_alert').text('Please select a KPI Name');
+            return false;
+           }
+           if (is_derived == 0 && kpi =='') {
+            $('.kpi_alert').text('Please enter a KPI Name');
+            return false;
+           } 
+           if(target_value == ''){
+            $('.value_alert').text('Please enter a target value');
+            return false;
+           }
+           
+        });
+    });
+</script>
 @endsection
-

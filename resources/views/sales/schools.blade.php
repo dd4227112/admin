@@ -145,7 +145,7 @@
                                         <?php 
                                         $i = 1;
                                            if(count($schools) > 0) {
-                                            foreach ($schools as $school) {
+                                           foreach ($schools as $school) {                        
                                             ?>
                                             <tr>
                                                 <td><?= $i++ ?></td>

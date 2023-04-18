@@ -280,10 +280,10 @@ class Report extends Controller {
     $this->data['key_performances'] = DB::select('select * from admin.key_performances where user_id ='.$id);  
     $this->data['user'] = \App\Models\User::where('id', $id)->first();
     if ($_POST) {
+     
       // dd(request()->all());
       if (request('is_derived')=='1') {        
       $kpi_performance = \App\Models\KeyPerformance::where('id', request('kpi_derived'))->first();
-
       $obj = array_merge(request()->except('kpi', 'kpi_derived', '_token'),
       [
 
@@ -395,4 +395,3 @@ class Report extends Controller {
     }
 }
 }
-
