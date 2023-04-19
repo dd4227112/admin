@@ -118,9 +118,8 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
                                                 </td>
 
                                                 <td data-title="action">
-                                                    <?php  if (Auth::user()->role_id == 1){
-                                                            ?>  <a  href="<?=url('report/setreport/' . $user->id)?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"> </i> Set Report </a> 
-                                                    <?php } ?>
+                                                    <a  href="<?=url('report/setreport/' . $user->id)?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"> </i> Set Report </a> 
+
                                                     <a  href="<?=url('report/dashboard/' . $user->id)?>" class="btn btn-success btn-sm"><i class="fa fa-folder"> </i>View </a>
                                                 </td>
                                             </tr>

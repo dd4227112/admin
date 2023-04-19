@@ -261,15 +261,15 @@ class Report extends Controller {
           \App\Models\StaffReport::where('id', $id)->delete();
         }
         $this->data['staff_reports'] = \App\Models\StaffReport::whereBetween('date', [$from_date, $to_date])->get();
-        if (Auth::user()->role_id == 1) 
-        { 
+        // if (Auth::user()->role_id == 1) 
+        // { 
 
           $this->data['users'] = \App\Models\User::where('status',1)->get();
-        }
-        else
-        {
-          $this->data['users'] = \App\Models\User::where('id', Auth::user()->id )->get();
-        }
+        // }
+        // else
+        // {
+        //   $this->data['users'] = \App\Models\User::where('id', Auth::user()->id )->get();
+        // }
         return view('users.hr.staffsreports', $this->data);
    
     }
