@@ -288,7 +288,7 @@ class Report extends Controller {
       [
 
       'kpi' => $kpi_performance->name,
-      'is_derived_sql' => $kpi_performance->custom_query.' created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
+      'is_derived_sql' => $kpi_performance->custom_query.'  a.created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
       'created_by_sid' => Auth::User()->sid,
       'schema_name'=>'shulesoft',
       'connection' =>$kpi_performance->connection,
@@ -339,7 +339,7 @@ class Report extends Controller {
     $data = [
     'name' => $request->name,
     'created_by' => Auth::user()->id,
-    'custom_query' => $request->custom_query. ' created_by = '.$request->user_sid.' and ',
+    'custom_query' => $request->custom_query,
     'user_id' =>$request->user_sid,
     'connection' =>$request->connection,
     ];
