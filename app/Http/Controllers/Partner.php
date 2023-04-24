@@ -17,6 +17,10 @@ class Partner extends Controller {
     /**
      * Display a listing of the resource.
      *
+     * $type_id meaning
+     * 1. CRDB
+     * 2. Whatsapp
+     * 3. VFD
      * @return \Illuminate\Http\Response
      */
     public function index() {
@@ -446,6 +450,114 @@ class Partner extends Controller {
         return view('partners.add_school', $this->data);
     }
 
+    public function addPartnerService() {
+
+        $this->data['clients'] = $partner = \App\Models\Client::all();
+        if ($_POST) {
+            $client_id = request('client_id');
+            $client = \App\Models\Client::find($client_id);
+            //If its a new version, then schema needs to be shulesoft
+            $schema = (int) $client->is_new_version == 1 ? 'shulesoft' : $client->username;
+
+            //if its an old version, then separate by settingID
+            $column = (int) $client->is_new_version == 1 ? 'schema_name' : 'settingID';
+
+            //for old version, default settingID is 1
+            $column_value = (int) $client->is_new_version == 1 ? $client->username : 1;
+
+            $this->validate(request(), [
+                'tin' => 'required',
+                'tin_certificate' => 'required',
+                'id_certificate' => 'required',
+                'application_letter' => 'required'
+            ]);
+
+            $setting_object = [
+                "income_tax" => request('income_tax'),
+                "vfd_enabled" => request('vfd_enabled'),
+                "tin" => request('tin'),
+                "vrn" => request('vrn'),
+                "tax_group" => request('tax_group')
+            ];
+            
+            DB::table($schema . '.setting')->where($column, $column_value)->update($setting_object);
+
+            $this->data['bank_id'] = $bank_id = DB::table($schema.'.bank_accounts')->first()->id;
+
+            $integration = DB::table('shulesoft.bank_accounts_integrations')->first();
+
+            $bank_accounts_integration_id = $integration->id;
+
+            $object = array('client_id' => $client->id,
+                'refer_bank_id' => 22,
+                'bank_account_id' => $bank_id,
+                'user_id' => session('id'),
+                "table" => session('table'),
+                'bank_accounts_integration_id' => $bank_accounts_integration_id,
+                'schema_name' => $schema,
+                'type_id' => 3
+            );
+            $int = DB::table('admin.integration_requests')
+                            ->where('type_id', 3)
+                            ->where('client_id', $client->id)->first();
+
+            if (empty($int)) {
+                $integration_request_id = DB::table('admin.integration_requests')->insertGetId($object);
+            } else {
+                $integration_request_id = $int->id;
+            }
+            $this->uploadVfdFile('tin_certificate', $integration_request_id);
+            !empty(request('vrn_certificate')) ?
+                            $this->uploadVfdFile('vrn_certificate', $integration_request_id) : '';
+            $this->uploadVfdFile('id_certificate', $integration_request_id);
+            $this->uploadVfdFile('application_letter', $integration_request_id);
+
+            $message = 'Dear ' . $client->name . ' 
+We are glad to inform you that your application was successfully submitted for  TRA Virtual EFD  Integration. Your application is on verification stage.
+We shall let you know once we have done with verification, then you can proceed with  integration services. ';
+            $this->send_sms($client->phone, $message);
+            $this->send_email($client->email, 'VFD Application Status', $message);
+            return redirect('Partner/index/3')->with('success','success');
+        }
+        return view('partners.add_partner_service', $this->data);
+    }
+
+     public function uploadVfdFile($key, $integration_request_id) {
+        //attach any file to this requests
+        $file = request($key);
+        // print_r($file);
+        $url = 'attach_' . time() . rand(11, 8894) . '.' . $file->guessExtension();
+        $url = base_url('storage/uploads/images/' . $url);
+        $filePath = base_path() . '/storage/uploads/images/';
+        $file->move($filePath, $url);
+
+        //invoice
+        $files_data = [
+            'name' => $file->getClientOriginalName(),
+            'extension' => $file->getClientOriginalExtension(),
+            'user_id' => 3, //we force to assume CEO upload it
+            // 'size' => $file->getSize(),
+            'caption' => $file->getRealPath(),
+            'path' => $url
+        ];
+        $company_file_id = DB::table('admin.company_files')->insertGetId($files_data);
+
+        $object = [
+            'refer_bank_id' => 22,
+            'company_file_id' => $company_file_id,
+            'created_by' => session('id'),
+        ];
+        $integration_bank_document_id = DB::table('admin.integration_bank_documents')
+                ->insertGetId($object);
+
+        DB::table('admin.integration_requests_documents')->insert([
+            'integration_request_id' => $integration_request_id,
+            'integration_bank_document_id' => $integration_bank_document_id,
+            'company_file_id' => $company_file_id,
+            'path' => $url
+        ]);
+    }
+
     public function deletepPartner() {
         $id = request()->segment(3);
         if ((int) $id > 0) {
@@ -492,6 +604,42 @@ class Partner extends Controller {
         return TRUE;
     }
 
+    private function verifyVfdIntegration() {
+        $req_id = request()->segment(3);
+        $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
+        $client = DB::table('admin.clients')->where('username', $request->schema_name)->first();
+
+        //If its a new version, then schema needs to be shulesoft
+        $schema = (int) $client->is_new_version == 1 ? 'shulesoft' : $request->schema_name;
+
+        //if its an old version, then separate by settingID
+        $column = (int) $client->is_new_version == 1 ? 'schema_name' : 'settingID';
+
+        //for old version, default settingID is 1
+        $column_value = (int) $client->is_new_version == 1 ? $request->schema_name : 1;
+
+        DB::table($schema . '.setting')
+                ->where($column, $column_value)
+                ->update([
+                    'vfd_serial_number' => request('vfd_serial_number'),
+                    'vfd_password' => request('vfd_password'),
+                    'vfd_approved' => 1
+        ]);
+        $request->update(['bank_approved' => 1, 'shulesoft_approved' => 1, 'approval_user_id' => Auth::User()->id]);
+        $setting = DB::table($schema . '.setting')
+                        ->where($column, $column_value)->first();
+        $message = 'Hello ' . $setting->sname . ', Your VFD application  approved successfully. Now each payment you receive '
+                . 'will automatically generate a VFD receipt';
+
+        $email_message = 'Dear ' . $setting->sname . ' 
+                    Your application for VFD receipt is approved successfully.
+              . Now each payment you receive  will automatically generate a VFD receipt<br>
+                <br>Thanks
+                <br>ShuleSoft Support Team';
+        $this->send_email($setting->email, 'School Onboarding: VFD application is successfully', $email_message);
+        $this->send_sms($setting->phone, $message, 1);
+    }
+
     public function VerifyPayment() {
         $req_id = request()->segment(3);
         if ((int) $req_id > 0) {
@@ -500,26 +648,8 @@ class Partner extends Controller {
         }
         if ($_POST) {
             if (request('vfd_serial_number') != '') {
-
-                $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
-                DB::table('shulesoft.setting')->where('schema_name', $request->schema_name)->update([
-                    'vfd_serial_number' => request('vfd_serial_number'),
-                    'vfd_password' => request('vfd_password'),
-                    'vfd_approved' => 1
-                ]);
-                $request->update(['bank_approved' => 1, 'shulesoft_approved' => 1, 'approval_user_id' => Auth::User()->id]);
-                $setting = DB::table('shulesoft.setting')->where('schema_name', $request->schema_name)->first();
-                $message = 'Hello ' . $setting->sname . ', Your VFD application  approved successfully. Now each payment you receive '
-                        . 'will automatically generate a VFD receipt';
-
-                $email_message = 'Dear ' . $setting->sname . ' 
-                    Your application for VFD receipt is approved successfully.
-              . Now each payment you receive  will automatically generate a VFD receipt<br>
-                <br>Thanks
-                <br>ShuleSoft Support Team';
-                $this->send_email($setting->email, 'School Onboarding: VFD application is successfully', $email_message);
-                $this->send_sms($setting->phone, $message, 1);
-                return redirect('Partner/index/' . $request->type_id)->with('success', 'Request Approved successfully');
+                $this->verifyVfdIntegration();
+                return redirect('Partner/index/3')->with('success', 'Request Approved successfully');
             } else {
                 $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
                 $reference = request('reference');

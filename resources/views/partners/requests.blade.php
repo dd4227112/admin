@@ -4,7 +4,13 @@
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
 
-
+<?php
+$objects = ["1" => 'CRDB BANK Integration Requests',
+    "2" => 'WhatsApp Integration Requests',
+    "3" => 'VFD Integration Requests',
+    "4" => 'Bulk SMS Integration Requests',
+    "5" => 'Email Integration Requests'];
+?>
 <!-- Page-header start -->
 <div class="page-header">
     <div class="page-header-title">
@@ -30,11 +36,16 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <p align="left">
-                    <br/>
-                    &nbsp; &nbsp; &nbsp; <a class="btn btn-primary btn-mini btn-round" href="<?= url('partner/school') ?>">  Onboard New School</a>
+                <?php
+                if ((int) request()->segment(3) > 0) {
+                    ?>
+                    <p align="left">
+                        <br/>
+                        &nbsp; &nbsp; &nbsp;
+                        <a class="btn btn-primary btn-mini btn-round" href="<?= url('partner/addPartnerService/' . request()->segment(3)) ?>">  Onboard New School for <?= $objects[request()->segment(3)] ?></a>
 
-                </p>
+                    </p>
+                <?php } ?>
                 <div class="card-header">
                     <h5>Schools Onboarding Status </h5>
 
@@ -45,11 +56,12 @@
                         <div class="col-sm-10">
 
                             <select name="type_id" id="integration_type" onchange="window.location.href = '<?= url('Partner/index') ?>/' + this.value" class="form-control">
-                                <option value="1"  <?= $type_id == 1 ? 'selected' : '' ?>>CRDB BANK Integration Requests</option>
-                                <option value="2"  <?= $type_id == 2 ? 'selected' : '' ?>>WhatsApp Integration Requests</option>
-                                <option value="3"  <?= $type_id == 3 ? 'selected' : '' ?>>VFD Integration Requests</option>
-                                <option value="4"  <?= $type_id == 4 ? 'selected' : '' ?>>Bulk SMS Integration Requests</option>
-                                <option value="5"  <?= $type_id == 5 ? 'selected' : '' ?>>Email Integration Requests</option>
+                                <?php
+                                foreach ($objects as $key => $value) {
+                                    $selected = request()->segment(3) == $key ? 'selected' : '';
+                                    echo '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
+                                }
+                                ?>
                             </select>
                         </div>
                         <span class="offset-2">
@@ -132,8 +144,8 @@
                                                 ?>
                                             <td><?= $number ?></td>
                                             <td><?=
-                                        $request->bank_approved == 1 ? '<b class="label label-success">Approved</b>' :
-                                                '<b class="label label-default">Not Approved</b>'
+                                                $request->bank_approved == 1 ? '<b class="label label-success">Approved</b>' :
+                                                        '<b class="label label-default">Not Approved</b>'
                                                 ?></td>
                                             <td><?= $request->shulesoft_approved == 1 ? '<b class="label label-success" title="' . $request->approval->name . '"> Approved </b>' : '<b class="label label-warning"> Not Approved </b>' ?></td>
                                             <td><?= timeAgo($request->created_at) ?></td>
@@ -243,4 +255,6 @@
                     </div>
                 </div>
             </div>
+
+
             @endsection
