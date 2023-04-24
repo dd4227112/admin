@@ -261,15 +261,15 @@ class Report extends Controller {
           \App\Models\StaffReport::where('id', $id)->delete();
         }
         $this->data['staff_reports'] = \App\Models\StaffReport::whereBetween('date', [$from_date, $to_date])->get();
-        if (Auth::user()->role_id == 1) 
-        { 
+        // if (Auth::user()->role_id == 1) 
+        // { 
 
           $this->data['users'] = \App\Models\User::where('status',1)->get();
-        }
-        else
-        {
-          $this->data['users'] = \App\Models\User::where('id', Auth::user()->id )->get();
-        }
+        // }
+        // else
+        // {
+        //   $this->data['users'] = \App\Models\User::where('id', Auth::user()->id )->get();
+        // }
         return view('users.hr.staffsreports', $this->data);
    
     }
@@ -280,15 +280,15 @@ class Report extends Controller {
     $this->data['key_performances'] = DB::select('select * from admin.key_performances where user_id ='.$id);  
     $this->data['user'] = \App\Models\User::where('id', $id)->first();
     if ($_POST) {
+     
       // dd(request()->all());
       if (request('is_derived')=='1') {        
       $kpi_performance = \App\Models\KeyPerformance::where('id', request('kpi_derived'))->first();
-
       $obj = array_merge(request()->except('kpi', 'kpi_derived', '_token'),
       [
 
       'kpi' => $kpi_performance->name,
-      'is_derived_sql' => $kpi_performance->custom_query.' created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
+      'is_derived_sql' => $kpi_performance->custom_query.'  a.created_at between \'' . request('start_date') . '\' and \'' . request('end_date') . '\'',
       'created_by_sid' => Auth::User()->sid,
       'schema_name'=>'shulesoft',
       'connection' =>$kpi_performance->connection,
@@ -339,7 +339,7 @@ class Report extends Controller {
     $data = [
     'name' => $request->name,
     'created_by' => Auth::user()->id,
-    'custom_query' => $request->custom_query. ' created_by = '.$request->user_sid.' and ',
+    'custom_query' => $request->custom_query,
     'user_id' =>$request->user_sid,
     'connection' =>$request->connection,
     ];
@@ -395,4 +395,3 @@ class Report extends Controller {
     }
 }
 }
-
