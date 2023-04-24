@@ -10,11 +10,11 @@ class ClientSchool extends Model {
     protected $fillable = ['id', 'client_id', 'school_id', 'created_at', 'updated_at'];
 
     public function school() {
-        return $this->belongsTo(\App\Models\User::class, 'school_id', 'id');
+        return $this->belongsTo(\App\Models\User::class, 'school_id', 'id')->withDefault(['name'=>'Not Defined']);
     }
 
     public function client() {
-        return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
+        return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id')->withDefault(['name'=>'Not Defined']);
     }
 
 }

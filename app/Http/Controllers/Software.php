@@ -707,7 +707,7 @@ class Software extends Controller {
         $background = new \App\Http\Controllers\Background();
         $url = 'http://75.119.140.177:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
-        $curl = $background->curlServer($fields, $url, 'row');
+        $curl = $background->curlServer($fields, $url);
         return $curl;
         // return redirect()->back()->with('success',$curl);
     }
