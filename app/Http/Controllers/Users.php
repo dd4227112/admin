@@ -576,7 +576,7 @@ class Users extends Controller {
         $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
         return view('users.minutes.view_minute', $this->data);
     }
-
+  
     public function deleteMinute() {
         $id = request()->segment(3);
         \App\Models\Minutes::where('id', $id)->delete();

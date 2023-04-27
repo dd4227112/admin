@@ -75,6 +75,15 @@
                                         </p>
                                       </td>
                                     </tr>
+                                    <?php if ($minute->attached !=NULL){?>
+                                    <tr>
+                                      <th>
+                                        Attachments
+                                      </th>
+                                      <td>{{$minute->attached}}  <a href="<?= url('/storage/uploads/images/' . $minute->attached)?>" class="btn btn-info  f-right"> <i class="icofont icofont-cloud"></i> View</a>
+                                        </td>
+                                    </tr>
+                                    <?php } ?>
                                     </tbody>
                                   </table>
                                 </div>
@@ -95,7 +104,7 @@
                         <div class="card">
                           <div class="card-header">
                             <h5 class="card-header-text">Description of this Meeting</h5>
-                            {{-- <a href="<?= url('/storage/uploads/images/' . $minute->attached)?>" class="btn btn-info  f-right"> <i class="icofont icofont-cloud"></i> Document</a> --}}
+                             {{-- <a href="<?= url('/storage/uploads/images/' . $minute->attached)?>" class="btn btn-info  f-right"> <i class="icofont icofont-cloud"></i> Document</a> --}}
                           </div>
                           <div class="card-block user-desc">
                             <div class="view-desc">
