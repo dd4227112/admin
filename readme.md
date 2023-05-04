@@ -31,3 +31,16 @@ ALTER ROLE
 
 #limit idle connections in postgres
 SET SESSION idle_in_transaction_session_timeout = '3s';
+
+#delete duplicate data differ by date
+WITH cte AS (
+  SELECT student_id, installment_id,
+         ROW_NUMBER() OVER (PARTITION BY student_id, installment_id ORDER BY created_at DESC) AS rn
+  FROM shulesoft.tmembers
+)
+DELETE FROM shulesoft.tmembers
+WHERE (student_id, installment_id) IN (
+  SELECT student_id, installment_id
+  FROM cte
+  WHERE rn > 1
+);

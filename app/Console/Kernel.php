@@ -7,7 +7,6 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\Message;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Customer;
-
 use App\Http\Controllers\Background;
 use Illuminate\Support\Facades\DB;
 use App\Mail\EmailTemplate;
@@ -77,6 +76,10 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
+            $this->databaseOptimization();
+        })->dailyAt('00:40'); // Eq to 03:40 AM   
+
+        $schedule->call(function () {
             //$this->RefreshMaterializedView();
         })->twiceDaily(1, 13); // Run the task daily at 1:00 & 13:00
 
@@ -89,13 +92,19 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
-
-        //$schedule->call(function () {
-        //send SMS to karibuSMS
-        // $this->karibuSMS();
-        // })->everyMinute();
     }
 
+     public function databaseOptimization() {
+        $clients = DB::table('admin.clients')->where('status', 1)->where('is_new_version', 0)->get();
+        foreach ($clients as $client) {
+            if ($client->is_new_version == 1) {
+                DB::SELECT('SELECT * FROM shulesoft.redistribute_all_student_payments(' . $client->username . ')');
+            } else {
+                DB::SELECT('SELECT * FROM ' . $client->username . ' redistribute_all_student_payments()');
+            }
+        }
+    }
+    
     public function sendQuickSms() {
         $schemas = DB::select('select schema_name from admin.sms_status');
         foreach ($schemas as $schema_) {
@@ -105,16 +114,16 @@ class Kernel extends ConsoleKernel {
 
             if (!empty($messages)) {
                 foreach ($messages as $message) {
-                    $beem=$this->beem_sms($message->phone, $message->body, $schema);
+                    $beem = $this->beem_sms($message->phone, $message->body, $schema);
                     DB::table($schema . ".sms")->where('sms_id', $message->id)->update([
                         'status' => 1,
-                        'return_code'=> json_encode($beem),
+                        'return_code' => json_encode($beem),
                         'updated_at' => 'now()'
                     ]);
                 }
             }
         }
-     //DB::select('refresh  materialized view  admin.all_sms ');
+        //DB::select('refresh  materialized view  admin.all_sms ');
     }
 
     function beem_sms($phone_number, $message, $schema_ = null) {
@@ -184,8 +193,8 @@ class Kernel extends ConsoleKernel {
 
         return $return;
     }
-    
-      private function status_code($result) {
+
+    private function status_code($result) {
 
         switch ($result) {
             case '1701':
@@ -260,7 +269,6 @@ class Kernel extends ConsoleKernel {
 
         return json_encode($results);
     }
-
 
     public function whatsappMessage() {
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 29');
