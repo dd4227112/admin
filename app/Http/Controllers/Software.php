@@ -827,6 +827,7 @@ class Software extends Controller {
 
         $this->data['headers'] = \collect($projects)->first();
         $this->data['contents'] = $projects;
+        
         return view('customer.usage.custom_report', $this->data);
     }
 

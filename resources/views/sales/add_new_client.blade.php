@@ -44,7 +44,7 @@
                                   <input style="max-width: 15em; resize: none" class="form-control" id="school_username" name="username" type="text" placeholder="school name" value="<?= clean(strtolower($school->name)) ?>" maxlength="20" onkeyup="validateForm()"> 
                               </div>
                               <div id="col-sm-3">
-                                  <b style="font-size: 1.2em;">.shulesoft.com</b>
+                                  <b style="font-size: 1.2em;">.shulesoft.africa</b>
                               </div>
                           </div>
                           <small style="max-width: 13em;" id="username_message_reply"></small>

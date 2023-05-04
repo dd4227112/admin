@@ -394,4 +394,34 @@ class Report extends Controller {
        exit;
     }
 }
+public function edit_kpi(){
+  
+  $uuid = clean_htmlentities((request()->segment(3)));
+  if($_POST){
+    $obj = array(
+
+    'kpi' => request('kpi'),
+    'is_derived_sql' => request('is_derived_sql'),
+    'value' => request('value'),
+    'end_date' =>request('end_date'),
+    'start_date' =>request('start_date'),
+    'uuid' =>request('uuid'),
+    'is_derived' =>request('is_derived'),
+    );
+    if(\App\Models\StaffTarget::where('uuid', $obj['uuid'])->update($obj)){
+      return redirect()->back()->with('success', 'Updated successfully ');
+    }
+    
+  }else{
+
+  $data =\App\Models\StaffTarget::where('uuid', $uuid)->first();
+//  $data = \APP\Models\StaffTarget::where('uuid', $id)->first();
+  return response()->json($data);
+  }
+
+}
+
+  public function save_edit_kpi(){
+    
+  }
 }
