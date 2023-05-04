@@ -1,6 +1,7 @@
 <?php $root = url('/') . '/public/';
 $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 //isset($value) ? dd($value) : 'vaaaaaaaa' 
+$pass=time();
 ?>
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
@@ -12,6 +13,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <meta name="description" content="ShuleSoft Admin">
         <meta name="csrf-token" content="{{ csrf_token() }}" />
+        <meta name="auths" content="<?= $pass.':'.bcrypt($pass) ?>" />
         <meta name="keywords" content="ShuleSoft, Admin, Admin Panel">
         <meta name="author" content="ShuleSoft">
         <!-- Favicon icon -->
