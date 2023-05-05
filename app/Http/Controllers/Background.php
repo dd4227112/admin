@@ -646,14 +646,13 @@ class Background extends Controller {
         $tasks_allocated = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id', $user_id)->whereYear('created_at', '=', date('Y'))->get(['task_id']))->whereYear('created_at', '=', date('Y'))->where('status','<>','complete')->get();
         $last_created_task = \collect(DB::select("select max(t.created_at) from admin.tasks t join admin.tasks_users u on u.task_id = t.id where t.status <> 'complete' and u.user_id = '$user_id'"))->first();
         $schools_to_approve = \collect(\DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,s.company_file_id, c.created_at FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a on a.client_id = c.id  where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status, c.created_at, s.company_file_id HAVING count(a.id) <= 0 ORDER BY c.created_at DESC"))->count();
-
         $schools_to_implement = \collect(\DB::select("select T.id,T.name,T.email,T.phone,T.code,T.status from (
         select * from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)
         or id in (select client_id from admin.client_trials)) T where T.id not in (select client_id from admin.train_items_allocations)"))->count();
 
          echo json_encode(array(
            'tasks_allocated' => $tasks_allocated,
-           'last_created_task' => timeAgo($last_created_task->max),
+           'last_created_task' => $last_created_task->max==null?0:timeAgo($last_created_task->max),
            'schools_to_approve' => $schools_to_approve,
            'schools_to_implement' => $schools_to_implement,
            'total' => count($tasks_allocated) + $schools_to_approve + $schools_to_implement
