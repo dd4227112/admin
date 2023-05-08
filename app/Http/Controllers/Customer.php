@@ -323,7 +323,8 @@ class Customer extends Controller {
             'content' => str_replace('src="../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
             'created_by' => \Auth::user()->id,
             'language' => 'eng',
-            'company_file_id' => $company_file_id
+            'company_file_id' => $company_file_id,
+            'guide_type' =>request()->guide_type,
         ];
         DB::table('constant.guides')->insert($obj);
         return redirect('customer/guide');
@@ -345,7 +346,7 @@ class Customer extends Controller {
 
     public function getPermission() {
         $group_id = request('group_id');
-        $permissions = \DB::table('constant.permission')->where('permission_group_id', $group_id)->get();
+        $permissions = \DB::table('admin.permissions')->where('permission_group_id', $group_id)->get();
         foreach ($permissions as $value) {
             echo '<input type="radio" name="permission_id" value="' . $value->id . '" />' . $value->display_name;
         }
@@ -373,15 +374,27 @@ class Customer extends Controller {
                     'content' => str_replace('src="../../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
                     "is_edit" => request()->is_edit,
                     'language' => 'eng',
-                    'company_file_id' => $company_file_id
+                    'company_file_id' => $company_file_id,
+                    'guide_type' =>request()->guide_type,
                 ];
 
                 \App\Models\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
-        } else {
+        } 
+        else if (request('pg') && is_numeric(request('pg')) && floor(request('pg')) == request('pg'))
+        {
+            $guide_type = (int)request('pg');
+            $page = 'guide';
+            $this->data['guides'] = \App\Models\Guide::latest()->where('guide_type', $guide_type)->get();
+            // $this->data['guides'] =DB::select("select a.*, c.name, b.display_name from constant.guides a join constant.permission a.permission_id = b.id join constant.permission_group c on c.id = b.permission_group_id");
+
+        }
+        else {
             $page = 'guide';
             $this->data['guides'] = \App\Models\Guide::latest()->get();
+            // $this->data['guides'] =DB::select("select a.*, c.name, b.display_name from constant.guides a join constant.permission b on a.permission_id = b.id join constant.permission_group c on c.id = b.permission_group_id");
+
         }
         return view('customer.' . $page, $this->data);
     }

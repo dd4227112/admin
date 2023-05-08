@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.app')
 @section('content')
         <div class="page-header">
             <div class="page-header-title">
@@ -34,13 +34,28 @@
                                     <h4 class="modal-title" id="exampleModalLabel1">Add New Guide</h4> </div>
                                 <form method="post" action="<?= url('customer/createGuide') ?>"  enctype="multipart/form-data">
                                     <div class="modal-body" id="message_result">
+                                    <div class="form-group">
+                                            <label for="guide_type" class="control-label">Guide Type</label>
+                                            <select class="form-control select2" id="guide_type" name ="guide_type" required>
+                                            <?php
+                                                $guides = [
+                                                    '1' =>'Technical',
+                                                    '2' =>'Users',
+                                                    '3'=>'Database',
+                                                    
+                                                ];?>
+                                                <?php foreach($guides as $key=>$value){?>
+                                                    <option  value="<?=$key?>"><?=$value?></option>
+                                            <?php  } ?>
+                                            </select>
+                                        </div>
 
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">Main Module:</label>
                                             <select class="form-control select2" id="permission_group" required>
                                                 <option value=""></option>
                                                 <?php
-                                                $permission_groups = \DB::table('constant.permission_group')->get();
+                                                $permission_groups = \DB::table('admin.permission_groups')->get();
                                                 foreach ($permission_groups as $group) {
                                                     ?>
                                                     <option value="<?= $group->id ?>"><?= $group->name ?></option>
@@ -66,7 +81,7 @@
                                         <div ></div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <a type="button" href="<?=base_url('customer/guide')?>" class="btn btn-danger" data-dismiss="modal">Cancel</a>
                                         <button type="submit" class="btn btn-primary" id="add_faq">Submit</button>
                                     </div>
                                     <?= csrf_field() ?>

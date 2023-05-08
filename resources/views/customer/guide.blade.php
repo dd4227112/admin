@@ -31,9 +31,22 @@
 
                           
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                       <p align='left'>
                                         <a class="btn btn-primary btn-mini btn-round" href="<?= url('customer/guide/null?pg=add') ?>">Add New Guide</a>
+                                      </p>
+                                    <br/>
+                                </div>
+
+                                <div class="col-md-3">
+                                      <p align='left'>
+                                        <label for="guide_type">Guide Type</label>
+                                      <select class="form-control select2" id="guide_type">
+                                            <option value=""></option>
+                                            <option value="1">Technical</option>
+                                            <option value="2">Users</option>
+                                            <option value="3">Database</option>
+                                        </select>
                                       </p>
                                     <br/>
                                 </div>
@@ -160,6 +173,12 @@
             }
         });
     }
-    $(document).ready(content_for);
+    school_selector = function () {
+        $('#guide_type').change(function () {
+            var val = $(this).val();
+            window.location.href = '<?= url('customer/guide/null?pg=') ?>' + val;
+        })
+    }
+    $(document).ready(school_selector);
 </script>
 @endsection

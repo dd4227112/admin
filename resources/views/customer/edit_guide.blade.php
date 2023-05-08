@@ -46,13 +46,29 @@
     </div>
     <form method="post" action="<?= url('customer/guide/edit/'.$guide->id) ?>"  enctype="multipart/form-data">
         <div class="modal-body" id="message_result">
+            <div class="form-group">
+                <label for="guide_type" class="control-label">Guide Type</label>
+                <select class="form-control select2" id="guide_type" name ="guide_type" required>
+                    <?php
+                    $guides = [
+                        '1' =>'Technical',
+                        '2' =>'Users',
+                        '3'=>'Database',
+                        
+                    ];?>
+                <option  selected value="<?=$guide->guide_type?>"><?=$guides[$guide->guide_type]?></option>
 
+                    <?php foreach($guides as $key=>$value){?>
+                        <option  value="<?=$key?>"><?=$value?></option>
+                  <?php  } ?>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="recipient-name" class="control-label">Main Module:</label>
                 <select class="form-control" id="permission_group">
                     <option value=""></option>
                     <?php
-                    $permission_groups = \DB::table('constant.permission_group')->get();
+                    $permission_groups = \DB::table('admin.permission_groups')->get();
                     foreach ($permission_groups as $group) {
                         ?>
                         <option value="<?= $group->id ?>" <?= $guide->permission->permissionGroup->id == $group->id ? 'selected' : '' ?>><?= $group->name ?></option>
@@ -69,7 +85,7 @@
                 <label for="recipient-name" class="control-label">Content For :</label>
                 <span id="content_for">
                     <?php
-                    $permissions = \DB::table('constant.permission')->where('permission_group_id', $guide->permission->permissionGroup->id)->get();
+                    $permissions = \DB::table('admin.permissions')->where('permission_group_id', $guide->permission->permissionGroup->id)->get();
                     foreach ($permissions as $value) { ?>
                        <input type="radio" name="permission_id" value="<?= $value->id ?>" <?= $guide->permission_id == $value->id ? 'checked' : '' ?>/><?=$value->display_name;?>
                  <?php       }
