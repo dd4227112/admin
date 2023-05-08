@@ -49,16 +49,21 @@
             <div class="form-group">
                 <label for="guide_type" class="control-label">Guide Type</label>
                 <select class="form-control select2" id="guide_type" name ="guide_type" required>
-                    <?php
-                    $guides = [
-                        '1' =>'Technical',
-                        '2' =>'Users',
-                        '3'=>'Database',
-                        
+                <?php
+                    $guide_types = [
+                        '1' =>'Product requirement documentation',
+                        '2' =>'UX design documentation',
+                        '3'=>'Software architecture design documentation',
+                        '4'=>'Source code documentation',
+                        '5'=>'Quality assurance documentation',
+                        '6'=>'Maintanance and help guide',
+                        '7'=>'API documentation',
+                        '8'=>'End -user documentation',
+                        '9'=>'System admin documentation',
                     ];?>
-                <option  selected value="<?=$guide->guide_type?>"><?=$guides[$guide->guide_type]?></option>
+                <option  selected value="<?=$guide->guide_type?>"><?=$guide_types[$guide->guide_type]?></option>
 
-                    <?php foreach($guides as $key=>$value){?>
+                    <?php foreach($guide_types as $key=>$value){?>
                         <option  value="<?=$key?>"><?=$value?></option>
                   <?php  } ?>
                 </select>

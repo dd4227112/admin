@@ -42,10 +42,22 @@
                                       <p align='left'>
                                         <label for="guide_type">Guide Type</label>
                                       <select class="form-control select2" id="guide_type">
-                                            <option value=""></option>
-                                            <option value="1">Technical</option>
-                                            <option value="2">Users</option>
-                                            <option value="3">Database</option>
+                                      <option  value=""></option>
+                                      <?php
+                                        $guide_types = [
+                                            '1' =>'Product requirement documentation',
+                                            '2' =>'UX design documentation',
+                                            '3'=>'Software architecture design documentation',
+                                            '4'=>'Source code documentation',
+                                            '5'=>'Quality assurance documentation',
+                                            '6'=>'Maintanance and help guide',
+                                            '7'=>'API documentation',
+                                            '8'=>'End -user documentation',
+                                            '9'=>'System admin documentation',
+                                        ];?>
+                                        <?php foreach($guide_types as $key=>$value){?>
+                                                    <option  value="<?=$key?>"><?=$value?></option>
+                                            <?php  } ?>
                                         </select>
                                       </p>
                                     <br/>
