@@ -385,6 +385,7 @@ class Customer extends Controller {
         else if (request('pg') && is_numeric(request('pg')) && floor(request('pg')) == request('pg'))
         {
             $guide_type = (int)request('pg');
+            $this->data['guide_selected'] = $guide_type?$guide_type:'';
             $page = 'guide';
             $this->data['guides'] = \App\Models\Guide::latest()->where('guide_type', $guide_type)->get();
             // $this->data['guides'] =DB::select("select a.*, c.name, b.display_name from constant.guides a join constant.permission a.permission_id = b.id join constant.permission_group c on c.id = b.permission_group_id");
@@ -392,6 +393,7 @@ class Customer extends Controller {
         }
         else {
             $page = 'guide';
+            $this->data['guide_selected'] = '';
             $this->data['guides'] = \App\Models\Guide::latest()->get();
             // $this->data['guides'] =DB::select("select a.*, c.name, b.display_name from constant.guides a join constant.permission b on a.permission_id = b.id join constant.permission_group c on c.id = b.permission_group_id");
 

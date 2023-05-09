@@ -13,7 +13,7 @@ class Guide extends Model
     
     public $timestamps=false;
     protected $fillable = [
-        'permission_id', 'content', 'created_by','language','company_file_id'
+        'permission_id', 'content', 'created_by','language','company_file_id', 'guide_type'
     ];
     
     public function permission() {

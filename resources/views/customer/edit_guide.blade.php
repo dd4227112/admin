@@ -61,10 +61,10 @@
                         '8'=>'End -user documentation',
                         '9'=>'System admin documentation',
                     ];?>
-                <option  selected value="<?=$guide->guide_type?>"><?=$guide_types[$guide->guide_type]?></option>
+
 
                     <?php foreach($guide_types as $key=>$value){?>
-                        <option  value="<?=$key?>"><?=$value?></option>
+                        <option  value="<?=$key?>" <?=$key==$guide->guide_type?'selected':''?>><?=$value?></option>
                   <?php  } ?>
                 </select>
             </div>
@@ -198,7 +198,7 @@ console.log(xhr);
             } else {
                 $.ajax({
                     type: 'get',
-                    url: "<?= url('customer/getPermission') ?>",
+                    url: "<?= url('customer/getPermission/null') ?>",
                     data: "group_id=" + group_id,
                     dataType: "html",
                     success: function (data) {
