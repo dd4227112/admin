@@ -149,7 +149,7 @@ class Sales extends Controller {
         return view('market.objective');
     }
 
-    function schoolStatus() {
+    function schoolStatus(){ 
         $id = request()->segment(3);
         if ($id == 'shulesoft') {
             $this->data['title'] = "Schools Alreardy Onboarded";

@@ -31,9 +31,35 @@
 
                           
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                       <p align='left'>
                                         <a class="btn btn-primary btn-mini btn-round" href="<?= url('customer/guide/null?pg=add') ?>">Add New Guide</a>
+                                      </p>
+                                    <br/>
+                                </div>
+
+                                <div class="col-md-3">
+                                      <p align='left'>
+                                        <label for="guide_type">Guide Type</label>
+                                      <select class="form-control select2" id="guide_type">
+                                      <option  value="">All</option>
+                                      <?php
+                                        $guide_types = [
+                                            '1' =>'Product requirement documentation',
+                                            '2' =>'UX design documentation',
+                                            '3'=>'Software architecture design documentation',
+                                            '4'=>'Source code documentation',
+                                            '5'=>'Quality assurance documentation',
+                                            '6'=>'Maintanance and help guide',
+                                            '7'=>'API documentation',
+                                            '8'=>'End -user documentation',
+                                            '9'=>'System admin documentation',
+                                        ];?>
+                                        <?php 
+                                        foreach($guide_types as $key=>$value){?>
+                                                <option  value="<?=$key?>" <?=$key==$guide_selected?'selected':''?>><?=$value?></option>
+                                            <?php  } ?>
+                                        </select>
                                       </p>
                                     <br/>
                                 </div>
@@ -160,6 +186,12 @@
             }
         });
     }
-    $(document).ready(content_for);
+    school_selector = function () {
+        $('#guide_type').change(function () {
+            var val = $(this).val();
+            window.location.href = '<?= url('customer/guide/null?pg=') ?>' + val;
+        })
+    }
+    $(document).ready(school_selector);
 </script>
 @endsection

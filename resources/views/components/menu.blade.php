@@ -642,6 +642,11 @@
                                                     <span class="pcoded-mtext">Reset school</span>
                                                 </a>
                                             </li>
+                                            <!-- <li class=" ">
+                                                <a href="<?= url('software/migration') ?>">
+                                                    <span class="pcoded-mtext">Migration</span>
+                                                </a>
+                                            </li> -->
                                      </ul>
                                 </li>
                              <?php } ?>

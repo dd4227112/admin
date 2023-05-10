@@ -16,7 +16,7 @@ class Background extends Controller {
      * @return void
      */
     public function __construct() {
-        // $this->middleware('auth');
+// $this->middleware('auth');
     }
 
     /**
@@ -25,7 +25,7 @@ class Background extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index($tag = 'sms') {
-        //
+//
         return $tag == 'sms' ?
                 $this->dispatch((new \App\Jobs\PushSMS())) :
                 $this->dispatch((new \App\Jobs\PushEmail()));
@@ -57,7 +57,7 @@ class Background extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        //
+//
     }
 
     /**
@@ -67,7 +67,7 @@ class Background extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        //
+//
     }
 
     /**
@@ -77,7 +77,7 @@ class Background extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        //
+//
     }
 
     /**
@@ -87,7 +87,7 @@ class Background extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        //
+//
     }
 
     /**
@@ -98,7 +98,7 @@ class Background extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        //
+//
     }
 
     /**
@@ -108,7 +108,7 @@ class Background extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        //
+//
     }
 
     public function updateInvoice() {
@@ -127,15 +127,15 @@ class Background extends Controller {
                         "callback_url" => "http://75.119.140.177:8081/api/init",
                         "token" => $token
                     );
-                    // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
+// $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
                     $push_status = 'invoice_update';
                     if ($invoice->schema_name == 'beta_testing') {
-                        //testing invoice
+//testing invoice
                         $setting = DB::table('public.setting')->first();
 
                         $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
                     } else {
-                        //live invoice
+//live invoice
                         $setting = DB::table($invoice->schema_name . '.setting')->first();
                         $url = 'https://api.mpayafrica.co.tz/v2/' . $push_status;
                     }
@@ -154,8 +154,8 @@ class Background extends Controller {
 
     public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
-            //testing invoice
-            //  $setting = DB::table('public.setting')->first();
+//testing invoice
+//  $setting = DB::table('public.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
             $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
             if (!empty($credentials)) {
@@ -166,8 +166,8 @@ class Background extends Controller {
                 $pass = '';
             }
         } else {
-            //live invoice
-            // $setting = DB::table($invoice->schema_name . '.setting')->first();
+//live invoice
+// $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
             $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
             if (!empty($credentials)) {
@@ -183,7 +183,7 @@ class Background extends Controller {
             'password' => $pass
                 ], $url);
         $obj = json_decode($request);
-        //DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
+//DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
         }
@@ -266,7 +266,7 @@ class Background extends Controller {
     }
 
     public function tech_task() {
-        // $data1          = json_decode(file_get_contents(base_path() . '/task.json'));
+// $data1          = json_decode(file_get_contents(base_path() . '/task.json'));
         $data1 = request()->all();
 
         $repo = isset($data1['repository']['full_name']) ? $data1['repository']['full_name'] : '';
@@ -276,15 +276,15 @@ class Background extends Controller {
         $activity_type = strtolower($commit_message_in_words[0]);
         $module_of_activity = strtolower($commit_message_in_words[1]);
 
-        // after getting message then taking Id for identifying type
-        // firstly getting activity type from database
+// after getting message then taking Id for identifying type
+// firstly getting activity type from database
 
         if (DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->count()) {
             $id = DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->first();
             $task_id = $id->id;
         } else {
             $task_id = 27;
-            #sending message to the Commiter that the entered activity type is not correct
+#sending message to the Commiter that the entered activity type is not correct
         }
 
         if (DB::table('admin.modules')->whereRaw('LOWER(name) LIKE ?', ['%' . ($module_of_activity) . '%'])->count()) {
@@ -294,12 +294,12 @@ class Background extends Controller {
             $module_id = '';
         }
 
-        #getting a user who push
+#getting a user who push
         if (DB::table('admin.users')->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($user) . '%'])->count()) {
             $actor = DB::table('admin.users')->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($user) . '%'])->first();
             $user_id = $actor->id;
         }
-        #data to be sent to the database
+#data to be sent to the database
         $data = [
             'user_id' => $user_id,
             'activity' => $commit_message,
@@ -312,15 +312,15 @@ class Background extends Controller {
             'time' => '1',
         ];
 
-        // Then pushing to the database(Task) from Repository after push
+// Then pushing to the database(Task) from Repository after push
         $send_task = \App\Models\Task::create($data);
-        // Then adding entry to module_tasks table
+// Then adding entry to module_tasks table
         $module_tasks = new ModuleTask();
         $module_tasks->module_id = $module_id;
         $module_tasks->task_id = $send_task->id;
         $module_tasks->save();
 
-        // Then pushing to the database(Table tasks_user) from Repository after push
+// Then pushing to the database(Table tasks_user) from Repository after push
         $send_task_to_user_task = DB::table('tasks_users')->insert(
                 [
                     'user_id' => $user_id,
@@ -407,7 +407,7 @@ class Background extends Controller {
         }
     }
 
-    //Notify all admin about monthly reports
+//Notify all admin about monthly reports
     public function schoolMonthlyReport() {
         $users = DB::select("SELECT * from admin.all_users where lower(usertype) like '%admin%' or lower(usertype) like '%direct%' or lower(usertype) like '%manage%' and schema_name not in ('public','jknyerere') and status=1 ");
         $key_id = DB::table('public.sms_keys')->first()->id;
@@ -455,10 +455,10 @@ class Background extends Controller {
         $applicant_id = decrypt(request()->segment(3));
         $applicant = DB::table('admin.applicants')->where('id', $applicant_id)->first();
         if ($applicant) {
-            //register user in demo account
-            //build data to upload
+//register user in demo account
+//build data to upload
             if (DB::table('public.user')->where('email', $applicant->email)->first()) {
-                //user exists, set to 1 then send email
+//user exists, set to 1 then send email
                 DB::table('public.user')->where('email', $applicant->email)->update(['status' => 1]);
                 return $this->sendApplicantEmail(DB::table('public.user')->where('email', $applicant->email)->first());
             }
@@ -472,7 +472,7 @@ class Background extends Controller {
             ));
             $this->registerInAdmin($applicant, $password);
             return $this->sendApplicantEmail(DB::table('public.user')->where('email', $applicant->email)->first());
-            //send confirmation email and send invite email for academy learning
+//send confirmation email and send invite email for academy learning
         } else {
             die('Wrong url supplied, this user does not exists');
         }
@@ -486,7 +486,7 @@ class Background extends Controller {
         $replacements = array(
             $applicant->name, $applicant->username, $applicant->default_password
         );
-        //send sms
+//send sms
         $sms = preg_replace($patterns, $replacements, $message);
         $new_user_message = 'Hi ' . $applicant->name . ', Your accounts ( in https://demo.shulesoft.com, https://academy.shulesoft.com) '
                 . 'has been created successfully with username: ' . $applicant->username . ' and password: ' . $applicant->default_password . ' .Check your email for detailed information. Thanks ';
@@ -507,7 +507,7 @@ class Background extends Controller {
             $replacements = array(
                 $applicant->name, $url
             );
-            //send sms
+//send sms
             $sms = preg_replace($patterns, $replacements, $message);
             $new_user_message = 'Hello ' . $applicant->name . ' '
                     . 'You are kindly invited to Join ShuleSoft Associate Program. Our Associates will be directly involved to provide training, data entry and configuration '
@@ -540,7 +540,7 @@ class Background extends Controller {
         $schema_number = 1;
         foreach ($schemas as $schema) {
 
-            //check if schema exists or create
+//check if schema exists or create
             $sql = "SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema= '" . $schema->table_schema . "' limit 1";
             $check_schema = \collect(DB::connection('live')->select($sql))->first();
             if (empty($check_schema)) {
@@ -548,14 +548,14 @@ class Background extends Controller {
                 echo 'Schema ' . $schema->table_schema . ' Created Successfully <br/>';
             }
 
-            //get tables on that schema
+//get tables on that schema
             $tables = $software->loadTables($schema->table_schema);
 
-            //loop through tables and push one by one
-            //
+//loop through tables and push one by one
+//
             foreach ($tables as $table) {
 
-                //check if table exists in live envir
+//check if table exists in live envir
                 $check_table = \collect(DB::connection('live')->select("SELECT table_name, column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE  is_updatable='YES' AND "
                                 . " table_schema='" . $schema->table_schema . "' AND table_name='" . $table . "'"))->first();
 
@@ -566,7 +566,7 @@ class Background extends Controller {
 
                     !empty($object_array) ? $this->insertIntoLive($schema->table_schema, $table) : '';
                 } else {
-                    //this table does not exists, so sync this table
+//this table does not exists, so sync this table
                     echo 'Table ' . $schema->table_schema . '. ' . $table . ' does not exists, try to create new table now <br/>';
                     $software->syncTable($table, $schema->table_schema, 'live');
                     echo 'Table ' . $schema->table_schema . '. ' . $table . ' created successfully <br/>';
@@ -587,13 +587,13 @@ class Background extends Controller {
             if (count($object_data) > 0) {
                 $ob = [];
                 foreach ($object_data as $data) {
-                    //array_push($ob, (array) $data);
+//array_push($ob, (array) $data);
                     DB::connection('live')->table($schema_table_schema . '.' . $table)->insert((array) $data);
                     echo 'data inserted for table ' . $table . '<br/>';
                 }
             }
         }
-        // }
+// }
     }
 
     public function searchDistrict() {
