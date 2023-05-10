@@ -216,22 +216,20 @@ class Message extends Controller {
     }
 
     public function sendSms() {
-    //     //get all connected phones first, we use parallel approach to implement this
-    //     DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
-    //     $phones_connected = DB::select('select distinct api_key from public.all_sms');
-    //     if (count($phones_connected) > 0) {
-    //         foreach ($phones_connected as $phone) {
-
-    //             $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
-    //             if (!empty($messages)) {
-    //                 foreach ($messages as $sms) {
-
-    //                     //here put options to send sms by channels
-    //                     $this->sendByChannel($sms);
-    //                 }
-    //             }
-    //         }
-    //     }
+        //     //get all connected phones first, we use parallel approach to implement this
+        //     DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
+        //     $phones_connected = DB::select('select distinct api_key from public.all_sms');
+        //     if (count($phones_connected) > 0) {
+        //         foreach ($phones_connected as $phone) {
+        //             $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
+        //             if (!empty($messages)) {
+        //                 foreach ($messages as $sms) {
+        //                     //here put options to send sms by channels
+        //                     $this->sendByChannel($sms);
+        //                 }
+        //             }
+        //         }
+        //     }
     }
 
     /**
@@ -358,14 +356,13 @@ class Message extends Controller {
         }
     }
 
-
     public function sendEmail() {
-        return true;
+return false;
         //loop through schema names and push emails
-      //  DB::select('REFRESH MATERIALIZED VIEW  public.email');
-        $this->emails = DB::select('select * from public.email limit 8');
-        if (count($this->emails) > 0) {
-            foreach ($this->emails as $message) {
+        $emails = DB::select('select * from public.email limit 8');
+        $total_emails = !empty($emails) ? count($emails) : 0;
+        if (count($emails) > 0) {
+            foreach ($emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
@@ -398,6 +395,7 @@ class Message extends Controller {
                 sleep(2);
             }
         }
+        echo '>> Emails sent : Total count =' . $total_emails . chr(10);
     }
 
     public function karibusmsEmails() {
@@ -567,12 +565,5 @@ Kind regards,';
 //            }
 //        }
     }
-
-
-
-
-
-       
-       
 
 }

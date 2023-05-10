@@ -421,7 +421,7 @@ class Kernel extends ConsoleKernel {
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
-        echo '>> Invoice Sync Completed : Count ' . count($invoices);
+        echo '>> Invoice Sync Completed : Count ' . count($invoices). chr(10);
     }
 
     public function syncRevenueInvoice() {
