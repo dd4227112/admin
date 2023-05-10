@@ -44,7 +44,7 @@
                                                     '3'=>'Software architecture design documentation',
                                                     '4'=>'Source code documentation',
                                                     '5'=>'Quality assurance documentation',
-                                                    '6'=>'Maintanance nad help guide',
+                                                    '6'=>'Maintanance and help guide',
                                                     '7'=>'API documentation',
                                                     '8'=>'End -user documentation',
                                                     '9'=>'System admin documentation',

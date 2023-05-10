@@ -1205,7 +1205,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                         <div class="col-sm-6"  id="dates">
                             <label class="control-label">Sick Leave document</label>
                              <div class="col-lg-12">
-                                <a href="https://drive.google.com/file/d/1YhpG4g9OSsylI6aM6SJZw7zZVa7iZYTc/view" target="_blank" class="badge badge-warning badge-sm"> Download </a> 
+                                <a href="https://drive.google.com/file/d/1AWw8O7HNw37UjfcD4iNY6ja8JTDbiBT3/view" target="_blank" class="badge badge-warning badge-sm"> Download </a> 
                              </div>
                           </div>
 
