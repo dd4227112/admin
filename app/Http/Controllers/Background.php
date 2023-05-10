@@ -320,7 +320,6 @@ class Background extends Controller {
         $module_tasks->task_id = $send_task->id;
         $module_tasks->save();
 
-
         // Then pushing to the database(Table tasks_user) from Repository after push
         $send_task_to_user_task = DB::table('tasks_users')->insert(
                 [
@@ -409,7 +408,7 @@ class Background extends Controller {
     }
 
     //Notify all admin about monthly reports
-      public function schoolMonthlyReport() {
+    public function schoolMonthlyReport() {
         $users = DB::select("SELECT * from admin.all_users where lower(usertype) like '%admin%' or lower(usertype) like '%direct%' or lower(usertype) like '%manage%' and schema_name not in ('public','jknyerere') and status=1 ");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {
@@ -428,7 +427,7 @@ class Background extends Controller {
 
             $company_file_id = null;
             $phone = \collect(DB::select("select admin.whatsapp_phone('" . $user->phone . "')"))->first();
-            $data = array('message'=> $message,'phone'=> $phone->whatsapp_phone, 'company_file_id'=>$company_file_id);
+            $data = array('message' => $message, 'phone' => $phone->whatsapp_phone, 'company_file_id' => $company_file_id);
             \App\Models\WhatsAppMessages::create($data);
 
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email) && !in_array($user->email, ['inetscompany@gmail.com'])) {
@@ -554,7 +553,7 @@ class Background extends Controller {
 
             //loop through tables and push one by one
             //
-           foreach ($tables as $table) {
+            foreach ($tables as $table) {
 
                 //check if table exists in live envir
                 $check_table = \collect(DB::connection('live')->select("SELECT table_name, column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE  is_updatable='YES' AND "
@@ -639,40 +638,38 @@ class Background extends Controller {
         return redirect()->back()->with('success', 'success');
     }
 
+    public function alerts() {
+        if (!empty(\Auth::user())) {
+            $user_id = \Auth::user()->id;
+            $tasks_allocated = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id', $user_id)->whereYear('created_at', '=', date('Y'))->get(['task_id']))->whereYear('created_at', '=', date('Y'))->where('status', '<>', 'complete')->get();
+            $last_created_task = \collect(DB::select("select max(t.created_at) from admin.tasks t join admin.tasks_users u on u.task_id = t.id where t.status <> 'complete' and u.user_id = '$user_id'"))->first();
+            $schools_to_approve = \collect(\DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,s.company_file_id, c.created_at FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a on a.client_id = c.id  where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status, c.created_at, s.company_file_id HAVING count(a.id) <= 0 ORDER BY c.created_at DESC"))->count();
 
-
-    public function alerts(){
-        $user_id = \Auth::user()->id;
-        $tasks_allocated = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id', $user_id)->whereYear('created_at', '=', date('Y'))->get(['task_id']))->whereYear('created_at', '=', date('Y'))->where('status','<>','complete')->get();
-        $last_created_task = \collect(DB::select("select max(t.created_at) from admin.tasks t join admin.tasks_users u on u.task_id = t.id where t.status <> 'complete' and u.user_id = '$user_id'"))->first();
-        $schools_to_approve = \collect(\DB::select("SELECT c.id,c.name,c.email,c.phone,c.address,c.code,c.status,COUNT(a.id) as tasks,s.id as sid,s.company_file_id, c.created_at FROM admin.clients c JOIN admin.standing_orders s on c.id = s.client_id LEFT JOIN admin.train_items_allocations a on a.client_id = c.id  where c.status <> 3 GROUP BY s.id,c.id,c.name,c.email,c.phone,c.address,c.code,c.status, c.created_at, s.company_file_id HAVING count(a.id) <= 0 ORDER BY c.created_at DESC"))->count();
-
-        $schools_to_implement = \collect(\DB::select("select T.id,T.name,T.email,T.phone,T.code,T.status from (
+            $schools_to_implement = \collect(\DB::select("select T.id,T.name,T.email,T.phone,T.code,T.status from (
         select * from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)
         or id in (select client_id from admin.client_trials)) T where T.id not in (select client_id from admin.train_items_allocations)"))->count();
 
-         echo json_encode(array(
-           'tasks_allocated' => $tasks_allocated,
-           'last_created_task' => timeAgo($last_created_task->max),
-           'schools_to_approve' => $schools_to_approve,
-           'schools_to_implement' => $schools_to_implement,
-           'total' => count($tasks_allocated) + $schools_to_approve + $schools_to_implement
-        ));
+            echo json_encode(array(
+                'tasks_allocated' => $tasks_allocated,
+                'last_created_task' => timeAgo($last_created_task->max),
+                'schools_to_approve' => $schools_to_approve,
+                'schools_to_implement' => $schools_to_implement,
+                'total' => count($tasks_allocated) + $schools_to_approve + $schools_to_implement
+            ));
+        }
     }
 
-     public function schoolTasks(){
+    public function schoolTasks() {
         $this->data['schoolstasks'] = DB::select("select T.id,T.name,T.email,T.phone,T.code,T.status from (
             select * from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)
             or id in (select client_id from admin.client_trials)) T where T.id not in (select client_id from admin.train_items_allocations)");
-           return view('sales.school_tasks',$this->data);
+        return view('sales.school_tasks', $this->data);
+    }
 
-     }
-
-
-    public function taskallocated(){
+    public function taskallocated() {
         $user_id = \Auth::user()->id;
-        $this->data['tasks_allocated'] = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id',$user_id)->whereYear('created_at','=', date('Y'))->get(['task_id']))->whereYear('created_at', '=', date('Y'))->where('status','<>','complete')->latest()->get();
-        return view('sales.tasks_allocated',$this->data);
-     }
+        $this->data['tasks_allocated'] = \App\Models\Task::whereIn('id', \App\Models\TaskUser::where('user_id', $user_id)->whereYear('created_at', '=', date('Y'))->get(['task_id']))->whereYear('created_at', '=', date('Y'))->where('status', '<>', 'complete')->latest()->get();
+        return view('sales.tasks_allocated', $this->data);
+    }
 
 }

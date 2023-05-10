@@ -5,13 +5,9 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\Message;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Customer;
 use App\Http\Controllers\Background;
 use Illuminate\Support\Facades\DB;
-use App\Mail\EmailTemplate;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 class Kernel extends ConsoleKernel {
 
@@ -33,11 +29,8 @@ class Kernel extends ConsoleKernel {
             $this->syncInvoice();
 
             //  $this->syncData();
-        })->everyMinute();
-
-        $schedule->call(function () {
-            //sync new messages 
             $this->whatsappMessage();
+            (new Message())->sendEmail();
         })->everyMinute();
 
         $schedule->call(function () {
@@ -46,17 +39,14 @@ class Kernel extends ConsoleKernel {
         })->hourly();
 
         $schedule->call(function () {
-            (new Message())->sendEmail();
-        })->everyMinute();
-
-        $schedule->call(function () {
             $this->sendTodReminder();
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
-            $this->sendNotice();
+            
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
+            $this->sendNotice();
             // $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM    
 
@@ -94,7 +84,7 @@ class Kernel extends ConsoleKernel {
         })->monthlyOn(28, '06:36');
     }
 
-     public function databaseOptimization() {
+    public function databaseOptimization() {
         $clients = DB::table('admin.clients')->where('status', 1)->where('is_new_version', 0)->get();
         foreach ($clients as $client) {
             if ($client->is_new_version == 1) {
@@ -104,7 +94,7 @@ class Kernel extends ConsoleKernel {
             }
         }
     }
-    
+
     public function sendQuickSms() {
         $schemas = DB::select('select schema_name from admin.sms_status');
         foreach ($schemas as $schema_) {
@@ -1023,13 +1013,16 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     }
 
     public function sendNotice() {
-        $notices = DB::select("select * from admin.all_notice  WHERE schema_name !='stpeterclaver' AND date-CURRENT_DATE=3 and status=0 ");
+        DB::select('refresh materialized view admin.all_notice');
+        $notices = DB::select("select * from admin.all_notice  WHERE  date-CURRENT_DATE=3 and status=0 ");
 ///these are notices
         foreach ($notices as $notice) {
 //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
             $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
 
-            $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->schema_name . ".sms_keys limit 1 ) as sms_keys_id from admin.all_users where 'table' not in ('student', 'setting') AND schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) as sms_keys_id from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
+            $users = $to_roll_ids == 0 ?
+                    DB::select("select *,(select id as sms_keys_id from " . $notice->schema_name . ".sms_keys limit 1 ) as sms_keys_id from admin.all_users where 'table' not in ('student', 'setting') AND schema_name::text='" . $notice->schema_name . "'") :
+                    DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) as sms_keys_id from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
             if (count($users) > 0) {
                 foreach ($users as $user) {
                     $message = 'Kalenda ya Shule:'
