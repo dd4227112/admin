@@ -36,6 +36,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             //remaind tasks to users and allocated users
             $this->setTaskRemainder();
+            DB::select('refresh  materialized view  admin.all_sms ');
         })->hourly();
 
         $schedule->call(function () {
@@ -113,7 +114,7 @@ class Kernel extends ConsoleKernel {
                 }
             }
         }
-        //DB::select('refresh  materialized view  admin.all_sms ');
+        echo '>> SMS sent from '. print_r($schemas). chr(10);
     }
 
     function beem_sms($phone_number, $message, $schema_ = null) {
@@ -279,6 +280,7 @@ class Kernel extends ConsoleKernel {
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
             }
         }
+        echo '>> Whatsapp Messages sent ---'. chr(10);
     }
 
     function checkPaymentPattern($user, $schema) {
@@ -416,6 +418,7 @@ class Kernel extends ConsoleKernel {
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
+        echo '>> Invoice Sync Completed sent from '. print_r($invoices);
     }
 
     public function syncRevenueInvoice() {
