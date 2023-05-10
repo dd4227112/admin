@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
-            
+
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
             $this->sendNotice();
@@ -98,10 +98,12 @@ class Kernel extends ConsoleKernel {
 
     public function sendQuickSms() {
         $schemas = DB::select('select schema_name from admin.sms_status');
+        $total_sms_sent = 0;
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
 
             $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from " . $schema . ".sms a where a.status = 0 and a.type = 1 order by priority DESC limit 30");
+            $total_sms_sent += !empty($messages) ? count($messages) : 0;
 
             if (!empty($messages)) {
                 foreach ($messages as $message) {
@@ -114,7 +116,7 @@ class Kernel extends ConsoleKernel {
                 }
             }
         }
-        echo '>> SMS sent from '. print_r($schemas). chr(10);
+        echo '>> Quick SMS sent : Total ' . $total_sms_sent . chr(10);
     }
 
     function beem_sms($phone_number, $message, $schema_ = null) {
@@ -264,6 +266,7 @@ class Kernel extends ConsoleKernel {
     public function whatsappMessage() {
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 29');
         $controller = new \App\Http\Controllers\Controller();
+        $total_count = !empty($messages) ? count($messages) : 0;
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 if (!empty($message->company_file_id)) {
@@ -280,7 +283,7 @@ class Kernel extends ConsoleKernel {
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
             }
         }
-        echo '>> Whatsapp Messages sent ---'. chr(10);
+        echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10);
     }
 
     function checkPaymentPattern($user, $schema) {
@@ -418,7 +421,7 @@ class Kernel extends ConsoleKernel {
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
-        echo '>> Invoice Sync Completed sent from '. print_r($invoices);
+        echo '>> Invoice Sync Completed : Count ' . count($invoices);
     }
 
     public function syncRevenueInvoice() {
