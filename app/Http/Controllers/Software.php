@@ -907,8 +907,22 @@ class Software extends Controller {
             $schema = request('schema');
             $pass = $schema . rand(5697, 33);
             $username = $schema . date('Hi');
-            DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
-            $this->data['school'] = DB::table($schema . '.setting')->first();
+
+           $query1 = DB::select("select * from admin.all_setting where schema_name ='$schema'");
+           $query2 = DB::select("select * from shulesoft.setting where schema_name = '$schema'");
+
+           $available_in_admin = \collect($query1)->first();
+           $available_in_shulesoft = \collect($query2)->first();
+            if($available_in_shulesoft){
+            DB::table('shulesoft.setting')->where('schema_name', $schema)->update(['password' => bcrypt($pass), 'username' => $username]);
+            $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name', $schema)->first();
+
+            }
+            if($available_in_admin){
+                DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
+                $this->data['school'] = DB::table($schema . '.setting')->first();
+            }
+
             $this->data['schema_name'] = $schema;
             $this->data['pass'] = $pass;
             $this->data['username'] = $username;

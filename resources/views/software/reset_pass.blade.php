@@ -34,7 +34,12 @@
                                     <h4 class="sub-title">Select School</h4>
                                     <select name="schema" class="select2"  id="schema">
                                        <option value="0">Select</option>
-                                         <?php  $schemas = DB::table('admin.all_setting')->get();
+                                         <?php  
+                                         $schemas1 = DB::table('admin.all_setting')->get();
+                                         $schemas2 = DB::table('shulesoft.setting')->get();
+                                          $schemas =array_merge($schemas1->toArray(), $schemas2->toArray());
+                                        //  dd($schemas);
+
                                             foreach ($schemas as $schema) {
                                             ?>
                                             <option value="<?= $schema->schema_name ?>" selected><?= $schema->sname ?></option>
