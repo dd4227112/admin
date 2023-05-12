@@ -430,6 +430,11 @@
                                                         </a>
                                                     </li>
                                                 <?php } ?>
+                                                <li class=" ">
+                                                        <a href="<?= url('role/manage_permission') ?>">
+                                                            <span class="pcoded-mtext">Manage Permissions</span>
+                                                        </a>
+                                                    </li>
                                                     <li class=" ">
                                                         <a href="<?= url('report/staffs') ?>">
                                                             <span class="pcoded-mtext">Staff Reports</span>

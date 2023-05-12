@@ -346,7 +346,7 @@ class Customer extends Controller {
 
     public function getPermission() {
         $group_id = request('group_id');
-        $permissions = \DB::table('admin.permissions')->where('permission_group_id', $group_id)->get();
+        $permissions = \DB::table('constant.permission')->where('permission_group_id', $group_id)->get();
         foreach ($permissions as $value) {
             echo '<input type="radio" name="permission_id" value="' . $value->id . '" />' . $value->display_name;
         }
