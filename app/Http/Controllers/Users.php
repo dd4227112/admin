@@ -196,7 +196,10 @@ class Users extends Controller {
         $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->latest()->get();
         $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->latest()->get();
         $this->data['learnings'] = \App\Models\Course::whereIn('id', \App\Models\UserCourse::where('user_id', $id)->get(['course_id']))->latest()->get();
-        $this->data['reports'] =DB::select('select a.*, b.current_value from shulesoft.staff_report a join shulesoft.staff_targets_reports b on a.id =b.staff_report_id where a.user_id ='.$id);
+        $quater =DB::table('admin.year_quarters')->first();    
+        $this->data['from_date'] = $from_date = date($quater->start_date.' 00:00:00');
+        $this->data['to_date'] = $to_date = date($quater->end_date.' 23:59:59');
+        $this->data['reports'] =DB::select("select a.*, b.current_value from shulesoft.staff_report a join shulesoft.staff_targets_reports b on a.id =b.staff_report_id where a.user_id =".$id." and b.created_at between '".$from_date."' and '".$to_date."'");
 
     // dd($this->data['reports']);
         //default number of days 22 to minutes

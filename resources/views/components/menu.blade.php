@@ -436,6 +436,11 @@
                                                         </a>
                                                     </li>
                                                     <li class=" ">
+                                                        <a href="<?= url('role/manage_quarters') ?>">
+                                                            <span class="pcoded-mtext">Manage Quaters</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class=" ">
                                                         <a href="<?= url('report/staffs') ?>">
                                                             <span class="pcoded-mtext">Staff Reports</span>
                                                         </a>

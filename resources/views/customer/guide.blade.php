@@ -95,11 +95,7 @@
                                                     <td><?= $value->createdBy->firstname . ' ' . $value->createdBy->lastname ?></td>
                                                     <td><?=$value->guidePageVisit()->count()?></td>
                                                     <td>
-                                                       <?php if(can_access('view_guide')) { ?>
                                                         <a href="#"  data-toggle="modal" data-target="#exampleModal<?= $i ?>" data-whatever="@mdo" class="btn btn-success btn-mini btn-round">View</a>
-                                                       
-                                                       <?php } ?>
-
                                                          <div class="modal fade modal-flex" id="exampleModal<?= $i ?>" tabindex="-1" role="dialog">
                                                             <div class="modal-dialog modal-lg" role="document">
                                                               <div class="modal-content">

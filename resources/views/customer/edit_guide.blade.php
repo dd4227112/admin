@@ -73,7 +73,7 @@
                 <select class="form-control" id="permission_group">
                     <option value=""></option>
                     <?php
-                    $permission_groups = \DB::table('admin.permission_groups')->get();
+                    $permission_groups = \DB::table('constant.permission_group')->get();
                     foreach ($permission_groups as $group) {
                         ?>
                         <option value="<?= $group->id ?>" <?= $guide->permission->permissionGroup->id == $group->id ? 'selected' : '' ?>><?= $group->name ?></option>
@@ -90,7 +90,7 @@
                 <label for="recipient-name" class="control-label">Content For :</label>
                 <span id="content_for">
                     <?php
-                    $permissions = \DB::table('admin.permissions')->where('permission_group_id', $guide->permission->permissionGroup->id)->get();
+                    $permissions = \DB::table('constant.permission')->where('permission_group_id', $guide->permission->permissionGroup->id)->get();
                     foreach ($permissions as $value) { ?>
                        <input type="radio" name="permission_id" value="<?= $value->id ?>" <?= $guide->permission_id == $value->id ? 'checked' : '' ?>/><?=$value->display_name;?>
                  <?php       }

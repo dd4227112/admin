@@ -98,6 +98,29 @@ public function removePermission() {
    
     return redirect()->back()->with('success', 'New Permission Group created successfully');
   }
- 
+  public function manage_quarters()
+  {
+    $data['quarters'] = DB::table('year_quarters')->first();
+    return view('users.permissions.qaurter', $data);
+  } 
+public function updateQuarter(request $request){
+    $data = [
+        'id' => $request->id,
+        'name' =>$request->name,
+        'start_date' =>$request->start_date,
+        'end_date' =>$request->end_date,
+    ];
+    DB::table('admin.year_quarters')->where('id', $data['id'])->update($data);
+   return redirect()->back()->with('success', "Current Quarter Updated Successfully");
+}
+    public function saveQuarter(request $request){
+        $data = [
+            'name' =>$request->name,
+            'start_date' =>$request->start_date,
+            'end_date' =>$request->end_date,
+        ];
+        DB::table('admin.year_quarters')->insert($data);
+    return redirect()->back()->with('success', "Current Quarter Added Successfully");
+    }
 
 }
