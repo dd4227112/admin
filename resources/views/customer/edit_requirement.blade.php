@@ -1,79 +1,123 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
-
-
-  
- 
-
-       <div class="page-header">
-        <div class="page-header-title">
-            <h4>Edit requirements</h4>
+<div class="page-header">
+  <div class="page-header-title">
+      <h4>Edit requirements</h4>
+  </div>
+  <div class="page-header-breadcrumb">
+      <ul class="breadcrumb-title">
+          <li class="breadcrumb-item">
+          <a href="<?= url('/') ?>">
+              <i class="feather icon-home"></i>
+          </a>
+          </li>
+          <li class="breadcrumb-item"><a href="<?=url('customer/requirements')?>">user requirements</a>
+          </li>
+          <li class="breadcrumb-item"><a href="#!">Operations</a>
+          </li>
+      </ul>
+  </div>
+</div> 
+    <br>
+<div class="page-body">
+    <form action="<?= url('customer/editReq') ?>" method="post">
+      <div class="row">
+          <div class="col-sm-12 col-xl-4">
+              <h4 class="sub-title">Select School</h4>
+              <input type="number" class="form-control" id="get_schools" required name="school_id">
+          </div>
+          <div class="col-sm-12 col-xl-4">
+              <h4 class="sub-title">Task Due Date</h4>
+              <input type="date" required name="due_date" value="<?=date('Y-m-d', strtotime($requirement->due_date))?>" style="text-transform:uppercase" class="form-control">
+          </div>
+          <div class="col-sm-12 col-xl-4">
+              <h4 class="sub-title">Task Type</h4>
+                <select name="task_type" class="form-control select2" required>
+                      <option value="">Select Task Type</option>
+                      <option value="bug">Bug</a>
+                      <option value="feature">New Feature</a>
+                      <option value="changes">Change Request</a>
+                  <option value="Release">Release</a>
+                  <?php
+                  // $staff = DB::table('users')->where('status', 1)->inRandomOrder()->first();
+                  ?>
+                  
+              </select>
+          </div>
+        
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-12 col-md-3 m-b-30">
+        <h4 class="sub-title">Requirement Priority</h4>
+              <select name="priority" class="form-control" required>
+              <option value=""></option>
+              <option value="None" <?=$requirement->priority =='None'?'selected':''?>>None</option>
+              <option value="Critical" <?=$requirement->priority =='Critical'?'selected':''?>>Critical</option>
+              <option value="High" <?=$requirement->priority =='High'?'selected':''?>>High</option>
+              <option value="Medium" <?=$requirement->priority =='Medium'?'selected':''?>>Medium</option>
+              <option value="Low" <?=$requirement->priority =='Low'?'selected':''?>>Low</option>
+            </select>
         </div>
-        <div class="page-header-breadcrumb">
-            <ul class="breadcrumb-title">
-                <li class="breadcrumb-item">
-                <a href="<?= url('/') ?>">
-                    <i class="feather icon-home"></i>
-                </a>
-                </li>
-                <li class="breadcrumb-item"><a href="#!">user requirements</a>
-                </li>
-                <li class="breadcrumb-item"><a href="#!">Operations</a>
-                </li>
-            </ul>
+        <div class="col-sm-12 col-md-3 m-b-30">
+        <h4 class="sub-title">Current Requirement State</h4>
+              <select name="current_state" class="form-control" required>
+              <option value="" ></option>
+              <option value="unstarted">Unstarted</option>
+              <option value="started">Started</option>
+              <option value="finished">Finished</option>
+              <option value="delivered">Delivered</option>
+              <option value="rejected">Rejected</option>
+              <option value="accepted">Accepted</option>
+              <option value="unscheduled">Unscheduled</option>
+              <option value="planned">Planned</option>
+            </select>
         </div>
-    </div> 
+        <div class="col-sm-12 col-md-3 m-b-30">
+        <h4 class="sub-title">Requirement Module</h4>
+              <select name="module_id" class="form-control select2" required>
+                <option value=""></option>
+                <?php
+                $modules = DB::table('admin.modules')->get();
+                foreach ($modules as $module) {
+                  ?>
+                  <option value="<?= $module->id ?>" <?=$requirement->module_id ==$module->id?'selected':''?>><?= $module->name ?></option>
+                <?php } ?>
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-3 m-b-30">
+        <h4 class="sub-title">Allocated to</h4>
+              <select name="to_user_id" class="form-control select2" required>
+                <option value=""></option>
+                <?php
+                $users = DB::table('admin.users')->where('status', 1)->get();
+                foreach ($users as $user) {
+                  ?>
+                  <option value="<?= $user->id ?>" <?=$requirement->user->id==$user->id?'selected':''?>><?= $user->firstname." ".$user->middlename." ".$user->lastname ?></option>
+                <?php } ?>
+            </select>
+            <input type="text" hidden  name ="req_id" value="<?=$requirement->id?>">
+        </div>
+      
+    </div>
+          <div class="row">
+              <div class="col-sm-12">
+              <h4 class="sub-title">Note</h4>
+                  <textarea rows="7" minlength="30" required="" class="form-control" placeholder="Explain about this requirement" name="note"><?=$requirement->note?></textarea>
+              </div>
+          </div>
 
-            <div class="page-body">
-              <div class="row">
-                  <div class="col-sm-12">
-                      <!-- Default select start -->
-                      <div class="card">
-                          <div class="card-block">
-                             <form action="<?= url('customer/editReq') ?>" method="post">
-                              <div class="row">
-                                  <div class="col-sm-12 col-xl-4 m-b-30">
-                                      <h4 class="sub-title">Select School</h4>
-                                       <input type="number" class="form-" id="get_schools" name="school_id">
-                                  </div>
-                                  <div class="col-sm-12 col-xl-4 m-b-30">
-                                      <h4 class="sub-title">School Contact</h4>
-                                      <input type="text" name="contact" style="text-transform:uppercase" class="form-control" value="<?= $requirement->contact ?>">
-                                  </div>
-                                  <div class="col-sm-12 col-xl-4 m-b-30">
-                                      <h4 class="sub-title">Allocated person</h4>
-                                        <select name="to_user_id" class="form- select2" required>
-                                          <?php
-                                          $staffs = DB::table('users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
-                                          foreach ($staffs as $staff) {
-                                            ?>
-                                            <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                          <?php } ?>
-                                      </select>
-                                  </div>
-                                
-                              </div>
-                                 <div class="row">
-                                      <h4 class="sub-title">More details</h4>
-                                      <div class="col-sm-12">
-                                          <textarea rows="3" cols="7" id="content_part" class="form-control"><?= $requirement->note ?></textarea>
-                                      </div>
-                                  </div>
+            <div class="col-sm-3 m-10">
+                
+                <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit Here</button>
+          </div>
+          <?= csrf_field() ?>
+        
+      </form>
+  </div>
 
-                                   <div class="col-sm-3 m-10">
-                                        <input type="hidden" name="req_id" value="<?= $requirement->id ?>">
-                                        <button type="submit" class="btn btn-primary btn-mini btn-round ">Submit Here</button>
-                                  </div>
-                                  <?= csrf_field() ?>
-                                
-                              </form>
-                          </div>
-                      </div>
 
-                      </div>
-                  </div>
-                         </div>
                                           
    
               <!-- Row start -->
@@ -91,7 +135,7 @@
 
                               <div class="col-md-6">
                                 <strong>  Select School</strong>
-                                <input type="number" class="form-control" id="get_schools" name="school_id">
+                             
                               </div>
                               <div class="col-md-6">
                                 <strong>School Contacts Phone/Email</strong>
@@ -150,7 +194,7 @@ get_schools = function () {
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: '<?= url('customer/getschools/null') ?>',
+      url: '<?= url('customer/getCLientschools/null') ?>',
       dataType: 'json',
       type: "GET",
       quietMillis: 50,

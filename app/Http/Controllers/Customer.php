@@ -737,10 +737,11 @@ class Customer extends Controller {
     }
 
     public function getschools() {
-        $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A left join admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE 
+        $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A  JOIN admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE 
         '%" . str_replace("'", null, strtolower(request('term'))) . "%' LIMIT 10";
         die(json_encode(DB::select($sql)));
     }
+    
 
     public function getCLientschools() {
         $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A JOIN admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE 
@@ -950,6 +951,9 @@ class Customer extends Controller {
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
             $this->data['requirement'] = \App\Models\Requirement::where('id', (int) $id)->first();
+            if(empty($this->data['requirement'])){
+            return redirect(url('customer/requirements'))->with('error', "No customer requirement associated  with the given id");
+            }
             $next_id = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first();
             $this->data['next'] = is_null($next_id) ? '' : $next_id->id;
             return view('customer/view_requirement', $this->data);
@@ -980,6 +984,8 @@ class Customer extends Controller {
                 $this->data['endDate'] = $endDate = date('Y-m-d', strtotime($startDate . ' + 6 days'));
                 $this->data['person_stats'] = $this->checkTaskProgress($startDate, $endDate, $to_user_id);
                 $this->data['requirements'] = \App\Models\Requirement::whereBetween('created_at', [$startDate, $endDate]);
+            }else{
+                $this->data['requirements'] = \App\Models\Requirement::latest();          
             }
             $this->data['person_stats'] = $this->checkTaskProgress($startDate, $endDate, $to_user_id);
             return view('customer/analysis', $this->data);
@@ -990,21 +996,23 @@ class Customer extends Controller {
             $validated = request()->validate([
                 'note' => 'required|min:12',
             ]);
-
             $requirement = [
-                'school_id' => is_null(request('school_id')) ? '0' : request('school_id'),
-                'to_user_id' => request('to_user_id'),
-                'project_id' => 1,
-                'due_date' => request('due_date'),
-                'note' => request('note'),
-            ];
-
-            $data = array_merge($requirement, ['user_id' => \Auth::user()->id]);
-
-            $req = \App\Models\Requirement::create($data);
+                'note' =>request('note'),
+                'priority' =>request('priority'), 
+                'user_id' => Auth::user()->id, 
+                'contact' =>DB::table('shulesoft.setting')->where('school_id', request('school_id'))->first()?DB::table('shulesoft.setting')->where('school_id', request('school_id'))->first()->phone:'',  
+                'to_user_id' =>request('to_user_id'), 
+                'project_id' =>1,
+                'module_id' =>request('module_id'),
+                'due_date' =>request('due_date'), 
+                'school_id' =>request('school_id'),
+                'status'=>'New'
+        ];
+            $req = \App\Models\Requirement::create($requirement);
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
-                $new_req = isset($req->school->name) && (int) $req->school_id > 0 ? ' - from ' . $req->school->name . ' on ' . request('module') : ' - ' . request('module');
+                $module =DB::table('admin.modules')->where('id',request('module_id'))->first()->name;
+                $new_req = isset($req->school->name) && (int) $req->school_id > 0 ? ' - from ' . $req->school->name . ' on ' . $module : ' - ' . $module;
                 $message = 'Hello ' . $user->name . '<br/>'
                         . 'There is ' . $new_req . '</p>'
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
@@ -1023,10 +1031,9 @@ class Customer extends Controller {
                     "current_state" => request('current_state'),
                     "name" => 'Hello ' . $user->name . ' - ' . $new_req,
                     "estimate" => 1,
-                    "story_type" => request("feature"),
-                    "current_state" => request("accepted"),
+                    "story_type" => request("task_type"),
                     "requested_by_id" => request('requested_by_id'),
-                    "story_priority" => request('story_priority'),
+                    "story_priority" => request('priority'),
                     "token" => "c3c067a65948d99055ab1ac60891c174",
                     "description" => Auth::User()->name . ' - ' . strip_tags(request('note'))
                 ];
@@ -1043,9 +1050,16 @@ class Customer extends Controller {
 
     public function editReq() {
         $id = request('req_id');
-        $data = request()->except('_token', 'req_id');
+        //check if the requirement exist and then update it
+       $req = \App\Models\Requirement::where('id', $id)->first();
+       if($req){
+        $data = request()->except('_token', 'req_id', 'task_type', 'current_state');
         \App\Models\Requirement::where('id', $id)->update($data);
         return redirect('customer/requirements')->with('success', 'Edited successfully!');
+       }else{
+        return redirect('customer/requirements')->with('error', "No customer requirement associated  with the given id");
+       
+       }
     }
 
     public function updateReq() {

@@ -176,7 +176,7 @@ get_schools = function () {
            headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
            },
-            url: '<?= url('customer/getschools/null') ?>',
+            url: '<?= url('customer/getCLientschools/null') ?>',
             dataType: 'json',
             type: "GET",
             quietMillis: 50,
