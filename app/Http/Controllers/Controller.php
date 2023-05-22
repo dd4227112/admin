@@ -345,8 +345,7 @@ class Controller extends BaseController {
 
 
     public function sendRequest($method, $data) {
-        return true;
-        
+   
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
             $url = $this->APIurl . $method . '?token=' . $this->token;
             if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {

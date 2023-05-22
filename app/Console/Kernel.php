@@ -23,15 +23,7 @@ class Kernel extends ConsoleKernel {
 
     protected function schedule(Schedule $schedule) {
 
-        $schedule->call(function () {
-            //sync invoices 
-            $this->sendQuickSms();
-            $this->syncInvoice();
 
-            //  $this->syncData();
-            $this->whatsappMessage();
-            (new Message())->sendEmail();
-        })->everyMinute();
 
         $schedule->call(function () {
             //remaind tasks to users and allocated users
@@ -83,6 +75,16 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(28, '06:36');
+        
+        $schedule->call(function () {
+            //sync invoices 
+            $this->sendQuickSms();
+            $this->syncInvoice();
+
+            //  $this->syncData();
+            $this->whatsappMessage();
+            (new Message())->sendEmail();
+        })->everyMinute();
     }
 
     public function databaseOptimization() {
@@ -421,7 +423,7 @@ class Kernel extends ConsoleKernel {
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
-        echo '>> Invoice Sync Completed : Count ' . count($invoices). chr(10);
+        echo '>> Invoice Sync Completed : Count ' . count($invoices) . chr(10);
     }
 
     public function syncRevenueInvoice() {

@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => 'mandrill',
+    'driver' => 'smtp',
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' =>'smtp.mandrillapp.com',
+    'host' =>'mail.shulesoft.africa:2096',
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     */
 
     'from' => [
-        'address' => 'noreply@shulesoft.com',
+        'address' => 'support@shulesoft.africa',
         'name' => 'Shulesoft School Management System',
     ],
 
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'noreply@shulesoft.com',
+    'username' => 'support@shulesoft.africa',
 
-    'password' =>'k8y*&*YHIU(&*(((_)+_#%$$777$HGHGgu',
+    'password' =>'uy~*XaXV57QG',
 
     /*
     |--------------------------------------------------------------------------
