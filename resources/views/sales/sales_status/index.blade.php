@@ -30,6 +30,14 @@
                     <h6>Pick date </h6>
                     <input type="text" name="dates" id="rangeDate" class="form-control">
                 </div>
+                
+                <div class="col-sm-12 col-lg-3 m-b-20">
+                    <h6> &nbsp; </h6>
+                    <select class="form-control" name="choose" id="choose" >
+                    <option value="All"> All</option>
+                    <option value="Mine"> Mine</option>
+                    </select>
+                </div>
                 <div class="col-sm-12 col-lg-3 m-b-20">
                     <h6> &nbsp; </h6>
                     <input type="submit" id="search_custom" class="input-sm btn btn-mini btn-primary btn-round">
@@ -435,7 +443,8 @@ submit_search = function () {
             alldates = alldates.split("-");
             start_date = formatDate(alldates[0]);
             end_date = formatDate(alldates[1]);
-        window.location.href = '<?= url('sales/salesStatus/') ?>/5?start=' + start_date + '&end=' + end_date;
+            choose =$('#choose').val();
+        window.location.href = '<?= url('sales/salesStatus/') ?>/'+choose + '/5?start=' + start_date + '&end=' + end_date ;
     });
 }
 

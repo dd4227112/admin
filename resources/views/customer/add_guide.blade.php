@@ -60,7 +60,7 @@
                                             <select class="form-control select2" id="permission_group" required>
                                                 <option value=""></option>
                                                 <?php
-                                                $permission_groups = \DB::table('admin.permission_groups')->get();
+                                                $permission_groups = \DB::table('constant.permission_group')->get();
                                                 foreach ($permission_groups as $group) {
                                                     ?>
                                                     <option value="<?= $group->id ?>"><?= $group->name ?></option>

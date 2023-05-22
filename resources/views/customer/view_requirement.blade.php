@@ -47,32 +47,27 @@
 
 
                         <div class="form-radio m-b-30">
-                                     <?php
-                                       $check = \App\Models\Requirement::where(['id' => $requirement->id,'status'=>$requirement->status])->first();
-                                        !empty($check->status) ? $checked = 'checked' : $checked = '';
-                                        echo $check->status;
-                                        ?>
                                 <div class="radio radiofill radio-primary radio-inline">
                                     <label>
-                                        <input type="radio" id="On Progres"  name="radio" value="On Progres" {{$checked}} >
+                                        <input type="radio" id="On Progres"  name="radio" value="On Progres" {{$requirement->status=='On Progres'?'checked':''}} >
                                              <i class="helper"></i>On Progres
                                     </label>
                                 </div>
                                 <div class="radio radiofill radio-primary radio-inline">
                                     <label>
-                                        <input type="radio"  id="Completed" name="radio" value="Completed" {{$checked}} >
+                                        <input type="radio"  id="Completed" name="radio" value="Completed" {{$requirement->status=='Completed'?'checked':''}} >
                                         <i class="helper"></i>Completed
                                     </label>
                                 </div>
                                 <div class="radio radiofill radio-primary radio-inline">
                                     <label>
-                                        <input type="radio" id="Resolved"  name="radio" value="Resolved" {{$checked}} >
+                                        <input type="radio" id="Resolved"  name="radio" value="Resolved" {{$requirement->status=='Resolved'?'checked':''}} >
                                         <i class="helper"></i>Resolved
                                     </label>
                                 </div>
                                 <div class="radio radiofill radio-primary radio-inline">
                                     <label>
-                                        <input type="radio" id="Canceled"  name="radio" value="Canceled" {{$checked}} >
+                                        <input type="radio" id="Canceled"  name="radio" value="Canceled" {{$requirement->status=='Canceled'?'checked':''}} >
                                         <i class="helper"></i>Canceled
                                     </label>
                                 </div>

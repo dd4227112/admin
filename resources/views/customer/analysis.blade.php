@@ -220,7 +220,7 @@
                               <div class="row">
                                   <div class="col-sm-12 col-xl-4">
                                       <h4 class="sub-title">Select School</h4>
-                                       <input type="number" class="form-control" id="get_schools" name="school_id">
+                                       <input type="number" class="form-control" id="get_schools" required name="school_id">
                                   </div>
                                   <div class="col-sm-12 col-xl-4">
                                       <h4 class="sub-title">Task Due Date</h4>
@@ -228,35 +228,37 @@
                                   </div>
                                   <div class="col-sm-12 col-xl-4">
                                       <h4 class="sub-title">Task Type</h4>
-                                        <select name="story_type" class="form-control select2" required>
+                                        <select name="task_type" class="form-control select2" required>
                                               <option value="">Select Task Type</option>
                                               <option value="bug">Bug</a>
                                               <option value="feature">New Feature</a>
-                                              <option value="chore">Change Request</a>
-                                          <option value="Rrelease">Release</a>
+                                              <option value="changes">Change Request</a>
+                                          <option value="Release">Release</a>
                                           <?php
-                                          $staff = DB::table('users')->where('status', 1)->inRandomOrder()->first();
+                                          // $staff = DB::table('users')->where('status', 1)->inRandomOrder()->first();
                                          ?>
-                                            <input type="hidden"  value="<?= $staff->id ?>" name="to_user_id">
+                                          
                                       </select>
                                   </div>
                                 
                               </div>
                               <hr>
                               <div class="row">
-                                <div class="col-sm-12 col-md-4 m-b-30">
-                                     <select name="story_priority" class="form-control" required>
-                                      <option value="">Requirement Priority</option>
-                                      <option value="null">None</option>
-                                      <option value="P0">Critical</option>
-                                      <option value="P1">High</option>
-                                      <option value="P2">Medium</option>
-                                      <option value="P3">Low</option>
+                                <div class="col-sm-12 col-md-3 m-b-30">
+                                <h4 class="sub-title">Requirement Priority</h4>
+                                     <select name="priority" class="form-control" required>
+                                      <option value=""></option>
+                                      <option value="None">None</option>
+                                      <option value="Critical">Critical</option>
+                                      <option value="High">High</option>
+                                      <option value="Medium">Medium</option>
+                                      <option value="Low">Low</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-12 col-md-4 m-b-30">
+                                <div class="col-sm-12 col-md-3 m-b-30">
+                                <h4 class="sub-title">Current Requirement State</h4>
                                      <select name="current_state" class="form-control" required>
-                                      <option value="unscheduled">Current Requirement State</option>
+                                      <option value=""></option>
                                       <option value="unstarted">Unstarted</option>
                                       <option value="started">Started</option>
                                       <option value="finished">Finished</option>
@@ -267,14 +269,27 @@
                                       <option value="planned">Planned</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-12 col-md-4 m-b-30">
-                                      <select name="module" class="form-control select2" required>
-                                        <option value="">Requirement Module</option>
+                                <div class="col-sm-12 col-md-3 m-b-30">
+                                <h4 class="sub-title">Requirement Module</h4>
+                                      <select name="module_id" class="form-control select2" required>
+                                        <option value=""></option>
                                         <?php
-                                        $staffs = DB::table('modules')->get();
-                                        foreach ($staffs as $staff) {
+                                        $modules = DB::table('admin.modules')->get();
+                                        foreach ($modules as $module) {
                                           ?>
-                                          <option value="<?= $staff->name ?>"><?= $staff->name ?></option>
+                                          <option value="<?= $module->id ?>"><?= $module->name ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 col-md-3 m-b-30">
+                                <h4 class="sub-title">Allocate to</h4>
+                                      <select name="to_user_id" class="form-control select2" required>
+                                        <option value=""></option>
+                                        <?php
+                                        $users = DB::table('admin.users')->where('status', 1)->get();
+                                        foreach ($users as $user) {
+                                          ?>
+                                          <option value="<?= $user->id ?>"><?= $user->firstname." ".$user->middlename." ".$user->lastname ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -282,6 +297,7 @@
                             </div>
                                  <div class="row">
                                       <div class="col-sm-12">
+                                      <h4 class="sub-title">Note</h4>
                                           <textarea rows="7" minlength="30" required="" class="form-control" placeholder="Explain about this requirement" name="note"></textarea>
                                       </div>
                                   </div>
@@ -377,7 +393,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="progress m-t-15">
-                                                            <div class="progress-bar bg-c-green" style="width:35%"></div>
+                                                            <div class="progress-bar bg-c-green" style="width:<?= isset($person_stats->percentage_new) ? number_format($person_stats->percentage_new) : 0 ?>%"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -400,7 +416,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="progress m-t-15">
-                                                            <div class="progress-bar bg-c-green" style="width:28%"></div>
+                                                            <div class="progress-bar bg-c-green" style="width:<?= isset($person_stats->percentage_progress) ? number_format($person_stats->percentage_progress) : 0 ?>%"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -423,7 +439,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="progress m-t-15">
-                                                            <div class="progress-bar bg-c-green" style="width:87%"></div>
+                                                            <div class="progress-bar bg-c-green" style="width: <?= isset($person_stats->percentage_resolved) ? number_format($person_stats->percentage_resolved) : 0 ?>%"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -446,7 +462,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="progress m-t-15">
-                                                            <div class="progress-bar bg-c-green" style="width:32%"></div>
+                                                            <div class="progress-bar bg-c-green" style="width:<?=isset($person_stats->percentage_complete) ? number_format($person_stats->percentage_complete) : 0 ?>%"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -470,7 +486,7 @@
                                                           </div>
                                                       </div>
                                                       <div class="progress m-t-15">
-                                                          <div class="progress-bar bg-c-green" style="width:32%"></div>
+                                                          <div class="progress-bar bg-c-green" style="width:<?= isset($person_stats->percentage_canceled) ? number_format($person_stats->percentage_canceled) : 0 ?>%"></div>
                                                       </div>
                                                   </div>
                                               </div>
@@ -493,7 +509,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="progress m-t-15">
-                                                        <div class="progress-bar bg-c-green" style="width:32%"></div>
+                                                        <div class="progress-bar bg-c-green" style="width:100%"></div>
                                                     </div>
                                                 </div>
                                             </div>

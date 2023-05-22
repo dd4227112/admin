@@ -252,8 +252,9 @@ class Report extends Controller {
               return redirect()->back()->with('error', "Invalid date range selection");
             }
         } else {
-            $this->data['from_date'] = $from_date = date('Y-m-01 00:00:00');
-            $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59');
+          $quater =DB::table('admin.year_quarters')->first();    
+            $this->data['from_date'] = $from_date = date($quater->start_date.' 00:00:00');
+            $this->data['to_date'] = $to_date = date($quater->end_date.' 23:59:59');
         }
         $id = request()->segment(3);
         $type = request()->segment(4);
@@ -323,8 +324,9 @@ class Report extends Controller {
         return redirect()->back()->with('error', "Invalid date range selection");
       }
     } else {
-      $this->data['from_date'] = $from_date = date('Y-m-01 00:00:00');
-      $this->data['to_date'] = $to_date = date('Y-m-d 23:59:59');
+      $quater =DB::table('admin.year_quarters')->first();    
+      $this->data['from_date'] = $from_date = date($quater->start_date.' 00:00:00');
+      $this->data['to_date'] = $to_date = date($quater->end_date.' 23:59:59');
     }
     return view('users.hr.dashboard', $this->data);
   }
