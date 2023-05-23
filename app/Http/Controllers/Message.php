@@ -357,39 +357,45 @@ class Message extends Controller {
     }
 
     public function sendEmail() {
-return false;
         //loop through schema names and push emails
-        $emails = DB::select('select * from public.email limit 8');
+        $emails = DB::select('select a.*, b.is_new_version from public.all_email a join admin.clients b on b.username=a.schema_name limit 8');
         $total_emails = !empty($emails) ? count($emails) : 0;
         if (count($emails) > 0) {
             foreach ($emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
-                        $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
+                        $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => '', 'is_new_version' => $message->is_new_version];
                         $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
                                     $m->from('noreply@shulesoft.africa', $message->sitename);
                                     $m->to($message->email)->subject($message->subject);
                                 });
 
                         if (count(\Mail::failures()) > 0) {
-                            DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
+                            if ($message->is_new_version == 1) {
+                                DB::update('update shulesoft.email set status=3 WHERE schema_name=\'' . $message->schema_name . '\' email_id=' . $message->email_id);
+                            } else {
+                                //retry to send the message
+                                DB::update('update ' . $message->schema_name . '.email set status=3 WHERE email_id=' . $message->email_id);
+                            }
                         } else {
-                            if ($message->email == 'inetscompany@gmail.com') {
-                                DB::table($message->schema_name . '.email')->where('email_id', $message->email_id)->delete();
+                            if ($message->is_new_version == 1) {
+                                DB::update('update shulesoft.email set status=1 WHERE schema_name=\'' . $message->schema_name . '\' email_id=' . $message->email_id);
                             } else {
                                 DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                             }
                         }
                     } catch (\Exception $e) {
-                        // error occur
-                        //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
-                        echo 'something is not write' . $e->getMessage();
+                        echo 'something is not okay' . $e->getMessage();
                     }
                 } else {
 //skip all emails with ShuleSoft title
 //skip all invalid emails
-                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                    if ($message->is_new_version == 1) {
+                        DB::update('update shulesoft.email set status=1 WHERE schema_name=\'' . $message->schema_name . '\' email_id=' . $message->email_id);
+                    } else {
+                        DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                    }
                 }
 //$this->updateEmailConfig();
                 sleep(2);
