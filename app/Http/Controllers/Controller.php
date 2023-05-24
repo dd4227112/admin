@@ -345,7 +345,8 @@ class Controller extends BaseController {
 
 
     public function sendRequest($method, $data) {
-   
+        return true;
+        
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
             $url = $this->APIurl . $method . '?token=' . $this->token;
             if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
@@ -367,6 +368,27 @@ class Controller extends BaseController {
             echo 'Wrong url supplied in whatsapp api';
         }
         
+    }
+    public function sendWhatsappTest(){
+        $token ='ZGF2aWQuZGFuaWVsOm13ZXNpR0VNV0Ux';
+        $jsonData =["from"=>"N-SMS", "to"=>"255743414770",  "text"=> "this is the test sms", "reference"=>"aswqetgcv"];
+        $data =json_encode($jsonData);
+
+        $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://messaging-service.co.tz/api/sms/v1/test/text/single');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Authorization: Basic ' . $token
+            ));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // execute the cURL request
+            $response = curl_exec($ch); 
+        curl_close($ch);
+        echo $response;		
+
     }
 
 
@@ -513,6 +535,38 @@ class Controller extends BaseController {
             }
         }
 
+      }
+      public function sendText(){
+        $phone='255743414770';
+        $api_key='788455074ffb68f3';
+        $secret_key ='ZWUzM2M5YjVlMTljYmJjNTAxZmRjMjUxYzIyOGI2NGE3MTg4MjdkZjUxNzQxNGEwMzBmYzgwMTRiYTRmMDQ4NA==';
+        $postData = array(
+            'source_addr' => 'INFO',
+            'encoding'=>0,
+            'schedule_time' => '',
+            'message' =>'This is the test sms',
+            'recipients' => [array('recipient_id' => 1,'dest_addr'=>$phone)]
+        );
+        
+        $Url ='https://apisms.beem.africa/v1/send';
+        
+        $ch = curl_init($Url);
+        error_reporting(E_ALL);
+        ini_set('display_errors', 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_HTTPHEADER => array(
+                'Authorization:Basic ' . base64_encode("$api_key:$secret_key"),
+                'Content-Type: application/json'
+            ),
+            CURLOPT_POSTFIELDS => json_encode($postData)
+        ));     
+        $response = curl_exec($ch);
+        $res=json_decode($response);
+        print_r($res);
       }
 
    
