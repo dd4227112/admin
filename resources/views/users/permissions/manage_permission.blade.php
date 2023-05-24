@@ -94,14 +94,13 @@
 
 <!-- Add permission modal -->
 <div class="modal fade" id="addpermission">
-    <div class="modal-dialog>
+    <div class="modal-dialog">
         <form  action="<?=base_url('Role/add_permission')?>" method="post" class="form-horizontal group_form " role="form">
             <?= csrf_field() ?>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add Permission</h5>
                 </div>
-
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12 col-md-6">
@@ -109,7 +108,7 @@
                                 <label> Name</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Permission name" name="name" required>
-                                        <input type="hidden" name ="permission_group_id" value=" <?=$Permissionsgroup->id?>">
+                                    <input type="hidden" name="permission_group_id" value="<?=$Permissionsgroup->id?>">
                                 </div>
                             </div>
                         </div>
@@ -136,15 +135,17 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                    </div>
                 </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
+
 
 
 <!-- Edit permission modal -->
@@ -154,7 +155,7 @@
             <?= csrf_field() ?>
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Permission</h5>
+                    <h5 class="modal-title">Edit Permission</h5>
                 </div>
 
                 <div class="modal-body">

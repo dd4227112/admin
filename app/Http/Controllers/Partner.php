@@ -25,6 +25,7 @@ class Partner extends Controller {
      */
     public function index() {
         $type_id = $this->data['type_id'] = (int) request()->segment(3) == 0 ? 1 : request()->segment(3);
+        $this->data['clients'] = \App\Models\Client::all();
 
         if (Auth::user()->department == 9 || Auth::user()->department == 10) {
             $this->data['refer_bank_id'] = $refer_bank_id = preg_match('/crdb/', Auth::user()->email) ? 8 : 22;
@@ -719,6 +720,32 @@ We shall let you know once we have done with verification, then you can proceed 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         echo isset(json_decode($response)->description) ? json_decode($response)->description . ' - ' . json_decode($response)->reference : json_decode($response)->description;
+    }
+    public function addAddonsPayment(){
+        $amount = request('amount');
+        $client_id = request('school_id');
+        $addon_id = request('addon_id');
+        $method = request('method');
+        $note = request('note');
+
+        $tansaction_id = strtoupper(md5(date('Y-m-d:H:i:s')));
+        $payment =[
+            'amount'=>$amount,
+            'method'=>$method,
+            'transaction_id'=>$tansaction_id,
+            'client_id'=>$client_id,
+            'note'=>$note,
+        ];
+        $payment_id =DB::table('admin.payments')->insertGetId($payment);
+        $addon_payment = [
+            'payment_id' =>$payment_id,
+            'addon_id'=>$addon_id,
+            'client_id'=>$client_id,
+        ];
+        DB::table('admin.addons_payments')->insert($addon_payment);
+        return redirect()->back()->with('success', "Payment received successfully");
+        // Add code to send notification sms/email to payer
+
     }
 
 }
