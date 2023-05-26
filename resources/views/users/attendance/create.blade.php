@@ -98,11 +98,11 @@ function tagEdit($column, $value) {
                           <td><?= $user->firstname. ' '.$user->lastname ?></td>
                           <td class="text-center">
                           
-                            <input type="datetime" class="form-control timein" name="timein" id="timein<?= $user->id ?>" style="width: 135px;" value="<?= empty($user->uattendance->where('date',$date)->first()) ? date('Y-m-d H:i:s') : $user->uattendance->where('date',$date)->first()->timein ?>" disabled="disabled"/>
+                            <input type="datetime" class="form-control timein" name="timein" id="timein<?= $user->id ?>" style="width: 135px;" value="<?= empty($user->uattendance->where('date',$date)->first()) ? date('Y-m-d 07:47:00') : $user->uattendance->where('date',$date)->first()->timein ?>" disabled="disabled"/>
                           </td>
                            
                            <td class="text-center">
-                             <input type="datetime" class="form-control timeout" name="timeout"  id="timeout<?= $user->id ?>" style="width: 135px;" value="<?= empty($user->uattendance->where('date',$date)->first()) ? date('Y-m-d 17:00:00') : $user->uattendance->where('date',$date)->first()->timeout ?>" disabled="disabled"/>
+                             <input type="datetime" class="form-control timeout" name="timeout"  id="timeout<?= $user->id ?>" style="width: 135px;" value="<?= empty($user->uattendance->where('date',$date)->first()) ? date('Y-m-d 17:15:00') : $user->uattendance->where('date',$date)->first()->timeout ?>" disabled="disabled"/>
                            </td>
                         
                           <td data-title="<?= ('Absent reason') ?>" class="text-center">
@@ -212,8 +212,12 @@ $.ajax({
   data: {"id": id, "day": day, status: status, absent_id: absent_id},
   dataType: "html",
   success: function (data) {
+    if (data =='Invalid date format!') {
+      toastr.error(data);
+    }else{
       toastr.success(data);
       //window.location.reload();
+    }
    }
   });
 }

@@ -295,7 +295,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                     <span aria-hidden="true">×</span>
                                                                 </button>
                                                             </div>
-                                                            <form action="#" method="post">
+                                                            <form action="#" method="post" enctype="multipart/form-data">
                                                                 <div class="modal-body">
                                                                     <span>
                                                                         Create a task for this school with
@@ -412,6 +412,15 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                             ?>
                                                                         </select>
                                                                     </div>
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <strong> Add Attachment</strong>
+                                                                                <p>Upload image(screenshot) or audio to cralify the task/activity</p>
+                                                                                <input type="file"  class="form-control" placeholder="" name="attachment">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 
                                                                 </div>
 
@@ -504,6 +513,9 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                     &nbsp; &nbsp;
                                                                                     @endforeach
                                                                                 </p>
+                                                                                @if(!empty($task->attachment))
+                                                                                <a  href= "<?=base_url('customer/attachment/'.request()->segment(3).'/'.$task->id)?>"class="btn btn-mini btn-round btn-primary float-center text-center" id="<?=$task->id?>" >view attachment</a>-{{$task->attachment_type}}
+                                                                                @endif
                                                                             </div>
 
                                                                             <div class="user-box">
@@ -2147,6 +2159,26 @@ if (!empty($profile)) {
     </div>
 
 <?php } ?>
+<!-- Attachment Modal -->
+<div class="modal fade" id="attachmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">View Attachment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- notify js Fremwork -->
 <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
 <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
@@ -2169,6 +2201,12 @@ if (!empty($profile)) {
 <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
 
 <script>
+    $(document).ready(function(){
+        $('.getAttachment').click(function(){
+            var task_id = $(this).attr("id");
+            alert(task_id);
+        });
+    });
     function RemoveAttr(a) {
         var val = a;
         if (val !== '') {

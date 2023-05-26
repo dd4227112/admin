@@ -8,9 +8,9 @@
 <?php
 $objects = [
     ""=>    'select',
-    "1" => 'Bulk SMS Integration Requests',
-    "2" => 'WhatsApp Integration Requests',
-    "3" => 'VFD Integration Requests',
+    "1" => 'VFD Integration Requests',
+    "2" => 'Bulk SMS Integration Requests',
+    "3" => 'WhatsApp Integration Requests',
     "4" => 'CRDB BANK Integration Requests',
     "5" => 'Email Integration Requests'];
 ?>
@@ -46,7 +46,7 @@ $objects = [
                         <br/>
                         &nbsp; &nbsp; &nbsp;
                         <a class="btn btn-primary btn-mini btn-round" href="<?= url('partner/addPartnerService/' . request()->segment(3)) ?>">  Onboard New School for <?= $objects[request()->segment(3)] ?></a>
-                        <?php if (request()->segment(3) == 1) {?> 
+                        <?php if (request()->segment(3) == 2) {?> 
                         
                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                         <a class="btn btn-success btn-mini btn-round addPayment" data-toggle="modal" data-target="#addPayment" href="#">  Add addons Payment</a>

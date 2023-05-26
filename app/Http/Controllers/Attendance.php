@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use PDF;
+use DateTime;
 
 class Attendance extends Controller {
 
@@ -38,6 +39,11 @@ class Attendance extends Controller {
     function singl_add() {
         $id = request('id');
         $day = request('day');
+        if (!$this->is_valid_date_without_second($day) && !$this->is_valid_date_with_second($day)) {
+            echo "Invalid date format!";
+            exit;
+        } else {
+
         $absent_reason_id = (int) request('absent_id') > 0 ? (int) request('absent_id') : null;
         $user_id = preg_replace('/[^0-9]/i', '', $id);
         if ((int) $user_id) {
@@ -51,6 +57,20 @@ class Attendance extends Controller {
             }
         }
     }
+
+    }
+    function is_valid_date_without_second($date_string) {
+        $date_format ='Y-m-d H:i';
+        $date = DateTime::createFromFormat($date_format, $date_string);
+        return $date && $date->format($date_format) === $date_string;
+    }
+    function is_valid_date_with_second($date_string) {
+        $date_format ='Y-m-d H:i:s';
+        $date = DateTime::createFromFormat($date_format, $date_string);
+        return $date && $date->format($date_format) === $date_string;
+    }
+    
+    
 
 
     public function addSingleUser($id, $action, $day, $present, $absent_reason_id=null) {

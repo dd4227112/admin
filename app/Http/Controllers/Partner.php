@@ -741,6 +741,7 @@ We shall let you know once we have done with verification, then you can proceed 
             'payment_id' =>$payment_id,
             'addon_id'=>$addon_id,
             'client_id'=>$client_id,
+            'quantity'=>$amount/20,
         ];
         DB::table('admin.addons_payments')->insert($addon_payment);
         return redirect()->back()->with('success', "Payment received successfully");
