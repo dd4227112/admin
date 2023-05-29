@@ -8,6 +8,7 @@ use App\Http\Controllers\Message;
 use App\Http\Controllers\Customer;
 use App\Http\Controllers\Background;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel {
 
@@ -18,73 +19,220 @@ class Kernel extends ConsoleKernel {
      */
     protected $commands = [
 // \App\Console\Commands\Inspire::class,
+    \App\Console\Commands\SendDailyReport::class,
+    \App\Console\Commands\SendWhatsappSms::class,
+    \App\Console\Commands\InsertData::class,
+    \App\Console\Commands\SendNormalSms::class,
+    \App\Console\Commands\SendBirhdayWishes::class,
+    \App\Console\Commands\SendTaskReminder::class,
+    \App\Console\Commands\SendNotice::class,
+    \App\Console\Commands\SendTodoRemainder::class,
+    \App\Console\Commands\SetTaskRemainder::class,
+    \App\Console\Commands\SyncInvoice::class,
+    \App\Console\Commands\SendQuickSms::class,
+    \App\Console\Commands\FindMissingPayments::class,
+    \App\Console\Commands\StandingOrderRemainder::class,
+    \App\Console\Commands\HRContractRemainders::class,
+    \App\Console\Commands\DatabaseOptimization::class,
+    \App\Console\Commands\CreateTodayReport::class,
+    \App\Console\Commands\SchoolMonthlyReport::class,
+    // \App\Console\Commands\HRLeaveRemainders::class, // Currently disabled
+    // \App\Console\Commands\RefreshMaterializedView::class, // Currently disabled
+    // \App\Console\Commands\SendSequenceReminder::class, // Currently disabled
     ];
     public $emails;
 
     protected function schedule(Schedule $schedule) {
 
+        // send BirthDay Wishes, configure the service set RestartSec = 1 minute (60s)
+        try {
+            $schedule->command('send:birthdaywishes')->dailyAt('04:40');
+        } catch (\Exception $e) {
+            Log::error('Send birthday wishes to students every day failed' . $e->getMessage());
+        }
 
+
+        // configure the service set RestartSec = 1 minute (60s)
+        try {
+            $schedule->command('send:reminder')->dailyAt('04:40');
+        } catch (\Exception $e) {
+            Log::error('Send task reminders failed' . $e->getMessage());
+        }
+
+         // configure the service set RestartSec = 1 minute (60s)
+         try {
+            $schedule->command('send:notice')->dailyAt('04:40');
+        } catch (\Exception $e) {
+            Log::error('Send Remainder failed' . $e->getMessage());
+        }
+          // configure the service set RestartSec = 1 minute (60s)
+        try {
+            $schedule->command('send:todoremider')->dailyAt('03:40');
+        } catch (\Exception $e) {
+            Log::error('Send todo reminder failed' . $e->getMessage());
+        }
+        // configure the service set RestartSec = 1 hour (60*60s)
+        try {
+            $schedule->command('set:taskreminder')->hourly();
+        } catch (\Exception $e) {
+            Log::error('set reminder failed' . $e->getMessage());
+        }
+    
+        // configure the service set RestartSec = 1 minute (60s)
+        try {
+            $schedule->command('whatsapp:sms')->everyMinute();
+        } catch (\Exception $e) {
+            Log::error('Send a WhatsApp SMS failed: ' . $e->getMessage());
+        }
+           
+        // configure the service set RestartSec = 1 minute (60s)
+        try {
+            $schedule->command('sync:invoice')->everyMinute();
+        } catch (\Exception $e) {
+            Log::error('Sync Invoice failed: ' . $e->getMessage());
+        }
+
+          // configure the service set RestartSec = 1 minute (60s)
+        try {
+            $schedule->command('send:quicksms')->everyMinute();
+        } catch (\Exception $e) {
+            Log::error('Send Quick SMS failed: ' . $e->getMessage());
+        }
+           // configure the service set RestartSec = 2hours (60*2*60s)
+        try {
+            $schedule->command('find:payment')->everyTwoHours();
+        } catch (\Exception $e) {
+            Log::error('Find Missing Payments failed: ' . $e->getMessage());
+        }
+
+        // configure the service set RestartSec = 1 minute
+        try {
+            $schedule->command('standingorder:reminder')->dailyAt('03:40');
+        } catch (\Exception $e) {
+            Log::error('Set Standing Order reminder failed' . $e->getMessage());
+        }
+        // configure the service set RestartSec = 1 minute
+        try {
+            $schedule->command('contractor:reminder')->dailyAt('04:40');
+        } catch (\Exception $e) {
+            Log::error('HR contractor reminder failed' . $e->getMessage());
+        }
+          // configure the service set RestartSec = 1 minute
+          try {
+            $schedule->command('database:optimize')->dailyAt('00:40');
+        } catch (\Exception $e) {
+            Log::error('HR contractor reminder failed' . $e->getMessage());
+        }
+           // configure the service set RestartSec = 1 minute
+        try {
+            $schedule->command('today:report')->dailyAt('14:50');
+        } catch (\Exception $e) {
+            Log::error('Daily Report failed' . $e->getMessage());
+        }
+        
+        // configure the service set RestartSec = 1 minute
+        try {
+            $schedule->command('schoolmontly:report')->monthlyOn(28, '06:36');
+        } catch (\Exception $e) {
+            Log::error('School Montly Report failed' . $e->getMessage());
+        }
+
+        // configure the service set RestartSec = 1 minute currently disabled
+        // try {
+        //     $schedule->command('leave:reminder')->dailyAt('04:40');
+        // } catch (\Exception $e) {
+        //     Log::error('HR Leave Reminder failed' . $e->getMessage());
+        // }
+
+        // configure the service set RestartSec = 1 hour (60*60s) currently disabled
+        // try {
+        //     $schedule->command('refresh:view')->twiceDaily(1, 13);
+        // } catch (\Exception $e) {
+        //     Log::error('Refresh Materialized View failed' . $e->getMessage());
+        // }
+
+        // configure the service set RestartSec = 1 minute (60s) currently disabled
+        // try {
+        //     $schedule->command('send:sequence')->dailyAt('04:40');
+        // } catch (\Exception $e) {
+        //     Log::error('Sequence Remiinder failed' . $e->getMessage());
+        // }
+
+        
+        
+
+        // try {
+        //     $schedule->command('report:send')->everyMinute();
+        // } catch (\Exception $e) {
+        //     Log::error('send daily report failed: ' . $e->getMessage());
+        // }
+
+        // try {
+        //     $schedule->command('send:normal-sms')->everyMinute();
+        // } catch (\Exception $e) {
+        //     Log::error('Whatsapp command failed: ' . $e->getMessage());
+        // }
+        
+            $schedule->call(function () {
+            //sync invoices 
+            $this->sendQuickSms();  // done 
+            $this->syncInvoice(); //done
+
+            //  $this->syncData();
+            $this->whatsappMessage(); // done
+            (new Message())->sendEmail();
+        })->everyMinute();
 
         $schedule->call(function () {
             //remaind tasks to users and allocated users
-            $this->setTaskRemainder();
+            $this->setTaskRemainder(); //done
             DB::select('refresh  materialized view  admin.all_sms ');
         })->hourly();
 
         $schedule->call(function () {
-            $this->sendTodReminder();
+            $this->sendTodReminder(); //done
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
 
-            $this->sendBirthdayWish();
-            $this->sendTaskReminder();
-            $this->sendNotice();
-            // $this->sendSequenceReminder();
-        })->dailyAt('04:40'); // Eq to 07:40 AM    
+            $this->sendBirthdayWish(); // done
+            $this->sendTaskReminder(); //done
+            $this->sendNotice(); //done
+            // $this->sendSequenceReminder(); //done
+        })->dailyAt('04:40'); // Eq to 07:40 AM 
 
 
         $schedule->call(function () {
-            $this->findMissingPayments();
+            $this->findMissingPayments(); // done
         })->everyTwoHours();
 
         $schedule->call(function () {
-            $this->standingOrderRemainder();
+            $this->standingOrderRemainder(); //done
         })->dailyAt('03:40'); // Eq to 06:40 AM   
 
         $schedule->call(function () {
-            $this->HRContractRemainders();
-            //  $this->HRLeaveRemainders();
+            $this->HRContractRemainders(); //done
+            //  $this->HRLeaveRemainders(); //done
         })->dailyAt('04:40'); // Eq to 07:40 AM   
 
 
         $schedule->call(function () {
-            $this->databaseOptimization();
+            $this->databaseOptimization(); //done
         })->dailyAt('00:40'); // Eq to 03:40 AM   
 
         $schedule->call(function () {
-            //$this->RefreshMaterializedView();
+            // $this->RefreshMaterializedView(); //done
         })->twiceDaily(1, 13); // Run the task daily at 1:00 & 13:00
 
 
         $schedule->call(function () {
-            (new Customer())->createTodayReport();
+            (new Customer())->createTodayReport(); //done
         })->dailyAt('14:50'); // Eq to 17:50 h 
 
 
         $schedule->call(function () {
-            (new Background())->schoolMonthlyReport();
+            (new Background())->schoolMonthlyReport(); //done
         })->monthlyOn(28, '06:36');
-        
-        $schedule->call(function () {
-            //sync invoices 
-            $this->sendQuickSms();
-            $this->syncInvoice();
-
-            //  $this->syncData();
-            $this->whatsappMessage();
-            (new Message())->sendEmail();
-        })->everyMinute();
     }
 
     public function databaseOptimization() {
@@ -423,7 +571,7 @@ class Kernel extends ConsoleKernel {
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
-        echo '>> Invoice Sync Completed : Count ' . count($invoices) . chr(10);
+        echo '>> Invoice Sync Completed : Count ' . count($invoices). chr(10);
     }
 
     public function syncRevenueInvoice() {
@@ -1541,5 +1689,11 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         curl_close($ch);
         print_r($result);
     }
+    // protected function commands()
+    // {
+    //     $this->load(__DIR__.'/Commands');
+
+    //     require base_path('routes/console.php');
+    // }
 
 }

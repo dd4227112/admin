@@ -469,5 +469,10 @@ public function updateTask(){
     $url = 'https://www.pivotaltracker.com/services/v5/projects/'.$this->projectID.'/stories/'.$id;
    $data1 = $this->post($url, $fields);
 }
+public function show(){
+    $addon = request()->segment(3);
+    echo "Page under construction";
+    exit;
+}
 
 }

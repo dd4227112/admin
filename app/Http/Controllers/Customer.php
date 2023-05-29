@@ -464,7 +464,7 @@ class Customer extends Controller {
         return view('customer.training.report');
     }
 
-    public function profile() {
+    public function profile(Request $request) {
         $school =  request()->segment(3);
         
         $schema = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
@@ -547,17 +547,65 @@ class Customer extends Controller {
                 'end_date' => 'nullable|after:start_date',
                 'remainder_date' => 'nullable|after:start_date|before:end_date'
             ]);
+            if ($request->hasFile('attachment')) {
+                $maxFileSize = 20971520; // 20MB
+                $file = $request->file('attachment');
+                // Specify the directory where you want to store the file
+                $path =storage_path('uploads/images');
+                $extension = $file->getClientOriginalExtension();
+                 // Define the allowed file types
+                $allowedAudioExtensions = ['mp3', 'wav'];
+                $allowedImageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                $allowedVideoExtensions = ['mp4', 'avi', 'mov', 'mkv'];
+                if ($file->getSize() > $maxFileSize) {
+                    return redirect()->back()->with('error', "File size exceeds the maximum limit of 20MB.");
+
+                }
+                if (in_array($extension, $allowedAudioExtensions)) {
+                $fileName = $file->getClientOriginalName();
+                $file->move($path, $file->getClientOriginalName());
+                $file_type = 'Audio';
+                $file_data = ['attachment' =>$fileName, 'attachment_type'=>$file_type];
+                } 
+                
+                elseif (in_array($extension, $allowedImageExtensions)) {
+                $fileName = $file->getClientOriginalName();
+                $file->move($path, $file->getClientOriginalName());
+                $file_type = 'Image';
+                $file_data = ['attachment' =>$fileName, 'attachment_type'=>$file_type];
+                } 
+                
+                elseif (in_array($extension, $allowedVideoExtensions)) {
+                $fileName = $file->getClientOriginalName();
+                $file->move($path, $file->getClientOriginalName()); 
+                $file_type = 'Video';
+                $file_data = ['attachment' =>$fileName, 'attachment_type'=>$file_type];               
+                }
+               else {
+                    // Invalid file type
+                    return redirect()->back()->with('error', "Invalid file type. Only audio, image, and video files are allowed.");
+                }
+                $remainder = empty(request('remainder_date')) ? 1 : 0;
+                $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
+                $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
+                $data = array_merge(request()->except(['start_date', 'end_date', 'to_user_id', 'activity']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date, 'activity' => nl2br(request('activity'))]);    
+                // $data = array_merge($file_data, $task_data);
+                $data['attachment']=$fileName;
+                $data['attachment_type']=$file_type;
+
+        }else{
 
             $remainder = empty(request('remainder_date')) ? 1 : 0;
             $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
             $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
             $data = array_merge(request()->except(['start_date', 'end_date', 'to_user_id', 'activity']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date, 'activity' => nl2br(request('activity'))]);
-
+        }
             $task = \App\Models\Task::create($data);
             DB::table('tasks_clients')->insert([
                 'task_id' => $task->id,
                 'client_id' => (int) request('client_id')
             ]);
+         
 
             if (!empty(request('to_user_id'))) {
                 $to_users = request('to_user_id');
@@ -1922,6 +1970,12 @@ class Customer extends Controller {
         }
 
         return $data;
+    }
+    public function attachment(){
+        $id = request()->segment(4);
+        $data['task']=\App\Models\Task::where('id', $id)->first();
+        $data['school']=request()->segment(3);
+        return view('customer.attachment', $data);
     }
 
 }

@@ -3,22 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
-class whatsappMessage extends Command
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+class SendDailyReport extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'report:send';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send the daily report';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,18 @@ class whatsappMessage extends Command
      */
     public function handle()
     {
-        return 0;
+    //    DB::table('shulesoft.sms')->insert(
+    //     ['body'=>'Tunajaribu',
+    //     'user_id'=>1,
+    //     'schema_name'=>'stpeterclaver'
+    //     ]
+
+    //    );
+       Log::info('Testing');
+       return 0;
     }
 }
+
+
+
+

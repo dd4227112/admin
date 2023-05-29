@@ -90,6 +90,12 @@
                                                                         ?>
                                                                     </td>
                                                                 </tr>
+                                                                @if(!empty($activity->attachment))
+                                                                <tr>
+                                                                    <th scope="row">Attachment</th>
+                                                                    <th> <a  href= "<?=base_url('customer/attachment/'.request()->segment(3).'/'.$activity->id)?>"class="btn btn-mini btn-round btn-primary float-center text-center" id="<?=$activity->id?>" >view attachment</a>-{{$activity->attachment_type}}</th> 
+                                                                </tr>
+                                                                @endif
                                                             </tbody>
                                                         </table>
                                                     </div>
