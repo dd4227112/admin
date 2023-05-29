@@ -54,11 +54,11 @@
                                                 </td>
                                                 <td data-title="<?= __('holiday_name') ?>">
                                                     <input type="text" value="<?php echo $sent->amount ?>" name="amount" amount_id="<?php echo $sent->username ?>" class="amount"/>
-
+                                                    <span id="<?php echo $sent->username ?>1"></span>
                                                 </td>
                                                 <td data-title="<?= __('holiday_name') ?>">
                                                     <input type="text" value="<?php echo $sent->paid_amount ?>" name="paid_amount" paid_amount_id="<?php echo $sent->username ?>" class="paid_amount"/>
-
+ <span id="<?php echo $sent->username ?>2"></span>
                                                 </td>
                                                 <td data-title="<?= __('balance') ?>">
                                                     <?php echo $sent->amount - $sent->paid_amount ?>
@@ -93,7 +93,7 @@
                 data: {amount: amount, username: username},
                 dataType: "html",
                 success: function (data) {
-                    alert(data);
+                    $('#'+username+'1').html(data).addClass('badge badge-success text-white');
                 }
             })
         })
@@ -108,7 +108,7 @@
                 data: {paid_amount: paid_amount, username: username},
                 dataType: "html",
                 success: function (data) {
-                    alert(data);
+                     $('#'+username+'2').html(data).addClass('badge badge-success  text-white');
                 }
             })
         })

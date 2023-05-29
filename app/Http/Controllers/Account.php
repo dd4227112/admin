@@ -1692,7 +1692,7 @@ class Account extends Controller {
     public function updateInvoiceSettings() {
         $amount = request('amount');
         $username = request('username');
-        $invoice = DB::table('invoices_sent')->where('year', date('Y'))->where('username', $username)->first();
+        $invoice = DB::table('invoices_sent')->where('year', date('Y'))->where('schema_name', $username)->first();
         if (empty($invoice)) {
             //insert
             $client = DB::table('admin.clients')->where('username', $username)->first();
@@ -1710,7 +1710,7 @@ class Account extends Controller {
             //update
             DB::table('invoices_sent')
                     ->where('year', date('Y'))
-                    ->where('username', $username)
+                    ->where('schema_name', $username)
                     ->update(['amount' => $amount]);
         }
         echo 'success';
@@ -1719,11 +1719,11 @@ class Account extends Controller {
     public function updateInvoiceSettingsPaid() {
         $paid_amount = request('paid_amount');
         $username = request('username');
-        $invoice = DB::table('invoices_sent')->where('year', date('Y'))->where('username', $username)->first();
+        $invoice = DB::table('invoices_sent')->where('year', date('Y'))->where('schema_name', $username)->first();
         if (!empty($invoice)) {          
             DB::table('invoices_sent')
                     ->where('year', date('Y'))
-                    ->where('username', $username)
+                    ->where('schema_name', $username)
                     ->update(['paid_amount' => $paid_amount]);
             echo 'success';
         } else {
