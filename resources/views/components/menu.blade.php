@@ -842,6 +842,11 @@
                                                         <span class="pcoded-mtext">Holidays</span>
                                                     </a>
                                                 </li>
+                                                <li class="">
+                                                    <a href="<?= url('account/dashboardsettings') ?>">
+                                                        <span class="pcoded-mtext">Dashboard Settings</span>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </li>
                                      <?php } ?> 
