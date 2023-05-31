@@ -176,8 +176,8 @@ $objects = [
                                             <th>No.</th>
                                             <th>School Name</th>
                                             <th>Username</th>
-                                            <th><?= $type_id == 3 ? 'TIN' : 'Account' ?> Number</th>
-                                            <th><?= $type_id == 3 ? 'TRA' : 'Bank' ?> Status</th>
+                                            <th><?= $type_id == 1 ? 'TIN' : 'Account' ?> Number</th>
+                                            <th><?= $type_id == 1 ? 'TRA' : 'Bank' ?> Status</th>
                                             <th>Shulesoft Status</th>
                                             <th>Added Date</th>
                                             <th>Action</th>
@@ -190,7 +190,7 @@ $objects = [
                                             $i = 1;
                                             $bank = null;
                                             foreach ($requests as $request) {
-                                                if ($type_id == 1) {
+                                                if ($type_id == 4) { // CRDB Bank
                                                     $check_school = DB::table('all_setting')->where('schema_name', $request->client->username)->first();
                                                     if (!empty($check_school)) {
                                                         $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $request->bank_account_id)->first();
@@ -202,7 +202,7 @@ $objects = [
                                                     }
                                                     $number = !empty($bank) ? $bank_number : '<b class="label label-danger">Invalid</b>';
                                                 }
-                                                if ($type_id == 3) {
+                                                if ($type_id == 1) { // VFD integration
                                                     $set = DB::table('shulesoft.setting')->where('schema_name', $request->client->username)->first();
                                                     $number = $set->tin;
                                                 }

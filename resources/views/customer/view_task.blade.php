@@ -93,7 +93,7 @@
                                                                 @if(!empty($activity->attachment))
                                                                 <tr>
                                                                     <th scope="row">Attachment</th>
-                                                                    <th> <a  href= "<?=base_url('customer/attachment/'.request()->segment(3).'/'.$activity->id)?>"class="btn btn-mini btn-round btn-primary float-center text-center" id="<?=$activity->id?>" >view attachment</a>-{{$activity->attachment_type}}</th> 
+                                                                    <th> <p>Attachment - {{$activity->attachment_type}}</p><small>Click on school name above to view attachment</small></th>
                                                                 </tr>
                                                                 @endif
                                                             </tbody>

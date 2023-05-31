@@ -151,7 +151,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                     <label class="badge badge-inverse-primary">
                                                         <?= !empty($username) ? \DB::table($schema . '.user')->where('status', 1)->count() :  \DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->count() ?>
                                                     </label>
-                                                    <label>Staff</label>
+                                                    <label>Non-Teaching Staff</label>
                                                 </div>
 
                                                 <div class="row m-1">
@@ -201,9 +201,9 @@ $s_address = isset($school->address) ? $school->address : '';
                                                 ?>
                                                         <div class="media m-b-10">
                                                             <a class="media-left" href="#!">
-                                                                <?php $user_image = 'storage/uploads/images/defualt.png'; ?>
+                                                                <?php $user_image = base_url('storage/uploads/images/defualt.png'); ?>
 
-                                                                <img class="media-object img-circle" src="https://demo.shulesoft.com/<?= $user_image ?>" alt="Image">
+                                                                <img class="media-object img-circle" src="<?= $user_image ?>" alt="Image">
                                                             </a>
                                                             <div class="media-body">
                                                                 <div class="text-info social-designation"><?= $log->name ?></div>
@@ -441,8 +441,8 @@ $s_address = isset($school->address) ? $school->address : '';
                                                 <?php
                                                 $client_id = $profile->id;
 
-                                                $tasks_ids = \App\Models\TaskSchool::whereIn('school_id', \App\Models\ClientSchool::where('client_id', $client_id)->get(['school_id']))->get(['task_id']);
-                                                $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskClient::where('client_id', $client_id)->get(['task_id']))->orWhereIn('id', $tasks_ids)->orderBy('created_at', 'desc')->get();
+                                                $tasks_ids = \App\Models\TaskClient::whereIn('client_id', \App\Models\ClientSchool::where('client_id', $client_id)->get(['client_id']))->get(['task_id']);
+                                                $tasks = \App\Models\Task::whereIn('id', $tasks_ids)->orderBy('created_at', 'desc')->get();
                                                 if (!empty($tasks)) {
                                                     foreach ($tasks as $task) {
                                                 ?>
@@ -452,7 +452,8 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                     <div class="social-timelines-left">
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
+                                                                <div class="<?=!empty($task->attachment)?'col-xs-6 col-sm-6 p-l-5 p-b-35':'col-xs-10 col-sm-11 p-l-5 p-b-35'?>">
+
                                                                     <div class="card m-0">
 
                                                                         <div class="dropdown-menu dropdown-menu-right b-none services-list">
@@ -514,7 +515,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                     @endforeach
                                                                                 </p>
                                                                                 @if(!empty($task->attachment))
-                                                                                <a  href= "<?=base_url('customer/attachment/'.request()->segment(3).'/'.$task->id)?>"class="btn btn-mini btn-round btn-primary float-center text-center" id="<?=$task->id?>" >view attachment</a>-{{$task->attachment_type}}
+                                                                                <p>Attachment- {{$task->attachment_type}}</p>
                                                                                 @endif
                                                                             </div>
 
@@ -572,7 +573,31 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                </div>@if(!empty($task->attachment))
+                                                                <div class="col-xs-4 col-sm-5 p-l-5 p-b-35">
+                                                                <div class="row">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="card">
+                                                                            @if($task->attachment_type =='Image')
+                                                                            <a  target="_blank" href="<?=base_url('storage/uploads/images/' . $task->attachment)?>">
+                                                                            <img width="640" height="295" src="<?php echo base_url('storage/uploads/images/' . $task->attachment); ?>"></a>
+                                                                            @endif
+                                                                            @if($task->attachment_type =='Video')
+                                                                            <video src="<?php echo base_url('storage/uploads/images/' . $task->attachment);?>" width="640" height="295" controls  loop>
+                                                                            </video>
+
+                                                                            @endif
+                                                                            @if($task->attachment_type =='Audio')
+                                                                            <audio controls>
+                                                                            <source src="<?php echo base_url('storage/uploads/images/' . $task->attachment); ?>">
+                                                                            </audio>
+                                                                            @endif
+
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
+                                                                </div>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                 <?php

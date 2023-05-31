@@ -68,6 +68,8 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
                                 <tbody>
                                     <?php
                                     if (count($users) > 0) {
+                                        $overall1= 0;
+                                        $overall2= 0;
                                         $i = 1;
                                         foreach ($users as $user) {
                                             ?>
@@ -101,19 +103,24 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
                                                     $r = 1;
                                                     $avg_performance = 0;
                                                     $r1 = 1;
-                                                    $avg_performance1 = 0;
+                                                    $avg_performance1 = 0;                                               
+
                                                     foreach ($user->staffTargets()->whereBetween('created_at', [$from_date, $to_date])->where('is_derived', 1)->get() as $target) {
                                                         $cur_value = DB::connection($target->connection)->select($target->is_derived_sql);
                                                         $performance =  $cur_value['0']->current_value;
                                                         $avg_performance += (float) $target->value > 0 ? round($performance * 100 / $target->value) : 0;
                                                         $r++;
+                                                        $overall1+=$avg_performance;
                                                     }
                                                     foreach ($user->staffTargets()->whereBetween('created_at', [$from_date, $to_date])->where('is_derived', 0)->get() as $target) {
                                                     $performance1 =  $target->staffTargetsReports()->sum('current_value');
                                                     $avg_performance1 += (float) $target->value > 0 ? round($performance1 * 100 / $target->value) : 0;
                                                     $r1++;
+                                                    
+
                                                 }
                                                     echo ($r-1)+($r1-1)!=0 ? round(($avg_performance+$avg_performance1)/(($r-1)+($r1-1))).'%' :'0%';
+                                                    $overall2 += round(($avg_performance+$avg_performance1)/(($r-1)+($r1-1)))
                                                     ?>
                                                 </td>
 
@@ -125,8 +132,11 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
                                             </tr>
                                             <?php
                                             $i++;
-                                        }
-                                    }
+                                           
+                                          
+                                        }?>
+                                          <p class="total_KPI"><?=($overall2/($i-1)*100)?></p>
+                                   <?php }
                                     ?>
                                 </tbody>
                             </table>
@@ -182,6 +192,21 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
 
     
     @endsection
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script>
+    $(document).ready(function(){
+        $('.total_KPI').hide();
+    
+    
+        $('.page-header-title').on('mouseenter', function() {
+         $('.total_KPI').show();
+        });
+        $('.page-header-title ').on('mouseleave', function(){
+            $('.total_KPI').hide();
+        });
+    
+    });
+    </script>
     @section('footer')
 
 

@@ -20,7 +20,7 @@ class IntegrationRequest extends Model {
      */
     
     protected $table = 'integration_requests';
-    protected $fillable = ['id', 'client_id', 'user_id', 'shulesoft_approved', 'bank_approved', 'schema_name', 'created_at','updated_at','approval_user_id','refer_bank_id','bank_account_id','bank_accounts_integration_id'];
+    protected $fillable = ['id', 'type_id', 'client_id', 'user_id', 'shulesoft_approved', 'bank_approved', 'schema_name', 'created_at','updated_at','approval_user_id','refer_bank_id','bank_account_id','bank_accounts_integration_id'];
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');

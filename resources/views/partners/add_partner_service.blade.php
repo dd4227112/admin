@@ -105,10 +105,20 @@
                                                     <option value="1" <?= request()->tax_group == 1 ? 'selected' : '' ?>>Vatable Products or Services</option>
                                                 </select>
                                             </div>
+                                            <span class="">
+                                                <?php echo form_error($errors, 'tax_group'); ?>
+                                            </span>
+                                            <br>
+                                            <br>
+                                            <label for="income_tax" class="col-sm-2 control-label">
+                                                Income Tax
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="income_tax" id="income_tax" class="form-control">
+                                            </div>
                                             <span class="offset-2">
                                                 <?php echo form_error($errors, 'tax_group'); ?>
                                             </span>
-                                     
                                     </div>
                                     <div class="col-md-6">
                                         <label for="kyc_forms" class="col-sm-8 control-label">
@@ -126,7 +136,7 @@
                                         <div class="col-sm-12">
                                             <input type="file" class="form-control" id="vrn" name="application_letter" value="<?= old('vrn', request()->application_letter) ?>" >
                                             Application Letter <br/>
-                                            <a href="%">Download Sample</a></div>
+                                            <a href="<?=base_url('Partner/downloadSample')?>">Download Sample</a></div>
 
                                         <span class="offset-1">
                                             <?php echo form_error($errors, 'kyc_forms'); ?>

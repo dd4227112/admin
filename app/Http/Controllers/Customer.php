@@ -519,7 +519,8 @@ class Customer extends Controller {
             }
             $school_ = "'".$school."'";
             // $this->data['top_users'] = !empty($schema) ? DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5') :  DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table" and a.schema_name=b.schema_name) where a.schema_name='.$school_.' AND user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
-            $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null and a.schema_name ='.$school.' group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
+            $this->data['top_users'] = DB::select("SELECT COUNT(a.*) AS count, b.name, b.usertype FROM shulesoft.log a JOIN shulesoft.users b ON a.user_id = b.id WHERE a.schema_name = '".$school."' GROUP BY b.name, b.usertype ORDER BY count DESC limit 5");
+
 
         }
 
@@ -554,9 +555,9 @@ class Customer extends Controller {
                 $path =storage_path('uploads/images');
                 $extension = $file->getClientOriginalExtension();
                  // Define the allowed file types
-                $allowedAudioExtensions = ['mp3', 'wav'];
-                $allowedImageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-                $allowedVideoExtensions = ['mp4', 'avi', 'mov', 'mkv'];
+                $allowedAudioExtensions = ['mp3', 'wav', 'ogg', 'aac', 'm4a', 'flac', 'wma', 'opus', 'amr', 'mid'];
+                $allowedImageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico', 'webp', 'jfif'];
+                $allowedVideoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'm4v', '3gp'];
                 if ($file->getSize() > $maxFileSize) {
                     return redirect()->back()->with('error', "File size exceeds the maximum limit of 20MB.");
 
@@ -592,6 +593,7 @@ class Customer extends Controller {
                 // $data = array_merge($file_data, $task_data);
                 $data['attachment']=$fileName;
                 $data['attachment_type']=$file_type;
+                $data['school_id'] =request('client_id');
 
         }else{
 
@@ -599,6 +601,7 @@ class Customer extends Controller {
             $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
             $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
             $data = array_merge(request()->except(['start_date', 'end_date', 'to_user_id', 'activity']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date, 'activity' => nl2br(request('activity'))]);
+            $data['school_id'] =request('client_id');
         }
             $task = \App\Models\Task::create($data);
             DB::table('tasks_clients')->insert([

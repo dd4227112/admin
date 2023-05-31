@@ -472,10 +472,9 @@ class Partner extends Controller {
                 'id_certificate' => 'required',
                 'application_letter' => 'required'
             ]);
-
             $setting_object = [
                 "income_tax" => request('income_tax'),
-                "vfd_enabled" => request('vfd_enabled'),
+                "vfd_enabled" => 1, // vfd enabled set to 1 means vfd will be enabled as the user insert a vfd integration request
                 "tin" => request('tin'),
                 "vrn" => request('vrn'),
                 "tax_group" => request('tax_group')
@@ -484,22 +483,26 @@ class Partner extends Controller {
             DB::table($schema . '.setting')->where($column, $column_value)->update($setting_object);
 
             $this->data['bank_id'] = $bank_id = DB::table($schema.'.bank_accounts')->first()->id;
+            if($schema=='shulesoft'){
+                $integration = DB::table($schema.'.bank_accounts_integrations')->where('schema_name', $client->username)->first();
+            }else{
+            $integration = DB::table($schema.'.bank_accounts_integrations')->first();
+            }
 
-            $integration = DB::table('shulesoft.bank_accounts_integrations')->first();
+            $bank_accounts_integration_id = !empty($integration)?$integration->id:DB::table('shulesoft.bank_accounts_integrations')->first()->id; // if empty $integration pick any from shulesoft bank_accounts_integrations to preventing inserting null value (not recommended approach)
 
-            $bank_accounts_integration_id = $integration->id;
-
-            $object = array('client_id' => $client->id,
+            $object = array(
+                'client_id' => $client->id,
                 'refer_bank_id' => 22,
                 'bank_account_id' => $bank_id,
-                'user_id' => session('id'),
-                "table" => session('table'),
+                'user_id' => Auth::User()->id,
+                "table" => 'users',
                 'bank_accounts_integration_id' => $bank_accounts_integration_id,
                 'schema_name' => $schema,
-                'type_id' => 3
+                'type_id' => 1, // Fixed to 1 for VFD Integration request 
             );
             $int = DB::table('admin.integration_requests')
-                            ->where('type_id', 3)
+                            ->where('type_id', 1) // 1 for vfd 
                             ->where('client_id', $client->id)->first();
 
             if (empty($int)) {
@@ -518,7 +521,7 @@ We are glad to inform you that your application was successfully submitted for  
 We shall let you know once we have done with verification, then you can proceed with  integration services. ';
             $this->send_sms($client->phone, $message);
             $this->send_email($client->email, 'VFD Application Status', $message);
-            return redirect('Partner/index/3')->with('success','success');
+            return redirect('Partner/index/1')->with('success','success');
         }
         return view('partners.add_partner_service', $this->data);
     }
@@ -536,7 +539,7 @@ We shall let you know once we have done with verification, then you can proceed 
         $files_data = [
             'name' => $file->getClientOriginalName(),
             'extension' => $file->getClientOriginalExtension(),
-            'user_id' => 3, //we force to assume CEO upload it
+            'user_id' => Auth::user()->id,
             // 'size' => $file->getSize(),
             'caption' => $file->getRealPath(),
             'path' => $url
@@ -747,6 +750,12 @@ We shall let you know once we have done with verification, then you can proceed 
         return redirect()->back()->with('success', "Payment received successfully");
         // Add code to send notification sms/email to payer
 
+    }
+     // download sample vfd application letter
+    public function downloadSample()
+    {
+        $samplefile = storage_path('uploads/images/sample.pdf'); // Upload the actual sample pdf file named sample
+            return response()->download($samplefile);
     }
 
 }
