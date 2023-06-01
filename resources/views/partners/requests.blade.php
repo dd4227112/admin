@@ -7,7 +7,7 @@
 
 <?php
 $objects = [
-    ""=>    'select',
+    "" => 'select',
     "1" => 'VFD Integration Requests',
     "2" => 'Bulk SMS Integration Requests',
     "3" => 'WhatsApp Integration Requests',
@@ -46,75 +46,75 @@ $objects = [
                         <br/>
                         &nbsp; &nbsp; &nbsp;
                         <a class="btn btn-primary btn-mini btn-round" href="<?= url('partner/addPartnerService/' . request()->segment(3)) ?>">  Onboard New School for <?= $objects[request()->segment(3)] ?></a>
-                        <?php if (request()->segment(3) == 2) {?> 
-                        
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <a class="btn btn-success btn-mini btn-round addPayment" data-toggle="modal" data-target="#addPayment" href="#">  Add addons Payment</a>
+                        <?php if (request()->segment(3) == 2) { ?> 
+
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            <a class="btn btn-success btn-mini btn-round addPayment" data-toggle="modal" data-target="#addPayment" href="#">  Add addons Payment</a>
                         <?php } ?>
 
                     </p>
                 <?php } ?>
                 <div class="row addPaymentrow" style="margin-left: 100px; margin-right: 100px;">
-        <div class="col-sm-12">
-            <h4> Add Addons Payment (Bulk SMS Intergration)</h4>
-        <form  action="<?= url('Partner/addAddonsPayment') ?>" method="post" class="form-horizontal group_form " role="form">
-                    <div class="row">                      
-                        <div class="col-sm-12">
-                        <div class="form-group">
-                        <label for="client_id">Select School:</label>
-                            <select name='school_id' id="client_id" class="form select2" required>
+                    <div class="col-sm-12">
+                        <h4> Add Addons Payment (Bulk SMS Intergration)</h4>
+                        <form  action="<?= url('Partner/addAddonsPayment') ?>" method="post" class="form-horizontal group_form " role="form">
+                            <div class="row">                      
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="client_id">Select School:</label>
+                                        <select name='school_id' id="client_id" class="form select2" required>
 
-                            @foreach($clients as $client)
+                                            @foreach($clients as $client)
 
-                            <option value="{{$client->id}}">{{ucfirst($client->name)}} </option>
+                                            <option value="{{$client->id}}">{{ucfirst($client->name)}} </option>
 
-                            @endforeach
-                            </select>
-                        </div>
-                        </div>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label> Amount</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" placeholder="Payed amount" name="amount" required>
+                                            <input  type="hidden" name="addon_id" value="<?= request()->segment(3) ?>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label> Payment Method</label>
+                                        <div class="input-group">
+                                            <select type="text" class="form-control" name="method" required>
+                                                <option selected>....</option>
+                                                <option value="Bank Deposit">Bank Deposit</option>
+                                                <option value="Electronic Payment">Electronic Payment</option>
+                                                <option value="Cash">Cash</option>
+                                                <option value="Other">Others</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="form-group">
+                                        <label> Note</label>
+                                        <div class="input-group">
+                                            <textarea rows="4" class="form-control" placeholder="add payment notes (optional)" name="note"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-warning closeAddPayment" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+
+                        </form>
+
                     </div>
-
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <label> Amount</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="Payed amount" name="amount" required>
-                                    <input  type="hidden" name="addon_id" value="<?=request()->segment(3)?>">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <label> Payment Method</label>
-                                <div class="input-group">
-                                    <select type="text" class="form-control" name="method" required>
-                                        <option selected>....</option>
-                                        <option value="Bank Deposit">Bank Deposit</option>
-                                        <option value="Electronic Payment">Electronic Payment</option>
-                                        <option value="Cash">Cash</option>
-                                        <option value="Other">Others</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <label> Note</label>
-                                <div class="input-group">
-                                    <textarea rows="4" class="form-control" placeholder="add payment notes (optional)" name="note"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-warning closeAddPayment" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    
-                </form>
-
-        </div>
-    </div>
+                </div>
 
                 <div class="card-header">
                     <h5>Schools Onboarding Status </h5>
@@ -204,7 +204,7 @@ $objects = [
                                                 }
                                                 if ($type_id == 1) { // VFD integration
                                                     $set = DB::table('shulesoft.setting')->where('schema_name', $request->client->username)->first();
-                                                    $number = $set->tin;
+                                                    $number = !empty($set) ? $set->tin : '000000';
                                                 }
 
                                                 echo '<tr>
@@ -328,58 +328,58 @@ $objects = [
 </div>
 
 <script>
-$(document).ready(function() {
-    $(".select2").select2({
-    theme: "bootstrap",
-    dropdownAutoWidth: false,
-    allowClear: false,
-    debug: true
-  }); 
+    $(document).ready(function () {
+        $(".select2").select2({
+            theme: "bootstrap",
+            dropdownAutoWidth: false,
+            allowClear: false,
+            debug: true
+        });
 
-    $('.addPaymentrow').hide();
+        $('.addPaymentrow').hide();
 
-    $('.addPayment').on('click', function(){
-        $('.addPaymentrow').toggle('10000');
+        $('.addPayment').on('click', function () {
+            $('.addPaymentrow').toggle('10000');
+        });
+        $('.closeAddPayment').on('click', function () {
+            $('.addPaymentrow').hide('10000');
+        });
+
     });
-    $('.closeAddPayment').on('click', function(){
-        $('.addPaymentrow').hide('10000');
-    });
-    
-});
-get_schools = function () {
-  $("#get_schools").select2({
-    minimumInputLength: 2,
-    // tags: [],
-    ajax: {
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '<?= url('customer/getCLientschools/null') ?>',
-      dataType: 'json',
-      type: "GET",
-      quietMillis: 50,
-      data: function (term) {
-        return {
-          term: term,
-          token: $('meta[name="csrf-token"]').attr('content')
-        };
-      },
-      results: function (data) {
-        return {
-          results: $.map(data, function (item) {
-            return {
-              text: item.name,
-              id: item.id
-            };
-          })
-        };
-      }
+    get_schools = function () {
+        $("#get_schools").select2({
+            minimumInputLength: 2,
+            // tags: [],
+            ajax: {
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '<?= url('customer/getCLientschools/null') ?>',
+                dataType: 'json',
+                type: "GET",
+                quietMillis: 50,
+                data: function (term) {
+                    return {
+                        term: term,
+                        token: $('meta[name="csrf-token"]').attr('content')
+                    };
+                },
+                results: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.name,
+                                id: item.id
+                            };
+                        })
+                    };
+                }
+            }
+        });
     }
-  });
-}
 
-$(document).ready(get_schools);
+    $(document).ready(get_schools);
 
 </script>
- @endsection
+@endsection
 
