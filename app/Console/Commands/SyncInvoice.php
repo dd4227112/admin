@@ -5,8 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class SyncInvoice extends Command
-{
+class SyncInvoice extends Command {
+
     /**
      * The name and signature of the console command.
      *
@@ -26,12 +26,62 @@ class SyncInvoice extends Command
      *
      * @return void
      */
+
     /**
-    * @param type $fields
-    */
-    public function __construct()
-    {
+     * @param type $fields
+     */
+    public function __construct() {
         parent::__construct();
+    }
+
+    /**
+     * 
+     * @param type $schema
+     * @return type
+     *             $user = '107M17S666D381';
+      $pass = 'rWh$abB!P5&$MWvj$!DTe29F#vAu2tmct!2';
+     * 
+      Username: 109M17SA01DINET
+      Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
+     */
+    public function getToken($invoice) {
+        if ($invoice->schema_name == 'beta_testing') {
+            //testing invoice
+            //  $setting = DB::table('public.setting')->first();
+            $url = 'https://wip.mpayafrica.com/v2/auth';
+            $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
+            if (!empty($credentials)) {
+                $user = trim($credentials->sandbox_api_username);
+                $pass = trim($credentials->sandbox_api_password);
+            } else {
+                $user = '';
+                $pass = '';
+            }
+        } else {
+            //live invoice
+            // $setting = DB::table($invoice->schema_name . '.setting')->first();
+            $url = 'https://api.mpayafrica.co.tz/v2/auth';
+            $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
+            if (!empty($credentials)) {
+                $user = trim($credentials->api_username);
+                $pass = trim($credentials->api_password);
+            } else {
+//                $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->first();
+//                $user = trim($credentials->api_username);
+//                $pass = trim($credentials->api_password);
+                return DB::table('api.requests')->insert(['return' => '', 'content' => 'invalid credentials for ' . $invoice->schema_name]);
+            }
+        }
+        $request = $this->curlServer([
+            'username' => $user,
+            'password' => $pass
+                ], $url);
+        $obj = json_decode($request);
+
+        DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request), 'header' => $invoice->schema_name]);
+        if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
+            return $obj->token;
+        }
     }
 
     /**
@@ -39,22 +89,22 @@ class SyncInvoice extends Command
      *
      * @return int
      */
-    public function handle()
-    {
+    public function handle() {
         $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on(a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 and a.schema_name not in ('public') ");
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
-        echo '>> Invoice Sync Completed : Count ' . count($invoices). chr(10);
+        echo '>> Invoice Sync Completed : Count ' . count($invoices) . chr(10);
         return 0;
     }
-    public function syncInvoicePerSchool($schema = ''){
+
+    public function syncInvoicePerSchool($schema = '') {
         $invoices = DB::select("select b.invoice_id as id, d.student_id, b.status, b.reference, b.prefix,d.date,b.sync,b.return_message,b.push_status,d.academic_year_id, "
-        . " b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from "
-        . "  " . $schema . ".setting limit 1) as sub_invoice   from   " . $schema . ".invoice_prefix b JOIN  " . $schema . ".invoices d on b.invoice_id=d.id  join " . $schema . ".student c on c.student_id=d.student_id join (select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a "
-        . " group by a.invoice_id ) a on a.invoice_id=d.id where b.sync <>1 and b.prefix in "
-        . " (select bn.invoice_prefix from " . $schema . ".bank_accounts_integrations bn join " . $schema . ".bank_accounts ba on "
-        . " ba.id=bn.bank_account_id where ba.refer_bank_id=22 AND bn.api_username is not null) order by random() limit 120");
+                        . " b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from "
+                        . "  " . $schema . ".setting limit 1) as sub_invoice   from   " . $schema . ".invoice_prefix b JOIN  " . $schema . ".invoices d on b.invoice_id=d.id  join " . $schema . ".student c on c.student_id=d.student_id join (select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a "
+                        . " group by a.invoice_id ) a on a.invoice_id=d.id where b.sync <>1 and b.prefix in "
+                        . " (select bn.invoice_prefix from " . $schema . ".bank_accounts_integrations bn join " . $schema . ".bank_accounts ba on "
+                        . " ba.id=bn.bank_account_id where ba.refer_bank_id=22 AND bn.api_username is not null) order by random() limit 120");
 
         foreach ($invoices as $invoice) {
             if ($invoice->sub_invoice == 1) {
@@ -63,13 +113,14 @@ class SyncInvoice extends Command
 
                 foreach ($sub_invoices as $sub_invoice) {
                     $this->pushInvoice($sub_invoice);
-            }
+                }
             } else {
                 echo 'push Normal  invoices for ' . $invoice->schema_name . '' . chr(10) . chr(10);
                 $this->pushInvoice($invoice);
             }
         }
     }
+
     public function pushInvoice($invoice) {
         $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
@@ -128,6 +179,7 @@ class SyncInvoice extends Command
         }
         DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
+
     public function deleteInvoice($invoice, $token) {
         if (strlen($token) > 4) {
             $fields = array(
@@ -159,6 +211,7 @@ class SyncInvoice extends Command
             DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
         }
     }
+
     public function validateInvoice($invoice, $token) {
         $fields = array(
             "reference" => trim($invoice->reference),
@@ -214,6 +267,7 @@ class SyncInvoice extends Command
 
         DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
+
     public function pushStudentInvoice($fields, $invoice, $token) {
         $push_status = 'invoice_submission';
 
@@ -241,23 +295,24 @@ class SyncInvoice extends Command
         DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
 
-   private function curlServer($fields, $url) {
+    private function curlServer($fields, $url) {
 // Open connection
-       $ch = curl_init();
+        $ch = curl_init();
 // Set the url, number of POST vars, POST data
 
-       curl_setopt($ch, CURLOPT_URL, $url);
-       curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-           'application/x-www-form-urlencoded'
-       ));
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'application/x-www-form-urlencoded'
+        ));
 
-       curl_setopt($ch, CURLOPT_POST, TRUE);
-       curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
 
-       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-       $result = curl_exec($ch);
-       curl_close($ch);
-       return $result;
-   }
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
+
 }

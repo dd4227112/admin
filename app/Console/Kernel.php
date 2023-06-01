@@ -842,56 +842,7 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-    /**
-     * 
-     * @param type $schema
-     * @return type
-     *             $user = '107M17S666D381';
-      $pass = 'rWh$abB!P5&$MWvj$!DTe29F#vAu2tmct!2';
-     * 
-      Username: 109M17SA01DINET
-      Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
-     */
-    public function getToken($invoice) {
-        if ($invoice->schema_name == 'beta_testing') {
-            //testing invoice
-            //  $setting = DB::table('public.setting')->first();
-            $url = 'https://wip.mpayafrica.com/v2/auth';
-            $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
-            if (!empty($credentials)) {
-                $user = trim($credentials->sandbox_api_username);
-                $pass = trim($credentials->sandbox_api_password);
-            } else {
-                $user = '';
-                $pass = '';
-            }
-        } else {
-            //live invoice
-            // $setting = DB::table($invoice->schema_name . '.setting')->first();
-            $url = 'https://api.mpayafrica.co.tz/v2/auth';
-            $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
-            if (!empty($credentials)) {
-                $user = trim($credentials->api_username);
-                $pass = trim($credentials->api_password);
-            } else {
-//                $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->first();
-//                $user = trim($credentials->api_username);
-//                $pass = trim($credentials->api_password);
-                return DB::table('api.requests')->insert(['return' => '', 'content' => 'invalid credentials for ' . $invoice->schema_name]);
-            }
-        }
-        $request = $this->curlServer([
-            'username' => $user,
-            'password' => $pass
-                ], $url);
-        $obj = json_decode($request);
-
-        DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request), 'header' => $invoice->schema_name]);
-        if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
-            return $obj->token;
-        }
-    }
-
+ 
     private function save_api_request($api_key = '', $api_secret = '') {
         $ip = $_SERVER['REMOTE_ADDR'];
 
