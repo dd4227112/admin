@@ -120,7 +120,7 @@ $end =date('Y-m-d', strtotime($to_date)); ?>
 
                                                 }
                                                     echo ($r-1)+($r1-1)!=0 ? round(($avg_performance+$avg_performance1)/(($r-1)+($r1-1))).'%' :'0%';
-                                                    $overall2 += round(($avg_performance+$avg_performance1)/(($r-1)+($r1-1)))
+                                                    $overall2 += ($r-1)+($r1-1)!=0 ? round(($avg_performance+$avg_performance1)/(($r-1)+($r1-1))):0;
                                                     ?>
                                                 </td>
 
