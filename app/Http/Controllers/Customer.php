@@ -649,6 +649,15 @@ class Customer extends Controller {
             return view('customer/profile', $this->data);
         }
     }
+    public function updateSstatus(){
+        $data =['status'=>request('status')];
+        $id =request('task_id');
+        if(DB::table('admin.tasks')->where('id', $id)->update($data)){
+            $response =['message'=>'Status updated'];
+            echo json_encode($response);
+        }
+    
+    }
 
     public function editdetails() {
         $id = request()->segment(3);
