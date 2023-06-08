@@ -479,7 +479,9 @@ $s_address = isset($school->address) ? $school->address : '';
         border-radius: 50%;
         overflow: hidden;">
                                                                                     &nbsp;&nbsp;<?= $task->user->firstname ?> -
-                                                                                    <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span> &nbsp;&nbsp; <label class="badge badge-inverse-primary">{{ $task->status}}</label>
+                                                                                    <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span> &nbsp;&nbsp; <select id="<?= $task->id ?>" name="status" class="badge badge-inverse-primary"><option value ='Not started' <?=$task->status=='Not started'?'selected':''?>> Not started</option>
+                                                                                                                                                                                                                                                                                                <option value ='Completed' <?=$task->status=='Completed'?'selected':''?>> Completed</option>
+                                                                                                                                                                                                                                                                                                <option value ='on progess' <?=$task->status=='on progress'?'selected':''?>>on progress</option></select>
                                                                                     <?php if (can_access('delete_tasks')) { ?>
                                                                                         <a class="btn btn-mini btn-round btn-danger float-right text-light" onclick="RemoveAttr(<?= $task->id ?>);"> delete </a>
                                                                                     <?php } ?>
@@ -2486,6 +2488,25 @@ if (!empty($profile)) {
         })
         .bind("geocode:multiple", function(event, results) {
             console.log("Multiple: " + results.length + " results found");
+        });
+
+        $('select[name =status]').change(function() {
+            var val = $(this).val();
+            var id =$(this).attr('id');
+            $.ajax({
+                url: '<?= url('customer/updateSstatus') ?>',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    task_id: id,
+                    status: val,
+    
+                },
+                success: function(data) {
+                    toastr.success(data.message);
+                    window.location.reload();
+                }
+            });
         });
 </script>
 @endsection

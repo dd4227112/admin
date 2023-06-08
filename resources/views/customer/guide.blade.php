@@ -104,7 +104,7 @@
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                     <h5 class="font-header"><?= $value->permission->display_name ?? '' ?></h5>
-                                                                        <p style="word-wrap: break-word;overflow-wrap: break-word;">  <?= $value->content ?? '' ?> </p>
+                                                                        <p>  <?= wordwrap($value->content, 80, "<br>") ?? '' ?> </p>
                                                                     <div class="overflow-container">
                                                                         <h6>image</h6>
                                                                     </div>
