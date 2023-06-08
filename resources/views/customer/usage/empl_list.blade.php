@@ -59,7 +59,7 @@ foreach ($departments as $department) {
                     </td>
 
                     <td> 
-                        PERFOMANCE
+                          <?= $user->performance ?? 'Not specified'?>
                     </td>
 
                      <td> 

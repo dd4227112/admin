@@ -44,3 +44,7 @@ WHERE (student_id, installment_id) IN (
   FROM cte
   WHERE rn > 1
 );
+
+
+#tool to check if database is well configured
+postgresqltuner --ssd
