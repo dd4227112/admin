@@ -445,6 +445,11 @@
                                                             <span class="pcoded-mtext">Staff Reports</span>
                                                         </a>
                                                     </li>
+                                                    <li class=" ">
+                                                        <a href="<?= url('report/manuals') ?>">
+                                                            <span class="pcoded-mtext">Operation Manuals</span>
+                                                        </a>
+                                                    </li>
 
                                             </ul>
                                         </li>

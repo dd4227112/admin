@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' =>'mail.shulesoft.africa:2096',
+    'host' =>'mail.ngarafdc.ac.tz',
 
     /*
     |--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => 'support@shulesoft.africa',
-        'name' => 'Shulesoft School Management System',
+        'name' => 'Shulesoft Admin Panel',
     ],
 
     /*
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'support@shulesoft.africa',
+    'username' => 'adminpaneltest@ngarafdc.ac.tz',
 
-    'password' =>'uy~*XaXV57QG',
+    'password' =>'mwesiGEMWE1',
 
     /*
     |--------------------------------------------------------------------------

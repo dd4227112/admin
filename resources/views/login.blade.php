@@ -46,28 +46,39 @@
 
                                 <form class="md-float-material" role="form" method="POST" action="{{ route('password.email') }}">
                                     {{ csrf_field() }}
-
-                                    <div class="text-center">
-                                        <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
-                                    </div>
                                     <div class="auth-box">
-                                        <div class="row m-b-20">
+                                    <div class="row m-b-20">
                                             <div class="col-md-12">
-                                                <h3 class="text-center">Reset Your Password </h3>
-
+                                            <div class="text-center">
+                                        <img src="<?= $root ?>/images/shulesoft_logo.png" alt="logo.png" width="70px">
+                                    </div>
+                                                <small style="color:black; text-align: center">ShuleSoft Administration Panel</small>
+                                                <h3 style ="font-size:18px;margin-bottom:0px;" class="text-left txt-primary">Reset Password</h3>
                                             </div>
                                         </div>
                                         <p class="text-inverse b-b-default text-right">Back to <a href="<?= url('/') ?>">Login.</a></p>
+                                        @if (session('status'))
+                                        <div class="row m-b-20">
+                                            <div class="col-md-12">
+                                                <div class="alert alert-success">
+                                                   <strong> {{ session('status') }}</strong>
+                                                </div>
+
+                                                </div>
+                                         </div>
+                                         @endif
+                                         @if ($errors->has('email'))
+                                         <div class="row m-b-20">
+                                            <div class="col-md-12">
+                                                <div class="alert alert-danger">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        @endif
    
                                         <div class="input-group">
                                             <input type="email" name="email" class="form-control" placeholder="Your Email Address"  value="{{ old('email') }}">
-                                          
-                                            @if ($errors->has('email'))
-                                            <br/> <br/>
-                                            <span class="help-block" style="color: red;">
-                                                <strong>{{ $errors->first('email') }}</strong>
-                                            </span>
-                                            @endif
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -80,9 +91,6 @@
                                                 <p class="text-inverse text-left m-b-0">Credentials are only provided by Administrator</p>
                                                 <p class="text-inverse text-left"></p>
                                             </div>
-                                            <div class="col-md-2">
-                                                <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="small-logo.png" width="30" height="30">
-                                            </div>
                                         </div>
 
                                     </div>
@@ -91,14 +99,14 @@
                                 <form class="md-float-material" id="loginform" method="POST" action="{{ route('login') }}" >
                                     {{ csrf_field() }}
 
-                                    <div class="text-center">
-                                        <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
-                                    </div>
                                     <div class="auth-box">
                                         <div class="row m-b-20">
                                             <div class="col-md-12">
+                                            <div class="text-center">
+                                        <img src="<?= $root ?>/images/shulesoft_logo.png" alt="logo.png" width="70px">
+                                    </div>
                                                 <small style="color:black; text-align: center">ShuleSoft Administration Panel</small>
-                                                <h3 class="text-left txt-primary">Sign In</h3>
+                                                <h3 style ="font-size:18px;" class="text-left txt-primary">Sign In</h3>
                                             </div>
                                         </div>
                                         @if ($errors->has('password'))
@@ -150,7 +158,7 @@
                                                 <p class="text-inverse text-left"></p>
                                             </div>
                                             <div class="col-md-2">
-                                                <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="small-logo.png" width="30" height="30">
+                                                <!-- <img src="<?= $root ?>images/shulesoft_logo.png" alt="small-logo.png" width="30" height="30"> -->
                                             </div>
                                         </div>
 
