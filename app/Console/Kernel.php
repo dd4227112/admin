@@ -19,26 +19,26 @@ class Kernel extends ConsoleKernel {
      */
     protected $commands = [
 // \App\Console\Commands\Inspire::class,
-    \App\Console\Commands\SendDailyReport::class,
-    \App\Console\Commands\SendWhatsappSms::class,
-    \App\Console\Commands\InsertData::class,
-    \App\Console\Commands\SendNormalSms::class,
-    \App\Console\Commands\SendBirhdayWishes::class,
-    \App\Console\Commands\SendTaskReminder::class,
-    \App\Console\Commands\SendNotice::class,
-    \App\Console\Commands\SendTodoRemainder::class,
-    \App\Console\Commands\SetTaskRemainder::class,
-    \App\Console\Commands\SyncInvoice::class,
-    \App\Console\Commands\SendQuickSms::class,
-    \App\Console\Commands\FindMissingPayments::class,
-    \App\Console\Commands\StandingOrderRemainder::class,
-    \App\Console\Commands\HRContractRemainders::class,
-    \App\Console\Commands\DatabaseOptimization::class,
-    \App\Console\Commands\CreateTodayReport::class,
-    \App\Console\Commands\SchoolMonthlyReport::class,
-    // \App\Console\Commands\HRLeaveRemainders::class, // Currently disabled
-    // \App\Console\Commands\RefreshMaterializedView::class, // Currently disabled
-    // \App\Console\Commands\SendSequenceReminder::class, // Currently disabled
+        \App\Console\Commands\SendDailyReport::class,
+        \App\Console\Commands\SendWhatsappSms::class,
+        \App\Console\Commands\InsertData::class,
+        \App\Console\Commands\SendNormalSms::class,
+        \App\Console\Commands\SendBirhdayWishes::class,
+        \App\Console\Commands\SendTaskReminder::class,
+        \App\Console\Commands\SendNotice::class,
+        \App\Console\Commands\SendTodoRemainder::class,
+        \App\Console\Commands\SetTaskRemainder::class,
+        \App\Console\Commands\SyncInvoice::class,
+        \App\Console\Commands\SendQuickSms::class,
+        \App\Console\Commands\FindMissingPayments::class,
+        \App\Console\Commands\StandingOrderRemainder::class,
+        \App\Console\Commands\HRContractRemainders::class,
+        \App\Console\Commands\DatabaseOptimization::class,
+        \App\Console\Commands\CreateTodayReport::class,
+        \App\Console\Commands\SchoolMonthlyReport::class,
+            // \App\Console\Commands\HRLeaveRemainders::class, // Currently disabled
+            // \App\Console\Commands\RefreshMaterializedView::class, // Currently disabled
+            // \App\Console\Commands\SendSequenceReminder::class, // Currently disabled
     ];
     public $emails;
 
@@ -59,13 +59,13 @@ class Kernel extends ConsoleKernel {
             Log::error('Send task reminders failed' . $e->getMessage());
         }
 
-         // configure the service set RestartSec = 1 minute (60s)
-         try {
+        // configure the service set RestartSec = 1 minute (60s)
+        try {
             $schedule->command('send:notice')->dailyAt('04:40');
         } catch (\Exception $e) {
             Log::error('Send Remainder failed' . $e->getMessage());
         }
-          // configure the service set RestartSec = 1 minute (60s)
+        // configure the service set RestartSec = 1 minute (60s)
         try {
             $schedule->command('send:todoremider')->dailyAt('03:40');
         } catch (\Exception $e) {
@@ -77,14 +77,14 @@ class Kernel extends ConsoleKernel {
         } catch (\Exception $e) {
             Log::error('set reminder failed' . $e->getMessage());
         }
-    
+
         // configure the service set RestartSec = 1 minute (60s)
         try {
             $schedule->command('whatsapp:sms')->everyMinute();
         } catch (\Exception $e) {
             Log::error('Send a WhatsApp SMS failed: ' . $e->getMessage());
         }
-           
+
         // configure the service set RestartSec = 1 minute (60s)
         try {
             $schedule->command('sync:invoice')->everyMinute();
@@ -92,13 +92,13 @@ class Kernel extends ConsoleKernel {
             Log::error('Sync Invoice failed: ' . $e->getMessage());
         }
 
-          // configure the service set RestartSec = 1 minute (60s)
+        // configure the service set RestartSec = 1 minute (60s)
         try {
             $schedule->command('send:quicksms')->everyMinute();
         } catch (\Exception $e) {
             Log::error('Send Quick SMS failed: ' . $e->getMessage());
         }
-           // configure the service set RestartSec = 2hours (60*2*60s)
+        // configure the service set RestartSec = 2hours (60*2*60s)
         try {
             $schedule->command('find:payment')->everyTwoHours();
         } catch (\Exception $e) {
@@ -117,19 +117,19 @@ class Kernel extends ConsoleKernel {
         } catch (\Exception $e) {
             Log::error('HR contractor reminder failed' . $e->getMessage());
         }
-          // configure the service set RestartSec = 1 minute
-          try {
+        // configure the service set RestartSec = 1 minute
+        try {
             $schedule->command('database:optimize')->dailyAt('00:40');
         } catch (\Exception $e) {
             Log::error('HR contractor reminder failed' . $e->getMessage());
         }
-           // configure the service set RestartSec = 1 minute
+        // configure the service set RestartSec = 1 minute
         try {
             $schedule->command('today:report')->dailyAt('14:50');
         } catch (\Exception $e) {
             Log::error('Daily Report failed' . $e->getMessage());
         }
-        
+
         // configure the service set RestartSec = 1 minute
         try {
             $schedule->command('schoolmontly:report')->monthlyOn(28, '06:36');
@@ -143,41 +143,33 @@ class Kernel extends ConsoleKernel {
         // } catch (\Exception $e) {
         //     Log::error('HR Leave Reminder failed' . $e->getMessage());
         // }
-
         // configure the service set RestartSec = 1 hour (60*60s) currently disabled
         // try {
         //     $schedule->command('refresh:view')->twiceDaily(1, 13);
         // } catch (\Exception $e) {
         //     Log::error('Refresh Materialized View failed' . $e->getMessage());
         // }
-
         // configure the service set RestartSec = 1 minute (60s) currently disabled
         // try {
         //     $schedule->command('send:sequence')->dailyAt('04:40');
         // } catch (\Exception $e) {
         //     Log::error('Sequence Remiinder failed' . $e->getMessage());
         // }
-
-        
-        
-
         // try {
         //     $schedule->command('report:send')->everyMinute();
         // } catch (\Exception $e) {
         //     Log::error('send daily report failed: ' . $e->getMessage());
         // }
-
         // try {
         //     $schedule->command('send:normal-sms')->everyMinute();
         // } catch (\Exception $e) {
         //     Log::error('Whatsapp command failed: ' . $e->getMessage());
         // }
-        
-            $schedule->call(function () {
+
+        $schedule->call(function () {
             //sync invoices 
             $this->sendQuickSms();  // done 
             $this->syncInvoice(); //done
-
             //  $this->syncData();
             $this->whatsappMessage(); // done
             (new Message())->sendEmail();
@@ -434,6 +426,12 @@ class Kernel extends ConsoleKernel {
             }
         }
         echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10);
+
+        //check school whatsapp messages and sent them
+        $messages = empty($setting_) ? DB::select("select a.phone_number as phone,  '" . $value->schema_name . "'||a.sms_id as id, " . " '" . $schema . ": '||a.body || '" . chr(10) . " School Link > https://" . $link . "' as body, a.sent_from from " . $value->schema_name . ".sms a where status = 0 and type <> 1 order by priority DESC limit 30") :
+                DB::select("select a.phone_number as phone,  '" . $value->schema_name . "'||a.sms_id as id, " . " '" . $schema . ": '||a.body || '" . chr(10) . " School Link > https://" . $link . "' as body, a.sent_from from shulesoft.sms a where a.schema_name='" . $value->schema_name . "' AND status = 0 and type <> 1 order by priority DESC limit 30");
+
+        $this->curlServer(['sms' => 1], 'http://api.shulesoft.co/api/pushWhatsapp');
     }
 
     function checkPaymentPattern($user, $schema) {
@@ -571,7 +569,7 @@ class Kernel extends ConsoleKernel {
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
-        echo '>> Invoice Sync Completed : Count ' . count($invoices). chr(10);
+        echo '>> Invoice Sync Completed : Count ' . count($invoices) . chr(10);
     }
 
     public function syncRevenueInvoice() {
@@ -842,7 +840,6 @@ class Kernel extends ConsoleKernel {
         }
     }
 
- 
     private function save_api_request($api_key = '', $api_secret = '') {
         $ip = $_SERVER['REMOTE_ADDR'];
 
@@ -1640,11 +1637,10 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         curl_close($ch);
         print_r($result);
     }
+
     // protected function commands()
     // {
     //     $this->load(__DIR__.'/Commands');
-
     //     require base_path('routes/console.php');
     // }
-
 }
