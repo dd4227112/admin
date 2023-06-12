@@ -109,20 +109,17 @@ class Controller extends BaseController {
         if ((strlen($phone_number) > 6 && strlen($phone_number) < 20) && $message != '') {
             $sms_key = DB::table('public.sms_keys')->first();
             $sms_keys_id = !empty($sms_key) ? $sms_key->id : null;
-            if($sms_keys_id){
-               \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 
-                     'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id)); 
+            if ($sms_keys_id) {
+                \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message,
+                    'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id));
             }
-            
         }
         return $this;
     }
 
-
-  
- //Altenative function to store files locally
+    //Altenative function to store files locally
     public function saveFile($file, $local = null) {
-            if($local == TRUE) { 
+        if ($local == TRUE) {
             $url = $this->uploadFileLocal($file);
             $file_id = DB::table('company_files')->insertGetId([
                 'extension' => $file->getClientOriginalExtension(),
@@ -137,7 +134,7 @@ class Controller extends BaseController {
     }
 
     public function uploadFileLocal($file) {
-       //Move Uploaded File
+        //Move Uploaded File
         $destinationPath = 'storage/uploads/images';
         !is_dir($destinationPath) ? mkdir($destinationPath) : '';
         $filename = rand(145, 87998) . time() . '.' . $file->getClientOriginalExtension();
@@ -145,10 +142,9 @@ class Controller extends BaseController {
         return url($destinationPath . '/' . $filename);
     }
 
-    
     public function curlPrivate($fields, $url = null) {
         // Open connection
-        $url =$url==null ? 'http://75.119.140.177:8081/api/payment': $url;
+        $url = $url == null ? 'http://75.119.140.177:8081/api/payment' : $url;
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
 
@@ -289,7 +285,7 @@ class Controller extends BaseController {
                 'body' => $filename,
                 'filename' => $availableFiles[$format],
                 'caption' => $caption
-            ); 
+            );
             $this->sendRequest('sendFile', $data);
         }
 
@@ -302,14 +298,13 @@ class Controller extends BaseController {
         }
     }
 
-
     //sends a voice message. it is called when the bot gets the command "ptt"
     //@param $chatId [string] [required] - the ID of chat where we send a message
     public function ptt($chatId) {
         $data = array(
             'audio' => 'https://shulesoft.com/PHP/ptt.ogg',
             'chatId' => $chatId
-        ); 
+        );
         $this->sendRequest('sendAudio', $data);
     }
 
@@ -326,33 +321,43 @@ class Controller extends BaseController {
         $this->sendRequest('group', $data);
     }
 
-     public function sendMessageFile($chatId,$caption,$filename,$path){
-          $data = json_encode(array(
-              'chatId' => $chatId,
-              'body'   => $path,
-              'filename' => $filename,
-              'caption' => $caption
-             ));
-          $this->sendRequest('sendFile',$data);
-      }
-
-
+    public function sendMessageFile($chatId, $caption, $filename, $path) {
+        $data = json_encode(array(
+            'chatId' => $chatId,
+            'body' => $path,
+            'filename' => $filename,
+            'caption' => $caption
+        ));
+        $this->sendRequest('sendFile', $data);
+    }
 
     public function sendMessage($chatId, $text) {
         $data = array('chatId' => $chatId, 'body' => $text);
         $this->sendRequest('message', $data);
     }
 
+    public function sendRequest($method, $data, $schema = null) {
 
-    public function sendRequest($method, $data) {
-        return true;
-        
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
             $url = $this->APIurl . $method . '?token=' . $this->token;
             if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
                 $url = $this->token . $method . '?token=' . $this->APIurl;
             }
-
+            if ( $schema == 'michaelmausa') {
+                $api = 'https://eu211.chat-api.com/instance226778/';
+                $token_ = 'z9y63dtih3n0mfau';
+                $url = $api . $method . '?token=' . $token_;
+            }
+            if ($schema == 'greenacres') {
+                $api = 'https://api.1msg.io/337797/';
+                $token_ = 'bldz8l1vsxx1oc03';
+                $url = $api . $method . '?token=' . $token_;
+            }
+            if ( $schema == 'capricorninstitute') {
+                $api = 'https://api.chat-api.com/instance377666/';
+                $token_ = 'aumoa17acohddcpa';
+                $url = $api . $method . '?token=' . $token_;
+            }
             if (is_array($data)) {
                 $data = json_encode($data);
             }
@@ -361,195 +366,176 @@ class Controller extends BaseController {
                     'header' => 'Content-type: application/json',
                     'content' => $data]]);
             $response = file_get_contents($url, false, $options);
-            // $response = $this->curlServer($body, $url);
+            //$response = $this->curlServer($body, $url);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
-           // echo $response;
+            // echo $response;
         } else {
             echo 'Wrong url supplied in whatsapp api';
         }
-        
     }
-    public function sendWhatsappTest(){
-        $token ='ZGF2aWQuZGFuaWVsOm13ZXNpR0VNV0Ux';
-        $jsonData =["from"=>"N-SMS", "to"=>"255743414770",  "text"=> "this is the test sms", "reference"=>"aswqetgcv"];
-        $data =json_encode($jsonData);
+
+    public function sendWhatsappTest() {
+        $token = 'ZGF2aWQuZGFuaWVsOm13ZXNpR0VNV0Ux';
+        $jsonData = ["from" => "N-SMS", "to" => "255743414770", "text" => "this is the test sms", "reference" => "aswqetgcv"];
+        $data = json_encode($jsonData);
 
         $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://messaging-service.co.tz/api/sms/v1/test/text/single');
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_URL, 'https://messaging-service.co.tz/api/sms/v1/test/text/single');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
             'Authorization: Basic ' . $token
-            ));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-            // execute the cURL request
-            $response = curl_exec($ch); 
+        // execute the cURL request
+        $response = curl_exec($ch);
         curl_close($ch);
-        echo $response;		
-
+        echo $response;
     }
 
-
-      public function send_whatsapp_sms($phone, $message, $company_file_id = null) {
+    public function send_whatsapp_sms($phone, $message, $company_file_id = null) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
             $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $phone . "')"))->first();
-            $data = array('message'=> $message,'phone'=> $phone->whatsapp_phone, 'company_file_id'=>$company_file_id);
+            $data = array('message' => $message, 'phone' => $phone->whatsapp_phone, 'company_file_id' => $company_file_id);
             \App\Models\WhatsAppMessages::create($data);
-           }
+        }
         return $this;
     }
- 
-      public function syncMissingPayments(){
+
+    public function syncMissingPayments() {
         $this->data['prefix'] = '';
         $returns = array();
         $allschemas = DB::select('select * from admin.all_setting');
-        foreach($allschemas as $schema) {
-                $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema->schema_name . '\'');
-                $background = new \App\Http\Controllers\Background();
-                //Iterate through invoices
-                    foreach ($invoices as $invoice) {
-                        $token = $background->getToken($invoice);
-                        $prefix = $invoice->prefix;
-                        if (strlen($token) > 4) {
-                            $fields = array(
-                                "reconcile_date" => date('d-m-Y'),
-                                // "reconcile_date" => $value->format('d-m-Y'),
-                                "token" => $token
-                            );
-                            $push_status = 'reconcilliation';
-                            $url = $invoice->schema_name == 'beta_testing' ?
-                                    'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
-                            $curl = $background->curlServer($fields, $url);
-                            array_push($returns, json_decode($curl));
-                        } 
+        foreach ($allschemas as $schema) {
+            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema->schema_name . '\'');
+            $background = new \App\Http\Controllers\Background();
+            //Iterate through invoices
+            foreach ($invoices as $invoice) {
+                $token = $background->getToken($invoice);
+                $prefix = $invoice->prefix;
+                if (strlen($token) > 4) {
+                    $fields = array(
+                        "reconcile_date" => date('d-m-Y'),
+                        // "reconcile_date" => $value->format('d-m-Y'),
+                        "token" => $token
+                    );
+                    $push_status = 'reconcilliation';
+                    $url = $invoice->schema_name == 'beta_testing' ?
+                            'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                    $curl = $background->curlServer($fields, $url);
+                    array_push($returns, json_decode($curl));
+                }
 
-                        foreach($returns as $return){
-                            $this->syncMissingInv($return->transactions,$prefix,$invoice->schema_name);
-                        }
-                 }
+                foreach ($returns as $return) {
+                    $this->syncMissingInv($return->transactions, $prefix, $invoice->schema_name);
+                }
             }
         }
+    }
 
-
-      public function syncMissingInv($data,$prefix,$schema_name){
-       $trans = (object) $data;
+    public function syncMissingInv($data, $prefix, $schema_name) {
+        $trans = (object) $data;
         foreach ($trans as $tran) {
             if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
-                 $check = DB::table($schema_name. '.payments')->where('transaction_id', $tran->receipt)->first();
-                if(empty($check)){
-                    $data= urlencode(json_encode($tran));
+                $check = DB::table($schema_name . '.payments')->where('transaction_id', $tran->receipt)->first();
+                if (empty($check)) {
+                    $data = urlencode(json_encode($tran));
                     $background = new \App\Http\Controllers\Background();
                     $url = 'http://75.119.140.177:8081/api/init';
                     $fields = json_decode(urldecode($data));
                     $curl = $background->curlServer($fields, $url, 'row');
                     return $curl;
-               }
-             }
-           }
-       }
-
-           
-           
-        public function action($action) {
-            if (request()->ajax()) {
-                return response()->json(['error' => 'Not Found'], 404);
-            } else {
-                return $action;
+                }
             }
         }
-            
+    }
 
-    
-    
+    public function action($action) {
+        if (request()->ajax()) {
+            return response()->json(['error' => 'Not Found'], 404);
+        } else {
+            return $action;
+        }
+    }
 
-      public  function imartSMSAPIs()
-      {
-            $api_key = '262A04B6B5635A';
-            $contacts = '0655007457';
-            $from = 'Shule';
-            $sms_text = urlencode('Testing imartgroup sms API');
+    public function imartSMSAPIs() {
+        $api_key = '262A04B6B5635A';
+        $contacts = '0655007457';
+        $from = 'Shule';
+        $sms_text = urlencode('Testing imartgroup sms API');
 
-            //Submit to server
+        //Submit to server
 
-            $ch = curl_init();
-            curl_setopt($ch,CURLOPT_URL, "http://smsportal.imartgroup.co.tz/app/smsapi/index.php");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, "key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text);
-            $response = curl_exec($ch);
-            curl_close($ch);
-            echo $response;
-      }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "http://smsportal.imartgroup.co.tz/app/smsapi/index.php");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "key=" . $api_key . "&campaign=280&routeid=8&type=text&contacts=" . $contacts . "&senderid=" . $from . "&msg=" . $sms_text);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        echo $response;
+    }
 
-
-
-      public function test2()
-      {
+    public function test2() {
         $api_key = '262A04B6B5635A';
         $contacts = '655007457,753683801';
         $from = 'Shule';
         $sms_text = urlencode('Hello People, have a great day');
 
-        $api_url = "http://smsportal.imartgroup.co.tz/app/smsapi/index.php?key=".$api_key."&campaign=280&routeid=8&type=text&contacts=".$contacts."&senderid=".$from."&msg=".$sms_text;
+        $api_url = "http://smsportal.imartgroup.co.tz/app/smsapi/index.php?key=" . $api_key . "&campaign=280&routeid=8&type=text&contacts=" . $contacts . "&senderid=" . $from . "&msg=" . $sms_text;
 
         //Submit to server
         $response = file_get_contents($api_url);
         echo $response;
-      }
+    }
 
-
-
-
-      public function test3()
-      {
+    public function test3() {
         $variable = '{""ack"":[{""id"":""gBEGJVdUVAEIAgl-OgngAw5QHR4"",""chatId"":""255754540108@c.us"",""status"":""read""}],""instanceId"":210904}';
 
         $variable1 = '{""messages"":[{""id"":""gBEGJVdUVAEIAgl-OgngAw5QHR4"",""body"":""NOTREDAMESEC: Habari SHUMA MAZUNGU,  nenotumizi (username) lako ni: +255754540108 na nenosiri (password) ni : 613hgf. Kumbuka kubadili neno siri ukishaingia kwenye account yako ya notredamesec. Asante\n\n Download  Shulesoft Parent Experience App on\nPlayStore(Android)?? \nhttps:\/\/cutt.ly\/parentalApp\n\nAppStore(Iphone)??\nhttps:\/\/cutt.ly\/fT2Qn5f"",""self"":1,""type"":""chat"",""author"":""255655406004@c.us"",""chatId"":""255754540108@c.us"",""fromMe"":true,""caption"":null,""chatName"":""255754540108"",""senderName"":""255655406004@c.us"",""isForwarded"":false,""time"":""1657093119""}],""instanceId"":210904}';
 
         $json = str_replace('""', '"', $variable);
-        $search_array = (array) json_decode($json);  
-       
+        $search_array = (array) json_decode($json);
 
-         if(array_key_exists('ack', $search_array)) {
+        if (array_key_exists('ack', $search_array)) {
             $ack_object = (object) $search_array;
             $ack_object = $ack_object->{'ack'}[0];
-          
-        \DB::table('admin.message_logs')->where('message_id',$ack_object->id)->update(['status'=>$ack_object->status,'updated_at'=>now()]);
 
-        } elseif(array_key_exists('messages', $search_array)) {
-             $message_object = (object) $search_array;
-             $message_object = $message_object->{'messages'}[0];
+            \DB::table('admin.message_logs')->where('message_id', $ack_object->id)->update(['status' => $ack_object->status, 'updated_at' => now()]);
+        } elseif (array_key_exists('messages', $search_array)) {
+            $message_object = (object) $search_array;
+            $message_object = $message_object->{'messages'}[0];
 
-             $phonenumber = validate_phone_number($message_object->chatName);
-             $schema = \DB::table('all_users')->where('phone',$phonenumber)->first();
-             $schema_name = $schema ? $schema->schema_name : 'public';
-            
-             $check_message = \DB::table('admin.message_logs')->where('message_id',$message_object->id)->first();
+            $phonenumber = validate_phone_number($message_object->chatName);
+            $schema = \DB::table('all_users')->where('phone', $phonenumber)->first();
+            $schema_name = $schema ? $schema->schema_name : 'public';
 
-             if(empty($check_message)){
-                $array_message = array('message_id'=>$message_object->id,'schema_name'=>$schema_name,'author'=>$message_object->author,'chatid'=> $message_object->chatId,'status'=>'Sent');
-              \DB::table('admin.message_logs')->insert($array_message);
+            $check_message = \DB::table('admin.message_logs')->where('message_id', $message_object->id)->first();
+
+            if (empty($check_message)) {
+                $array_message = array('message_id' => $message_object->id, 'schema_name' => $schema_name, 'author' => $message_object->author, 'chatid' => $message_object->chatId, 'status' => 'Sent');
+                \DB::table('admin.message_logs')->insert($array_message);
             }
         }
+    }
 
-      }
-      public function sendText(){
-        $phone='255743414770';
-        $api_key='788455074ffb68f3';
-        $secret_key ='ZWUzM2M5YjVlMTljYmJjNTAxZmRjMjUxYzIyOGI2NGE3MTg4MjdkZjUxNzQxNGEwMzBmYzgwMTRiYTRmMDQ4NA==';
+    public function sendText() {
+        $phone = '255743414770';
+        $api_key = '788455074ffb68f3';
+        $secret_key = 'ZWUzM2M5YjVlMTljYmJjNTAxZmRjMjUxYzIyOGI2NGE3MTg4MjdkZjUxNzQxNGEwMzBmYzgwMTRiYTRmMDQ4NA==';
         $postData = array(
             'source_addr' => 'INFO',
-            'encoding'=>0,
+            'encoding' => 0,
             'schedule_time' => '',
-            'message' =>'This is the test sms',
-            'recipients' => [array('recipient_id' => 1,'dest_addr'=>$phone)]
+            'message' => 'This is the test sms',
+            'recipients' => [array('recipient_id' => 1, 'dest_addr' => $phone)]
         );
-        
-        $Url ='https://apisms.beem.africa/v1/send';
-        
+
+        $Url = 'https://apisms.beem.africa/v1/send';
+
         $ch = curl_init($Url);
         error_reporting(E_ALL);
         ini_set('display_errors', 0);
@@ -563,13 +549,10 @@ class Controller extends BaseController {
                 'Content-Type: application/json'
             ),
             CURLOPT_POSTFIELDS => json_encode($postData)
-        ));     
+        ));
         $response = curl_exec($ch);
-        $res=json_decode($response);
+        $res = json_decode($response);
         print_r($res);
-      }
+    }
 
-   
 }
-
-

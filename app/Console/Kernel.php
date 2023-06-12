@@ -431,7 +431,41 @@ class Kernel extends ConsoleKernel {
         $messages = empty($setting_) ? DB::select("select a.phone_number as phone,  '" . $value->schema_name . "'||a.sms_id as id, " . " '" . $schema . ": '||a.body || '" . chr(10) . " School Link > https://" . $link . "' as body, a.sent_from from " . $value->schema_name . ".sms a where status = 0 and type <> 1 order by priority DESC limit 30") :
                 DB::select("select a.phone_number as phone,  '" . $value->schema_name . "'||a.sms_id as id, " . " '" . $schema . ": '||a.body || '" . chr(10) . " School Link > https://" . $link . "' as body, a.sent_from from shulesoft.sms a where a.schema_name='" . $value->schema_name . "' AND status = 0 and type <> 1 order by priority DESC limit 30");
 
-        $this->curlServer(['sms' => 1], 'http://api.shulesoft.co/api/pushWhatsapp');
+        $this->pushWhatsappMessageOnly();
+    }
+
+    public function pushWhatsappMessageOnly() {
+        DB::select('refresh materialized view admin.all_sms');
+        DB::select('refresh materialized view admin.all_sms_files');
+        $messages = DB::select("select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_name||': '||a.body || ' \n School Link > https://'||a.schema_name||' .shulesoft.co' as body, 1 as is_old_version, a.schema_name, b.url as file_url from admin.all_sms a left join admin.all_sms_files b on (b.schema_name=a.schema_name and a.sms_content_id=b.sms_content_id) where sent_from = 'whatsapp' and status=0 
+UNION 
+select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_name||':'||a.body || ' . \n  School Link > https://'||a.schema_name||' .shulesoft.africa' as body, 0 as is_old_version, a.schema_name, b.url as file_url from shulesoft.sms a  left join shulesoft.sms_files b on (b.schema_name=a.schema_name and a.sms_content_id=b.sms_content_id) where  sent_from='whatsapp' and status = 0  limit 30");
+        $bot =  new \App\Http\Controllers\Controller();
+
+        if (count($messages) > 0) {
+            foreach ($messages as $message) {
+                $id = (int) $message->id;
+                //send whatsapp message
+                $chat_id = $message->phone;
+
+                if (strlen($message->file_url) > 5) {
+                    $bot->sendMessageFile($chat_id, strtoupper($message->schema_name) . ' Sent File ', $message->schema_name, $message->file_url);
+                } else {
+                    $bot->sendMessage($chat_id, $message->body, $message->schema_name);
+                }
+
+                (int) $message->is_old_version == 1 ? DB::table($message->schema_name . ".sms")->where('sms_id', $id)->update([
+                                    'status' => 1,
+                                    'return_code' => 'pushed to be sent',
+                                    'updated_at' => 'now()'
+                                ]) : DB::table("shulesoft.sms")->where('schema_name', $message->schema_name)->where('sms_id', $id)->update([
+                                    'status' => 1,
+                                    'return_code' => 'pushed to be sent',
+                                    'updated_at' => 'now()'
+                ]);
+            }
+        }
+        echo '>> Whatsapp Messages for other schools sent : Total sent =' . count($messages) . chr(10);
     }
 
     function checkPaymentPattern($user, $schema) {
