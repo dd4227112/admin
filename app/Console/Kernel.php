@@ -427,13 +427,7 @@ class Kernel extends ConsoleKernel {
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
             }
         }
-        echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10);
-
-        //check school whatsapp messages and sent them
-        $messages = empty($setting_) ? DB::select("select a.phone_number as phone,  '" . $value->schema_name . "'||a.sms_id as id, " . " '" . $schema . ": '||a.body || '" . chr(10) . " School Link > https://" . $link . "' as body, a.sent_from from " . $value->schema_name . ".sms a where status = 0 and type <> 1 order by priority DESC limit 30") :
-                DB::select("select a.phone_number as phone,  '" . $value->schema_name . "'||a.sms_id as id, " . " '" . $schema . ": '||a.body || '" . chr(10) . " School Link > https://" . $link . "' as body, a.sent_from from shulesoft.sms a where a.schema_name='" . $value->schema_name . "' AND status = 0 and type <> 1 order by priority DESC limit 30");
-
-        
+        echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10); 
     }
 
     public function pushWhatsappMessageOnly() {
