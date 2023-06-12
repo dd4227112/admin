@@ -459,6 +459,7 @@ select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_
                                     'return_code' => 'pushed to be sent',
                                     'updated_at' => 'now()'
                 ]);
+                 sleep(0.8);
             }
         }
         echo '>> Whatsapp Messages for other schools sent : Total sent =' . count($messages) . chr(10);
