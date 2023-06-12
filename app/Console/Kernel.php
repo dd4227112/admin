@@ -172,6 +172,7 @@ class Kernel extends ConsoleKernel {
             $this->syncInvoice(); //done
             //  $this->syncData();
             $this->whatsappMessage(); // done
+            $this->pushWhatsappMessageOnly(); //done
             (new Message())->sendEmail();
         })->everyMinute();
 
@@ -431,7 +432,7 @@ class Kernel extends ConsoleKernel {
         $messages = empty($setting_) ? DB::select("select a.phone_number as phone,  '" . $value->schema_name . "'||a.sms_id as id, " . " '" . $schema . ": '||a.body || '" . chr(10) . " School Link > https://" . $link . "' as body, a.sent_from from " . $value->schema_name . ".sms a where status = 0 and type <> 1 order by priority DESC limit 30") :
                 DB::select("select a.phone_number as phone,  '" . $value->schema_name . "'||a.sms_id as id, " . " '" . $schema . ": '||a.body || '" . chr(10) . " School Link > https://" . $link . "' as body, a.sent_from from shulesoft.sms a where a.schema_name='" . $value->schema_name . "' AND status = 0 and type <> 1 order by priority DESC limit 30");
 
-        $this->pushWhatsappMessageOnly();
+        
     }
 
     public function pushWhatsappMessageOnly() {
