@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Department_task;
 use Illuminate\Http\Request;
 use DB;
 use Excel;
@@ -422,8 +424,87 @@ public function edit_kpi(){
   }
 
 }
+// OPERATION MANUALS
+  public function manuals(){
+    // get all departments 
+    $data['departments'] = Department::all();
+    $department_id =(int)request('deparment');
+    $page =request('page');
+    if($page){
+      if($page== 'add'){
+        return view('users.manuals.add', $data);
+      }else{
+        return redirect()->back()->with('error', 'Undefined page request');
+      }
+    }
+   if($department_id){
+      //get all data in the selected department
+      $data['department_id'] = $department_id;
+      $data['department_tasks'] = Department_task::where('department_id', $department_id)->get();
+    return  view('users.manuals.index', $data);
+    }
+    else
+    {
+      //get all tasks in all departments
+      $data['department_id'] =null;
+      $data['department_tasks'] = Department_task::all();
+      return  view('users.manuals.index', $data);
+    }
+  }
+  public function addManual(){
+    if($_POST){
+      $data =[
+         'department_id'=>request('department_id'),
+         'name'=>request('name'),
+         'content'=>request('content'),
+         'created_by'=>Auth::User()->id,
+      ];
+      if(Department_task::create($data)){
+        return redirect('report/manuals/')->with(['success'=>'Successs']);
+      }
+      
+    }else{
+      return redirect()->back()->with('error', 'Invalid post data');
 
-  public function save_edit_kpi(){
-    
+    }
+  }
+  public function editManual(){
+    if ($_POST) {
+      $data=[
+        'department_id'=>request('department_id'),
+        'name'=>request('name'),
+        'content'=>request('content'),
+      ];
+      $task_id = request('task_id');
+      if(Department_task::where('id', $task_id)->update($data)){
+        return redirect('report/manuals')->with('success', 'Updated successfully');
+      }      else{
+       return redirect('report/manuals')->with('error', 'Update Failed');
+      }
+    }else{
+      $task_id=request()->segment('3');
+      $data['departments'] = Department::all();
+      $data['task'] = Department_task::where('id', $task_id)->first();
+      if (empty($data['task'])) {
+        return redirect()->back()->with('error', 'No manual with the given ID');
+      }
+      else{
+        return view('users.manuals.edit', $data);
+      }
+    }
+  }
+  public function deleteManual(){
+    $task_id=request()->segment('3');
+    $task_check = Department_task::where('id', $task_id)->first();
+    if (empty($task_check)) {
+      return redirect()->back()->with('error', 'No manual with the given ID');
+    }
+    else{
+      if(Department_task::where('id', $task_id)->delete()){
+        return redirect('report/manuals')->with('success', 'Deleted');
+      }else{
+      return redirect()->back()->with('error', 'Delete failed');
+      }
+    }
   }
 }

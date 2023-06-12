@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
     
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable {
 
     //use \App\Traits\belongsTocompanyFile;
+    use Notifiable;
 
 
     /**
@@ -117,6 +119,9 @@ class User extends Authenticatable {
     }
     public function staffReports() {
         return $this->hasMany(\App\Models\StaffReport::class, 'user_id', 'id');
+    }
+    public function department_task(){
+        return $this->hasMany(\App\Models\Department_task::class, 'id', 'created_by');
     }
 
 }

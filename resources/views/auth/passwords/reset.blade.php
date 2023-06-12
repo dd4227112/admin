@@ -38,98 +38,89 @@
     <body class="fix-menu">
         <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
             <!-- Container-fluid starts -->
-            <div class="container-fluid">
+            <div class="container-fluid" >
                 <div class="row">
-                    <div class="col-sm-12">
+                <div class="col-sm-4"></div>
+                    <div class="col-sm-4" style="background-color:white;border-radius:10px;">
                         <!-- Authentication card start -->
                         <div class="login-card card-block auth-body">
                             <div class="container">
-                                <nav class=" navbar-default ">
-                                    <div class="">
-                                        <div class="top-left-part">
-                                            <!-- Logo -->
-                                            <a class="logo" href="{{url('home')}}">
-
-                                                <span class="hidden-xs">
-                                                    <img src="<?= $root ?>images/ShuleSoft-TM.png"  height="80" alt="home" class="light-logo">
-                                                </span> </a>
-                                        </div>
+                             <div class="card-body" >
+                             <div class="row">
+                                            <div class="col-md-11">
+                                            <div class="text-center">
+                                        <img src="<?= $root ?>/images/shulesoft_logo.png" alt="logo.png" width="70px">
                                     </div>
-                                </nav>
-                                <div class="row">
-                                    <div class="col-md-3"></div>
-                                    <div class="col-md-6">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">Reset Password</div>
-                                            <div class="panel-body">
-                                                @if (session('status'))
-                                                <div class="alert alert-success">
-                                                    {{ session('status') }}
-                                                </div>
-                                                @endif
+                                                <small style="color:black; text-align: center">ShuleSoft Administration Panel</small>
+                                                <h3 style ="font-size:18px;margin-bottom:0px;" class="text-left txt-primary">Setup New Password</h3>
+                                                <hr/>
+                                            </div>
+                                             <hr/>
+                                        </div>
+                                       
+                    <form method="POST" action="{{ route('password.update') }}">
+                        @csrf
 
-                                                <form class="form-horizontal" role="form" method="POST" action="{{ route('password.request') }}">
-                                                    {{ csrf_field() }}
+                        <input type="hidden" name="token" value="{{ $token }}">
 
-                                                    <input type="hidden" name="token" value="{{ $token }}">
+                        <div class="row mb-3">                            
+                            <div class="col-md-10">
+                                <input id="email" style="border-radius:5px;" placeholder="Enter your email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
 
-                                                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                                        <label for="email" class="col-md-4 control-label text-left">E-Mail Address</label>
+                                @error('email')
+                                    <span class="invalid-feedback text-danger" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
 
-                                                        <div class="col-md-6">
-                                                            <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}" required autofocus>
+                        <div class="row mb-3">
+                            <div class="col-md-10">
+                                <input id="password" style="border-radius:5px;" placeholder="New Password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
 
-                                                            @if ($errors->has('email'))
-                                                            <span class="help-block">
-                                                                <strong>{{ $errors->first('email') }}</strong>
-                                                            </span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
+                                @error('password')
+                                    <span class="invalid-feedback text-danger" role="alert" >
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
 
-                                                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                                        <label for="password" class="col-md-4 control-label">Password</label>
+                        <div class="row mb-3">
+                            <div class="col-md-10">
+                                <input id="password-confirm"style="border-radius:5px;" placeholder="Confirm Password" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            </div>
+                        </div>
 
-                                                        <div class="col-md-6">
-                                                            <input id="password" type="password" class="form-control" name="password" required>
-
-                                                            @if ($errors->has('password'))
-                                                            <span class="help-block">
-                                                                <strong>{{ $errors->first('password') }}</strong>
-                                                            </span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                                                        <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-                                                        <div class="col-md-6">
-                                                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-
-                                                            @if ($errors->has('password_confirmation'))
-                                                            <span class="help-block">
-                                                                <strong>{{ $errors->first('password_confirmation') }}</strong>
-                                                            </span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <div class="col-md-6 col-md-offset-4">
-                                                            <button type="submit" class="btn btn-primary">
-                                                                Reset Password
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                        <div class="row mb-12">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Reset Password') }}
+                                </button>
+                                
+                            </div>
+                            
+                        </div>
+                
+                    </form>
+                    
+                    <div class="row">
+                                            <div class="col-md-10">
+                                            <hr/>
+                                                <p class="text-inverse text-left m-b-0">Credentials are only provided by Administrator</p>
+                                                <p class="text-inverse text-left"></p>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <!-- <img src="<?= $root ?>images/shulesoft_logo.png" alt="small-logo.png" width="30" height="30"> -->
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3"></div>
-                                </div>
+                </div>
+                         
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-4"></div>
                 </div>
             </div>
         </section>

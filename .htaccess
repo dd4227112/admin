@@ -1,27 +1,19 @@
+DirectoryIndex index.php index.html
+
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews
-    </IfModule>
 
-    RewriteEngine On
+RewriteEngine On
+# RewriteBase /basepath/
+RewriteCond $1 !^(index\.php|assets|install|update)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 
-    # Redirect Trailing Slashes If Not A Folder...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)/$ /$1 [L,R=301]
+# For godady Shared Hosting Server uncomment the line below
+RewriteRule ^(.*)$ index.php?/$1 [L]
 
-    # Handle Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+# Please comment this if you have uncommented the above
+# RewriteRule ^(.*)$ index.php/$1 [NC,L,QSA]
 
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-    #prevent user to access .env file in url
-     <Files ".env">
-        Order Allow,Deny
-        Deny from all
-    </Files>
 </IfModule>
+
 
