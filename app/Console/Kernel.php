@@ -188,8 +188,8 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
          $schedule->call(function () {
-            $this->sendTodReminder(); //done
-        })->dailyAt('09:58'); // Eq to 06:30 AM 
+            $this->sendBirthdayWish(); //done
+        })->dailyAt('10:10'); // Eq to 13:10 AM 
 
         $schedule->call(function () {
 
