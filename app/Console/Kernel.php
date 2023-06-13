@@ -188,8 +188,8 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
-            //$this->sendBirthdayWish(); //done
-        })->dailyAt('10:48'); // Eq to 06:30 AM 
+            $this->sendBirthdayWish(); //done
+        })->dailyAt('10:55'); // Eq to 06:30 AM 
 
 
         $schedule->call(function () {
@@ -1254,7 +1254,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
         //Remind them in parent experience app as well as a push notification
         DB::statement('refresh materialized view admin.all_sms');
         $push_notification = "insert into admin.push_notifications (phone,schema_name,message) VALUES'
-                . '(Select phone_number, schema_name,body from admin.all_sms where created_at=current_date and lower(body) like '%birthday%' AND phone in (select phone from api.parent_experience_logs where schema_name='noschema') )";
+                . '(Select phone_number, schema_name,body from admin.all_sms where created_at::date=current_date and lower(body) like '%birthday%' AND phone_number in (select phone from api.parent_experience_logs where schema_name='noschema') )";
         DB::statement($push_notification);
     }
 
