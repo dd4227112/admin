@@ -187,9 +187,9 @@ class Kernel extends ConsoleKernel {
             $this->sendTodReminder(); //done
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
-         $schedule->call(function () {
+        $schedule->call(function () {
             $this->sendBirthdayWish(); //done
-        })->dailyAt('10:10'); // Eq to 13:10 AM 
+        })->dailyAt('10:26'); // Eq to 13:10 AM 
 
         $schedule->call(function () {
 
@@ -411,17 +411,31 @@ class Kernel extends ConsoleKernel {
         return json_encode($results);
     }
 
+    public function appendAd($phone) {
+        $message = '';
+        $check = \collect(DB::select("select * from api.parent_experience_logs where admin.whatsapp_phone(phone)='" . $phone . "'"))->first();
+        if (empty($check)) {
+            $message = 'Download Parent Experience App here: '
+                    . 'Android: https://cutt.ly/ssape , '
+                    . 'Iphone: https://cutt.ly/ssipe';
+        }
+        return $message;
+    }
+
     public function whatsappMessage() {
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 29');
         $controller = new \App\Http\Controllers\Controller();
         $total_count = !empty($messages) ? count($messages) : 0;
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
+
+                //Advertise our parent Experience app
+                $add = $this->appendAd($message->phone);
                 if (!empty($message->company_file_id)) {
                     $file = \App\Models\CompanyFile::find($message->company_file_id);
-                    $controller->sendMessageFile($message->phone, $message->message, $file->name, $file->path);
+                    $controller->sendMessageFile($message->phone, $message->message.$add, $file->name, $file->path);
                 } else {
-                    $controller->sendMessage($message->phone, $message->message);
+                    $controller->sendMessage($message->phone, $message->message.$add);
                 }
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
