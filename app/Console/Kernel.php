@@ -187,7 +187,11 @@ class Kernel extends ConsoleKernel {
             $this->sendTodReminder(); //done
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
-     
+        $schedule->call(function () {
+            $this->sendBirthdayWish(); //done
+        })->dailyAt('10:48'); // Eq to 06:30 AM 
+
+
         $schedule->call(function () {
 
             $this->sendBirthdayWish(); // done
@@ -410,7 +414,7 @@ class Kernel extends ConsoleKernel {
 
     public function appendAd($phone) {
         $message = '';
-        $check = \collect(DB::select("select * from api.parent_experience_logs where admin.whatsapp_phone(phone)='" . $phone . "'"))->first();
+        $check = \collect(DB::select("select * from api.parent_experience_logs where admin.whatsapp_phone(phone)='admin.whatsapp_phone(" . $phone . ")'"))->first();
         if (empty($check)) {
             $message = 'Download Parent Experience App here: '
                     . 'Android: https://cutt.ly/ssape , '
@@ -430,9 +434,9 @@ class Kernel extends ConsoleKernel {
                 $add = $this->appendAd($message->phone);
                 if (!empty($message->company_file_id)) {
                     $file = \App\Models\CompanyFile::find($message->company_file_id);
-                    $controller->sendMessageFile($message->phone, $message->message.$add, $file->name, $file->path);
+                    $controller->sendMessageFile($message->phone, $message->message . $add, $file->name, $file->path);
                 } else {
-                    $controller->sendMessage($message->phone, $message->message.$add);
+                    $controller->sendMessage($message->phone, $message->message . $add);
                 }
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 //   echo 'message sent to ' . $message->phone . '' . chr(10);
@@ -458,11 +462,12 @@ select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_
                 $id = (int) $message->id;
                 //send whatsapp message
                 $chat_id = $message->phone;
-
+                $add = $this->appendAd($message->phone);
+                
                 if (strlen($message->file_url) > 5) {
                     $bot->sendMessageFile($chat_id, strtoupper($message->schema_name) . ' Sent File ', $message->schema_name, $message->file_url);
                 } else {
-                    $bot->sendMessage($chat_id, $message->body, $message->schema_name);
+                    $bot->sendMessage($chat_id, $message->body . $add, $message->schema_name);
                 }
 
                 (int) $message->is_old_version == 1 ? DB::table($message->schema_name . ".sms")->where('sms_id', $id)->update([
@@ -1195,12 +1200,12 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
      * Only paid users
      */
     public function sendBirthdayWish() {
-        $schemas = DB::select('select username as schema_name, is_new_version from admin.clients where status=1');
+        $schemas = DB::select('select username as table_schema, is_new_version from admin.clients where status=1');
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'betatwo', 'api', 'admin'))) {
 
                 //Remind parents,class and section teachers to wish their students
-
+                //insert into SMS and send as text message
                 $sql = (int) $schema->is_new_version == 1 ?
                         "insert into shulesoft.sms (schema_name,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
                         . "select '" . $schema->table_schema . "', 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe '|| a.dob ||'. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe '|| a.dob ||', tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from shulesoft.sms_keys where schema_name='" . $schema->table_schema . "' limit 1)  FROM shulesoft.student a join shulesoft.student_parents b on b.student_id=a.student_id JOIN shulesoft.parent c on c.\"parentID\"=b.parent_id WHERE 
@@ -1209,6 +1214,16 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                         . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe '|| a.dob ||'. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe '|| a.dob ||', tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from " . $schema->table_schema . ".sms_keys limit 1)  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1 AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
                 DB::statement($sql);
+
+                //insert to be sent as whatsapp message
+                $sql2 = (int) $schema->is_new_version == 1 ?
+                        "insert into shulesoft.sms (sent_from,schema_name,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
+                        . "select 'whatsapp', '" . $schema->table_schema . "', 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe '|| a.dob ||'. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe '|| a.dob ||', tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from shulesoft.sms_keys where schema_name='" . $schema->table_schema . "' limit 1)  FROM shulesoft.student a join shulesoft.student_parents b on b.student_id=a.student_id JOIN shulesoft.parent c on c.\"parentID\"=b.parent_id WHERE 
+                    schema_name='" . $schema->table_schema . "' and DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1 AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)" :
+                        "insert into {$schema->table_schema}.sms (sent_from,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
+                        . "select 'whatsapp', 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe '|| a.dob ||'. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe '|| a.dob ||', tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from " . $schema->table_schema . ".sms_keys limit 1)  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
+                    DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1 AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
+                DB::statement($sql2);
 
                 //get students with birthday, with their section teacher names
                 //get count total number of students with birthday today and send to admin
@@ -1222,6 +1237,18 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                         . "  a.status=1 and  t.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY"
                         . " teacher_name,phone,classes,section,phone,\"teacherID\"";
                 DB::statement($sql_for_teachers);
+
+                //send to teachers whatsapp as well
+                $sql_for_teachers2 = (int) $schema->is_new_version == 1 ?
+                        "insert into shulesoft.sms (sent_from,schema_name,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
+                        . "SELECT 'whatsapp', '" . $schema->table_schema . "', 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher',(select id from shulesoft.sms_keys where schema_name='" . $schema->table_schema . "' limit 1 ) from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from shulesoft.student a join shulesoft.section c on c.\"sectionID\"=a.\"sectionID\" JOIN shulesoft.teacher t on t.\"teacherID\"=c.\"teacherID\" join shulesoft.classes d on d.\"classesID\"=c.\"classesID\" WHERE"
+                        . "   schema_name='" . $schema->table_schema . "' AND a.status=1 and  t.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY"
+                        . " teacher_name,phone,classes,section,phone,\"teacherID\"" :
+                        "insert into " . $schema->table_schema . ".sms (sent_from,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
+                        . "SELECT 'whatsapp', 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher',(select id from " . $schema->table_schema . ".sms_keys limit 1 ) from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE"
+                        . "  a.status=1 and  t.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY"
+                        . " teacher_name,phone,classes,section,phone,\"teacherID\"";
+                DB::statement($sql_for_teachers2);
             }
         }
         //Remind them in parent experience app as well as a push notification
