@@ -331,9 +331,9 @@ class Controller extends BaseController {
         $this->sendRequest('sendFile', $data);
     }
 
-    public function sendMessage($chatId, $text) {
+    public function sendMessage($chatId, $text, $schema = null) {
         $data = array('chatId' => $chatId, 'body' => $text);
-        $this->sendRequest('message', $data);
+        $this->sendRequest('message', $data, $schema);
     }
 
     public function sendRequest($method, $data, $schema = null) {
@@ -344,7 +344,7 @@ class Controller extends BaseController {
                 $url = $this->token . $method . '?token=' . $this->APIurl;
             }
             if ( $schema == 'michaelmausa') {
-                $api = 'https://eu211.chat-api.com/instance226778/';
+                $api = 'https://api.1msg.io/226778/';
                 $token_ = 'z9y63dtih3n0mfau';
                 $url = $api . $method . '?token=' . $token_;
             }
@@ -354,7 +354,7 @@ class Controller extends BaseController {
                 $url = $api . $method . '?token=' . $token_;
             }
             if ( $schema == 'capricorninstitute') {
-                $api = 'https://api.chat-api.com/instance377666/';
+                $api = 'https://api.1msg.io/377666/';
                 $token_ = 'aumoa17acohddcpa';
                 $url = $api . $method . '?token=' . $token_;
             }
