@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel {
         \App\Console\Commands\StandingOrderRemainder::class,
         \App\Console\Commands\HRContractRemainders::class,
         \App\Console\Commands\DatabaseOptimization::class,
-        \App\Console\Commands\CreateTodayReport::class,
+       // \App\Console\Commands\CreateTodayReport::class,
         \App\Console\Commands\SchoolMonthlyReport::class,
             // \App\Console\Commands\HRLeaveRemainders::class, // Currently disabled
             // \App\Console\Commands\RefreshMaterializedView::class, // Currently disabled
@@ -187,10 +187,6 @@ class Kernel extends ConsoleKernel {
             $this->sendTodReminder(); //done
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
-        $schedule->call(function () {
-            $this->sendBirthdayWish(); //done
-        })->dailyAt('11:24'); // Eq to 06:30 AM 
-
 
         $schedule->call(function () {
 
@@ -225,7 +221,7 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-            (new Customer())->createTodayReport(); //done
+           // (new Customer())->createTodayReport(); //done
         })->dailyAt('14:50'); // Eq to 17:50 h 
 
 
@@ -1253,8 +1249,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
         }
         //Remind them in parent experience app as well as a push notification
         DB::statement('refresh materialized view admin.all_sms');
-        $push_notification = "insert into admin.push_notifications (phone,schema_name,message) VALUES'
-                . '(Select phone_number, schema_name,body from admin.all_sms where created_at::date=current_date and lower(body) like '%birthday%' AND phone_number in (select phone from api.parent_experience_logs where schema_name='noschema') )";
+        $push_notification = "insert into admin.push_notifications (phone,schema_name,message) select phone_number, schema_name,body from admin.all_sms where created_at::date=current_date and lower(body) like '%birthday%' AND phone_number in (select phone from api.parent_experience_logs where schema_name='noschema') ";
         DB::statement($push_notification);
     }
 
