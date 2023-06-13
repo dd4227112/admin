@@ -189,7 +189,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->sendBirthdayWish(); //done
-        })->dailyAt('11:00'); // Eq to 06:30 AM 
+        })->dailyAt('11:24'); // Eq to 06:30 AM 
 
 
         $schedule->call(function () {
@@ -1200,7 +1200,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
      * Only paid users
      */
     public function sendBirthdayWish() {
-        $schemas = DB::select('select username as table_schema, is_new_version from admin.clients where status=1');
+        $schemas = DB::select("select username as table_schema, is_new_version from admin.clients where status=1 and username not in ('mustlead','materdeischool','millenniumkindergarten')");
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'betatwo', 'api', 'admin'))) {
 
