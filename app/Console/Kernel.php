@@ -174,7 +174,7 @@ class Kernel extends ConsoleKernel {
             $this->pushWhatsappMessageOnly(); //done
             $this->whatsappMessage(); // done
 
-            (new Message())->sendEmail();
+            //(new Message())->sendEmail();
         })->everyMinute();
 
         $schedule->call(function () {
@@ -189,7 +189,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->sendBirthdayWish(); //done
-        })->dailyAt('10:55'); // Eq to 06:30 AM 
+        })->dailyAt('11:00'); // Eq to 06:30 AM 
 
 
         $schedule->call(function () {
