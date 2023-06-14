@@ -425,23 +425,21 @@ public function edit_kpi(){
 
 }
 // OPERATION MANUALS
-  public function manuals(){
+  public function manuals(request $request){
     // get all departments 
     $data['departments'] = Department::all();
-    $department_id =(int)request('deparment');
-    $page =request('page');
-    if($page){
-      if($page== 'add'){
-        return view('users.manuals.add', $data);
-      }else{
-        return redirect()->back()->with('error', 'Undefined page request');
+      $page =request()->segment(3);
+      if($page){
+      if($page && $page =='add'){
+          return view('users.manuals.add', $data);
+        }
+      if($page && (int)$page >0){
+        //get all data in the selected department
+        $department_id =(int)$page;
+        $data['department_id'] = $department_id;
+        $data['department_tasks'] = Department_task::where('department_id', $department_id)->get();
+      return  view('users.manuals.index', $data);
       }
-    }
-   if($department_id){
-      //get all data in the selected department
-      $data['department_id'] = $department_id;
-      $data['department_tasks'] = Department_task::where('department_id', $department_id)->get();
-    return  view('users.manuals.index', $data);
     }
     else
     {
