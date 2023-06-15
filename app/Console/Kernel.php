@@ -412,7 +412,7 @@ class Kernel extends ConsoleKernel {
         $message = '';
         $check = \collect(DB::select("select * from api.parent_experience_logs where admin.whatsapp_phone(phone)='admin.whatsapp_phone(" . $phone . ")'"))->first();
         if (empty($check)) {
-            $message = 'Download Parent Experience App here: '
+            $message = ' : Download Parent Experience App here: '
                     . 'Android: https://cutt.ly/ssape , '
                     . 'Iphone: https://cutt.ly/ssipe';
         }
