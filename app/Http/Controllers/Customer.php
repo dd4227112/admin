@@ -1070,7 +1070,7 @@ class Customer extends Controller {
         ];
             $req = \App\Models\Requirement::create($requirement);
             if ((int) request('to_user_id') > 0) {
-                $user = \App\Models\User::find(request('to_user_id'));
+                $user= \App\Models\User::find(request('to_user_id'));
                 $module =DB::table('admin.modules')->where('id',request('module_id'))->first()->name;
                 $new_req = isset($req->school->name) && (int) $req->school_id > 0 ? ' - from ' . $req->school->name . ' on ' . $module : ' - ' . $module;
                 $message = 'Hello ' . $user->name . '<br/>'
@@ -1102,6 +1102,50 @@ class Customer extends Controller {
 
                 $this->send_whatsapp_sms($user->phone, $sms);
                 $this->send_sms($user->phone, $sms, 1);
+            }
+            if (request('notify_to')) {
+                 $users_selected = request('notify_to');
+                foreach ($users_selected as $key=>$value) {
+                    $notify_data =[
+                        'user_id'=>$value,
+                        'task_id'=>$req->id
+                    ];
+                    DB::table('admin.notify_tasks')->insert($notify_data);
+                    $user = User::find($value);
+                    $user_allocated = User::find(request('to_user_id'));
+                    $module =DB::table('admin.modules')->where('id',request('module_id'))->first()->name;
+                    $new_req = isset($req->school->name) && (int) $req->school_id > 0 ? ' - from ' . $req->school->name . ' on ' . $module : ' - ' . $module;
+                    $message = 'Hello ' . $user->name . '<br/>'
+                            . 'There is ' . $new_req . ' allocated to'.$user_allocated->name.' </p>'
+                            . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                            . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
+                    $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+    
+                    $sms = 'Hello ' . $user->name . '.'
+                            . chr(10) . 'There is ' . $new_req . ' allocated to '.$user_allocated->name
+                            . chr(10) . strip_tags($req->note)
+                            . chr(10) . 'By: ' . $req->user->name . '.'
+                            . chr(10) . 'Thanks and regards.';
+    
+                    $url = 'https://www.pivotaltracker.com/services/v5/projects/2553591/stories';
+    
+                    $fields = [
+                        "current_state" => request('current_state'),
+                        "name" => 'Hello ' . $user->name . ' - ' . $new_req,
+                        "estimate" => 1,
+                        "story_type" => request("task_type"),
+                        "requested_by_id" => request('requested_by_id'),
+                        "story_priority" => request('priority'),
+                        "token" => "c3c067a65948d99055ab1ac60891c174",
+                        "description" => Auth::User()->name . ' - ' . strip_tags(request('note'))
+                    ];
+                    $story = new \App\Http\Controllers\General();
+                    $data1 = $story->post($url, $fields);
+    
+                    $this->send_whatsapp_sms($user->phone, $sms);
+                    $this->send_sms($user->phone, $sms, 1);
+                   
+                } 
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest();

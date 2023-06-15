@@ -295,6 +295,20 @@
                                 </div>
                               
                             </div>
+                            <div class="row">
+                            <div class="col-sm-12 col-md-6 m-b-30">
+                                <h4 class="sub-title">Send notification to</h4>
+                                      <select name="notify_to[]" class="form-control select2" multiple required>
+                                        <option value=""></option>
+                                        <?php
+                                        $users = DB::table('admin.users')->where('status', 1)->get();
+                                        foreach ($users as $user) {
+                                          ?>
+                                          <option value="<?= $user->id ?>"><?= $user->firstname." ".$user->middlename." ".$user->lastname ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
                                  <div class="row">
                                       <div class="col-sm-12">
                                       <h4 class="sub-title">Note</h4>

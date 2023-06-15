@@ -31,7 +31,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                       <p align='left'>
-                                        <a class="btn btn-primary btn-mini btn-round" href="<?= url('report/manuals/null?page=add') ?>">Add New Manual</a>
+                                        <a class="btn btn-primary btn-mini btn-round" href="<?= url('report/manuals/add') ?>">Add New Manual</a>
                                       </p>
                                     <br/>
                                 </div>
@@ -40,7 +40,7 @@
                                       <p align='left'>
                                         <label for="guide_type">Departments</label>
                                       <select class="form-control select2" id="department">
-                                      <option  value="all">All</option>
+                                      <option  value="">All</option>
                                          @if(!empty($departments))
                                         @foreach($departments as $key=>$department)
                                                 <option  value="<?=$department->id?>" <?=$department_id ==$department->id?'selected':''?>><?=$department->name?></option>
@@ -137,7 +137,7 @@
     school_selector = function () {
         $('#department').change(function () {
             var val = $(this).val();
-            window.location.href = '<?= url('report/manuals/null?deparment=') ?>' + val;
+            window.location.href = '<?= url('report/manuals') ?>/' + val;
         })
     }
     $(document).ready(school_selector);
