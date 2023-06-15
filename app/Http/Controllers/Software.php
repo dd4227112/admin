@@ -106,10 +106,10 @@ class Software extends Controller {
      * @return type array: list of schemas
      */
     public function loadSchema() {
-         $schema= self::$master_schema;
-         $segment=request()->segment(4);
-         $where=strlen($segment)>3 ? " table_schema='".$schema."' AND ":'';
-          
+        $schema = self::$master_schema;
+        $segment = request()->segment(4);
+        $where = strlen($segment) > 3 ? " table_schema='" . $schema . "' AND " : '';
+
         return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE $where table_schema NOT IN ('pg_catalog','information_schema','app','skysat','dodoso','forum','academy','accounts12','api','admin','academy','insurance','admin2','projects','constant') order by table_schema asc");
         //return DB::select("SELECT distinct schema_name as table_schema from admin.all_student where extract(year from created_at)=2022 offset 143");
     }
@@ -160,7 +160,7 @@ class Software extends Controller {
     }
 
     public function loadTableColumnsBulks() {
-        $schema= self::$master_schema;
+        $schema = self::$master_schema;
         $tables = DB::select("SELECT table_name, column_name,table_schema FROM INFORMATION_SCHEMA.COLUMNS where table_schema='" . $schema . "' ");
         $column_names = array();
         foreach ($tables as $table) {
@@ -273,6 +273,18 @@ class Software extends Controller {
     }
 
     public function upgrade() {
+//        $scripts = DB::select('select table_name, (select string_agg(\'"\'||column_name||\'"\',\',\')'
+//                        . ' from information_schema.columns  where table_name=p.table_name and table_schema=\'canossa\' and column_name not in (\'id\') )'
+//                        . ' as column_ from information_schema.tables p where p.table_schema=\'shulesoft\''
+//                        . ' and p.table_type<>\'VIEW\'');
+//        $sql = '';
+//        foreach ($scripts as $value) {
+//            $sql .= " sql_=format('INSERT into shulesoft.$value->table_name ($value->column_,schema_name)
+//	select $value->column_, ''%I'' from %I.$value->table_name',schema_,schema_)";
+//            $sql .= '; <br/><br/>execute sql_;<br/><br/>' . chr(10) . chr(10) . '';
+//        }
+//        echo $sql;
+//        exit;
         if (request('sql') != '') {
             $this->data['script'] = $this->createUpgradeScript();
         } else {
@@ -827,7 +839,7 @@ class Software extends Controller {
 
         $this->data['headers'] = \collect($projects)->first();
         $this->data['contents'] = $projects;
-        
+
         return view('customer.usage.custom_report', $this->data);
     }
 
@@ -908,17 +920,16 @@ class Software extends Controller {
             $pass = $schema . rand(5697, 33);
             $username = $schema . date('Hi');
 
-           $query1 = DB::select("select * from admin.all_setting where schema_name ='$schema'");
-           $query2 = DB::select("select * from shulesoft.setting where schema_name = '$schema'");
+            $query1 = DB::select("select * from admin.all_setting where schema_name ='$schema'");
+            $query2 = DB::select("select * from shulesoft.setting where schema_name = '$schema'");
 
-           $available_in_admin = \collect($query1)->first();
-           $available_in_shulesoft = \collect($query2)->first();
-            if($available_in_shulesoft){
-            DB::table('shulesoft.setting')->where('schema_name', $schema)->update(['password' => bcrypt($pass), 'username' => $username]);
-            $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name', $schema)->first();
-
+            $available_in_admin = \collect($query1)->first();
+            $available_in_shulesoft = \collect($query2)->first();
+            if ($available_in_shulesoft) {
+                DB::table('shulesoft.setting')->where('schema_name', $schema)->update(['password' => bcrypt($pass), 'username' => $username]);
+                $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name', $schema)->first();
             }
-            if($available_in_admin){
+            if ($available_in_admin) {
                 DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
                 $this->data['school'] = DB::table($schema . '.setting')->first();
             }

@@ -302,7 +302,7 @@ class Controller extends BaseController {
     //@param $chatId [string] [required] - the ID of chat where we send a message
     public function ptt($chatId) {
         $data = array(
-            'audio' => 'https://shulesoft.com/PHP/ptt.ogg',
+            'audio' => 'https://shulesoft.africa/PHP/ptt.ogg',
             'chatId' => $chatId
         );
         $this->sendRequest('sendAudio', $data);
@@ -365,7 +365,7 @@ class Controller extends BaseController {
                     'method' => 'POST',
                     'header' => 'Content-type: application/json',
                     'content' => $data]]);
-            $response = file_get_contents($url, false, $options);
+            $response = @file_get_contents($url, false, $options);
             //$response = $this->curlServer($body, $url);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
             // echo $response;
