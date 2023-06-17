@@ -140,12 +140,12 @@ sql_=format('INSERT into shulesoft.student_other ("admitted_from","reg_number","
 
 execute sql_;
 --33. exam special case
-sql_=format('INSERT into shulesoft.exam_special_cases ("student_id","exam_id","description","special_exam_reason_id","created_by","created_by_table","created_at","updated_at","subjects_excluded","subjects_ids_excluded","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"description","special_exam_reason_id","created_by","created_by_table","created_at","updated_at","subjects_excluded","subjects_ids_excluded","uuid", ''%I'' from %I.exam_special_cases a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.exam_special_cases ("student_id","exam_id","description","special_exam_reason_id","created_by","created_by_table","created_at","updated_at","subjects_excluded","subjects_ids_excluded","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"description","special_exam_reason_id",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","subjects_excluded","subjects_ids_excluded","uuid", ''%I'' from %I.exam_special_cases a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 
 --34. insert user
-sql_=format('INSERT into shulesoft.user ("name","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","signature","signature_path","role_id","salary","id_number","default_password","status","status_id","bank_account_number","bank_name","remember_token","number","sid","location","education_level_id","employment_type_id","physical_condition_id","health_status_id","health_insurance_id","religion_id","town","national_id","country_id","qualification","email_valid","payroll_status","fcm_token","updated_at","uuid",schema_name) select "name","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","signature","signature_path",(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.roll_id)),"salary","id_number","default_password","status","status_id","bank_account_number","bank_name","remember_token","number","sid","location","education_level_id","employment_type_id","physical_condition_id","health_status_id","health_insurance_id","religion_id","town","national_id","country_id","qualification","email_valid","payroll_status","fcm_token","updated_at","uuid", ''%I'' from %I.user a',schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.user ("name","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","signature","signature_path","role_id","salary","id_number","default_password","status","status_id","bank_account_number","bank_name","remember_token","number","sid","location","education_level_id","employment_type_id","physical_condition_id","health_status_id","health_insurance_id","religion_id","town","national_id","country_id","qualification","email_valid","payroll_status","fcm_token","updated_at","uuid",schema_name) select "name","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","signature","signature_path",(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"salary","id_number","default_password","status","status_id","bank_account_number","bank_name","remember_token","number","sid","location","education_level_id","employment_type_id","physical_condition_id","health_status_id","health_insurance_id","religion_id","town","national_id","country_id","qualification","email_valid","payroll_status","fcm_token","updated_at","uuid", ''%I'' from %I.user a',schema_,schema_,schema_);
 
 execute sql_;
 --35. insert emails
@@ -174,11 +174,11 @@ sql_=format('INSERT into shulesoft.student_status ("reason","created_at","is_rep
 
 execute sql_;
 --41. user roles
-sql_=format('INSERT into shulesoft.user_role ("user_id","role_id","created_at","updated_at","table","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.roll_id)),"created_at","updated_at","table","uuid", ''%I'' from %I.user_role a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.user_role ("user_id","role_id","created_at","updated_at","table","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"created_at","updated_at","table","uuid", ''%I'' from %I.user_role a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --42. reminders
-sql_=format('INSERT into shulesoft.reminders ("user_id","role_id","date","time","mailandsmstemplate_id","title","is_repeated","days","created_at","updated_at","message","type","category","student_id","last_schedule_date","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.roll_id)),"date","time","mailandsmstemplate_id","title","is_repeated","days","created_at","updated_at","message","type","category",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"last_schedule_date","uuid", ''%I'' from %I.reminders a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.reminders ("user_id","role_id","date","time","mailandsmstemplate_id","title","is_repeated","days","created_at","updated_at","message","type","category","student_id","last_schedule_date","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"date","time","mailandsmstemplate_id","title","is_repeated","days","created_at","updated_at","message","type","category",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"last_schedule_date","uuid", ''%I'' from %I.reminders a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --43. file folder
@@ -228,7 +228,7 @@ sql_=format('INSERT into shulesoft.login_locations ("ip","city","region","countr
 execute sql_;
 
 --55. tempfiles
-sql_=format('INSERT into shulesoft.tempfiles ("data","filename","created_at","updated_at","method","controller","created_by","created_by_table","processed","status","uuid",schema_name) select "data","filename","created_at","updated_at","method","controller","created_by","created_by_table","processed","status","uuid", ''%I'' from %I.tempfiles',schema_,schema_);
+sql_=format('INSERT into shulesoft.tempfiles ("data","filename","created_at","updated_at","method","controller","created_by","created_by_table","processed","status","uuid",schema_name) select "data","filename","created_at","updated_at","method","controller",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","processed","status","uuid", ''%I'' from %I.tempfiles',schema_,schema_);
 
 execute sql_;
 --59. sms templates
@@ -260,7 +260,7 @@ sql_=format('INSERT into shulesoft.subject_student ("subject_id","student_id","c
 
 execute sql_;
 --66. subject mark
-sql_=format('INSERT into shulesoft.subject_mark ("grade_mark","effort_mark","achievement_mark","student_id","subjectID","classesID","academic_year_id","examID","created_at","updated_at","sectionID","year","exam","subject","status","uuid",schema_name) select "grade_mark","effort_mark","achievement_mark",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),"created_at","updated_at",(select "sectionID" from shulesoft.section where uuid=(select uuid from %I.section where "sectionID"=a."sectionID")),"year","exam","subject","status","uuid", ''%I'' from %I.subject_mark',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.subject_mark ("grade_mark","effort_mark","achievement_mark","student_id","subjectID","classesID","academic_year_id","examID","created_at","updated_at",(select "sectionID" from shulesoft.section where uuid=(select uuid from %I.section where "sectionID"=a."sectionID")),"year","exam","subject","status","uuid",schema_name) select "grade_mark","effort_mark","achievement_mark",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),"created_at","updated_at",(select "sectionID" from shulesoft.section where uuid=(select uuid from %I.section where "sectionID"=a."sectionID")),"year","exam","subject","status","uuid", ''%I'' from %I.subject_mark',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --67. subject topic
@@ -280,430 +280,504 @@ sql_=format('INSERT into shulesoft.duties ("start_date","end_date","name","creat
 
 execute sql_;
 --71. duty reports
-sql_=format('INSERT into shulesoft.duty_reports ("date","transport","feed","special_event","tod_comment","headteacher_comment","created_at","updated_at","created_by","created_by_table","duty_id","uuid",schema_name) select "date","transport","feed","special_event","tod_comment","headteacher_comment","created_at","updated_at","created_by","created_by_table",(select id from shulesoft.duties where uuid=(select uuid from %I.duties where id=a.duty_id)),"uuid", ''%I'' from %I.duty_reports',schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.duty_reports ("date","transport","feed","special_event","tod_comment","headteacher_comment","created_at","updated_at","created_by","created_by_table","duty_id","uuid",schema_name) select "date","transport","feed","special_event","tod_comment","headteacher_comment","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table",(select id from shulesoft.duties where uuid=(select uuid from %I.duties where id=a.duty_id)),"uuid", ''%I'' from %I.duty_reports',schema_,schema_,schema_);
+
+execute sql_;
+--72. youtube access tokens
+sql_=format('INSERT into shulesoft.youtube_access_tokens ("access_token","created_at","updated_at","uuid",schema_name) select "access_token","created_at","updated_at","uuid", ''%I'' from %I.youtube_access_tokens',schema_,schema_);
+
+execute sql_;
+--73. syllabus topics
+sql_=format('INSERT into shulesoft.syllabus_topics ("code","title","subject_id","start_date","end_date","created_at","updated_at","uuid",schema_name) select "code","title",(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subject_id")),"start_date","end_date","created_at","updated_at","uuid", ''%I'' from %I.syllabus_topics a',schema_,schema_,schema_);
+
+execute sql_;
+--74. forum questions
+sql_=format('INSERT into shulesoft.forum_questions ("syllabus_topic_id","title","question","created_by","created_by_table","created_at","updated_at","status","uuid",schema_name) select (select "id" from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where "id"=a."syllabus_topic_id")),"title","question",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","status","uuid", ''%I'' from %I.forum_questions a',schema_,schema_,schema_schema_);
+
+execute sql_;
+--75. forum questions viewers
+sql_=format('INSERT into shulesoft.forum_question_viewers ("forum_question_id","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.forum_questions where uuid=(select uuid from %I.forum_questions where "id"=a."forum_question_id")),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_question_viewers a',schema_,schema_,schema_schema_);
+
+execute sql_;
+--76. log table
+sql_=format('INSERT into shulesoft.log ("url","user_agent","platform","platform_name","source","created_at","updated_at","user","user_id","country","city","region","isp","table","controller","method","is_ajax","request","uuid",schema_name) select "url","user_agent","platform","platform_name","source","created_at","updated_at","user",(select "id" from shulesoft.userd where uuid in (select uuid from %I.users where "id"=a."user_id")),"country","city","region","isp","table","controller","method","is_ajax","request","uuid", ''%I'' from %I.log a',schema_,schema_,schema_);
+
+execute sql_;
+--77. minor exams
+sql_=format('INSERT into shulesoft.minor_exams ("subject_id","exam_group_id","date","note","created_by","created_by_table","created_at","updated_at","total_question","publish_exam","publish_result","syllabus_topic_id","total_time","uuid",schema_name) select (select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subject_id")),(select "id" from shulesoft.exam_groups where uuid=(select uuid from %I.exam_groups where "id"=a."exam_group_id")),"date","note",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","total_question","publish_exam","publish_result",(select "id" from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where "id"=a."syllabus_topic_id")),"total_time","uuid", ''%I'' from %I.minor_exams a',schema_,schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+--78. minor exams marks
+sql_=format('INSERT into shulesoft.minor_exam_marks ("minor_exam_id","student_id","mark","academic_year_id","status","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.minor_exams where uuid=(select uuid from %I.minor_exams where "id"=a."minor_exam_id")),(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"mark",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"status",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.minor_exam_marks a',schema_,schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+--79. questions
+sql_=format('INSERT into shulesoft.questions ("minor_exam_id","question","weight","created_at","updated_at","attach","type","uuid",schema_name) select (select "id" from shulesoft.minor_exams where uuid=(select uuid from %I.minor_exams where "id"=a."minor_exam_id")),"question","weight","created_at","updated_at","attach","type","uuid", ''%I'' from %I.questions a',schema_,schema_,schema_);
+
+execute sql_;
+--80. valid answers
+sql_=format('INSERT into shulesoft.valid_answers ("question_id","answer","status","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.questions where uuid=(select uuid from %I.questions where "id"=a."question_id")),"answer","status","created_at","updated_at","uuid", ''%I'' from %I.valid_answers a',schema_,schema_,schema_);
+
+execute sql_;
+--81. exam comments
+sql_=format('INSERT into shulesoft.exam_comments ("body","student_id","exam_report_id","created_at","updated_at","user_id","name","academic_year_id","status","user_table","uuid",schema_name) select "body",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)), (select "id" from shulesoft.exam_report where uuid=(select uuid from %I.exam_report where "id"=a."exam_report_id")),"created_at","updated_at",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"name",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"status","user_table","uuid", ''%I'' from %I.exam_comments a',schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.syllabus_objectives ("syllabus_subtopic_id","objective","activities","resources","assessment_criteria","remarks","periods","created_at","updated_at","uuid",schema_name) select "syllabus_subtopic_id","objective","activities","resources","assessment_criteria","remarks","periods","created_at","updated_at","uuid", ''%I'' from %I.syllabus_objectives',schema_,schema_);
+--82. sponsors
+sql_=format('INSERT into shulesoft.sponsors ("name","location_address","phone_no","email","created_at","uuid",schema_name) select "name","location_address","phone_no","email","created_at","uuid", ''%I'' from %I.sponsors',schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.syllabus_student_benchmarking ("student_id","syllabus_benchmark_id","syllabus_objective_id","created_by_id","created_by_table","created_at","updated_at","semester_id","syllabus_topic_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"syllabus_benchmark_id","syllabus_objective_id","created_by_id","created_by_table","created_at","updated_at","semester_id","syllabus_topic_id","uuid", ''%I'' from %I.syllabus_student_benchmarking',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.syllabus_subtopics ("syllabus_topic_id","code","subtitle","start_date","end_date","created_at","updated_at","uuid",schema_name) select "syllabus_topic_id","code","subtitle","start_date","end_date","created_at","updated_at","uuid", ''%I'' from %I.syllabus_subtopics',schema_,schema_);
+--83. student sponsors
+sql_=format('INSERT into shulesoft.student_sponsors ("student_id","sponsor_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select student_id from shulesoft.sponsors where uuid=(select uuid from %I.sponsors where id=a.sponsor_id)),"uuid", ''%I'' from %I.student_sponsors a',schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.syllabus_topics ("code","title","subject_id","start_date","end_date","created_at","updated_at","uuid",schema_name) select "code","title","subject_id","start_date","end_date","created_at","updated_at","uuid", ''%I'' from %I.syllabus_topics',schema_,schema_);
+--84. special promotion
+sql_=format('INSERT into shulesoft.special_promotion ("student_id","from_academic_year_id","to_academic_year_id","pass_mark","remark","created_at","updated_at","status","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.from_academic_year_id)),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.to_academic_year_id)),"pass_mark","remark","created_at","updated_at","status","uuid", ''%I'' from %I.special_promotion a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
+--85. characters
+sql_=format('INSERT into shulesoft.characters ("code","description","created_by","created_by_id","created_at","updated_at","character_category_id","position","uuid",schema_name) select "code","description",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_id","created_at","updated_at","character_category_id","position","uuid", ''%I'' from %I.characters a',schema_,schema_,schema_);
+
+execute sql_;
+--86. student duties
+sql_=format('INSERT into shulesoft.student_duties ("duty_id","student_id","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.duties where uuid=(select uuid from %I.duties where id=a.duty_id)),(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"created_at","updated_at","uuid", ''%I'' from %I.student_duties a',schema_,schema_,schema_, schema_);
+
+execute sql_;
+--87. application
+sql_=format('INSERT into shulesoft.application ("student_id","apply_for","created_at","created_by","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"apply_for","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"uuid", ''%I'' from %I.application a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--88. student characters
+sql_=format('INSERT into shulesoft.student_characters ("student_id","semester_id","character_id","teacher_id","grade1","grade2","remark","created_at","updated_at","classes_id","status","grade3","grade4","grade5","grade","exam_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.semester where uuid=(select uuid from %I.semester where id=a.semester_id)),(select id from shulesoft.characters where uuid=(select uuid from %I.characters where id=a.character_id)),(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"grade1","grade2","remark","created_at","updated_at",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classes_id")),"status","grade3","grade4","grade5","grade",(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"uuid", ''%I'' from %I.student_characters a',schema_,schema_,schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+--89. syllabus sub topics
+sql_=format('INSERT into shulesoft.syllabus_subtopics ("syllabus_topic_id","code","subtitle","start_date","end_date","created_at","updated_at","uuid",schema_name) select(select id from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where id=a.syllabus_topic_id)),"code","subtitle","start_date","end_date","created_at","updated_at","uuid", ''%I'' from %I.syllabus_subtopics a',schema_,schema_,schema_);
+
+execute sql_;
+--90. syllabus objectives
+sql_=format('INSERT into shulesoft.syllabus_objectives ("syllabus_subtopic_id","objective","activities","resources","assessment_criteria","remarks","periods","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.syllabus_subtopics where uuid=(select uuid from %I.syllabus_subtopics where id=a.syllabus_subtopic_id)),"objective","activities","resources","assessment_criteria","remarks","periods","created_at","updated_at","uuid", ''%I'' from %I.syllabus_objectives a',schema_,schema_,schema_);
+
+execute sql_;
+--91. syllabus benchmarks
 sql_=format('INSERT into shulesoft.syllabus_benchmarks ("grade_remark","grade","description","points","created_at","updated_at","uuid",schema_name) select "grade_remark","grade","description","points","created_at","updated_at","uuid", ''%I'' from %I.syllabus_benchmarks',schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.syllabus_objective_references ("syllabus_objective_id","book_id","page_description","reference_type","created_by_id","created_by_table","created_at","updated_at","uuid",schema_name) select "syllabus_objective_id","book_id","page_description","reference_type","created_by_id","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.syllabus_objective_references',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.syllabus_subtopics_teachers ("syllabus_subtopic_id","teacher_id","year","created_at","updated_at","uuid",schema_name) select "syllabus_subtopic_id",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"year","created_at","updated_at","uuid", ''%I'' from %I.syllabus_subtopics_teachers',schema_,schema_);
+--92. syllabus student benchmarking
+sql_=format('INSERT into shulesoft.syllabus_student_benchmarking ("student_id","syllabus_benchmark_id","syllabus_objective_id","created_by_id","created_by_table","created_at","updated_at","semester_id","syllabus_topic_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.syllabus_benchmarks where uuid=(select uuid from %I.syllabus_benchmarks where id=a.syllabus_benchmark_id)), (select id from shulesoft.syllabus_objectives where uuid=(select uuid from %I.syllabus_objectives where id=a.syllabus_objective_id)),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by_id")),"created_by_table","created_at","updated_at",(select id from shulesoft.semester where uuid=(select uuid from %I.semester where id=a.semester_id)),(select id from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where id=a.syllabus_topic_id)),"uuid", ''%I'' from %I.syllabus_student_benchmarking a',schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.lesson_plan ("syllabus_objective_id","stage_position","stage_name","activity","time_taken","resource","teacher_id","created_by_id","created_by_table","created_at","updated_at","uuid",schema_name) select "syllabus_objective_id","stage_position","stage_name","activity","time_taken","resource",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"created_by_id","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.lesson_plan',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.teacher_duties ("duty_id","teacher_id","created_at","updated_at","uuid",schema_name) select "duty_id",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"created_at","updated_at","uuid", ''%I'' from %I.teacher_duties',schema_,schema_);
+--93. syllabus objective reference
+sql_=format('INSERT into shulesoft.syllabus_objective_references ("syllabus_objective_id","book_id","page_description","reference_type","created_by_id","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.syllabus_objectives where uuid=(select uuid from %I.syllabus_objectives where id=a.syllabus_objective_id)),(select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id))","page_description","reference_type",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by_id")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.syllabus_objective_references a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.media_comment_reply ("user_id","table","comment","comment_id","created_at","updated_at","opened","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","comment","comment_id","created_at","updated_at","opened","uuid", ''%I'' from %I.media_comment_reply',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.media_comments ("media_id","comment","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "media_id","comment","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.media_comments',schema_,schema_);
+--94 syllabus subtopics teachers
+sql_=format('INSERT into shulesoft.syllabus_subtopics_teachers ("syllabus_subtopic_id","teacher_id","year","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.syllabus_subtopics where uuid=(select uuid from %I.syllabus_subtopics where id=a.syllabus_subtopic_id)),(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"year","created_at","updated_at","uuid", ''%I'' from %I.syllabus_subtopics_teachers a',schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-
-
-sql_=format('INSERT into shulesoft.assignment_downloads ("assignment_id","counter","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "assignment_id","counter","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.assignment_downloads',schema_,schema_);
+--95. lesson plan
+sql_=format('INSERT into shulesoft.lesson_plan ("syllabus_objective_id","stage_position","stage_name","activity","time_taken","resource","teacher_id","created_by_id","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.syllabus_objectives where uuid=(select uuid from %I.syllabus_objectives where id=a.syllabus_objective_id)),"stage_position","stage_name","activity","time_taken","resource",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by_id")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.lesson_plan a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.media ("mediaID","userID","usertype","mcategoryID","file_name","file_name_display","created_at","table","class","name","uuid",schema_name) select "mediaID",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"usertype","mcategoryID","file_name","file_name_display","created_at","table","class","name","uuid", ''%I'' from %I.media',schema_,schema_);
+--96. teacher duties
+sql_=format('INSERT into shulesoft.teacher_duties ("duty_id","teacher_id","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.duties where uuid=(select uuid from %I.duties where id=a.duty_id)),(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"created_at","updated_at","uuid", ''%I'' from %I.teacher_duties a',schema_,schema_,schema_,schema_);
 
 execute sql_;
-
+--97. media category
 sql_=format('INSERT into shulesoft.media_category ("folder_name","create_time","created_at","uuid",schema_name) select "folder_name","create_time","created_at","uuid", ''%I'' from %I.media_category',schema_,schema_);
 
 execute sql_;
+--98. media table
+sql_=format('INSERT into shulesoft.media ("userID","usertype","mcategoryID","file_name","file_name_display","created_at","table","class","name","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"usertype",(select id from shulesoft.media_category where uuid=(select uuid from %I.media_category where id=a."mcategoryID")),"file_name","file_name_display","created_at","table","class","name","uuid", ''%I'' from %I.media a',schema_,schema_,schema_,schema_);
 
-
-
-sql_=format('INSERT into shulesoft.media_likes ("media_id","created_by","created_by_table","created_at","updated_at","type","uuid",schema_name) select "media_id","created_by","created_by_table","created_at","updated_at","type","uuid", ''%I'' from %I.media_likes',schema_,schema_);
+execute sql_;
+--99. media option
+sql_=format('INSERT into shulesoft.medias ("created_by","size","media_category_id","title","description","created_at","created_by_table","url","name","syllabus_topic_id","updated_at","status","syllabus_subtopic_id","media_link","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"size",(select id from shulesoft.media_category where uuid=(select uuid from %I.media_category where id=a."media_category_id")),"title","description","created_at","created_by_table","url","name",(select id from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where id=a."syllabus_topic_id")),"updated_at","status",(select id from shulesoft.syllabus_subtopics where uuid=(select uuid from %I.syllabus_subtopics where id=a."syllabus_subtopic_id")),"media_link","uuid", ''%I'' from %I.medias a',schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.media_live ("media_id","start_time","streaming_url","created_at","updated_at","end_time","source","date","uuid",schema_name) select "media_id","start_time","streaming_url","created_at","updated_at","end_time","source","date","uuid", ''%I'' from %I.media_live',schema_,schema_);
+--100. media comments
+sql_=format('INSERT into shulesoft.media_comments ("media_id","comment","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.medias where uuid=(select uuid from %I.medias where id=a.media_id)),"comment",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.media_comments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--101. media comment reply
+sql_=format('INSERT into shulesoft.media_comment_reply ("user_id","table","comment","comment_id","created_at","updated_at","opened","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."user_id")),"table","comment",(select id from shulesoft.media_comments where uuid=(select uuid from %I.media_comments where id=a.comment_id)),"created_at","updated_at","opened","uuid", ''%I'' from %I.media_comment_reply a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.media_live_comments ("media_live_id","comment","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "media_live_id","comment","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.media_live_comments',schema_,schema_);
+--102. assignement downloads
 
-execute sql_;
-
-sql_=format('INSERT into shulesoft.media_viewers ("media_id","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "media_id","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.media_viewers',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.medias ("created_by","size","media_category_id","title","description","created_at","created_by_table","url","name","syllabus_topic_id","updated_at","status","syllabus_subtopic_id","media_link","uuid",schema_name) select "created_by","size","media_category_id","title","description","created_at","created_by_table","url","name","syllabus_topic_id","updated_at","status","syllabus_subtopic_id","media_link","uuid", ''%I'' from %I.medias',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.minor_exams ("subject_id","exam_group_id","date","note","created_by","created_by_table","created_at","updated_at","total_question","publish_exam","publish_result","syllabus_topic_id","total_time","uuid",schema_name) select "subject_id","exam_group_id","date","note","created_by","created_by_table","created_at","updated_at","total_question","publish_exam","publish_result","syllabus_topic_id","total_time","uuid", ''%I'' from %I.minor_exams',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.necta ("name","class_level_id","url","year","regional_position","national_position","candidate_type","centre_gpa","created_at","updated_at","created_by_id","created_by_user_table","uuid",schema_name) select "name","class_level_id","url","year","regional_position","national_position","candidate_type","centre_gpa","created_at","updated_at","created_by_id","created_by_user_table","uuid", ''%I'' from %I.necta',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.page_tips_viewers ("user_id","table","page_tip_id","created_at","updated_at","is_helpful","not_helpful_comment","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","page_tip_id","created_at","updated_at","is_helpful","not_helpful_comment","uuid", ''%I'' from %I.page_tips_viewers',schema_,schema_);
+sql_=format('INSERT into shulesoft.assignments ("subject_id","note","created_at","updated_at","title","attach","attach_file_name","due_date","exam_group_id","uuid",schema_name) select (select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subject_id")),"note","created_at","updated_at","title","attach","attach_file_name","due_date",(select id from shulesoft.exam_groups where uuid=(select uuid from %I.exam_groups where id=a.exam_group_id)),"uuid", ''%I'' from %I.assignments a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 
 
-sql_=format('INSERT into shulesoft.file_share ("classesID","public","file_or_folder","item_id","created_at","uuid",schema_name) select (select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID"))"public","file_or_folder","item_id","created_at","uuid", ''%I'' from %I.file_share',schema_,schema_);
+sql_=format('INSERT into shulesoft.assignment_downloads ("assignment_id","counter","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.assignments where uuid=(select uuid from %I.assignments where id=a.assignment_id)),"counter",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.assignment_downloads a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--103. media likes
+sql_=format('INSERT into shulesoft.media_likes ("media_id","created_by","created_by_table","created_at","updated_at","type","uuid",schema_name) select (select id from shulesoft.medias where uuid=(select uuid from %I.medias where id=a.media_id)),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","type","uuid", ''%I'' from %I.media_likes a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--104. media live
+sql_=format('INSERT into shulesoft.media_live ("media_id","start_time","streaming_url","created_at","updated_at","end_time","source","date","uuid",schema_name) select (select id from shulesoft.medias where uuid=(select uuid from %I.medias where id=a.media_id)),"start_time","streaming_url","created_at","updated_at","end_time","source","date","uuid", ''%I'' from %I.media_live a',schema_,schema_,schema_);
+
+execute sql_;
+--105. media live comments
+sql_=format('INSERT into shulesoft.media_live_comments ("media_live_id","comment","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.media_live where uuid=(select uuid from %I.media_live where id=a.media_live_id)),"comment",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.media_live_comments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--106. media viewers
+sql_=format('INSERT into shulesoft.media_viewers ("media_id","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.medias where uuid=(select uuid from %I.medias where id=a.media_id)),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.media_viewers a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--107.necta
+sql_=format('INSERT into shulesoft.necta ("name","class_level_id","url","year","regional_position","national_position","candidate_type","centre_gpa","created_at","updated_at","created_by_id","created_by_user_table","uuid",schema_name) select "name",(select classlevel_id from shulesoft.classlevel where uuid=(select uuid from %I.classlevel where classlevel_id=a.class_level_id)),"url","year","regional_position","national_position","candidate_type","centre_gpa","created_at","updated_at","created_by_id","created_by_user_table","uuid", ''%I'' from %I.necta a',schema_,schema_,schema_);
+
+execute sql_;
+--108. page tips
+sql_=format('INSERT into shulesoft.page_tips_viewers ("user_id","table","page_tip_id","created_at","updated_at","is_helpful","not_helpful_comment","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."user_id")),"table","page_tip_id","created_at","updated_at","is_helpful","not_helpful_comment","uuid", ''%I'' from %I.page_tips_viewers a',schema_,schema_,schema_);
+
+execute sql_;
+--109. files share
+sql_=format('INSERT into shulesoft.file_share ("classesID","public","file_or_folder","item_id","created_at","uuid",schema_name) select (select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),"public","file_or_folder","item_id","created_at","uuid", ''%I'' from %I.file_share a',schema_,schema_,schema_);
+
+execute sql_;
+--110. forum categories
+sql_=format('INSERT into shulesoft.forum_categories ("parent_id","class_id","order","name","color","slug","created_at","updated_at","uuid",schema_name) select (select "parentID" from shulesoft.parent where uuid=(select uuid from %I.parent where "parentID"=a."parent_id")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"order","name","color","slug","created_at","updated_at","uuid", ''%I'' from %I.forum_categories a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--111. forum discussion
+sql_=format('INSERT into shulesoft.forum_discussion ("forum_category_id","title","user_table","user_id","sticky","views","answered","created_at","updated_at","slug","color","deleted_at","last_reply_at","uuid",schema_name) select (select "id" from shulesoft.forum_categories where uuid=(select uuid from %I.forum_categories where "id"=a."forum_category_id")),"title","user_table",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"sticky","views","answered","created_at","updated_at","slug","color","deleted_at","last_reply_at","uuid", ''%I'' from %I.forum_discussion a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--112. forum user discussions
+sql_=format('INSERT into shulesoft.forum_user_discussion ("user_id","user_table","discussion_id","uuid",schema_name) select (select "id" from shulesoft.userd where uuid in (select uuid from %I.users where "id"=a."user_id")),"user_table",(select id from shulesoft.forum_discussion where uuid=(select uuid from %I.forum_discussion where id=a.discussion_id)),"uuid", ''%I'' from %I.forum_user_discussion a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.current_assets2 ("amount","date","from_refer_expense_id","to_refer_expense_id","payer_name","usertype","uname","created_by","userID","note","recipient","transaction_id","voucher_no","uuid",schema_name) select "amount","date",(select "id" from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where "id"=a."from_refer_expense_id")),"to_refer_expense_id","payer_name","usertype","uname","created_by",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"note","recipient","transaction_id","voucher_no","uuid", ''%I'' from %I.current_assets2',schema_,schema_);
+--113. posts
+sql_=format('INSERT into shulesoft.forum_post ("forum_discussion_id","user_id","user_table","body","created_at","updated_at","markdown","locked","deleted_at","uuid",schema_name) select (select id from shulesoft.forum_discussion where uuid=(select uuid from %I.forum_discussion where id=a.forum_discussion_id)),(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_table","body","created_at","updated_at","markdown","locked","deleted_at","uuid", ''%I'' from %I.forum_post',schema_,schema_);
+
+execute sql_;
+--114. forum answers
+sql_=format('INSERT into shulesoft.forum_answers ("forum_question_id","answer","created_by","created_by_table","created_at","updated_at","is_correct","teacher_id","uuid",schema_name) select (select "id" from shulesoft.forum_questions where uuid=(select uuid from %I.forum_questions where "id"=a."forum_question_id")),"answer",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","is_correct",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"uuid", ''%I'' from %I.forum_answers a',schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+--115. answer votes
+sql_=format('INSERT into shulesoft.forum_answer_votes ("forum_answer_id","vote_type","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.forum_answers where uuid=(select uuid from %I.forum_answers where "id"=a."forum_answer_id")),"vote_type",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_answer_votes a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.discount (,schema_name) select , ''%I'' from %I.discount',schema_,schema_);
+--116. forum question commnets
+sql_=format('INSERT into shulesoft.forum_questions_comments ("forum_question_id","content","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select(select "id" from shulesoft.forum_questions where uuid=(select uuid from %I.forum_questions where "id"=a."forum_question_id")),"content",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_questions_comments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--117 forum question votes
+sql_=format('INSERT into shulesoft.forum_questions_votes ("forum_question_answer_id","vote_type","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.forum_answers where uuid=(select uuid from %I.forum_answers where "id"=a."forum_question_answer_id")),"vote_type",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_questions_votes a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-
-
-
-sql_=format('INSERT into shulesoft.exchange_rates ("from_currency","to_currency","rate","note","created_at","updated_at","created_by_id","created_by_table","status","uuid",schema_name) select "from_currency","to_currency","rate","note","created_at","updated_at","created_by_id","created_by_table","status","uuid", ''%I'' from %I.exchange_rates',schema_,schema_);
+--118
+sql_=format('INSERT into shulesoft.mailandsms ("users","type","message","create_date","year","created_at","uuid",schema_name) select "users","type","message","create_date","year","created_at","uuid", ''%I'' from %I.mailandsms',schema_,schema_);
 
 execute sql_;
-sql_=format('INSERT into shulesoft.forum_user_discussion ("user_id","user_table","discussion_id","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_table","discussion_id","uuid", ''%I'' from %I.forum_user_discussion',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.forum_categories ("parent_id","class_id","order","name","color","slug","created_at","updated_at","uuid",schema_name) select "parent_id",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"order","name","color","slug","created_at","updated_at","uuid", ''%I'' from %I.forum_categories',schema_,schema_);
+--119
+sql_=format('INSERT into shulesoft.media_share ("classesID","public","file_or_folder","item_id","create_time","created_at","uuid",schema_name) select (select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),"public","file_or_folder","item_id","create_time","created_at","uuid", ''%I'' from %I.media_share a',schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.forum_discussion ("forum_category_id","title","user_table","user_id","sticky","views","answered","created_at","updated_at","slug","color","deleted_at","last_reply_at","uuid",schema_name) select "forum_category_id","title","user_table",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"sticky","views","answered","created_at","updated_at","slug","color","deleted_at","last_reply_at","uuid", ''%I'' from %I.forum_discussion',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.forum_post ("forum_discussion_id","user_id","user_table","body","created_at","updated_at","markdown","locked","deleted_at","uuid",schema_name) select "forum_discussion_id",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_table","body","created_at","updated_at","markdown","locked","deleted_at","uuid", ''%I'' from %I.forum_post',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.forum_answer_votes ("forum_answer_id","vote_type","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "forum_answer_id","vote_type","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_answer_votes',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.forum_questions_comments ("forum_question_id","content","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "forum_question_id","content","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_questions_comments',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.forum_questions_votes ("forum_question_answer_id","vote_type","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "forum_question_answer_id","vote_type","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_questions_votes',schema_,schema_);
-
-execute sql_;
-sql_=format('INSERT into shulesoft.forum_answers ("forum_question_id","answer","created_by","created_by_table","created_at","updated_at","is_correct","teacher_id","uuid",schema_name) select "forum_question_id","answer","created_by","created_by_table","created_at","updated_at","is_correct",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"uuid", ''%I'' from %I.forum_answers',schema_,schema_);
-
-execute sql_;
-
-
-sql_=format('INSERT into shulesoft.login_attempts ("username","wrong_password","created_at","uuid",schema_name) select "username","wrong_password","created_at","uuid", ''%I'' from %I.login_attempts',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.mailandsms ("mailandsmsID","users","type","message","create_date","year","created_at","uuid",schema_name) select "mailandsmsID","users","type","message","create_date","year","created_at","uuid", ''%I'' from %I.mailandsms',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.media_share ("shareID","classesID","public","file_or_folder","item_id","create_time","created_at","uuid",schema_name) select "shareID",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID"))"public","file_or_folder","item_id","create_time","created_at","uuid", ''%I'' from %I.media_share',schema_,schema_);
-
-execute sql_;
-
-
+--120
 sql_=format('INSERT into shulesoft.refer_character_grading_systems ("grade_remark","grade","description","points","created_at","updated_at","uuid",schema_name) select "grade_remark","grade","description","points","created_at","updated_at","uuid", ''%I'' from %I.refer_character_grading_systems',schema_,schema_);
 
 execute sql_;
 
-
-sql_=format('INSERT into shulesoft.reply_msg ("replyID","messageID","reply_msg","status","create_time","created_at","sender_id","sender_table","updated_at","uuid",schema_name) select "replyID","messageID","reply_msg","status","create_time","created_at","sender_id","sender_table","updated_at","uuid", ''%I'' from %I.reply_msg',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.track_invoices ("reference","student_id","invoice_id","created_at","sync","return_message","push_status","date","updated_at","academic_year_id","prefix","due_date","deleted_at","session_id","usertype","uuid",schema_name) select "reference",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"invoice_id","created_at","sync","return_message","push_status","date","updated_at",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"prefix","due_date","deleted_at","session_id","usertype","uuid", ''%I'' from %I.track_invoices',schema_,schema_);
+--121
+sql_=format('INSERT into shulesoft.reply_msg ("messageID","reply_msg","status","create_time","created_at","sender_id","sender_table","updated_at","uuid",schema_name) select (select "messageID" from shulesoft.message where uuid=(select uuid from %I.message where "messageID"=a."messageID")),"reply_msg","status","create_time","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."sender_id")),"sender_table","updated_at","uuid", ''%I'' from %I.reply_msg a',schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-
-
-sql_=format('INSERT into shulesoft.track ("user_id","user_type","table_name","column_name","column_value_from","column_final_value","created_at","status","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_type","table_name","column_name","column_value_from","column_final_value","created_at","status","uuid", ''%I'' from %I.track',schema_,schema_);
+--122
+sql_=format('INSERT into shulesoft.assignment_files ("assignment_id","attach","attach_file_name","created_at","updated_at","status","uuid",schema_name) select (select id from shulesoft.assignments where uuid=(select uuid from %I.assignments where id=a.assignment_id)),"attach","attach_file_name","created_at","updated_at","status","uuid", ''%I'' from %I.assignment_files a',schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.student_due_date ("student_id","due_date","installment_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"due_date","installment_id","uuid", ''%I'' from %I.student_due_date',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.student_fee_subscription ("fee_id","academic_year_id","student_id","status","uuid",schema_name) select "fee_id",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"status","uuid", ''%I'' from %I.student_fee_subscription',schema_,schema_);
+--123
+sql_=format('INSERT into shulesoft.assignments_submitted ("assignment_id","created_at","updated_at","student_id","score_mark","attach","attach_file_name","note","uuid",schema_name) select (select id from shulesoft.assignments where uuid=(select uuid from %I.assignments where id=a.assignment_id)),"created_at","updated_at",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"score_mark","attach","attach_file_name","note","uuid", ''%I'' from %I.assignments_submitted a',schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-
-
-sql_=format('INSERT into shulesoft.track_payments ("payment_id","student_id","amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","amount_entered","created_by","created_by_table","session_id","deleted_at","usertype","uuid",schema_name) select "payment_id",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","amount_entered","created_by","created_by_table","session_id","deleted_at","usertype","uuid", ''%I'' from %I.track_payments',schema_,schema_);
+--124
+sql_=format('INSERT into shulesoft.submit_files ("attach","attach_file_name","created_at","updated_at","status","uuid",schema_name) select "attach","attach_file_name","created_at","updated_at","status","uuid", ''%I'' from %I.submit_files',schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.youtube_access_tokens ("access_token","created_at","updated_at","uuid",schema_name) select "access_token","created_at","updated_at","uuid", ''%I'' from %I.youtube_access_tokens',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.user_reminders ("user_id","end_date","created_at","template_id","status","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"end_date","created_at","template_id","status","uuid", ''%I'' from %I.user_reminders',schema_,schema_);
+--123
+sql_=format('INSERT into shulesoft.assignment_viewers ("assignment_id","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.assignments where uuid=(select uuid from %I.assignments where id=a.assignment_id)),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.assignment_viewers a',schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.current_assets ("uuid","refer_expense_id","account_id","transaction_id","amount","user_sid","created_by_id","note","reconciled","number","sms_sent","date","created_at","updated_at",schema_name) select "uuid","refer_expense_id","account_id","transaction_id","amount","user_sid","created_by_id","note","reconciled","number","sms_sent","date","created_at","updated_at", ''%I'' from %I.current_assets',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.notice ("noticeID","title","notice","year","date","create_date","created_at","class_id","to_roll_id","notice_for","status","uuid",schema_name) select "noticeID","title","notice","year","date","create_date","created_at",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"to_roll_id","notice_for","status","uuid", ''%I'' from %I.notice',schema_,schema_);
+--124
+sql_=format('INSERT into shulesoft.book_quantity ("book_id","status","book_condition","bID","updated_at","created_at","uuid",schema_name) select (select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id)),"status","book_condition","bID","updated_at","created_at","uuid", ''%I'' from %I.book_quantity',schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.admissions ("student_id","status","user_id","created_at","updated_at","comment","time","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"status",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"created_at","updated_at","comment","time","uuid", ''%I'' from %I.admissions',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.advance_payments ("student_id","fee_id","payment_id","amount","created_at","updated_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"fee_id","payment_id","amount","created_at","updated_at","uuid", ''%I'' from %I.advance_payments',schema_,schema_);
+--125
+sql_=format('INSERT into shulesoft.book_class ("classes_id","created_at",book_id,"updated_at","uuid",schema_name) select (select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classes_id")),"created_at",(select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id)),"updated_at","uuid", ''%I'' from %I.book_class a',schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.advance_payments_invoices_fees_installments ("invoices_fees_installments_id","advance_payment_id","amount","created_at","updated_at","uuid",schema_name) select "invoices_fees_installments_id","advance_payment_id","amount","created_at","updated_at","uuid", ''%I'' from %I.advance_payments_invoices_fees_installments',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.assignment_files ("assignment_id","attach","attach_file_name","created_at","updated_at","status","uuid",schema_name) select "assignment_id","attach","attach_file_name","created_at","updated_at","status","uuid", ''%I'' from %I.assignment_files',schema_,schema_);
+--126
+sql_=format('INSERT into shulesoft.attendance ("student_id","classesID","userID","usertype","monthyear","a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","created_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"usertype","monthyear","a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","created_at","uuid", ''%I'' from %I.attendance',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.assignments_submitted ("assignment_id","created_at","updated_at","student_id","score_mark","attach","attach_file_name","note","uuid",schema_name) select "assignment_id","created_at","updated_at",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"score_mark","attach","attach_file_name","note","uuid", ''%I'' from %I.assignments_submitted',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.submit_files ("assignment_submit_id","attach","attach_file_name","created_at","updated_at","status","uuid",schema_name) select "assignment_submit_id","attach","attach_file_name","created_at","updated_at","status","uuid", ''%I'' from %I.submit_files',schema_,schema_);
+--127
+sql_=format('INSERT into shulesoft.eattendance ("examID","classesID","subjectID","date","student_id","s_name","eattendance","year","eextra","created_at","uuid",schema_name) select  (select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),"date",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"s_name","eattendance","year","eextra","created_at","uuid", ''%I'' from %I.eattendance',schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.assignment_viewers ("assignment_id","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "assignment_id","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.assignment_viewers',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.bank_accounts_fees_classes ("bank_account_id","fees_classes_id","updated_at","created_at","uuid",schema_name) select "bank_account_id","fees_classes_id","updated_at","created_at","uuid", ''%I'' from %I.bank_accounts_fees_classes',schema_,schema_);
+--128
+sql_=format('INSERT into shulesoft.character_classes ("character_id","class_id","created_at","updated_at","created_by","created_by_table","uuid",schema_name) select (select id from shulesoft.characters where uuid=(select uuid from %I.characters where id=a.character_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","uuid", ''%I'' from %I.character_classes a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.book_quantity ("book_id","status","book_condition","bID","updated_at","created_at","uuid",schema_name) select "book_id","status","book_condition","bID","updated_at","created_at","uuid", ''%I'' from %I.book_quantity',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.book_class ("classes_id","created_at","book_id","updated_at","uuid",schema_name) select "classes_id","created_at","book_id","updated_at","uuid", ''%I'' from %I.book_class',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.attendance ("attendanceID","student_id","classesID","userID","usertype","monthyear","a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","created_at","uuid",schema_name) select "attendanceID",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID"))(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"usertype","monthyear","a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","created_at","uuid", ''%I'' from %I.attendance',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.eattendance ("eattendanceID","examID","classesID","subjectID","date","student_id","s_name","eattendance","year","eextra","created_at","uuid",schema_name) select "eattendanceID",(select (select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")) from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID"))"subjectID","date",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"s_name","eattendance","year","eextra","created_at","uuid", ''%I'' from %I.eattendance',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.character_classes ("character_id","class_id","created_at","updated_at","created_by","created_by_table","uuid",schema_name) select "character_id",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"created_at","updated_at","created_by","created_by_table","uuid", ''%I'' from %I.character_classes a',schema_,schema_,schema_);
-
-execute sql_;
-
+--129
 sql_=format('INSERT into shulesoft.character_categories ("character_category","based_on","position","uuid",schema_name) select "character_category","based_on","position","uuid", ''%I'' from %I.character_categories',schema_,schema_);
 
 execute sql_;
 
 
+--ACCOUNT MODULE
 
-
-sql_=format('INSERT into shulesoft.discount_fees_installments ("fees_installment_id","amount","student_id","note","created_at","updated_at","uuid",schema_name) select "fees_installment_id","amount",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"note","created_at","updated_at","uuid", ''%I'' from %I.discount_fees_installments',schema_,schema_);
-
-execute sql_;
-
-
-
-sql_=format('INSERT into shulesoft.due_amounts ("amount","student_id","fee_id","created_at","updated_at","uuid",schema_name) select "amount",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"fee_id","created_at","updated_at","uuid", ''%I'' from %I.due_amounts',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.due_amounts_payments ("payment_id","due_amount_id","amount","created_at","updated_at","uuid",schema_name) select "payment_id","due_amount_id","amount","created_at","updated_at","uuid", ''%I'' from %I.due_amounts_payments',schema_,schema_);
-
-execute sql_;
-
-
-
-
-
-
-
-
+--130
 sql_=format('INSERT into shulesoft.fees ("name","priority","created_at","updated_at","uuid",schema_name) select "name","priority","created_at","updated_at","uuid", ''%I'' from %I.fees',schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.feecat_class ("feecat_classesID","classesID","feetype_categoryID","uuid",schema_name) select "feecat_classesID",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID"))"feetype_categoryID","uuid", ''%I'' from %I.feecat_class',schema_,schema_);
+--131
+sql_=format('INSERT into shulesoft.bank_accounts ("name","number","currency","branch","refer_bank_id","opening_balance","note","created_at","updated_at","refer_currency_id","uuid",schema_name) select "name","number","currency","branch","refer_bank_id","opening_balance","note","created_at","updated_at","refer_currency_id","uuid", ''%I'' from %I.bank_accounts',schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.fees_classes ("fee_id","class_id","created_at","updated_at","uuid",schema_name) select "fee_id",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"created_at","updated_at","uuid", ''%I'' from %I.fees_classes',schema_,schema_);
+--132
+sql_=format('INSERT into shulesoft.feecat_class ("classesID","feetype_categoryID","uuid",schema_name) select (select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),"feetype_categoryID","uuid", ''%I'' from %I.feecat_class a',schema_,schema_,schema_);
+
+execute sql_;
+--133
+sql_=format('INSERT into shulesoft.fees_classes ("fee_id","class_id","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"created_at","updated_at","uuid", ''%I'' from %I.fees_classes a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--134
+sql_=format('INSERT into shulesoft.bank_accounts_fees_classes ("bank_account_id","fees_classes_id","updated_at","created_at","uuid",schema_name) select (select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),(select id from shulesoft.fees_classes where uuid=(select uuid from %I.fees_classes where id=a.fees_classes_id)),"updated_at","created_at","uuid", ''%I'' from %I.bank_accounts_fees_classes a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.fees_installments_classes ("fees_installment_id","class_id","amount","created_at","updated_at","uuid",schema_name) select "fees_installment_id",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"amount","created_at","updated_at","uuid", ''%I'' from %I.fees_installments_classes',schema_,schema_);
+--135
+sql_=format('INSERT into shulesoft.exchange_rates ("from_currency","to_currency","rate","note","created_at","updated_at","created_by_id","created_by_table","status","uuid",schema_name) select "from_currency","to_currency","rate","note","created_at","updated_at","created_by_id","created_by_table","status","uuid", ''%I'' from %I.exchange_rates',schema_,schema_);
 
 execute sql_;
 
+--136. invoices
+sql_=format('INSERT into shulesoft.invoices ("reference","student_id","created_at","sync","return_message","push_status","date","updated_at","academic_year_id","prefix","due_date","sid","token","order_id","qr","gateway_buyer_uuid","payment_gateway_url","user_table","source","amount","status","live_package_id","uuid",schema_name) select "reference",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"created_at","sync","return_message","push_status","date","updated_at",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"prefix","due_date","sid","token","order_id","qr","gateway_buyer_uuid","payment_gateway_url","user_table","source","amount","status","live_package_id","uuid", ''%I'' from %I.invoices a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--137.
+sql_=format('INSERT into shulesoft.track_invoices ("reference","student_id","invoice_id","created_at","sync","return_message","push_status","date","updated_at","academic_year_id","prefix","due_date","deleted_at","session_id","usertype","uuid",schema_name) select "reference",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.invoices where uuid=(select uuid from %I.invoices where id=a.invoice_id)),"created_at","sync","return_message","push_status","date","updated_at",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"prefix","due_date","deleted_at","session_id","usertype","uuid", ''%I'' from %I.track_invoices a',schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+
+--138.
+sql_=format('INSERT into shulesoft.track ("user_id","user_type","table_name","column_name","column_value_from","column_final_value","created_at","status","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_type","table_name","column_name","column_value_from","column_final_value","created_at","status","uuid", ''%I'' from %I.track',schema_,schema_);
+
+execute sql_;
+--139
+sql_=format('INSERT into shulesoft.student_fee_subscription ("fee_id","academic_year_id","student_id","status","uuid",schema_name) select (select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"status","uuid", ''%I'' from %I.student_fee_subscription a',schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+
+--140
+sql_=format('INSERT into shulesoft.installments ("academic_year_id","start_date","end_date","name","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"start_date","end_date","name","created_at","updated_at","uuid", ''%I'' from %I.installments a',schema_,schema_,schema_);
+
+execute sql_;
+--141
+sql_=format('INSERT into shulesoft.student_due_date ("student_id","due_date","installment_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"due_date",(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id)),"uuid", ''%I'' from %I.student_due_date a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+
+--142
+sql_=format('INSERT into shulesoft.payments ("student_id","amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","amount_entered","created_by","created_by_table","note","invoice_id","status","sid","priority","comment","uuid","verification_code","verification_url","code",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"amount","payment_type_id","date","transaction_id","created_at","cheque_number",(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","amount_entered",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","note",(select id from shulesoft.invoices where uuid=(select uuid from %I.invoices where id=a.invoice_id)),"status","sid","priority","comment","uuid","verification_code","verification_url","code", ''%I'' from %I.payments a',schema_,schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+--143
+sql_=format('INSERT into shulesoft.advance_payments ("student_id","fee_id","payment_id","amount","created_at","updated_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),(select id from shulesoft.payments where uuid=(select uuid from %I.payments where id=a.payment_id)),"amount","created_at","updated_at","uuid", ''%I'' from %I.advance_payments',schema_,schema_);
+
+execute sql_;
+--145
+sql_=format('INSERT into shulesoft.track_payments ("payment_id","student_id","amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","amount_entered","created_by","created_by_table","session_id","deleted_at","usertype","uuid",schema_name) select (select id from shulesoft.payments where uuid=(select uuid from %I.payments where id=a.payment_id)),(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"amount","payment_type_id","date","transaction_id","created_at","cheque_number",(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","amount_entered",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","session_id","deleted_at","usertype","uuid", ''%I'' from %I.track_payments a',schema_,schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+
+--146
+sql_=format('INSERT into shulesoft.reminder_template ("template","class_level_id","type","academic_year_id","uuid",schema_name) select "template",(select classlevel_id from shulesoft.classlevel where uuid=(select uuid from %I.classlevel where classlevel_id=a.class_level_id)),"type",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"uuid", ''%I'' from %I.reminder_template a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--147
+sql_=format('INSERT into shulesoft.user_reminders ("user_id","end_date","created_at","template_id","status","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"end_date","created_at",(select id from shulesoft.reminder_template where uuid=(select uuid from %I.reminder_template where id=a.template_id)),"status","uuid", ''%I'' from %I.user_reminders a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--148
+sql_=format('INSERT into shulesoft.account_groups ("name","created_at","updated_at","note","category_id","financial_category_id","predefined","uuid",schema_name) select "name","created_at","updated_at","note","category_id","financial_category_id","predefined","uuid", ''%I'' from %I.account_groups',schema_,schema_);
+
+execute sql_;
+--149
+sql_=format('INSERT into shulesoft.refer_expense ("name","create_date","financial_category_id","note","status","code","date","open_balance","account_group_id","updated_at","created_at","predefined","depreciation","chart_no","uuid",schema_name) select "name","create_date","financial_category_id","note","status","code","date","open_balance",(select id from shulesoft.account_groups where uuid=(select uuid from %I.account_groups where id=a.account_group_id)),"updated_at","created_at","predefined","depreciation","chart_no","uuid", ''%I'' from %I.refer_expense a',schema_,schema_,schema_);
+
+execute sql_;
+
+--150
+sql_=format('INSERT into shulesoft.notice ("title","notice","year","date","create_date","created_at","class_id","to_roll_id","notice_for","status","uuid",schema_name) select "title","notice","year","date","create_date","created_at",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.to_roll_id)),"notice_for","status","uuid", ''%I'' from %I.notice a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--151
+sql_=format('INSERT into shulesoft.admissions ("student_id","status","user_id","created_at","updated_at","comment","time","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"status",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"created_at","updated_at","comment","time","uuid", ''%I'' from %I.admissions a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--152
+sql_=format('INSERT into shulesoft.due_amounts ("amount","student_id","fee_id","created_at","updated_at","uuid",schema_name) select "amount",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),"created_at","updated_at","uuid", ''%I'' from %I.due_amounts a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--153
+sql_=format('INSERT into shulesoft.due_amounts_payments ("payment_id","due_amount_id","amount","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.payments where uuid=(select uuid from %I.payments where id=a.payment_id)),(select id from shulesoft.due_amounts where uuid=(select uuid from %I.due_amounts where id=a.due_amount_id)),"amount","created_at","updated_at","uuid", ''%I'' from %I.due_amounts_payments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--154
 sql_=format('INSERT into shulesoft.deductions ("name","percent","amount","created_at","updated_at","description","is_percentage","category","employer_amount","employer_percent","gross_pay","uuid",schema_name) select "name","percent","amount","created_at","updated_at","description","is_percentage","category","employer_amount","employer_percent","gross_pay","uuid", ''%I'' from %I.deductions',schema_,schema_);
 
 execute sql_;
+--155
+sql_=format('INSERT into shulesoft.news_board ("title","role_id","body","create_date","created_at","updated_at","status","attach_file_name","attach","class_id","attachment","uuid",schema_name) select "title",(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"body","create_date","created_at","updated_at","status","attach_file_name","attach",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"attachment","uuid", ''%I'' from %I.news_board a',schema_,schema_,schema_,schema_);
 
-sql_=format('INSERT into shulesoft.issue ("lmember_id","issue_date","due_date","return_date","fine","note","created_at","is_returned","book_quantityID","created_by","type","book_quantity_id","book_id","created_by_table","updated_at","lID","uuid",schema_name) select "lmember_id","issue_date","due_date","return_date","fine","note","created_at","is_returned","book_quantityID","created_by","type","book_quantity_id","book_id","created_by_table","updated_at","lID","uuid", ''%I'' from %I.issue',schema_,schema_);
+execute sql_;
+--156
+sql_=format('INSERT into shulesoft.user_phones ("user_id","table","phone_number","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."user_id")),"table","phone_number","created_at","updated_at","uuid", ''%I'' from %I.user_phones a',schema_,schema_,schema_);
+
+execute sql_;
+--157
+sql_=format('INSERT into shulesoft.loan_types ("name","source","minimum_amount","maximum_amount","maximum_tenor","minimum_tenor","interest_rate","credit_ratio","created_at","updated_at","created_by","created_by_table","description","uuid",schema_name) select "name","source","minimum_amount","maximum_amount","maximum_tenor","minimum_tenor","interest_rate","credit_ratio","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","description","uuid", ''%I'' from %I.loan_types a',schema_,schema_,schema_);
+--158
+execute sql_;
+sql_=format('INSERT into shulesoft.loan_applications ("user_id","table","created_by","created_by_table","approved_by","approved_by_table","approval_status","amount","payment_start_date","loan_type_id","created_at","updated_at","qualify","months","description","monthly_repayment_amount","loan_source_id","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."user_id")),"table",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."approved_by")),"approved_by_table","approval_status","amount","payment_start_date",(select "id" from shulesoft.loan_types where uuid in (select uuid from %I.loan_types where "id"=a."loan_type_id")),"created_at","updated_at","qualify","months","description","monthly_repayment_amount","loan_source_id","uuid", ''%I'' from %I.loan_applications a',schema_,schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+--159
+sql_=format('INSERT into shulesoft.loan_payments ("loan_application_id","amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","created_by","created_by_table","status","uuid",schema_name) select (select "id" from shulesoft.loan_applications where uuid =(select uuid from %I.loan_applications where "id"=a."loan_application_id")),"amount","payment_type_id","date","transaction_id","created_at","cheque_number",(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","status","uuid", ''%I'' from %I.loan_payments a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.news_board ("title","role_id","body","create_date","created_at","updated_at","status","attach_file_name","attach","class_id","attachment","uuid",schema_name) select "title","role_id","body","create_date","created_at","updated_at","status","attach_file_name","attach",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"attachment","uuid", ''%I'' from %I.news_board',schema_,schema_);
+--160
+sql_=format('INSERT into shulesoft.user_deductions ("user_id","table","deduction_id","created_at","updated_at","created_by","deadline","type","amount","percent","employer_amount","employer_percent","loan_application_id","uuid",schema_name) select (select "id" from shulesoft.user where uuid in (select uuid from %I.users where "id"=a."user_id")),"table",(select "id" from shulesoft.deductions where uuid =(select uuid from %I.deductions where "id"=a."deduction_id")),"created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"deadline","type","amount","percent","employer_amount","employer_percent",(select id from shulesoft.loan_applications where uuid=(select uuid from %I.load_applications where id=a.loan_application_id)),"uuid", ''%I'' from %I.user_deductions a',schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.user_phones ("user_id","table","phone_number","created_at","updated_at","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","phone_number","created_at","updated_at","uuid", ''%I'' from %I.user_phones',schema_,schema_);
-
-execute sql_;
-
-
-
-sql_=format('INSERT into shulesoft.user_deductions ("user_id","table","deduction_id","created_at","updated_at","created_by","deadline","type","amount","percent","employer_amount","employer_percent","loan_application_id","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","deduction_id","created_at","updated_at","created_by","deadline","type","amount","percent","employer_amount","employer_percent","loan_application_id","uuid", ''%I'' from %I.user_deductions',schema_,schema_);
+--161
+sql_=format('INSERT into shulesoft.section_subject_teacher ("sectionID","academic_year_id","teacherID","created_at","refer_subject_id","subject_id","classesID","updated_at","uuid",schema_name) select (select "sectionID" from shulesoft.section where uuid=(select uuid from %I.section where "sectionID"=a."sectionID")),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacherID")),"created_at",(select "sectionID" from shulesoft.refer_subject where uuid=(select uuid from %I.refer_subject where "subject_id"=a."refer_subject_id")),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subject_id")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),"updated_at","uuid", ''%I'' from %I.section_subject_teacher a',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.section_subject_teacher ("sectionID","academic_year_id","teacherID","created_at","refer_subject_id","subject_id","classesID","updated_at","uuid",schema_name) select "sectionID",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacherID")),"created_at","refer_subject_id","subject_id",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID"))"updated_at","uuid", ''%I'' from %I.section_subject_teacher',schema_,schema_);
-
-execute sql_;
-
-
-sql_=format('INSERT into shulesoft.tattendance ("tattendanceID","teacherID","usertype","monthyear","a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","created_at","uuid",schema_name) select "tattendanceID",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacherID")),"usertype","monthyear","a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","created_at","uuid", ''%I'' from %I.tattendance',schema_,schema_);
+--162
+sql_=format('INSERT into shulesoft.tattendance ("teacherID","usertype","monthyear","a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","created_at","uuid",schema_name) select (select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacherID")),"usertype","monthyear","a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","created_at","uuid", ''%I'' from %I.tattendance a',schema_,schema_,schema_);
 
 execute sql_;
-
-
-
-
-
-sql_=format('INSERT into shulesoft.hmembers ("student_id","hostel_category_id","jod","created_at","updated_at","hostel_id","installment_id","bed_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"hostel_category_id","jod","created_at","updated_at","hostel_id","installment_id","bed_id","uuid", ''%I'' from %I.hmembers',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.hostel_beds ("name","hostel_id","created_at","updated_at","uuid",schema_name) select "name","hostel_id","created_at","updated_at","uuid", ''%I'' from %I.hostel_beds',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.general_character_assessment ("student_id","semester_id","class_teacher_id","class_teacher_comment","head_teacher_id","head_teacher_comment","class_teacher_created_at","head_teacher_created_at","class_teacher_updated_at","head_teacher_updated_at","exam_id","created_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"semester_id","class_teacher_id","class_teacher_comment","head_teacher_id","head_teacher_comment","class_teacher_created_at","head_teacher_created_at","class_teacher_updated_at","head_teacher_updated_at",(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"created_at","uuid", ''%I'' from %I.general_character_assessment',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.hostel_category ("hostel_id","class_type","hbalance","note","created_at","updated_at","uuid",schema_name) select "hostel_id","class_type","hbalance","note","created_at","updated_at","uuid", ''%I'' from %I.hostel_category',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.hostel_fees_installments ("hostel_id","fees_installment_id","amount","created_at","updated_at","uuid",schema_name) select "hostel_id","fees_installment_id","amount","created_at","updated_at","uuid", ''%I'' from %I.hostel_fees_installments',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.hostels ("name","htype","address","note","created_at","updated_at","user_id","usertype","beds_no","uuid",schema_name) select "name","htype","address","note","created_at","updated_at",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"usertype","beds_no","uuid", ''%I'' from %I.hostels',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.invoices_fees_installments ("invoice_id","fees_installment_id","created_at","updated_at","uuid",schema_name) select "invoice_id","fees_installment_id","created_at","updated_at","uuid", ''%I'' from %I.invoices_fees_installments',schema_,schema_);
-
-execute sql_;
-
-
+--163
 sql_=format('INSERT into shulesoft.livestudy_packages ("amount","days","note","created_at","updated_at","uuid",schema_name) select "amount","days","note","created_at","updated_at","uuid", ''%I'' from %I.livestudy_packages',schema_,schema_);
 
 execute sql_;
+--164
+sql_=format('INSERT into shulesoft.routine ("classesID","sectionID","subjectID","day","room","created_at","start_time","end_time","uuid",schema_name) select (select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select "sectionID" from shulesoft.section where uuid=(select uuid from %I.section where "sectionID"=a."sectionID")),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),"day","room","created_at","start_time","end_time","uuid", ''%I'' from %I.routine',schema_,schema_,schema_,schema_,schema_);
 
+execute sql_;
+--165
+sql_=format('INSERT into shulesoft.fees_installments ("fee_id","installment_id","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id)),"created_at","updated_at","uuid", ''%I'' from %I.fees_installments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--166
+sql_=format('INSERT into shulesoft.invoices_fees_installments ("invoice_id","fees_installment_id","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.invoices where uuid=(select uuid from %I.invoices where id=a.invoice_id)),(select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),"created_at","updated_at","uuid", ''%I'' from %I.invoices_fees_installments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+
+--167
+sql_=format('INSERT into shulesoft.advance_payments_invoices_fees_installments ("invoices_fees_installments_id","advance_payment_id","amount","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.invoices_fees_installments where uuid=(select uuid from %I.invoices_fees_installments where id=a.invoices_fees_installments_id)),(select id from shulesoft.advance_payments where uuid=(select uuid from %I.advance_payments where id=a.advance_payment_id)),"amount","created_at","updated_at","uuid", ''%I'' from %I.advance_payments_invoices_fees_installments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+
+
+--168
+sql_=format('INSERT into shulesoft.discount_fees_installments ("fees_installment_id","amount","student_id","note","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),"amount",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"note","created_at","updated_at","uuid", ''%I'' from %I.discount_fees_installments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+
+--169
+sql_=format('INSERT into shulesoft.fees_installments_classes ("fees_installment_id","class_id","amount","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"amount","created_at","updated_at","uuid", ''%I'' from %I.fees_installments_classes a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--170
 sql_=format('INSERT into shulesoft.vendors ("email","name","phone_number","telephone_number","country","city","location","bank_name","bank_branch","account_number","contact_person_name","contact_person_phone","contact_person_email","contact_person_jobtitle","service_product","created_at","updated_at","uuid",schema_name) select "email","name","phone_number","telephone_number","country","city","location","bank_name","bank_branch","account_number","contact_person_name","contact_person_phone","contact_person_email","contact_person_jobtitle","service_product","created_at","updated_at","uuid", ''%I'' from %I.vendors',schema_,schema_);
 
 execute sql_;
-
-sql_=format('INSERT into shulesoft.invoices ("reference","student_id","created_at","sync","return_message","push_status","date","updated_at","academic_year_id","prefix","due_date","sid","token","order_id","qr","gateway_buyer_uuid","payment_gateway_url","user_table","source","amount","status","live_package_id","uuid",schema_name) select "reference",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"created_at","sync","return_message","push_status","date","updated_at",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"prefix","due_date","sid","token","order_id","qr","gateway_buyer_uuid","payment_gateway_url","user_table","source","amount","status","live_package_id","uuid", ''%I'' from %I.invoices',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.items ("name","batch_number","quantity","vendor_id","contact_person_name","contact_person_number","status","price","created_at","comments","depreciation","current_price","date_purchased","uuid",schema_name) select "name","batch_number","quantity","vendor_id","contact_person_name","contact_person_number","status","price","created_at","comments","depreciation","current_price","date_purchased","uuid", ''%I'' from %I.items',schema_,schema_);
+--171
+sql_=format('INSERT into shulesoft.lmember ("lID","user_id","lbalance","ljoindate","created_at","status","user_table","updated_at","uuid",schema_name) select "lID",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"lbalance","ljoindate","created_at","status","user_table","updated_at","uuid", ''%I'' from %I.lmember a',schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.livestudy_payments ("sid","payment_id","end_date","created_at","updated_at","livestudy_package_id","start_date","uuid",schema_name) select "sid","payment_id","end_date","created_at","updated_at","livestudy_package_id","start_date","uuid", ''%I'' from %I.livestudy_payments',schema_,schema_);
+--172
+sql_=format('INSERT into shulesoft.issue ("lmember_id","issue_date","due_date","return_date","fine","note","created_at","is_returned","book_quantityID","created_by","type","book_quantity_id","book_id","created_by_table","updated_at","lID","uuid",schema_name) select (select id from shulesoft.lmember where uuid=(select uuid from %I.lmember where id=a.lmember_id)),"issue_date","due_date","return_date","fine","note","created_at","is_returned","book_quantityID",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"type",(select id from shulesoft.book_quantity where uuid=(select uuid from %I.book_quantity where id=a.book_quantity_id)),(select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id)),"created_by_table","updated_at","lID","uuid", ''%I'' from %I.issue a',schema_,schema_,schema_,schema_,schema_);
+
+execute sql_;
+--173 hostels
+sql_=format('INSERT into shulesoft.hostels ("name","htype","address","note","created_at","updated_at","user_id","usertype","beds_no","uuid",schema_name) select "name","htype","address","note","created_at","updated_at",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"usertype","beds_no","uuid", ''%I'' from %I.hostels a',schema_,schema_,schema_);
+
+execute sql_;
+--174
+sql_=format('INSERT into shulesoft.hostel_category ("hostel_id","class_type","hbalance","note","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.hostels where uuid=(select uuid from %I.hostels where id=a.hostel_id)),"class_type","hbalance","note","created_at","updated_at","uuid", ''%I'' from %I.hostel_category a',schema_,schema_,schema_);
+
+execute sql_;
+--175
+sql_=format('INSERT into shulesoft.hostel_beds ("name","hostel_id","created_at","updated_at","uuid",schema_name) select "name",(select id from shulesoft.hostels where uuid=(select uuid from %I.hostels where id=a.hostel_id)),"created_at","updated_at","uuid", ''%I'' from %I.hostel_beds a',schema_,schema_,schema_);
+
+execute sql_;
+--176
+sql_=format('INSERT into shulesoft.hmembers ("student_id","hostel_category_id","jod","created_at","updated_at","hostel_id","installment_id","bed_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.hostel_category where uuid=(select uuid from %I.hostel_category where id=a.hostel_category_id)),"jod","created_at","updated_at",(select id from shulesoft.hostels where uuid=(select uuid from %I.hostels where id=a.hostel_id)),(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id)),(select id from shulesoft.hostel_beds where uuid=(select uuid from %I.hostel_beds where id=a.bed_id)),"uuid", ''%I'' from %I.hmembers',schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.loan_applications ("user_id","table","created_by","created_by_table","approved_by","approved_by_table","approval_status","amount","payment_start_date","loan_type_id","created_at","updated_at","qualify","months","description","monthly_repayment_amount","loan_source_id","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","created_by","created_by_table","approved_by","approved_by_table","approval_status","amount","payment_start_date","loan_type_id","created_at","updated_at","qualify","months","description","monthly_repayment_amount","loan_source_id","uuid", ''%I'' from %I.loan_applications',schema_,schema_);
+--178
+sql_=format('INSERT into shulesoft.general_character_assessment ("student_id","semester_id","class_teacher_id","class_teacher_comment","head_teacher_id","head_teacher_comment","class_teacher_created_at","head_teacher_created_at","class_teacher_updated_at","head_teacher_updated_at","exam_id","created_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.semester where uuid=(select uuid from %I.semester where id=a.semester_id)),(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."class_teacher_id")),"class_teacher_comment",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."head_teacher_id")),"head_teacher_comment","class_teacher_created_at","head_teacher_created_at","class_teacher_updated_at","head_teacher_updated_at",(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"created_at","uuid", ''%I'' from %I.general_character_assessment',schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.loan_payments ("loan_application_id","amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","created_by","created_by_table","status","uuid",schema_name) select "loan_application_id","amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","created_by","created_by_table","status","uuid", ''%I'' from %I.loan_payments',schema_,schema_);
+--179
+sql_=format('INSERT into shulesoft.hostel_fees_installments ("hostel_id","fees_installment_id","amount","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.hostels where uuid=(select uuid from %I.hostels where id=a.hostel_id)),(select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),"amount","created_at","updated_at","uuid", ''%I'' from %I.hostel_fees_installments',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--180
+sql_=format('INSERT into shulesoft.items ("name","batch_number","quantity","vendor_id","contact_person_name","contact_person_number","status","price","created_at","comments","depreciation","current_price","date_purchased","uuid",schema_name) select "name","batch_number","quantity",(select id from shulesoft.vendors where uuid=(select uuid from %I.vendors where id=a.vendor_id)),"contact_person_name","contact_person_number","status","price","created_at","comments","depreciation","current_price","date_purchased","uuid", ''%I'' from %I.items a',schema_,schema_,schema_);
+
+execute sql_;
+--181
+sql_=format('INSERT into shulesoft.livestudy_payments ("sid","payment_id","end_date","created_at","updated_at","livestudy_package_id","start_date","uuid",schema_name) select "sid",(select id from shulesoft.payments where uuid=(select uuid from %I.payments where id=a.payment_id)),"end_date","created_at","updated_at",(select id from shulesoft.livestudy_packages where uuid=(select uuid from %I.livestudy_packages where id=a.livestudy_package_id))"livestudy_package_id","start_date","uuid", ''%I'' from %I.livestudy_payments a',schema_,schema_,schema_,schema_);
+
+execute sql_;
+--182
+sql_=format('INSERT into shulesoft.parent_documents ("type","parent_id","attach","attach_file_name","created_at","updated_at","uuid",schema_name) select "type",(select "parentID" from shulesoft.parent where uuid=(select uuid from %I.parent where "parentID"=a.parent_id)),"attach","attach_file_name","created_at","updated_at","uuid", ''%I'' from %I.parent_documents a',schema_,schema_,schema_);
+
+execute sql_;
+--183
+sql_=format('INSERT into shulesoft.parent_phones ("parent_id","phone","updated_at","uuid",schema_name) select (select "parentID" from shulesoft.parent where uuid=(select uuid from %I.parent where "parentID"=a.parent_id)),"phone","updated_at","uuid", ''%I'' from %I.parent_phones a',schema_,schema_,schema_);
+
+execute sql_;
+sql_=format('INSERT into shulesoft.payments_invoices_fees_installments ("invoices_fees_installment_id","payment_id","amount","created_at","updated_at","uuid",schema_name) select "invoices_fees_installment_id",(select id from shulesoft.payments where uuid=(select uuid from %I.payments where id=a.payment_id)),"amount","created_at","updated_at","uuid", ''%I'' from %I.payments_invoices_fees_installments',schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.loan_types ("name","source","minimum_amount","maximum_amount","maximum_tenor","minimum_tenor","interest_rate","credit_ratio","created_at","updated_at","created_by","created_by_table","description","uuid",schema_name) select "name","source","minimum_amount","maximum_amount","maximum_tenor","minimum_tenor","interest_rate","credit_ratio","created_at","updated_at","created_by","created_by_table","description","uuid", ''%I'' from %I.loan_types',schema_,schema_);
 
-execute sql_;
-
-
-
-
-sql_=format('INSERT into shulesoft.parent_documents ("type","parent_id","attach","attach_file_name","created_at","updated_at","uuid",schema_name) select "type","parent_id","attach","attach_file_name","created_at","updated_at","uuid", ''%I'' from %I.parent_documents',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.payments_invoices_fees_installments ("invoices_fees_installment_id","payment_id","amount","created_at","updated_at","uuid",schema_name) select "invoices_fees_installment_id","payment_id","amount","created_at","updated_at","uuid", ''%I'' from %I.payments_invoices_fees_installments',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.parent_phones ("parent_id","phone","updated_at","uuid",schema_name) select "parent_id","phone","updated_at","uuid", ''%I'' from %I.parent_phones',schema_,schema_);
-
-execute sql_;
 
 sql_=format('INSERT into shulesoft.product_alert_quantity ("product_register_id","alert_quantity","updated_at","created_at","name","note","metric_id","refer_expense_id","open_blance","uuid",schema_name) select "product_register_id","alert_quantity","updated_at","created_at","name","note","metric_id","refer_expense_id","open_blance","uuid", ''%I'' from %I.product_alert_quantity',schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.account_groups ("name","created_at","updated_at","note","category_id","financial_category_id","predefined","uuid",schema_name) select "name","created_at","updated_at","note","category_id","financial_category_id","predefined","uuid", ''%I'' from %I.account_groups',schema_,schema_);
 
-execute sql_;
 
-sql_=format('INSERT into shulesoft.expense ("expenseID","create_date","date","expense","amount","userID","uname","usertype","expenseyear","note","created_at","categoryID","is_depreciation","depreciation","refer_expense_id","ref_no","payment_method","created_by","bank_account_id","transaction_id","created_by_table","reconciled","voucher_no","payer_name","recipient","updated_at","payment_type_id","uuid",schema_name) select "expenseID","create_date","date","expense","amount",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"uname","usertype","expenseyear","note","created_at","categoryID","is_depreciation","depreciation","refer_expense_id","ref_no","payment_method","created_by","bank_account_id","transaction_id","created_by_table","reconciled","voucher_no","payer_name","recipient","updated_at","payment_type_id","uuid", ''%I'' from %I.expense',schema_,schema_);
+sql_=format('INSERT into shulesoft.expense ("expenseID","create_date","date","expense","amount","userID","uname","usertype","expenseyear","note","created_at","categoryID","is_depreciation","depreciation","refer_expense_id","ref_no","payment_method","created_by","bank_account_id","transaction_id","created_by_table","reconciled","voucher_no","payer_name","recipient","updated_at","payment_type_id","uuid",schema_name) select "expenseID","create_date","date","expense","amount",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"uname","usertype","expenseyear","note","created_at","categoryID","is_depreciation","depreciation","refer_expense_id","ref_no","payment_method",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"transaction_id","created_by_table","reconciled","voucher_no","payer_name","recipient","updated_at","payment_type_id","uuid", ''%I'' from %I.expense',schema_,schema_);
 
 execute sql_;
 
@@ -713,7 +787,7 @@ sql_=format('INSERT into shulesoft.product_cart ("name","product_alert_id","reve
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.product_purchases ("created_by","product_alert_id","quantity","amount","vendor_id","created_at","note","created_by_table","updated_at","expense_id","date","unit_price","status","uuid",schema_name) select "created_by","product_alert_id","quantity","amount","vendor_id","created_at","note","created_by_table","updated_at","expense_id","date","unit_price","status","uuid", ''%I'' from %I.product_purchases',schema_,schema_);
+sql_=format('INSERT into shulesoft.product_purchases ("created_by","product_alert_id","quantity","amount","vendor_id","created_at","note","created_by_table","updated_at","expense_id","date","unit_price","status","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"product_alert_id","quantity","amount","vendor_id","created_at","note","created_by_table","updated_at","expense_id","date","unit_price","status","uuid", ''%I'' from %I.product_purchases',schema_,schema_);
 
 execute sql_;
 
@@ -721,7 +795,7 @@ sql_=format('INSERT into shulesoft.product_registers ("product_name","alert_quan
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.product_sales ("product_alert_id","quantity","selling_price","revenue_id","created_by","created_by_table","date","created_at","updated_at","note","uuid",schema_name) select "product_alert_id","quantity","selling_price","revenue_id","created_by","created_by_table","date","created_at","updated_at","note","uuid", ''%I'' from %I.product_sales',schema_,schema_);
+sql_=format('INSERT into shulesoft.product_sales ("product_alert_id","quantity","selling_price","revenue_id","created_by","created_by_table","date","created_at","updated_at","note","uuid",schema_name) select "product_alert_id","quantity","selling_price","revenue_id",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","date","created_at","updated_at","note","uuid", ''%I'' from %I.product_sales',schema_,schema_);
 
 execute sql_;
 
@@ -729,19 +803,11 @@ sql_=format('INSERT into shulesoft.promotionsubject ("promotionSubjectID","class
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.questions ("minor_exam_id","question","weight","created_at","updated_at","attach","type","uuid",schema_name) select "minor_exam_id","question","weight","created_at","updated_at","attach","type","uuid", ''%I'' from %I.questions',schema_,schema_);
 
-execute sql_;
 
-sql_=format('INSERT into shulesoft.bank_accounts ("name","number","currency","branch","refer_bank_id","opening_balance","note","created_at","updated_at","refer_currency_id","uuid",schema_name) select "name","number","currency","branch","refer_bank_id","opening_balance","note","created_at","updated_at","refer_currency_id","uuid", ''%I'' from %I.bank_accounts',schema_,schema_);
 
-execute sql_;
 
-sql_=format('INSERT into shulesoft.refer_expense ("name","create_date","financial_category_id","note","status","code","date","open_balance","account_group_id","updated_at","created_at","predefined","depreciation","chart_no","uuid",schema_name) select "name","create_date","financial_category_id","note","status","code","date","open_balance","account_group_id","updated_at","created_at","predefined","depreciation","chart_no","uuid", ''%I'' from %I.refer_expense',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.expense_cart ("name","note","date","expense_id","refer_expense_id","created_at","updated_at","created_by","amount","uuid",schema_name) select "name","note","date","expense_id","refer_expense_id","created_at","updated_at","created_by","amount","uuid", ''%I'' from %I.expense_cart',schema_,schema_);
+sql_=format('INSERT into shulesoft.expense_cart ("name","note","date","expense_id","refer_expense_id","created_at","updated_at","created_by","amount","uuid",schema_name) select "name","note","date","expense_id","refer_expense_id","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"amount","uuid", ''%I'' from %I.expense_cart',schema_,schema_);
 
 execute sql_;
 
@@ -751,23 +817,19 @@ execute sql_;
 
 
 
-sql_=format('INSERT into shulesoft.revenues ("payer_name","payer_phone","payer_email","refer_expense_id","amount","created_by_id","created_by_table","created_at","updated_at","payment_method","transaction_id","bank_account_id","invoice_number","note","date","user_in_shulesoft","user_id","user_table","reconciled","number","payment_type_id","loan_application_id","uuid",schema_name) select "payer_name","payer_phone","payer_email","refer_expense_id","amount","created_by_id","created_by_table","created_at","updated_at","payment_method","transaction_id","bank_account_id","invoice_number","note","date","user_in_shulesoft",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_table","reconciled","number","payment_type_id","loan_application_id","uuid", ''%I'' from %I.revenues',schema_,schema_);
+sql_=format('INSERT into shulesoft.revenues ("payer_name","payer_phone","payer_email","refer_expense_id","amount","created_by_id","created_by_table","created_at","updated_at","payment_method","transaction_id","bank_account_id","invoice_number","note","date","user_in_shulesoft","user_id","user_table","reconciled","number","payment_type_id","loan_application_id","uuid",schema_name) select "payer_name","payer_phone","payer_email","refer_expense_id","amount","created_by_id","created_by_table","created_at","updated_at","payment_method","transaction_id",(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"invoice_number","note","date","user_in_shulesoft",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_table","reconciled","number","payment_type_id","loan_application_id","uuid", ''%I'' from %I.revenues',schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.reminder_template ("template","class_level_id","type","academic_year_id","uuid",schema_name) select "template","class_level_id","type",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"uuid", ''%I'' from %I.reminder_template',schema_,schema_);
+
+
+
+
+sql_=format('INSERT into shulesoft.salary_allowances ("salary_id","allowance_id","amount","created_at","created_by","uuid",schema_name) select "salary_id","allowance_id","amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"uuid", ''%I'' from %I.salary_allowances',schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.routine ("routineID","classesID","sectionID","subjectID","day","room","created_at","start_time","end_time","uuid",schema_name) select "routineID",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID"))"sectionID","subjectID","day","room","created_at","start_time","end_time","uuid", ''%I'' from %I.routine',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.salary_allowances ("salary_id","allowance_id","amount","created_at","created_by","uuid",schema_name) select "salary_id","allowance_id","amount","created_at","created_by","uuid", ''%I'' from %I.salary_allowances',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.salary_deductions ("salary_id","deduction_id","amount","created_at","created_by","employer_amount","uuid",schema_name) select "salary_id","deduction_id","amount","created_at","created_by","employer_amount","uuid", ''%I'' from %I.salary_deductions',schema_,schema_);
+sql_=format('INSERT into shulesoft.salary_deductions ("salary_id","deduction_id","amount","created_at","created_by","employer_amount","uuid",schema_name) select "salary_id","deduction_id","amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"employer_amount","uuid", ''%I'' from %I.salary_deductions',schema_,schema_);
 
 execute sql_;
 
@@ -777,61 +839,19 @@ execute sql_;
 
 
 
-sql_=format('INSERT into shulesoft.sattendances ("student_id","created_by","created_by_table","date","present","absent_reason","absent_reason_id","created_at","updated_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"created_by","created_by_table","date","present","absent_reason","absent_reason_id","created_at","updated_at","uuid", ''%I'' from %I.sattendances',schema_,schema_);
-
-execute sql_;
-
-
-
-sql_=format('INSERT into shulesoft.sponsors ("name","location_address","phone_no","email","created_at","uuid",schema_name) select "name","location_address","phone_no","email","created_at","uuid", ''%I'' from %I.sponsors',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.student_sponsors ("student_id","sponsor_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"sponsor_id","uuid", ''%I'' from %I.student_sponsors',schema_,schema_);
-
-execute sql_;
-
-
-
-sql_=format('INSERT into shulesoft.special_promotion ("student_id","from_academic_year_id","to_academic_year_id","pass_mark","remark","created_at","updated_at","status","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"from_academic_year_id","to_academic_year_id","pass_mark","remark","created_at","updated_at","status","uuid", ''%I'' from %I.special_promotion',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.characters ("code","description","created_by","created_by_id","created_at","updated_at","character_category_id","position","uuid",schema_name) select "code","description","created_by","created_by_id","created_at","updated_at","character_category_id","position","uuid", ''%I'' from %I.characters',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.student_duties ("duty_id","student_id","created_at","updated_at","uuid",schema_name) select "duty_id",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"created_at","updated_at","uuid", ''%I'' from %I.student_duties',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.application ("student_id","apply_for","created_at","created_by","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"apply_for","created_at","created_by","uuid", ''%I'' from %I.application',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.student_characters ("student_character_id","student_id","semester_id","character_id","teacher_id","grade1","grade2","remark","created_at","updated_at","classes_id","status","grade3","grade4","grade5","grade","exam_id","uuid",schema_name) select "student_character_id",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"semester_id","character_id",(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"grade1","grade2","remark","created_at","updated_at","classes_id","status","grade3","grade4","grade5","grade",(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"uuid", ''%I'' from %I.student_characters',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.lmember ("lID","user_id","lbalance","ljoindate","created_at","status","user_table","updated_at","uuid",schema_name) select "lID",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"lbalance","ljoindate","created_at","status","user_table","updated_at","uuid", ''%I'' from %I.lmember',schema_,schema_);
-
-execute sql_;
-
-
-
-sql_=format('INSERT into shulesoft.assignments ("subject_id","note","created_at","updated_at","title","attach","attach_file_name","due_date","exam_group_id","uuid",schema_name) select "subject_id","note","created_at","updated_at","title","attach","attach_file_name","due_date","exam_group_id","uuid", ''%I'' from %I.assignments',schema_,schema_);
+sql_=format('INSERT into shulesoft.sattendances ("student_id","created_by","created_by_table","date","present","absent_reason","absent_reason_id","created_at","updated_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","date","present","absent_reason","absent_reason_id","created_at","updated_at","uuid", ''%I'' from %I.sattendances',schema_,schema_);
 
 execute sql_;
 
 
 
 
-sql_=format('INSERT into shulesoft.installments ("academic_year_id","start_date","end_date","name","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"start_date","end_date","name","created_at","updated_at","uuid", ''%I'' from %I.installments',schema_,schema_);
-
-execute sql_;
 
 
-sql_=format('INSERT into shulesoft.tmembers ("student_id","transport_route_id","tjoindate","vehicle_id","is_oneway","created_at","updated_at","installment_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"transport_route_id","tjoindate","vehicle_id","is_oneway","created_at","updated_at","installment_id","uuid", ''%I'' from %I.tmembers',schema_,schema_);
+
+
+
+sql_=format('INSERT into shulesoft.tmembers ("student_id","transport_route_id","tjoindate","vehicle_id","is_oneway","created_at","updated_at","installment_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"transport_route_id","tjoindate","vehicle_id","is_oneway","created_at","updated_at",(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id)),"uuid", ''%I'' from %I.tmembers',schema_,schema_);
 
 execute sql_;
 
@@ -844,12 +864,12 @@ execute sql_;
 
 
 
-sql_=format('INSERT into shulesoft.tmemberss ("student_id","transport_route_id","tjoindate","vehicle_id","is_oneway","created_at","updated_at","installment_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"transport_route_id","tjoindate","vehicle_id","is_oneway","created_at","updated_at","installment_id","uuid", ''%I'' from %I.tmemberss',schema_,schema_);
+sql_=format('INSERT into shulesoft.tmemberss ("student_id","transport_route_id","tjoindate","vehicle_id","is_oneway","created_at","updated_at","installment_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"transport_route_id","tjoindate","vehicle_id","is_oneway","created_at","updated_at",(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id)),"uuid", ''%I'' from %I.tmemberss',schema_,schema_);
 
 execute sql_;
 
 
-sql_=format('INSERT into shulesoft.salary_pensions ("salary_id","pension_id","amount","created_at","created_by","employer_amount","uuid",schema_name) select "salary_id","pension_id","amount","created_at","created_by","employer_amount","uuid", ''%I'' from %I.salary_pensions',schema_,schema_);
+sql_=format('INSERT into shulesoft.salary_pensions ("salary_id","pension_id","amount","created_at","created_by","employer_amount","uuid",schema_name) select "salary_id","pension_id","amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"employer_amount","uuid", ''%I'' from %I.salary_pensions',schema_,schema_);
 
 execute sql_;
 
@@ -857,7 +877,7 @@ sql_=format('INSERT into shulesoft.allowances ("name","amount","percent","create
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.transport_installment ("transport_id","amount","fee_installment_id","total_amount","status","installment_id","uuid",schema_name) select "transport_id","amount","fee_installment_id","total_amount","status","installment_id","uuid", ''%I'' from %I.transport_installment',schema_,schema_);
+sql_=format('INSERT into shulesoft.transport_installment ("transport_id","amount","fee_installment_id","total_amount","status","installment_id","uuid",schema_name) select "transport_id","amount","fee_installment_id","total_amount","status",(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id)),"uuid", ''%I'' from %I.transport_installment',schema_,schema_);
 
 execute sql_;
 
@@ -865,9 +885,7 @@ sql_=format('INSERT into shulesoft.transport ("route","vehicle","fare","note","c
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.fees_installments ("fee_id","installment_id","created_at","updated_at","uuid",schema_name) select "fee_id","installment_id","created_at","updated_at","uuid", ''%I'' from %I.fees_installments',schema_,schema_);
 
-execute sql_;
 
 sql_=format('INSERT into shulesoft.pensions ("name","employer_percentage","employee_percentage","created_at","address","updated_at","refer_pension_id","status","uuid",schema_name) select "name","employer_percentage","employee_percentage","created_at","address","updated_at","refer_pension_id","status","uuid", ''%I'' from %I.pensions',schema_,schema_);
 
@@ -875,7 +893,7 @@ execute sql_;
 
 
 
-sql_=format('INSERT into shulesoft.student_fees_installments_unsubscriptions ("fees_installment_id","student_id","created_at","updated_at","uuid",schema_name) select "fees_installment_id",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"created_at","updated_at","uuid", ''%I'' from %I.student_fees_installments_unsubscriptions',schema_,schema_);
+sql_=format('INSERT into shulesoft.student_fees_installments_unsubscriptions ("fees_installment_id","student_id","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"created_at","updated_at","uuid", ''%I'' from %I.student_fees_installments_unsubscriptions',schema_,schema_);
 
 execute sql_;
 
@@ -883,7 +901,7 @@ sql_=format('INSERT into shulesoft.user_updates ("update_id","is_opened","like",
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.sms_content ("message","created_by","created_by_table","channels","created_at","updated_at","uuid",schema_name) select "message","created_by","created_by_table","channels","created_at","updated_at","uuid", ''%I'' from %I.sms_content',schema_,schema_);
+sql_=format('INSERT into shulesoft.sms_content ("message","created_by","created_by_table","channels","created_at","updated_at","uuid",schema_name) select "message",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","channels","created_at","updated_at","uuid", ''%I'' from %I.sms_content',schema_,schema_);
 
 execute sql_;
 
@@ -895,31 +913,12 @@ sql_=format('INSERT into shulesoft.student_assessment ("valid_answer_id","studen
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.bank_accounts_integrations ("bank_account_id","api_username","api_password","invoice_prefix","created_at","updated_at","sandbox_api_username","sandbox_api_password","uuid",schema_name) select "bank_account_id","api_username","api_password","invoice_prefix","created_at","updated_at","sandbox_api_username","sandbox_api_password","uuid", ''%I'' from %I.bank_accounts_integrations',schema_,schema_);
+sql_=format('INSERT into shulesoft.bank_accounts_integrations ("bank_account_id","api_username","api_password","invoice_prefix","created_at","updated_at","sandbox_api_username","sandbox_api_password","uuid",schema_name) select (select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"api_username","api_password","invoice_prefix","created_at","updated_at","sandbox_api_username","sandbox_api_password","uuid", ''%I'' from %I.bank_accounts_integrations',schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.fee ("name","created_at","priority","uuid",schema_name) select "name","created_at","priority","uuid", ''%I'' from %I.fee',schema_,schema_);
 
-execute sql_;
-
-sql_=format('INSERT into shulesoft.forum_question_viewers ("forum_question_id","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "forum_question_id","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_question_viewers',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.forum_questions ("syllabus_topic_id","title","question","created_by","created_by_table","created_at","updated_at","status","uuid",schema_name) select "syllabus_topic_id","title","question","created_by","created_by_table","created_at","updated_at","status","uuid", ''%I'' from %I.forum_questions',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.log ("url","user_agent","platform","platform_name","source","created_at","updated_at","user","user_id","country","city","region","isp","table","controller","method","is_ajax","request","uuid",schema_name) select "url","user_agent","platform","platform_name","source","created_at","updated_at","user",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"country","city","region","isp","table","controller","method","is_ajax","request","uuid", ''%I'' from %I.log',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.minor_exam_marks ("minor_exam_id","student_id","mark","academic_year_id","status","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select "minor_exam_id",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"mark",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"status","created_by","created_by_table","created_at","updated_at","uuid", ''%I'' from %I.minor_exam_marks',schema_,schema_);
-
-execute sql_;
-
-sql_=format('INSERT into shulesoft.prepayments ("invoiceID","student_id","paymentamount","paymenttype","paymentdate","paymentmonth","paymentyear","created_at","transaction_id","userID","slipfile","approved","approved_date","approved_user_id","cheque_number","bank_name","payer_name","fee_id","transaction_time","account_number","token","bank_account_id","reconciled","updated_at","reject_reason","uuid",schema_name) select "invoiceID",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"paymentamount","paymenttype","paymentdate","paymentmonth","paymentyear","created_at","transaction_id",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"slipfile","approved","approved_date","approved_user_id","cheque_number","bank_name","payer_name","fee_id","transaction_time","account_number","token","bank_account_id","reconciled","updated_at","reject_reason","uuid", ''%I'' from %I.prepayments',schema_,schema_);
+sql_=format('INSERT into shulesoft.prepayments ("invoiceID","student_id","paymentamount","paymenttype","paymentdate","paymentmonth","paymentyear","created_at","transaction_id","userID","slipfile","approved","approved_date","approved_user_id","cheque_number","bank_name","payer_name","fee_id","transaction_time","account_number","token","bank_account_id","reconciled","updated_at","reject_reason","uuid",schema_name) select "invoiceID",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"paymentamount","paymenttype","paymentdate","paymentmonth","paymentyear","created_at","transaction_id",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"slipfile","approved","approved_date","approved_user_id","cheque_number","bank_name","payer_name",(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),"transaction_time","account_number","token",(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"reconciled","updated_at","reject_reason","uuid", ''%I'' from %I.prepayments',schema_,schema_);
 
 execute sql_;
 
@@ -931,7 +930,7 @@ execute sql_;
 
 
 
-sql_=format('INSERT into shulesoft.track_invoices_fees_installments ("deleted_at","fees_installments_id","invoice_id","uuid",schema_name) select "deleted_at","fees_installments_id","invoice_id","uuid", ''%I'' from %I.track_invoices_fees_installments',schema_,schema_);
+sql_=format('INSERT into shulesoft.track_invoices_fees_installments ("deleted_at","fees_installments_id","invoice_id","uuid",schema_name) select "deleted_at","fees_installments_id",(select id from shulesoft.invoices where uuid=(select uuid from %I.invoices where id=a.invoice_id)),"uuid", ''%I'' from %I.track_invoices_fees_installments',schema_,schema_);
 
 execute sql_;
 
@@ -943,17 +942,17 @@ sql_=format('INSERT into shulesoft.transport_routes ("name","note","created_at",
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.transport_routes_fees_installments ("transport_route_id","fees_installment_id","amount","created_at","updated_at","uuid",schema_name) select "transport_route_id","fees_installment_id","amount","created_at","updated_at","uuid", ''%I'' from %I.transport_routes_fees_installments',schema_,schema_);
+sql_=format('INSERT into shulesoft.transport_routes_fees_installments ("transport_route_id","fees_installment_id","amount","created_at","updated_at","uuid",schema_name) select "transport_route_id",(select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),"amount","created_at","updated_at","uuid", ''%I'' from %I.transport_routes_fees_installments',schema_,schema_);
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.uattendances ("user_id","created_by","created_by_table","user_table","date","timein","timeout","present","absent_reason","absent_reason_id","created_at","updated_at","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"created_by","created_by_table","user_table","date","timein","timeout","present","absent_reason","absent_reason_id","created_at","updated_at","uuid", ''%I'' from %I.uattendances',schema_,schema_);
+sql_=format('INSERT into shulesoft.uattendances ("user_id","created_by","created_by_table","user_table","date","timein","timeout","present","absent_reason","absent_reason_id","created_at","updated_at","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"created_by_table","user_table","date","timein","timeout","present","absent_reason","absent_reason_id","created_at","updated_at","uuid", ''%I'' from %I.uattendances',schema_,schema_);
 
 execute sql_;
 
 
 
-sql_=format('INSERT into shulesoft.user_allowances ("user_id","table","allowance_id","created_at","updated_at","created_by","deadline","type","amount","percent","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","allowance_id","created_at","updated_at","created_by","deadline","type","amount","percent","uuid", ''%I'' from %I.user_allowances',schema_,schema_);
+sql_=format('INSERT into shulesoft.user_allowances ("user_id","table","allowance_id","created_at","updated_at","created_by","deadline","type","amount","percent","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","allowance_id","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"deadline","type","amount","percent","uuid", ''%I'' from %I.user_allowances',schema_,schema_);
 
 execute sql_;
 
@@ -961,17 +960,14 @@ sql_=format('INSERT into shulesoft.user_contract ("user_id","table","start_date"
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.user_pensions ("user_id","table","pension_id","created_at","updated_at","created_by","checknumber","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","pension_id","created_at","updated_at","created_by","checknumber","uuid", ''%I'' from %I.user_pensions',schema_,schema_);
+sql_=format('INSERT into shulesoft.user_pensions ("user_id","table","pension_id","created_at","updated_at","created_by","checknumber","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","pension_id","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"checknumber","uuid", ''%I'' from %I.user_pensions',schema_,schema_);
 
 execute sql_;
 
 
 
-sql_=format('INSERT into shulesoft.valid_answers ("question_id","answer","status","created_at","updated_at","uuid",schema_name) select "question_id","answer","status","created_at","updated_at","uuid", ''%I'' from %I.valid_answers',schema_,schema_);
 
-execute sql_;
-
-sql_=format('INSERT into shulesoft.vehicles ("plate_number","seats","description","created_at","created_by","updated_at","name","driver_id","conductor_id","uuid",schema_name) select "plate_number","seats","description","created_at","created_by","updated_at","name","driver_id","conductor_id","uuid", ''%I'' from %I.vehicles',schema_,schema_);
+sql_=format('INSERT into shulesoft.vehicles ("plate_number","seats","description","created_at","created_by","updated_at","name","driver_id","conductor_id","uuid",schema_name) select "plate_number","seats","description","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),"updated_at","name","driver_id","conductor_id","uuid", ''%I'' from %I.vehicles',schema_,schema_);
 
 execute sql_;
 
@@ -999,7 +995,7 @@ sql_=format('INSERT into shulesoft.invoice_prefix (,schema_name) select , ''%I''
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.wallet ("student_id","value","date","status","fee_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"value","date","status","fee_id","uuid", ''%I'' from %I.wallet',schema_,schema_);
+sql_=format('INSERT into shulesoft.wallet ("student_id","value","date","status","fee_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"value","date","status",(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),"uuid", ''%I'' from %I.wallet',schema_,schema_);
 
 execute sql_;
 
@@ -1069,13 +1065,17 @@ sql_=format('INSERT into shulesoft.financial_year (,schema_name) select , ''%I''
 
 execute sql_;
 
-sql_=format('INSERT into shulesoft.exam_comments ("body","student_id","exam_report_id","created_at","updated_at","user_id","name","academic_year_id","status","user_table","uuid",schema_name) select "body",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"exam_report_id","created_at","updated_at",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"name",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"status","user_table","uuid", ''%I'' from %I.exam_comments',schema_,schema_);
+
+sql_=format('INSERT into shulesoft.current_assets2 ("amount","date","from_refer_expense_id","to_refer_expense_id","payer_name","usertype","uname","created_by","userID","note","recipient","transaction_id","voucher_no","uuid",schema_name) select "amount","date",(select "id" from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where "id"=a."from_refer_expense_id")),"to_refer_expense_id","payer_name","usertype","uname",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by")),(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"note","recipient","transaction_id","voucher_no","uuid", ''%I'' from %I.current_assets2',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.discount (,schema_name) select , ''%I'' from %I.discount',schema_,schema_);
 
 execute sql_;
 
 
-sql_=format('INSERT into shulesoft.payments ("student_id","amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","amount_entered","created_by","created_by_table","note","invoice_id","status","sid","priority","comment","uuid","verification_code","verification_url","code",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"amount","payment_type_id","date","transaction_id","created_at","cheque_number","bank_account_id","payer_name","mobile_transaction_id","transaction_time","account_number","token","reconciled","receipt_code","updated_at","channel","amount_entered","created_by","created_by_table","note","invoice_id","status","sid","priority","comment","uuid","verification_code","verification_url","code", ''%I'' from %I.payments',schema_,schema_);
+--this table does not exists in old version
+sql_=format('INSERT into shulesoft.current_assets ("uuid","refer_expense_id","account_id","transaction_id","amount","user_sid","created_by_id","note","reconciled","number","sms_sent","date","created_at","updated_at",schema_name) select "uuid","refer_expense_id","account_id","transaction_id","amount","user_sid","created_by_id","note","reconciled","number","sms_sent","date","created_at","updated_at", ''%I'' from %I.current_assets',schema_,schema_);
 
 execute sql_;
-
-

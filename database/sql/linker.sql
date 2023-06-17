@@ -43,3 +43,34 @@ returns integer;
 (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID"))
 
 (select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.roll_id))
+
+(select id from shulesoft.characters where uuid=(select uuid from %I.characters where id=a.character_id))
+
+(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "id"=a."created_by"))
+
+(select id from shulesoft.medias where uuid=(select uuid from %I.medias where id=a.media_id))
+
+(select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id))
+
+
+(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id))
+
+(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id))
+
+(select id from shulesoft.payments where uuid=(select uuid from %I.payments where id=a.payment_id))
+
+(select id from shulesoft.account_groups where uuid=(select uuid from %I.account_groups where id=a.account_group_id))
+
+(select id from shulesoft.hostels where uuid=(select uuid from %I.hostels where id=a.hostel_id))
+
+
+(select id from shulesoft.invoices where uuid=(select uuid from %I.invoices where id=a.invoice_id))
+
+(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id))
+
+(select "id" from shulesoft.forum_questions where uuid=(select uuid from %I.forum_questions where "id"=a."forum_question_id"))
+
+(select id from shulesoft.assignments where uuid=(select uuid from %I.assignments where id=a.assignment_id))
+
+
+(select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id))
