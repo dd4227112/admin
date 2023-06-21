@@ -1263,5 +1263,134 @@ WHERE table_schema ='{$schema->table_schema}'
             }
         }
     }
+    public function serverErrors(){
+        // $filename = '/var/log/apache2/error.log'; // File path for apache web server
+        $filename ='/var/log/nginx/error.log'; //File path for nginx web server
+        // Open the file in read mode
+        $file = fopen($filename, 'r');
+
+        if ($file) {
+            $i=1;
+            $data =[];
+            // Read and output lines until the end of the file is reached
+            while (($line = fgets($file)) !== false) {
+                $datas = ['message'=>$line,
+                        'status'=>'New'];
+                        $data[]=$datas;
+            }
+            if(DB::table('admin.server_errors')->insert($data)){
+                file_put_contents($filename, '');
+                 // Close the file handle
+                fclose($file);
+                $data['errors'] =DB::table("admin.server_errors")->latest()->get();
+                $data['all_errors'] = \collect(DB::select("SELECT COUNT(*) as total FROM admin.server_errors"))->first();
+                $data['resolved'] =\collect(DB::select("SELECT COUNT(*) as total FROM admin.server_errors where status ='Resolved'"))->first();
+                $data['pending'] =\collect(DB::select("SELECT COUNT(*) as total FROM admin.server_errors where status ='New' "))->first();
+               
+                return view('software.server_log', $data);
+            }
+        } else {
+            echo "Failed to open the file.";
+        }
+    }
+    public function serverlogsDelete() {
+        $id = request('id');
+        $id= \DB::table('admin.server_errors')->where('id',$id)->first()->id;
+        if ($id !=null){
+            $detete = \DB::table('admin.server_errors')->where('id',$id)->delete();
+            echo $detete > 0 ? 1 : 0;
+        }
+    }
+    public function viewServerError(){
+        $id = request()->segment(3);
+        $data['error'] = \DB::table('admin.server_errors')->where('id',$id)->first();
+        if($data['error']!=null){
+            return view('software.view_server_error', $data);
+        }
+        else{
+            return redirect()->back()->with('error'," Error detail not found");
+        }
+
+    }
+     public function updateServerErrors(){
+        $error_id = request('error_id');
+        $status = request('status');
+        $check_existance= \DB::table('admin.server_errors')->where('id',$error_id)->first()->id;
+        if ($check_existance !=null){
+            \DB::table('admin.server_errors')->where('id',$error_id)->update(['status'=>$status]);
+            $message = 'error status updated';
+            echo json_encode($message);
+        }
+
+
+     }
+
+
+
+
+// NOT WORKING, INCOMPLETE
+     public function databaseErrors(){
+        $filename = '/var/log/postgresql/postgresql-15-main.log'; // Replace with the actual file path
+        // Open the file in read mode
+        $file = fopen($filename, 'r');
+
+        if ($file) {
+            $i=1;
+            $data =[];
+            // Read and output lines until the end of the file is reached
+            while (($line = fgets($file)) !== false) {
+                $datas = ['message'=>$line,
+                        'status'=>'New'];
+                        $data[]=$datas;
+            }
+            if(DB::table('admin.database_errors')->insert($data)){
+                file_put_contents($filename, '');
+                 // Close the file handle
+                fclose($file);
+                $data['errors'] =DB::table("admin.database_errors")->latest()->get();
+                $data['all_errors'] = \collect(DB::select("SELECT COUNT(*) as total FROM admin.database_errors"))->first();
+                $data['resolved'] =\collect(DB::select("SELECT COUNT(*) as total FROM admin.database_errors where status ='Resolved'"))->first();
+                $data['pending'] =\collect(DB::select("SELECT COUNT(*) as total FROM admin.database_errors where status ='New' "))->first();
+               
+                return view('software.database_log', $data);
+            }
+        } else {
+            echo "Failed to open the file.";
+        }
+    }
+    public function databaselogsDelete() {
+        $id = request('id');
+        $id= \DB::table('admin.database_errors')->where('id',$id)->first()->id;
+        if ($id !=null){
+            $detete = \DB::table('admin.database_errors')->where('id',$id)->delete();
+            echo $detete > 0 ? 1 : 0;
+        }
+    }
+    public function viewdatabaseError(){
+        $id = request()->segment(3);
+        $data['error'] = \DB::table('admin.database_errors')->where('id',$id)->first();
+        if($data['error']!=null){
+            return view('software.view_database_error', $data);
+        }
+        else{
+            return redirect()->back()->with('error'," Error detail not found");
+        }
+
+    }
+     public function updatedatabaseErrors(){
+        $error_id = request('error_id');
+        $status = request('status');
+        $check_existance= \DB::table('admin.database_errors')->where('id',$error_id)->first()->id;
+        if ($check_existance !=null){
+            \DB::table('admin.database_errors')->where('id',$error_id)->update(['status'=>$status]);
+            $message = 'error status updated';
+            echo json_encode($message);
+        }
+
+
+     }
+
+     // END NOT WORKING, INCOMPLETE
+
 
 }

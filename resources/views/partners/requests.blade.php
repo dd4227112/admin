@@ -202,9 +202,16 @@ $objects = [
                                                     }
                                                     $number = !empty($bank) ? $bank_number : '<b class="label label-danger">Invalid</b>';
                                                 }
+                                                if ($type_id ==1){
+                                                    $number = !empty($set) ? $set->tin : '';
+                                                
+                                                }
+                                                else{
+                                                    $number = !empty($bank) ? $bank->number:'';   
+                                                } 
                                                 if ($type_id == 1) { // VFD integration
                                                     $set = DB::table('shulesoft.setting')->where('schema_name', $request->client->username)->first();
-                                                    $number = !empty($set) ? $set->tin : '000000';
+                                                   
                                                 }
 
                                                 echo '<tr>
