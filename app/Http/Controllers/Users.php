@@ -98,7 +98,7 @@ class Users extends Controller {
 
         $user_data = DB::table('admin.users')->where('id', (int) $user_id)->first();
 
-        DB::table('accounts.users')->insert([
+        DB::table('accounts.user')->insert([
             'name' => request('firstname') . ' ' . request('lastname'),
             'dob' => date("Y-m-d", strtotime(request('date_of_birth'))),
             'sex' => request('sex'),
