@@ -34,6 +34,8 @@ class Kernel extends ConsoleKernel {
         \App\Console\Commands\StandingOrderRemainder::class,
         \App\Console\Commands\HRContractRemainders::class,
         \App\Console\Commands\DatabaseOptimization::class,
+        \App\Console\Commands\OptimizePayment::class,
+
        // \App\Console\Commands\CreateTodayReport::class,
         \App\Console\Commands\SchoolMonthlyReport::class,
             // \App\Console\Commands\HRLeaveRemainders::class, // Currently disabled
@@ -90,6 +92,12 @@ class Kernel extends ConsoleKernel {
             $schedule->command('sync:invoice')->everyMinute();
         } catch (\Exception $e) {
             Log::error('Sync Invoice failed: ' . $e->getMessage());
+        }
+        // configure the service set RestartSec = 1 minute (60s)
+        try {
+            $schedule->command('payment:optimize')->everyMinute();
+        } catch (\Exception $e) {
+            Log::error('Payment Optimization failed: ' . $e->getMessage());
         }
 
         // configure the service set RestartSec = 1 minute (60s)
@@ -469,11 +477,11 @@ select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_
                 (int) $message->is_old_version == 1 ? DB::table($message->schema_name . ".sms")->where('sms_id', $id)->update([
                                     'status' => 1,
                                     'return_code' => 'sent by whatsapp :admin-kernel',
-                                    'updated_at' => 'now()'
+                                    'updated_at' => now(),
                                 ]) : DB::table("shulesoft.sms")->where('schema_name', $message->schema_name)->where('sms_id', $id)->update([
                                     'status' => 1,
                                     'return_code' => 'sent by whatsapp :admin-kernel',
-                                    'updated_at' => 'now()'
+                                    'updated_at' => now()
                 ]);
                 sleep(0.8);
             }
