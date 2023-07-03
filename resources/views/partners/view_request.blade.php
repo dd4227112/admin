@@ -228,7 +228,7 @@
                                             if (!empty($request)) {
                                                 ?>
                                                 <?php
-                                                $client = DB::table('admin.clients')->where('schema_name', $request->client->username)->first();
+                                                $client = DB::table('admin.clients')->where('username', $request->client->username)->first();
 
                                                 if ((int) $client->is_new_version == 1) {
                                                   $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->where('schema_name', $request->client->username)->first();
