@@ -228,11 +228,17 @@
                                             if (!empty($request)) {
                                                 ?>
                                                 <?php
-                                                $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->where('schema_name', $request->client->username)->first();
+                                                $client = DB::table('admin.clients')->where('schema_name', $request->client->username)->first();
 
-                                                if (!empty($integrated) && !empty($checksystem)) {
-                                                    $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
+                                                if ((int) $client->is_new_version == 1) {
+                                                  $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->where('schema_name', $request->client->username)->first();
+  
+                                                }else{
+                                                        $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
+                                                
                                                 }
+                                                
+                                               
                                                 ?>
                                                 <tr>
                                                     <th>Invoice Prefix</th>

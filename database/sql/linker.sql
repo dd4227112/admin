@@ -74,3 +74,116 @@ returns integer;
 
 
 (select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id))
+
+(select id from shulesoft.invoices_fees_installments where uuid=(select uuid from %I.invoices_fees_installments where id=a.invoices_fees_installment_id))
+
+(select id from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where id=a.refer_expense_id))
+
+(select id from shulesoft.salaries where uuid=(select uuid from %I.salaries where id=a.salary_id))
+
+(select id from shulesoft.allowances where uuid=(select uuid from %I.allowances where id=a.allowance_id))
+
+(select id from shulesoft.transport_routes where uuid=(select uuid from %I.transport_routes where id=a.transport_route_id))
+
+(select id from shulesoft.deductions where uuid=(select uuid from %I.deductions where id=a.deduction_id))
+
+
+sql_=format('INSERT into shulesoft.expenses (,schema_name) select , ''%I'' from %I.expenses',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.fixed_assets (,schema_name) select , ''%I'' from %I.fixed_assets',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.revenue (,schema_name) select , ''%I'' from %I.revenue',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.liabilities (,schema_name) select , ''%I'' from %I.liabilities',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.capital (,schema_name) select , ''%I'' from %I.capital',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.closing_year_balance (,schema_name) select , ''%I'' from %I.closing_year_balance',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.wallet_uses (,schema_name) select , ''%I'' from %I.wallet_uses',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.routine_daily (,schema_name) select , ''%I'' from %I.routine_daily',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.tattendances (,schema_name) select , ''%I'' from %I.tattendances',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.staff_report (,schema_name) select , ''%I'' from %I.staff_report',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.user_devices (,schema_name) select , ''%I'' from %I.user_devices',schema_,schema_);
+
+execute sql_;
+
+
+
+sql_=format('INSERT into shulesoft.configurations (,schema_name) select , ''%I'' from %I.configurations',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.valid_emails (,schema_name) select , ''%I'' from %I.valid_emails',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.staff_targets_reports (,schema_name) select , ''%I'' from %I.staff_targets_reports',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.staff_targets (,schema_name) select , ''%I'' from %I.staff_targets',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.financial_year (,schema_name) select , ''%I'' from %I.financial_year',schema_,schema_);
+
+execute sql_;
+
+
+
+
+sql_=format('INSERT into shulesoft.discount (,schema_name) select , ''%I'' from %I.discount',schema_,schema_);
+
+execute sql_;
+
+
+--this table does not exists in old version
+sql_=format('INSERT into shulesoft.current_assets ("uuid","refer_expense_id","account_id","transaction_id","amount","user_sid","created_by_id","note","reconciled","number","sms_sent","date","created_at","updated_at",schema_name) select "uuid",(select id from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where id=a.refer_expense_id)),"account_id","transaction_id","amount","user_sid","created_by_id","note","reconciled","number","sms_sent","date","created_at","updated_at", ''%I'' from %I.current_assets',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.journals (,schema_name) select , ''%I'' from %I.journals',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.budgets (,schema_name) select , ''%I'' from %I.budgets',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.warehouses (,schema_name) select , ''%I'' from %I.warehouses',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.warehouse_transfers (,schema_name) select , ''%I'' from %I.warehouse_transfers',schema_,schema_);
+
+execute sql_;
+
+sql_=format('INSERT into shulesoft.invoice_prefix (,schema_name) select , ''%I'' from %I.invoice_prefix',schema_,schema_);
+
+execute sql_;
+

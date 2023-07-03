@@ -1,3 +1,21 @@
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_one(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0;
+  
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
+ --delete any data for that particular schema_name if exists
+ 
+
+ perform shulesoft.delete_schema_details_from_shulesoft_schema(schema_);
 --1. Setting 
 sql_=format('INSERT into shulesoft.setting ("settingID","sname","name","phone","address","email","sid","currency_code","currency_symbol","footer","photo","username","password","usertype","created_at","api_key","api_secret","box","payment_integrated","pass_mark","website","academic_year_id","motto","sms_enabled","email_enabled","sms_type","headname","signature","signature_path","exam_avg_format","school_format","registration_number","salary","id_number","empty_mark","institution_code","price_per_student","api_username","api_password","default_password","shulesoft_comission","nmb_comission","transaction_fee","bank_account_number","bank_name","updated_at","remember_token","show_report_to","custom_to","custom_to_amount","payment_status","payment_deadline_date","show_report_to_all","show_zero_in_report","school_gender","currency_rounding","email_list","invoice_guide","transaction_charges_to_parents","publish_exam","number","show_payment_plan","estimated_students","account_manager_id","show_bank","enable_payment_delete","total_paid_amount","region","school_id","roll_no_initial","online_admission","email_valid","payroll_status","pay_live_session","other_learning_material","enable_parent_charging","enable_self_registration","collection_method","fcm_token","sub_invoice","source","last_payment_date","next_payment_date","school_status","default_lang","country_id","sms_lang","gender","category","uuid","vfd_serial_number","vfd_password","tin","vrn","tax_group","vfd_approved","income_tax","vfd_enabled","allow_insurance",schema_name) select "settingID","sname","name","phone","address","email","sid","currency_code","currency_symbol","footer","photo","username","password","usertype","created_at","api_key","api_secret","box","payment_integrated","pass_mark","website","academic_year_id","motto","sms_enabled","email_enabled","sms_type","headname","signature","signature_path","exam_avg_format","school_format","registration_number","salary","id_number","empty_mark","institution_code","price_per_student","api_username","api_password","default_password","shulesoft_comission","nmb_comission","transaction_fee","bank_account_number","bank_name","updated_at","remember_token","show_report_to","custom_to","custom_to_amount","payment_status","payment_deadline_date","show_report_to_all","show_zero_in_report","school_gender","currency_rounding","email_list","invoice_guide","transaction_charges_to_parents","publish_exam","number","show_payment_plan","estimated_students","account_manager_id","show_bank","enable_payment_delete","total_paid_amount","region","school_id","roll_no_initial","online_admission","email_valid","payroll_status","pay_live_session","other_learning_material","enable_parent_charging","enable_self_registration","collection_method","fcm_token","sub_invoice","source","last_payment_date","next_payment_date","school_status","default_lang","country_id","sms_lang","gender","category","uuid","vfd_serial_number","vfd_password","tin","vrn","tax_group","vfd_approved","income_tax","vfd_enabled","allow_insurance", ''%I'' from %I.setting',schema_,schema_);
 
@@ -26,18 +44,16 @@ sql_=format('INSERT into shulesoft.certificate_setting ("certificate_type","show
 execute sql_;
 
 --7. payroll settings
---sql_=format('INSERT into shulesoft.payroll_setting (,schema_name) select , ''%I'' from %I.payroll_setting',schema_,schema_);
 
-execute sql_;
 
 --8. insert into teachers table
-sql_=format('INSERT into shulesoft.teacher ("teacherID","name","designation","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","employment_type","signature","signature_path","id_number","library","health_insurance_id","health_status_id","education_id","designation_id","education_level_id","updated_at","physical_condition_id","religion_id","nationality","salary","default_password","status","status_id","bank_account_number","bank_name","remember_token","email_valid","number","location","region","sid","city_id","national_id","country_id","qualification","payroll_status","fcm_token","role_id","uuid",schema_name) select "teacherID","name","designation","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","employment_type","signature","signature_path","id_number","library","health_insurance_id","health_status_id","education_id","designation_id","education_level_id","updated_at","physical_condition_id","religion_id","nationality","salary","default_password","status","status_id","bank_account_number","bank_name","remember_token","email_valid","number","location","region","sid","city_id","national_id","country_id","qualification","payroll_status","fcm_token","role_id","uuid", ''%I'' from %I.teacher',schema_,schema_);
+sql_=format('INSERT into shulesoft.teacher ("name","designation","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","employment_type","signature","signature_path","id_number","library","health_insurance_id","health_status_id","education_id","designation_id","education_level_id","updated_at","physical_condition_id","religion_id","nationality","salary","default_password","status","status_id","bank_account_number","bank_name","remember_token","email_valid","number","location","region","sid","city_id","national_id","country_id","qualification","payroll_status","fcm_token","role_id","uuid",schema_name) select "name","designation","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","employment_type","signature","signature_path","id_number","library","health_insurance_id","health_status_id","education_id","designation_id","education_level_id","updated_at","physical_condition_id","religion_id","nationality","salary","default_password","status","status_id","bank_account_number","bank_name","remember_token","email_valid","number","location","region","sid","city_id","national_id","country_id","qualification","payroll_status","fcm_token","role_id","uuid", ''%I'' from %I.teacher',schema_,schema_);
 
 execute sql_;
 
 --START ACADEMIC DATA TRANSFER
 --9. insert into classlevel 
-sql_=format('INSERT into shulesoft.classlevel ("classlevel_id","name","start_date","end_date","span_number","created_at","updated_at","note","result_format","terms","level_numeric","school_level_id","stamp","head_teacher_title","school_id","leaving_certificate","pass_mark","reg_form","gender","category","religion","education_level_id","uuid","end_time",schema_name) select "classlevel_id","name","start_date","end_date","span_number","created_at","updated_at","note","result_format","terms","level_numeric","school_level_id","stamp","head_teacher_title","school_id","leaving_certificate","pass_mark","reg_form","gender","category","religion","education_level_id","uuid","end_time", ''%I'' from %I.classlevel',schema_,schema_);
+sql_=format('INSERT into shulesoft.classlevel ("name","start_date","end_date","span_number","created_at","updated_at","note","result_format","terms","level_numeric","school_level_id","stamp","head_teacher_title","school_id","leaving_certificate","pass_mark","reg_form","gender","category","religion","education_level_id","uuid",schema_name) select "name","start_date","end_date","span_number","created_at","updated_at","note","result_format","terms","level_numeric","school_level_id","stamp","head_teacher_title","school_id","leaving_certificate","pass_mark","reg_form","gender","category","religion","education_level_id","uuid", ''%I'' from %I.classlevel',schema_,schema_);
 
 execute sql_;
 --10. Insert academic years with data from classlevel above
@@ -87,8 +103,26 @@ sql_=format('INSERT into shulesoft.subject_section ("subject_id","section_id","c
 execute sql_;
 --20. exam groups
 sql_=format('INSERT into shulesoft.exam_groups ("name","note","weight","created_at","updated_at","predefined","uuid",schema_name) select "name","note","weight","created_at","updated_at","predefined","uuid", ''%I'' from %I.exam_groups',schema_,schema_);
-
 execute sql_;
+ RETURN 0; 
+ END; 
+
+$BODY$;
+
+
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_two(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0; 
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
 --21. refer exam
 sql_=format('INSERT into shulesoft.refer_exam ("name","classlevel_id","note","created_at","abbreviation","exam_group_id","updated_at","uuid",schema_name) select "name",(select classlevel_id from shulesoft.classlevel where uuid=(select uuid from %I.classlevel where classlevel_id=a.classlevel_id)),"note","created_at","abbreviation",(select id from shulesoft.exam_groups where uuid=(select uuid from %I.exam_groups where id=a.exam_group_id)),"updated_at","uuid", ''%I'' from %I.refer_exam a',schema_,schema_,schema_,schema_);
 
@@ -139,10 +173,7 @@ execute sql_;
 sql_=format('INSERT into shulesoft.student_other ("admitted_from","reg_number","student_id","created_at","year_finished","other_subject","school_id","updated_at","uuid",schema_name) select "admitted_from","reg_number",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"created_at","year_finished","other_subject","school_id","updated_at","uuid", ''%I'' from %I.student_other a',schema_,schema_,schema_);
 
 execute sql_;
---33. exam special case
-sql_=format('INSERT into shulesoft.exam_special_cases ("student_id","exam_id","description","special_exam_reason_id","created_by","created_by_table","created_at","updated_at","subjects_excluded","subjects_ids_excluded","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"description","special_exam_reason_id",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","subjects_excluded","subjects_ids_excluded","uuid", ''%I'' from %I.exam_special_cases a',schema_,schema_,schema_,schema_,schema_);
 
-execute sql_;
 
 --34. insert user
 sql_=format('INSERT into shulesoft.user ("name","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","signature","signature_path","role_id","salary","id_number","default_password","status","status_id","bank_account_number","bank_name","remember_token","number","sid","location","education_level_id","employment_type_id","physical_condition_id","health_status_id","health_insurance_id","religion_id","town","national_id","country_id","qualification","email_valid","payroll_status","fcm_token","updated_at","uuid",schema_name) select "name","dob","sex","email","phone","address","jod","photo","username","password","usertype","created_at","signature","signature_path",(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"salary","id_number","default_password","status","status_id","bank_account_number","bank_name","remember_token","number","sid","location","education_level_id","employment_type_id","physical_condition_id","health_status_id","health_insurance_id","religion_id","town","national_id","country_id","qualification","email_valid","payroll_status","fcm_token","updated_at","uuid", ''%I'' from %I.user a',schema_,schema_,schema_);
@@ -150,6 +181,10 @@ sql_=format('INSERT into shulesoft.user ("name","dob","sex","email","phone","add
 execute sql_;
 --35. insert emails
 sql_=format('INSERT into shulesoft.email ("email_id","body","subject","user_id","created_at","status","email","table","uuid",schema_name) select "email_id","body","subject","user_id","created_at","status","email","table","uuid", ''%I'' from %I.email',schema_,schema_);
+
+execute sql_;
+--33. exam special case
+sql_=format('INSERT into shulesoft.exam_special_cases ("student_id","exam_id","description","special_exam_reason_id","created_by","created_by_table","created_at","updated_at","subjects_excluded","subjects_ids_excluded","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"description","special_exam_reason_id",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","subjects_excluded","subjects_ids_excluded","uuid", ''%I'' from %I.exam_special_cases a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --36. sms keys
@@ -174,17 +209,35 @@ sql_=format('INSERT into shulesoft.student_status ("reason","created_at","is_rep
 
 execute sql_;
 --41. user roles
-sql_=format('INSERT into shulesoft.user_role ("user_id","role_id","created_at","updated_at","table","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and "id"=a."user_id")),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"created_at","updated_at","table","uuid", ''%I'' from %I.user_role a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.user_role ("user_id","role_id","created_at","updated_at","table","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and "id"=a."user_id" limit 1) limit 1),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id) limit 1),"created_at","updated_at","table","uuid", ''%I'' from %I.user_role a',schema_,schema_,schema_,schema_);
 
 execute sql_;
---42. reminders: User IDS needs to be manually converted 
-sql_=format('INSERT into shulesoft.reminders ("user_id","role_id","date","time","mailandsmstemplate_id","title","is_repeated","days","created_at","updated_at","message","type","category","student_id","last_schedule_date","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"date","time","mailandsmstemplate_id","title","is_repeated","days","created_at","updated_at","message","type","category",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"last_schedule_date","uuid", ''%I'' from %I.reminders a',schema_,schema_,schema_,schema_,schema_);
+--42. reminders
+sql_=format('INSERT into shulesoft.reminders ("user_id","role_id","date","time","mailandsmstemplate_id","title","is_repeated","days","created_at","updated_at","message","type","category","student_id","last_schedule_date","uuid",schema_name) select user_id,role_id,"date","time","mailandsmstemplate_id","title","is_repeated","days","created_at","updated_at","message","type","category",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"last_schedule_date","uuid", ''%I'' from %I.reminders a',schema_,schema_,schema_);
 
 execute sql_;
 --43. file folder
 sql_=format('INSERT into shulesoft.file_folder ("user_id","table","name","created_at","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","name","created_at","uuid", ''%I'' from %I.file_folder a',schema_,schema_,schema_);
 
 execute sql_;
+ RETURN 0; 
+ END; 
+
+$BODY$;
+
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_three(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0; 
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
 --45. files 
 sql_=format('INSERT into shulesoft.files ("mime","file_folder_id","name","display_name","created_at","user_id","table","size","caption","path","uuid",schema_name) select "mime",(select "id" from shulesoft.file_folder where uuid=(select uuid from %I.file_folder where "id"=a."file_folder_id")),"name","display_name","created_at",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"table","size","caption","path","uuid", ''%I'' from %I.files a',schema_,schema_,schema_,schema_);
 
@@ -194,7 +247,7 @@ sql_=format('INSERT into shulesoft.id_cards ("show_gender","show_birthday","show
 
 execute sql_;
 --47. email_lists
-sql_=format('INSERT into shulesoft.email_lists ("email","created_at","updated_at","created_by","uuid",schema_name) select "email","created_at","updated_at",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."created_by")),"uuid", ''%I'' from %I.email_lists',schema_,schema_);
+sql_=format('INSERT into shulesoft.email_lists ("email","created_at","updated_at","created_by","uuid",schema_name) select "email","created_at","updated_at",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."created_by"::bigint)),"uuid", ''%I'' from %I.email_lists a',schema_,schema_,schema_);
 
 execute sql_;
 --48. payment types
@@ -206,7 +259,7 @@ sql_=format('INSERT into shulesoft.media_categories ("name","updated_at","create
 
 execute sql_;
 --50. books
-sql_=format('INSERT into shulesoft.book ("name","author","rack","created_at","edition","user_id","serial_no","subject_code","subject_id","classesID","whois","book_condition","quantity","book_for","due_quantity","updated_at","uuid",schema_name) select "name","author","rack","created_at","edition",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"serial_no","subject_code",(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subject_id")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),"whois","book_condition","quantity","book_for","due_quantity","updated_at","uuid", ''%I'' from %I.book a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.book ("name","author","rack","created_at","edition","user_id","serial_no","subject_code","subject_id","classesID","whois","quantity","book_for","due_quantity","updated_at","uuid",schema_name) select "name","author","rack","created_at","edition",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"serial_no","subject_code",(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subject_id")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),"whois","quantity","book_for","due_quantity","updated_at","uuid", ''%I'' from %I.book a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 
@@ -219,16 +272,16 @@ sql_=format('INSERT into shulesoft.diary_comments ("user_id","table","comment","
 
 execute sql_;
 --53. messages
-sql_=format('INSERT into shulesoft.message ("email","receiverID","receiverType","subject","message","attach","attach_file_name","userID","usertype","useremail","year","date","create_date","read_status","from_status","to_status","fav_status","fav_status_sent","reply_status","created_at","receiverTable","uuid",schema_name) select "email","receiverID","receiverType","subject","message","attach","attach_file_name",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"usertype","useremail","year","date","create_date","read_status","from_status","to_status","fav_status","fav_status_sent","reply_status","created_at","receiverTable","uuid", ''%I'' from %I.message a',schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.message ("email","receiverID","receiverType","subject","message","attach","attach_file_name","userID","usertype","useremail","year","date","create_date","read_status","from_status","to_status","fav_status","fav_status_sent","reply_status","created_at","receiverTable","uuid",schema_name) select "email","receiverID","receiverType","subject","message","attach","attach_file_name",(select "id" from shulesoft.users where uuid=(select uuid from %I.users where "id"=a."userID" and lower(usertype)=lower(a.usertype) limit 1) limit 1),"usertype","useremail","year","date","create_date","read_status","from_status","to_status","fav_status","fav_status_sent","reply_status","created_at","receiverTable","uuid", ''%I'' from %I.message a',schema_,schema_,schema_);
 
 execute sql_;
 --54. login locations
-sql_=format('INSERT into shulesoft.login_locations ("ip","city","region","country","latitude","longtude","timezone","user_id","table","continent","currency_code","currency_symbol","currency_convert","location_radius_accuracy","created_at","updated_at","action","uuid",schema_name) select "ip","city","region","country","latitude","longtude","timezone",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id")),"table","continent","currency_code","currency_symbol","currency_convert","location_radius_accuracy","created_at","updated_at","action","uuid", ''%I'' from %I.login_locations a',schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.login_locations ("ip","city","region","country","latitude","longtude","timezone","user_id","table","continent","currency_code","currency_symbol","currency_convert","location_radius_accuracy","created_at","updated_at","action","uuid",schema_name) select "ip","city","region","country","latitude","longtude","timezone",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id" limit 1) limit 1),"table","continent","currency_code","currency_symbol","currency_convert","location_radius_accuracy","created_at","updated_at","action","uuid", ''%I'' from %I.login_locations a',schema_,schema_,schema_);
 
 execute sql_;
 
 --55. tempfiles
-sql_=format('INSERT into shulesoft.tempfiles ("data","filename","created_at","updated_at","method","controller","created_by","created_by_table","processed","status","uuid",schema_name) select "data","filename","created_at","updated_at","method","controller",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","processed","status","uuid", ''%I'' from %I.tempfiles',schema_,schema_);
+sql_=format('INSERT into shulesoft.tempfiles ("data","filename","created_at","updated_at","method","controller","created_by","created_by_table","processed","status","uuid",schema_name) select "data","filename","created_at","updated_at","method","controller",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","processed","status","uuid", ''%I'' from %I.tempfiles a',schema_,schema_,schema_);
 
 execute sql_;
 --59. sms templates
@@ -244,15 +297,15 @@ sql_=format('INSERT into shulesoft.appointments ("date","time","to_user_id","to_
 
 execute sql_;
 --62. reply sms
-sql_=format('INSERT into shulesoft.reply_sms ("secret","from","message_id","message","sent_to","device_id","created_at","table","user_id","sent_timestamp","opened","updated_at","uuid",schema_name) select "secret","from",(select "messageID" from shulesoft.message where uuid=(select uuid from %I.message where "messageID"=a."message_id")),"message","sent_to","device_id","created_at","table",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"sent_timestamp","opened","updated_at","uuid", ''%I'' from %I.reply_sms a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.reply_sms ("secret","from","message_id","message","sent_to","device_id","created_at","table","user_id","sent_timestamp","opened","updated_at","uuid",schema_name) select "secret","from","message_id","message","sent_to","device_id","created_at","table",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"sent_timestamp","opened","updated_at","uuid", ''%I'' from %I.reply_sms a',schema_,schema_,schema_);
 
 execute sql_;
 --63. cash requests
-sql_=format('INSERT into shulesoft.cash_requests ("amount","requested_by","requested_by_table","requested_date","checked_by","checked_by_table","checked_date","approved_by","approved_by_table","approved_date","received_by","received_by_table","received_date","created_at","updated_at","particulars","uuid",schema_name) select "amount",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."requested_by_table" and  "id"=a."requested_by")),"requested_by_table","requested_date",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."checked_by_table" and  "id"=a."checked_by")),"checked_by_table","checked_date",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."approved_by_table" and  "id"=a."approved_by")),"approved_by_table","approved_date",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."received_by_table" and  "id"=a."received_by")),"received_by_table","received_date","created_at","updated_at","particulars","uuid", ''%I'' from %I.cash_requests a',schema_,schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.cash_requests ("amount","requested_by","requested_by_table","requested_date","checked_by","checked_by_table","checked_date","approved_by","approved_by_table","approved_date","received_by","received_by_table","received_date","created_at","updated_at","particulars","uuid",schema_name) select "amount",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."requested_by_table" and  "id"=a."requested_by" limit 1) limit 1),"requested_by_table","requested_date",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."checked_by_table" and  "id"=a."checked_by"  limit 1)  limit 1),"checked_by_table","checked_date",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."approved_by_table" and  "id"=a."approved_by"  limit 1)  limit 1),"approved_by_table","approved_date",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."received_by_table" and  "id"=a."received_by"  limit 1)  limit 1),"received_by_table","received_date","created_at","updated_at","particulars","uuid", ''%I'' from %I.cash_requests a',schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --64. mark
-sql_=format('INSERT into shulesoft.mark ("examID","exam","student_id","classesID","subjectID","subject","mark","year","created_at","postion","academic_year_id","status","created_by","table","updated_at","uuid",schema_name) select (select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),"exam",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),"subject","mark","year","created_at","postion",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"status",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."created_by")),"table","updated_at","uuid", ''%I'' from %I.mark a',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.mark ("examID","exam","student_id","classesID","subjectID","subject","mark","year","created_at","postion","academic_year_id","status","created_by","table","updated_at","uuid",schema_name) select (select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),"exam",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),"subject","mark","year","created_at","postion",(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"status",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."created_by") limit 1),"table","updated_at","uuid", ''%I'' from %I.mark a',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --65. subject student
@@ -260,7 +313,7 @@ sql_=format('INSERT into shulesoft.subject_student ("subject_id","student_id","c
 
 execute sql_;
 --66. subject mark
-sql_=format('INSERT into shulesoft.subject_mark ("grade_mark","effort_mark","achievement_mark","student_id","subjectID","classesID","academic_year_id","examID","created_at","updated_at",(select "sectionID" from shulesoft.section where uuid=(select uuid from %I.section where "sectionID"=a."sectionID")),"year","exam","subject","status","uuid",schema_name) select "grade_mark","effort_mark","achievement_mark",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),"created_at","updated_at",(select "sectionID" from shulesoft.section where uuid=(select uuid from %I.section where "sectionID"=a."sectionID")),"year","exam","subject","status","uuid", ''%I'' from %I.subject_mark a',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.subject_mark ("grade_mark","effort_mark","achievement_mark","student_id","subjectID","classesID","academic_year_id","examID","created_at","updated_at","sectionID","year","exam","subject","status","uuid",schema_name) select "grade_mark","effort_mark","achievement_mark",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),"created_at","updated_at",(select "sectionID" from shulesoft.section where uuid=(select uuid from %I.section where "sectionID"=a."sectionID")),"year","exam","subject","status","uuid", ''%I'' from %I.subject_mark a',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --67. subject topic
@@ -280,29 +333,47 @@ sql_=format('INSERT into shulesoft.duties ("start_date","end_date","name","creat
 
 execute sql_;
 --71. duty reports
-sql_=format('INSERT into shulesoft.duty_reports ("date","transport","feed","special_event","tod_comment","headteacher_comment","created_at","updated_at","created_by","created_by_table","duty_id","uuid",schema_name) select "date","transport","feed","special_event","tod_comment","headteacher_comment","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table",(select id from shulesoft.duties where uuid=(select uuid from %I.duties where id=a.duty_id)),"uuid", ''%I'' from %I.duty_reports a',schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.duty_reports ("date","transport","feed","special_event","tod_comment","headteacher_comment","created_at","updated_at","created_by","created_by_table","duty_id","uuid",schema_name) select "date","transport","feed","special_event","tod_comment","headteacher_comment","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by"::bigint)),"created_by_table",(select id from shulesoft.duties where uuid=(select uuid from %I.duties where id=a.duty_id)),"uuid", ''%I'' from %I.duty_reports a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --72. youtube access tokens
 sql_=format('INSERT into shulesoft.youtube_access_tokens ("access_token","created_at","updated_at","uuid",schema_name) select "access_token","created_at","updated_at","uuid", ''%I'' from %I.youtube_access_tokens',schema_,schema_);
 
 execute sql_;
+ RETURN 0; 
+ END; 
+
+$BODY$;
+
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_four(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0; 
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
 --73. syllabus topics
 sql_=format('INSERT into shulesoft.syllabus_topics ("code","title","subject_id","start_date","end_date","created_at","updated_at","uuid",schema_name) select "code","title",(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subject_id")),"start_date","end_date","created_at","updated_at","uuid", ''%I'' from %I.syllabus_topics a',schema_,schema_,schema_);
 
 execute sql_;
 --74. forum questions
-sql_=format('INSERT into shulesoft.forum_questions ("syllabus_topic_id","title","question","created_by","created_by_table","created_at","updated_at","status","uuid",schema_name) select (select "id" from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where "id"=a."syllabus_topic_id")),"title","question",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","status","uuid", ''%I'' from %I.forum_questions a',schema_,schema_,schema_schema_);
+sql_=format('INSERT into shulesoft.forum_questions ("syllabus_topic_id","title","question","created_by","created_by_table","created_at","updated_at","status","uuid",schema_name) select (select "id" from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where "id"=a."syllabus_topic_id")),"title","question",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","status","uuid", ''%I'' from %I.forum_questions a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --75. forum questions viewers
-sql_=format('INSERT into shulesoft.forum_question_viewers ("forum_question_id","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.forum_questions where uuid=(select uuid from %I.forum_questions where "id"=a."forum_question_id")),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_question_viewers a',schema_,schema_,schema_schema_);
+sql_=format('INSERT into shulesoft.forum_question_viewers ("forum_question_id","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.forum_questions where uuid=(select uuid from %I.forum_questions where "id"=a."forum_question_id")),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_question_viewers a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --76. log table
-sql_=format('INSERT into shulesoft.log ("url","user_agent","platform","platform_name","source","created_at","updated_at","user","user_id","country","city","region","isp","table","controller","method","is_ajax","request","uuid",schema_name) select "url","user_agent","platform","platform_name","source","created_at","updated_at","user",(select "id" from shulesoft.userd where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id")),"country","city","region","isp","table","controller","method","is_ajax","request","uuid", ''%I'' from %I.log a',schema_,schema_,schema_);
+--sql_=format('INSERT into shulesoft.log ("url","user_agent","platform","platform_name","source","created_at","updated_at","user","user_id","country","city","region","isp","table","controller","method","is_ajax","request","uuid",schema_name) select "url","user_agent","platform","platform_name","source","created_at","updated_at","user",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id")),"country","city","region","isp","table","controller","method","is_ajax","request","uuid", ''%I'' from %I.log a',schema_,schema_,schema_);
 
-execute sql_;
+--execute sql_;
 --77. minor exams
 sql_=format('INSERT into shulesoft.minor_exams ("subject_id","exam_group_id","date","note","created_by","created_by_table","created_at","updated_at","total_question","publish_exam","publish_result","syllabus_topic_id","total_time","uuid",schema_name) select (select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subject_id")),(select "id" from shulesoft.exam_groups where uuid=(select uuid from %I.exam_groups where "id"=a."exam_group_id")),"date","note",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","total_question","publish_exam","publish_result",(select "id" from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where "id"=a."syllabus_topic_id")),"total_time","uuid", ''%I'' from %I.minor_exams a',schema_,schema_,schema_,schema_,schema_,schema_);
 
@@ -349,7 +420,7 @@ sql_=format('INSERT into shulesoft.application ("student_id","apply_for","create
 
 execute sql_;
 --88. student characters
-sql_=format('INSERT into shulesoft.student_characters ("student_id","semester_id","character_id","teacher_id","grade1","grade2","remark","created_at","updated_at","classes_id","status","grade3","grade4","grade5","grade","exam_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.semester where uuid=(select uuid from %I.semester where id=a.semester_id)),(select id from shulesoft.characters where uuid=(select uuid from %I.characters where id=a.character_id)),(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"grade1","grade2","remark","created_at","updated_at",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classes_id")),"status","grade3","grade4","grade5","grade",(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"uuid", ''%I'' from %I.student_characters a',schema_,schema_,schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.student_characters ("student_id","semester_id","character_id","teacher_id","grade1","grade2","remark","created_at","updated_at","classes_id","status","grade3","grade4","grade5","grade","exam_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.semester where uuid=(select uuid from %I.semester where id=a.semester_id)),(select id from shulesoft.characters where uuid=(select uuid from %I.characters where id=a.character_id)),(select "teacherID" from shulesoft.teacher where uuid=(select uuid from %I.teacher where "teacherID"=a."teacher_id")),"grade1","grade2","remark","created_at","updated_at",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classes_id")),"status","grade3","grade4","grade5","grade",(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."exam_id")),"uuid", ''%I'' from %I.student_characters a',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --89. syllabus sub topics
@@ -365,11 +436,11 @@ sql_=format('INSERT into shulesoft.syllabus_benchmarks ("grade_remark","grade","
 
 execute sql_;
 --92. syllabus student benchmarking
-sql_=format('INSERT into shulesoft.syllabus_student_benchmarking ("student_id","syllabus_benchmark_id","syllabus_objective_id","created_by_id","created_by_table","created_at","updated_at","semester_id","syllabus_topic_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.syllabus_benchmarks where uuid=(select uuid from %I.syllabus_benchmarks where id=a.syllabus_benchmark_id)), (select id from shulesoft.syllabus_objectives where uuid=(select uuid from %I.syllabus_objectives where id=a.syllabus_objective_id)),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by_id")),"created_by_table","created_at","updated_at",(select id from shulesoft.semester where uuid=(select uuid from %I.semester where id=a.semester_id)),(select id from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where id=a.syllabus_topic_id)),"uuid", ''%I'' from %I.syllabus_student_benchmarking a',schema_,schema_,schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.syllabus_student_benchmarking ("student_id","syllabus_benchmark_id","syllabus_objective_id","created_by_id","created_by_table","created_at","updated_at","semester_id","syllabus_topic_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.syllabus_benchmarks where uuid=(select uuid from %I.syllabus_benchmarks where id=a.syllabus_benchmark_id)), (select id from shulesoft.syllabus_objectives where uuid=(select uuid from %I.syllabus_objectives where id=a.syllabus_objective_id)),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by_id")),"created_by_table","created_at","updated_at",(select id from shulesoft.semester where uuid=(select uuid from %I.semester where id=a.semester_id)),(select id from shulesoft.syllabus_topics where uuid=(select uuid from %I.syllabus_topics where id=a.syllabus_topic_id)),"uuid", ''%I'' from %I.syllabus_student_benchmarking a',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --93. syllabus objective reference
-sql_=format('INSERT into shulesoft.syllabus_objective_references ("syllabus_objective_id","book_id","page_description","reference_type","created_by_id","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.syllabus_objectives where uuid=(select uuid from %I.syllabus_objectives where id=a.syllabus_objective_id)),(select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id))","page_description","reference_type",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by_id")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.syllabus_objective_references a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.syllabus_objective_references ("syllabus_objective_id","book_id","page_description","reference_type","created_by_id","created_by_table","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.syllabus_objectives where uuid=(select uuid from %I.syllabus_objectives where id=a.syllabus_objective_id)),(select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id)),"page_description","reference_type",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by_id")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.syllabus_objective_references a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --94 syllabus subtopics teachers
@@ -388,6 +459,24 @@ execute sql_;
 sql_=format('INSERT into shulesoft.media_category ("folder_name","create_time","created_at","uuid",schema_name) select "folder_name","create_time","created_at","uuid", ''%I'' from %I.media_category',schema_,schema_);
 
 execute sql_;
+ RETURN 0; 
+ END; 
+
+$BODY$;
+
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_five(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0; 
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
 --98. media table
 sql_=format('INSERT into shulesoft.media ("userID","usertype","mcategoryID","file_name","file_name_display","created_at","table","class","name","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"usertype",(select id from shulesoft.media_category where uuid=(select uuid from %I.media_category where id=a."mcategoryID")),"file_name","file_name_display","created_at","table","class","name","uuid", ''%I'' from %I.media a',schema_,schema_,schema_,schema_);
 
@@ -453,12 +542,12 @@ sql_=format('INSERT into shulesoft.forum_discussion ("forum_category_id","title"
 
 execute sql_;
 --112. forum user discussions
-sql_=format('INSERT into shulesoft.forum_user_discussion ("user_id","user_table","discussion_id","uuid",schema_name) select (select "id" from shulesoft.userd where uuid in (select uuid from %I.users where "table"=a."user_table" and  "id"=a."user_id")),"user_table",(select id from shulesoft.forum_discussion where uuid=(select uuid from %I.forum_discussion where id=a.discussion_id)),"uuid", ''%I'' from %I.forum_user_discussion a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.forum_user_discussion ("user_id","user_table","discussion_id","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."user_table" and  "id"=a."user_id")),"user_table",(select id from shulesoft.forum_discussion where uuid=(select uuid from %I.forum_discussion where id=a.discussion_id)),"uuid", ''%I'' from %I.forum_user_discussion a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 
 --113. posts
-sql_=format('INSERT into shulesoft.forum_post ("forum_discussion_id","user_id","user_table","body","created_at","updated_at","markdown","locked","deleted_at","uuid",schema_name) select (select id from shulesoft.forum_discussion where uuid=(select uuid from %I.forum_discussion where id=a.forum_discussion_id)),(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_table","body","created_at","updated_at","markdown","locked","deleted_at","uuid", ''%I'' from %I.forum_post',schema_,schema_);
+sql_=format('INSERT into shulesoft.forum_post ("forum_discussion_id","user_id","user_table","body","created_at","updated_at","markdown","locked","deleted_at","uuid",schema_name) select (select id from shulesoft.forum_discussion where uuid=(select uuid from %I.forum_discussion where id=a.forum_discussion_id)),(select "id" from shulesoft.users where uuid=(select uuid from %I.users where "table"=a."user_table" and "id"=a."user_id")),"user_table","body","created_at","updated_at","markdown","locked","deleted_at","uuid", ''%I'' from %I.forum_post a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --114. forum answers
@@ -471,7 +560,7 @@ sql_=format('INSERT into shulesoft.forum_answer_votes ("forum_answer_id","vote_t
 execute sql_;
 
 --116. forum question commnets
-sql_=format('INSERT into shulesoft.forum_questions_comments ("forum_question_id","content","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select(select "id" from shulesoft.forum_questions where uuid=(select uuid from %I.forum_questions where "id"=a."forum_question_id")),"content",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_questions_comments a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.forum_questions_comments ("forum_question_id","content","created_by","created_by_table","created_at","updated_at","uuid",schema_name) select (select "id" from shulesoft.forum_questions where uuid=(select uuid from %I.forum_questions where "id"=a."forum_question_id")),"content",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","created_at","updated_at","uuid", ''%I'' from %I.forum_questions_comments a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --117 forum question votes
@@ -487,7 +576,24 @@ execute sql_;
 sql_=format('INSERT into shulesoft.media_share ("classesID","public","file_or_folder","item_id","create_time","created_at","uuid",schema_name) select (select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),"public","file_or_folder","item_id","create_time","created_at","uuid", ''%I'' from %I.media_share a',schema_,schema_,schema_);
 
 execute sql_;
+ RETURN 0; 
+ END; 
 
+$BODY$;
+
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_six(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0; 
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
 --120
 sql_=format('INSERT into shulesoft.refer_character_grading_systems ("grade_remark","grade","description","points","created_at","updated_at","uuid",schema_name) select "grade_remark","grade","description","points","created_at","updated_at","uuid", ''%I'' from %I.refer_character_grading_systems',schema_,schema_);
 
@@ -514,7 +620,7 @@ sql_=format('INSERT into shulesoft.assignment_viewers ("assignment_id","created_
 
 execute sql_;
 --124
-sql_=format('INSERT into shulesoft.book_quantity ("book_id","status","book_condition","bID","updated_at","created_at","uuid",schema_name) select (select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id)),"status","book_condition","bID","updated_at","created_at","uuid", ''%I'' from %I.book_quantity',schema_,schema_);
+sql_=format('INSERT into shulesoft.book_quantity ("book_id","status","book_condition","bID","updated_at","created_at","uuid",schema_name) select (select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id)),"status","book_condition","bID","updated_at","created_at","uuid", ''%I'' from %I.book_quantity a',schema_,schema_,schema_);
 
 execute sql_;
 --125
@@ -579,7 +685,7 @@ sql_=format('INSERT into shulesoft.track_invoices ("reference","student_id","inv
 execute sql_;
 
 --138.
-sql_=format('INSERT into shulesoft.track ("user_id","user_type","table_name","column_name","column_value_from","column_final_value","created_at","status","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_type","table_name","column_name","column_value_from","column_final_value","created_at","status","uuid", ''%I'' from %I.track',schema_,schema_);
+sql_=format('INSERT into shulesoft.track ("user_id","user_type","table_name","column_name","column_value_from","column_final_value","created_at","status","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),"user_type","table_name","column_name","column_value_from","column_final_value","created_at","status","uuid", ''%I'' from %I.track a',schema_,schema_,schema_);
 
 execute sql_;
 --139
@@ -591,6 +697,24 @@ execute sql_;
 sql_=format('INSERT into shulesoft.installments ("academic_year_id","start_date","end_date","name","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),"start_date","end_date","name","created_at","updated_at","uuid", ''%I'' from %I.installments a',schema_,schema_,schema_);
 
 execute sql_;
+RETURN 0; 
+ END; 
+
+$BODY$;
+
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_seven(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0; 
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
 --141
 sql_=format('INSERT into shulesoft.student_due_date ("student_id","due_date","installment_id","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"due_date",(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id)),"uuid", ''%I'' from %I.student_due_date a',schema_,schema_,schema_,schema_);
 
@@ -601,7 +725,7 @@ sql_=format('INSERT into shulesoft.payments ("student_id","amount","payment_type
 
 execute sql_;
 --143
-sql_=format('INSERT into shulesoft.advance_payments ("student_id","fee_id","payment_id","amount","created_at","updated_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),(select id from shulesoft.payments where uuid=(select uuid from %I.payments where id=a.payment_id)),"amount","created_at","updated_at","uuid", ''%I'' from %I.advance_payments',schema_,schema_);
+sql_=format('INSERT into shulesoft.advance_payments ("student_id","fee_id","payment_id","amount","created_at","updated_at","uuid",schema_name) select (select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),(select id from shulesoft.payments where uuid=(select uuid from %I.payments where id=a.payment_id)),"amount","created_at","updated_at","uuid", ''%I'' from %I.advance_payments a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --145
@@ -627,7 +751,7 @@ sql_=format('INSERT into shulesoft.refer_expense ("name","create_date","financia
 execute sql_;
 
 --150
-sql_=format('INSERT into shulesoft.notice ("title","notice","year","date","create_date","created_at","class_id","to_roll_id","notice_for","status","uuid",schema_name) select "title","notice","year","date","create_date","created_at",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.to_roll_id)),"notice_for","status","uuid", ''%I'' from %I.notice a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.notice ("title","notice","year","date","create_date","created_at","class_id","to_roll_id","notice_for","status","uuid",schema_name) select "title","notice","year","date","create_date","created_at",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id"::bigint)),(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.to_roll_id::integer)),"notice_for","status","uuid", ''%I'' from %I.notice a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --151
@@ -647,7 +771,7 @@ sql_=format('INSERT into shulesoft.deductions ("name","percent","amount","create
 
 execute sql_;
 --155
-sql_=format('INSERT into shulesoft.news_board ("title","role_id","body","create_date","created_at","updated_at","status","attach_file_name","attach","class_id","attachment","uuid",schema_name) select "title",(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"body","create_date","created_at","updated_at","status","attach_file_name","attach",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id")),"attachment","uuid", ''%I'' from %I.news_board a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.news_board ("title","role_id","body","create_date","created_at","updated_at","status","attach_file_name","attach","class_id","attachment","uuid",schema_name) select "title",(select id from shulesoft.role where uuid=(select uuid from %I.role where id=a.role_id)),"body","create_date","created_at","updated_at","status","attach_file_name","attach",(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."class_id"::bigint)),"attachment","uuid", ''%I'' from %I.news_board a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --156
@@ -667,7 +791,7 @@ sql_=format('INSERT into shulesoft.loan_payments ("loan_application_id","amount"
 execute sql_;
 
 --160
-sql_=format('INSERT into shulesoft.user_deductions ("user_id","table","deduction_id","created_at","updated_at","created_by","deadline","type","amount","percent","employer_amount","employer_percent","loan_application_id","uuid",schema_name) select (select "id" from shulesoft.user where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id")),"table",(select "id" from shulesoft.deductions where uuid =(select uuid from %I.deductions where "id"=a."deduction_id")),"created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."created_by")),"deadline","type","amount","percent","employer_amount","employer_percent",(select id from shulesoft.loan_applications where uuid=(select uuid from %I.load_applications where id=a.loan_application_id)),"uuid", ''%I'' from %I.user_deductions a',schema_,schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.user_deductions ("user_id","table","deduction_id","created_at","updated_at","created_by","deadline","type","amount","percent","employer_amount","employer_percent","loan_application_id","uuid",schema_name) select (select "id" from shulesoft.user where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id"::bigint)),"table",(select "id" from shulesoft.deductions where uuid =(select uuid from %I.deductions where "id"=a."deduction_id")),"created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."created_by"::bigint)),"deadline","type","amount","percent","employer_amount","employer_percent",(select id from shulesoft.loan_applications where uuid=(select uuid from %I.loan_applications where id=a.loan_application_id)),"uuid", ''%I'' from %I.user_deductions a',schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --161
@@ -690,6 +814,24 @@ execute sql_;
 sql_=format('INSERT into shulesoft.fees_installments ("fee_id","installment_id","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),(select id from shulesoft.installments where uuid=(select uuid from %I.installments where id=a.installment_id)),"created_at","updated_at","uuid", ''%I'' from %I.fees_installments a',schema_,schema_,schema_,schema_);
 
 execute sql_;
+RETURN 0; 
+ END; 
+
+$BODY$;
+
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_eight(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0; 
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
 --166
 sql_=format('INSERT into shulesoft.invoices_fees_installments ("invoice_id","fees_installment_id","created_at","updated_at","uuid",schema_name) select (select id from shulesoft.invoices where uuid=(select uuid from %I.invoices where id=a.invoice_id)),(select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),"created_at","updated_at","uuid", ''%I'' from %I.invoices_fees_installments a',schema_,schema_,schema_,schema_);
 
@@ -720,7 +862,7 @@ sql_=format('INSERT into shulesoft.lmember ("lID","user_id","lbalance","ljoindat
 execute sql_;
 
 --172
-sql_=format('INSERT into shulesoft.issue ("lmember_id","issue_date","due_date","return_date","fine","note","created_at","is_returned","book_quantityID","created_by","type","book_quantity_id","book_id","created_by_table","updated_at","lID","uuid",schema_name) select (select id from shulesoft.lmember where uuid=(select uuid from %I.lmember where id=a.lmember_id)),"issue_date","due_date","return_date","fine","note","created_at","is_returned","book_quantityID",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by")),"type",(select id from shulesoft.book_quantity where uuid=(select uuid from %I.book_quantity where id=a.book_quantity_id)),(select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id)),"created_by_table","updated_at","lID","uuid", ''%I'' from %I.issue a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.issue ("lmember_id","issue_date","due_date","return_date","fine","note","created_at","is_returned","book_quantityID","created_by","type","book_quantity_id","book_id","created_by_table","updated_at","lID","uuid",schema_name) select (select id from shulesoft.lmember where uuid=(select uuid from %I.lmember where id=a.lmember_id)),"issue_date","due_date","return_date","fine","note","created_at","is_returned","book_quantityID",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by")),"type",(select id from shulesoft.book_quantity where uuid=(select uuid from %I.book_quantity where id=a.book_quantity_id)),(select id from shulesoft.book where uuid=(select uuid from %I.book where id=a.book_id)),"created_by_table","updated_at","lID","uuid", ''%I'' from %I.issue a',schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --173 hostels
@@ -779,13 +921,31 @@ sql_=format('INSERT into shulesoft.product_alert_quantity ("product_register_id"
 execute sql_;
 
 --187
-sql_=format('INSERT into shulesoft.expense ("create_date","date","expense","amount","userID","uname","usertype","expenseyear","note","created_at","categoryID","is_depreciation","depreciation","refer_expense_id","ref_no","payment_method","created_by","bank_account_id","transaction_id","created_by_table","reconciled","voucher_no","payer_name","recipient","updated_at","payment_type_id","uuid",schema_name) select "create_date","date","expense","amount",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"uname","usertype","expenseyear","note","created_at","categoryID","is_depreciation","depreciation",(select id from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where id=a.refer_expense_id)),"ref_no","payment_method",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"transaction_id","created_by_table","reconciled","voucher_no","payer_name","recipient","updated_at","payment_type_id","uuid", ''%I'' from %I.expense a',schema_,schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.expense ("create_date","date","expense","amount","userID","uname","usertype","expenseyear","note","created_at","categoryID","is_depreciation","depreciation","refer_expense_id","ref_no","payment_method","created_by","bank_account_id","transaction_id","created_by_table","reconciled","voucher_no","payer_name","recipient","updated_at","payment_type_id","uuid",schema_name) select "create_date","date","expense","amount",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"uname","usertype","expenseyear","note","created_at","categoryID","is_depreciation","depreciation",(select id from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where id=a.refer_expense_id)),"ref_no","payment_method",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by"::bigint)),(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"transaction_id","created_by_table","reconciled","voucher_no","payer_name","recipient","updated_at","payment_type_id","uuid", ''%I'' from %I.expense a',schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --188
 sql_=format('INSERT into shulesoft.revenues ("payer_name","payer_phone","payer_email","refer_expense_id","amount","created_by_id","created_by_table","created_at","updated_at","payment_method","transaction_id","bank_account_id","invoice_number","note","date","user_in_shulesoft","user_id","user_table","reconciled","number","payment_type_id","loan_application_id","uuid",schema_name) select "payer_name","payer_phone","payer_email",(select id from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where id=a.refer_expense_id)),"amount",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by_id")),"created_by_table","created_at","updated_at","payment_method","transaction_id",(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"invoice_number","note","date","user_in_shulesoft",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."user_table" and  "id"=a."user_id")),"user_table","reconciled","number","payment_type_id",(select "id" from shulesoft.loan_applications where uuid =(select uuid from %I.loan_applications where "id"=a."loan_application_id")),"uuid", ''%I'' from %I.revenues a',schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
+RETURN 0; 
+ END; 
+
+$BODY$;
+
+CREATE OR REPLACE FUNCTION shulesoft.transfer_stage_nine(
+	schema_ text)
+    RETURNS numeric
+    LANGUAGE 'plpgsql'
+AS $BODY$
+
+ DECLARE 
+	sql_ text;
+ BEGIN 
+-- we set statement timeout =0. This will cost our cpu and memory but for the sake of effective transfer, this is  almost a mandatory statement
+  SET statement_timeout = 0; 
+ -- to prevent db reset during running a long query, we set this to infinity
+  SET idle_in_transaction_session_timeout = 0;
 --189
 sql_=format('INSERT into shulesoft.product_cart ("name","product_alert_id","revenue_id","created_at","updated_at","quantity","amount","uuid",schema_name) select "name",(select id from shulesoft.product_alert_quantity where uuid=(select uuid from %I.product_alert_quantity where id=a.product_alert_id)),(select id from shulesoft.revenues where uuid=(select uuid from %I.revenues where id=a.revenue_id)),"created_at","updated_at","quantity","amount","uuid", ''%I'' from %I.product_cart a',schema_,schema_,schema_,schema_);
 
@@ -804,7 +964,7 @@ sql_=format('INSERT into shulesoft.promotionsubject ("classesID","subjectID","su
 
 execute sql_;
 --193
-sql_=format('INSERT into shulesoft.expense_cart ("name","note","date","expense_id","refer_expense_id","created_at","updated_at","created_by","amount","uuid",schema_name) select "name","note","date",(select id from shulesoft.expense where uuid=(select uuid from %I.expense where "expenseID"=a.expense_id)),(select id from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where id=a.refer_expense_id)),"created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."created_by")),"amount","uuid", ''%I'' from %I.expense_cart a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.expense_cart ("name","note","date","expense_id","refer_expense_id","created_at","updated_at","created_by","amount","uuid",schema_name) select "name","note","date",(select id from shulesoft.expense where uuid=(select uuid from %I.expense where "expenseID"=a.expense_id)),(select id from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where id=a.refer_expense_id)),"created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by"::bigint)),"amount","uuid", ''%I'' from %I.expense_cart a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --194
@@ -820,7 +980,7 @@ sql_=format('INSERT into shulesoft.pensions ("name","employer_percentage","emplo
 
 execute sql_;
 --197
-sql_=format('INSERT into shulesoft.salary_pensions ("salary_id","pension_id","amount","created_at","created_by","employer_amount","uuid",schema_name) select (select id from shulesoft.salaries where uuid=(select uuid from %I.salaries where id=a.salary_id)),(select id from shulesoft.pensions where uuid=(select uuid from %I.pensions where id=a.pension_id)),"amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user  and  "userID"=a."created_by")),"employer_amount","uuid", ''%I'' from %I.salary_pensions a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.salary_pensions ("salary_id","pension_id","amount","created_at","created_by","employer_amount","uuid",schema_name) select (select id from shulesoft.salaries where uuid=(select uuid from %I.salaries where id=a.salary_id)),(select id from shulesoft.pensions where uuid=(select uuid from %I.pensions where id=a.pension_id)),"amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user  where  "userID"=a."created_by"::bigint)),"employer_amount","uuid", ''%I'' from %I.salary_pensions a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --198
@@ -828,11 +988,11 @@ sql_=format('INSERT into shulesoft.allowances ("name","amount","percent","create
 
 execute sql_;
 --199
-sql_=format('INSERT into shulesoft.salary_allowances ("salary_id","allowance_id","amount","created_at","created_by","uuid",schema_name) select (select id from shulesoft.salaries where uuid=(select uuid from %I.salaries where id=a.salary_id)),(select id from shulesoft.allowances where uuid=(select uuid from %I.allowances where id=a.allowance_id)),"amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by")),"uuid", ''%I'' from %I.salary_allowances a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.salary_allowances ("salary_id","allowance_id","amount","created_at","created_by","uuid",schema_name) select (select id from shulesoft.salaries where uuid=(select uuid from %I.salaries where id=a.salary_id)),(select id from shulesoft.allowances where uuid=(select uuid from %I.allowances where id=a.allowance_id)),"amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by"::bigint)),"uuid", ''%I'' from %I.salary_allowances a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --200
-sql_=format('INSERT into shulesoft.salary_deductions ("salary_id","deduction_id","amount","created_at","created_by","employer_amount","uuid",schema_name) select (select id from shulesoft.salaries where uuid=(select uuid from %I.salaries where id=a.salary_id)),(select id from shulesoft.deductions where uuid=(select uuid from %I.deductions where id=a.deduction_id)),"amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where "userID"=a."created_by")),"employer_amount","uuid", ''%I'' from %I.salary_deductions a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.salary_deductions ("salary_id","deduction_id","amount","created_at","created_by","employer_amount","uuid",schema_name) select (select id from shulesoft.salaries where uuid=(select uuid from %I.salaries where id=a.salary_id)),(select id from shulesoft.deductions where uuid=(select uuid from %I.deductions where id=a.deduction_id)),"amount","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where "userID"=a."created_by"::bigint)),"employer_amount","uuid", ''%I'' from %I.salary_deductions a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 
@@ -850,7 +1010,7 @@ sql_=format('INSERT into shulesoft.transport_routes_fees_installments ("transpor
 
 execute sql_;
 --220
-sql_=format('INSERT into shulesoft.vehicles ("plate_number","seats","description","created_at","created_by","updated_at","name","driver_id","conductor_id","uuid",schema_name) select "plate_number","seats","description","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "useID"=a."created_by")),"updated_at","name",(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."driver_id")),(select "id" from shulesoft.users where uuid in (select uuid from %I.user where "userID"=a."conductor_id")),"uuid", ''%I'' from %I.vehicles a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.vehicles ("plate_number","seats","description","created_at","created_by","updated_at","name","driver_id","conductor_id","uuid",schema_name) select "plate_number","seats","description","created_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by"::bigint)),"updated_at","name",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where "userID"=a."driver_id"::bigint)),(select "id" from shulesoft.users where uuid in (select uuid from %I.user where "userID"=a."conductor_id"::bigint)),"uuid", ''%I'' from %I.vehicles a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --204
@@ -888,29 +1048,29 @@ sql_=format('INSERT into shulesoft.bank_accounts_integrations ("bank_account_id"
 execute sql_;
 
 --212 prepayment table - needs to be deleted, unused
-sql_=format('INSERT into shulesoft.prepayments ("invoiceID","student_id","paymentamount","paymenttype","paymentdate","paymentmonth","paymentyear","created_at","transaction_id","userID","slipfile","approved","approved_date","approved_user_id","cheque_number","bank_name","payer_name","fee_id","transaction_time","account_number","token","bank_account_id","reconciled","updated_at","reject_reason","uuid",schema_name) select "invoiceID",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"paymentamount","paymenttype","paymentdate","paymentmonth","paymentyear","created_at","transaction_id",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"slipfile","approved","approved_date","approved_user_id","cheque_number","bank_name","payer_name",(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),"transaction_time","account_number","token",(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"reconciled","updated_at","reject_reason","uuid", ''%I'' from %I.prepayments',schema_,schema_);
+--sql_=format('INSERT into shulesoft.prepayments ("invoiceID","student_id","paymentamount","paymenttype","paymentdate","paymentmonth","paymentyear","created_at","transaction_id","userID","slipfile","approved","approved_date","approved_user_id","cheque_number","bank_name","payer_name","fee_id","transaction_time","account_number","token","bank_account_id","reconciled","updated_at","reject_reason","uuid",schema_name) select "invoiceID",(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),"paymentamount","paymenttype","paymentdate","paymentmonth","paymentyear","created_at","transaction_id",(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"slipfile","approved","approved_date","approved_user_id","cheque_number","bank_name","payer_name",(select id from shulesoft.fees where uuid=(select uuid from %I.fees where id=a.fee_id)),"transaction_time","account_number","token",(select id from shulesoft.bank_accounts where uuid=(select uuid from %I.bank_accounts where id=a.bank_account_id)),"reconciled","updated_at","reject_reason","uuid", ''%I'' from %I.prepayments',schema_,schema_);
 
-execute sql_;
+--execute sql_;
 --213. most likely not useful
 sql_=format('INSERT into shulesoft.route_vehicle ("transport_id","vehicle_id","created_at","uuid",schema_name) select (select id from shulesoft.transport where uuid=(select uuid from %I.transport where id=a.transport_id)),(select id from shulesoft.vehicles where uuid=(select uuid from %I.vehicles where id=a.vehicle_id)),"created_at","uuid", ''%I'' from %I.route_vehicle a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 
 --214
-sql_=format('INSERT into shulesoft.track_invoices_fees_installments ("deleted_at","fees_installments_id","invoice_id","uuid",schema_name) select "deleted_at",(select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),(select id from shulesoft.invoices where uuid=(select uuid from %I.invoices where id=a.invoice_id)),"uuid", ''%I'' from %I.track_invoices_fees_installments a',schema_,schema_,schema_,schema_);
+--sql_=format('INSERT into shulesoft.track_invoices_fees_installments ("deleted_at","fees_installments_id","invoice_id","uuid",schema_name) select "deleted_at",(select id from shulesoft.fees_installments where uuid=(select uuid from %I.fees_installments where id=a.fees_installment_id)),(select id from shulesoft.invoices where uuid=(select uuid from %I.invoices where id=a.invoice_id)),"uuid", ''%I'' from %I.track_invoices_fees_installments a',schema_,schema_,schema_,schema_);
 
-execute sql_;
+--execute sql_;
 --215
-sql_=format('INSERT into shulesoft.trainings ("training_checklist_id","user_id","table","created_at","updated_at","uuid",schema_name) select "training_checklist_id",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."user_id")),"table","created_at","updated_at","uuid", ''%I'' from %I.trainings a',schema_,schema_,schema_);
+--sql_=format('INSERT into shulesoft.trainings ("training_checklist_id","user_id","table","created_at","updated_at","uuid",schema_name) select "training_checklist_id",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."user_id")),"table","created_at","updated_at","uuid", ''%I'' from %I.trainings a',schema_,schema_,schema_);
 
-execute sql_;
+--execute sql_;
 
 --216
-sql_=format('INSERT into shulesoft.uattendances ("user_id","created_by","created_by_table","user_table","date","timein","timeout","present","absent_reason","absent_reason_id","created_at","updated_at","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by")),"created_by_table","user_table","date","timein","timeout","present","absent_reason","absent_reason_id","created_at","updated_at","uuid", ''%I'' from %I.uattendances a',schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.uattendances ("user_id","created_by","created_by_table","user_table","date","timein","timeout","present","absent_reason","absent_reason_id","created_at","updated_at","uuid",schema_name) select (select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."user_id")),(select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."created_by_table" and  "id"=a."created_by"::bigint)),"created_by_table","user_table","date","timein","timeout","present","absent_reason","absent_reason_id","created_at","updated_at","uuid", ''%I'' from %I.uattendances a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --217
-sql_=format('INSERT into shulesoft.user_allowances ("user_id","table","allowance_id","created_at","updated_at","created_by","deadline","type","amount","percent","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id")),"table",(select id from shulesoft.allowances where uuid=(select uuid from %I.allowances where id=a.allowance_id)),"created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by")),"deadline","type","amount","percent","uuid", ''%I'' from %I.user_allowances a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.user_allowances ("user_id","table","allowance_id","created_at","updated_at","created_by","deadline","type","amount","percent","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id")),"table",(select id from shulesoft.allowances where uuid=(select uuid from %I.allowances where id=a.allowance_id)),"created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by"::bigint)),"deadline","type","amount","percent","uuid", ''%I'' from %I.user_allowances a',schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --218
@@ -918,7 +1078,7 @@ sql_=format('INSERT into shulesoft.user_contract ("user_id","table","start_date"
 
 execute sql_;
 --219
-sql_=format('INSERT into shulesoft.user_pensions ("user_id","table","pension_id","created_at","updated_at","created_by","checknumber","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id")),"table","pension_id","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by")),"checknumber","uuid", ''%I'' from %I.user_pensions a',schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.user_pensions ("user_id","table","pension_id","created_at","updated_at","created_by","checknumber","uuid",schema_name) select (select "id" from shulesoft.users where uuid in (select uuid from %I.users where "table"=a."table" and  "id"=a."user_id")),"table","pension_id","created_at","updated_at",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where  "userID"=a."created_by"::bigint)),"checknumber","uuid", ''%I'' from %I.user_pensions a',schema_,schema_,schema_,schema_);
 
 execute sql_;
 --220
@@ -930,11 +1090,15 @@ sql_=format('INSERT into shulesoft.wallet ("student_id","value","date","status",
 
 execute sql_;
 --222
-sql_=format('INSERT into shulesoft.topic_mark ("achievement_mark","effort_mark","grade_mark","created_at","updated_at","subjectID","examID","academic_year_id","student_id","classesID","subject_topic_id","subject_mark_id","exam","subject","status","uuid",schema_name) select "achievement_mark","effort_mark","grade_mark","created_at","updated_at",(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select id from shulesoft.subject_topics where uuid=(select uuid from %I.subject_topics where id=a.subject_topic_id)),(select id from shulesoft.subject_marks where uuid=(select uuid from %I.subject_marks where id=a.subject_mark_id)),"exam","subject","status","uuid", ''%I'' from %I.topic_mark a',schema_,schema_,schema_,schema_,schema_);
+sql_=format('INSERT into shulesoft.topic_mark ("achievement_mark","effort_mark","grade_mark","created_at","updated_at","subjectID","examID","academic_year_id","student_id","classesID","subject_topic_id","subject_mark_id","exam","subject","status","uuid",schema_name) select "achievement_mark","effort_mark","grade_mark","created_at","updated_at",(select "subjectID" from shulesoft.subject where uuid=(select uuid from %I.subject where "subjectID"=a."subjectID")),(select "examID" from shulesoft.exam where uuid=(select uuid from %I.exam where "examID"=a."examID")),(select id from shulesoft.academic_year where uuid=(select uuid from %I.academic_year where id=a.academic_year_id)),(select student_id from shulesoft.student where uuid=(select uuid from %I.student where student_id=a.student_id)),(select "classesID" from shulesoft.classes where uuid=(select uuid from %I.classes where "classesID"=a."classesID")),(select id from shulesoft.subject_topic where uuid=(select uuid from %I.subject_topic where id=a.subject_topic_id)),(select id from shulesoft.subject_mark where uuid=(select uuid from %I.subject_mark where id=a.subject_mark_id)),"exam","subject","status","uuid", ''%I'' from %I.topic_mark a',schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_,schema_);
 
 execute sql_;
 --223
-sql_=format('INSERT into shulesoft.current_assets2 ("amount","date","from_refer_expense_id","to_refer_expense_id","payer_name","usertype","uname","created_by","userID","note","recipient","transaction_id","voucher_no","uuid",schema_name) select "amount","date",(select "id" from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where "id"=a."from_refer_expense_id")),(select "id" from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where "id"=a."to_refer_expense_id")),"payer_name","usertype","uname",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where "userID"=a."created_by")),(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID")),"note","recipient","transaction_id","voucher_no","uuid", ''%I'' from %I.current_assets a',schema_,schema_,schema_,schema_,schema_,schema_);
+--sql_=format('INSERT into shulesoft.current_assets2 ("amount","date","from_refer_expense_id","to_refer_expense_id","payer_name","usertype","uname","created_by","userID","note","recipient","transaction_id","voucher_no","uuid",schema_name) select "amount","date",(select "id" from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where "id"=a."from_refer_expense_id")),(select "id" from shulesoft.refer_expense where uuid=(select uuid from %I.refer_expense where "id"=a."to_refer_expense_id")),"payer_name","usertype","uname",(select "id" from shulesoft.users where uuid in (select uuid from %I.user where "userID"=a."created_by"::bigint)),(select "userID" from shulesoft.user where uuid=(select uuid from %I.user where "userID"=a."userID"::bigint)),"note","recipient","transaction_id","voucher_no","uuid", ''%I'' from %I.current_assets a',schema_,schema_,schema_,schema_,schema_,schema_);
 
-execute sql_;
+--execute sql_;
 
+ RETURN 0; 
+ END; 
+
+$BODY$;

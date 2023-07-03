@@ -32,7 +32,7 @@ ALTER ROLE
 #limit idle connections in postgres
 SET SESSION idle_in_transaction_session_timeout = '3s';
 
-#delete duplicate data differ by date
+#delete ALL duplicate data differ by date
 WITH cte AS (
   SELECT student_id, installment_id,
          ROW_NUMBER() OVER (PARTITION BY student_id, installment_id ORDER BY created_at DESC) AS rn
@@ -45,6 +45,19 @@ WHERE (student_id, installment_id) IN (
   WHERE rn > 1
 );
 
+
+#DELETE all duplicate data keep one
+WITH cte AS (
+  SELECT student_id, uuid, min("markID"),
+         ROW_NUMBER() OVER (PARTITION BY student_id, uuid ORDER BY "markID" DESC) AS rn
+  FROM shulesoft.mark where schema_name='motherofmercy' group by student_id,uuid,"markID"
+)
+delete FROM shulesoft.mark
+WHERE "markID" IN (
+  SELECT min
+  FROM cte
+  WHERE rn >1
+);
 
 #tool to check if database is well configured
 postgresqltuner --ssd

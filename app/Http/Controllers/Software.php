@@ -274,7 +274,7 @@ class Software extends Controller {
 
     public function upgrade() {
 //        $scripts = DB::select('select table_name, (select string_agg(\'"\'||column_name||\'"\',\',\')'
-//                        . ' from information_schema.columns  where table_name=p.table_name and table_schema=\'canossa\' and column_name not in (\'id\') )'
+//                        . ' from information_schema.columns  where table_name=p.table_name and table_schema=\'public\' and column_name not in (\'id\') )'
 //                        . ' as column_ from information_schema.tables p where p.table_schema=\'shulesoft\''
 //                        . ' and p.table_type<>\'VIEW\'');
 //        $sql = '';
