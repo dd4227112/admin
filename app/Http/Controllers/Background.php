@@ -416,12 +416,12 @@ class Background extends Controller {
                     . 'Kindly find ' . number_to_words(date('m')) . ' Month Report from 1st Jan to ' . date('d M Y') . ' and analyse your school performance '
                     . 'specifically on Students/parents/teachers Registered this Year and per Month, Amount of Fee collected Total and on Each month,'
                     . 'Academic performances per classes, subjects and teachers, Best students/teachers etc.'
-                    . 'Open this link to open https://' . $user->schema_name . '.shulesoft.com/signin/index/test/' . $user->sid . '  . Dont share this message. Thank you';
+                    . 'Open this link to open https://' . $user->schema_name . '.shulesoft.co/signin/index/test/' . $user->sid . '  . Dont share this message. Thank you';
             DB::table('public.sms')->insert([
                 'body' => $message,
                 'phone_number' => $user->phone,
                 'type' => 0,
-                'sent_from' => 'phonesms, whatsapp',
+                'sent_from' => 'phonesms',
                 'sms_keys_id' => $key_id
             ]);
 

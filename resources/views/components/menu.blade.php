@@ -645,6 +645,16 @@
                                                 </ul>
                                                </li>
                                            <?php } ?>
+                                           <li class=" ">
+                                                <a href="<?= url('software/databaseErrors') ?>">
+                                                    <span class="pcoded-mtext">Database Errors</span>
+                                                </a>
+                                            </li>
+                                             <li class=" ">
+                                                <a href="<?= url('software/serverErrors') ?>">
+                                                    <span class="pcoded-mtext">Server Errors</span>
+                                                </a>
+                                            </li>
                                            
                                             <li class="">
                                                 <a href="<?= url('software/api') ?>">
