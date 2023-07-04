@@ -454,6 +454,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function pushWhatsappMessageOnly() {
+        return false;
         DB::select('refresh materialized view admin.all_sms');
         DB::select('refresh materialized view admin.all_sms_files');
         $messages = DB::select("select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_name||': '||a.body || ' \n School Link > https://'||a.schema_name||' .shulesoft.co' as body, 1 as is_old_version, a.schema_name, b.url as file_url from admin.all_sms a left join admin.all_sms_files b on (b.schema_name=a.schema_name and a.sms_content_id=b.sms_content_id) where sent_from = 'whatsapp' and status=0 
