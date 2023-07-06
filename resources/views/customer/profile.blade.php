@@ -1933,6 +1933,9 @@ Last Seen <label class="label label-info">
                                 <option value="2">Active</option>
                                 <option value="3">Resale</option>
                                 <option value="4">Inactive</option>
+                                <option value="5">Migration</option>
+                                <option value="6">Suspended</option>
+
                             </select>
                         </div>
 
