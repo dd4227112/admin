@@ -1465,6 +1465,14 @@ class Customer extends Controller {
         if ($_POST) {
             $schema = request('schema_name');
             $status = request('status');
+            // migration, update admin.clients set status =4 (4=migration)
+            if ($status ==5) {
+                DB::table('admin.clients')->where('username', $schema)->update(['status' => 4]);
+            }
+             // suspended, update admin.clients set status =3 (3=suspended)
+             if ($status ==6) {
+                DB::table('admin.clients')->where('username', $schema)->update(['status' => 3]);
+            }
             if ((int) $status > 0) {
                 DB::table($schema . '.setting')->update(['school_status' => $status]);
                 return redirect()->back()->with('success', $schema . ' Status Updated successfuly');
