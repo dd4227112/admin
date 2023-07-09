@@ -172,7 +172,7 @@ class SyncDataToNewVersion extends Command {
         /*
          * update payment offset set existing one plus 3000
          */
-        DB::statement("update admin.transfer_control set mark_offset=mark_offset+1000 where schema_name='" . $client->username . "'");
+        DB::statement("update admin.transfer_control set mark_offset=mark_offset+10 where schema_name='" . $client->username . "'");
         /*
          * now check if all payments have been transferred, and skip this block completely
          */
