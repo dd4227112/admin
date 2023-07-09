@@ -85,7 +85,7 @@ class SyncDataToNewVersion extends Command {
             return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['seven_stage' => 1]);
         }
         if ($control->eight_stage == 0) {
-            return $this->transferMark($client);
+           // return $this->transferMark($client);
         }
 
         if ($control->nine_stage == 0) {
