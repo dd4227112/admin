@@ -59,13 +59,13 @@ class SyncDataToNewVersion extends Command {
             DB::statement("select * from  shulesoft.transfer_stage_three('$client->username')");
             DB::statement("select * from  shulesoft.transfer_stage_four('$client->username')");
             DB::statement("select * from  shulesoft.transfer_stage_five('$client->username')");
-            DB::table('admin.transfer_control')->update(['second_stage' => 1])->where('schema_name', $client->username);
+            DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['second_stage' => 1]);
             return true;
         }
 
         if ($control->third_stage == 0) {
             DB::statement("select * from  shulesoft.transfer_stage_six('$client->username')");
-            DB::table('admin.transfer_control')->update(['third_stage' => 1])->where('schema_name', $client->username);
+            DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['third_stage' => 1]);
             return true;
         }
 
@@ -78,11 +78,11 @@ class SyncDataToNewVersion extends Command {
         }
         if ($control->six_stage == 0) {
             DB::statement("select * from  shulesoft.transfer_stage_eight('$client->username')");
-            return DB::table('admin.transfer_control')->update(['six_stage' => 1])->where('schema_name', $client->username);
+            return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['six_stage' => 1]);
         }
         if ($control->seven_stage == 0) {
             DB::statement("select * from  shulesoft.transfer_stage_nine('$client->username')");
-            return DB::table('admin.transfer_control')->update(['seven_stage' => 1])->where('schema_name', $client->username);
+            return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['seven_stage' => 1]);
         }
         if ($control->eight_stage == 0) {
             return $this->transferMark($client);
@@ -140,7 +140,7 @@ class SyncDataToNewVersion extends Command {
         $shulesoft_payments = DB::table('shulesoft.payments')->where('schema_name', $client->username)->count();
         $schema_payments = DB::table($client->username . '.payments')->count();
         if ($schema_payments == $shulesoft_payments) {
-            DB::table('admin.transfer_control')->update(['fourth_stage' => 1])->where('schema_name', $client->username);
+            DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['fourth_stage' => 1]);
         }
     }
 
@@ -179,7 +179,7 @@ class SyncDataToNewVersion extends Command {
         $shulesoft_marks = DB::table('shulesoft.mark')->where('schema_name', $client->username)->count();
         $schema_marks = DB::table($client->username . '.mark')->count();
         if ($schema_marks == $shulesoft_marks) {
-            DB::table('admin.transfer_control')->update(['eight_stage' => 1])->where('schema_name', $client->username);
+            DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['eight_stage' => 1]);
         }
     }
 
@@ -190,7 +190,7 @@ class SyncDataToNewVersion extends Command {
         $student = DB::table('shulesoft.store_students_id')->where('status', 0)->first();
 
         if (empty($student)) {
-            DB::table('admin.transfer_control')->update(['nine_stage' => 1])->where('schema_name', $client->username);
+            DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['nine_stage' => 1]);
         }
         return 0;
     }
@@ -198,7 +198,7 @@ class SyncDataToNewVersion extends Command {
     public function syncJournals($client) {
         if (DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')")) {
             DB::table('admin.transfer_control')->update(['ten_stage' => 1])->where('schema_name', $client->username);
-            DB::table('admin.clients')->update(['status' => 1, 'is_new_version' => 1])->where('schema_name', $client->username);
+            DB::table('admin.clients')->where('schema_name', $client->username)->update(['status' => 1, 'is_new_version' => 1]);
         }
     }
 
