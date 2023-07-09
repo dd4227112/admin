@@ -59,5 +59,13 @@ WHERE "markID" IN (
   WHERE rn >1
 );
 
+--Alternatively
+delete FROM shulesoft.payments
+WHERE schema_name='annagamazo' and id NOT IN (
+  SELECT MIN(id)
+  FROM shulesoft.payments where schema_name='annagamazo'
+  GROUP BY uuid
+);
+
 #tool to check if database is well configured
 postgresqltuner --ssd

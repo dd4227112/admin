@@ -709,7 +709,8 @@ select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_
                     DB::table($invoice->schema_name . '.invoice_prefix')->where('reference', $invoice->reference)->update(['sync' => 1, 'status' => 1, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
                 } else {
                     //update the whole invoice
-                    $new_token = $this->getToken($invoice);
+                     $background = new \App\Http\Controllers\Background();
+                    $new_token = $background->getToken($invoice);
                     $fields = array(
                         "reference" => trim($invoice->reference),
                         "student_name" => isset($invoice->student_name) ? $invoice->student_name : '',
@@ -767,7 +768,8 @@ select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_
     }
 
     public function pushInvoice($invoice) {
-        $token = $this->getToken($invoice);
+           $background = new \App\Http\Controllers\Background();
+        $token = $background->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
@@ -853,10 +855,13 @@ select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_
     }
 
     public function updateInvoice() {
+        
         $invoices = DB::select('select * from api.invoices where sync=2 and amount >0 order by random() limit 80');
+       
         if (!empty($invoices)) {
+            $background = new \App\Http\Controllers\Background();
             foreach ($invoices as $invoice) {
-                $token = $this->getToken($invoice);
+                $token = $background->getToken($invoice);
                 if (strlen($token) > 4) {
                     $fields = array(
                         "reference" => trim($invoice->reference),
@@ -1665,7 +1670,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 //    }
 
     public function pushRevInvoice($invoice) {
-        $token = $this->getToken($invoice);
+        $background = new \App\Http\Controllers\Background();
+        $token = $background->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
