@@ -74,7 +74,7 @@ class SyncDataToNewVersion extends Command {
         }
         if ($control->five_stage == 0) {
             DB::statement("select * from  shulesoft.transfer_stage_seven('$client->username')");
-            return DB::table('admin.transfer_control')->update(['five_stage' => 1])->where('schema_name', $client->username);
+            return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['five_stage' => 1]);
         }
         if ($control->six_stage == 0) {
             DB::statement("select * from  shulesoft.transfer_stage_eight('$client->username')");
