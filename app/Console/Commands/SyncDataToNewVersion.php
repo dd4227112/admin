@@ -156,23 +156,23 @@ class SyncDataToNewVersion extends Command {
         $sql = 'INSERT into shulesoft.mark ("examID","exam","student_id","classesID","subjectID",'
                 . '"subject","mark","year","created_at","postion","academic_year_id","status",'
                 . '"created_by","table","updated_at","uuid",schema_name) select (select "examID" '
-                . 'from shulesoft.exam where uuid=(select uuid from ' . $client->username . '.exam where "examID"=a."examID")),'
-                . '"exam",(select student_id from shulesoft.student where uuid=(select uuid from'
+                . 'from shulesoft.exam where schema_name=\'' . $client->username . '\' and  uuid=(select uuid from ' . $client->username . '.exam where "examID"=a."examID")),'
+                . '"exam",(select student_id from shulesoft.student where  schema_name=\'' . $client->username . '\' AND uuid=(select uuid from'
                 . ' ' . $client->username . '.student where student_id=a.student_id)),(select "classesID" from '
-                . 'shulesoft.classes where uuid=(select uuid from ' . $client->username . '.classes where'
-                . ' "classesID"=a."classesID")),(select "subjectID" from shulesoft.subject where '
+                . 'shulesoft.classes where  schema_name=\'' . $client->username . '\' AND uuid=(select uuid from ' . $client->username . '.classes where'
+                . ' "classesID"=a."classesID")),(select "subjectID" from shulesoft.subject where  schema_name=\'' . $client->username . '\' AND '
                 . 'uuid=(select uuid from ' . $client->username . '.subject where "subjectID"=a."subjectID")),"subject","mark",'
-                . '"year","created_at","postion",(select id from shulesoft.academic_year where'
+                . '"year","created_at","postion",(select id from shulesoft.academic_year where  schema_name=\'' . $client->username . '\' AND '
                 . ' uuid=(select uuid from ' . $client->username . '.academic_year where id=a.academic_year_id)),"status",'
-                . '(select "id" from shulesoft.users where uuid in (select uuid from ' . $client->username . '.users where'
+                . '(select "id" from shulesoft.users where  schema_name=\'' . $client->username . '\' AND uuid in (select uuid from ' . $client->username . '.users where'
                 . ' "table"=a."table" and  "id"=a."created_by") limit 1),"table","updated_at","uuid",'
                 . ' \'' . $client->username . '\' from ' . $client->username . '.mark a '
-                . ' order by 1 desc offset ' . $mark_control->mark_offset . ' limit 10';
+                . ' order by 1 desc offset ' . $mark_control->mark_offset . ' limit 1000';
         DB::statement($sql);
         /*
          * update payment offset set existing one plus 3000
          */
-        DB::statement("update admin.transfer_control set mark_offset=mark_offset+10 where schema_name='" . $client->username . "'");
+        DB::statement("update admin.transfer_control set mark_offset=mark_offset+1000 where schema_name='" . $client->username . "'");
         /*
          * now check if all payments have been transferred, and skip this block completely
          */
