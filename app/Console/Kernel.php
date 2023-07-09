@@ -35,8 +35,8 @@ class Kernel extends ConsoleKernel {
         \App\Console\Commands\HRContractRemainders::class,
         \App\Console\Commands\DatabaseOptimization::class,
         \App\Console\Commands\OptimizePayment::class,
-
-       // \App\Console\Commands\CreateTodayReport::class,
+        \App\Console\Commands\SyncDataToNewVersion::class,
+        // \App\Console\Commands\CreateTodayReport::class,
         \App\Console\Commands\SchoolMonthlyReport::class,
             // \App\Console\Commands\HRLeaveRemainders::class, // Currently disabled
             // \App\Console\Commands\RefreshMaterializedView::class, // Currently disabled
@@ -181,7 +181,6 @@ class Kernel extends ConsoleKernel {
             //  $this->syncData();
             $this->pushWhatsappMessageOnly(); //done
             $this->whatsappMessage(); // done
-
             //(new Message())->sendEmail();
         })->everyMinute();
 
@@ -229,7 +228,7 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-           // (new Customer())->createTodayReport(); //done
+            // (new Customer())->createTodayReport(); //done
         })->dailyAt('14:50'); // Eq to 17:50 h 
 
 
@@ -420,7 +419,7 @@ class Kernel extends ConsoleKernel {
         $message = '';
         $check = \collect(DB::select("select * from api.parent_experience_logs where admin.whatsapp_phone(phone)='admin.whatsapp_phone(" . $phone . ")'"))->first();
         if (empty($check)) {
-            $message = chr(10).' : Download Parent Experience App here: '
+            $message = chr(10) . ' : Download Parent Experience App here: '
                     . 'Android: https://cutt.ly/ssape , '
                     . 'Iphone: https://cutt.ly/ssipe';
         }
@@ -468,7 +467,7 @@ select admin.whatsapp_phone(a.phone_number) as phone,  a.sms_id as id, a.schema_
                 //send whatsapp message
                 $chat_id = $message->phone;
                 $add = $this->appendAd($message->phone);
-                
+
                 if (strlen($message->file_url) > 5) {
                     $bot->sendMessageFile($chat_id, strtoupper($message->schema_name) . ' Sent File ', $message->schema_name, $message->file_url);
                 } else {
