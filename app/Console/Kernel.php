@@ -183,7 +183,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             //sync invoices 
             $this->sendQuickSms();  // done 
-            $this->syncInvoice(); //done
+           // $this->syncInvoice(); //done
             //  $this->syncData();
            // $this->pushWhatsappMessageOnly(); //done
             //$this->whatsappMessage(); // done

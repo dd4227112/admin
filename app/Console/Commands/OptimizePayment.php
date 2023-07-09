@@ -46,7 +46,7 @@ class OptimizePayment extends Command {
         //check if all payments has been uploaded
         $shulesoft_payments = DB::table('shulesoft.payments')->where('schema_name', $client->username)->count();
         $schema_payments = DB::table($client->username . '.payments')->count();
-        if ($schema_payments == $shulesoft_payments) {
+        if ($schema_payments != $shulesoft_payments) {
             if (!empty($student)) {
                 $student_id = $student->student_id;
                 //temporary hard-coded for motherofmercy schema_name
