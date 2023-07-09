@@ -198,6 +198,7 @@ class SyncDataToNewVersion extends Command {
     public function syncJournals($client) {
         if (DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')")) {
             DB::table('admin.transfer_control')->update(['ten_stage' => 1])->where('schema_name', $client->username);
+            DB::table('admin.clients')->update(['status' => 1, 'is_new_version' => 1])->where('schema_name', $client->username);
         }
     }
 
