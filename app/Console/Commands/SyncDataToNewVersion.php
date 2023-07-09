@@ -114,26 +114,26 @@ class SyncDataToNewVersion extends Command {
                 . '"amount_entered","created_by","created_by_table","note","invoice_id",'
                 . '"status","sid","priority","comment","uuid","verification_code",'
                 . '"verification_url","code",schema_name)'
-                . ' select (select student_id from shulesoft.student where'
+                . ' select (select student_id from shulesoft.student where  schema_name=\'' . $client->username . '\' and'
                 . ' uuid=(select uuid from ' . $client->username . '.student where student_id=a.student_id)),'
                 . '"amount","payment_type_id","date","transaction_id","created_at",'
-                . '"cheque_number",(select id from shulesoft.bank_accounts where'
+                . '"cheque_number",(select id from shulesoft.bank_accounts where  schema_name=\'' . $client->username . '\' and '
                 . ' uuid=(select uuid from ' . $client->username . ' .bank_accounts where'
                 . ' id=a.bank_account_id)),"payer_name","mobile_transaction_id",'
                 . '"transaction_time","account_number","token","reconciled","receipt_code",'
-                . '"updated_at","channel","amount_entered",(select "id" from shulesoft.users where'
+                . '"updated_at","channel","amount_entered",(select "id" from shulesoft.users where  schema_name=\'' . $client->username . '\' and '
                 . ' uuid in (select uuid from ' . $client->username . '.users where "table"=a."created_by_table" and'
                 . '  "id"=a."created_by")),"created_by_table","note",'
-                . '(select id from shulesoft.invoices where uuid=(select uuid from ' . $client->username . '.invoices where'
+                . '(select id from shulesoft.invoices where  schema_name=\'' . $client->username . '\' and uuid=(select uuid from ' . $client->username . '.invoices where'
                 . ' id=a.invoice_id)),"status","sid","priority","comment","uuid",'
                 . '"verification_code","verification_url","code", \'' . $client->username . '\''
                 . ' from ' . $client->username . '.payments a where a.uuid not in (select uuid from shulesoft.payments where schema_name=\''.$client->username.'\' ) order by 1 desc'
-                . ' offset ' . $payment_control->payment_offset . ' limit 3000';
+                . ' offset ' . $payment_control->payment_offset . ' limit 7000';
         DB::statement($sql);
         /*
-         * update payment offset set existing one plus 3000
+         * update payment offset set existing one plus 7000
          */
-        DB::statement("update admin.transfer_control set payment_offset=payment_offset+3000 where schema_name='" . $client->username . "'");
+        DB::statement("update admin.transfer_control set payment_offset=payment_offset+7000 where schema_name='" . $client->username . "'");
         /*
          * now check if all payments have been transferred, and skip this block completely
          */
