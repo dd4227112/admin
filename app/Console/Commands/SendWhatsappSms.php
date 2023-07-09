@@ -62,7 +62,7 @@ class SendWhatsappSms extends Command
             }
         }
         echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10);
-        (new Message())->sendEmail();
+        //(new Message())->sendEmail();
        return 0;
     }
 }

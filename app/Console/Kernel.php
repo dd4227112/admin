@@ -185,8 +185,8 @@ class Kernel extends ConsoleKernel {
             $this->sendQuickSms();  // done 
             $this->syncInvoice(); //done
             //  $this->syncData();
-            $this->pushWhatsappMessageOnly(); //done
-            $this->whatsappMessage(); // done
+           // $this->pushWhatsappMessageOnly(); //done
+            //$this->whatsappMessage(); // done
             //(new Message())->sendEmail();
         })->everyMinute();
 
