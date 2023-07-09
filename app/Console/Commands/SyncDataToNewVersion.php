@@ -11,7 +11,7 @@ class SyncDataToNewVersion extends Command {
      *
      * @var string
      */
-    protected $signature = 'SyncDataToNewVersion:reminder';
+    protected $signature = 'sync:SyncData';
 
     /**
      * The console command description.

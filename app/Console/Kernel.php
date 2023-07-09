@@ -100,6 +100,12 @@ class Kernel extends ConsoleKernel {
             Log::error('Payment Optimization failed: ' . $e->getMessage());
         }
 
+         // configure the service set RestartSec everyFiveMinutes
+        try {
+            $schedule->command('sync:SyncData')->everyFiveMinutes();
+        } catch (\Exception $e) {
+            Log::error('Data Transfer failed: ' . $e->getMessage());
+        }
         // configure the service set RestartSec = 1 minute (60s)
         try {
             $schedule->command('send:quicksms')->everyMinute();
