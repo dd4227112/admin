@@ -38,6 +38,7 @@ class SendQuickSms extends Command
      */
     public function handle()
     {
+        return false;
         $schemas = DB::select('select schema_name from admin.sms_status');
         $total_sms_sent = 0;
         foreach ($schemas as $schema_) {
