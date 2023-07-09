@@ -167,12 +167,12 @@ class SyncDataToNewVersion extends Command {
                 . '(select "id" from shulesoft.users where uuid in (select uuid from ' . $client->username . '.users where'
                 . ' "table"=a."table" and  "id"=a."created_by") limit 1),"table","updated_at","uuid",'
                 . ' \'' . $client->username . '\' from ' . $client->username . '.mark a '
-                . ' order by 1 desc offset ' . $mark_control->mark_offset . ' limit 3000';
+                . ' order by 1 desc offset ' . $mark_control->mark_offset . ' limit 1000';
         DB::statement($sql);
         /*
          * update payment offset set existing one plus 3000
          */
-        DB::statement("update admin.transfer_control set mark_offset=mark_offset+3000 where schema_name='" . $client->username . "'");
+        DB::statement("update admin.transfer_control set mark_offset=mark_offset+1000 where schema_name='" . $client->username . "'");
         /*
          * now check if all payments have been transferred, and skip this block completely
          */
