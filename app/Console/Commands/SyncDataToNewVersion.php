@@ -39,61 +39,62 @@ class SyncDataToNewVersion extends Command {
 
         $client = DB::table('admin.clients')->where('status', 4)->first(); //We transfer one at a time
         // We first set basic data via transfer control
+        if (!empty($client)) {
+            $control_check = DB::table('admin.transfer_control')->where('schema_name', $client->username)->first();
 
-        $control_check = DB::table('admin.transfer_control')->where('schema_name', $client->username)->first();
+            if (empty($control_check)) {
+                DB::table('admin.transfer_control')->insert(['schema_name' => $client->username]);
+            }
+            $control = DB::table('admin.transfer_control')->where('schema_name', $client->username)->first();
+            if ($control->first_stage == 0) {
+                DB::statement("select * from  shulesoft.delete_schema_details_from_shulesoft_schema('$client->username')");
+                DB::statement("select * from  shulesoft.transfer_stage_one('$client->username')");
+                DB::statement("select * from  shulesoft.transfer_stage_two('$client->username')");
 
-        if (empty($control_check)) {
-            DB::table('admin.transfer_control')->insert(['schema_name' => $client->username]);
-        }
-        $control = DB::table('admin.transfer_control')->where('schema_name', $client->username)->first();
-        if ($control->first_stage == 0) {
-            DB::statement("select * from  shulesoft.delete_schema_details_from_shulesoft_schema('$client->username')");
-            DB::statement("select * from  shulesoft.transfer_stage_one('$client->username')");
-            DB::statement("select * from  shulesoft.transfer_stage_two('$client->username')");
+                DB::table('admin.transfer_control')->update(['first_stage' => 1])->where('schema_name', $client->username);
+                return true;
+            }
 
-            DB::table('admin.transfer_control')->update(['first_stage' => 1])->where('schema_name', $client->username);
-            return true;
-        }
+            if ($control->second_stage == 0) {
+                DB::statement("select * from  shulesoft.transfer_stage_three('$client->username')");
+                DB::statement("select * from  shulesoft.transfer_stage_four('$client->username')");
+                DB::statement("select * from  shulesoft.transfer_stage_five('$client->username')");
+                DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['second_stage' => 1]);
+                return true;
+            }
 
-        if ($control->second_stage == 0) {
-            DB::statement("select * from  shulesoft.transfer_stage_three('$client->username')");
-            DB::statement("select * from  shulesoft.transfer_stage_four('$client->username')");
-            DB::statement("select * from  shulesoft.transfer_stage_five('$client->username')");
-            DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['second_stage' => 1]);
-            return true;
-        }
+            if ($control->third_stage == 0) {
+                DB::statement("select * from  shulesoft.transfer_stage_six('$client->username')");
+                DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['third_stage' => 1]);
+                return true;
+            }
 
-        if ($control->third_stage == 0) {
-            DB::statement("select * from  shulesoft.transfer_stage_six('$client->username')");
-            DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['third_stage' => 1]);
-            return true;
-        }
+            if ($control->fourth_stage == 0) {
+                return $this->transferPayments($client);
+            }
+            if ($control->five_stage == 0) {
+                DB::statement("select * from  shulesoft.transfer_stage_seven('$client->username')");
+                return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['five_stage' => 1]);
+            }
+            if ($control->six_stage == 0) {
+                DB::statement("select * from  shulesoft.transfer_stage_eight('$client->username')");
+                return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['six_stage' => 1]);
+            }
+            if ($control->seven_stage == 0) {
+                DB::statement("select * from  shulesoft.transfer_stage_nine('$client->username')");
+                return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['seven_stage' => 1]);
+            }
+            if ($control->eight_stage == 0) {
+                return $this->transferMark($client);
+            }
 
-        if ($control->fourth_stage == 0) {
-            return $this->transferPayments($client);
-        }
-        if ($control->five_stage == 0) {
-            DB::statement("select * from  shulesoft.transfer_stage_seven('$client->username')");
-            return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['five_stage' => 1]);
-        }
-        if ($control->six_stage == 0) {
-            DB::statement("select * from  shulesoft.transfer_stage_eight('$client->username')");
-            return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['six_stage' => 1]);
-        }
-        if ($control->seven_stage == 0) {
-            DB::statement("select * from  shulesoft.transfer_stage_nine('$client->username')");
-            return DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['seven_stage' => 1]);
-        }
-        if ($control->eight_stage == 0) {
-            return $this->transferMark($client);
-        }
+            if ($control->nine_stage == 0) {
+                return $this->redistributStudentPayments($client);
+            }
 
-        if ($control->nine_stage == 0) {
-            return $this->redistributStudentPayments($client);
-        }
-
-        if ($control->ten_stage == 0) {
-            return $this->syncJournals($client);
+            if ($control->ten_stage == 0) {
+                return $this->syncJournals($client);
+            }
         }
         return 0;
     }
@@ -127,7 +128,7 @@ class SyncDataToNewVersion extends Command {
                 . '(select id from shulesoft.invoices where  schema_name=\'' . $client->username . '\' and uuid=(select uuid from ' . $client->username . '.invoices where'
                 . ' id=a.invoice_id)),"status","sid","priority","comment","uuid",'
                 . '"verification_code","verification_url","code", \'' . $client->username . '\''
-                . ' from ' . $client->username . '.payments a where a.uuid not in (select uuid from shulesoft.payments where schema_name=\''.$client->username.'\' ) order by 1 desc'
+                . ' from ' . $client->username . '.payments a where a.uuid not in (select uuid from shulesoft.payments where schema_name=\'' . $client->username . '\' ) order by 1 desc'
                 . ' offset ' . $payment_control->payment_offset . ' limit 7000';
         DB::statement($sql);
         /*
