@@ -380,7 +380,7 @@ class Message extends Controller {
                             }
                         } else {
                             if ($message->is_new_version == 1) {
-                                DB::update('update shulesoft.email set status=1 WHERE schema_name=\'' . $message->schema_name . '\' email_id=' . $message->email_id);
+                                DB::update('update shulesoft.email set status=1 WHERE schema_name=\'' . $message->schema_name . '\' AND email_id=' . $message->email_id);
                             } else {
                                 DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                             }
@@ -392,7 +392,7 @@ class Message extends Controller {
 //skip all emails with ShuleSoft title
 //skip all invalid emails
                     if ($message->is_new_version == 1) {
-                        DB::update('update shulesoft.email set status=1 WHERE schema_name=\'' . $message->schema_name . '\' email_id=' . $message->email_id);
+                        DB::update('update shulesoft.email set status=1 WHERE schema_name=\'' . $message->schema_name . '\' AND email_id=' . $message->email_id);
                     } else {
                         DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                     }
