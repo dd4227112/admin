@@ -127,7 +127,7 @@ class SyncDataToNewVersion extends Command {
                 . '(select id from shulesoft.invoices where uuid=(select uuid from ' . $client->username . '.invoices where'
                 . ' id=a.invoice_id)),"status","sid","priority","comment","uuid",'
                 . '"verification_code","verification_url","code", \'' . $client->username . '\''
-                . ' from ' . $client->username . '.payments a order by 1 desc'
+                . ' from ' . $client->username . '.payments a where a.uuid not in (select uuid from shulesoft.payments where schema_name=\''.$client->username.'\' ) order by 1 desc'
                 . ' offset ' . $payment_control->payment_offset . ' limit 3000';
         DB::statement($sql);
         /*
