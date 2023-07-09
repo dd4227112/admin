@@ -189,14 +189,7 @@ class SyncDataToNewVersion extends Command {
 
         $student = DB::table('shulesoft.store_students_id')->where('status', 0)->first();
 
-        if (!empty($student)) {
-            $student_id = $student->student_id;
-            if (DB::SELECT("SELECT * FROM shulesoft.redistribute_student_payments($student_id, '" . $client->username . "')")) {
-                $update = ['status' => 1];
-                DB::table('shulesoft.store_students_id')->where('student_id', $student_id)->update($update);
-                Log::error("Payment optimization succes for student with student_id " . $student_id);
-            }
-        } else {
+        if (empty($student)) {
             DB::table('admin.transfer_control')->update(['nine_stage' => 1])->where('schema_name', $client->username);
         }
         return 0;
