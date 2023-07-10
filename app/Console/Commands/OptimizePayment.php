@@ -48,7 +48,7 @@ class OptimizePayment extends Command {
             if (!empty($student)) {
                 $student_id = $student->student_id;
                 //temporary hard-coded for motherofmercy schema_name
-                if (DB::SELECT("SELECT * FROM shulesoft.redistribute_student_payments($student_id, 'motherofmercy')")) {
+                if (DB::SELECT("SELECT * FROM shulesoft.redistribute_student_payments($student_id, '{$client->username}')")) {
                     $update = ['status' => 1];
                     DB::table('shulesoft.store_students_id')->where('student_id', $student_id)->update($update);
                     Log::error("Payment optimization succes for student with student_id " . $student_id);
