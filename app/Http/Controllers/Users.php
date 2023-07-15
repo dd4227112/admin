@@ -94,6 +94,7 @@ class Users extends Controller {
         ]);
         $user = array_merge(request()->except('_token', 'location'), ['password' => bcrypt(request('email')),
             'salary' => remove_comma(request('salary')), 'created_by' => \Auth::user()->id]);
+            $user['name'] = $request->firstname." ".$request->lastname;
         $user_id = DB::table('admin.users')->insertGetId($user);
 
         $user_data = DB::table('admin.users')->where('id', (int) $user_id)->first();
