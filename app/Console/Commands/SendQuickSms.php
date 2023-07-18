@@ -2,8 +2,11 @@
 
 namespace App\Console\Commands;
 
+// use App\Models\Log;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class SendQuickSms extends Command
 {
@@ -39,34 +42,48 @@ class SendQuickSms extends Command
     public function handle()
     {
         return false;
-        $schemas = DB::select('select schema_name from admin.sms_status');
+        $schemas = DB::select("select  a.client_id, sum(coalesce( a.quantity, 0)) as balance, b.username as schema_name , b.is_new_version from admin.addons_payments a, admin.clients b  where a.client_id =b.id and a.addon_id =2   group by a.client_id, b.username, b.is_new_version  having sum(coalesce( a.quantity, 0)) >0");
         $total_sms_sent = 0;
+        // find all customer subscribed to quick sms with their sms balance.
+        
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
+            if ($schema_->is_new_version ==1) {
+                $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from shulesoft.sms a where a.status = 0 and a.type = 1 and a.schema_name ='".$schema."' order by priority DESC limit 5");
+            }else {
 
-            $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from " . $schema . ".sms a where a.status = 0 and a.type = 1 order by priority DESC limit 30");
+            $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from " . $schema . ".sms a where a.status = 0 and a.type = 1 order by priority DESC limit 5");
+            }
+
             $total_sms_sent += !empty($messages) ? count($messages) : 0;
 
             if (!empty($messages)) {
                 foreach ($messages as $message) {
+
                     $beem = $this->beem_sms($message->phone, $message->body, $schema);
-                    DB::table($schema . ".sms")->where('sms_id', $message->id)->update([
-                        'status' => 1,
-                        'return_code' => json_encode($beem),
-                        'updated_at' => 'now()'
-                    ]);
+                    $return_code =json_decode($beem);                   
+                    if($return_code->success ==1){
+                        $sent_sms =$this->countSMS($message->body);
+
+                        DB::select(" update admin.sms_balance set balance =balance - ".$sent_sms." where client_id =". $schema_->client_id);
+                        DB::table("shulesoft.sms")->where('sms_id', $message->id)->update([
+                            'status' => 1,
+                            'return_code' => json_encode($beem),
+                            'updated_at' => now()
+                        ]);
+                    }
                 }
             }
         }
-        echo '>> Quick SMS sent : Total ' . $total_sms_sent . chr(10);
+        Log::info('Quick SMS sent : Total ' . $total_sms_sent . chr(10));
         return 0;
     }
-    function beem_sms($phone_number, $message, $schema_ = null) {
+    function beem_sms($phone_number, $message, $schema) {
         if ($phone_number != '') {
             $secret_key = 'MDI2ZGVlMWExN2NlNzlkYzUyYWE2NTlhOGE0MjgyMDRmMjFlMDFjODkwYjU2NjA4OTY4NzZlY2Y3NGZjY2Y0Yw==';
             $api_key = '5e0b7f1a911dd411';
 
-            $schema = $schema_ == null ? str_replace('.', null, set_schema_name()) : $schema_;
+            // $schema = $schema_ == null ? str_replace('.', null, set_schema_name()) : $schema_;
 
             if ($schema == 'annagamazo') {
                 $sender_name = 'ANNAGAMAZO';
@@ -202,5 +219,31 @@ class SendQuickSms extends Command
         $results = array_merge($status, $code);
 
         return json_encode($results);
+    }
+    function countSMS($message):int {
+        $charLength = mb_strlen($message);
+        if ($charLength >= 0 && $charLength <= 160) {
+            return 1;
+        } elseif ($charLength > 160 && $charLength <= 306) {
+            return 2;
+        } elseif ($charLength > 306 && $charLength <= 459) {
+            return 3;
+        } elseif ($charLength > 459 && $charLength <= 612) {
+            return 4;
+        } elseif ($charLength >= 612 && $charLength <= 765) {
+            return 5;
+        } elseif ($charLength > 765 && $charLength <= 918) {
+            return 6;
+        } elseif ($charLength > 918 && $charLength <= 1071) {
+            return 7;
+        } elseif ($charLength > 1071 && $charLength <= 1224) {
+            return 8;
+        } elseif ($charLength > 1224 && $charLength <= 1377) {
+            return 9;
+        } elseif ($charLength > 1377 && $charLength <= 1530) {
+            return 10;
+        } else {
+            return 0;
+        }
     }
 }

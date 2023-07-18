@@ -740,13 +740,23 @@ We shall let you know once we have done with verification, then you can proceed 
             'note'=>$note,
         ];
         $payment_id =DB::table('admin.payments')->insertGetId($payment);
+        $quantity =$amount/20;
         $addon_payment = [
             'payment_id' =>$payment_id,
             'addon_id'=>$addon_id,
             'client_id'=>$client_id,
-            'quantity'=>$amount/20,
+            'quantity'=>$quantity
         ];
-        DB::table('admin.addons_payments')->insert($addon_payment);
+       if( DB::table('admin.addons_payments')->insert($addon_payment)){
+        //check if client is already subscribed
+        $check = DB::table('admin.sms_balance')->where('client_id',$client_id)->first();
+        if (!empty($check)) {
+            DB::select('update admin.sms_balance set balance =balance+'.$quantity.' where client_id ='.$client_id);
+        }else{
+            DB::table('admin.sms_balance')->insert(['client_id'=>$client_id, 'balance'=>$quantity]);
+        }
+
+        }
         return redirect()->back()->with('success', "Payment received successfully");
         // Add code to send notification sms/email to payer
 
