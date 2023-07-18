@@ -41,7 +41,7 @@ class SendQuickSms extends Command
      */
     public function handle()
     {
-        return false;
+        //return false;
         $schemas = DB::select("select  a.client_id, sum(coalesce( a.quantity, 0)) as balance, b.username as schema_name , b.is_new_version from admin.addons_payments a, admin.clients b  where a.client_id =b.id and a.addon_id =2   group by a.client_id, b.username, b.is_new_version  having sum(coalesce( a.quantity, 0)) >0");
         $total_sms_sent = 0;
         // find all customer subscribed to quick sms with their sms balance.
@@ -49,10 +49,10 @@ class SendQuickSms extends Command
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
             if ($schema_->is_new_version ==1) {
-                $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from shulesoft.sms a where a.status = 0 and a.type = 1 and a.schema_name ='".$schema."' order by priority DESC limit 5");
+                $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from shulesoft.sms a where a.status = 0 and a.type = 1 and a.schema_name ='".$schema."' order by priority DESC limit 10");
             }else {
 
-            $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from " . $schema . ".sms a where a.status = 0 and a.type = 1 order by priority DESC limit 5");
+            $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from " . $schema . ".sms a where a.status = 0 and a.type = 1 order by priority DESC limit 10");
             }
 
             $total_sms_sent += !empty($messages) ? count($messages) : 0;
