@@ -261,10 +261,11 @@ $objects = [
                                         if (!empty($invoices) && (int) request()->segment(3) == 1) {
                                             $i = 1;
                                             foreach ($invoices as $invoice) {
+                                                if(isset($invoice->client)){
                                                 ?>
                                                 <tr>
                                                     <td><?= $i++ ?></td>
-                                                    <td><?= isset($invoice->client->name) ? $invoice->client->name : '' ?></td>
+                                                    <td><?= $invoice->client->name ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= $invoice->client->estimated_students ?></td>
                                                     <td><?= $invoice->invoiceFees()->sum('amount') ?></td>
@@ -320,6 +321,7 @@ $objects = [
                                                 </div>
                                             </div>
                                             <?php
+                                            }
                                         }
                                     }
                                     ?>
