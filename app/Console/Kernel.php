@@ -36,6 +36,11 @@ class Kernel extends ConsoleKernel {
         \App\Console\Commands\DatabaseOptimization::class,
         \App\Console\Commands\OptimizePayment::class,
         \App\Console\Commands\SyncDataToNewVersion::class,
+        \App\Console\Commands\UpdateSMSBalance::class,
+        \App\Console\Commands\checkBeamSMSBalance::class,
+
+
+
         // \App\Console\Commands\CreateTodayReport::class,
         \App\Console\Commands\SchoolMonthlyReport::class,
             // \App\Console\Commands\HRLeaveRemainders::class, // Currently disabled
@@ -149,6 +154,12 @@ class Kernel extends ConsoleKernel {
             $schedule->command('schoolmontly:report')->monthlyOn(28, '06:36');
         } catch (\Exception $e) {
             Log::error('School Montly Report failed' . $e->getMessage());
+        }
+         // configure the service set RestartSec = 1 minute (60s)
+         try {
+            $schedule->command('beem:sms_balance')->dailyAt('03:00');
+        } catch (\Exception $e) {
+            Log::error('Send beem sms balance failed' . $e->getMessage());
         }
 
         // configure the service set RestartSec = 1 minute currently disabled
