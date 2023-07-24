@@ -1052,6 +1052,35 @@ class Customer extends Controller {
                 'status' => 'New'
             ];
             $req = \App\Models\Requirement::create($requirement);
+            if ((int) request('user_sid') > 0) {
+
+                $client = \App\Models\Client::where('username', $req->school->schema_name)->first();
+                if (!empty($client)) {
+                    if ($client->is_new_version) {
+                        $user = \DB::table('shulesoft.users')->where('sid', request('user_sid'))->where('schema_name', $req->school->schema_name)->first();
+                    } else {
+                        $user = \DB::table('admin.all_users')->where('sid', request('user_sid'))->where('schema_name', $req->school->schema_name)->first();
+                    }
+
+                    $module = DB::table('admin.modules')->where('id', request('module_id'))->first()->name;
+                    $new_req = isset($req->school->name) && (int) $req->school_id > 0 ? ' - from ' . $req->school->name . ' on ' . $module : ' - ' . $module;
+                    $message = 'Hello ' . $user->name . '<br/>'
+                            . '</p>Your Requirement has been submitted for implementation</p>'
+                            . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                            . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
+                    $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+
+                    $sms = 'Hello ' . $user->name . '.'
+                            . chr(10) . 'Your Requirement: ' . $new_req . '.'
+                            . chr(10) . strip_tags($req->note)
+                            . chr(10) . 'is received by ShuleSoft team. We will update you for any status about it. '
+                            . ''
+                            . chr(10) . 'Thanks and regards.';
+
+                    $this->send_whatsapp_sms($user->phone, $sms);
+                    $this->send_sms($user->phone, $sms, 1);
+                }
+            }
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
                 $module = DB::table('admin.modules')->where('id', request('module_id'))->first()->name;
@@ -1169,8 +1198,19 @@ class Customer extends Controller {
                 . chr(10) . 'Thanks and regards,'
                 . chr(10) . 'Technical Team.';
         $this->send_whatsapp_sms($user->phone, $message);
-        $this->send_sms($user->phone, $message, 1);
 
+        if ((int) $data->user_sid > 0) {
+            $client = \App\Models\Client::where('username', $data->school->schema_name)->first();
+            if (!empty($client)) {
+                if ($client->is_new_version) {
+                    $user = \DB::table('shulesoft.users')->where('sid', $data->user_sid)->where('schema_name', $data->school->schema_name)->first();
+                } else {
+                    $user = \DB::table('admin.all_users')->where('sid', $data->user_sid)->where('schema_name', $data->school->schema_name)->first();
+                }
+                $this->send_whatsapp_sms($user->phone, $message);
+                $this->send_sms($user->phone, $message, 1);
+            }
+        }
         if (preg_match('/[0-9]/', $data->contact) && $action == 'Completed') {
             $message1 = 'Hello '
                     . chr(10) . 'Thanks for using Shulesoft Services'
@@ -1178,9 +1218,21 @@ class Customer extends Controller {
                     . chr(10) . 'Requested on ' . date('d-m-Y', strtotime($data->created_at)) . ' is now complete. Login into your shulesoft account'
                     . chr(10) . 'Thanks and regards,'
                     . chr(10) . 'Shulesoft Team'
-                    . chr(10) . 'Call: +255 655 406 004';
+                    . chr(10) . 'Call: +255 748 771 580';
             $this->send_whatsapp_sms($data->contact, $message1);
-            $this->send_sms($data->contact, $message1, 1);
+            
+            if ((int) $data->user_sid > 0) {
+                $client = \App\Models\Client::where('username', $data->school->schema_name)->first();
+                if (!empty($client)) {
+                    if ($client->is_new_version) {
+                        $user = \DB::table('shulesoft.users')->where('sid', $data->user_sid)->where('schema_name', $data->school->schema_name)->first();
+                    } else {
+                        $user = \DB::table('admin.all_users')->where('sid', $data->user_sid)->where('schema_name', $data->school->schema_name)->first();
+                    }
+                    $this->send_whatsapp_sms($user->phone, $message1);
+                    $this->send_sms($user->phone, $message1, 1);
+                }
+            }
         }
 
         echo $action;
