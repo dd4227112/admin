@@ -264,7 +264,7 @@ $objects = [
                                                 ?>
                                                 <tr>
                                                     <td><?= $i++ ?></td>
-                                                    <td><?= $invoice->client->name ?></td>
+                                                    <td><?= isset($invoice->client->name) ? $invoice->client->name : '' ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= $invoice->client->estimated_students ?></td>
                                                     <td><?= $invoice->invoiceFees()->sum('amount') ?></td>
