@@ -324,7 +324,7 @@ class Customer extends Controller {
             'created_by' => \Auth::user()->id,
             'language' => 'eng',
             'company_file_id' => $company_file_id,
-            'guide_type' =>request()->guide_type,
+            'guide_type' => request()->guide_type,
         ];
         DB::table('constant.guides')->insert($obj);
         return redirect('customer/guide');
@@ -375,28 +375,23 @@ class Customer extends Controller {
                     "is_edit" => request()->is_edit,
                     'language' => 'eng',
                     'company_file_id' => $company_file_id,
-                    'guide_type' =>request()->guide_type,
+                    'guide_type' => request()->guide_type,
                 ];
 
                 \App\Models\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
-        } 
-        else if (request('pg') && is_numeric(request('pg')) && floor(request('pg')) == request('pg'))
-        {
-            $guide_type = (int)request('pg');
-            $this->data['guide_selected'] = $guide_type?$guide_type:'';
+        } else if (request('pg') && is_numeric(request('pg')) && floor(request('pg')) == request('pg')) {
+            $guide_type = (int) request('pg');
+            $this->data['guide_selected'] = $guide_type ? $guide_type : '';
             $page = 'guide';
             $this->data['guides'] = \App\Models\Guide::latest()->where('guide_type', $guide_type)->get();
             // $this->data['guides'] =DB::select("select a.*, c.name, b.display_name from constant.guides a join constant.permission a.permission_id = b.id join constant.permission_group c on c.id = b.permission_group_id");
-
-        }
-        else {
+        } else {
             $page = 'guide';
             $this->data['guide_selected'] = '';
             $this->data['guides'] = \App\Models\Guide::latest()->get();
             // $this->data['guides'] =DB::select("select a.*, c.name, b.display_name from constant.guides a join constant.permission b on a.permission_id = b.id join constant.permission_group c on c.id = b.permission_group_id");
-
         }
         return view('customer.' . $page, $this->data);
     }
@@ -465,21 +460,20 @@ class Customer extends Controller {
     }
 
     public function profile(Request $request) {
-        $school =  request()->segment(3);
-        
+        $school = request()->segment(3);
+
         $schema = \collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE lower(table_schema) = '{$school}' "))->first();
         $id = request()->segment(4);
-        
+
         $this->data['shulesoft_users'] = (new \App\Http\Controllers\Users)->shulesoftUsers();
-       
+
         // $status =  DB::table('admin.all_setting')->where('schema_name', $school)->first();
         // $shulesoft =  DB::table('shulesoft.setting')->where('schema_name', $school)->first();
-         
         // $this->data['schema'] = empty($schema) ? 'shulesoft' : request()->segment(3);
         $this->data['schema'] = 'shulesoft';
 
         if (empty($status) && empty($shulesoft)) {
-          //  return redirect('https://' . $school . '.shulesoft.com');
+            //  return redirect('https://' . $school . '.shulesoft.com');
         }
 
         $client = \App\Models\Client::where('username', $school)->first();
@@ -490,11 +484,11 @@ class Customer extends Controller {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
-        // } elseif (empty($status) && isset($client->username) || empty($shulesoft)) {
-        // //    return redirect('https://' . $school . '.shulesoft.com');
-        // } elseif (empty($status) && empty($client->username)) {
-        //     return view('customer.checkinstallation', $this->data);
-        // } else {
+            // } elseif (empty($status) && isset($client->username) || empty($shulesoft)) {
+            // //    return redirect('https://' . $school . '.shulesoft.com');
+            // } elseif (empty($status) && empty($client->username)) {
+            //     return view('customer.checkinstallation', $this->data);
+            // } else {
             $is_client = 1;
             // $this->data['levels'] = !empty($schema) ? DB::table($school . '.classlevel')->get() : \DB::table('shulesoft.classlevel')->where('schema_name', $school)->get();
             $this->data['levels'] = DB::table('shulesoft.classlevel')->where('schema_name', $school)->get();
@@ -517,16 +511,13 @@ class Customer extends Controller {
             if ($zone_manager) {
                 $this->data['manager'] = \App\Models\User::where(['id' => $zone_manager->user_id, 'status' => 1]);
             }
-            $school_ = "'".$school."'";
+            $school_ = "'" . $school . "'";
             // $this->data['top_users'] = !empty($schema) ? DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5') :  DB::select('select count(*), user_id,a."table",b.name,b.usertype from shulesoft.log a join shulesoft.users b on (a.user_id=b.id and a."table"=b."table" and a.schema_name=b.schema_name) where a.schema_name='.$school_.' AND user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
-            $this->data['top_users'] = DB::select("SELECT COUNT(a.*) AS count, b.name, b.usertype FROM shulesoft.log a JOIN shulesoft.users b ON a.user_id = b.id WHERE a.schema_name = '".$school."' GROUP BY b.name, b.usertype ORDER BY count DESC limit 5");
-
-
+            $this->data['top_users'] = DB::select("SELECT COUNT(a.*) AS count, b.name, b.usertype FROM shulesoft.log a JOIN shulesoft.users b ON a.user_id = b.id WHERE a.schema_name = '" . $school . "' GROUP BY b.name, b.usertype ORDER BY count DESC limit 5");
         }
 
         // $this->data['school'] = !empty($schema) ? DB::table($school . '.setting')->first() : \DB::table('shulesoft.setting')->where('schema_name', $school)->first(); 
-        $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name', $school)->first(); 
-
+        $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name', $school)->first();
 
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
         $this->data['is_client'] = 1;
@@ -552,63 +543,55 @@ class Customer extends Controller {
                 $maxFileSize = 20971520; // 20MB
                 $file = $request->file('attachment');
                 // Specify the directory where you want to store the file
-                $path =storage_path('uploads/images');
+                $path = storage_path('uploads/images');
                 $extension = $file->getClientOriginalExtension();
-                 // Define the allowed file types
+                // Define the allowed file types
                 $allowedAudioExtensions = ['mp3', 'wav', 'ogg', 'aac', 'm4a', 'flac', 'wma', 'opus', 'amr', 'mid'];
                 $allowedImageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico', 'webp', 'jfif'];
                 $allowedVideoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'm4v', '3gp'];
                 if ($file->getSize() > $maxFileSize) {
                     return redirect()->back()->with('error', "File size exceeds the maximum limit of 20MB.");
-
                 }
                 if (in_array($extension, $allowedAudioExtensions)) {
-                $fileName = $file->getClientOriginalName();
-                $file->move($path, $file->getClientOriginalName());
-                $file_type = 'Audio';
-                $file_data = ['attachment' =>$fileName, 'attachment_type'=>$file_type];
-                } 
-                
-                elseif (in_array($extension, $allowedImageExtensions)) {
-                $fileName = $file->getClientOriginalName();
-                $file->move($path, $file->getClientOriginalName());
-                $file_type = 'Image';
-                $file_data = ['attachment' =>$fileName, 'attachment_type'=>$file_type];
-                } 
-                
-                elseif (in_array($extension, $allowedVideoExtensions)) {
-                $fileName = $file->getClientOriginalName();
-                $file->move($path, $file->getClientOriginalName()); 
-                $file_type = 'Video';
-                $file_data = ['attachment' =>$fileName, 'attachment_type'=>$file_type];               
-                }
-               else {
+                    $fileName = $file->getClientOriginalName();
+                    $file->move($path, $file->getClientOriginalName());
+                    $file_type = 'Audio';
+                    $file_data = ['attachment' => $fileName, 'attachment_type' => $file_type];
+                } elseif (in_array($extension, $allowedImageExtensions)) {
+                    $fileName = $file->getClientOriginalName();
+                    $file->move($path, $file->getClientOriginalName());
+                    $file_type = 'Image';
+                    $file_data = ['attachment' => $fileName, 'attachment_type' => $file_type];
+                } elseif (in_array($extension, $allowedVideoExtensions)) {
+                    $fileName = $file->getClientOriginalName();
+                    $file->move($path, $file->getClientOriginalName());
+                    $file_type = 'Video';
+                    $file_data = ['attachment' => $fileName, 'attachment_type' => $file_type];
+                } else {
                     // Invalid file type
                     return redirect()->back()->with('error', "Invalid file type. Only audio, image, and video files are allowed.");
                 }
                 $remainder = empty(request('remainder_date')) ? 1 : 0;
                 $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
                 $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
-                $data = array_merge(request()->except(['start_date', 'end_date', 'to_user_id', 'activity']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date, 'activity' => nl2br(request('activity'))]);    
+                $data = array_merge(request()->except(['start_date', 'end_date', 'to_user_id', 'activity']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date, 'activity' => nl2br(request('activity'))]);
                 // $data = array_merge($file_data, $task_data);
-                $data['attachment']=$fileName;
-                $data['attachment_type']=$file_type;
-                $data['school_id'] =request('client_id');
+                $data['attachment'] = $fileName;
+                $data['attachment_type'] = $file_type;
+                $data['school_id'] = request('client_id');
+            } else {
 
-        }else{
-
-            $remainder = empty(request('remainder_date')) ? 1 : 0;
-            $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
-            $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
-            $data = array_merge(request()->except(['start_date', 'end_date', 'to_user_id', 'activity']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date, 'activity' => nl2br(request('activity'))]);
-            $data['school_id'] =request('client_id');
-        }
+                $remainder = empty(request('remainder_date')) ? 1 : 0;
+                $end_date = strtolower(request('status')) == 'complete' ? date("Y-m-d") : request('end_date');
+                $remainder_date = !empty(request('remainder_date')) ? date('Y-m-d', strtotime(request('remainder_date'))) : null;
+                $data = array_merge(request()->except(['start_date', 'end_date', 'to_user_id', 'activity']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => $end_date, 'remainder' => $remainder, 'remainder_date' => $remainder_date, 'activity' => nl2br(request('activity'))]);
+                $data['school_id'] = request('client_id');
+            }
             $task = \App\Models\Task::create($data);
             DB::table('tasks_clients')->insert([
                 'task_id' => $task->id,
                 'client_id' => (int) request('client_id')
             ]);
-         
 
             if (!empty(request('to_user_id'))) {
                 $to_users = request('to_user_id');
@@ -649,14 +632,14 @@ class Customer extends Controller {
             return view('customer/profile', $this->data);
         }
     }
-    public function updateSstatus(){
-        $data =['status'=>request('status')];
-        $id =request('task_id');
-        if(DB::table('admin.tasks')->where('id', $id)->update($data)){
-            $response =['message'=>'Status updated'];
+
+    public function updateSstatus() {
+        $data = ['status' => request('status')];
+        $id = request('task_id');
+        if (DB::table('admin.tasks')->where('id', $id)->update($data)) {
+            $response = ['message' => 'Status updated'];
             echo json_encode($response);
         }
-    
     }
 
     public function editdetails() {
@@ -801,7 +784,6 @@ class Customer extends Controller {
         '%" . str_replace("'", null, strtolower(request('term'))) . "%' LIMIT 10";
         die(json_encode(DB::select($sql)));
     }
-    
 
     public function getCLientschools() {
         $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A JOIN admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE 
@@ -1011,8 +993,8 @@ class Customer extends Controller {
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
             $this->data['requirement'] = \App\Models\Requirement::where('id', (int) $id)->first();
-            if(empty($this->data['requirement'])){
-            return redirect(url('customer/requirements'))->with('error', "No customer requirement associated  with the given id");
+            if (empty($this->data['requirement'])) {
+                return redirect(url('customer/requirements'))->with('error', "No customer requirement associated  with the given id");
             }
             $next_id = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first();
             $this->data['next'] = is_null($next_id) ? '' : $next_id->id;
@@ -1044,8 +1026,8 @@ class Customer extends Controller {
                 $this->data['endDate'] = $endDate = date('Y-m-d', strtotime($startDate . ' + 6 days'));
                 $this->data['person_stats'] = $this->checkTaskProgress($startDate, $endDate, $to_user_id);
                 $this->data['requirements'] = \App\Models\Requirement::whereBetween('created_at', [$startDate, $endDate]);
-            }else{
-                $this->data['requirements'] = \App\Models\Requirement::latest();          
+            } else {
+                $this->data['requirements'] = \App\Models\Requirement::latest();
             }
             $this->data['person_stats'] = $this->checkTaskProgress($startDate, $endDate, $to_user_id);
             return view('customer/analysis', $this->data);
@@ -1057,21 +1039,22 @@ class Customer extends Controller {
                 'note' => 'required|min:12',
             ]);
             $requirement = [
-                'note' =>request('note'),
-                'priority' =>request('priority'), 
-                'user_id' => Auth::user()->id, 
-                'contact' =>DB::table('shulesoft.setting')->where('school_id', request('school_id'))->first()?DB::table('shulesoft.setting')->where('school_id', request('school_id'))->first()->phone:'',  
-                'to_user_id' =>request('to_user_id'), 
-                'project_id' =>1,
-                'module_id' =>request('module_id'),
-                'due_date' =>request('due_date'), 
-                'school_id' =>request('school_id'),
-                'status'=>'New'
-        ];
+                'note' => request('note'),
+                'priority' => request('priority'),
+                'user_id' => Auth::user()->id,
+                'contact' => DB::table('shulesoft.setting')->where('school_id', request('school_id'))->first() ? DB::table('shulesoft.setting')->where('school_id', request('school_id'))->first()->phone : '',
+                'to_user_id' => request('to_user_id'),
+                'user_sid' => request('user_sid'),
+                'project_id' => 1,
+                'module_id' => request('module_id'),
+                'due_date' => request('due_date'),
+                'school_id' => request('school_id'),
+                'status' => 'New'
+            ];
             $req = \App\Models\Requirement::create($requirement);
             if ((int) request('to_user_id') > 0) {
-                $user= \App\Models\User::find(request('to_user_id'));
-                $module =DB::table('admin.modules')->where('id',request('module_id'))->first()->name;
+                $user = \App\Models\User::find(request('to_user_id'));
+                $module = DB::table('admin.modules')->where('id', request('module_id'))->first()->name;
                 $new_req = isset($req->school->name) && (int) $req->school_id > 0 ? ' - from ' . $req->school->name . ' on ' . $module : ' - ' . $module;
                 $message = 'Hello ' . $user->name . '<br/>'
                         . 'There is ' . $new_req . '</p>'
@@ -1085,67 +1068,66 @@ class Customer extends Controller {
                         . chr(10) . 'By: ' . $req->user->name . '.'
                         . chr(10) . 'Thanks and regards.';
 
-                $url = 'https://www.pivotaltracker.com/services/v5/projects/2553591/stories';
-
-                $fields = [
-                    "current_state" => request('current_state'),
-                    "name" => 'Hello ' . $user->name . ' - ' . $new_req,
-                    "estimate" => 1,
-                    "story_type" => request("task_type"),
-                    "requested_by_id" => request('requested_by_id'),
-                    "story_priority" => request('priority'),
-                    "token" => "c3c067a65948d99055ab1ac60891c174",
-                    "description" => Auth::User()->name . ' - ' . strip_tags(request('note'))
-                ];
-                $story = new \App\Http\Controllers\General();
-                $data1 = $story->post($url, $fields);
+//                $url = 'https://www.pivotaltracker.com/services/v5/projects/2553591/stories';
+//
+//                $fields = [
+//                    "current_state" => request('current_state'),
+//                    "name" => 'Hello ' . $user->name . ' - ' . $new_req,
+//                    "estimate" => 1,
+//                    "story_type" => request("task_type"),
+//                    "requested_by_id" => request('requested_by_id'),
+//                    "story_priority" => request('priority'),
+//                    "token" => "c3c067a65948d99055ab1ac60891c174",
+//                    "description" => Auth::User()->name . ' - ' . strip_tags(request('note'))
+//                ];
+//                $story = new \App\Http\Controllers\General();
+//                $data1 = $story->post($url, $fields);
 
                 $this->send_whatsapp_sms($user->phone, $sms);
                 $this->send_sms($user->phone, $sms, 1);
             }
             if (request('notify_to')) {
-                 $users_selected = request('notify_to');
-                foreach ($users_selected as $key=>$value) {
-                    $notify_data =[
-                        'user_id'=>$value,
-                        'task_id'=>$req->id
+                $users_selected = request('notify_to');
+                foreach ($users_selected as $key => $value) {
+                    $notify_data = [
+                        'user_id' => $value,
+                        'task_id' => $req->id
                     ];
                     DB::table('admin.notify_tasks')->insert($notify_data);
                     $user = User::find($value);
                     $user_allocated = User::find(request('to_user_id'));
-                    $module =DB::table('admin.modules')->where('id',request('module_id'))->first()->name;
+                    $module = DB::table('admin.modules')->where('id', request('module_id'))->first()->name;
                     $new_req = isset($req->school->name) && (int) $req->school_id > 0 ? ' - from ' . $req->school->name . ' on ' . $module : ' - ' . $module;
                     $message = 'Hello ' . $user->name . '<br/>'
-                            . 'There is ' . $new_req . ' allocated to'.$user_allocated->name.' </p>'
+                            . 'There is ' . $new_req . ' allocated to' . $user_allocated->name . ' </p>'
                             . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                             . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                     $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
-    
+
                     $sms = 'Hello ' . $user->name . '.'
-                            . chr(10) . 'There is ' . $new_req . ' allocated to '.$user_allocated->name
+                            . chr(10) . 'There is ' . $new_req . ' allocated to ' . $user_allocated->name
                             . chr(10) . strip_tags($req->note)
                             . chr(10) . 'By: ' . $req->user->name . '.'
                             . chr(10) . 'Thanks and regards.';
-    
-                    $url = 'https://www.pivotaltracker.com/services/v5/projects/2553591/stories';
-    
-                    $fields = [
-                        "current_state" => request('current_state'),
-                        "name" => 'Hello ' . $user->name . ' - ' . $new_req,
-                        "estimate" => 1,
-                        "story_type" => request("task_type"),
-                        "requested_by_id" => request('requested_by_id'),
-                        "story_priority" => request('priority'),
-                        "token" => "c3c067a65948d99055ab1ac60891c174",
-                        "description" => Auth::User()->name . ' - ' . strip_tags(request('note'))
-                    ];
-                    $story = new \App\Http\Controllers\General();
-                    $data1 = $story->post($url, $fields);
-    
+
+//                    $url = 'https://www.pivotaltracker.com/services/v5/projects/2553591/stories';
+//    
+//                    $fields = [
+//                        "current_state" => request('current_state'),
+//                        "name" => 'Hello ' . $user->name . ' - ' . $new_req,
+//                        "estimate" => 1,
+//                        "story_type" => request("task_type"),
+//                        "requested_by_id" => request('requested_by_id'),
+//                        "story_priority" => request('priority'),
+//                        "token" => "c3c067a65948d99055ab1ac60891c174",
+//                        "description" => Auth::User()->name . ' - ' . strip_tags(request('note'))
+//                    ];
+                    //$story = new \App\Http\Controllers\General();
+                    //$data1 = $story->post($url, $fields);
+
                     $this->send_whatsapp_sms($user->phone, $sms);
                     $this->send_sms($user->phone, $sms, 1);
-                   
-                } 
+                }
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest();
@@ -1155,15 +1137,14 @@ class Customer extends Controller {
     public function editReq() {
         $id = request('req_id');
         //check if the requirement exist and then update it
-       $req = \App\Models\Requirement::where('id', $id)->first();
-       if($req){
-        $data = request()->except('_token', 'req_id', 'task_type', 'current_state');
-        \App\Models\Requirement::where('id', $id)->update($data);
-        return redirect('customer/requirements')->with('success', 'Edited successfully!');
-       }else{
-        return redirect('customer/requirements')->with('error', "No customer requirement associated  with the given id");
-       
-       }
+        $req = \App\Models\Requirement::where('id', $id)->first();
+        if ($req) {
+            $data = request()->except('_token', 'req_id', 'task_type', 'current_state');
+            \App\Models\Requirement::where('id', $id)->update($data);
+            return redirect('customer/requirements')->with('success', 'Edited successfully!');
+        } else {
+            return redirect('customer/requirements')->with('error', "No customer requirement associated  with the given id");
+        }
     }
 
     public function updateReq() {
@@ -1466,11 +1447,11 @@ class Customer extends Controller {
             $schema = request('schema_name');
             $status = request('status');
             // migration, update admin.clients set status =4 (4=migration)
-            if ($status ==5) {
+            if ($status == 5) {
                 DB::table('admin.clients')->where('username', $schema)->update(['status' => 4]);
             }
-             // suspended, update admin.clients set status =3 (3=suspended)
-             if ($status ==6) {
+            // suspended, update admin.clients set status =3 (3=suspended)
+            if ($status == 6) {
                 DB::table('admin.clients')->where('username', $schema)->update(['status' => 3]);
             }
             if ((int) $status > 0) {
@@ -1489,8 +1470,8 @@ class Customer extends Controller {
             if ($schema != '' && $schema != 'accounts') {
                 $pass = $schema . rand(5697, 33);
                 $username = $schema . date('Hi');
-                DB::table('shulesoft.setting')->where('schema_name',$schema)->update(['password' => bcrypt($pass), 'username' => $username]);
-                $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name',$schema)->first();
+                DB::table('shulesoft.setting')->where('schema_name', $schema)->update(['password' => bcrypt($pass), 'username' => $username]);
+                $this->data['school'] = DB::table('shulesoft.setting')->where('schema_name', $schema)->first();
                 $this->data['schema'] = $schema;
                 $this->data['pass'] = $pass;
                 return view('customer.view', $this->data)->with('success', 'Password Updated Successfully');
@@ -1703,6 +1684,26 @@ class Customer extends Controller {
             $option .= '<option value="' . $slot->id . '">' . $slot->start_time . ' - ' . $slot->end_time . '</option>';
         }
         echo $option;
+    }
+
+    public function getSchoolUsers() {
+        $school_id = request('school_id');
+        $school = \App\Models\School::find($school_id);
+        if (!empty($school) && !empty($school->schema_name)) {
+            $client = \App\Models\Client::where('username', $school->schema_name)->first();
+            if ($client->is_new_version) {
+                $sql = "select * from shulesoft.users where  \"table\"='" . $client->username . "' and  status=1 and \"table\" not in ('student','parent') ";
+            } else {
+                $sql = "select * from " . $client->username . ".users where status=1 and \"table\" not in ('student','parent') ";
+            }
+
+            $users = \DB::select($sql);
+            $option = '<select name="user_sid" class="form-control select2"  required><option></option>';
+            foreach ($users as $user) {
+                $option .= '<option value="' . $user->sid . '">' . $user->name . '</option>';
+            }
+            echo $option . '</select>';
+        }
     }
 
     public function download() {
@@ -2034,10 +2035,11 @@ class Customer extends Controller {
 
         return $data;
     }
-    public function attachment(){
+
+    public function attachment() {
         $id = request()->segment(4);
-        $data['task']=\App\Models\Task::where('id', $id)->first();
-        $data['school']=request()->segment(3);
+        $data['task'] = \App\Models\Task::where('id', $id)->first();
+        $data['school'] = request()->segment(3);
         return view('customer.attachment', $data);
     }
 
