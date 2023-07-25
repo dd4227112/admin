@@ -41,7 +41,7 @@ class SendQuickSms extends Command
      */
     public function handle()
     {
-        //return false;
+        return false;
         $schemas = DB::select("select  a.client_id, sum(coalesce( a.quantity, 0)) as balance, b.username as schema_name , b.is_new_version from admin.addons_payments a, admin.clients b  where a.client_id =b.id and a.addon_id =2   group by a.client_id, b.username, b.is_new_version  having sum(coalesce( a.quantity, 0)) >0");
         $total_sms_sent = 0;
         // find all customer subscribed to quick sms with their sms balance.
