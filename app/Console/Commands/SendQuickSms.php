@@ -42,17 +42,17 @@ class SendQuickSms extends Command
     public function handle()
     {
         return false;
-        $schemas = DB::select("select  a.client_id, sum(coalesce( a.quantity, 0)) as balance, b.username as schema_name , b.is_new_version from admin.addons_payments a, admin.clients b  where a.client_id =b.id and a.addon_id =2   group by a.client_id, b.username, b.is_new_version  having sum(coalesce( a.quantity, 0)) >0");
+        $schemas = DB::select("select  a.client_id, sum(coalesce( a.quantity, 0)) as balance, b.username as schema_name , b.is_new_version from admin.addons_payments a, admin.clients b  where a.client_id =b.id and a.addon_id =2  and a.client_id in(select client_id from admin.sms_balance where balance >0) group by a.client_id, b.username, b.is_new_version  having sum(coalesce( a.quantity, 0)) >0");
         $total_sms_sent = 0;
         // find all customer subscribed to quick sms with their sms balance.
         
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
             if ($schema_->is_new_version ==1) {
-                $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from shulesoft.sms a where a.status = 0 and a.type = 1 and a.schema_name ='".$schema."' order by priority DESC limit 10");
+                $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from shulesoft.sms a where a.status = 0 and a.type = 1 and a.schema_name ='".$schema."' and sent_from ='quick-sms'  order by priority DESC limit 10");
             }else {
 
-            $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from " . $schema . ".sms a where a.status = 0 and a.type = 1 order by priority DESC limit 10");
+            $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from from " . $schema . ".sms a where a.status = 0 and a.type = 1 and sent_from ='quick-sms' order by priority DESC limit 10");
             }
 
             $total_sms_sent += !empty($messages) ? count($messages) : 0;
@@ -61,8 +61,8 @@ class SendQuickSms extends Command
                 foreach ($messages as $message) {
 
                     $beem = $this->beem_sms($message->phone, $message->body, $schema);
-                    $return_code =json_decode($beem);                   
-                    if($return_code->success ==1){
+                    // $return_code =json_decode($beem);                   
+                    // if($return_code->success ==1){  // update sms status set =1 regardless either is seccessful or not especial for wrong number
                         $sent_sms =$this->countSMS($message->body);
 
                         DB::select(" update admin.sms_balance set balance =balance - ".$sent_sms." where client_id =". $schema_->client_id);
@@ -71,7 +71,7 @@ class SendQuickSms extends Command
                             'return_code' => json_encode($beem),
                             'updated_at' => now()
                         ]);
-                    }
+                    // }
                 }
             }
         }
