@@ -60,7 +60,7 @@ foreach ($exam_reports as $report) {
     $exam_report_count[$report->schema_name] = 'Exams:'.$report->count;
 }
 
-$smsstatus = DB::select('select distinct "schema_name", count(*) from admin.all_sms ' . $where . '   group by schema_name');
+$smsstatus =[]; // DB::select('select distinct "schema_name", count(*) from admin.all_sms ' . $where . '   group by schema_name');
 $sms_status = [];
 $sms_status_count = [];
 foreach ($smsstatus as $smss) {

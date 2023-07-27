@@ -37,7 +37,7 @@ foreach ($exam_reports as $report) {
 }
 
 
-$smsstatus = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sms ' . $where . '   group by schema_name');
+$smsstatus =[]; // DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sms ' . $where . '   group by schema_name');
 $sms_status = [];
 $sms_status_count = [];
 foreach ($smsstatus as $smss) {
