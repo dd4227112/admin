@@ -330,18 +330,22 @@
                                                     </a>
                                                  </li>
                                                 <?php } ?>
+                                                <?php if (can_access('add_requirements')) {?>
 
                                                 <li class="">
                                                     <a href="<?= url('customer/requirements') ?>">
                                                             <span class="pcoded-mtext">Customer Requirements</span>
                                                     </a>
                                                 </li>
+                                                <?php  } ?>
+                                                <?php if (can_access('view_guide')) {?>
 
                                                 <li class="">
                                                     <a href="<?= url('customer/guide') ?>">
                                                         <span class="pcoded-mtext">User Guide</span>
                                                     </a>
                                                 </li> 
+                                                <?php } ?>
 
                                                <?php if(can_access('manage_joina')) { ?>
                                                  <li class="">
