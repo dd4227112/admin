@@ -107,7 +107,7 @@ class Kernel extends ConsoleKernel {
 
          // configure the service set RestartSec everyFiveMinutes
         try {
-            $schedule->command('sync:SyncData')->everyMinute();
+            $schedule->command('sync:SyncData')->everyFiveMinutes();
         } catch (\Exception $e) {
             Log::error('Data Transfer failed: ' . $e->getMessage());
         }
