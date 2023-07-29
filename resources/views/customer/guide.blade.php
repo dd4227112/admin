@@ -142,9 +142,9 @@
 
                                                         <?php echo '<a  href="' . url("/customer/guide/edit/$value->id") . ' " class="btn btn-info btn-mini btn-round">' . __('edit') . ' </a>' ?>
 
-                                                        <?php if(can_access('delete_guide')) { ?>
-                                                        <?php echo '<a  href="' . url("customer/guide/delete/$value->id") . ' " class="btn btn-danger btn-mini btn-round">' . __('delete') . ' </a>' ?>
-                                                        <?php } ?>
+                                                        <?php // if(can_access('delete_guide')) { ?>
+                                                        <?php echo '<a  href="' . url("customer/guide/delete/$value->id") . ' " class="btn btn-danger btn-mini btn-round delete_button" id="'.$value->id.'">' . __('delete') . ' </a>' ?>
+                                                        <?php // } ?>
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -189,5 +189,23 @@
         })
     }
     $(document).ready(school_selector);
+    document.ready(function(){
+        $('.delete_button').click(function(){
+            Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      // If the user confirmed the deletion
+      if (result.isConfirmed) {
+        return true;
+      }
+    });
+        });
+    });
 </script>
 @endsection

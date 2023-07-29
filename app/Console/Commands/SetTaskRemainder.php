@@ -71,7 +71,7 @@ class SetTaskRemainder extends Command
                 \App\Models\Task::where('id', $task->id)->update(['remainder' => 1]);
             }
         }
-        DB::select('refresh  materialized view  admin.all_sms ');
+      //  DB::select('refresh  materialized view  admin.all_sms ');
         return 0;
     }
 }

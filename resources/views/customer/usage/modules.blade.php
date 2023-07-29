@@ -37,7 +37,7 @@ foreach ($exam_reports as $report) {
 }
 
 
-$smsstatus = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sms ' . $where . '   group by schema_name');
+$smsstatus =[]; // DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sms ' . $where . '   group by schema_name');
 $sms_status = [];
 $sms_status_count = [];
 foreach ($smsstatus as $smss) {
@@ -117,29 +117,29 @@ foreach ($characters as $character) {
 }
 
 
-$parents = DB::select('select distinct "schema_name",  count(distinct user_id) as count,  extract(month from created_at) as created_at from admin.all_login_locations a ' . $where . ' and "table"=\'parent\'   group by schema_name,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_parent where "schema_name"=a."schema_name" and status=1)');
-$parent_status = [];
-$parent_status_count = [];
-foreach ($parents as $parent) {
-    $character_status[$parent->schema_name] = $parent->created_at;
-    $character_status_count[$parent->schema_name] = $parent->count;
-}
+// $parents = DB::select('select distinct "schema_name",  count(distinct user_id) as count,  extract(month from created_at) as created_at from admin.all_login_locations a ' . $where . ' and "table"=\'parent\'   group by schema_name,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_parent where "schema_name"=a."schema_name" and status=1)');
+// $parent_status = [];
+// $parent_status_count = [];
+// foreach ($parents as $parent) {
+//     $character_status[$parent->schema_name] = $parent->created_at;
+//     $character_status_count[$parent->schema_name] = $parent->count;
+// }
 
-$login_staffs = DB::select('select distinct "schema_name",  count(distinct user_id) as count,  extract(month from created_at) as created_at from admin.all_login_locations a ' . $where . ' and "table" in (\'user\',\'teacher\' )  group by schema_name ,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)');
-$staff_status = [];
-$staff_status_count = [];
-foreach ($login_staffs as $staff) {
-    $staff_status[$staff->schema_name] = $staff->created_at;
-    $staff_status_count[$staff->schema_name] = $staff->count;
-}
+// $login_staffs = DB::select('select distinct "schema_name",  count(distinct user_id) as count,  extract(month from created_at) as created_at from admin.all_login_locations a ' . $where . ' and "table" in (\'user\',\'teacher\' )  group by schema_name ,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)');
+// $staff_status = [];
+// $staff_status_count = [];
+// foreach ($login_staffs as $staff) {
+//     $staff_status[$staff->schema_name] = $staff->created_at;
+//     $staff_status_count[$staff->schema_name] = $staff->count;
+// }
 
-$login_parents = DB::select('select distinct "schema_name",  count(distinct user_id) as count,  extract(month from created_at) as created_at from admin.all_login_locations a ' . $where . ' and "table" in (\'parent\' )  group by schema_name ,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)');
-$parents_status = [];
-$parents_status_count = [];
-foreach ($login_parents as $staff) {
-    $parents_status[$staff->schema_name] = $staff->created_at;
-    $parents_status_count[$staff->schema_name] = $staff->count;
-}
+// $login_parents = DB::select('select distinct "schema_name",  count(distinct user_id) as count,  extract(month from created_at) as created_at from admin.all_login_locations a ' . $where . ' and "table" in (\'parent\' )  group by schema_name ,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)');
+// $parents_status = [];
+// $parents_status_count = [];
+// foreach ($login_parents as $staff) {
+//     $parents_status[$staff->schema_name] = $staff->created_at;
+//     $parents_status_count[$staff->schema_name] = $staff->count;
+// }
 
 $epayments = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments ' . $where . ' and token is not null  group by schema_name');
 $epayment_status = [];
