@@ -136,9 +136,9 @@ class SyncDataToNewVersion extends Command {
          */
         $shulesoft_payments = DB::table('shulesoft.payments')->where('schema_name', $client->username)->count();
         /*
-         * update payment offset set existing one plus count($shulesoft_payments)
+         * update payment offset set existing one plus $shulesoft_payments
          */
-        DB::statement("update admin.transfer_control set payment_offset=". count($shulesoft_payments)." where schema_name='" . $client->username . "'");
+        DB::statement("update admin.transfer_control set payment_offset=". $shulesoft_payments." where schema_name='" . $client->username . "'");
 
         $schema_payments = DB::table($client->username . '.payments')->count();
         if ($schema_payments == $shulesoft_payments) {
@@ -178,7 +178,7 @@ class SyncDataToNewVersion extends Command {
          /*
          * update payment offset set existing one plus count($shulesoft_marks)
          */
-        DB::statement("update admin.transfer_control set mark_offset=". count($shulesoft_marks)." where schema_name='" . $client->username . "'");
+        DB::statement("update admin.transfer_control set mark_offset=". $shulesoft_marks." where schema_name='" . $client->username . "'");
        
         
         $schema_marks = DB::table($client->username . '.mark')->count();
