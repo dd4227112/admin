@@ -38,16 +38,24 @@ class OptimizePayment extends Command {
      */
     public function handle() {
         $client = DB::table('admin.clients')->where('status', 4)->first(); //We transfer one at a time
+        //we first check if all payments have been transferred or else we limit distribution
+        $can_distribute = 0;
         if (!empty($client)) {
-            DB::statement('insert into shulesoft.store_students_id (student_id,schema_name)'
-                    . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
+            $shulesoft_payments = DB::table('shulesoft.payments')->where('schema_name', $client->username)->count();
+            $schema_payments = DB::table($client->username . '.payments')->count();
+            if ($schema_payments == $shulesoft_payments) {
+                $can_distribute = 1;
+
+                DB::statement('insert into shulesoft.store_students_id (student_id,schema_name)'
+                        . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
+            }
         }
         $students = DB::table('shulesoft.store_students_id')->where('status', 0)->limit(10)->get();
         //check if all payments has been uploaded
         foreach ($students as $student) {
             if (!empty($student)) {
                 $student_id = $student->student_id;
-                //temporary hard-coded for motherofmercy schema_name
+              
                 if (DB::SELECT("SELECT * FROM shulesoft.redistribute_student_payments($student_id, '{$student->schema_name}')")) {
                     $update = ['status' => 1];
                     DB::table('shulesoft.store_students_id')->where('student_id', $student_id)->update($update);
