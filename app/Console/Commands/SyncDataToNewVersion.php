@@ -129,7 +129,7 @@ class SyncDataToNewVersion extends Command {
                 . ' id=a.invoice_id)),"status","sid","priority","comment","uuid",'
                 . '"verification_code","verification_url","code", \'' . $client->username . '\''
                 . ' from ' . $client->username . '.payments a where a.uuid not in (select uuid from shulesoft.payments where schema_name=\'' . $client->username . '\' ) order by 1 desc'
-                . ' offset ' . $payment_control->payment_offset . ' limit 7000';
+                . ' limit 7000';
         DB::statement($sql);
         /*
          * now check if all payments have been transferred, and skip this block completely
@@ -169,7 +169,7 @@ class SyncDataToNewVersion extends Command {
                 . '(select "id" from shulesoft.users where  schema_name=\'' . $client->username . '\' AND uuid in (select uuid from ' . $client->username . '.users where'
                 . ' "table"=a."table" and  "id"=a."created_by") limit 1),"table","updated_at","uuid",'
                 . ' \'' . $client->username . '\' from ' . $client->username . '.mark a '
-                . ' order by 1 desc offset ' . $mark_control->mark_offset . ' limit 7000';
+                . ' order by 1 desc  limit 7000';
         DB::statement($sql);
         /*
          * now check if all payments have been transferred, and skip this block completely
