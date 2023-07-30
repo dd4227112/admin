@@ -132,13 +132,14 @@ class SyncDataToNewVersion extends Command {
                 . ' offset ' . $payment_control->payment_offset . ' limit 7000';
         DB::statement($sql);
         /*
-         * update payment offset set existing one plus 7000
-         */
-        DB::statement("update admin.transfer_control set payment_offset=payment_offset+7000 where schema_name='" . $client->username . "'");
-        /*
          * now check if all payments have been transferred, and skip this block completely
          */
         $shulesoft_payments = DB::table('shulesoft.payments')->where('schema_name', $client->username)->count();
+        /*
+         * update payment offset set existing one plus count($shulesoft_payments)
+         */
+        DB::statement("update admin.transfer_control set payment_offset=". count($shulesoft_payments)." where schema_name='" . $client->username . "'");
+
         $schema_payments = DB::table($client->username . '.payments')->count();
         if ($schema_payments == $shulesoft_payments) {
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['fourth_stage' => 1]);
@@ -171,13 +172,15 @@ class SyncDataToNewVersion extends Command {
                 . ' order by 1 desc offset ' . $mark_control->mark_offset . ' limit 7000';
         DB::statement($sql);
         /*
-         * update payment offset set existing one plus 3000
-         */
-        DB::statement("update admin.transfer_control set mark_offset=mark_offset+7000 where schema_name='" . $client->username . "'");
-        /*
          * now check if all payments have been transferred, and skip this block completely
          */
         $shulesoft_marks = DB::table('shulesoft.mark')->where('schema_name', $client->username)->count();
+         /*
+         * update payment offset set existing one plus count($shulesoft_marks)
+         */
+        DB::statement("update admin.transfer_control set mark_offset=". count($shulesoft_marks)." where schema_name='" . $client->username . "'");
+       
+        
         $schema_marks = DB::table($client->username . '.mark')->count();
         if ($schema_marks == $shulesoft_marks) {
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['eight_stage' => 1]);
@@ -188,7 +191,7 @@ class SyncDataToNewVersion extends Command {
         DB::statement('insert into shulesoft.store_students_id (student_id,schema_name)'
                 . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
 
-        $student = DB::table('shulesoft.store_students_id')->where('schema_name',$client->username)->where('status', 0)->first();
+        $student = DB::table('shulesoft.store_students_id')->where('schema_name', $client->username)->where('status', 0)->first();
 
         if (empty($student)) {
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['nine_stage' => 1]);
@@ -199,7 +202,7 @@ class SyncDataToNewVersion extends Command {
     public function syncJournals($client) {
         if (DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')")) {
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['ten_stage' => 1]);
-           //update major tables
+            //update major tables
             DB::statement('update shulesoft.salaries a  set user_sid=(select sid from shulesoft.users where schema_name=\'' . $client->username . '\' and  id=a.user_id and "table"=a."table" ) where schema_name=\'' . $client->username . '\' and user_sid is null');
             DB::table('admin.clients')->where('schema_name', $client->username)->update(['status' => 1, 'is_new_version' => 1]);
         }
