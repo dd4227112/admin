@@ -188,7 +188,7 @@ class SyncDataToNewVersion extends Command {
         DB::statement('insert into shulesoft.store_students_id (student_id,schema_name)'
                 . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
 
-        $student = DB::table('shulesoft.store_students_id')->where('status', 0)->first();
+        $student = DB::table('shulesoft.store_students_id')->where('schema_name',$client->username)->where('status', 0)->first();
 
         if (empty($student)) {
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['nine_stage' => 1]);
