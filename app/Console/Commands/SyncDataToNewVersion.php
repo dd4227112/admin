@@ -168,7 +168,7 @@ class SyncDataToNewVersion extends Command {
                 . ' uuid=(select uuid from ' . $client->username . '.academic_year where id=a.academic_year_id)),"status",'
                 . '(select "id" from shulesoft.users where  schema_name=\'' . $client->username . '\' AND uuid in (select uuid from ' . $client->username . '.users where'
                 . ' "table"=a."table" and  "id"=a."created_by") limit 1),"table","updated_at","uuid",'
-                . ' \'' . $client->username . '\' from ' . $client->username . '.mark a '
+                . ' \'' . $client->username . '\' from ' . $client->username . '.mark a where a.uuid not in (select uuid from shulesoft.mark where schema_name=\'' . $client->username . '\' ) '
                 . ' order by 1 desc  limit 7000';
         DB::statement($sql);
         /*
