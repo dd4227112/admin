@@ -50,7 +50,7 @@ class OptimizePayment extends Command {
                         . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
             }
         }
-        $students = DB::table('shulesoft.store_students_id')->where('status', 0)->limit(10)->get();
+        $students = DB::table('shulesoft.store_students_id')->where('status', 0)->limit(15)->get();
         //check if all payments has been uploaded
         foreach ($students as $student) {
             if (!empty($student)) {

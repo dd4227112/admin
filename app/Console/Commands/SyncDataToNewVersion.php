@@ -199,12 +199,12 @@ class SyncDataToNewVersion extends Command {
     }
 
     public function syncJournals($client) {
-        if (DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')")) {
+       // if (DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')")) {
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['ten_stage' => 1]);
             //update clients tables
             DB::table('admin.clients')->where('schema_name', $client->username)->update(['status' => 1, 'is_new_version' => 1]);
             DB::statement('update shulesoft.salaries a  set user_sid=(select sid from shulesoft.users where schema_name=\'' . $client->username . '\' and  id=a.user_id and "table"=a."table" ) where schema_name=\'' . $client->username . '\' and user_sid is null');
-        }
+        //}
     }
 
 }
