@@ -131,7 +131,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                     <div class="card-block">
                                         <?php
                                         if ($is_client == 1) {
-                                           ?>
+                                            ?>
                                             <div class="">
                                                 <div class="row m-2">
                                                     <label class="badge badge-inverse-primary">
@@ -543,10 +543,10 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                             </a>
                                                                                             <div class="media-body b-b-muted social-client-description">
                                                                                                 <div class="chat-header">
-                <?= $comment->user->name ?> &nbsp;&nbsp; <span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span>
+                                                                                                    <?= $comment->user->name ?> &nbsp;&nbsp; <span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span>
                                                                                                 </div>
                                                                                                 <p class="text-muted">
-                <?= $comment->content ?></p>
+                                                                                                    <?= $comment->content ?></p>
                                                                                             </div>
                                                                                         </div>
 
@@ -619,11 +619,11 @@ $s_address = isset($school->address) ? $school->address : '';
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <h5 class="card-header-text h5">Basic Information</h5>
-<?php if (can_access('update_school_data')) { ?>
+                                                        <?php if (can_access('update_school_data')) { ?>
                                                             <button id="edit-btn" type="button" class="btn btn-primary btn-round btn-sm float-right" data-toggle="modal" data-target="#school_details">
                                                                 Update
                                                             </button>
-<?php } ?>
+                                                        <?php } ?>
                                                     </div>
                                                     <div class="card-block">
                                                         <div id="view-info" class="row">
@@ -636,28 +636,28 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                     School Name
                                                                                 </th>
                                                                                 <td class="social-user-name b-none p-t-0">
-<?= $school->sname ?? '' ?></td>
+                                                                                    <?= $school->sname ?? '' ?></td>
                                                                             </tr>
 
                                                                             <tr>
                                                                                 <th class="social-label b-none">
                                                                                     Location</th>
                                                                                 <td class="social-user-name b-none">
-                                                                            <?= $school->address ?? '' ?></td>
+                                                                                    <?= $school->address ?? '' ?></td>
                                                                             </tr>
-<?php if ($is_client == 1) { ?>
+                                                                            <?php if ($is_client == 1) { ?>
                                                                                 <tr>
                                                                                     <th class="social-label b-none">
                                                                                         Date On boarded</th>
                                                                                     <td class="social-user-name b-none">
-    <?= isset($school->created_at) ? date('d M Y h:i', strtotime($school->created_at)) : '' ?>
+                                                                                        <?= isset($school->created_at) ? date('d M Y h:i', strtotime($school->created_at)) : '' ?>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <th class="social-label b-none">
                                                                                         Contact Details</th>
                                                                                     <td class="social-user-name b-none">
-    <?= $school->phone ?? '' ?></td>
+                                                                                        <?= $school->phone ?? '' ?></td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <th class="social-label b-none p-b-0">School Level</th>
@@ -683,7 +683,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                       </td>
                                                                                       </tr>
                                                                                       <?php } */ ?>
-<?php } ?>
+                                                                                <?php } ?>
 
                                                                         </tbody>
                                                                     </table>
@@ -701,20 +701,20 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                     Zone Manager
                                                                                 </th>
                                                                                 <td class="social-user-name b-none p-t-0">
-<?= isset($manager->name) ? $manager->name : '' ?></td>
+                                                                                    <?= isset($manager->name) ? $manager->name : '' ?></td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <th class="social-label b-none">
                                                                                     Zone Manager phone</th>
                                                                                 <td class="social-user-name b-none">
-<?= isset($manager->phone) ? $manager->phone : '' ?></td>
+                                                                                    <?= isset($manager->phone) ? $manager->phone : '' ?></td>
                                                                             </tr>
 
                                                                             <tr>
                                                                                 <th class="social-label b-none">
                                                                                     Email</th>
                                                                                 <td class="social-user-name b-none">
-<?= isset($manager->email) ? $manager->email : '' ?></td>
+                                                                                    <?= isset($manager->email) ? $manager->email : '' ?></td>
                                                                             </tr>
 
                                                                         </tbody>
@@ -794,21 +794,21 @@ $s_address = isset($school->address) ? $school->address : '';
                                                         <div id="view-info" class="row">
                                                             <div class="col-lg-6 col-md-12">
                                                                 <table class="table m-b-0">
-<?php if (isset($agreement)) { ?>
+                                                                    <?php if (isset($agreement)) { ?>
                                                                         <tbody>
                                                                             <tr>
                                                                                 <th class="social-label b-none p-t-0">
                                                                                     Contact person name
                                                                                 </th>
                                                                                 <td class="social-user-name b-none p-t-0">
-    <?= $agreement->contact_person_name ?? '' ?>
+                                                                                    <?= $agreement->contact_person_name ?? '' ?>
                                                                                 </td>
 
                                                                                 <th class="social-label b-none p-t-0">
                                                                                     NMB Account name
                                                                                 </th>
                                                                                 <td class="social-user-name b-none p-t-0">
-    <?= $agreement->school->nmb_school_name ?? '' ?>
+                                                                                    <?= $agreement->school->nmb_school_name ?? '' ?>
                                                                                 </td>
                                                                             </tr>
 
@@ -816,13 +816,13 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 <th class="social-label b-none">
                                                                                     Contact person phone</th>
                                                                                 <td class="social-user-name b-none">
-    <?= $agreement->contact_person_phone ?? '' ?>
+                                                                                    <?= $agreement->contact_person_phone ?? '' ?>
                                                                                 </td>
 
                                                                                 <th class="social-label b-none">
                                                                                     NMB Account</th>
                                                                                 <td class="social-user-name b-none">
-    <?= $agreement->school->account_number ?? '' ?>
+                                                                                    <?= $agreement->school->account_number ?? '' ?>
                                                                                 </td>
 
                                                                             </tr>
@@ -830,7 +830,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                             <tr>
                                                                                 <th class="social-label b-none"> Designation</th>
                                                                                 <td class="social-user-name b-none">
-    <?= $agreement->contact_person_designation ?? '' ?>
+                                                                                    <?= $agreement->contact_person_designation ?? '' ?>
                                                                                 </td>
                                                                             </tr>
 
@@ -838,17 +838,17 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 <th class="social-label b-none">
                                                                                     Agreement date</th>
                                                                                 <td class="social-user-name b-none">
-    <?= isset($agreement->agreement_date) ? date('d-m-Y', strtotime($agreement->agreement_date)) : '' ?></td>
+                                                                                    <?= isset($agreement->agreement_date) ? date('d-m-Y', strtotime($agreement->agreement_date)) : '' ?></td>
                                                                             </tr>
 
                                                                             <tr>
                                                                                 <th class="social-label b-none"> Agreement form type</th>
                                                                                 <td class="social-user-name b-none">
-    <?= $agreement->form_type ?? '' ?></td>
+                                                                                    <?= $agreement->form_type ?? '' ?></td>
 
                                                                                 <th class="social-label b-none"> View file</th>
                                                                                 <td class="social-user-name b-none">
-    <?php $viw_url = isset($agreement) ? "customer/viewContract/$agreement->id/agreement" : ''; ?>
+                                                                                    <?php $viw_url = isset($agreement) ? "customer/viewContract/$agreement->id/agreement" : ''; ?>
                                                                                     <a target="_blank" href="<?= url($viw_url) ?>" class="btn btn-primary btn-mini btn-round">View</a>
                                                                                 </td>
                                                                             </tr>
@@ -857,10 +857,10 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 <th class="social-label b-none">
                                                                                     Created by</th>
                                                                                 <td class="social-user-name b-none">
-    <?= isset($agreement) ? $agreement->user->name() : '' ?></td>
+                                                                                    <?= isset($agreement) ? $agreement->user->name() : '' ?></td>
                                                                             </tr>
                                                                         </tbody>
-<?php } ?>
+                                                                    <?php } ?>
                                                                 </table>
                                                             </div>
                                                         </div>
@@ -917,7 +917,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                             <a type="button" class="btn btn-primary btn-sm btn-round" target="_blank" href="<?= isset($client_contract->contract_id) ? url('customer/viewContract/' . $client_contract->contract_id) : '' ?>">View</a>
                                                                                             <?php if (can_access('delete_contract')) { ?>
                                                                                                 <a type="button" class="btn btn-danger btn-sm btn-round" href="<?= isset($client_contract->contract_id) ? url('customer/deleteContract/' . $client_contract->contract_id) : '' ?>">Delete</a>
-        <?php } ?>
+                                                                                            <?php } ?>
                                                                                         </td>
                                                                                     </tr>
 
@@ -1240,17 +1240,17 @@ $s_address = isset($school->address) ? $school->address : '';
 
                                                                     </td>
                                                                     <td>
-    <?php
-    if (preg_match('/not implemented/i', $status)) {
-        ?>
+                                                                        <?php
+                                                                        if (preg_match('/not implemented/i', $status)) {
+                                                                            ?>
                                                                             <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-primary btn-sm btn-round task_allocated_id">Save</button>
                                                                         <?php } ?>
                                                                     </td>
                                                                 </tr>
-    <?php
-    $x++;
-}
-?>
+                                                                <?php
+                                                                $x++;
+                                                            }
+                                                            ?>
 
                                                         </tbody>
                                                     </table>
@@ -1321,61 +1321,61 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                 <th scope="row">1</th>
                                                                 <td>Basic Configuration</td>
                                                                 <td>
-<?php
+                                                                    <?php
 //classlevel
-$levels = !empty($username) ? DB::table($schema . '.classlevel')->get() :
-        DB::table('shulesoft.classlevel')->where('schema_name', $schema)->get();
-if (empty($levels)) {
-    echo '<label class="badge badge-warning">Class Level Not Defined</label>';
-}
-/**
- * --Check if Academic Years defined
- */
-if (!empty($levels)) {
-    foreach ($levels as $level) {
+                                                                    $levels = !empty($username) ? DB::table($schema . '.classlevel')->get() :
+                                                                            DB::table('shulesoft.classlevel')->where('schema_name', $schema)->get();
+                                                                    if (empty($levels)) {
+                                                                        echo '<label class="badge badge-warning">Class Level Not Defined</label>';
+                                                                    }
+                                                                    /**
+                                                                     * --Check if Academic Years defined
+                                                                     */
+                                                                    if (!empty($levels)) {
+                                                                        foreach ($levels as $level) {
 
-        $academic_year = !empty($username) ?
-                DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first() : DB::table('shulesoft.academic_year')->where('schema_name', $schema)->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
-        if (empty($academic_year)) {
-            echo '<label class="badge badge-inverse-warning">Academic Year Not Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
-        }
-    }
-} else {
-    echo '<label class="badge badge-inverse-warning">Academic Year Not Defined</label><br/>';
-}
-/**
- *
- * Check if terms have been defined
- */
-if (!empty($levels)) {
-    foreach ($levels as $level) {
+                                                                            $academic_year = !empty($username) ?
+                                                                                    DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first() : DB::table('shulesoft.academic_year')->where('schema_name', $schema)->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
+                                                                            if (empty($academic_year)) {
+                                                                                echo '<label class="badge badge-inverse-warning">Academic Year Not Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        echo '<label class="badge badge-inverse-warning">Academic Year Not Defined</label><br/>';
+                                                                    }
+                                                                    /**
+                                                                     *
+                                                                     * Check if terms have been defined
+                                                                     */
+                                                                    if (!empty($levels)) {
+                                                                        foreach ($levels as $level) {
 
-        $academic_year = !empty($username) ? DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first() : DB::table('shulesoft.academic_year')->where('schema_name', $schema)->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
-        if (empty($academic_year)) {
-            echo '<label class="badge badge-inverse-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
-        } else {
-            //check terms for this defined year
-            $terms = !empty($username) ? DB::table($schema . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count() : DB::table('shulesoft.semester')->where('schema_name', $schema)->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
+                                                                            $academic_year = !empty($username) ? DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first() : DB::table('shulesoft.academic_year')->where('schema_name', $schema)->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
+                                                                            if (empty($academic_year)) {
+                                                                                echo '<label class="badge badge-inverse-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
+                                                                            } else {
+                                                                                //check terms for this defined year
+                                                                                $terms = !empty($username) ? DB::table($schema . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count() : DB::table('shulesoft.semester')->where('schema_name', $schema)->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
 
-            echo $terms == 0 ? '<label class="badge badge-inverse-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>' : '<label class="badge badge-inverse-success">' . $level->name . ' (' . $academic_year->name . ') at ' . date('d M Y', strtotime($academic_year->created_at)) . '</label>';
-        }
-    }
-} else {
-    echo '<label class="badge badge-inverse-warning">Not Defined</label><br/>';
-}
-/**
- *
- * --check if stamp has been defined
- * Electronic Payments
- */
-if (!empty($levels)) {
-    foreach ($levels as $level) {
-        if (strlen($level->stamp) < 3) {
-            echo '<label class="badge badge-inverse-warning">No Stamp for ' . $level->name . '</label><br/>';
-        }
-    }
-}
-?>
+                                                                                echo $terms == 0 ? '<label class="badge badge-inverse-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>' : '<label class="badge badge-inverse-success">' . $level->name . ' (' . $academic_year->name . ') at ' . date('d M Y', strtotime($academic_year->created_at)) . '</label>';
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        echo '<label class="badge badge-inverse-warning">Not Defined</label><br/>';
+                                                                    }
+                                                                    /**
+                                                                     *
+                                                                     * --check if stamp has been defined
+                                                                     * Electronic Payments
+                                                                     */
+                                                                    if (!empty($levels)) {
+                                                                        foreach ($levels as $level) {
+                                                                            if (strlen($level->stamp) < 3) {
+                                                                                echo '<label class="badge badge-inverse-warning">No Stamp for ' . $level->name . '</label><br/>';
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    ?>
 
                                                                 </td>
                                                             </tr>
@@ -1384,7 +1384,7 @@ if (!empty($levels)) {
                                                                 <th scope="row">2</th>
                                                                 <td>Marking</td>
                                                                 <td>
-<?= check_status('mark'); ?>
+                                                                    <?= check_status('mark'); ?>
                                                                 </td>
                                                                 <td></td>
                                                             </tr>
@@ -1409,48 +1409,48 @@ if (!empty($levels)) {
                                                             <tr>
                                                                 <th scope="row">6</th>
                                                                 <td>SMS sents</td>
-                                                                <td> <?= check_status('sms'); ?>
+                                                                <td> <?= check_status('sms'," where (body not ilike '%kuzaliwa%'  OR body not ilike '%password%' OR body not ilike '%655406004%') "); ?>
                                                                     <br />
-<?php
-/*
-  $karibu = DB::connection('karibusms')->table('client')->where('keyname', $schema)->first();
-  $karibu_shulesoft = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
-  if (!empty($karibu) && !empty($karibu_shulesoft) && $karibu->gcm_id = $karibu_shulesoft->gcm_id) {
+                                                                    <?php
+                                                                    /*
+                                                                      $karibu = DB::connection('karibusms')->table('client')->where('keyname', $schema)->first();
+                                                                      $karibu_shulesoft = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
+                                                                      if (!empty($karibu) && !empty($karibu_shulesoft) && $karibu->gcm_id = $karibu_shulesoft->gcm_id) {
 
-  $last_online = $karibu->last_reported_online;
+                                                                      $last_online = $karibu->last_reported_online;
 
-  $time = strtotime($last_online);
-  $tz_date = strtotime('-4 hours', $time);
-
-
-
-  $sms_time = date('d-m-Y H:i', $tz_date);
-  ?>
-  Sent From <label
-  class="label label-success"> ShuleSoft
-  Phone</label><br />
-  Last Seen <label class="label label-info">
-  <?= $sms_time ?>
-  </label>
-  <?php
-  } else if (!empty($karibu)) {
-  $last_online = $karibu->last_reported_online;
-
-  $time = strtotime($last_online);
-  $tz_date = strtotime('-4 hours', $time);
+                                                                      $time = strtotime($last_online);
+                                                                      $tz_date = strtotime('-4 hours', $time);
 
 
 
-  $sms_time = date('d-m-Y H:i', $tz_date);
-  ?>
-  Sent From <label
-  class="label label-success">
-  <?= $schema ?> Phone</label><br />
-  Last Seen <label class="label label-info">
-  <?= $sms_time ?>
-  </label>
-  <?php } */
-?>
+                                                                      $sms_time = date('d-m-Y H:i', $tz_date);
+                                                                      ?>
+                                                                      Sent From <label
+                                                                      class="label label-success"> ShuleSoft
+                                                                      Phone</label><br />
+                                                                      Last Seen <label class="label label-info">
+                                                                      <?= $sms_time ?>
+                                                                      </label>
+                                                                      <?php
+                                                                      } else if (!empty($karibu)) {
+                                                                      $last_online = $karibu->last_reported_online;
+
+                                                                      $time = strtotime($last_online);
+                                                                      $tz_date = strtotime('-4 hours', $time);
+
+
+
+                                                                      $sms_time = date('d-m-Y H:i', $tz_date);
+                                                                      ?>
+                                                                      Sent From <label
+                                                                      class="label label-success">
+                                                                      <?= $schema ?> Phone</label><br />
+                                                                      Last Seen <label class="label label-info">
+                                                                      <?= $sms_time ?>
+                                                                      </label>
+                                                                      <?php } */
+                                                                    ?>
                                                                 </td>
                                                                 <td></td>
                                                             </tr>
@@ -1478,7 +1478,7 @@ if (!empty($levels)) {
                                                                 <td>Electronic Payments</td>
                                                                 <td>
                                                                     Integration Date:
-<?= check_status('bank_accounts_integrations'); ?><br />
+                                                                    <?= check_status('bank_accounts_integrations'); ?><br />
                                                                     Last Online Transaction Date:
                                                                     <?= check_status('payments', ' WHERE token is not null'); ?>
                                                                 </td>
@@ -1487,7 +1487,7 @@ if (!empty($levels)) {
                                                                 <th scope="row">3</th>
                                                                 <td>Inventory Usage</td>
                                                                 <td>Vendors Registered:
-<?= check_status('admin.vendors', "WHERE schema_name='" . $schema . "'"); ?><br />
+                                                                    <?= check_status('admin.vendors', "WHERE schema_name='" . $schema . "'"); ?><br />
                                                                     Items
                                                                     Registered:<?= check_status('product_alert_quantity'); ?>
 
@@ -1499,11 +1499,11 @@ if (!empty($levels)) {
                                                                 <td>Other Transactions</td>
                                                                 <td>
                                                                     Revenue:
-<?= !empty($username) ? check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=1) ') : check_status('revenues', "WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND financial_category_id=1) "); ?>
+                                                                    <?= !empty($username) ? check_status('revenues') : check_status('revenues'); ?>
                                                                     <br />
 
                                                                     Capital :
-<?= !empty($username) ? check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) ') : check_status('revenues', " WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND  financial_category_id=7) "); ?><br />
+                                                                    <?= !empty($username) ? check_status('capital') : check_status('capital'); ?><br />
                                                                     Fixed Assets:
                                                                     <?= !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=4) ') : check_status('expense', " WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND  financial_category_id=4) "); ?><br />
                                                                     Liabilities :
@@ -1522,7 +1522,7 @@ if (!empty($levels)) {
                                                                 <td>Library Usage</td>
                                                                 <td>
                                                                     Books Added:
-<?= check_status('book'); ?><br />
+                                                                    <?= check_status('book'); ?><br />
                                                                     Book Issue: <?= check_status('issue'); ?>
                                                                 </td>
 
@@ -1532,14 +1532,14 @@ if (!empty($levels)) {
                                                                 <td>Attendance Usage</td>
                                                                 <td>
                                                                     Student:
-<?= check_status('sattendances'); ?>
+                                                                    <?= check_status('sattendances'); ?>
                                                                     <br />
                                                                     Teacher: <?= check_status('uattendances'); ?>
                                                                     <br />
                                                                     Exam: <?= check_status('eattendance'); ?>
                                                                     <br />
                                                                     Teacher on Duty:
-<?= check_status('teacher_duties'); ?>
+                                                                    <?= check_status('teacher_duties'); ?>
                                                                 </td>
                                                                 <td></td>
                                                             </tr>
@@ -1590,12 +1590,12 @@ if (!empty($levels)) {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-<?php
-$i = 1;
-$users = !empty($username) ? DB::table($schema . '.user')->where('status', 1)->get() : DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->get();
-if (!empty($users)) {
-    foreach ($users as $user) {
-        ?>
+                                                            <?php
+                                                            $i = 1;
+                                                            $users = !empty($username) ? DB::table($schema . '.user')->where('status', 1)->get() : DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->get();
+                                                            if (!empty($users)) {
+                                                                foreach ($users as $user) {
+                                                                    ?>
                                                                     <tr>
                                                                         <td><?= $i ?></td>
                                                                         <td><?= $user->name ?></td>
@@ -1851,8 +1851,8 @@ if (!empty($users)) {
                                                                                 <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"><span class="point-marker bg-danger"></span>View</a>
                                                                                     <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a>
                                                                                     {{-- <a
-                        class="dropdown-item waves-light waves-effect"
-                        href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
+                            class="dropdown-item waves-light waves-effect"
+                            href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
                                                                                     class="point-marker bg-warning"></span>Delete</a> --}}
                                                                                         <?php if ((int) $unpaid > 0) { ?>
                                                                                         <hr />
