@@ -142,6 +142,15 @@ class SyncDataToNewVersion extends Command {
 
         $schema_payments = DB::table($client->username . '.payments')->count();
         if ($schema_payments == $shulesoft_payments) {
+            $update_transport = "update shulesoft.tmembers d set"
+                    . " amount=(select a.amount from shulesoft.transport_routes_fees_installments a "
+                    . " where a.schema_name='geniuskings' and a.transport_route_id=d.transport_route_id "
+                    . " and a.schema_name=d.schema_name and a.fees_installment_id  = (select id from "
+                    . " shulesoft.fees_installments where installment_id=d.installment_id "
+                    . " and fee_id=(select id from shulesoft.fees where schema_name='".$client->username."' "
+                    . " and lower(name) like '%transport%' limit 1)) ) "
+                    . " where d.schema_name='".$client->username."' and d.amount::integer <=0";
+            DB::statement($update_transport);
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['fourth_stage' => 1]);
         }
     }
@@ -198,13 +207,50 @@ class SyncDataToNewVersion extends Command {
         return 0;
     }
 
+    public function install_chart_account($client) {
+        $predefineds = [
+            ['name' => "Banks", 'financial_category_id' => 5, 'predefined' => 1, 'schema_name' => $client->username],
+            ['name' => "Cash", 'financial_category_id' => 5, 'predefined' => 1, 'schema_name' => $client->username]];
+        foreach ($predefineds as $predefined) {
+            $check = \App\Model\AccountGroup::where($predefined)->first();
+            if (empty($check)) {
+                $check = \App\Model\AccountGroup::create($predefined);
+                $check = \App\Model\AccountGroup::where($predefined)->first();
+            }
+            if (!empty($check) && $predefined['name'] <> 'Banks') {
+                $s_object = ["name" => $check->name, 'schema_name' => $client->username,
+                    "financial_category_id" => $check->financial_category_id, "account_group_id" => $check->id];
+                DB::table('shulesoft.refer_expense')->where($s_object)->count() == 0 ? DB::table('refer_expense')->insert(array_merge(['code' => rand(1000, 99999), 'predefined' => 1], $s_object)) : '';
+            }
+        }
+    }
+
     public function syncJournals($client) {
-       // if (DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')")) {
-            DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['ten_stage' => 1]);
-            //update clients tables
-            DB::table('admin.clients')->where('username', $client->username)->update(['status' => 1, 'is_new_version' => 1]);
-            DB::statement('update shulesoft.salaries a  set user_sid=(select sid from shulesoft.users where schema_name=\'' . $client->username . '\' and  id=a.user_id and "table"=a."table" ) where schema_name=\'' . $client->username . '\' and user_sid is null');
-        //}
+        // if (DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')")) {
+        DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['ten_stage' => 1]);
+        //update clients tables
+        DB::table('admin.clients')->where('username', $client->username)->update(['status' => 1, 'is_new_version' => 1]);
+        DB::statement('update shulesoft.salaries a  set user_sid=(select sid from shulesoft.users where schema_name=\'' . $client->username . '\' and  id=a.user_id and "table"=a."table" ) where schema_name=\'' . $client->username . '\' and user_sid is null');
+        $this->install_chart_account($client);
+        $sql = "insert into shulesoft.expenses 
+            (uuid,refer_expense_id,account_id,category,transaction_id,
+            reference,amount,vendor_id,created_by_sid,note,reconciled,
+            number,date,created_at,updated_at,schema_name)
+select uuid,refer_expense_id,
+case when a.bank_account_id is null then 
+(select id from shulesoft.refer_expense where name ilike '%cash%' and schema_name=a.schema_name) 
+else (select  id from shulesoft.refer_expense where
+schema_name=a.schema_name and source_id=a.bank_account_id and source_table='bank_accounts')
+end as account_id,\"categoryID\" AS category,transaction_id,ref_no as reference,amount,
+(select id from shulesoft.vendors where schema_name=a.schema_name limit 1)
+as vendor_id,(select id from shulesoft.users where schema_name=a.schema_name
+and \"usertype\"=a.usertype and id=a.\"userID\") as 
+created_by_sid,note,reconciled,voucher_no,date,create_date as created_at,
+updated_at,schema_name from shulesoft.expense a 
+where a.schema_name='" . $client->username . "' and a.uuid not in (select uuid from shulesoft.expenses)";
+
+        DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')");
+//}
     }
 
 }
