@@ -1503,7 +1503,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                     <br />
 
                                                                     Capital :
-                                                                    <?= !empty($username) ? check_status('capital') : check_status('capital'); ?><br />
+                                                                    <?= !empty($username) ? check_status('expense',' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) ') : check_status('capital'); ?><br />
                                                                     Fixed Assets:
                                                                     <?= !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=4) ') : check_status('expense', " WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND  financial_category_id=4) "); ?><br />
                                                                     Liabilities :

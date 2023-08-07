@@ -142,15 +142,16 @@ class SyncDataToNewVersion extends Command {
 
         $schema_payments = DB::table($client->username . '.payments')->count();
         if ($schema_payments == $shulesoft_payments) {
-            $update_transport = "update shulesoft.tmembers d set"
-                    . " amount=(select a.amount from shulesoft.transport_routes_fees_installments a "
-                    . " where a.schema_name='geniuskings' and a.transport_route_id=d.transport_route_id "
-                    . " and a.schema_name=d.schema_name and a.fees_installment_id  = (select id from "
-                    . " shulesoft.fees_installments where installment_id=d.installment_id "
-                    . " and fee_id=(select id from shulesoft.fees where schema_name='".$client->username."' "
-                    . " and lower(name) like '%transport%' limit 1)) ) "
-                    . " where d.schema_name='".$client->username."' and d.amount::integer <=0";
-            DB::statement($update_transport);
+//            $update_transport = "update shulesoft.tmembers d set"
+//                    . " amount=(select a.amount from shulesoft.transport_routes_fees_installments a "
+//                    . " where a.schema_name='geniuskings' and a.transport_route_id=d.transport_route_id "
+//                    . " and a.schema_name=d.schema_name and a.fees_installment_id  = (select id from "
+//                    . " shulesoft.fees_installments where installment_id=d.installment_id "
+//                    . " and fee_id=(select id from shulesoft.fees where schema_name='".$client->username."' "
+//                    . " and lower(name) like '%transport%' limit 1)) ) "
+//                    . " where d.schema_name='".$client->username."' and d.amount::integer <=0";
+//            DB::statement($update_transport);
+            DB::select("select * from shulesoft.selecttransportamount('" . $client->username . "')");
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['fourth_stage' => 1]);
         }
     }
