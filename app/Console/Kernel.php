@@ -52,11 +52,11 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule) {
 
         // send BirthDay Wishes, configure the service set RestartSec = 1 minute (60s)
-        try {
-            $schedule->command('send:birthdaywishes')->dailyAt('04:40');
-        } catch (\Exception $e) {
-            Log::error('Send birthday wishes to students every day failed' . $e->getMessage());
-        }
+//        try {
+//            $schedule->command('send:birthdaywishes')->dailyAt('04:40');
+//        } catch (\Exception $e) {
+//            Log::error('Send birthday wishes to students every day failed' . $e->getMessage());
+//        }
 
 
         // configure the service set RestartSec = 1 minute (60s)

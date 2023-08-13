@@ -45,7 +45,7 @@ class SendBirhdayWishes extends Command
                     //Remind parents,class and section teachers to wish their students
 
                     $sql = "insert into shulesoft.sms (schema_name,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
-                            . "select " . $schema->table_schema . ", 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe '|| a.dob ||'. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe '|| a.dob ||', tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from " . $schema->table_schema . ".sms_keys limit 1)  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
+                            . "select '" . $schema->table_schema . "', 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe '|| a.dob ||'. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe '|| a.dob ||', tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from " . $schema->table_schema . ".sms_keys limit 1)  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
                         DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1 AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
                     DB::statement($sql);
 
