@@ -193,7 +193,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             //sync invoices 
-            $this->sendQuickSms();  // done 
+           // $this->sendQuickSms();  // done 
            // $this->syncInvoice(); //done
             //  $this->syncData();
            // $this->pushWhatsappMessageOnly(); //done
@@ -267,7 +267,7 @@ class Kernel extends ConsoleKernel {
 
     public function sendQuickSms() {
         return false;
-        $schemas = DB::select('select schema_name from admin.sms_status');
+        $schemas = DB::select('select * from admin.sms_status where  message_left >0');
         $total_sms_sent = 0;
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
