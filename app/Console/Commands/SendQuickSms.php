@@ -89,9 +89,13 @@ class SendQuickSms extends Command {
                 $sender_name = 'CAPRICORN';
             } elseif ($schema == 'mgutwasec') {
                 $sender_name = 'MGUTWA SECONDARY';
+            }
+            elseif ($schema == 'victoria') {
+                $sender_name = 'VICTORIA';
             } else {
                 $sender_name = 'SHULESOFT';
             }
+            
 
             // The data to send to the API
             $posthData = array(

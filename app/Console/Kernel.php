@@ -304,6 +304,8 @@ class Kernel extends ConsoleKernel {
                 $sender_name = 'CAPRICORN';
             } elseif ($schema == 'mgutwasec') {
                 $sender_name = 'MGUTWA SECONDARY';
+            } elseif ($schema == 'victoria') {
+                $sender_name = 'VICTORIA';
             } else {
                 $sender_name = 'SHULESOFT';
             }
