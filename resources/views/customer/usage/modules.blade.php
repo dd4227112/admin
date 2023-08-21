@@ -401,7 +401,12 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //Parents Login >50%
-                        echo ($parents_status[$school->username]);
+                         if (isset($parents_status[$school->username])) {
+
+                            echo $parents_status[$school->username];
+                        } else {
+                            echo 0;
+                        }
                         ?>
                     </td>
 
