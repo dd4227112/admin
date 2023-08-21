@@ -1241,12 +1241,12 @@ class Customer extends Controller {
     public function usageAnalysis() {
         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum',
             'betatwo', 'jifunze', 'beta_testing'];
-        $sql = DB::table('admin.all_setting')
-                ->whereNotIn('schema_name', $skip);
-        strlen(request('schools')) > 3 ? $sql->whereIn('schema_name', explode(',', request('schools'))) : '';
+        $sql = DB::table('admin.clients')->where('status',1)
+                ->whereNotIn('username', $skip);
+        strlen(request('schools')) > 3 ? $sql->whereIn('username', explode(',', request('schools'))) : '';
         strlen(request('regions')) > 3 ? $sql->whereIn('regions', explode(',', request('regions'))) : '';
         $year = date('Y') - 1;
-        (int) request('is_client') == 1 ? $sql->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', '>=', $year)->get(['client_id']))->get(['username'])) : '';
+        (int) request('is_client') == 1 ? $sql->whereIn('username', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', '>=', $year)->get(['client_id']))->get(['username'])) : '';
         $this->data['schools'] = $sql->get();
         return view('customer.usage.modules', $this->data);
     }

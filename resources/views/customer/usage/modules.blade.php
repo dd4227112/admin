@@ -37,7 +37,7 @@ foreach ($exam_reports as $report) {
 }
 
 
-$smsstatus =[]; // DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sms ' . $where . '   group by schema_name');
+$smsstatus = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sms ' . $where . '   group by schema_name');
 $sms_status = [];
 $sms_status_count = [];
 foreach ($smsstatus as $smss) {
@@ -124,7 +124,6 @@ foreach ($characters as $character) {
 //     $character_status[$parent->schema_name] = $parent->created_at;
 //     $character_status_count[$parent->schema_name] = $parent->count;
 // }
-
 // $login_staffs = DB::select('select distinct "schema_name",  count(distinct user_id) as count,  extract(month from created_at) as created_at from admin.all_login_locations a ' . $where . ' and "table" in (\'user\',\'teacher\' )  group by schema_name ,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)');
 // $staff_status = [];
 // $staff_status_count = [];
@@ -133,13 +132,13 @@ foreach ($characters as $character) {
 //     $staff_status_count[$staff->schema_name] = $staff->count;
 // }
 
-// $login_parents = DB::select('select distinct "schema_name",  count(distinct user_id) as count,  extract(month from created_at) as created_at from admin.all_login_locations a ' . $where . ' and "table" in (\'parent\' )  group by schema_name ,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)');
-// $parents_status = [];
+$login_parents = DB::select('select  "schema_name",  count(distinct phone) as count from api.parent_experience_logs  group by schema_name');
+$parents_status = [];
 // $parents_status_count = [];
-// foreach ($login_parents as $staff) {
-//     $parents_status[$staff->schema_name] = $staff->created_at;
+foreach ($login_parents as $parent) {
+    $parents_status[$parent->schema_name] = $parent->count;
 //     $parents_status_count[$staff->schema_name] = $staff->count;
-// }
+}
 
 $epayments = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments ' . $where . ' and token is not null  group by schema_name');
 $epayment_status = [];
@@ -192,7 +191,7 @@ foreach ($schools_data as $value) {
 
 $invoice_issued = [];
 $invoices_current = DB::select('select distinct "schema_name", max(date) as created_at, count(*) from admin.all_invoices  ' . $where . '  group by schema_name');
-foreach ($invoices_current as $invoice_info) {    
+foreach ($invoices_current as $invoice_info) {
     $invoice_issued[$invoice_info->schema_name] = $invoice_info->created_at;
     $invoice_issued_count[$invoice_info->schema_name] = $invoice_info->count;
 }
@@ -206,7 +205,8 @@ function select($value, $schema, $sources) {
         <thead>
             <tr>
                 <th>School Name</th>                                                          
-                <td>Date Onboarded</td>                                                
+                <td>Date Onboarded</td>   
+                <td>Use New Version</td>
                 <td>Students</td>
                 <th>Exam  Published</th>	
                 <th>Fee collection</th>	
@@ -220,7 +220,7 @@ function select($value, $schema, $sources) {
                 <th>Attendance</th>
                 <th>Library</th>
                 <th>Character</th>
-                <th>Parents login >20%</th>	
+                <th>Parents App Usage</th>	
                 <th>Staff login >20%</th>	
                 <th>Electronic Payments</th> 
                 <th>Diary</th>
@@ -238,13 +238,15 @@ function select($value, $schema, $sources) {
             $no_payment = 0;
             $a = 0;
             foreach ($schools as $school) {
-                $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
+                
+                $students =$school->is_new_version==1 ? DB::table('shulesoft.student')->where('schema_name',$school->username)->where('status',1)->count():
+                    DB::table($school->username . '.student')->where('status', 1)->count();
                 ?>
                 <tr>
-                    <td><?= $school->schema_name ?></td>
-                    <td><?=date('d M Y', strtotime($school->created_at))?>
+                    <td><?= $school->username ?></td>
+                    <td><?= date('d M Y', strtotime($school->created_at)) ?>
                     </td>
-                    
+
                     <td>
                         <?php
                         if ($students == 0) {
@@ -254,13 +256,13 @@ function select($value, $schema, $sources) {
                             echo $students;
                         }
                         ?>
-                        </td>
+                    </td>
 
                     <td>
                         <?php
                         //exam report published
 
-                        if (isset($exam_report_status[$school->schema_name])) {
+                        if (isset($exam_report_status[$school->username])) {
                             echo 'YES';
                         } else {
                             $no_exams_published++;
@@ -269,31 +271,31 @@ function select($value, $schema, $sources) {
                         ?>
                     </td>
                     <td> <?php
-                        //fee collection
-                        if (isset($payment_status[$school->schema_name])) {
+                    //fee collection
+                    if (isset($payment_status[$school->username])) {
 
-                            echo 'YES';
-                        } else {
-                            $no_payment++;
-                            echo 'NO';
-                        }
+                        echo 'YES';
+                    } else {
+                        $no_payment++;
+                        echo 'NO';
+                    }
                         ?></td>
 
                     <td> <?php
-                        //expense management
-                        if (isset($expense_status[$school->schema_name])) {
+                    //expense management
+                    if (isset($expense_status[$school->username])) {
 
-                            echo 'YES';
-                        } else {
-                            $no_expense++;
-                            echo 'NO';
-                        }
+                        echo 'YES';
+                    } else {
+                        $no_expense++;
+                        echo 'NO';
+                    }
                         ?></td>
 
                     <td>
                         <?php
                         //Invoice Issued STATUS
-                        if (isset($invoice_issued[$school->schema_name])) {
+                        if (isset($invoice_issued[$school->username])) {
                             echo 'YES';
                         } else {
                             echo 'NO';
@@ -302,7 +304,7 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //SMS STATUS
-                        if (isset($sms_status_count[$school->schema_name])) {
+                        if (isset($sms_status_count[$school->username])) {
                             echo 'YES';
                         } else {
                             echo 'NO';
@@ -311,21 +313,21 @@ function select($value, $schema, $sources) {
 
 
                     <td> <?php
-                        //PAYROLL
+                    //PAYROLL
 
-                        if (isset($payroll_status[$school->schema_name])) {
+                    if (isset($payroll_status[$school->username])) {
 
-                            echo 'YES';
-                        } else {
-                            echo 'NO';
-                        }
+                        echo 'YES';
+                    } else {
+                        echo 'NO';
+                    }
                         ?>
                     </td>
 
                     <td>
                         <?php
                         //Inventory
-                        if (isset($inventory_status[$school->schema_name])) {
+                        if (isset($inventory_status[$school->username])) {
 
                             echo 'YES';
                         } else {
@@ -338,7 +340,7 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //transport
-                        if (isset($tmember_status[$school->schema_name])) {
+                        if (isset($tmember_status[$school->username])) {
 
                             echo 'YES';
                         } else {
@@ -350,7 +352,7 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //Hostel
-                        if (isset($hmember_status[$school->schema_name])) {
+                        if (isset($hmember_status[$school->username])) {
 
                             echo 'YES';
                         } else {
@@ -362,7 +364,7 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //Attendance
-                        if (isset($sattendance_status[$school->schema_name])) {
+                        if (isset($sattendance_status[$school->username])) {
 
                             echo 'YES';
                         } else {
@@ -374,7 +376,7 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //Library
-                        if (isset($issue_status[$school->schema_name])) {
+                        if (isset($issue_status[$school->username])) {
 
                             echo 'YES';
                         } else {
@@ -386,7 +388,7 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //Character
-                        if (isset($character_status[$school->schema_name])) {
+                        if (isset($character_status[$school->username])) {
 
                             echo 'YES';
                         } else {
@@ -399,76 +401,71 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //Parents Login >50%
-                        if (isset($parents_status[$school->schema_name])) {
-
-                            echo 'YES';
-                        } else {
-                            echo 'NO';
-                        }
+                        echo ($parents_status[$school->username]);
                         ?>
                     </td>
 
                     <td>
-                        <?php
-                        //Staff login >50%
-                        if (isset($staff_status[$school->schema_name])) {
+    <?php
+    //Staff login >50%
+    if (isset($staff_status[$school->username])) {
 
-                            echo 'YES';
-                        } else {
-                            echo 'NO';
-                        }
-                        ?>
+        echo 'YES';
+    } else {
+        echo 'NO';
+    }
+    ?>
                     </td>
 
                     <td>
-                        <?php
-                        //Electronic Payment
-                        if (isset($epayment_status[$school->schema_name])) {
+    <?php
+    //Electronic Payment
+    if (isset($epayment_status[$school->username])) {
 
-                            echo 'YES';
-                        } else {
-                            echo 'NO';
-                        }
-                        ?>
+        echo 'YES';
+    } else {
+        echo 'NO';
+    }
+    ?>
                     </td>
 
                     <td>
-                        <?php
-                        //Diary
-                        if (isset($ediary_status[$school->schema_name])) {
+    <?php
+    //Diary
+    if (isset($ediary_status[$school->username])) {
 
-                            echo 'YES';
-                        } else {
-                            echo 'NO';
-                        }
-                        ?>
+        echo 'YES';
+    } else {
+        echo 'NO';
+    }
+    ?>
                     </td>
 
                     <td>
-                        <?php
-                        //Digital Learning
-                        if (isset($digital_status[$school->schema_name])) {
+    <?php
+    //Digital Learning
+    if (isset($digital_status[$school->username])) {
 
-                            echo 'YES';
-                        } else {
-                            echo 'NO';
-                        }
-                        ?>
+        echo 'YES';
+    } else {
+        echo 'NO';
+    }
+    ?>
                     </td>
 
                     <td>
-                        <?php
-                        //Online admission
-                        if (isset($admission_status[$school->schema_name])) {
+    <?php
+    //Online admission
+    if (isset($admission_status[$school->username])) {
 
-                            echo 'YES';
-                        } else {
-                            echo 'NO';
-                        }
-                        ?>
+        echo 'YES';
+    } else {
+        echo 'NO';
+    }
+    ?>
                     </td>
                 </tr>
-            <?php } ?>
+                    <?php } ?>
         </tbody>
     </table>
 </div>
