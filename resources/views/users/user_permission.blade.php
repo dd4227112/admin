@@ -35,14 +35,13 @@
                             </div>
                             <div class="col-sm-8">
                                <?php $user_roles = \App\Models\Role::get(); ?>
-                                <span>
-                                    <select class="select2"  id='permission'>
+                                    <select class="select2"  id='permission' >
                                         <option></option>
                                         <?php foreach ($user_roles as $u_role) { ?>
-                                        <option value="<?= $u_role->id ?>" <?= (int) request('id') > 0 && request('id') == $u_role->id ? 'selected' : '' ?> ><?= $u_role->name  ?></option>
+                                        <option value="<?= $u_role->id ?>" <?=$role_id== $u_role->id? 'selected' : '' ?> ><?= $u_role->name  ?></option>
                                         <?php } ?>
                                     </select>
-                                </span>
+                               
                           
                             </div>
                         </div>
