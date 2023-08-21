@@ -200,7 +200,7 @@ function select($value, $schema, $sources) {
     return isset($sources[$schema]) && strtolower($sources[$schema]) == strtolower($value) ? 'Selected' : '';
 }
 ?>
-<div class="table-responsive dt-responsive">
+<div class="table-responsive dt-responsive" style="border: 1px solid #ccc;">
     <table>
         <thead>
             <tr>
@@ -238,15 +238,15 @@ function select($value, $schema, $sources) {
             $no_payment = 0;
             $a = 0;
             foreach ($schools as $school) {
-                
-                $students =$school->is_new_version==1 ? DB::table('shulesoft.student')->where('schema_name',$school->username)->where('status',1)->count():
-                    DB::table($school->username . '.student')->where('status', 1)->count();
+
+                $students = $school->is_new_version == 1 ? DB::table('shulesoft.student')->where('schema_name', $school->username)->where('status', 1)->count() :
+                        DB::table($school->username . '.student')->where('status', 1)->count();
                 ?>
                 <tr>
                     <td><?= $school->username ?></td>
                     <td><?= date('d M Y', strtotime($school->created_at)) ?>
                     </td>
-
+                    <td><?= $school->is_new_version == 1 ? 'Yes' : 'No' ?></td>
                     <td>
                         <?php
                         if ($students == 0) {
@@ -271,25 +271,25 @@ function select($value, $schema, $sources) {
                         ?>
                     </td>
                     <td> <?php
-                    //fee collection
-                    if (isset($payment_status[$school->username])) {
+                        //fee collection
+                        if (isset($payment_status[$school->username])) {
 
-                        echo 'YES';
-                    } else {
-                        $no_payment++;
-                        echo 'NO';
-                    }
+                            echo 'YES';
+                        } else {
+                            $no_payment++;
+                            echo 'NO';
+                        }
                         ?></td>
 
                     <td> <?php
-                    //expense management
-                    if (isset($expense_status[$school->username])) {
+                        //expense management
+                        if (isset($expense_status[$school->username])) {
 
-                        echo 'YES';
-                    } else {
-                        $no_expense++;
-                        echo 'NO';
-                    }
+                            echo 'YES';
+                        } else {
+                            $no_expense++;
+                            echo 'NO';
+                        }
                         ?></td>
 
                     <td>
@@ -313,14 +313,14 @@ function select($value, $schema, $sources) {
 
 
                     <td> <?php
-                    //PAYROLL
+                        //PAYROLL
 
-                    if (isset($payroll_status[$school->username])) {
+                        if (isset($payroll_status[$school->username])) {
 
-                        echo 'YES';
-                    } else {
-                        echo 'NO';
-                    }
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
                         ?>
                     </td>
 
@@ -401,7 +401,7 @@ function select($value, $schema, $sources) {
                     <td>
                         <?php
                         //Parents Login >50%
-                         if (isset($parents_status[$school->username])) {
+                        if (isset($parents_status[$school->username])) {
 
                             echo $parents_status[$school->username];
                         } else {
@@ -411,66 +411,66 @@ function select($value, $schema, $sources) {
                     </td>
 
                     <td>
-    <?php
-    //Staff login >50%
-    if (isset($staff_status[$school->username])) {
+                        <?php
+                        //Staff login >50%
+                        if (isset($staff_status[$school->username])) {
 
-        echo 'YES';
-    } else {
-        echo 'NO';
-    }
-    ?>
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
+                        ?>
                     </td>
 
                     <td>
-    <?php
-    //Electronic Payment
-    if (isset($epayment_status[$school->username])) {
+                        <?php
+                        //Electronic Payment
+                        if (isset($epayment_status[$school->username])) {
 
-        echo 'YES';
-    } else {
-        echo 'NO';
-    }
-    ?>
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
+                        ?>
                     </td>
 
                     <td>
-    <?php
-    //Diary
-    if (isset($ediary_status[$school->username])) {
+                        <?php
+                        //Diary
+                        if (isset($ediary_status[$school->username])) {
 
-        echo 'YES';
-    } else {
-        echo 'NO';
-    }
-    ?>
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
+                        ?>
                     </td>
 
                     <td>
-    <?php
-    //Digital Learning
-    if (isset($digital_status[$school->username])) {
+                        <?php
+                        //Digital Learning
+                        if (isset($digital_status[$school->username])) {
 
-        echo 'YES';
-    } else {
-        echo 'NO';
-    }
-    ?>
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
+                        ?>
                     </td>
 
                     <td>
-    <?php
-    //Online admission
-    if (isset($admission_status[$school->username])) {
+                        <?php
+                        //Online admission
+                        if (isset($admission_status[$school->username])) {
 
-        echo 'YES';
-    } else {
-        echo 'NO';
-    }
-    ?>
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
+                        ?>
                     </td>
                 </tr>
-                    <?php } ?>
+            <?php } ?>
         </tbody>
     </table>
 </div>
