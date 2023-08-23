@@ -250,7 +250,7 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-            (new Background())->schoolMonthlyReport(); //done
+           // (new Background())->schoolMonthlyReport(); //done
         })->monthlyOn(28, '06:36');
     }
 
@@ -1287,6 +1287,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     }
 
     public function sendReportReminder() {
+        return false;
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'kisaraweljs', 'laureatemikocheni', 'laureatembezi', 'lifewaylighschools', 'montessori', 'sullivanprovost', 'ubungomodern', 'whiteangles', 'atlasschools'))) {
@@ -1560,6 +1561,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function weeklyAccountsReports() {
+        return false;
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
@@ -1586,6 +1588,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function monthlyAccountsReports() {
+        return false;
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {

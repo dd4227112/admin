@@ -101,14 +101,14 @@ group by ownership');
         return view('market.objective');
     }
 
-     
-    public function DeleteMedia(){
+    public function DeleteMedia() {
         $id = request()->segment(3);
-        if($id){
-         \App\Models\Events::where('id', $id)->delete();
-           return redirect()->back()->with('success', 'Deleted Successfully');
+        if ($id) {
+            \App\Models\Events::where('id', $id)->delete();
+            return redirect()->back()->with('success', 'Deleted Successfully');
         }
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -179,9 +179,9 @@ group by ownership');
     public function show($id) {
         return $id;
         $this->data['type'] = $id;
-          $table = $id == 'sms' ? 'all_sms' : 'all_email';
-         // $this->data['messages'] = DB::select('select * from admin.' . $table);
-          $this->data['messages'] = [];
+        $table = $id == 'sms' ? 'all_sms' : 'all_email';
+        // $this->data['messages'] = DB::select('select * from admin.' . $table);
+        $this->data['messages'] = [];
         return view('message.show', $this->data);
     }
 
@@ -203,9 +203,9 @@ group by ownership');
                     'note' => request('note'),
                     'title' => request('title')
                 ];
-            
+
                 $post = \App\Models\MediaPost::create($data);
-            
+
                 if (!empty($post->id) && request('socialmedia_id')) {
                     $modules = request('socialmedia_id');
                     foreach ($modules as $key => $value) {
@@ -256,11 +256,11 @@ group by ownership');
             $file_id = null;
             $attach_id = null;
             if (!empty(request('attached'))) {
-                $file_id = $this->saveFile(request('attached'),TRUE);
+                $file_id = $this->saveFile(request('attached'), TRUE);
             }
 
             if (!empty(request('image'))) {
-                $attach_id = $this->saveFile(request('image'),TRUE);
+                $attach_id = $this->saveFile(request('image'), TRUE);
             }
             $array = [
                 'title' => request('title'),
@@ -285,7 +285,7 @@ group by ownership');
     public function Events() {
         $id = request()->segment(3);
         if ((int) $id > 0) {
-             
+
             if ($_POST) {
                 $body = request('message');
                 $sms = request('sms');
@@ -441,21 +441,19 @@ group by ownership');
         echo json_call($this->data);
     }
 
-    
-     function getTemplateContent() {
+    function getTemplateContent() {
         $id = (int) request('templateID');
         $template = DB::table('admin.mailandsmstemplates')->where('id', $id)->first();
         return $template->message;
     }
 
-
     public function communication() {
-         $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
-          if ($_POST) { 
+        $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
+        if ($_POST) {
             $this->validate(request(), [
                 'message' => 'required'
             ]);
-            
+
             $message = request("message");
             $prospectscriteria = request('prospectscriteria');
             $leadscriteria = request('leadscriteria');
@@ -465,24 +463,27 @@ group by ownership');
             $custom_numbers = request('custom_numbers');
             $criteria = request('less_than');
             $student_number = request('student_number');
-            $file =  request('file_');
+            $file = request('file_');
 
             switch ($firstCriteria) {
-                case 00:   
+                case 00:
                     //customers First
-                    return $this->sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$customer_segment,$prospectscriteria = null, $leadscriteria = null);
+                    return $this->sendCustomSmsToCustomers($message, $customer_criteria, $criteria, $student_number, $customer_segment, $prospectscriteria = null, $leadscriteria = null);
                     break;
                 case 01:
-                    //Prospects
+                    //Prospects: all schools never signup for shulesoft
+                    $custom_numbers = DB::select('select distinct name,phone from admin.school_contacts a where not exists  (select 1 from admin.client_schools b join admin.clients c on c.id=b.client_id where c.status=1 and b.school_id=a.school_id) and phone is not null');
+
                     return $this->sendCustomSmsToProspects($message, $custom_numbers);
                     break;
                 case 02:
-                    //Leads
+                    //Leads: all schools sign for shulesoft but not customers
+                    $custom_numbers = DB::select('select distinct name,phone,username from admin.clients where status <>1');
                     return $this->sendCustomSmsToLeads($message, $custom_numbers);
                     break;
                 case 03:
                     //All customers
-                    return $this->sendCustomSmsToAll($message,$customer_criteria);
+                    return $this->sendCustomSmsToAll($message, $customer_criteria);
                     break;
                 case 04:
                     // Not Custom selection
@@ -495,26 +496,26 @@ group by ownership');
         return view('market.communication.index', $this->data);
     }
 
-    public function sendCustomSmsToCustomers($message,$customer_criteria,$criteria,$student_number,$customer_segment = null,$prospectscriteria = null,$leadscriteria = null) {
-        
+    public function sendCustomSmsToCustomers($message, $customer_criteria, $criteria, $student_number, $customer_segment = null, $prospectscriteria = null, $leadscriteria = null) {
+
         // $dates = date('Y-m-d',strtotime('first day of January'));
-           $dates = '2021-01-01';
-    
+        $dates = '2021-01-01';
+
         switch ($customer_criteria) {
             case 0:   //All customers (paid)
                 $customers = \DB::select("select * from admin.clients where id in (select client_id from admin.invoices where id in (select invoice_id from admin.payments where created_at::date > '" . $dates . "'))");
                 break;
             case 1:
                 //Active & Full paid customers
-                  $customers = \DB::select("select a.client_id,a.name,a.username,a.remain_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,f.amount as total_amount,COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,i.client_id,c.username ) a where a.remain_amount = 0");
+                $customers = \DB::select("select a.client_id,a.name,a.username,a.remain_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,f.amount as total_amount,COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,i.client_id,c.username ) a where a.remain_amount = 0");
                 break;
             case 2:
                 //Active & partial paid customers
-                  $customers = \DB::select("select a.client_id,a.name,a.username,a.total_amount,a.remain_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,f.amount as total_amount,COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,i.client_id,c.username ) a where a.remain_amount > 0");
+                $customers = \DB::select("select a.client_id,a.name,a.username,a.total_amount,a.remain_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,f.amount as total_amount,COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,i.client_id,c.username ) a where a.remain_amount > 0");
                 break;
             case 3:
                 // Active but not paid customers (have S.I)
-                  $customers = \DB::select("select a.client_id,a.phone,a.name,a.username,a.total_amount,a.paid_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,c.phone,f.amount as total_amount,
+                $customers = \DB::select("select a.client_id,a.phone,a.name,a.username,a.total_amount,a.paid_amount from (select i.client_id,i.reference,i.account_year_id,c.name,c.username,c.phone,f.amount as total_amount,
                       COALESCE(sum(p.amount),0) as paid_amount,f.amount - COALESCE(sum(p.amount),0) as remain_amount from admin.invoices i join admin.invoice_fees f on i.id = f.invoice_id join admin.payments p on p.invoice_id = i.id join admin.clients c on c.id = i.client_id group by i.reference,i.account_year_id,f.amount,c.name,c.phone,i.client_id,c.username ) a 
                         where a.paid_amount = 0 and a.client_id in (select client_id from admin.standing_orders)");
                 break;
@@ -523,20 +524,20 @@ group by ownership');
                 break;
 
             case 5:
-                return $this->sendCustomSmsBySegment($message,$customer_segment,$criteria,$student_number);
+                return $this->sendCustomSmsBySegment($message, $customer_segment, $criteria, $student_number);
                 break;
             default:
                 break;
         }
-        if (isset($customers) && count($customers) > 0) { 
+        if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
                     $customer->name, $customer->username
                 );
-                 $sms = $this->getCleanSms($replacements, $message, array(
+                $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i', '/#username/i', '/#schema_name/i',
                 ));
-                  $this->sendMessages($customer->phone, $sms);
+                $this->sendMessages($customer->phone, $sms);
             }
 
             return redirect()->back()->with('success', 'Message sent successfuly');
@@ -545,69 +546,76 @@ group by ownership');
         }
     }
 
-   
+    public function sendCustomSmsToProspects($message, $custom_numbers) {
+        $numbers = $custom_numbers;
+//        if (preg_match('/,/', $custom_numbers)) {
+//            $numbers = explode(',', $custom_numbers);
+//        } else if (preg_match('/ /', $custom_numbers)) {
+//            $numbers = explode(' ', $custom_numbers);
+//        } else {
+//            $numbers = [$custom_numbers];
+//        }
+        $sent_to = 0;
+        $wrong = 0;
+        $invalid_numbers = '';
 
+        //$replacements = array('', '', '', '', '', '');
 
-    public function sendCustomSmsToProspects($message,$custom_numbers) {
-          $numbers = [];
-            if (preg_match('/,/', $custom_numbers)) {
-                $numbers = explode(',', $custom_numbers);
-            } else if (preg_match('/ /', $custom_numbers)) {
-                $numbers = explode(' ', $custom_numbers);
-            } else {
-                $numbers = [$custom_numbers];
-            }
-            $sent_to = 0;
-            $wrong = 0;
-            $invalid_numbers = '';
-
-       $replacements = array('', '', '', '', '', '');
-
-        $sms = $this->getCleanSms($replacements, $message);
+        //$sms = $this->getCleanSms($replacements, $message);
 
         foreach ($numbers as $number) {
-            $valid = validate_phone($number);
+            $valid = validate_phone($number->phone);
             if (is_array($valid)) {
                 $sent_to++;
+                $replacements = array(
+                    $number->name, '', ''
+                );
+                $sms = $this->getCleanSms($replacements, $message, array(
+                    '/#name/i', '/#username/i', '/#schema_name/i',
+                ));
                 $this->sendMessages($valid[1], $sms);
             } else {
                 $wrong++;
-                $invalid_numbers .= $number . ',';
+                $invalid_numbers .= $number->phone . ',';
             }
         }
     }
 
-
-    public function sendCustomSmsToLeads($message,$custom_numbers) {
-          $numbers = [];
-            if (preg_match('/,/', $custom_numbers)) {
-                $numbers = explode(',', $custom_numbers);
-            } else if (preg_match('/ /', $custom_numbers)) {
-                $numbers = explode(' ', $custom_numbers);
-            } else {
-                $numbers = [$custom_numbers];
-            }
-            $sent_to = 0;
-            $wrong = 0;
-            $invalid_numbers = '';
+    public function sendCustomSmsToLeads($message, $custom_numbers) {
+        $numbers = $custom_numbers;
+//        if (preg_match('/,/', $custom_numbers)) {
+//            $numbers = explode(',', $custom_numbers);
+//        } else if (preg_match('/ /', $custom_numbers)) {
+//            $numbers = explode(' ', $custom_numbers);
+//        } else {
+//            $numbers = [$custom_numbers];
+//        }
+        $sent_to = 0;
+        $wrong = 0;
+        $invalid_numbers = '';
         $replacements = array('', '', '', '', '', '');
 
-        $sms = $this->getCleanSms($replacements, $message);
+        // $sms = $this->getCleanSms($replacements, $message);
 
         foreach ($numbers as $number) {
-            $valid = validate_phone($number);
+            $valid = validate_phone($number->phone);
             if (is_array($valid)) {
                 $sent_to++;
+                $replacements = array(
+                    $number->name, $number->username, $number->username
+                );
+                $sms = $this->getCleanSms($replacements, $message, array(
+                    '/#name/i', '/#username/i', '/#schema_name/i',
+                ));
                 $this->sendMessages($valid[1], $sms);
             } else {
                 $wrong++;
-                $invalid_numbers .= $number . ',';
+                $invalid_numbers .= $number->phone . ',';
             }
         }
     }
 
-
-    public function sendCustomSmsToAll($message,$customer_criteria){
+    public function sendCustomSmsToAll($message, $customer_criteria) {
         $customers = DB::select("select * from admin.all_users where \"table\" not in ('parent','setting','student') and status=1 and schema_name in (select username from admin.clients where status=1) and  usertype not in ('Student','Parent','Driver','Matron','Cooks','Cleaner','Secreatry','Conductor','Gardener','Normal','Nurse','Dormitory','Cook','Gatekeeper','Sanitation','Doctor','Attendant','Janitor','Security guard')");
         if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
@@ -615,7 +623,7 @@ group by ownership');
                     $customer->name, $customer->schema_name, $customer->schema_name
                 );
                 $sms = $this->getCleanSms($replacements, $message, array(
-                    '/#name/i','/#schema_name/i','/#username/i'
+                    '/#name/i', '/#schema_name/i', '/#username/i'
                 ));
                 $this->sendMessages($customer->phone, $sms);
             }
@@ -625,14 +633,12 @@ group by ownership');
         }
     }
 
-
-    public function sendCustomSms($message){
-       return false;
+    public function sendCustomSms($message) {
+        return false;
     }
 
-
-    public function sendCustomSmsBySegment($message,$customer_segment,$criteria,$students_number){
-         switch ($customer_segment) {
+    public function sendCustomSmsBySegment($message, $customer_segment, $criteria, $students_number) {
+        switch ($customer_segment) {
             case 00: //Nursey schools only 
                 $segments = DB::select("select * from admin.all_classlevel where lower(name) = 'nursery' or lower(name) = 'nursery level'");
                 break;
@@ -650,7 +656,7 @@ group by ownership');
                 break;
             case 04:
                 // Schools with student (greater than or less than)
-                return $this->sendSmsByStudentNumber($message,$criteria,$students_number,$customer_segment);
+                return $this->sendSmsByStudentNumber($message, $criteria, $students_number, $customer_segment);
                 break;
             default:
                 break;
@@ -661,8 +667,8 @@ group by ownership');
                 $customer = \collect(\DB::select("select * from admin.all_setting where schema_name ='{$segment->schema_name}'"))->first();
                 $replacements = array($customer->sname, $segment->schema_name);
                 $sms = $this->getCleanSms($replacements, $message, array(
-                    '/#name/i', '/#schema_name/i','/#username/i',
-                ));                  
+                    '/#name/i', '/#schema_name/i', '/#username/i',
+                ));
                 $this->sendMessages($customer->phone, $sms);
             }
             return redirect()->back()->with('success', 'Message sent successfuly');
@@ -670,17 +676,15 @@ group by ownership');
             return redirect()->back()->with('error', 'Message Failed to be sent');
         }
     }
-     
 
+    public function sendSmsByStudentNumber($message, $criteria, $students_number, $segment) {
+        $sql = $this->statusNumber($criteria, $students_number, $segment);
+        $customers = DB::select("select * from admin.clients where estimated_students is not null $sql");
 
-     public function sendSmsByStudentNumber($message,$criteria,$students_number,$segment){
-         $sql = $this->statusNumber($criteria,$students_number,$segment);
-         $customers = DB::select("select * from admin.clients where estimated_students is not null $sql");
-
-         if (isset($customers) && count($customers) > 0) {
+        if (isset($customers) && count($customers) > 0) {
             foreach ($customers as $customer) {
                 $replacements = array(
-                    $customer->name, $customer->username,$customer->username
+                    $customer->name, $customer->username, $customer->username
                 );
                 $sms = $this->getCleanSms($replacements, $message, array(
                     '/#name/i', '/#username/i', '/#schema_name/i',
@@ -694,10 +698,9 @@ group by ownership');
         }
     }
 
-
-    public function statusNumber($criteria,$number,$segment,$column = 'estimated_students') {
+    public function statusNumber($criteria, $number, $segment, $column = 'estimated_students') {
         $and = '';
-        if ((int) $number > 0 && (int) $segment == 04 ) {
+        if ((int) $number > 0 && (int) $segment == 04) {
             if ((int) $criteria == 1) {
                 $and = ' AND ' . $column . ' <=' . $number;
             } else if ((int) $criteria == 0) {
@@ -711,9 +714,7 @@ group by ownership');
         return $and;
     }
 
-
-
-      public function getCleanSms($replacements, $message, $pattern = null) {
+    public function getCleanSms($replacements, $message, $pattern = null) {
         $sms = preg_replace($pattern != null ? $pattern : $this->patterns, $replacements, $message);
         if (preg_match('/#/', $sms)) {
             //try to replace that character
@@ -723,96 +724,86 @@ group by ownership');
         }
     }
 
-
-
-     public function sendMessages($phone,$message){
+    public function sendMessages($phone, $message) {
         $channels = request('sms_channels');
-        $phone = \collect(DB::select("select * from admin.format_phone_number('" .$phone. "')"))->first();
+        $phone = \collect(DB::select("select * from admin.format_phone_number('" . $phone . "')"))->first();
         $phonenumber = $phone->format_phone_number;
- 
-        if(in_array("quick-sms", $channels)) {
-              // Send messages by quick sms
-             $this->send_sms($phonenumber,$message,1);
-         }
 
-        if(in_array("whatsapp", $channels)) { 
-            $this->send_whatsapp_sms($phonenumber,$message);
+        if (in_array("quick-sms", $channels)) {
+            // Send messages by quick sms
+            $this->send_sms($phonenumber, $message, 1);
         }
 
-        if(in_array("telegram", $channels)) {
+        if (in_array("whatsapp", $channels)) {
+            $this->send_whatsapp_sms($phonenumber, $message);
+        }
+
+        if (in_array("telegram", $channels)) {
             // Send messages by  Telegram
         }
 
-        if(in_array("phone-sms", $channels)) {
+        if (in_array("phone-sms", $channels)) {
             // Send messages by  normal sms
-            $this->send_sms($phonenumber,$message);
+            $this->send_sms($phonenumber, $message);
         }
 
-        if(in_array("email", $channels)) {
+        if (in_array("email", $channels)) {
             // Send messages by Email
-              $user = \collect(DB::select("select * from admin.all_users where phone = '" .$phonenumber. "' and status=1 and email not like '%@shulesoft.%'"))->first();
-              if(isset($user) && !empty($user->email)){
-                  $this->send_email($user->email, 'ShuleSoft', $message);
-              }
+            $user = \collect(DB::select("select * from admin.all_users where phone = '" . $phonenumber . "' and status=1 and email not like '%@shulesoft.%'"))->first();
+            if (isset($user) && !empty($user->email)) {
+                $this->send_email($user->email, 'ShuleSoft', $message);
+            }
         }
-      
     }
 
-
-
-    public function templates(){
+    public function templates() {
         $type = request()->segment(3);
         $id = request()->segment(4);
-        $this->data['mailandsmstemplates'] =  DB::table('admin.mailandsmstemplates')->orderBy('created_at', 'desc')->get();
-        if($type == 'delete'){
-             DB::table('admin.mailandsmstemplates')->where('id',$id)->delete();
-             return redirect(base_url('marketing/templates'))->with('success','Successful deleted!');
-        }elseif($type == 'edit'){
-             $this->data['temp'] = DB::table('admin.mailandsmstemplates')->where('id',(int) $id)->first();
-             if($_POST){
+        $this->data['mailandsmstemplates'] = DB::table('admin.mailandsmstemplates')->orderBy('created_at', 'desc')->get();
+        if ($type == 'delete') {
+            DB::table('admin.mailandsmstemplates')->where('id', $id)->delete();
+            return redirect(base_url('marketing/templates'))->with('success', 'Successful deleted!');
+        } elseif ($type == 'edit') {
+            $this->data['temp'] = DB::table('admin.mailandsmstemplates')->where('id', (int) $id)->first();
+            if ($_POST) {
                 $data = request()->except('_token');
-                DB::table('admin.mailandsmstemplates')->where('id',$id)->update($data);
-                  return redirect(base_url('marketing/templates'))->with('success','Successful Edited!');
-             }
-              return view('market.communication.edittemplate',$this->data);
-        }elseif($type == 'view'){
-             $this->data['temp'] = DB::table('admin.mailandsmstemplates')->where('id',(int) $id)->first();
-             return view('market.communication.viewtemplate',$this->data);
-        }
-        return view('market.communication.templates',$this->data);
-    }
-
-    public function addtemplate(){
-          if ($_POST) {
-                $validated = request()->validate([
-                   'name' => 'required|max:255',
-                   'message' => 'required',
-                   ]);
-                DB::table('admin.mailandsmstemplates')->insert(request()->except('_token'));
-                return redirect(base_url('marketing/templates'))->with('success','Successfully!');;
-            } else {
-                return view('market.communication.addtemplate');
+                DB::table('admin.mailandsmstemplates')->where('id', $id)->update($data);
+                return redirect(base_url('marketing/templates'))->with('success', 'Successful Edited!');
             }
-
+            return view('market.communication.edittemplate', $this->data);
+        } elseif ($type == 'view') {
+            $this->data['temp'] = DB::table('admin.mailandsmstemplates')->where('id', (int) $id)->first();
+            return view('market.communication.viewtemplate', $this->data);
+        }
+        return view('market.communication.templates', $this->data);
     }
 
+    public function addtemplate() {
+        if ($_POST) {
+            $validated = request()->validate([
+                'name' => 'required|max:255',
+                'message' => 'required',
+            ]);
+            DB::table('admin.mailandsmstemplates')->insert(request()->except('_token'));
+            return redirect(base_url('marketing/templates'))->with('success', 'Successfully!');
+            ;
+        } else {
+            return view('market.communication.addtemplate');
+        }
+    }
 
-    public function summary(){
+    public function summary() {
         $this->data['summary'] = [];
         $this->data['whatsapp_sent_sms'] = DB::table('admin.whatsapp_messages')->count();
         $this->data['whatsapp_sent_delivered'] = DB::table('admin.whatsapp_messages')->where('status', 1)->count();
         $this->data['sms_sent'] = DB::table('public.sms')->count();
-        $this->data['pending_sms'] = DB::table('public.sms')->where('status', 0)->where('user_id','>',0)->where('table','<>','')->count();
-        $this->data['delevered_sms'] =  DB::table('public.sms')->where('status', 1)->where('user_id','>',0)->where('table','<>','')->count();
-        $this->data['failed_sms'] =  DB::table('public.sms')->where('status', 2)->where('user_id','>',0)->where('table','<>','')->count();
+        $this->data['pending_sms'] = DB::table('public.sms')->where('status', 0)->where('user_id', '>', 0)->where('table', '<>', '')->count();
+        $this->data['delevered_sms'] = DB::table('public.sms')->where('status', 1)->where('user_id', '>', 0)->where('table', '<>', '')->count();
+        $this->data['failed_sms'] = DB::table('public.sms')->where('status', 2)->where('user_id', '>', 0)->where('table', '<>', '')->count();
 
         $this->data['sent_email'] = DB::table('public.email')->where('status', 1)->count();
         $this->data['pending_email'] = DB::table('public.email')->where('status', 0)->count();
-        return view('market.communication.summary',$this->data);
-
-     }
-
-
-     
+        return view('market.communication.summary', $this->data);
+    }
 
 }
