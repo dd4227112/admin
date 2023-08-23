@@ -213,10 +213,10 @@ class SyncDataToNewVersion extends Command {
             ['name' => "Banks", 'financial_category_id' => 5, 'predefined' => 1, 'schema_name' => $client->username],
             ['name' => "Cash", 'financial_category_id' => 5, 'predefined' => 1, 'schema_name' => $client->username]];
         foreach ($predefineds as $predefined) {
-            $check = \App\Model\AccountGroup::where($predefined)->first();
+            $check = \DB::table('shulesoft.account_groups')->where($predefined)->first();
             if (empty($check)) {
-                $check = \App\Model\AccountGroup::create($predefined);
-                $check = \App\Model\AccountGroup::where($predefined)->first();
+                $check = \DB::table('shulesoft.account_groups')->insert($predefined);
+                $check =\DB::table('shulesoft.account_groups')->where($predefined)->first();
             }
             if (!empty($check) && $predefined['name'] <> 'Banks') {
                 $s_object = ["name" => $check->name, 'schema_name' => $client->username,
