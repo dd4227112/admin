@@ -12,7 +12,7 @@ class SchoolContact extends Model {
      * Generated
      */
     protected $table = 'admin.school_contacts';
-    protected $fillable = ['id', 'name', 'school_id', 'email', 'phone', 'created_at', 'updated_at','user_id','title'];
+    protected $fillable = ['id', 'name', 'school_id', 'email', 'phone', 'created_at', 'updated_at','user_id','title','notes'];
 
     public function school() {
         return $this->belongsTo(\App\Models\School::class);

@@ -149,7 +149,7 @@ class Sales extends Controller {
         return view('market.objective');
     }
 
-    function schoolStatus(){ 
+    function schoolStatus() {
         $id = request()->segment(3);
         if ($id == 'shulesoft') {
             $this->data['title'] = "Schools Alreardy Onboarded";
@@ -244,8 +244,7 @@ class Sales extends Controller {
      */
     public function show() {
         $page = request('page');
-        //   dd(request('type'));
-
+      
         switch ($page) {
             case 'leads':
                 $sql = 'select a.* from admin.leads a join admin.schools b on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.prospects d on d.id=a.prospect_id join admin.tasks e on e.id=a.task_id';
@@ -336,6 +335,15 @@ class Sales extends Controller {
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             default:
+                 if ((int) request('type') == 3) {
+                    $sql = "SELECT *  from admin.schools a where a.schema_name NOT IN  (select schema_name from admin.all_setting) AND  lower(a.ownership) <>'government'";
+                } else if ((int) request('type') == 2) {
+                    $sql = "SELECT *  from admin.schools a where a.schema_name in  (select schema_name from admin.all_setting) AND  lower(a.ownership) <>'government'";
+                } else {
+                    $sql = "SELECT * from admin.schools a  where lower(a.ownership) <>'government'";
+                }
+                return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
+               
                 break;
         }
     }
@@ -367,8 +375,10 @@ class Sales extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        //
+    public function deleteContact() {
+        $id = (int) request()->segment(3);
+        DB::table('school_contacts')->where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Contact deleted successfully');
     }
 
     public function profile() {
@@ -388,8 +398,11 @@ class Sales extends Controller {
             $file = request()->file('agreement_file');
             $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
 
-            $school_array = array('name' => request('school_name'), 'nmb_school_name' => request('nmb_school_name'), 'account_number' => request('account_number'),
-                'students' => request('students'), 'type' => request('school_type'));
+            $school_array = array('name' => request('school_name'),
+                'nmb_school_name' => request('nmb_school_name'),
+                'account_number' => request('account_number'),
+                'students' => request('students'),
+                'type' => request('school_type'));
             $agreement_array = array('school_id' => request('school_id'), 'contact_person_name' => request('contact_person_name'), 'contact_person_phone' => request('contact_person_phone'),
                 'contact_person_designation' => request('contact_person_designation'), 'company_file_id' => $company_file_id,
                 'agreement_date' => date('Y-m-d', strtotime(request('agreement_date'))), 'form_type' => request('form_type'), 'created_by' => Auth()->user()->id);
@@ -411,7 +424,8 @@ class Sales extends Controller {
                     'phone' => request('phone'),
                     'school_id' => request('school_id'),
                     'user_id' => Auth::user()->id,
-                    'title' => request('title')
+                    'title' => request('title'),
+                    'notes'=>request('notes')
                 ]);
                 return redirect()->back()->with('success', 'user recorded successfully');
             } else {
@@ -673,13 +687,13 @@ class Sales extends Controller {
         $academic_year = DB::table('accounts.academic_year')->whereYear('end_date', date('Y'))->first();
 
         if (empty($academic_year)) {
-            
-            $academic_year_id =DB::table('accounts.academic_year')
+
+            $academic_year_id = DB::table('accounts.academic_year')
                     ->insertGetId([
-                        'name'=>date('Y'),
-                        'class_level_id' => $classlevel->classlevel_id,
-                        'start_date'=>date('Y').'-01-01',
-                        'end_date'=>date('Y').'-12-31']);
+                'name' => date('Y'),
+                'class_level_id' => $classlevel->classlevel_id,
+                'start_date' => date('Y') . '-01-01',
+                'end_date' => date('Y') . '-12-31']);
         } else {
             $academic_year_id = $academic_year->id;
         }
@@ -1009,7 +1023,7 @@ class Sales extends Controller {
     public function salesStatus() {
         $page = request()->segment(4);
         $select = request()->segment(3);
-        
+
         if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             //current day
             $this->data['today'] = 1;
@@ -1024,16 +1038,14 @@ class Sales extends Controller {
         }
         $user_id = Auth::User()->id;
         //   $this->data['schools'] = DB::select("select * from admin.tasks where user_id = $user_id  and  (start_date, end_date) OVERLAPS ('$start_date'::date, '$end_date'::date)");
-        if($select == 'Mine'){
+        if ($select == 'Mine') {
             $this->data['schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
             $this->data['new_schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
             $this->data['pipelines'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
             $this->data['closeds'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
             $this->data['query'] = 'SELECT count(next_action), next_action from admin.tasks a where  a.user_id=' . Auth::User()->id . ' and ' . $where . ' group by next_action order by count(next_action) desc';
             $this->data['types'] = 'SELECT count(b.name), b.name as type from admin.tasks a, admin.task_types b  where a.task_type_id=b.id AND a.user_id =' . Auth::User()->id . ' and ' . $where . ' group by b.name order by count(b.name) desc';
-
-        }
-        else{
+        } else {
             if ((int) Auth::User()->type == 0) {
                 $this->data['schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
                 $this->data['new_schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();

@@ -248,7 +248,7 @@
                         if (row.client_id != null) {
                             return '<a href="<?= url('customer/profile') ?>/' + row.username + '" class="label label-inverse-warning"> Already Customer  </a>';
                         } else {
-                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="badge badge-primary">Onboard School</a>';
+                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="badge badge-primary">View Profile</a>';
                         }
 
                     }
