@@ -260,7 +260,7 @@ class Kernel extends ConsoleKernel {
             if ($client->is_new_version == 1) {
                 DB::SELECT('SELECT * FROM shulesoft.redistribute_all_student_payments(' . $client->username . ')');
             } else {
-                DB::SELECT('SELECT * FROM ' . $client->username . ' redistribute_all_student_payments()');
+                DB::SELECT('SELECT * FROM ' . $client->username . '.redistribute_all_student_payments()');
             }
         }
     }
