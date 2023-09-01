@@ -3,7 +3,7 @@
  * Description of report
  *
  *  -----------------------------------------------------
- *  Copyright: INETS COMPANY LIMITED
+ *  Copyright: SHULESOFT LIMITED
  *  Website: www.inetstz.com
  *  Email: info@inetstz.com
  *  -----------------------------------------------------

@@ -4,7 +4,7 @@ ini_set('max_execution_time', 360);
  * Description of print_combined
  *
  *  -----------------------------------------------------
- *  Copyright: INETS COMPANY LIMITED
+ *  Copyright: SHULESOFT LIMITED
  *  Website: www.inetstz.com
  *  Email: info@inetstz.com
  *  -----------------------------------------------------

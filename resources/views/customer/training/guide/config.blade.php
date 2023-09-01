@@ -71,7 +71,7 @@ div.cls_014{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
 <div style="position:absolute;left:0px;top:0px">
 <img src="<?=url('public/images/background2.jpg') ?>" width=612 height=792></div>
 <div style="position:absolute;left:235.37px;top:31.20px" class="cls_013"><span class="cls_013">INETS Company: Trainer</span></div>
-<div style="position:absolute;left:72.02px;top:66.50px" class="cls_014"><span class="cls_014">For and on behalf of the INETS Company Limited, provider   Name:</span></div>
+<div style="position:absolute;left:72.02px;top:66.50px" class="cls_014"><span class="cls_014">For and on behalf of the SHULESOFT LIMITED, provider   Name:</span></div>
 <div style="position:absolute;left:418.90px;top:66.50px" class="cls_011"><span class="cls_011">Choose an item.</span></div>
 <div style="position:absolute;left:72.02px;top:78.02px" class="cls_014"><span class="cls_014">and owner of ShuleSoft:</span></div>
 <div style="position:absolute;left:343.63px;top:88.34px" class="cls_014"><span class="cls_014">Designation</span></div>

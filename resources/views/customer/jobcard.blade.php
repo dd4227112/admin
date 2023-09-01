@@ -145,13 +145,13 @@ $root = url('/') . '/public/'
                                                 <tr  style="border-bottom: 5px solid #8CDDCD;">
                                                     <th colspan="2" class="text-white" style="background:#8CDDCD;text-align: center;
                                                         font-size: 18px;
-                                                       ">INETS COMPANY LIMITED</th>
+                                                       ">SHULESOFT LIMITED</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td style="width: 60% !important;">
-                                                        For and on behalf of <br/>the INETS Company Limited, <br/>
+                                                        For and on behalf of <br/>the SHULESOFT LIMITED, <br/>
                                                         the aforementioned services headed by</td>
                                                         <td>   
                                                          <table class="table">

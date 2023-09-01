@@ -163,7 +163,7 @@
                                                         <td>
                                                             <ul>
                                                                 <li style="font-size: 1rem">From</li>
-                                                                <li><strong>INETS COMPANY LIMITED</strong></li>
+                                                                <li><strong>SHULESOFT LIMITED</strong></li>
                                                                 <li>TIN 122-866-750</li>
                                                                 <li>P.o Box 33287 Dar es Salaam</li>
                                                                 <li>2nd Floor,Block NO. 576</li>
@@ -276,7 +276,7 @@
                                             <img src="<?= url('public/assets/images/account/airtel.jpg') ?>" alt="Airtel Money" width="50" height="60"></a>-->
                                             <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
                                                 <b>Account Details :</b><br/>
-                                                <b>Account Name:</b> INETS COMPANY LIMITED <br/> <b>Bank Name:</b> NMB BANK PLC <br/>  <b>Account Number:</b> 22510077805
+                                                <b>Account Name:</b> SHULESOFT LIMITED <br/> <b>Bank Name:</b> NMB BANK PLC <br/>  <b>Account Number:</b> 22510077805
                                                 <br/>
                                             </p>
                                             <d>Or Pay Electronically here <a href="<?= url('epayment/i/' . $booking->id) ?>" target="_blank"><?= url('epayment/i/' . ($booking->id)) ?></a></d>

@@ -220,7 +220,7 @@ $bn_number = 888999;
                 <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 300px;">
                   <tr>
                     <td align="left" valign="top" style="padding-bottom: 36px; padding-left: 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                      <p><strong>INETS COMPANY LIMITED</strong></p>
+                      <p><strong>SHULESOFT LIMITED</strong></p>
                       <p>
                         <b>TIN 122-866-750</b> 
                         <b>p.o Box 33287 Dar es Salaam  </b> 

@@ -31,7 +31,7 @@
                                                 <tr style="text-align: left;">
                                                     <td>
                                                         <li style="font-size: 1.5rem;list-style: none; text-align:left;">From</li>
-                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;"><strong>INETS COMPANY LIMITED</strong></li>
+                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;"><strong>SHULESOFT LIMITED</strong></li>
                                                         <li style="font-size: 0.9rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
                                                         <li style="font-size: 0.9rem;list-style: none; text-align:left;">Shamo Park House</li>
                                                         <li style="font-size: 0.9rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
@@ -136,7 +136,7 @@
                                                  if(!empty($a)){ ?>
                                                    <p>
                                                     <b  style="font-size: 0.8rem;">Account Details :</b><br/>
-                                                    <b  style="font-size: 0.8rem;">Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                    <b  style="font-size: 0.8rem;">Account Name:</b> SHULESOFT LIMITED <br/> 
                                                     <b  style="font-size: 0.8rem;">Bank Name:</b> NMB BANK PLC <br/> 
                                                      <b  style="font-size: 0.8rem;">Account Number:</b> 22510077805
                                                     <br/>
@@ -145,7 +145,7 @@
                                                   <?php }else { ?>
                                                     <p>
                                                         <b  style="font-size: 0.8rem;">Account Details :</b><br/>
-                                                        <b  style="font-size: 0.8rem;">Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                        <b  style="font-size: 0.8rem;">Account Name:</b> SHULESOFT LIMITED <br/> 
                                                         <b  style="font-size: 0.8rem;">Bank Name:</b> NMB BANK PLC <br/> 
                                                         <b  style="font-size: 0.8rem;">Account Number:</b> 22510077805
                                                         <br/>

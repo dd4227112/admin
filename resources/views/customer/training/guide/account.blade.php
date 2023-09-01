@@ -91,7 +91,7 @@ div.cls_014{font-family:Arial,serif;font-size:10.0px;color:rgb(0,0,0);font-weigh
 <div style="position:absolute;left:112.58px;top:437.35px" class="cls_008"><span class="cls_008">☐</span><span class="cls_002">Connections of accounts module with other modules i.e Users, Transport, Library, Hostel</span></div>
 <div style="position:absolute;left:97.10px;top:468.67px" class="cls_002"><span class="cls_002">Other training performed on </span><span class="cls_015">5-Dec-18</span><span class="cls_002"> </span><span class="cls_010">│</span><span class="cls_002"> Status </span><span class="cls_011">Choose an item.</span><span class="cls_002"> </span><span class="cls_010">│Performed by </span><span class="cls_011">Choose an item.</span></div>
 <div style="position:absolute;left:235.37px;top:525.46px" class="cls_013"><span class="cls_013">INETS Company: Trainer</span></div>
-<div style="position:absolute;left:72.02px;top:560.74px" class="cls_014"><span class="cls_014">For and on behalf of the INETS Company Limited, provider   Name:</span></div>
+<div style="position:absolute;left:72.02px;top:560.74px" class="cls_014"><span class="cls_014">For and on behalf of the SHULESOFT LIMITED, provider   Name:</span></div>
 <div style="position:absolute;left:418.90px;top:560.74px" class="cls_011"><span class="cls_011">Choose an item.</span></div>
 <div style="position:absolute;left:72.02px;top:572.26px" class="cls_014"><span class="cls_014">and owner of ShuleSoft:</span></div>
 <div style="position:absolute;left:343.63px;top:582.58px" class="cls_014"><span class="cls_014">Designation</span></div>

@@ -59,7 +59,7 @@ div.cls_014{font-family:"Calibri",serif;font-size:10.0px;color:rgb(146,146,146);
 <div style="position:absolute;left:115.10px;top:534.34px" class="cls_008"><span class="cls_008">☐</span><span class="cls_002"> View exam report insight</span></div>
 <div style="position:absolute;left:97.10px;top:565.66px" class="cls_002"><span class="cls_002">Other training performed on </span><span class="cls_015">5-Dec-18</span><span class="cls_002"> </span><span class="cls_010">│</span><span class="cls_002"> Status </span><span class="cls_011">Choose an item.</span><span class="cls_002"> </span><span class="cls_010">│Performed by </span><span class="cls_011">Choose an item.</span></div>
 <div style="position:absolute;left:235.37px;top:622.42px" class="cls_012"><span class="cls_012">INETS Company: Trainer</span></div>
-<div style="position:absolute;left:72.02px;top:657.84px" class="cls_013"><span class="cls_013">For and on behalf of the INETS Company Limited, provider   Name:</span></div>
+<div style="position:absolute;left:72.02px;top:657.84px" class="cls_013"><span class="cls_013">For and on behalf of the SHULESOFT LIMITED, provider   Name:</span></div>
 <div style="position:absolute;left:418.90px;top:657.84px" class="cls_011"><span class="cls_011">Choose an item.</span></div>
 <div style="position:absolute;left:72.02px;top:669.24px" class="cls_013"><span class="cls_013">and owner of ShuleSoft:</span></div>
 <div style="position:absolute;left:343.63px;top:679.56px" class="cls_013"><span class="cls_013">Designation</span></div>

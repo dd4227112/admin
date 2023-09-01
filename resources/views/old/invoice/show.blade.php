@@ -8,7 +8,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="pull-left"> <address>
-                  <h3> &nbsp;<b class="text-danger">Inets Company Limited</b></h3>
+                  <h3> &nbsp;<b class="text-danger">SHULESOFT LIMITED</b></h3>
                   <p class="text-muted m-l-5">11th Block, Bima Road, <br>
                     Mikocheni B,Kinondoni <br>
                     P.o Box - 32278, <br>

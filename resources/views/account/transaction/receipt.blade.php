@@ -19,7 +19,7 @@ $bn_number = 888999;
                                     </td>
                                     <td>
                                         <ul>
-                                            <li style="font-size: 1em;"><strong>INETS COMPANY LIMITED</strong></li>
+                                            <li style="font-size: 1em;"><strong>SHULESOFT LIMITED</strong></li>
                                             <li>TIN 122-866-750</li>
                                             <li>P.o Box 32282 Dar es Salaam  </li>
                                             <li> 2nd Floor,Block NO. 576</li>

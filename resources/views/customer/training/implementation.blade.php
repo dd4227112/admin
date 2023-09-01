@@ -182,12 +182,12 @@ $root = url('/') . '/public/'
                                                 <tr  style="border-bottom: 5px solid #8CDDCD;">
                                                     <th colspan="2" style="background:#8CDDCD;text-align: center;
                                                         font-size: 18px;
-                                                        color: white;">INETS COMPANY LIMITED</th>
+                                                        color: white;">SHULESOFT LIMITED</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td style="width: 60% !important;">For and on behalf of the INETS Company Limited, the aforementioned services headed by</td>
+                                                    <td style="width: 60% !important;">For and on behalf of the SHULESOFT LIMITED, the aforementioned services headed by</td>
                                                     <td>    <table class="table">
                                                             <tbody>
                                                                 <tr>

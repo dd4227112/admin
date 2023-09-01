@@ -114,7 +114,7 @@
                                         <h4>How to Pay Event Fee</h4>
                                         <ul>
                                             <li> <b>Account Details :</b></li>
-                                            <li> - Account Name: INETS COMPANY LIMITED</li>
+                                            <li> - Account Name: SHULESOFT LIMITED</li>
                                             <li> - Bank Name: NMB BANK PLC</li>
                                             <li> - Account Number: 22510077805</li>
                                             <li><code>Please notify us after a deposit</code></li>

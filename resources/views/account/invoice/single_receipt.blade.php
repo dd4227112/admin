@@ -109,7 +109,7 @@
                                                     <td>
                                                         <ul>
                                                             <li style="font-size: 1rem">From</li>
-                                                            <li><strong>INETS COMPANY LIMITED</strong></li>
+                                                            <li><strong>SHULESOFT LIMITED</strong></li>
                                                             <li>P.o Box 32282 Dar es Salaam</li>
                                                             <li>2nd Floor,Block NO. 576</li>
                                                             <li>Mbezi Beach Bagamoyo Road</li>
@@ -218,7 +218,7 @@
                                                  if(!empty($a)){ ?>
                                                    <p>
                                                     <b>Account Details :</b><br/>
-                                                    <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                    <b>Account Name:</b> SHULESOFT LIMITED <br/> 
                                                     <b>Bank Name:</b> NMB BANK PLC <br/> 
                                                      <b>Account Number:</b> 22510077805
                                                     <br/>
@@ -227,7 +227,7 @@
                                                   <?php }else { ?>
                                                     <p>
                                                         <b>Account Details :</b><br/>
-                                                        <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                        <b>Account Name:</b> SHULESOFT LIMITED <br/> 
                                                         <b>Bank Name:</b> NMB BANK PLC <br/> 
                                                          <b>Account Number:</b> 22510077805
                                                         <br/>
