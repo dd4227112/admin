@@ -109,16 +109,16 @@
                                             Meeting.</li>
                                     </ol>
                                     @else
-                                        <h4 align="center">This event charges <b> 150,000/-</b> Tsh for Schools that do not use Shulesoft.</b></h4>
+                                        <!--<h4 align="center">This event charges <b> 150,000/-</b> Tsh for Schools that do not use Shulesoft.</b></h4>-->
                                     <hr>
-                                        <h4>How to Pay Event Fee</h4>
+<!--                                        <h4>How to Pay Event Fee</h4>
                                         <ul>
                                             <li> <b>Account Details :</b></li>
                                             <li> - Account Name: SHULESOFT LIMITED</li>
                                             <li> - Bank Name: NMB BANK PLC</li>
                                             <li> - Account Number: 22510077805</li>
                                             <li><code>Please notify us after a deposit</code></li>
-                                        </ul>
+                                        </ul>-->
                                         <br>  <br>
                                         <!-- <h4>Does ShuleSoft have a free Events?</h4>
 
@@ -131,7 +131,7 @@
                                     </div>
 
                                     <br>
-                                    <h3 class="btn btn-primary">For more call/whatsapp: 0655406004</h3>
+                                    <!--<h3 class="btn btn-primary">For more call/whatsapp: 0655406004</h3>-->
                                 </div>
 
 
