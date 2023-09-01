@@ -81,26 +81,27 @@
         <hr>                @if (isset($status) && $status==1)
             
                                     <!-- <h4>How to join in Zoom Meeting</h4> -->
-                                    <h4>How to join a Zoom meeting on a web browser</h4>
+                                    <h4>How to join a Google meeting on a web browser</h4>
                                     <p>Open Browser ie Chrome.</p>
                                     <ol>
-                                        <li> Go to join.zoom.us.</li>
+                                        <li> Go to <a
+                                                href="https://meet.google.com" target="_blank"
+                                                rel="noopener noreferrer">meet.google.com</a></li>
                                         <li>Enter your meeting ID provided by the host/organizer.</li>
-                                        <li>Click Join. If this is your first time joining from Google Chrome, you will
-                                            be asked to open the Zoom client to join the meeting.</li>
-                                        <li>To learn more how to use Zoom Meeting Watch this video >>> <a
-                                                href="https://youtu.be/hIkCmbvAHQQ" target="_blank"
-                                                rel="noopener noreferrer">https://youtu.be/hIkCmbvAHQQ</a> </li>
+                                        <li>Click Join.</li>
+                                        <li>To learn more how to use Google Meeting Watch this video >>> <a
+                                                href="https://www.youtube.com/watch?v=X4jAvaX73-U" target="_blank"
+                                                rel="noopener noreferrer">https://www.youtube.com/watch?v=X4jAvaX73-U</a> </li>
                                     </ol>
                                     <hr>
 
-                                    <h4>HOW TO JOIN ZOOM MEETING BY PHONE</h4>
-                                    <p>** Open the Zoom mobile app. If you have not downloaded the Zoom mobile app yet,
+                                    <h4>HOW TO JOIN Google MEETING BY PHONE</h4>
+                                    <p>** Open the Google Meet mobile app. If you have not downloaded the Google Meet  mobile app yet,
                                         you can download it from the Google Play Store or App Store.</p>
                                     <p>Join a meeting using one of these methods:</p>
                                     <ol>
                                         <li>Tap Join a Meeting if you want to join without signing in.
-                                            Sign in to Zoom then tap Join.</li>
+                                            Sign in to Google Meet  then tap Join.</li>
                                         <li>Enter the meeting ID number and your display name.</li>
                                         <li>If you're signed in, change your name if you don't want your default name
                                             to appear. </li>
