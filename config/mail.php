@@ -84,7 +84,7 @@ return [
     |
     */
 
-    'username' => 'daviddaniel@ngarafdc.ac.tz',
+    'username' => 'adminpaneltest@ngarafdc.ac.tz',
 
     'password' =>'mwesiGEMWE1',
 
