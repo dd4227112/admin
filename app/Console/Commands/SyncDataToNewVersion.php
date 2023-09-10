@@ -51,7 +51,7 @@ class SyncDataToNewVersion extends Command {
                 DB::statement("select * from  shulesoft.transfer_stage_one('$client->username')");
                 DB::statement("select * from  shulesoft.transfer_stage_two('$client->username')");
 
-                DB::table('admin.transfer_control')->update(['first_stage' => 1])->where('schema_name', $client->username);
+                DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['first_stage' => 1]);
                 return true;
             }
 
@@ -151,7 +151,7 @@ class SyncDataToNewVersion extends Command {
 //                    . " and lower(name) like '%transport%' limit 1)) ) "
 //                    . " where d.schema_name='".$client->username."' and d.amount::integer <=0";
 //            DB::statement($update_transport);
-            DB::select("select * from shulesoft.selecttransportamount('" . $client->username . "')");
+  //          DB::select("select * from shulesoft.selecttransportamount('" . $client->username . "')");
             DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['fourth_stage' => 1]);
         }
     }
@@ -197,8 +197,8 @@ class SyncDataToNewVersion extends Command {
     }
 
     public function redistributStudentPayments($client) {
-        DB::statement('insert into shulesoft.store_students_id (student_id,schema_name)'
-                . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
+//        DB::statement('insert into shulesoft.store_students_id (student_id,schema_name)'
+//                . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
 
         $student = DB::table('shulesoft.store_students_id')->where('schema_name', $client->username)->where('status', 0)->first();
 
@@ -215,8 +215,8 @@ class SyncDataToNewVersion extends Command {
         foreach ($predefineds as $predefined) {
             $check = \DB::table('shulesoft.account_groups')->where($predefined)->first();
             if (empty($check)) {
-                 \DB::table('shulesoft.account_groups')->insert($predefined);
-                $check =\DB::table('shulesoft.account_groups')->where($predefined)->first();
+                \DB::table('shulesoft.account_groups')->insert($predefined);
+                $check = \DB::table('shulesoft.account_groups')->where($predefined)->first();
             }
             if (!empty($check) && $predefined['name'] <> 'Banks') {
                 $s_object = ["name" => $check->name, 'schema_name' => $client->username,
@@ -233,22 +233,46 @@ class SyncDataToNewVersion extends Command {
         DB::table('admin.clients')->where('username', $client->username)->update(['status' => 1, 'is_new_version' => 1]);
         DB::statement('update shulesoft.salaries a  set user_sid=(select sid from shulesoft.users where schema_name=\'' . $client->username . '\' and  id=a.user_id and "table"=a."table" ) where schema_name=\'' . $client->username . '\' and user_sid is null');
         $this->install_chart_account($client);
-         $this->insertReveneExpense($client);
-         
+        $this->insertReveneExpense($client);
+
         DB::SELECT("SELECT * FROM shulesoft.journal_sync_all('" . $client->username . "')");
 //}
     }
-    
+
+    public function checkBankDefinition($client) {
+             //first check if the bank account id is already in refer expense table or create it
+        $banks = DB::table('shulesoft.bank_accounts')->where('schema_name', $client->username)->get();
+        foreach ($banks as $bank) {
+            $check = DB::table('shulesoft.refer_expense')->where('source_table', 'bank_accounts')
+                            ->where('source_id', $bank->id)->first();
+            if (empty($check)) {
+                $group = DB::table('shulesoft.account_groups')->where('name','ilike','%Banks%')->first();
+                $account_group_id = !empty($group) ? $group->id :
+                       DB::table('shulesoft.account_groups')->create(['name' => 'Banks', "financial_category_id" => 5, 'predefined' => 1])->id;
+
+                $refer_object = ["name" => $bank->name . '(' . $bank->number . ')',
+                    "financial_category_id" => 5,
+                    "account_group_id" => $account_group_id,
+                    'code' => createCode(),
+                    'source_table' => 'bank_accounts',
+                    'source_id' => $bank->id,
+                    'predefined' => $bank->id];
+
+                return DB::table('shulesoft.refer_expense')->create($refer_object);
+            } else {
+                return $check;
+            }
+        }
+    }
     public function insertReveneExpense($client) {
-        $sql_revenue="insert into shulesoft.revenue (uuid,refer_expense_id,account_id,category,transaction_id,reference,amount,user_sid,created_by_sid,note,reconciled, number,sms_sent,date,created_at,updated_at,schema_name,status)
+        $this->checkBankDefinition($client);
+        $sql_revenue = "insert into shulesoft.revenue (uuid,refer_expense_id,account_id,category,transaction_id,reference,amount,user_sid,created_by_sid,note,reconciled, number,sms_sent,date,created_at,updated_at,schema_name,status)
 select uuid,refer_expense_id, ( case when bank_account_id is null then (select id from shulesoft.refer_expense where schema_name='" . $client->username . "' and name ilike '%cash%' limit 1) else (select id from shulesoft.refer_expense where schema_name=a.schema_name and source_table='bank_accounts' and source_id=a.bank_account_id) end ),'',transaction_id,invoice_number,amount, (select sid from shulesoft.users where id=a.user_id and \"table\"=a.user_table),(case when created_by_id is null then (select sid from shulesoft.setting where schema_name='" . $client->username . "') else (select sid from shulesoft.users where id=a.created_by_id and \"table\"=a.created_by_table) end ),note,reconciled,number,1,date,created_at,updated_at,'" . $client->username . "',status from shulesoft.revenues a where schema_name='" . $client->username . "'";
-    
         DB::statement($sql_revenue);
         $sql_expense = "insert into shulesoft.expenses 
             (uuid,refer_expense_id,account_id,category,transaction_id,
             reference,amount,vendor_id,created_by_sid,note,reconciled,
-            number,date,created_at,updated_at,schema_name)
-select uuid,refer_expense_id,
+            number,date,created_at,updated_at,schema_name) select uuid,refer_expense_id,
 case when a.bank_account_id is null then 
 (select id from shulesoft.refer_expense where name ilike '%cash%' and schema_name=a.schema_name) 
 else (select  id from shulesoft.refer_expense where
@@ -260,7 +284,7 @@ and \"usertype\"=a.usertype and id=a.\"userID\") as
 created_by_sid,note,reconciled,voucher_no,date,create_date as created_at,
 updated_at,schema_name from shulesoft.expense a 
 where a.schema_name='" . $client->username . "' and a.uuid not in (select uuid from shulesoft.expenses)";
- DB::statement($sql_expense);
+        DB::statement($sql_expense);
     }
 
 }
