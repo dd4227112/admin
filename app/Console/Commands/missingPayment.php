@@ -38,7 +38,12 @@ class missingPayment extends Command
      */
     public function handle()
     {
-        DB::statement("select shulesoft.transfermissingpayment('kilimanischools')");
+       //find all school that migrated from old version to new version
+        $schemas =DB::select("select distinct username from admin.clients where is_new_version =1 and status =1 and username in (select  DISTINCT table_schema from information_schema.tables where table_type ='BASE TABLE' and table_schema != 'public' )");
+        foreach ($schemas as $key => $schema) { 
+            DB::statement("select shulesoft.transfermissingpayment('".$schema->username."')");
+        }
+        
         return 0;
     }
 }
