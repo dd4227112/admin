@@ -38,6 +38,9 @@ class Kernel extends ConsoleKernel {
         \App\Console\Commands\SyncDataToNewVersion::class,
         \App\Console\Commands\UpdateSMSBalance::class,
         \App\Console\Commands\checkBeamSMSBalance::class,
+        \App\Console\Commands\missingPayment::class,
+
+        
 
 
 
@@ -160,6 +163,12 @@ class Kernel extends ConsoleKernel {
             $schedule->command('beem:sms_balance')->dailyAt('03:00');
         } catch (\Exception $e) {
             Log::error('Send beem sms balance failed' . $e->getMessage());
+        }
+
+        try {
+            $schedule->command('missing:payments')->everyMinute();
+        } catch (\Exception $e) {
+            Log::error('missing payments failed: ' . $e->getMessage());
         }
 
         // configure the service set RestartSec = 1 minute currently disabled

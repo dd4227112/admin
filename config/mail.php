@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' =>'mail.ngarafdc.ac.tz',
+    'host' =>'mail.romatun.co.tz',
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => 'support@shulesoft.africa',
-        'name' => 'Shulesoft Admin Panel',
+        'address' => 'noreply@shulesoft.com',
+        'name' => 'ShuleSoft - School Management System',
     ],
 
     /*
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'encryption' => null,
+    'encryption' => 'tls',
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'adminpaneltest@ngarafdc.ac.tz',
+    'username' => 'no-reply@romatun.co.tz',
 
-    'password' =>'mwesiGEMWE1',
+    'password' =>'PCpLvnyh?~wx',
 
     /*
     |--------------------------------------------------------------------------
@@ -111,7 +111,6 @@ return [
     | of the emails. Or, you may simply stick with the Laravel defaults!
     |
     */
-
 
     'markdown' => [
         'theme' => 'default',
