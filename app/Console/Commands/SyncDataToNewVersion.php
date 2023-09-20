@@ -200,6 +200,8 @@ class SyncDataToNewVersion extends Command {
 //        DB::statement('insert into shulesoft.store_students_id (student_id,schema_name)'
 //                . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
 
+        DB::statement("select * from shulesoft.transfer_missing_data_into_shulesoft('".$client->username."')");
+        
         $student = DB::table('shulesoft.store_students_id')->where('schema_name', $client->username)->where('status', 0)->first();
 
         if (empty($student)) {
