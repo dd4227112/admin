@@ -144,8 +144,8 @@ class Sales extends Controller {
         }
         // Prospects status = 0
         elseif($id ==4){
-            $this->data['schools'] = \App\Models\School::where(['sales_status'=>0, 'ownership'=>'Non-Government'])->get();
-
+            // $this->data['schools'] = \App\Models\School::where(['sales_status'=>0, 'ownership'=>'Non-Government'])->get();
+            $this->data['schools'] = \App\Models\School::where('sales_status',0)->where('ownership', 'ilike', 'Non-Government')->get();
         }
          // Qualified status =2
         elseif($id ==5){

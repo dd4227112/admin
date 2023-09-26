@@ -20,7 +20,7 @@
             </li>
         </ul>
     </div>
-</div> 
+</div>
 
 
 <div class="page-body">
@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="card-block">
 
-                    <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>"  enctype="multipart/form-data">
+                    <form class="form-horizontal" method="POST" action="<?= base_url('marketing/communication') ?>" enctype="multipart/form-data">
 
                         <div class="form-group row">
                             <div class="col-sm-4">
@@ -38,12 +38,12 @@
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <select multiple="" id="sms_keys_id" class="select2"  name ="sms_channels[]" required>
+                                <select multiple="" id="sms_keys_id" class="select2" name="sms_channels[]" required>
                                     <option value="quick-sms">Quick SMS</option>
                                     <option value="whatsapp">WhatsApp</option>
-                                    <option value="telegram">Telegram</option>
+                                    <!-- <option value="telegram">Telegram</option> -->
                                     <option value="phone-sms">Phone SMS</option>
-                                    <option value="email">Email</option>
+                                    <!-- <option value="email">Email</option> -->
                                 </select>
                             </div>
                         </div>
@@ -55,8 +55,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <select style="" id="form-field-select-0" class="select2" name="firstCriteria"
-                                        onchange="setFirstCriteria(this.value);">
+                                <select style="" id="form-field-select-0" class="select2" name="firstCriteria" onchange="setFirstCriteria(this.value);">
                                     <option value="{{old('criteria')}}">Select</option>
                                     <option value="00">Customers (School with Active Accounts)</option>
                                     <option value="01">Prospects (all schools never signup for shulesoft)</option>
@@ -68,7 +67,7 @@
 
                             </div>
                             <div class="has-error">
-                                <?php if (form_error($errors, 'criteria')): ?>
+                                <?php if (form_error($errors, 'criteria')) : ?>
                                     <?php echo form_error($errors, 'criteria'); ?>
                                 <?php endif ?>
                             </div>
@@ -83,8 +82,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <select id="form-field-select-3" class="select2" name="customer_criteria"
-                                        onchange="setCriteria(this.value);">
+                                <select id="form-field-select-3" class="select2" name="customer_criteria" onchange="setCriteria(this.value);">
                                     <option value="{{old('criteria')}}">Select</option>
                                     <option value="0">All Customers (Paid Customers) </option>
                                     <option value="1">Active & Full paid customers</option>
@@ -103,15 +101,14 @@
 
                         <div class="form-group row" id="by_customer_segment" style="display: none;">
                             <div class="col-sm-4">
-                                <label  for="form-field-select-4">
+                                <label for="form-field-select-4">
                                     Customer Segment
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <select id="form-field-select-3" class="select2" name="customer_segment"
-                                        onchange="BycustomerSegment(this.value);">
+                                <select id="form-field-select-3" class="select2" name="customer_segment" onchange="BycustomerSegment(this.value);">
                                     <option value="{{old('criteria')}}">Select</option>
-                                    <option value="00">Nursey schools only  </option>
+                                    <option value="00">Nursey schools only </option>
                                     <option value="01">Primary schools</option>
                                     <option value="02">Secondary schools </option>
                                     <option value="03">College only</option>
@@ -134,15 +131,14 @@
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <select id="form-field-select-4" class="select2" name="prospectscriteria"
-                                        onchange="setProspectsCriteria(this.value);">
+                                <select id="form-field-select-4" class="select2" name="prospectscriteria" onchange="setProspectsCriteria(this.value);">
                                     <option value="{{old('criteria')}}">Select</option>
                                     <option value="001">All Prospects </option>
                                     <option value="002">Based on segment</option>
                                 </select>
                             </div>
                             <div class="has-error">
-                                <?php if (form_error($errors, 'criteria')): ?>
+                                <?php if (form_error($errors, 'criteria')) : ?>
                                     <?php echo form_error($errors, 'criteria'); ?>
                                 <?php endif ?>
                             </div>
@@ -156,19 +152,18 @@
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <select id="form-field-select-4" class="select2" name="leadscriteria"
-                                        onchange="setLeadsCriteria(this.value);">
+                                <select id="form-field-select-4" class="select2" name="leadscriteria" onchange="setLeadsCriteria(this.value);">
                                     <option value="{{old('criteria')}}">Select</option>
                                     <option value="001">All Leads </option>
                                     <option value="002">Based on segment</option>
                                 </select>
                             </div>
                             <div class="has-error">
-                                <?php if (form_error($errors, 'criteria')): ?>
+                                <?php if (form_error($errors, 'criteria')) : ?>
                                     <?php echo form_error($errors, 'criteria'); ?>
                                 <?php endif ?>
                             </div>
-                        </div>     
+                        </div>
 
 
                         <div class="form-group row" id="custom_number_selection" style="display: none;">
@@ -178,10 +173,10 @@
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <input type="text" id="tags_1" data-role="tagsinput" class="tags form-control"  name ="custom_numbers" placeholder="separate by comma or space"  />
+                                <input type="text" id="tags_1" data-role="tagsinput" class="tags form-control" name="custom_numbers" placeholder="separate by comma or space" />
                             </div>
                             <div class="has-error">
-                                <?php if (form_error($errors, 'custom_numbers')): ?>
+                                <?php if (form_error($errors, 'custom_numbers')) : ?>
                                     <?php echo form_error($errors, 'custom_numbers'); ?>
                                 <?php endif ?>
                             </div>
@@ -191,20 +186,20 @@
 
 
                         <div class="row" id="number_of_student" style="display: none;">
-                            <div class="form-group col-sm-12 row" >
+                            <div class="form-group col-sm-12 row">
                                 <label class="col-sm-3">
                                     Criteria
                                 </label>
                                 <label class="col-sm-3">
-                                    Less Than   <input type="radio" id="optionsRadios1" name="less_than" value="1" >
+                                    Less Than <input type="radio" id="optionsRadios1" name="less_than" value="1">
                                 </label>
                                 <label class="col-sm-3">
-                                    Greater than  
-                                    <input type="radio" id="optionsRadios2" name="less_than"  value="0" > 
+                                    Greater than
+                                    <input type="radio" id="optionsRadios2" name="less_than" value="0">
                                 </label>
                                 <label class="col-sm-3">
-                                    Equals to 
-                                    <input type="radio" id="optionsRadios3" name="less_than"  value="2" > 
+                                    Equals to
+                                    <input type="radio" id="optionsRadios3" name="less_than" value="2">
                                 </label>
                             </div>
 
@@ -214,11 +209,11 @@
                                         Specify students number
                                     </label>
                                 </div>
-                                <div  class="col-sm-7">
-                                    <input type="number" name="student_number" placeholder="Enter student number Here" id= "student_number" class="form-control"/>
+                                <div class="col-sm-7">
+                                    <input type="number" name="student_number" placeholder="Enter student number Here" id="student_number" class="form-control" />
                                 </div>
-                            </div> 
-                        </div> 
+                            </div>
+                        </div>
 
 
 
@@ -242,34 +237,43 @@
 
                             </div>
                             <span class="col-sm-1 control-label">
-<?php echo form_error($errors, 'sms_template'); ?>
+                                <?php echo form_error($errors, 'sms_template'); ?>
                             </span>
+                        </div>
+
+                        <div class='form-group row'>
+                            <div class="col-sm-4">
+                                <label for="sms_template">
+                                    <?= __("Date Range") ?>
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                From: <input type="date" name="from_date" placeholder="Enter student number Here" id="student_number" class="form-control" />
+                            </div>
+                            <div class="col-sm-4">
+                                To: <input type="date" name="to_date" placeholder="Enter student number Here" id="student_number" class="form-control" />
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <textarea class="form-control" name="message"
-                                          onmousedown="get_estimated_delivery_time()" rows="6" id="content_area"
-                                          placeholder="<?= __('message') ?>"><?= old('sms_message') ?></textarea>
+                                <textarea class="form-control" name="message" onmousedown="get_estimated_delivery_time()" rows="6" id="content_area" placeholder="<?= __('message') ?>"><?= old('sms_message') ?></textarea>
                             </div>
                             <div class="col-sm-12">
-                                <span><?= __('chars/SMS count') ?> <b id="word_counts">0</b>/<b
-                                        id="sms_count">1</b></span>
+                                <span><?= __('chars/SMS count') ?> <b id="word_counts">0</b>/<b id="sms_count">1</b></span>
                                 <div><?= __('write') ?> <code style="color: green;"><?= __('#name') ?></code>,
                                     <?= __('it_will') ?>; <code style="color: green;"><?= __('#username') ?></code>,
-<?= __('it_will_username') ?> #schema_name =School Short Name</div>
+                                    <?= __('it_will_username') ?> #schema_name =School Short Name</div>
 
 
                                 <div id="account_tags" style="display: none">
-                                    <code style="color: green;">#name</code> =Admin Name, <code
-                                        style="color: green;">#schema_name </code>= Admin Short School Name, <code
-                                        style="color: green;">#username </code>=Admin username
+                                    <code style="color: green;">#name</code> =Admin Name, <code style="color: green;">#schema_name </code>= Admin Short School Name, <code style="color: green;">#username </code>=Admin username
                                 </div>
                             </div>
                             <div class="has-error">
-                                <?php if (form_error($errors, 'message')): ?>
+                                <?php if (form_error($errors, 'message')) : ?>
                                     <?php echo form_error($errors, 'message'); ?>
-<?php endif ?>
+                                <?php endif ?>
                             </div>
                         </div>
 
@@ -295,11 +299,11 @@
                             </p>
                         </div> --}}
                         <div class="pull-right col-sm-2">
-                                <button type="submit" class="btn btn-primary btn-mini btn-round"> Submit </button>
+                            <button type="submit" class="btn btn-primary btn-mini btn-round"> Submit </button>
                         </div>
-<?= csrf_field() ?>
+                        <?= csrf_field() ?>
 
-                        </form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -344,7 +348,7 @@
                         </tr>
                         <tr>
                             <td> <i class="fa fa-envelope"> </i> Phone SMS</td>
-                            <td colspan="2"><b id="phone_last_online"> Active - <b>  </b> <br>
+                            <td colspan="2"><b id="phone_last_online"> Active - <b> </b> <br>
                                     <code></a></code>
                             </td>
 
@@ -363,7 +367,6 @@
 </div>
 </div>
 <script>
-
     $(".select2").select2({
         theme: "bootstrap",
         dropdownAutoWidth: false,
@@ -372,7 +375,7 @@
     });
 
 
-    get_estimated_delivery_time = function () {
+    get_estimated_delivery_time = function() {
         // var type = $('#sms_keys_id').val();
         // $.ajax({
         //     type: 'GET',
@@ -386,7 +389,7 @@
         //     }
         // });
     }
-    message_left_count = function () {
+    message_left_count = function() {
         $.ajax({
             type: 'POST',
             url: "<?= url('background/getBulkSmsRemains') ?>",
@@ -394,13 +397,13 @@
                 type: 'sms'
             },
             dataType: "html",
-            success: function (data) {
+            success: function(data) {
                 $('#message_left_count').html(data);
             }
         });
     }
-    buy_sms = function () {
-        $('#buy_sms_btn').mousedown(function () {
+    buy_sms = function() {
+        $('#buy_sms_btn').mousedown(function() {
             var number_of_sms = $('#number_of_sms').val();
             $.ajax({
                 type: 'POST',
@@ -410,7 +413,7 @@
                     type: 'sms'
                 },
                 dataType: "html",
-                success: function (data) {
+                success: function(data) {
                     $('#buy_sms_content').html(data);
                 }
             });
@@ -418,7 +421,7 @@
     }
     $(document).ready(buy_sms);
 
-    $('#sms_template').change(function () {
+    $('#sms_template').change(function() {
         var templateID = $(this).val();
         $.ajax({
             type: 'POST',
@@ -428,7 +431,7 @@
             url: "<?= base_url('marketing/getTemplateContent') ?>",
             data: "templateID=" + templateID,
             dataType: "html",
-            success: function (data) {
+            success: function(data) {
                 $('#content_area').html(data);
             }
         });
@@ -529,7 +532,7 @@
     function setProspectsCriteria(value) {
         switch (value) {
             case '001':
-                $('#custom_number_selection').show();
+                $('#custom_number_selection').hide();
                 $('#parents_selection,#leads_selection,#by_customer_segment,#parents_selection,#number_of_student').hide();
                 break;
             case '002':
@@ -544,7 +547,7 @@
     function setLeadsCriteria(value) {
         switch (value) {
             case '001':
-                $('#custom_number_selection').show();
+                $('#custom_number_selection').hide();
                 $('#parents_selection,#by_customer_segment,#parents_selection,#prospect_selection,#number_of_student').hide();
                 break;
             case '002':
@@ -578,8 +581,8 @@
         }
     }
 
-    word_count = function () {
-        $('#content_area').keyup(function () {
+    word_count = function() {
+        $('#content_area').keyup(function() {
             var words = $('#content_area').val().length;
             $('#word_counts').html(words);
             $('#sms_count').html(Math.ceil(words / 160));
@@ -590,8 +593,8 @@
     };
     $(document).ready(word_count);
 
-//add comma at every 3 digit on amount
-    $('#amount').change(function (event) {
+    //add comma at every 3 digit on amount
+    $('#amount').change(function(event) {
         var num = $this.val().replace(/(\s)/g, '');
         $this.val(num.replace(/(\d)(?=(\d{3})+(?!\d))/g, ","));
     });
