@@ -274,7 +274,7 @@ select uuid,refer_expense_id, ( case when bank_account_id is null then (select i
         $sql_expense = "insert into shulesoft.expenses 
             (uuid,refer_expense_id,account_id,category,transaction_id,
             reference,amount,vendor_id,created_by_sid,note,reconciled,
-            number,date,created_at,updated_at,schema_name) select uuid,refer_expense_id,
+            number,date,created_at,updated_at,schema_name,user_name,user_phone,user_sid) select uuid,refer_expense_id,
 case when a.bank_account_id is null then 
 (select id from shulesoft.refer_expense where name ilike '%cash%' and schema_name=a.schema_name) 
 else (select  id from shulesoft.refer_expense where
@@ -284,7 +284,7 @@ end as account_id,\"categoryID\" AS category,transaction_id,ref_no as reference,
 as vendor_id,(select id from shulesoft.users where schema_name=a.schema_name
 and \"usertype\"=a.usertype and id=a.\"userID\") as 
 created_by_sid,note,reconciled,voucher_no,date,create_date as created_at,
-updated_at,schema_name from shulesoft.expense a 
+updated_at,schema_name,recipient,uname, (select sid from shulesoft.users where schema_name='" . $client->username . "' and uuid=(select uuid from " . $client->username . ".users where usertype=a.usertype and id=a.\"userID\")) from shulesoft.expense a 
 where a.schema_name='" . $client->username . "' and a.uuid not in (select uuid from shulesoft.expenses)";
         DB::statement($sql_expense);
     }
