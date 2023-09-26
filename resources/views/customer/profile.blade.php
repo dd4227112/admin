@@ -183,6 +183,30 @@ $s_address = isset($school->address) ? $school->address : '';
                                                     }
                                                     ?>
                                                 </div>
+                                                
+
+                                                <div class="col-md-12 col-lg-12">
+                                                    <hr>
+                                                    <h6 class="">Sales Status</h6>
+                                                    <?php
+                                                    $st = !empty($username) ? DB::table($schema . '.setting')->first() : \DB::table('shulesoft.setting')->where('schema_name', $schema)->first();
+                                                    if (!empty($st)) {
+                                                        echo '<a data-toggle="modal" data-target="#sales-Modal">';
+                                                        if ($st->school_status == 1) {
+                                                            echo '<div class="btn btn-sm btn-round btn-primary">Active Paid</div>';
+                                                        } elseif ($st->school_status == 2) {
+                                                            echo '<div class="btn btn-success">Active</div>';
+                                                        } elseif ($st->school_status == 3) {
+                                                            echo '<div class="btn btn-warning">Resale</div>';
+                                                        } elseif ($st->school_status == 4) {
+                                                            echo '<label class="badge badge-inverse-default"> Inactive </label>';
+                                                        } else {
+                                                            echo '<label class="badge badge-inverse-warning">Not defined</div>';
+                                                        }
+                                                        echo '</a>';
+                                                    }
+                                                    ?>
+                                                </div>
                                             </div>
                                         <?php } ?>
                                     </div>
@@ -1909,6 +1933,7 @@ $s_address = isset($school->address) ? $school->address : '';
 </div>
 </div>
 
+
 <div class="card-block">
     <div class="modal fade" id="status-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
         <div class="modal-dialog modal-lg" role="document">
@@ -1949,6 +1974,7 @@ $s_address = isset($school->address) ? $school->address : '';
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="customer_contracts_model" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

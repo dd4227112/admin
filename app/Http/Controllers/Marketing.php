@@ -464,6 +464,15 @@ group by ownership');
             $criteria = request('less_than');
             $student_number = request('student_number');
             $file = request('file_');
+            $from_date =request('from_date');
+            $to_date =request('to_date');
+            if (request('from_date') && request('to_date')) {
+               $where ="and created_at between'".$from_date."' and '".$to_date."'";
+            }elseif (request('from_date')) {
+                $where ="and created_at >'".$from_date."'";
+            }else{
+                $where=''; 
+            }
 
             switch ($firstCriteria) {
                 case 00:
@@ -472,14 +481,21 @@ group by ownership');
                     break;
                 case 01:
                     //Prospects: all schools never signup for shulesoft
-                    $custom_numbers = DB::select('select distinct name,phone from admin.school_contacts a where not exists  (select 1 from admin.client_schools b join admin.clients c on c.id=b.client_id where c.status=1 and b.school_id=a.school_id) and phone is not null');
-
-                    return $this->sendCustomSmsToProspects($message, $custom_numbers);
+                    // $custom_numbers = DB::select('select distinct name,phone from admin.school_contacts a where not exists  (select 1 from admin.client_schools b join admin.clients c on c.id=b.client_id where c.status=1 and b.school_id=a.school_id) and phone is not null');
+                    $custom_numbers =DB::select("select name, phone from admin.school_contacts  a where  exists  (select id from admin.schools b where sales_status =0 and a.phone is not null and a.school_id =b.id) ".$where);
+                    if(empty($custom_numbers)){
+                        return redirect()->back()->with('error', 'No Prospects contact found');
+                    }
+                    $this->sendCustomSmsToProspects($message, $custom_numbers);
                     break;
                 case 02:
                     //Leads: all schools sign for shulesoft but not customers
-                    $custom_numbers = DB::select('select distinct name,phone,username from admin.clients where status <>1');
-                    return $this->sendCustomSmsToLeads($message, $custom_numbers);
+                    // $custom_numbers = DB::select('select distinct name,phone,username from admin.clients where status <>1');
+                    $custom_numbers =DB::select("select name, phone from admin.school_contacts  a where  exists  (select id from admin.schools b where sales_status =1 and a.phone is not null  and  a.school_id =b.id) ".$where);
+                    if(empty($custom_numbers)){
+                        return redirect()->back()->with('error', 'No Leads contact found');
+                    }
+                    $this->sendCustomSmsToProspects($message, $custom_numbers);
                     break;
                 case 03:
                     //All customers
@@ -579,6 +595,7 @@ group by ownership');
                 $invalid_numbers .= $number->phone . ',';
             }
         }
+        return redirect()->back()->with('success', "Message sent successfullly");
     }
 
     public function sendCustomSmsToLeads($message, $custom_numbers) {
@@ -731,7 +748,7 @@ group by ownership');
 
         if (in_array("quick-sms", $channels)) {
             // Send messages by quick sms
-            $this->send_sms($phonenumber, $message, 1);
+            $this->send_sms($phonenumber, $message, 1, 'quick-sms');
         }
 
         if (in_array("whatsapp", $channels)) {
@@ -744,7 +761,7 @@ group by ownership');
 
         if (in_array("phone-sms", $channels)) {
             // Send messages by  normal sms
-            $this->send_sms($phonenumber, $message);
+            $this->send_sms($phonenumber, $message, 0, 'phone-sms');
         }
 
         if (in_array("email", $channels)) {
