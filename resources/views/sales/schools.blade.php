@@ -156,14 +156,14 @@
                                                     <tr>
                                                         <td><?= $i++ ?></td>
                                                         <td><?= warp($school->name, 20) ?></td>
-                                                        <td><?= $school->region." ".$school->district ?></td>
+                                                        <td><?= $school->region . " " . $school->district ?></td>
                                                         <td><?= $school->ownership ?></td>
-                                                        <td><?= $school->type?></td>
-                                                    
+                                                        <td><?= $school->type ?></td>
+
                                                 <?php
                                                     echo '<td>';
                                                     // echo '<a href="' . url('customer/profile/' . $school->client->username) . '" class="btn btn-primary btn-mini btn-round"> View</a>';
-                                                    echo '<a id ='.$school->id.' class="btn btn-secondary btn-mini btn-round update_status" data-toggle="modal"  data-target="#sales-Modal">Update Sales Status</a>';
+                                                    echo '<a id =' . $school->id . ' class="btn btn-secondary btn-mini btn-round update_status" data-toggle="modal"  data-target="#sales-Modal">Update Sales Status</a>';
                                                     echo '</td>';
                                                     echo '</tr>';
                                                 }
@@ -253,15 +253,14 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#example').DataTable();
-        $('.update_status').click(function(){
-        var school_id = $(this).attr("id");
-        $('input[name=school_id]').val(school_id);
-    });
+        $('#example').on('click', '.update_status', function() {
+            var school_id = $(this).attr("id");
+            $('input[name=school_id]').val(school_id);
+        });
     });
 
     $(document).ready(function() {
-        
+
         var table = $('#list_of_schools').DataTable({
             "processing": true,
             "serverSide": true,
