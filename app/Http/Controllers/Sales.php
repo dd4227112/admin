@@ -139,12 +139,12 @@ class Sales extends Controller {
         }
          // Leads status =1
         elseif($id ==3){
-            $this->data['schools'] = \App\Models\School::where('sales_status', 0)->get();
+            $this->data['schools'] = \App\Models\School::where('sales_status', 1)->get();
 
         }
         // Prospects status = 0
         elseif($id ==4){
-            $this->data['schools'] = \App\Models\School::where(['sales_status'=>1, 'Ownershop'=>'Non-Government'])->get();
+            $this->data['schools'] = \App\Models\School::where(['sales_status'=>0, 'Ownershop'=>'Non-Government'])->get();
 
         }
          // Qualified status =2
