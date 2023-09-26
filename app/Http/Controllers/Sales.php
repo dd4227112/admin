@@ -125,16 +125,34 @@ class Sales extends Controller {
     }
 
     public function schools() {
-        $id = request()->segment(3);
+        $id = request()->segment(3)??1;
+        // dd($id);
         $reg_id = request()->segment(4);
-
-        if ($id > 1) {
+        $this->data['selected'] =1;
+        if ($id ==2) {
             if (isset($reg_id) && (int) $reg_id > 0) {
                 $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id', \App\Models\School::whereIn('ward_id', \App\Models\Ward::whereIn('district_id', \App\Models\District::whereIn('region_id', [$reg_id])->get(['id']))->get(['id']))->get(['id']))->get();
+                $this->data['selected'] =$id;
             } else {
                 $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id', \App\Models\School::whereIn('ward_id', \App\Models\Ward::whereIn('district_id', \App\Models\District::whereIn('region_id', \App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
             }
         }
+         // Leads status =1
+        elseif($id ==3){
+            $this->data['schools'] = \App\Models\School::where('sales_status', 1)->get();
+
+        }
+        // Prospects status = 0
+        elseif($id ==4){
+            $this->data['schools'] = \App\Models\School::where('sales_status', 0)->get();
+
+        }
+         // Qualified status =2
+        elseif($id ==5){
+            $this->data['schools'] = \App\Models\School::where('sales_status', 2)->get();
+
+        }
+        $this->data['selected'] =$id;
 
 
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;

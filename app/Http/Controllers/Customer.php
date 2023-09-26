@@ -1512,6 +1512,17 @@ class Customer extends Controller {
             }
         }
     }
+    public function salesStatus()
+    {
+        if ($_POST) {
+            $schema = request('schema_name');
+            $status = request('status');
+            DB::table('admin.schools')->where('id', request('school_id'))->update(['sales_status' => request('status')]);
+            return redirect()->back()->with('success', $schema . ' Status Updated successfuly');
+        }
+    }
+
+    
 
     public function resetPassword() {
         if (Auth::user()->id <> 2) {
