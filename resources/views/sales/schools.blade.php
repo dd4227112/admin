@@ -253,6 +253,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#example').DataTable();
         $('#example').on('click', '.update_status', function() {
             var school_id = $(this).attr("id");
             $('input[name=school_id]').val(school_id);
