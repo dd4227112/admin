@@ -327,7 +327,7 @@
         var reg = $(this).val();
         var val = 2
         window.location.href = '<?= url('sales/schools') ?>/' + val + '/' + reg;
-    })
+    });
 </script>
 
 @endsection
