@@ -42,15 +42,18 @@ class SendQuickSms extends Command {
         $total_sms_sent = 0;
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
-
-            if((int)$schema_->is_new_version==1){
-                 $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from"
-                    . " from shulesoft.sms a where a.status = 0 and a.type = 1"
-                    . " and sent_from not in ('phonesms','phone-sms') and schema_name='".$schema."' order by priority DESC limit 30"); 
-            }else{
+            if ($schema_->schema_name == 'public') {
                 $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from"
-                    . " from " . $schema . ".sms a where a.status = 0 and a.type = 1"
-                    . " and sent_from not in ('phonesms','phone-sms') order by priority DESC limit 30");  
+                . " from public.sms a where a.status = 0 and a.type = 1"
+                . " and sent_from not in ('phonesms','phone-sms') order by priority DESC limit 30");
+            } elseif ((int)$schema_->is_new_version == 1) {
+                $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from"
+                . " from shulesoft.sms a where a.status = 0 and a.type = 1"
+                . " and sent_from not in ('phonesms','phone-sms') and schema_name='" . $schema . "' order by priority DESC limit 30");
+            } else {
+                $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from"
+                . " from " . $schema . ".sms a where a.status = 0 and a.type = 1"
+                . " and sent_from not in ('phonesms','phone-sms') order by priority DESC limit 30");
             }
           
             $total_sms_sent += !empty($messages) ? count($messages) : 0;
