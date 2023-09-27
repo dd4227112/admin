@@ -69,3 +69,7 @@ WHERE schema_name='annagamazo' and id NOT IN (
 
 #tool to check if database is well configured
 postgresqltuner --ssd
+
+#ip address
+51.91.251.252 
+75.119.140.177
