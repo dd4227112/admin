@@ -112,11 +112,18 @@
                                                 foreach ($payments as $value) {
                                                     $payment = json_decode($value->content);
                                                     if (isset($payment->transactionRef)) {
-                                                        $school = DB::table('admin.all_invoice_prefix')->where('reference', $payment->paymentReference)->first();
+                                                        $school = $is_new_version == 0 ?
+                                                                DB::table('admin.all_invoice_prefix')->where('reference', $payment->paymentReference)->first() :
+                                                                DB::table('shulesoft.invoice_prefix')->where('reference', $payment->paymentReference)->first();
                                                         if (!empty($school)) {
                                                             if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->paymentReference))) {
-                                                                $check = DB::table($school->schema_name . '.payments')->where('transaction_id', $payment->transactionRef)->first();
-                                                                $check_ = DB::table($school->schema_name . '.wallets')->where('transaction_id', $payment->transactionRef)->first();
+                                                                $check = $is_new_version == 0 ?
+                                                                        DB::table($school->schema_name . '.payments')->where('transaction_id', $payment->transactionRef)->first() :
+                                                                        DB::table('shulesoft.payments')->where('transaction_id', $payment->transactionRef)->first();
+
+                                                                $check_ = $is_new_version == 0 ?
+                                                                        DB::table($school->schema_name . '.wallets')->where('transaction_id', $payment->transactionRef)->first() :
+                                                                        DB::table('shulesoft.wallets')->where('transaction_id', $payment->transactionRef)->first();
                                                             }
                                                         } else {
                                                             $check = [];
@@ -137,21 +144,22 @@
                                                                 <?php echo isset($payment->paymentReference) ? $payment->paymentReference : ''; ?>
                                                             </td>
                                                             <td data-title="<?= ('bank_name') ?>">
-                                                                <?php echo $payment->amount;
+                                                                <?php
+                                                                echo $payment->amount;
                                                                 $total_payments += $payment->amount;
                                                                 ?>
                                                             </td>
                                                             <!-- <td data-title="<?= ('bank_name') ?>">
-            <?php // echo $payment->paymentDesc;  ?>
+                                                            <?php // echo $payment->paymentDesc;   ?>
                                                             </td> -->
                                                             <td data-title="<?= ('bank_account') ?>">
-            <?php echo isset($payment->transactionRef) ? $payment->transactionRef : ''; ?>
+                                                                <?php echo isset($payment->transactionRef) ? $payment->transactionRef : ''; ?>
                                                             </td>
                                                             <td data-title="<?= ('transaction_id') ?>">
-            <?php echo isset($payment->transactionChannel) ? $payment->transactionChannel : ''; ?>
+                                                                <?php echo isset($payment->transactionChannel) ? $payment->transactionChannel : ''; ?>
                                                             </td>
                                                             <td data-title="<?= ('transaction_date') ?>">
-            <?php echo isset($payment->transactionDate) ? $payment->transactionDate : ''; ?>
+                                                                <?php echo isset($payment->transactionDate) ? $payment->transactionDate : ''; ?>
                                                             </td>
 
                                                             <?php
@@ -164,7 +172,7 @@
                                                                 </td>
                                                             <?php } else { ?>
                                                                 <td></td>
-                                                        <?php } ?>
+                                                            <?php } ?>
                                                         </tr>
                                                         <?php
                                                     }

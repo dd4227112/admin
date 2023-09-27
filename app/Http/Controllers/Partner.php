@@ -479,17 +479,17 @@ class Partner extends Controller {
                 "vrn" => request('vrn'),
                 "tax_group" => request('tax_group')
             ];
-            
+
             DB::table($schema . '.setting')->where($column, $column_value)->update($setting_object);
 
-            $this->data['bank_id'] = $bank_id = DB::table($schema.'.bank_accounts')->first()->id;
-            if($schema=='shulesoft'){
-                $integration = DB::table($schema.'.bank_accounts_integrations')->where('schema_name', $client->username)->first();
-            }else{
-            $integration = DB::table($schema.'.bank_accounts_integrations')->first();
+            $this->data['bank_id'] = $bank_id = DB::table($schema . '.bank_accounts')->first()->id;
+            if ($schema == 'shulesoft') {
+                $integration = DB::table($schema . '.bank_accounts_integrations')->where('schema_name', $client->username)->first();
+            } else {
+                $integration = DB::table($schema . '.bank_accounts_integrations')->first();
             }
 
-            $bank_accounts_integration_id = !empty($integration)?$integration->id:DB::table('shulesoft.bank_accounts_integrations')->first()->id; // if empty $integration pick any from shulesoft bank_accounts_integrations to preventing inserting null value (not recommended approach)
+            $bank_accounts_integration_id = !empty($integration) ? $integration->id : DB::table('shulesoft.bank_accounts_integrations')->first()->id; // if empty $integration pick any from shulesoft bank_accounts_integrations to preventing inserting null value (not recommended approach)
 
             $object = array(
                 'client_id' => $client->id,
@@ -521,12 +521,12 @@ We are glad to inform you that your application was successfully submitted for  
 We shall let you know once we have done with verification, then you can proceed with  integration services. ';
             $this->send_sms($client->phone, $message);
             $this->send_email($client->email, 'VFD Application Status', $message);
-            return redirect('Partner/index/1')->with('success','success');
+            return redirect('Partner/index/1')->with('success', 'success');
         }
         return view('partners.add_partner_service', $this->data);
     }
 
-     public function uploadVfdFile($key, $integration_request_id) {
+    public function uploadVfdFile($key, $integration_request_id) {
         //attach any file to this requests
         $file = request($key);
         // print_r($file);
@@ -693,6 +693,11 @@ We shall let you know once we have done with verification, then you can proceed 
     }
 
     public function transactions() {
+        $old_version_request = \collect(DB::select("select * from admin.all_bank_accounts_integrations a where upper(a.invoice_prefix) LIKE '%SASA%' and exists (select 1 from admin.clients where is_new_version<>1 and username=a.schema_name)"))->first();
+
+ 
+        $this->data['is_new_version'] = empty($old_version_request) ? 1 : 0;
+
         $this->data['bank_accounts'] = DB::table('admin.all_bank_accounts_integrations')->whereRaw('UPPER(invoice_prefix) LIKE ?', ['%SASA%'])->get();
         $this->data['from_date'] = $from = request('from_date') != '' ? request('from_date') : date("Y-m-d", strtotime('-10 day'));
         $this->data['to_date'] = $to = request('to_date') != '' ? request('to_date') : date("Y-m-d");
@@ -724,7 +729,8 @@ We shall let you know once we have done with verification, then you can proceed 
         $response = curl_exec($ch);
         echo isset(json_decode($response)->description) ? json_decode($response)->description . ' - ' . json_decode($response)->reference : json_decode($response)->description;
     }
-    public function addAddonsPayment(){
+
+    public function addAddonsPayment() {
         $amount = request('amount');
         $client_id = request('school_id');
         $addon_id = request('addon_id');
@@ -732,40 +738,38 @@ We shall let you know once we have done with verification, then you can proceed 
         $note = request('note');
 
         $tansaction_id = strtoupper(md5(date('Y-m-d:H:i:s')));
-        $payment =[
-            'amount'=>$amount,
-            'method'=>$method,
-            'transaction_id'=>$tansaction_id,
-            'client_id'=>$client_id,
-            'note'=>$note,
+        $payment = [
+            'amount' => $amount,
+            'method' => $method,
+            'transaction_id' => $tansaction_id,
+            'client_id' => $client_id,
+            'note' => $note,
         ];
-        $payment_id =DB::table('admin.payments')->insertGetId($payment);
-        $quantity =$amount/20;
+        $payment_id = DB::table('admin.payments')->insertGetId($payment);
+        $quantity = $amount / 20;
         $addon_payment = [
-            'payment_id' =>$payment_id,
-            'addon_id'=>$addon_id,
-            'client_id'=>$client_id,
-            'quantity'=>$quantity
+            'payment_id' => $payment_id,
+            'addon_id' => $addon_id,
+            'client_id' => $client_id,
+            'quantity' => $quantity
         ];
-       if( DB::table('admin.addons_payments')->insert($addon_payment)){
-        //check if client is already subscribed
-        $check = DB::table('admin.sms_balance')->where('client_id',$client_id)->first();
-        if (!empty($check)) {
-            DB::select('update admin.sms_balance set balance =balance+'.$quantity.' where client_id ='.$client_id);
-        }else{
-            DB::table('admin.sms_balance')->insert(['client_id'=>$client_id, 'balance'=>$quantity]);
-        }
-
+        if (DB::table('admin.addons_payments')->insert($addon_payment)) {
+            //check if client is already subscribed
+            $check = DB::table('admin.sms_balance')->where('client_id', $client_id)->first();
+            if (!empty($check)) {
+                DB::select('update admin.sms_balance set balance =balance+' . $quantity . ' where client_id =' . $client_id);
+            } else {
+                DB::table('admin.sms_balance')->insert(['client_id' => $client_id, 'balance' => $quantity]);
+            }
         }
         return redirect()->back()->with('success', "Payment received successfully");
         // Add code to send notification sms/email to payer
-
     }
-     // download sample vfd application letter
-    public function downloadSample()
-    {
+
+    // download sample vfd application letter
+    public function downloadSample() {
         $samplefile = storage_path('uploads/images/sample.pdf'); // Upload the actual sample pdf file named sample
-            return response()->download($samplefile);
+        return response()->download($samplefile);
     }
 
 }
