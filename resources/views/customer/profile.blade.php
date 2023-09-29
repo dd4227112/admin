@@ -641,8 +641,10 @@ $s_address = isset($school->address) ? $school->address : '';
 
                                     <div class="tab-pane" id="about" aria-expanded="true">
                                         <div class="row">
-
-                                            <div class="col-sm-12">
+<div class="col-lg-12" style="text-align:right">
+                                            <a href="#" class="btn btn-default" onclick="printDiv('about')"> <i class="feather icon-printer"></i> Print</a>
+                                        </div>
+                                            <div class="col-sm-12" id="basic-information-print">
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <h5 class="card-header-text h5">Basic Information</h5>
@@ -1316,8 +1318,10 @@ $s_address = isset($school->address) ? $school->address : '';
 </div>
 </div>
 </div>-->
-
-                                        <div class="card">
+<div class="col-lg-12" style="text-align:right">
+                                            <a href="#" class="btn btn-default" onclick="printDiv('usage-summary-print')"> <i class="feather icon-printer"></i> Print</a>
+                                        </div>
+                                        <div class="card" id="usage-summary-print">
                                             <div class="card-header">
                                                 <h5>Client Usage Stages</h5>
                                                 <span>This part analyze customer system usage and provide a
