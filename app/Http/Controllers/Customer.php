@@ -1507,7 +1507,11 @@ class Customer extends Controller {
                 DB::table('admin.clients')->where('username', $schema)->update(['status' => 3]);
             }
             if ((int) $status > 0) {
-                DB::table($schema . '.setting')->update(['school_status' => $status]);
+                $schema=='shulesoft'? DB::table('shulesoft.setting')->where('schema_name', $schema)->update(['school_status' => $status]): DB::table($schema . '.setting')->update(['school_status' => $status]);
+                //also update client status, set status = 1 active
+                if ($status == 1 || $status ==2){
+                    DB::table('admin.clients')->where('username', $schema)->update(['status' =>1]);
+                }
                 return redirect()->back()->with('success', $schema . ' Status Updated successfuly');
             }
         }

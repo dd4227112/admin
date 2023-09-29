@@ -97,9 +97,9 @@ class Controller extends BaseController {
         }
     }
 
-    public function send_email($email, $subject, $message) {
+    public function send_email($email, $subject, $message, $project=null) {
         // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $obj = array('body' => $message, 'subject' => $subject, 'email' => $email);
+        $obj = array('body' => $message, 'subject' => $subject, 'email' => $email, 'project'=>$project);
         DB::table('public.email')->insert($obj);
         // }
         return $this;
@@ -395,11 +395,11 @@ class Controller extends BaseController {
         echo $response;
     }
 
-    public function send_whatsapp_sms($phone, $message, $company_file_id = null) {
+    public function send_whatsapp_sms($phone, $message, $company_file_id = null, $project=null) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
             $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $phone . "')"))->first();
-            $data = array('message' => $message, 'phone' => $phone->whatsapp_phone, 'company_file_id' => $company_file_id);
+            $data = array('message' => $message, 'phone' => $phone->whatsapp_phone, 'company_file_id' => $company_file_id,'project'=>$project);
             \App\Models\WhatsAppMessages::create($data);
         }
         return $this;

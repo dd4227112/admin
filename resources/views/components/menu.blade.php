@@ -875,6 +875,170 @@
                                 </li>
                                <?php } ?>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                               <?php if (can_access('manage_revenue')) { ?>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="icofont icofont-bank"></i></span>
+                                        <span class="pcoded-mtext">LINESHOP</span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext text-bold">Sales</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                <a href="<?= url('lineshop/salesMaterials') ?>">
+                                                    <span class="pcoded-mtext">Sales Materials</span>
+                                                </a>
+                                                </li>
+                                                <li class="">
+                                                <a href="<?= url('lineshop/pharmacies') ?>">
+                                                    <span class="pcoded-mtext">List of pharmacies</span>
+                                                </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="<?= url('lineshop/pharmacyRequest') ?>">
+                                                       <span class="pcoded-mtext">Pharmacy requests</span>
+                                                    </a>
+                                                 </li>
+                                            </ul>
+
+                                        </li>
+
+
+                                         <li class="pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Marketing</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">                                             
+                                                <?php if (can_access('event_seminar')) { ?>
+                                                <li class="">
+                                                  <a href="<?= url('lineshop/events') ?>">
+                                                        <span class="pcoded-mtext">Events and seminars</span>
+                                                  </a>
+                                                </li>
+                                                <?php } ?>
+
+                                                <?php if (can_access('communication')) { ?>
+                                                    <li class=" pcoded-hasmenu">
+                                                        <a href="javascript:void(0)">
+                                                        <span class="pcoded-mtext text-bold">Communications</span>
+                                                    </a>
+                                                      <ul class="pcoded-submenu">
+                                                        <li class="">
+                                                            <a href="<?= url('lineshop/communication') ?>">
+                                                                <span class="pcoded-mtext">Compose</span>
+                                                            </a>
+                                                        </li>
+                                                            
+                                                         <li class="">
+                                                            <a href="<?= url('lineshop/templates') ?>">
+                                                                <span class="pcoded-mtext">Template</span>
+                                                            </a>
+                                                          </li>
+
+                                                         <li class="">
+                                                            <a href="<?= url('lineshop/summary') ?>">
+                                                                <span class="pcoded-mtext">Summary</span>
+                                                            </a>
+                                                          </li>
+
+                                                        </ul> 
+                                                        </li>
+                                                <?php } ?>
+                                            </ul>
+                                        </li>
+
+                                        <?php if (can_access('customer_success')) { ?>
+                                          <li class="pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext text-bold">Customer Success</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                  <li class=" ">
+                                                    <a href="<?= url('lineshop/customers') ?>">
+                                                        <span class="pcoded-mtext">Customers</span>
+                                                    </a>
+                                                </li>
+                        
+                                                <li class="">
+                                                    <a href="<?= url('lineshop/feedbacks/null') ?>">
+                                                        <span class="pcoded-mtext">Customer feedbacks</span>
+                                                    </a>
+                                                </li>
+
+                                              <?php if (can_access('comm_logs')) { ?>
+                                                <li class="">
+                                                    <a href="<?= url('lineshop/usage') ?>">
+                                                        <span class="pcoded-mtext">Usage Summary</span>
+                                                    </a>
+                                                </li>
+
+                                               <li class="">
+                                                    <a href="<?= url('lineshop/reports') ?>">
+                                                        <span class="pcoded-mtext">Reports</span>
+                                                    </a>
+                                                </li> 
+
+                                              
+                                              <?php } ?>                                            
+                                            </ul>
+                                        </li>
+                                        <?php } ?>
+
+                                        <?php if (can_access('manage_partnership')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Product</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('lineshop/customer_requirements') ?>">
+                                                    <span class="pcoded-mtext"> Customer requirements </span>
+                                                    </a>
+                                                </li>
+
+                                               <?php if(can_access('view_epayments')) { ?>
+                                                 <li class=" ">
+                                                    <a href="<?= url('lineshop/training_request') ?>">
+                                                        <span class="pcoded-mtext">Training requests</span>
+                                                    </a>
+                                                </li>
+                                                <?php } ?>
+                                            </ul>
+                                        </li>
+                                      <?php } ?>
+                                    </ul>
+                                </li>
+                                <?php }  ?>
                             </ul>
                         </div>
                     </nav>

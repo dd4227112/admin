@@ -175,9 +175,12 @@ $s_address = isset($school->address) ? $school->address : '';
                                                         } elseif ($st->school_status == 3) {
                                                             echo '<div class="btn btn-warning">Resale</div>';
                                                         } elseif ($st->school_status == 4) {
-                                                            echo '<label class="badge badge-inverse-default"> Inactive </label>';
-                                                        } else {
-                                                            echo '<label class="badge badge-inverse-warning">Not defined</div>';
+                                                            echo '<div class="btn btn-danger"> Inactive </div>';
+                                                        } 
+                                                        elseif ($st->school_status == 6) {
+                                                            echo '<div class="btn btn-warning"> Suspended </div>';
+                                                        }else {
+                                                            echo '<div class="btn btn-warning">Not defined</div>';
                                                         }
                                                         echo '</a>';
                                                     }
