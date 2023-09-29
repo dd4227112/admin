@@ -183,7 +183,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                     }
                                                     ?>
                                                 </div>
-                                                
+
 
                                                 <div class="col-md-12 col-lg-12">
                                                     <hr>
@@ -209,62 +209,61 @@ $s_address = isset($school->address) ? $school->address : '';
                                                 </div>
                                             </div>
                                         <?php } ?>
-                                    </div>
+                                        <?php
+                                        if ($is_client == 1) {
+                                            ?>
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h6 class="card-header-text">Top user Logins</h6>
+                                                </div>
+                                                <div class="card-block user-box">
+                                                    <?php
+                                                    if (!empty($top_users)) {
+                                                        foreach ($top_users as $log) {
+                                                            ?>
+                                                            <div class="media m-b-10">
+                                                                <a class="media-left" href="#!">
+                                                                    <?php $user_image = base_url('storage/uploads/images/defualt.png'); ?>
 
-                                    <?php
-                                    if ($is_client == 1) {
-                                        ?>
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h6 class="card-header-text">Top user Logins</h6>
-                                            </div>
-                                            <div class="card-block user-box">
-                                                <?php
-                                                if (!empty($top_users)) {
-                                                    foreach ($top_users as $log) {
-                                                        ?>
-                                                        <div class="media m-b-10">
-                                                            <a class="media-left" href="#!">
-                                                                <?php $user_image = base_url('storage/uploads/images/defualt.png'); ?>
-
-                                                                <img class="media-object img-circle" src="<?= $user_image ?>" alt="Image">
-                                                            </a>
-                                                            <div class="media-body">
-                                                                <div class="text-info social-designation"><?= $log->name ?></div>
-                                                                <div class="text-muted social-designation">
-                                                                    <?= $log->usertype ?></div>
+                                                                    <img class="media-object img-circle" src="<?= $user_image ?>" alt="Image">
+                                                                </a>
+                                                                <div class="media-body">
+                                                                    <div class="text-info social-designation"><?= $log->name ?></div>
+                                                                    <div class="text-muted social-designation">
+                                                                        <?= $log->usertype ?></div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <?php
+                                                            <?php
+                                                        }
                                                     }
-                                                }
-                                                ?>
+                                                    ?>
 
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="card">
-                                            <div class="card-block">
-                                                <h4>Training Reports</h4>
-                                                <ul class="list-group">
-                                                    <li class="list-group-item justify-content-between">
-                                                        <a href="<?= url('customer/training/config/null?id=' . encrypt($schema)) ?>" target="_blank">Configuration</a>
-                                                        <a href="#" title="copy link"><span class="badge badge-default badge-pill">&></span></a>
+                                            <div class="card">
+                                                <div class="card-block">
+                                                    <h4>Training Reports</h4>
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item justify-content-between">
+                                                            <a href="<?= url('customer/training/config/null?id=' . encrypt($schema)) ?>" target="_blank">Configuration</a>
+                                                            <a href="#" title="copy link"><span class="badge badge-default badge-pill">&></span></a>
 
-                                                    </li>
-                                                    <li class="list-group-item justify-content-between">
-                                                        <a href="<?= url('customer/training/account/null?id=' . encrypt($schema)) ?>" target="_blank"> Accounts</a>
-                                                        <span class="badge badge-default badge-pill">&></span>
-                                                    </li>
-                                                    <li class="list-group-item justify-content-between">
-                                                        <a href="<?= url('customer/training/exam/null?id=' . encrypt($schema)) ?>" target="_blank"> Exams</a>
-                                                        <span class="badge badge-default badge-pill">&></span>
-                                                    </li>
+                                                        </li>
+                                                        <li class="list-group-item justify-content-between">
+                                                            <a href="<?= url('customer/training/account/null?id=' . encrypt($schema)) ?>" target="_blank"> Accounts</a>
+                                                            <span class="badge badge-default badge-pill">&></span>
+                                                        </li>
+                                                        <li class="list-group-item justify-content-between">
+                                                            <a href="<?= url('customer/training/exam/null?id=' . encrypt($schema)) ?>" target="_blank"> Exams</a>
+                                                            <span class="badge badge-default badge-pill">&></span>
+                                                        </li>
 
-                                                </ul>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                    <?php } ?>
+                                        <?php } ?>
+                                    </div>
                                 </div>
                             </div>
 
@@ -305,9 +304,13 @@ $s_address = isset($school->address) ? $school->address : '';
                                 <div class="tab-content">
                                     <!-- Timeline tab start -->
                                     <div class="tab-pane active" id="timeline" aria-expanded="false">
+                                        <div class="col-lg-12" style="text-align:right">
+                                            <a href="#" class="btn btn-default" onclick="printDiv('timeline-dot-print')"> <i class="feather icon-printer"></i> Print</a>
+                                        </div>
                                         <div class="row">
                                             <div class="card-block">
                                                 <button type="button" class="btn btn-primary btn-lg btn-round" data-toggle="modal" data-target="#large-Modal">Create Task</button>
+
 
                                                 <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050;  display: none;">
                                                     <div class="modal-dialog modal-lg" role="document">
@@ -461,7 +464,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                             </div>
 
 
-                                            <div class="col-md-12 timeline-dot">
+                                            <div class="col-md-12 timeline-dot" id="timeline-dot-print">
                                                 <?php
                                                 $client_id = $profile->id;
 
@@ -1433,7 +1436,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                             <tr>
                                                                 <th scope="row">6</th>
                                                                 <td>SMS sents</td>
-                                                                <td> <?= check_status('sms'," where (body not ilike '%kuzaliwa%'  OR body not ilike '%password%' OR body not ilike '%655406004%') "); ?>
+                                                                <td> <?= check_status('sms', " where (body not ilike '%kuzaliwa%'  OR body not ilike '%password%' OR body not ilike '%655406004%') "); ?>
                                                                     <br />
                                                                     <?php
                                                                     /*
@@ -1527,7 +1530,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                     <br />
 
                                                                     Capital :
-                                                                    <?= !empty($username) ? check_status('expense',' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) ') : check_status('capital'); ?><br />
+                                                                    <?= !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) ') : check_status('capital'); ?><br />
                                                                     Fixed Assets:
                                                                     <?= !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=4) ') : check_status('expense', " WHERE refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND  financial_category_id=4) "); ?><br />
                                                                     Liabilities :
@@ -1875,666 +1878,676 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"><span class="point-marker bg-danger"></span>View</a>
                                                                                     <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a>
                                                                                     {{-- <a
-                            class="dropdown-item waves-light waves-effect"
-                            href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
-                                                                                    class="point-marker bg-warning"></span>Delete</a> --}}
-                                                                                        <?php if ((int) $unpaid > 0) { ?>
-                                                                                        <hr />
-                                                                                        <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add
-                                                                                            Payments</a>
-                                                                                    <?php } ?>
-                                                                                    <?php if ((int) $unpaid > 0) { ?>
-                                                                                        <a class="dropdown-item waves-light waves-effect" href="#" data-toggle="modal" data-target="#large-Modal" onclick="$('#invoice_id').val('<?= $invoice->id ?>')"><span class="point-marker bg-warning"></span>Send Invoice</a>
-                                                                                    <?php } ?>
-                                                                                    <?php if ((int) $paid > 0) { ?>
-                                                                                        <a class="dropdown-item waves-light waves-effect" href="<?= url('account/receipts/' . $invoice->id) ?>" target="_blank"><span class="point-marker bg-warning"></span>Receipt</a>
-                                                                                    <?php }
-                                                                                    ?>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <?php
-                                                                    $i++;
-                                                                }
-                                                                ?>
-                                                            </tbody>
-                                                            <tfoot>
-                                                                <tr>
-                                                                    <td colspan="2">Total</td>
-                                                                    <td><?= money($total_amount) ?></td>
-                                                                    <td><?= money($total_paid) ?></td>
-                                                                    <td><?= money($total_unpaid) ?></td>
-                                                                    <td colspan="2"></td>
-                                                                </tr>
-                                                            </tfoot>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-
-
-
-
-                                    </div>
-                                    <!-- Row end -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Page-body end -->
-</div>
-</div>
-
-
-<div class="card-block">
-    <div class="modal fade" id="status-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Change Schools Status</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="<?= url('customer/schoolStatus') ?>" method="post">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <input type="hidden" value="<?= $schema ?>" name="schema_name" />
-                        </div>
-                        <div class="form-group">
-                            School <?= ucfirst($schema) ?> status
-                            <select name="status" class="form-control select2">
-                                <option value="">Select status</option>
-                                <option value="1">Active Paid</option>
-                                <option value="2">Active</option>
-                                <option value="3">Resale</option>
-                                <option value="4">Inactive</option>
-                                <option value="5">Migration</option>
-                                <option value="6">Suspended</option>
-
-                            </select>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-mini btn-round " data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary btn-mini btn-round ">Save changes</button>
-                    </div>
-                    <?= csrf_field() ?>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="customer_contracts_model" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Upload Contract</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p align='center'><span class="label label-danger">Once you upload a contract, you cannot EDIT</span>
-                </p>
-                <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST" enctype="multipart/form-data">
-
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Contract Name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="name" required="">
-                        </div>
-                    </div>
-
-
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Agreement Type</label>
-                        <div class="col-sm-10">
-                            <select name="contract_type_id" class="form-control">
-
-                                <?php
-                                $ctypes = DB::table('admin.contracts_types')->where('id', '!=', '8')->get();
-                                if (!empty($ctypes)) {
-                                    foreach ($ctypes as $ctype) {
-                                        ?>
-                                        <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
-                                        <?php
-                                    }
-                                }
-                                ?>
-
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Contract Start Date</label>
-                        <div class="col-sm-10">
-                            <input type="date" class="form-control" value="" name="start_date" required="">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Contract End Date</label>
-                        <div class="col-sm-10">
-                            <input type="date" class="form-control" name="end_date" required="">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Upload Document</label>
-                        <div class="col-sm-10">
-                            <input type="file" class="form-control" accept=".pdf" name="file" required="">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Notes</label>
-                        <div class="col-sm-10">
-                            <textarea rows="5" cols="5" name="description" class="form-control" placeholder="Any important details about this document"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-10">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<?php
-if (!empty($profile)) {
-    ?>
-    <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style=" display: none;" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="card-block">
-
-                        <div class="row">
-                            <form action="<?= url('customer/editdetails/' . $client_id) ?>" method="POST">
-                                <div class="form-group row">
-                                    <label class="col-sm-4">School Name</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" name="name" value="<?= $profile->name ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row justify-content-center">
-                                    <label class="col-sm-4 col-form-label">Estimated students</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group row">
-                                    <label class="col-sm-4 col-form-label">School Address</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" name="address" value="<?= $profile->address ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-4 col-form-label">School Email</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
-                                    </div>
-                                </div>
-
-
-                                <label class="">School Owner Contacts</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <label for="">Phone</label>
-                                        <input type="text" class="form-control" name="owner_phone" value="<?= $profile->owner_phone ?>">
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <label for="">Email</label>
-                                        <input type="text" class="form-control" name="owner_email" value="<?= $profile->owner_email ?>">
-                                    </div>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-
-    <div class="modal fade" id="agreement_school_details" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="card-block">
-
-                        <div class="row">
-                            <h5> Edit Agreement Details </h5>
-                            <br>
-                            <br>
-
-                            <form action="<?= url('sales/editAgreementDetails/' . $school_id) ?>" method="POST" enctype="multipart/form-data">
-                                <div class="form-group row">
-                                    <label class="col-sm-6">Contact Name</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="contact_person_name" value="<?= $agreement->contact_person_name ?? '' ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row ">
-                                    <label class="col-sm-6">Contact Phone</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="contact_person_phone" value="<?= $agreement->contact_person_phone ?? '' ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row ">
-                                    <label class="col-sm-6">Contact person Designation</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="contact_person_designation" value="<?= $agreement->contact_person_designation ?? '' ?>">
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group row">
-                                    <label class="col-sm-6 col-form-label">Agreement Date</label>
-                                    <div class="col-sm-6">
-                                        <input type="date" class="form-control" name="agreement_date" value="<?= $agreement->agreement_date ?? '' ?>">
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <label for="type">Type</label>
-                                        <select name="form_type" class="form-control" required>
-                                            <option value='0'> Choose</option>
-                                            <option value='Shulesoft'> Shulesoft</option>
-                                            <option value='NMB'> NMB </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <label for="">Document</label>
-                                        <input type="file" class="form-control" name="agreement_file">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <label for="">NMB School name</label>
-                                        <input type="text" class="form-control" name="nmb_account_name" value="<?= $agreement->school->nmb_school_name ?? '' ?>">
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <label for="">NMB Account</label>
-                                        <input type="text" class="form-control" name="nmb_account" value="<?= $agreement->school->account_number ?? '' ?>">
-                                    </div>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-<?php } ?>
-<!-- Attachment Modal -->
-<div class="modal fade" id="attachmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">View Attachment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- notify js Fremwork -->
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
-
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
-<script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
-<script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyBgc2zYiUzXGjZ277annFVhIXkrpXdOoXw"></script>
-<script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
-
-<script>
-                                                                                    $(document).ready(function () {
-                                                                                        $('.getAttachment').click(function () {
-                                                                                            var task_id = $(this).attr("id");
-                                                                                            alert(task_id);
-                                                                                        });
-                                                                                    });
-                                                                                    function RemoveAttr(a) {
-                                                                                        var val = a;
-                                                                                        if (val !== '') {
-                                                                                            $.ajax({
-                                                                                                type: 'POST',
-                                                                                                headers: {
-                                                                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                                                                },
-                                                                                                url: "<?= base_url('customer/removeTag/null') ?>",
-                                                                                                data: {
-                                                                                                    "id": val
-                                                                                                },
-                                                                                                dataType: "html",
-                                                                                                success: function (data) {
-                                                                                                    toastr.success(data);
-                                                                                                    location.reload();
-                                                                                                }
-                                                                                            });
+                                            class="dropdown-item waves-light waves-effect"
+                                            href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
+                                                                                        class="point-marker bg-warning"></span>Delete</a> --}}
+                                                                                            <?php if ((int) $unpaid > 0) { ?>
+                                                                                                <hr />
+                                                                                                <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add
+                                                                                                    Payments</a>
+                                                                                            <?php } ?>
+                                                                                            <?php if ((int) $unpaid > 0) { ?>
+                                                                                                <a class="dropdown-item waves-light waves-effect" href="#" data-toggle="modal" data-target="#large-Modal" onclick="$('#invoice_id').val('<?= $invoice->id ?>')"><span class="point-marker bg-warning"></span>Send Invoice</a>
+                                                                                            <?php } ?>
+                                                                                            <?php if ((int) $paid > 0) { ?>
+                                                                                                <a class="dropdown-item waves-light waves-effect" href="<?= url('account/receipts/' . $invoice->id) ?>" target="_blank"><span class="point-marker bg-warning"></span>Receipt</a>
+                                                                                            <?php }
+                                                                                            ?>
+                                                                                            </div>
+                                                                                            </div>
+                                                                                            </td>
+                                                                                            </tr>
+                                                                                            <?php
+                                                                                            $i++;
                                                                                         }
-                                                                                    }
+                                                                                        ?>
+                                                                                        </tbody>
+                                                                                        <tfoot>
+                                                                                            <tr>
+                                                                                                <td colspan="2">Total</td>
+                                                                                                <td><?= money($total_amount) ?></td>
+                                                                                                <td><?= money($total_paid) ?></td>
+                                                                                                <td><?= money($total_unpaid) ?></td>
+                                                                                                <td colspan="2"></td>
+                                                                                            </tr>
+                                                                                        </tfoot>
+                                                                                        </table>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
 
-                                                                                    function chooseValue(value) {
-                                                                                        if (value == 'complete') {
-                                                                                            $('#end_date').hide();
-                                                                                            $('#remainder_date').hide();
-                                                                                        } else {
-                                                                                            $('#end_date').show();
-                                                                                            $('#remainder_date').show();
-                                                                                        }
-                                                                                    }
 
 
-                                                                                    function save(a, id, column) {
-                                                                                        var val = $('#' + a).text();
-                                                                                        if (val !== '') {
-                                                                                            $.ajax({
-                                                                                                type: 'POST',
-                                                                                                headers: {
-                                                                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                                                                },
-                                                                                                url: "<?= base_url('account/editSetting/null') ?>",
-                                                                                                data: {
-                                                                                                    "id": id,
-                                                                                                    newvalue: val,
-                                                                                                    column: column,
-                                                                                                    table: 'tasks'
-                                                                                                },
-                                                                                                dataType: "html",
-                                                                                                beforeSend: function (xhr) {
-                                                                                                    $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
-                                                                                                },
-                                                                                                complete: function (xhr, status) {
-                                                                                                    $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
-                                                                                                },
-                                                                                                success: function (data) {
-                                                                                                    toastr.success(data);
-                                                                                                }
+
+
+
+                                                                                        </div>
+                                                                                        <!-- Row end -->
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        <!-- Page-body end -->
+                                                                                        </div>
+                                                                                        </div>
+
+
+                                                                                        <div class="card-block">
+                                                                                            <div class="modal fade" id="status-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+                                                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                                                    <div class="modal-content">
+                                                                                                        <div class="modal-header">
+                                                                                                            <h4 class="modal-title">Change Schools Status</h4>
+                                                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                                <span aria-hidden="true">×</span>
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                        <form action="<?= url('customer/schoolStatus') ?>" method="post">
+                                                                                                            <div class="modal-body">
+                                                                                                                <div class="form-group">
+                                                                                                                    <input type="hidden" value="<?= $schema ?>" name="schema_name" />
+                                                                                                                </div>
+                                                                                                                <div class="form-group">
+                                                                                                                    School <?= ucfirst($schema) ?> status
+                                                                                                                    <select name="status" class="form-control select2">
+                                                                                                                        <option value="">Select status</option>
+                                                                                                                        <option value="1">Active Paid</option>
+                                                                                                                        <option value="2">Active</option>
+                                                                                                                        <option value="3">Resale</option>
+                                                                                                                        <option value="4">Inactive</option>
+                                                                                                                        <option value="5">Migration</option>
+                                                                                                                        <option value="6">Suspended</option>
+
+                                                                                                                    </select>
+                                                                                                                </div>
+
+                                                                                                            </div>
+                                                                                                            <div class="modal-footer">
+                                                                                                                <button type="button" class="btn btn-default btn-mini btn-round " data-dismiss="modal">Close</button>
+                                                                                                                <button type="submit" class="btn btn-primary btn-mini btn-round ">Save changes</button>
+                                                                                                            </div>
+                                                                                                            <?= csrf_field() ?>
+                                                                                                        </form>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div class="modal fade" id="customer_contracts_model" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
+                                                                                            <div class="modal-dialog modal-lg" role="document">
+                                                                                                <div class="modal-content">
+                                                                                                    <div class="modal-header">
+                                                                                                        <h4 class="modal-title">Upload Contract</h4>
+                                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                            <span aria-hidden="true">×</span>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                    <div class="modal-body">
+                                                                                                        <p align='center'><span class="label label-danger">Once you upload a contract, you cannot EDIT</span>
+                                                                                                        </p>
+                                                                                                        <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST" enctype="multipart/form-data">
+
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-sm-2 col-form-label">Contract Name</label>
+                                                                                                                <div class="col-sm-10">
+                                                                                                                    <input type="text" class="form-control" name="name" required="">
+                                                                                                                </div>
+                                                                                                            </div>
+
+
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-sm-2 col-form-label">Agreement Type</label>
+                                                                                                                <div class="col-sm-10">
+                                                                                                                    <select name="contract_type_id" class="form-control">
+
+                                                                                                                        <?php
+                                                                                                                        $ctypes = DB::table('admin.contracts_types')->where('id', '!=', '8')->get();
+                                                                                                                        if (!empty($ctypes)) {
+                                                                                                                            foreach ($ctypes as $ctype) {
+                                                                                                                                ?>
+                                                                                                                                <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
+                                                                                                                                <?php
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        ?>
+
+                                                                                                                    </select>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-sm-2 col-form-label">Contract Start Date</label>
+                                                                                                                <div class="col-sm-10">
+                                                                                                                    <input type="date" class="form-control" value="" name="start_date" required="">
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-sm-2 col-form-label">Contract End Date</label>
+                                                                                                                <div class="col-sm-10">
+                                                                                                                    <input type="date" class="form-control" name="end_date" required="">
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-sm-2 col-form-label">Upload Document</label>
+                                                                                                                <div class="col-sm-10">
+                                                                                                                    <input type="file" class="form-control" accept=".pdf" name="file" required="">
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-sm-2 col-form-label">Notes</label>
+                                                                                                                <div class="col-sm-10">
+                                                                                                                    <textarea rows="5" cols="5" name="description" class="form-control" placeholder="Any important details about this document"></textarea>
+                                                                                                                </div>
+                                                                                                            </div>
+
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-sm-2 col-form-label"></label>
+                                                                                                                <div class="col-sm-10">
+                                                                                                                    <?= csrf_field() ?>
+                                                                                                                    <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </form>
+
+                                                                                                        <div class="modal-footer">
+                                                                                                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        </div>
+
+                                                                                        <?php
+                                                                                        if (!empty($profile)) {
+                                                                                            ?>
+                                                                                            <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style=" display: none;" aria-hidden="true">
+                                                                                                <div class="modal-dialog" role="document">
+                                                                                                    <div class="modal-content">
+                                                                                                        <div class="modal-header">
+                                                                                                            <div class="card-block">
+
+                                                                                                                <div class="row">
+                                                                                                                    <form action="<?= url('customer/editdetails/' . $client_id) ?>" method="POST">
+                                                                                                                        <div class="form-group row">
+                                                                                                                            <label class="col-sm-4">School Name</label>
+                                                                                                                            <div class="col-sm-8">
+                                                                                                                                <input type="text" class="form-control" name="name" value="<?= $profile->name ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+                                                                                                                        <div class="form-group row justify-content-center">
+                                                                                                                            <label class="col-sm-4 col-form-label">Estimated students</label>
+                                                                                                                            <div class="col-sm-8">
+                                                                                                                                <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+
+                                                                                                                        <div class="form-group row">
+                                                                                                                            <label class="col-sm-4 col-form-label">School Address</label>
+                                                                                                                            <div class="col-sm-8">
+                                                                                                                                <input type="text" class="form-control" name="address" value="<?= $profile->address ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+                                                                                                                        <div class="form-group row">
+                                                                                                                            <label class="col-sm-4 col-form-label">School Email</label>
+                                                                                                                            <div class="col-sm-8">
+                                                                                                                                <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+
+                                                                                                                        <label class="">School Owner Contacts</label>
+                                                                                                                        <div class="form-group row">
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <label for="">Phone</label>
+                                                                                                                                <input type="text" class="form-control" name="owner_phone" value="<?= $profile->owner_phone ?>">
+                                                                                                                            </div>
+
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <label for="">Email</label>
+                                                                                                                                <input type="text" class="form-control" name="owner_email" value="<?= $profile->owner_email ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+                                                                                                                        <div class="modal-footer">
+                                                                                                                            <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+                                                                                                                        </div>
+                                                                                                                    </form>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                            </div>
+
+
+
+                                                                                            <div class="modal fade" id="agreement_school_details" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+                                                                                                <div class="modal-dialog" role="document">
+                                                                                                    <div class="modal-content">
+                                                                                                        <div class="modal-header">
+                                                                                                            <div class="card-block">
+
+                                                                                                                <div class="row">
+                                                                                                                    <h5> Edit Agreement Details </h5>
+                                                                                                                    <br>
+                                                                                                                    <br>
+
+                                                                                                                    <form action="<?= url('sales/editAgreementDetails/' . $school_id) ?>" method="POST" enctype="multipart/form-data">
+                                                                                                                        <div class="form-group row">
+                                                                                                                            <label class="col-sm-6">Contact Name</label>
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <input type="text" class="form-control" name="contact_person_name" value="<?= $agreement->contact_person_name ?? '' ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+                                                                                                                        <div class="form-group row ">
+                                                                                                                            <label class="col-sm-6">Contact Phone</label>
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <input type="text" class="form-control" name="contact_person_phone" value="<?= $agreement->contact_person_phone ?? '' ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+                                                                                                                        <div class="form-group row ">
+                                                                                                                            <label class="col-sm-6">Contact person Designation</label>
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <input type="text" class="form-control" name="contact_person_designation" value="<?= $agreement->contact_person_designation ?? '' ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+
+                                                                                                                        <div class="form-group row">
+                                                                                                                            <label class="col-sm-6 col-form-label">Agreement Date</label>
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <input type="date" class="form-control" name="agreement_date" value="<?= $agreement->agreement_date ?? '' ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+
+                                                                                                                        <div class="form-group row">
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <label for="type">Type</label>
+                                                                                                                                <select name="form_type" class="form-control" required>
+                                                                                                                                    <option value='0'> Choose</option>
+                                                                                                                                    <option value='Shulesoft'> Shulesoft</option>
+                                                                                                                                    <option value='NMB'> NMB </option>
+                                                                                                                                </select>
+                                                                                                                            </div>
+
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <label for="">Document</label>
+                                                                                                                                <input type="file" class="form-control" name="agreement_file">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+                                                                                                                        <div class="form-group row">
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <label for="">NMB School name</label>
+                                                                                                                                <input type="text" class="form-control" name="nmb_account_name" value="<?= $agreement->school->nmb_school_name ?? '' ?>">
+                                                                                                                            </div>
+
+                                                                                                                            <div class="col-sm-6">
+                                                                                                                                <label for="">NMB Account</label>
+                                                                                                                                <input type="text" class="form-control" name="nmb_account" value="<?= $agreement->school->account_number ?? '' ?>">
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+                                                                                                                        <div class="modal-footer">
+                                                                                                                            <button type="submit" class="btn btn-primary btn-mini btn-round">Submit</button>
+                                                                                                                        </div>
+                                                                                                                    </form>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                        <?php } ?>
+                                                                                        <!-- Attachment Modal -->
+                                                                                        <div class="modal fade" id="attachmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                                            <div class="modal-dialog" role="document">
+                                                                                                <div class="modal-content">
+                                                                                                    <div class="modal-header">
+                                                                                                        <h5 class="modal-title" id="exampleModalLabel">View Attachment</h5>
+                                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                    <div class="modal-body">
+                                                                                                        ...
+                                                                                                    </div>
+                                                                                                    <div class="modal-footer">
+                                                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <!-- notify js Fremwork -->
+                                                                                        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
+                                                                                        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
+                                                                                        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
+                                                                                        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
+                                                                                        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
+                                                                                        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
+
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+                                                                                        <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
+                                                                                        <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyBgc2zYiUzXGjZ277annFVhIXkrpXdOoXw"></script>
+                                                                                        <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
+
+                                                                                        <script>
+                                                                                            $(document).ready(function () {
+                                                                                                $('.getAttachment').click(function () {
+                                                                                                    var task_id = $(this).attr("id");
+                                                                                                    alert(task_id);
+                                                                                                });
                                                                                             });
-                                                                                        }
-                                                                                    }
-
-                                                                                    $(document).ready(function () {
-                                                                                        $('#example').DataTable();
-                                                                                    });
-
-                                                                                    $(".select2").select2({
-                                                                                        theme: "bootstrap",
-                                                                                        dropdownAutoWidth: false,
-                                                                                        allowClear: false,
-                                                                                        debug: true
-                                                                                    });
-
-                                                                                    $('#supplied').click(function () {
-                                                                                        $('#idate')[this.checked ? "show" : "hide"]();
-                                                                                    });
-
-                                                                                    function calculate() {
-                                                                                        var myBox1 = document.getElementById('box1').value;
-                                                                                        var myBox2 = document.getElementById('box2').value;
-                                                                                        ue;
-                                                                                        var result = document.getElementById('result');
-                                                                                        var myResult = myBox1 * myBox2;
-                                                                                        x2;
-                                                                                        result.value = myResult;
-                                                                                    }
-
-
-                                                                                    function save_comment(id) {
-                                                                                        var content = $('#task_comment' + id).val();
-                                                                                        var task_id = $('#task_id' + id).val();
-                                                                                        $.ajax({
-                                                                                            type: 'POST',
-                                                                                            headers: {
-                                                                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                                                            },
-                                                                                            url: "<?= url('customer/taskComment/null') ?>",
-                                                                                            data: {
-                                                                                                content: content,
-                                                                                                task_id: task_id
-                                                                                            },
-                                                                                            dataType: "html",
-                                                                                            success: function (data) {
-                                                                                                $('input[type="text"],textarea').val('');
-                                                                                                $('.new_comment' + id).after(data);
+                                                                                            function RemoveAttr(a) {
+                                                                                                var val = a;
+                                                                                                if (val !== '') {
+                                                                                                    $.ajax({
+                                                                                                        type: 'POST',
+                                                                                                        headers: {
+                                                                                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                                                                        },
+                                                                                                        url: "<?= base_url('customer/removeTag/null') ?>",
+                                                                                                        data: {
+                                                                                                            "id": val
+                                                                                                        },
+                                                                                                        dataType: "html",
+                                                                                                        success: function (data) {
+                                                                                                            toastr.success(data);
+                                                                                                            location.reload();
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
                                                                                             }
-                                                                                        });
-                                                                                    }
 
-                                                                                    notify = function (title, message, type) {
-                                                                                        new PNotify({
-                                                                                            title: title,
-                                                                                            text: message,
-                                                                                            type: type,
-                                                                                            hide: 'false',
-                                                                                            icon: 'icofont icofont-info-circle'
-                                                                                        });
-                                                                                    }
-
-                                                                                    allocate = function (a, role_id) {
-                                                                                        $.ajax({
-                                                                                            url: '<?= url('customer/allocate/null') ?>',
-                                                                                            data: {
-                                                                                                user_id: a,
-                                                                                                school_id: '<?= $school->school_id ?? '' ?>',
-                                                                                                role_id: role_id,
-                                                                                                schema: '<?= $schema ?>'
-                                                                                            },
-                                                                                            dataType: 'html',
-                                                                                            success: function (data) {
-                                                                                                $('#supportl').html(data);
+                                                                                            function chooseValue(value) {
+                                                                                                if (value == 'complete') {
+                                                                                                    $('#end_date').hide();
+                                                                                                    $('#remainder_date').hide();
+                                                                                                } else {
+                                                                                                    $('#end_date').show();
+                                                                                                    $('#remainder_date').show();
+                                                                                                }
                                                                                             }
-                                                                                        });
-                                                                                    }
 
-                                                                                    show_tabs = function (a) {
-                                                                                        $('.live_tabs').hide(function () {
-                                                                                            $('#' + a).show();
-                                                                                        });
-                                                                                    }
 
-                                                                                    $('#school_id').click(function () {
-                                                                                        var val = $(this).val();
-                                                                                        $.ajax({
-                                                                                            url: '<?= url('customer/search/null') ?>',
-                                                                                            data: {
-                                                                                                val: val,
-                                                                                                type: 'school',
-                                                                                                schema: '<?= $schema ?>'
-                                                                                            },
-                                                                                            dataType: 'html',
-                                                                                            success: function (data) {
-
-                                                                                                $('#search_result').html(data);
+                                                                                            function save(a, id, column) {
+                                                                                                var val = $('#' + a).text();
+                                                                                                if (val !== '') {
+                                                                                                    $.ajax({
+                                                                                                        type: 'POST',
+                                                                                                        headers: {
+                                                                                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                                                                        },
+                                                                                                        url: "<?= base_url('account/editSetting/null') ?>",
+                                                                                                        data: {
+                                                                                                            "id": id,
+                                                                                                            newvalue: val,
+                                                                                                            column: column,
+                                                                                                            table: 'tasks'
+                                                                                                        },
+                                                                                                        dataType: "html",
+                                                                                                        beforeSend: function (xhr) {
+                                                                                                            $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
+                                                                                                        },
+                                                                                                        complete: function (xhr, status) {
+                                                                                                            $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
+                                                                                                        },
+                                                                                                        success: function (data) {
+                                                                                                            toastr.success(data);
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
                                                                                             }
-                                                                                        });
-                                                                                    });
 
-
-
-
-                                                                                    task_group = function () {
-                                                                                        $('.task_groups').change(function () {
-                                                                                            var val = $(this).val();
-                                                                                            var task_id = $(this).attr('data-task-id');
-                                                                                            var data_attr = $('#task_user' + task_id).val();
-                                                                                            $.ajax({
-                                                                                                url: '<?= url('customer/getAvailableSlot') ?>/null',
-                                                                                                method: 'get',
-                                                                                                data: {
-                                                                                                    start_date: val,
-                                                                                                    user_id: data_attr
-                                                                                                },
-                                                                                                success: function (data) {
-                                                                                                    $('#start_slot' + task_id).html(data);
-                                                                                                }
-                                                                                            });
-                                                                                        });
-                                                                                        $('.task_school_group').blur(function () {
-                                                                                            var val = $(this).text();
-                                                                                            var data_attr = $(this).attr('data-attr');
-                                                                                            var task_id = $(this).attr('task-id');
-                                                                                            // var date=$('#'+task_id).val();
-                                                                                            $.ajax({
-                                                                                                url: '<?= url('customer/editTrain') ?>/null',
-                                                                                                method: 'get',
-                                                                                                dataType: 'html',
-                                                                                                data: {
-                                                                                                    task_id: task_id,
-                                                                                                    value: val,
-                                                                                                    attr: data_attr
-                                                                                                },
-                                                                                                success: function (data) {
-                                                                                                    // $(this).after(data).addClass('label label-success');
-                                                                                                    notify('Success', 'Success', 'success');
-                                                                                                }
-                                                                                            });
-                                                                                        });
-                                                                                        $(document).on("click", ".user_dialog", function () {
-                                                                                            var UserName = $(this).data('id');
-                                                                                            $(".modal-body #job_date").val(UserName);
-                                                                                        });
-                                                                                        $('.slot').change(function () {
-                                                                                            var val = $(this).val();
-                                                                                            //var data_attr = $(this).attr('data-attr');
-                                                                                            var task_id = $(this).attr('data-id');
-                                                                                            var date = $('#' + task_id).val();
-                                                                                            $.ajax({
-                                                                                                url: '<?= url('customer/editTrain') ?>/null',
-                                                                                                method: 'get',
-                                                                                                dataType: 'json',
-                                                                                                data: {
-                                                                                                    task_id: task_id,
-                                                                                                    value: date,
-                                                                                                    slot_id: val,
-                                                                                                    attr: 'start_date'
-                                                                                                },
-                                                                                                success: function (data) {
-                                                                                                    $('#task_end_date_id' + data.task_id).html(data.end_date);
-                                                                                                    notify('Success', 'Success', 'success');
-                                                                                                }
-                                                                                            });
-                                                                                        });
-
-                                                                                        $('.task_allocated_id').mousedown(function () {
-                                                                                            var task_id = $(this).attr('task-id');
-                                                                                            var start_date = $('#start_date' + task_id).val();
-                                                                                            var school_person = $('#school_person' + task_id).text();
-                                                                                            var section_id = $(this).attr('section_id');
-                                                                                            $.ajax({
-                                                                                                url: '<?= url('customer/editTrain') ?>/null',
-                                                                                                method: 'get',
-                                                                                                data: {
-                                                                                                    task_id: task_id,
-                                                                                                    start_date: start_date,
-                                                                                                    school_person: school_person,
-                                                                                                    section_id: section_id
-                                                                                                },
-                                                                                                success: function (data) {
-                                                                                                    notify('Success', data, 'success');
-                                                                                                }
-                                                                                            });
-                                                                                        });
-                                                                                    }
-                                                                                    $(document).ready(task_group);
-                                                                                    $("#town").geocomplete()
-                                                                                            .bind("geocode:result", function (event, result) {
-                                                                                                var loc = result.geometry.location;
-                                                                                                $("#location").val(loc.lng() + ", " + loc.lat());
-                                                                                            })
-                                                                                            .bind("geocode:error", function (event, status) {
-                                                                                                console.log("ERROR: " + status);
-                                                                                            })
-                                                                                            .bind("geocode:multiple", function (event, results) {
-                                                                                                console.log("Multiple: " + results.length + " results found");
+                                                                                            $(document).ready(function () {
+                                                                                                $('#example').DataTable();
                                                                                             });
 
-                                                                                    $('select[name =status]').change(function () {
-                                                                                        var val = $(this).val();
-                                                                                        var id = $(this).attr('id');
-                                                                                        $.ajax({
-                                                                                            url: '<?= url('customer/updateSstatus') ?>',
-                                                                                            method: 'POST',
-                                                                                            dataType: 'json',
-                                                                                            data: {
-                                                                                                task_id: id,
-                                                                                                status: val,
+                                                                                            $(".select2").select2({
+                                                                                                theme: "bootstrap",
+                                                                                                dropdownAutoWidth: false,
+                                                                                                allowClear: false,
+                                                                                                debug: true
+                                                                                            });
 
-                                                                                            },
-                                                                                            success: function (data) {
-                                                                                                toastr.success(data.message);
-                                                                                                window.location.reload();
+                                                                                            $('#supplied').click(function () {
+                                                                                                $('#idate')[this.checked ? "show" : "hide"]();
+                                                                                            });
+
+                                                                                            function calculate() {
+                                                                                                var myBox1 = document.getElementById('box1').value;
+                                                                                                var myBox2 = document.getElementById('box2').value;
+                                                                                                ue;
+                                                                                                var result = document.getElementById('result');
+                                                                                                var myResult = myBox1 * myBox2;
+                                                                                                x2;
+                                                                                                result.value = myResult;
                                                                                             }
-                                                                                        });
-                                                                                    });
-</script>
-@endsection
+
+
+                                                                                            function save_comment(id) {
+                                                                                                var content = $('#task_comment' + id).val();
+                                                                                                var task_id = $('#task_id' + id).val();
+                                                                                                $.ajax({
+                                                                                                    type: 'POST',
+                                                                                                    headers: {
+                                                                                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                                                                    },
+                                                                                                    url: "<?= url('customer/taskComment/null') ?>",
+                                                                                                    data: {
+                                                                                                        content: content,
+                                                                                                        task_id: task_id
+                                                                                                    },
+                                                                                                    dataType: "html",
+                                                                                                    success: function (data) {
+                                                                                                        $('input[type="text"],textarea').val('');
+                                                                                                        $('.new_comment' + id).after(data);
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+
+                                                                                            notify = function (title, message, type) {
+                                                                                                new PNotify({
+                                                                                                    title: title,
+                                                                                                    text: message,
+                                                                                                    type: type,
+                                                                                                    hide: 'false',
+                                                                                                    icon: 'icofont icofont-info-circle'
+                                                                                                });
+                                                                                            }
+
+                                                                                            allocate = function (a, role_id) {
+                                                                                                $.ajax({
+                                                                                                    url: '<?= url('customer/allocate/null') ?>',
+                                                                                                    data: {
+                                                                                                        user_id: a,
+                                                                                                        school_id: '<?= $school->school_id ?? '' ?>',
+                                                                                                        role_id: role_id,
+                                                                                                        schema: '<?= $schema ?>'
+                                                                                                    },
+                                                                                                    dataType: 'html',
+                                                                                                    success: function (data) {
+                                                                                                        $('#supportl').html(data);
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+
+                                                                                            show_tabs = function (a) {
+                                                                                                $('.live_tabs').hide(function () {
+                                                                                                    $('#' + a).show();
+                                                                                                });
+                                                                                            }
+
+                                                                                            $('#school_id').click(function () {
+                                                                                                var val = $(this).val();
+                                                                                                $.ajax({
+                                                                                                    url: '<?= url('customer/search/null') ?>',
+                                                                                                    data: {
+                                                                                                        val: val,
+                                                                                                        type: 'school',
+                                                                                                        schema: '<?= $schema ?>'
+                                                                                                    },
+                                                                                                    dataType: 'html',
+                                                                                                    success: function (data) {
+
+                                                                                                        $('#search_result').html(data);
+                                                                                                    }
+                                                                                                });
+                                                                                            });
+
+
+
+
+                                                                                            task_group = function () {
+                                                                                                $('.task_groups').change(function () {
+                                                                                                    var val = $(this).val();
+                                                                                                    var task_id = $(this).attr('data-task-id');
+                                                                                                    var data_attr = $('#task_user' + task_id).val();
+                                                                                                    $.ajax({
+                                                                                                        url: '<?= url('customer/getAvailableSlot') ?>/null',
+                                                                                                        method: 'get',
+                                                                                                        data: {
+                                                                                                            start_date: val,
+                                                                                                            user_id: data_attr
+                                                                                                        },
+                                                                                                        success: function (data) {
+                                                                                                            $('#start_slot' + task_id).html(data);
+                                                                                                        }
+                                                                                                    });
+                                                                                                });
+                                                                                                $('.task_school_group').blur(function () {
+                                                                                                    var val = $(this).text();
+                                                                                                    var data_attr = $(this).attr('data-attr');
+                                                                                                    var task_id = $(this).attr('task-id');
+                                                                                                    // var date=$('#'+task_id).val();
+                                                                                                    $.ajax({
+                                                                                                        url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                        method: 'get',
+                                                                                                        dataType: 'html',
+                                                                                                        data: {
+                                                                                                            task_id: task_id,
+                                                                                                            value: val,
+                                                                                                            attr: data_attr
+                                                                                                        },
+                                                                                                        success: function (data) {
+                                                                                                            // $(this).after(data).addClass('label label-success');
+                                                                                                            notify('Success', 'Success', 'success');
+                                                                                                        }
+                                                                                                    });
+                                                                                                });
+                                                                                                $(document).on("click", ".user_dialog", function () {
+                                                                                                    var UserName = $(this).data('id');
+                                                                                                    $(".modal-body #job_date").val(UserName);
+                                                                                                });
+                                                                                                $('.slot').change(function () {
+                                                                                                    var val = $(this).val();
+                                                                                                    //var data_attr = $(this).attr('data-attr');
+                                                                                                    var task_id = $(this).attr('data-id');
+                                                                                                    var date = $('#' + task_id).val();
+                                                                                                    $.ajax({
+                                                                                                        url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                        method: 'get',
+                                                                                                        dataType: 'json',
+                                                                                                        data: {
+                                                                                                            task_id: task_id,
+                                                                                                            value: date,
+                                                                                                            slot_id: val,
+                                                                                                            attr: 'start_date'
+                                                                                                        },
+                                                                                                        success: function (data) {
+                                                                                                            $('#task_end_date_id' + data.task_id).html(data.end_date);
+                                                                                                            notify('Success', 'Success', 'success');
+                                                                                                        }
+                                                                                                    });
+                                                                                                });
+
+                                                                                                $('.task_allocated_id').mousedown(function () {
+                                                                                                    var task_id = $(this).attr('task-id');
+                                                                                                    var start_date = $('#start_date' + task_id).val();
+                                                                                                    var school_person = $('#school_person' + task_id).text();
+                                                                                                    var section_id = $(this).attr('section_id');
+                                                                                                    $.ajax({
+                                                                                                        url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                        method: 'get',
+                                                                                                        data: {
+                                                                                                            task_id: task_id,
+                                                                                                            start_date: start_date,
+                                                                                                            school_person: school_person,
+                                                                                                            section_id: section_id
+                                                                                                        },
+                                                                                                        success: function (data) {
+                                                                                                            notify('Success', data, 'success');
+                                                                                                        }
+                                                                                                    });
+                                                                                                });
+                                                                                            }
+                                                                                            $(document).ready(task_group);
+                                                                                            $("#town").geocomplete()
+                                                                                                    .bind("geocode:result", function (event, result) {
+                                                                                                        var loc = result.geometry.location;
+                                                                                                        $("#location").val(loc.lng() + ", " + loc.lat());
+                                                                                                    })
+                                                                                                    .bind("geocode:error", function (event, status) {
+                                                                                                        console.log("ERROR: " + status);
+                                                                                                    })
+                                                                                                    .bind("geocode:multiple", function (event, results) {
+                                                                                                        console.log("Multiple: " + results.length + " results found");
+                                                                                                    });
+
+                                                                                            $('select[name =status]').change(function () {
+                                                                                                var val = $(this).val();
+                                                                                                var id = $(this).attr('id');
+                                                                                                $.ajax({
+                                                                                                    url: '<?= url('customer/updateSstatus') ?>',
+                                                                                                    method: 'POST',
+                                                                                                    dataType: 'json',
+                                                                                                    data: {
+                                                                                                        task_id: id,
+                                                                                                        status: val,
+
+                                                                                                    },
+                                                                                                    success: function (data) {
+                                                                                                        toastr.success(data.message);
+                                                                                                        window.location.reload();
+                                                                                                    }
+                                                                                                });
+                                                                                            });
+
+                                                                                            function printDiv(divID) {
+                                                                                                var divElements = document.getElementById(divID).innerHTML;
+                                                                                                var oldPage = document.body.innerHTML;
+
+                                                                                                document.body.innerHTML = '<html><head><title></title></head><body>' + divElements + '</body>';
+                                                                                                window.print();
+                                                                                                //Restore orignal HTML
+                                                                                                document.body.innerHTML = oldPage;
+                                                                                            }
+                                                                                        </script>
+                                                                                        @endsection
