@@ -33,7 +33,7 @@ if (request()->ajax() == FALSE) {
                 <li class="list-group-item"> <strong>School name </strong>&nbsp; <?= $client->name ?> &nbsp;&nbsp; &nbsp;&nbsp; <strong>Estmated students </strong>&nbsp; <?= $client->estimated_students ?? '0' ?></li>
                 <li class="list-group-item"><strong> School Email </strong> &nbsp;<?= $client->email ?>  &nbsp;&nbsp; <strong> School phone </strong> <?= $client->phone ?></li>
                 <li class="list-group-item"><strong> School address </strong> &nbsp;<?= $client->address ?> </li>  
-                <li class="list-group-item"><strong> Onboarded by </strong> &nbsp; <?= $client->createdBy->name(); ?>  &nbsp;&nbsp; <strong> Phone </strong> <?=$client->createdBy->phone; ?></li>
+                <li class="list-group-item"><strong> Onboarded by </strong> &nbsp; <?= $client->name; ?>  &nbsp;&nbsp; <strong> Phone </strong> <?=$client->phone; ?></li>
                 {{-- <li class="list-group-item"><strong> Agreement Form  </strong> &nbsp; <?= 'y'; ?>  &nbsp;&nbsp; <strong> Standing Order </strong> <?php echo !is_null($client->standingorder) ? '<a target="_break" href="" class="btn btn-primary btn-mini btn-round">View</a>' : '<label class="badge badge-inverse-warning">Not Defined</label>' ; ?></li>  --}}
 
                 <li class="list-group-item"><strong> School Description </strong> <br>

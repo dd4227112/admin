@@ -19,4 +19,8 @@ class Ward extends Model {
     public function schools() {
         return $this->hasMany(\App\Models\School::class,'ward_id', 'id');
     }
+
+    public function pharmacies() {
+        return $this->hasMany(\App\Models\Pharmacies::class,'ward_id', 'id');
+    }
 }

@@ -792,7 +792,7 @@ group by ownership');
             $this->data['temp'] = DB::table('admin.mailandsmstemplates')->where('id', (int) $id)->first();
             return view('market.communication.viewtemplate', $this->data);
         }
-        return view('market.communication.templates', $this->data);
+        return view('lineshop.communication.templates', $this->data);
     }
 
     public function addtemplate() {
