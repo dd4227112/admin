@@ -697,7 +697,7 @@ We shall let you know once we have done with verification, then you can proceed 
         $this->data['bank_accounts'] = DB::table('admin.all_bank_accounts_integrations')->whereRaw('UPPER(invoice_prefix) LIKE ?', ['%SAS%'])->get();
         $this->data['from_date'] = $from = request('from_date') != '' ? request('from_date') : date("Y-m-d", strtotime('-10 day'));
         $this->data['to_date'] = $to = request('to_date') != '' ? request('to_date') : date("Y-m-d");
-        $reference = request('invoice_prefix') != '' ? 'PAYMENTREFERENCE":"' . request('invoice_prefix') : 'PAYMENTREFERENCE":"SASA80';
+        $reference = request('invoice_prefix') != '' ? 'PAYMENTREFERENCE":"' . request('invoice_prefix') : 'PAYMENTREFERENCE":"SAS';
         $this->data['payments'] = DB::table('api.requests')
                         ->select('content')->whereBetween('created_at', [$from, $to])->whereRaw('UPPER(content) LIKE ?', ['%' . strtoupper($reference) . '%'])
                         ->groupBy('content')->get();
