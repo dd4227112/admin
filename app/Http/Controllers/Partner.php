@@ -719,8 +719,8 @@ We shall let you know once we have done with verification, then you can proceed 
                         ->select('content')->whereBetween('created_at', [$from, $to])->whereRaw('UPPER(content) LIKE ?', ['%' . strtoupper($reference) . '%'])->whereRaw('UPPER(content) NOT LIKE ?', ['%SASA%'])->whereRaw('content LIKE ?', ['%customer_name%'])
                         ->groupBy('content')->get();
         $p=$this->data['invoice_prefix'] = request('invoice_prefix');
-        $old_version_request = \collect(DB::select("select * from admin.all_bank_accounts_integrations a where upper(a.invoice_prefix) LIKE '%".$p."%' and exists (select 1 from admin.clients where is_new_version<>1 and username=a.schema_name)"))->first();
-        $this->data['is_new_version'] = empty($old_version_request) ? 1 : 0;
+        // $old_version_request = \collect(DB::select("select * from admin.all_bank_accounts_integrations a where upper(a.invoice_prefix) LIKE '%".$p."%' and exists (select 1 from admin.clients where is_new_version<>1 and username=a.schema_name)"))->first();
+        // $this->data['is_new_version'] = empty($old_version_request) ? 1 : 0;
 
         
         return view('partners.nmb_payments', $this->data);
