@@ -113,7 +113,7 @@
                                                     if (isset($payment->reference)) {
                                                 //Find school version using student name from the request object
                                                         DB::SELECT('REFRESH MATERIALIZED VIEW admin.alls_users ');
-                                                        $student = DB::table('admin.alls_users')->where('name', $$payment->customer_name)->orderBy('id', 'desc')->first();
+                                                        $student = DB::table('admin.alls_users')->where('name', $payment->customer_name)->orderBy('id', 'desc')->first();
                                                         if (!empty($student)) {
                                                             $schema = $student->schema_name;
                                                             
