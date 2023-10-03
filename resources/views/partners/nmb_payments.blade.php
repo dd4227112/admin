@@ -126,11 +126,11 @@
                                                         // if (!empty($school)) {
                                                         //     if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->receipt))) {
                                                                 $check = $version == 0 ?
-                                                                        DB::table($school->schema_name . '.payments')->where('transaction_id', $payment->receipt)->first() :
+                                                                        DB::table($schema . '.payments')->where('transaction_id', $payment->receipt)->first() :
                                                                         DB::table('shulesoft.payments')->where('transaction_id', $payment->receipt)->first();
 
                                                                 $check_ = $version == 0 ?
-                                                                        DB::table($school->schema_name . '.wallets')->where('transaction_id', $payment->receipt)->first() :
+                                                                        DB::table($schema . '.wallets')->where('transaction_id', $payment->receipt)->first() :
                                                                         DB::table('shulesoft.wallets')->where('transaction_id', $payment->receipt)->first();
                                                             // }
                                                         // } else {
