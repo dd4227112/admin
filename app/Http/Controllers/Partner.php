@@ -712,7 +712,7 @@ We shall let you know once we have done with verification, then you can proceed 
     public function nmbTransactions() {
         
         $this->data['bank_accounts'] = DB::table('admin.all_bank_accounts_integrations')->whereRaw('UPPER(invoice_prefix) LIKE ?', ['%SAS%'])->get();
-        $this->data['from_date'] = $from = request('from_date') != '' ? request('from_date') : date("Y-m-d", strtotime('-2 months'));
+        $this->data['from_date'] = $from = request('from_date') != '' ? request('from_date') : date("Y-m-d", strtotime('-1 month'));
         $this->data['to_date'] = $to = request('to_date') != '' ? request('to_date') : date("Y-m-d");
         $reference = request('invoice_prefix') != '' ? request('invoice_prefix') :'SAS';
         $this->data['payments'] = DB::table('api.requests')
