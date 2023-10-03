@@ -112,7 +112,7 @@
                                                     $payment = json_decode($value->content);
                                                     if (isset($payment->reference)) {
                                                 //Find school version using student name from the request object
-                                                        DB::SELECT('REFRESH MATERIALIZED VIEW admin.alls_users ');
+                                                        // DB::SELECT('REFRESH MATERIALIZED VIEW admin.alls_users ');
                                                         $student = DB::table('admin.alls_users')->where('name', $payment->customer_name)->orderBy('id', 'desc')->first();
                                                         if (!empty($student)) {
                                                             $schema = $student->schema_name;
@@ -120,11 +120,11 @@
                                                             $version = DB::table('admin.clients')->where('username', $schema)->value('is_new_version');
                                                         }
 
-                                                        $school =  $version == 0 ?
-                                                                DB::table('admin.all_invoice_prefix')->where('reference', $payment->receipt)->first() :
-                                                                DB::table('shulesoft.invoice_prefix')->where('reference', $payment->receipt)->first();
-                                                        if (!empty($school)) {
-                                                            if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->receipt))) {
+                                                        // $school =  $version == 0 ?
+                                                        //         DB::table('admin.all_invoice_prefix')->where('reference', $payment->reference)->first() :
+                                                        //         DB::table('shulesoft.invoice_prefix')->where('reference', $payment->reference)->first();
+                                                        // if (!empty($school)) {
+                                                        //     if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->receipt))) {
                                                                 $check = $version == 0 ?
                                                                         DB::table($school->schema_name . '.payments')->where('transaction_id', $payment->receipt)->first() :
                                                                         DB::table('shulesoft.payments')->where('transaction_id', $payment->receipt)->first();
@@ -132,11 +132,11 @@
                                                                 $check_ = $version == 0 ?
                                                                         DB::table($school->schema_name . '.wallets')->where('transaction_id', $payment->receipt)->first() :
                                                                         DB::table('shulesoft.wallets')->where('transaction_id', $payment->receipt)->first();
-                                                            }
-                                                        } else {
-                                                            $check = [];
-                                                            $check_ = [];
-                                                        }
+                                                            // }
+                                                        // } else {
+                                                        //     $check = [];
+                                                        //     $check_ = [];
+                                                        // }
                                                         ?>
                                                         <tr>
                                                             <td data-title="<?= ('slno') ?>">
