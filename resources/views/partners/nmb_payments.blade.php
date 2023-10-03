@@ -163,7 +163,7 @@
                                                                 ?>
                                                                 <td id="payment<?= $payment->reference ?>" data-title="<?= ('action') ?>">
 
-                                                                    <a href="#" onclick="return false" class="btn btn-primary btn-mini btn-round" onmousedown="reconcile('<?= url('Partner/pushPayment/null?data=' . urlencode(json_encode($payment))) ?>', <?= $payment->reference ?>)">Sync</a>
+                                                                    <a href="#" onclick="return false" class="btn btn-primary btn-mini btn-round" onmousedown="reconcile('<?= url('Partner/pushPayment/null?data=' . urlencode(json_encode($payment))) ?>', '<?= $payment->reference ?>')">Sync</a>
 
                                                                 </td>
                                                             <?php } else { ?>
