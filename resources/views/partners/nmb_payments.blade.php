@@ -112,17 +112,17 @@
                                                     $payment = json_decode($value->content);
                                                     if (isset($payment->reference)) {
                                                         $school = $is_new_version == 0 ?
-                                                                DB::table('admin.all_invoice_prefix')->where('reference', $payment->reference)->first() :
-                                                                DB::table('shulesoft.invoice_prefix')->where('reference', $payment->reference)->first();
+                                                                DB::table('admin.all_invoice_prefix')->where('reference', $payment->receipt)->first() :
+                                                                DB::table('shulesoft.invoice_prefix')->where('reference', $payment->receipt)->first();
                                                         if (!empty($school)) {
-                                                            if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->reference))) {
+                                                            if (preg_match('/' . strtolower($prefix) . '/i', strtolower($payment->receipt))) {
                                                                 $check = $is_new_version == 0 ?
-                                                                        DB::table($school->schema_name . '.payments')->where('transaction_id', $payment->reference)->first() :
-                                                                        DB::table('shulesoft.payments')->where('transaction_id', $payment->reference)->first();
+                                                                        DB::table($school->schema_name . '.payments')->where('transaction_id', $payment->receipt)->first() :
+                                                                        DB::table('shulesoft.payments')->where('transaction_id', $payment->receipt)->first();
 
                                                                 $check_ = $is_new_version == 0 ?
-                                                                        DB::table($school->schema_name . '.wallets')->where('transaction_id', $payment->reference)->first() :
-                                                                        DB::table('shulesoft.wallets')->where('transaction_id', $payment->reference)->first();
+                                                                        DB::table($school->schema_name . '.wallets')->where('transaction_id', $payment->receipt)->first() :
+                                                                        DB::table('shulesoft.wallets')->where('transaction_id', $payment->receipt)->first();
                                                             }
                                                         } else {
                                                             $check = [];
