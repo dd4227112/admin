@@ -716,7 +716,7 @@ We shall let you know once we have done with verification, then you can proceed 
         $this->data['to_date'] = $to = request('to_date') != '' ? request('to_date') : date("Y-m-d");
         $reference = request('invoice_prefix') != '' ? request('invoice_prefix') :'SAS';
         $this->data['payments'] = DB::table('api.requests')
-                        ->select('content')->whereBetween('created_at', [$from, $to])->whereRaw('UPPER(content) LIKE ?', ['%' . strtoupper($reference) . '%'])
+                        ->select('content')->whereBetween('created_at', [$from, $to])->whereRaw('UPPER(content) LIKE ?', ['%' . strtoupper($reference) . '%'])->whereRaw('UPPER(content) NOT LIKE ?', ['%SASA%'])->whereRaw('content LIKE ?', ['%customer_name%'])
                         ->groupBy('content')->get();
         $p=$this->data['invoice_prefix'] = request('invoice_prefix');
         $old_version_request = \collect(DB::select("select * from admin.all_bank_accounts_integrations a where upper(a.invoice_prefix) LIKE '%".$p."%' and exists (select 1 from admin.clients where is_new_version<>1 and username=a.schema_name)"))->first();

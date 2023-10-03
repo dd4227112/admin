@@ -91,7 +91,6 @@
                                             <tr>
                                                 <th class="col-sm-2"><?= ('ID') ?></th>
                                                 <th class="col-sm-2"><?= ('Student Name') ?></th>
-                                                <th class="col-sm-2"><?= ('Phone') ?></th>
                                                 <th class="col-sm-2"><?= ('Reference') ?></th>
                                                 <th class="col-sm-2"><?= ('Amount') ?></th>
                                                 <th class="col-sm-2"><?= ('Receipt No') ?></th>
@@ -107,8 +106,8 @@
                                             $amount_reconciled = 0;
                                             $prefix = $invoice_prefix;
                                             $i = 1;
+                                            $count =0;
                                             if (count($payments) > 0) {
-
                                                 foreach ($payments as $value) {
                                                     $payment = json_decode($value->content);
                                                     if (isset($payment->reference)) {
@@ -138,9 +137,6 @@
                                                                 <?php echo isset($payment->customer_name) ? $payment->customer_name : ''; ?>
                                                             </td>
                                                             <td data-title="<?= ('bank_name') ?>">
-                                                                <?php echo isset($payment->payerMobile) ? $payment->payerMobile : ''; ?>
-                                                            </td>
-                                                            <td data-title="<?= ('bank_name') ?>">
                                                                 <?php echo isset($payment->reference) ? $payment->reference : ''; ?>
                                                             </td>
                                                             <td data-title="<?= ('bank_name') ?>">
@@ -156,7 +152,7 @@
                                                                 <?php echo isset($payment->receipt) ? $payment->receipt : ''; ?>
                                                             </td>
                                                             <td data-title="<?= ('transaction_id') ?>">
-                                                                <?php echo isset($payment->channel) ? $payment->transactionChannel : ''; ?>
+                                                                <?php echo isset($payment->channel) ? $payment->channel : ''; ?>
                                                             </td>
                                                             <td data-title="<?= ('transaction_date') ?>">
                                                                 <?php echo isset($payment->timestamp) ? $payment->timestamp : ''; ?>
@@ -175,6 +171,7 @@
                                                             <?php } ?>
                                                         </tr>
                                                         <?php
+                                                         $count++;
                                                     }
                                                 }
                                             }
@@ -224,7 +221,7 @@
                                                                 ?></td>
                                                             <td><?= 'From: <b>' . $from_date . '</b> - to - <b>' . $to_date . '</b>' ?></td>
                                                             <td><?= money($total_payments) ?></td>
-                                                            <td><?= $i ?></td>
+                                                            <td><?= $count ?></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
