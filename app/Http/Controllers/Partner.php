@@ -709,20 +709,30 @@ We shall let you know once we have done with verification, then you can proceed 
         return view('partners.payments', $this->data);
     }
 
-    public function nmbTransactions() {
-        
-        $this->data['bank_accounts'] = DB::table('admin.all_bank_accounts_integrations')->whereRaw('UPPER(invoice_prefix) LIKE ?', ['%SAS%'])->get();
+    public function nmbTransactions()
+    {
+
+        // $this->data['bank_accounts'] = DB::table('admin.all_bank_accounts_integrations')->whereRaw('UPPER(invoice_prefix) LIKE ?', ['%SAS%'])->get();
+
+        $this->data['bank_accounts'] =DB::table('admin.all_invoices')
+        ->select('prefix as invoice_prefix', 'schema_name')
+        ->distinct()
+        ->whereNotNull('prefix')
+        ->where('prefix', 'ilike', 'SAS%')
+        ->where('prefix', 'not ilike', 'SASA%')
+        ->get();
+
         $this->data['from_date'] = $from = request('from_date') != '' ? request('from_date') : date("Y-m-d", strtotime('-1 month'));
         $this->data['to_date'] = $to = request('to_date') != '' ? request('to_date') : date("Y-m-d");
-        $reference = request('invoice_prefix') != '' ? request('invoice_prefix') :'SAS';
+        $reference = request('invoice_prefix') != '' ? request('invoice_prefix') : 'SAS';
         $this->data['payments'] = DB::table('api.requests')
-                        ->select('content')->whereBetween('created_at', [$from, $to])->whereRaw('UPPER(content) LIKE ?', ['%' . strtoupper($reference) . '%'])->whereRaw('UPPER(content) NOT LIKE ?', ['%SASA%'])->whereRaw('content LIKE ?', ['%customer_name%'])
-                        ->groupBy('content')->get();
-        $p=$this->data['invoice_prefix'] = request('invoice_prefix');
+        ->select('content')->whereBetween('created_at', [$from, $to])->whereRaw('UPPER(content) LIKE ?', ['%' . strtoupper($reference) . '%'])->whereRaw('UPPER(content) NOT LIKE ?', ['%SASA%'])->whereRaw('content LIKE ?', ['%customer_name%'])
+        ->groupBy('content')->get();
+        $p = $this->data['invoice_prefix'] = request('invoice_prefix');
         // $old_version_request = \collect(DB::select("select * from admin.all_bank_accounts_integrations a where upper(a.invoice_prefix) LIKE '%".$p."%' and exists (select 1 from admin.clients where is_new_version<>1 and username=a.schema_name)"))->first();
         // $this->data['is_new_version'] = empty($old_version_request) ? 1 : 0;
 
-        
+
         return view('partners.nmb_payments', $this->data);
     }
 
