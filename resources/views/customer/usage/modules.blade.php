@@ -24,7 +24,7 @@ function createSql($sql,$table){
 
 $month = request()->segment(3);
 $year = request()->segment(4);
-$where = (int) $month > 0 && (int) $year > 0 ? ' WHERE extract(year from created_at)>=' . $year . ' AND extract(month from created_at) >=' . $month : '';
+$where = (int) $month > 0 && (int) $year > 0 ? ' WHERE extract(year from created_at)=' . $year . ' AND extract(month from created_at) =' . $month : '';
 $mark_sql='select distinct "schema_name", max(created_at) as created_at from admin.all_mark ' . $where . ' group by schema_name';
 
 
@@ -141,7 +141,7 @@ foreach ($characters as $character) {
 //     $staff_status_count[$staff->schema_name] = $staff->count;
 // }
 
-$login_parents = DB::select('select  "schema_name",  count(distinct phone) as count from api.parent_experience_logs  group by schema_name');
+$login_parents = DB::select('select  "schema_name",  count(distinct phone) as count from api.parent_experience_logs  ' . $where . '  group by schema_name');
 $parents_status = [];
 // $parents_status_count = [];
 foreach ($login_parents as $parent) {
