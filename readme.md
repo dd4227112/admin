@@ -73,3 +73,7 @@ postgresqltuner --ssd
 #ip address
 51.91.251.252 
 75.119.140.177
+
+
+#getting wifi password
+netsh wlan show profile name="network_name" key=clear

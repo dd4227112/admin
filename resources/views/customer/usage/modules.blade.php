@@ -1,5 +1,7 @@
-
 <?php
+function createSql($sql,$table){
+   return $final_sql=$sql.' UNION '.str_replace('admin.all_'.$table,'shulesoft.'.$table,$sql); 
+}
 // /**
 //  * select distinct &quot;schema_name&quot; from admin.all_student where extract (year from
 //   created_at)=&#39;2019&#39; order by &quot;schema_name&quot; -to get the schools that have recorded
@@ -23,21 +25,27 @@
 $month = request()->segment(3);
 $year = request()->segment(4);
 $where = (int) $month > 0 && (int) $year > 0 ? ' WHERE extract(year from created_at)>=' . $year . ' AND extract(month from created_at) >=' . $month : '';
-$marks = DB::select('select distinct "schema_name", max(created_at) as created_at from admin.all_mark ' . $where . ' group by schema_name');
+$mark_sql='select distinct "schema_name", max(created_at) as created_at from admin.all_mark ' . $where . ' group by schema_name';
+
+
+$marks = DB::select(createSql($mark_sql,'mark'));
 $mark_status = [];
 foreach ($marks as $mark) {
     $mark_status[$mark->schema_name] = $mark->created_at;
 }
 
 
-$exam_reports = DB::select('select distinct "schema_name", max(created_at) as created_at from admin.all_exam_report  ' . $where . '  group by schema_name');
+$report_sql='select distinct "schema_name", max(created_at) as created_at from admin.all_exam_report  ' . $where . '  group by schema_name';
+$exam_reports = DB::select(createSql($report_sql,'exam_report'));
+
 $exam_report_status = [];
 foreach ($exam_reports as $report) {
     $exam_report_status[$report->schema_name] = $report->created_at;
 }
 
+$sms_sql='select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sms ' . $where . '   group by schema_name';
+$smsstatus = DB::select(createSql($report_sql,'sms'));
 
-$smsstatus = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sms ' . $where . '   group by schema_name');
 $sms_status = [];
 $sms_status_count = [];
 foreach ($smsstatus as $smss) {
@@ -45,8 +53,9 @@ foreach ($smsstatus as $smss) {
     $sms_status_count[$smss->schema_name] = $smss->count;
 }
 
-
-$expenses = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_expense   ' . $where . '  group by schema_name');
+$expense_sql='select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_expense   ' . $where . '  group by schema_name';
+$final_sql=$expense_sql.' UNION '.str_replace('admin.all_expense','shulesoft.expenses',$sql);
+$expenses = DB::select($final_sql);
 $expense_status = [];
 $expense_status_count = [];
 foreach ($expenses as $expense) {
@@ -54,7 +63,7 @@ foreach ($expenses as $expense) {
     $expense_status_count[$expense->schema_name] = $expense->count;
 }
 
-$payments = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments  ' . $where . '  group by schema_name');
+$payments = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments  ' . $where . '  group by schema_name','payments'));
 $payment_status = [];
 $payment_count = [];
 foreach ($payments as $payment) {
@@ -63,7 +72,7 @@ foreach ($payments as $payment) {
 }
 
 
-$payroll = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_salaries ' . $where . '   group by schema_name');
+$payroll = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_salaries ' . $where . '   group by schema_name','salaries'));
 $payroll_status = [];
 $payroll_status_count = [];
 foreach ($payroll as $pay) {
@@ -72,7 +81,7 @@ foreach ($payroll as $pay) {
 }
 
 
-$inventories = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_product_alert_quantity ' . $where . '   group by schema_name');
+$inventories = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_product_alert_quantity ' . $where . '   group by schema_name','product_alert_quantity'));
 $inventory_status = [];
 $inventory_status_count = [];
 foreach ($inventories as $inventory) {
@@ -81,7 +90,7 @@ foreach ($inventories as $inventory) {
 }
 
 
-$tmembers = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_tmembers ' . $where . '   group by schema_name');
+$tmembers = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_tmembers ' . $where . '   group by schema_name','tmembers'));
 $tmember_status = [];
 $tmember_status_count = [];
 foreach ($tmembers as $tmember) {
@@ -90,7 +99,7 @@ foreach ($tmembers as $tmember) {
 }
 
 
-$hmembers = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_hmembers ' . $where . '   group by schema_name');
+$hmembers = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_hmembers ' . $where . '   group by schema_name','hmembers'));
 $hmember_status = [];
 $hmember_status_count = [];
 foreach ($hmembers as $hmember) {
@@ -99,7 +108,7 @@ foreach ($hmembers as $hmember) {
 }
 
 
-$sattendances = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sattendances ' . $where . '   group by schema_name');
+$sattendances = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_sattendances ' . $where . '   group by schema_name','sattendances'));
 $sattendance_status = [];
 $sattendance_status_count = [];
 foreach ($sattendances as $sattendance) {
@@ -108,7 +117,7 @@ foreach ($sattendances as $sattendance) {
 }
 
 
-$characters = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_general_character_assessment ' . $where . '   group by schema_name');
+$characters = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_general_character_assessment ' . $where . '   group by schema_name','general_character_assessment'));
 $character_status = [];
 $character_status_count = [];
 foreach ($characters as $character) {
@@ -140,7 +149,7 @@ foreach ($login_parents as $parent) {
 //     $parents_status_count[$staff->schema_name] = $staff->count;
 }
 
-$epayments = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments ' . $where . ' and token is not null  group by schema_name');
+$epayments = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments ' . $where . ' and token is not null  group by schema_name','payments'));
 $epayment_status = [];
 $epayment_status_count = [];
 foreach ($epayments as $epayment) {
@@ -149,7 +158,7 @@ foreach ($epayments as $epayment) {
 }
 
 
-$ediaries = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_diaries ' . $where . ' group by schema_name');
+$ediaries = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_diaries ' . $where . ' group by schema_name','diaries'));
 $ediary_status = [];
 $ediary_status_count = [];
 foreach ($ediaries as $ediary) {
@@ -157,7 +166,7 @@ foreach ($ediaries as $ediary) {
     $ediary_status_count[$ediary->schema_name] = $ediary->count;
 }
 
-$digitals = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_assignments ' . $where . ' group by schema_name');
+$digitals = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_assignments ' . $where . ' group by schema_name','assignments'));
 $digital_status = [];
 $digital_status_count = [];
 foreach ($digitals as $digital) {
@@ -166,7 +175,7 @@ foreach ($digitals as $digital) {
 }
 
 
-$admissions = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_admissions ' . $where . ' group by schema_name');
+$admissions = DB::select(createSql('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_admissions ' . $where . ' group by schema_name','admissions'));
 $admission_status = [];
 $admission_status_count = [];
 foreach ($admissions as $admission) {
@@ -190,7 +199,7 @@ foreach ($schools_data as $value) {
 }
 
 $invoice_issued = [];
-$invoices_current = DB::select('select distinct "schema_name", max(date) as created_at, count(*) from admin.all_invoices  ' . $where . '  group by schema_name');
+$invoices_current = DB::select(createSql('select distinct "schema_name", max(date) as created_at, count(*) from admin.all_invoices  ' . $where . '  group by schema_name','invoices'));
 foreach ($invoices_current as $invoice_info) {
     $invoice_issued[$invoice_info->schema_name] = $invoice_info->created_at;
     $invoice_issued_count[$invoice_info->schema_name] = $invoice_info->count;
@@ -211,7 +220,7 @@ function select($value, $schema, $sources) {
                 <th>Exam  Published</th>	
                 <th>Fee collection</th>	
                 <th>Expense</th>	
-                <th>Invoice Issued</th>
+                <th>Last Invoice Created</th>
                 <th>SMS</th>	
                 <th>Payroll</th>
                 <th>Inventory</th>
@@ -296,7 +305,7 @@ function select($value, $schema, $sources) {
                         <?php
                         //Invoice Issued STATUS
                         if (isset($invoice_issued[$school->username])) {
-                            echo 'YES';
+                            echo $invoice_issued[$school->username];
                         } else {
                             echo 'NO';
                         }
