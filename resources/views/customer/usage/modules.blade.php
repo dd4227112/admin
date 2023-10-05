@@ -199,7 +199,7 @@ foreach ($schools_data as $value) {
 }
 
 $invoice_issued = [];
-$invoices_current = DB::select(createSql('select distinct "schema_name", max(date) as created_at, count(*) from admin.all_invoices  ' . $where . '  group by schema_name','invoices'));
+$invoices_current = DB::select(createSql('select distinct "schema_name", max(date) as created_at, count(*) from admin.all_invoices   group by schema_name','invoices'));
 foreach ($invoices_current as $invoice_info) {
     $invoice_issued[$invoice_info->schema_name] = $invoice_info->created_at;
     $invoice_issued_count[$invoice_info->schema_name] = $invoice_info->count;
