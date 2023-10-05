@@ -54,7 +54,7 @@ foreach ($smsstatus as $smss) {
 }
 
 $expense_sql='select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_expense   ' . $where . '  group by schema_name';
-$final_sql=$expense_sql.' UNION '.str_replace('admin.all_expense','shulesoft.expenses',$sql);
+$final_sql=$expense_sql.' UNION '.str_replace('admin.all_expense','shulesoft.expenses',$expense_sql);
 $expenses = DB::select($final_sql);
 $expense_status = [];
 $expense_status_count = [];
