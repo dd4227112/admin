@@ -287,6 +287,13 @@
                                                 </a>
                                                </li>
                                             <?php } ?>
+                                            <?php if(can_access('reconciliation')) { ?>
+                                               <li class="">
+                                                <a href="<?= url('Partner/nmbTransactions') ?>">
+                                                    <span class="pcoded-mtext">Sync NMB Payments </span>
+                                                </a>
+                                               </li>
+                                            <?php } ?>
                                     
                                             <?php if(can_access('integration_requests')) { ?>
                                                    <li class=" ">
