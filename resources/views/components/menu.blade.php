@@ -77,6 +77,11 @@
                                             </a>
                                         </li>
                                         <?php } ?>
+                                        <li class=" ">
+                                            <a href="<?= url('customer/collectData') ?>">
+                                                <span class="pcoded-mtext">School Data</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
 
