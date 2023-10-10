@@ -1398,7 +1398,7 @@ WHERE table_schema ='{$schema->table_schema}'
         $schools = DB::select("select distinct  b.name, a.phone, a.title from admin.school_contacts a, admin.schools b where a.school_id =b.id and a.phone is not null and (a.title ilike '%director%' or a.title ilike '%manager%' or a.title ilike '%ceo%' or a.title ilike '%c.e.o%') and b.ownership ilike 'non%' order by b.name");
         $count =0;
         foreach ($schools as $key => $school) {
-            $message = "Hello" . $school->name . "
+            $message = "Hello " . $school->name . "
             Utakuwepo Dodoma kwenye mkutano na waziri wa Elimu?
             Kama Ndio,
             Usiache kupita kwenye banda la ShuleSoft, ujifunze mengi kuhusu ShuleSoft and kupata ofa kabambe tulizokuja nazo.
