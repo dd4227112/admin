@@ -1406,7 +1406,9 @@ WHERE table_schema ='{$schema->table_schema}'
             From
             ShuleSoft team.";
             $phone = $school->phone;
-            $this->send_sms($phone, $message, $priority = 0, $sent_from ='admin');
+            $phone = \collect(DB::select("select * from admin.format_phone_number('" . $phone . "')"))->first();
+            $phonenumber = $phone->format_phone_number;
+            $this->send_sms($phonenumber, $message, $priority = 1, $sent_from ='admin');
             $count++;
         }
     return redirect(base_url())->with('success', 'Message sent to '.$count.' users');
