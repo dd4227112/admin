@@ -1399,10 +1399,10 @@ WHERE table_schema ='{$schema->table_schema}'
         $count =0;
         foreach ($schools as $key => $school) {
             $message = "Hello" . $school->name . "
-            Utakuwepo dodoma kwenye mkutano na waziri wa Elimu?
+            Utakuwepo Dodoma kwenye mkutano na waziri wa Elimu?
             Kama Ndio,
             Usiache kupita kwenye banda la ShuleSoft, ujifunze mengi kuhusu ShuleSoft and kupata ofa kabambe tulizokuja nazo.
-            Usikose tafadhali, tutafurah kukuona.
+            Usikose tafadhali, tutafurahi kukuona.
             From
             ShuleSoft team.";
             $phone = $school->phone;
