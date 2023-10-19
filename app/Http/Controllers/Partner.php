@@ -34,7 +34,7 @@ class Partner extends Controller {
         } elseif(Auth::user()->role_id ==15){
             $this->data['refer_bank_id'] = $refer_bank_id = '';
             $ids = [];
-            $type_id = 4;
+            $type_id =$this->data['type_id']= 4;
             $this->data['requests'] = \App\Models\IntegrationRequest::where('type_id', $type_id)->latest()->get();
         }else{
             $this->data['refer_bank_id'] = $refer_bank_id = '';
