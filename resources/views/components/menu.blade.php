@@ -914,7 +914,7 @@
 
 
 
-                               <?php if (can_access('manage_revenue')) { ?>
+                               <?php if (can_access('manage_lineshop')) { ?>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="icofont icofont-bank"></i></span>
