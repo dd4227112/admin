@@ -235,6 +235,9 @@
                                                   if (empty($integrated) ){
                                                     $bank_id = \DB::select("select * from shulesoft.bank_accounts where uuid =(select uuid from ".$request->client->username.".bank_accounts where id =".$request->bank_account_id.")");
                                                     $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('id', $bank_id[0]->id)->where('schema_name', $request->client->username)->first();
+                                                    if (request()->segment(3)==107) {
+                                                       dd( $bank_id, $integrated);
+                                                    }
                                                   }
 
                                                 }else{
