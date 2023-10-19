@@ -32,8 +32,8 @@ class Partner extends Controller {
             $ids = [$refer_bank_id];
             $this->data['requests'] = \App\Models\IntegrationRequest::where('type_id', $type_id)->latest()->get();
         } elseif(Auth::user()->rol_id ==15){
-            $this->data['refer_bank_id'] = $refer_bank_id = preg_match('/crdb/', Auth::user()->email) ? 8 : 22;
-            $ids = [$refer_bank_id];
+            $this->data['refer_bank_id'] = $refer_bank_id = '';
+            $ids = [22, 8];
             $type_id =4;
             $this->data['requests'] = \App\Models\IntegrationRequest::where('type_id', $type_id)->latest()->get();
         }else{
