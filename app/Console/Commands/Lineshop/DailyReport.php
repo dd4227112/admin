@@ -41,7 +41,7 @@ class DailyReport extends Command
     public function handle()
     {
         //check time to sent report at 23:00 EAT
-        if (date('H:m' == '23:45')) {
+        if (date('H:i' == '23:45')) {
             //get all client
             $clients = \App\Models\LineshopCLient::where('status', 1)->get();
 
