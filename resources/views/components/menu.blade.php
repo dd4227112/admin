@@ -77,6 +77,11 @@
                                             </a>
                                         </li>
                                         <?php } ?>
+                                        <li class=" ">
+                                            <a href="<?= url('customer/collectData') ?>">
+                                                <span class="pcoded-mtext">School Data</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
 
@@ -909,7 +914,7 @@
 
 
 
-                               <?php if (can_access('manage_revenue')) { ?>
+                               <?php if (can_access('manage_lineshop')) { ?>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="icofont icofont-bank"></i></span>

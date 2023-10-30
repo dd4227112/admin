@@ -1390,7 +1390,30 @@ WHERE table_schema ='{$schema->table_schema}'
 
      }
 
-     // END NOT WORKING, INCOMPLETE
+    // END NOT WORKING, INCOMPLETE
+
+    //send sms to directors special event
+    public function sendSmsToDirectors()
+    {
+        $schools = DB::select("select distinct  b.name, a.phone, a.title from admin.school_contacts a, admin.schools b where a.school_id =b.id and a.phone is not null and (a.title ilike '%director%' or a.title ilike '%manager%' or a.title ilike '%ceo%' or a.title ilike '%c.e.o%') and b.ownership ilike 'non%' order by b.name");
+        $count =0;
+        foreach ($schools as $key => $school) {
+            $message = "Hello " . $school->name . "
+            Utakuwepo Dodoma kwenye mkutano na waziri wa Elimu?
+            Kama Ndio,
+            Usiache kupita kwenye banda la ShuleSoft, ujifunze mengi kuhusu ShuleSoft and kupata ofa kabambe tulizokuja nazo.
+            Usikose tafadhali, tutafurahi kukuona.
+            From
+            ShuleSoft team.";
+            $phone = $school->phone;
+            $phone = \collect(DB::select("select * from admin.format_phone_number('" . $phone . "')"))->first();
+            $phonenumber = $phone->format_phone_number;
+            $this->send_sms($phonenumber, $message, $priority = 1, $sent_from ='admin');
+            $count++;
+        }
+    return redirect(base_url())->with('success', 'Message sent to '.$count.' users');
+    }
+     
 
 
 }

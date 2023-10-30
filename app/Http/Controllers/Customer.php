@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\LeadsTable;
 use Illuminate\Support\Facades\Auth;
 use \App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -2210,5 +2211,15 @@ class Customer extends Controller
         $data['task'] = \App\Models\Task::where('id', $id)->first();
         $data['school'] = request()->segment(3);
         return view('customer.attachment', $data);
+    }
+    public function collectData(){
+       if ($_POST) {
+        $data = request()->except('_token');
+        $user =['user_id'=>Auth::user()->id];
+        $data =array_merge($data, $user);
+        LeadsTable::create($data);
+        return view('dodoma.thankyou');
+       }
+        return view('dodoma.index');
     }
 }

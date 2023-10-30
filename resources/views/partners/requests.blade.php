@@ -6,6 +6,9 @@
 <!-- Main-body start -->
 
 <?php
+
+use Illuminate\Support\Facades\Auth;
+
 $objects = [
     "" => 'select',
     "1" => 'VFD Integration Requests',
@@ -13,6 +16,11 @@ $objects = [
     "3" => 'WhatsApp Integration Requests',
     "4" => 'CRDB BANK Integration Requests',
     "5" => 'Email Integration Requests'];
+    if (Auth::user()->role_id==15) {
+       $objects =[
+        "4" => 'CRDB BANK Integration Requests',
+       ];
+    }
 ?>
 <!-- Page-header start -->
 <div class="page-header">

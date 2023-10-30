@@ -70,7 +70,9 @@
                     </div>
                     <div class="user-body" style="min-height: 625px;">
                         <?php
-                        $school_clients = DB::table('client_schools')->where('school_id', (int) $school->id)->first();
+                        // $school_clients = DB::table('client_schools')->where('school_id', (int) $school->id)->first();
+                        $school_clients = DB::select('select * from admin.clients where id in (select client_id from admin.client_schools where school_id ='. (int) $school->id.') and status is not null');
+
                         if (empty($school_clients)) {
                             ?>
                             <div class="card-block">

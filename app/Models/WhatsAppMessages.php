@@ -9,7 +9,7 @@ class WhatsAppMessages extends Model {
 
     protected $table = 'admin.whatsapp_messages';
 
-    protected $fillable = ['id', 'message', 'phone', 'name', 'status', 'return_message', 'created_at', 'updated_at','company_file_id'];
+    protected $fillable = ['id', 'message', 'phone', 'name', 'status', 'return_message', 'created_at', 'updated_at','company_file_id', 'project'];
    
     public function companyFile() {
         return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);

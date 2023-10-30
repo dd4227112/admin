@@ -105,13 +105,13 @@ class Controller extends BaseController {
         return $this;
     }
 
-    public function send_sms($phone_number, $message, $priority = 0, $sent_from =null) {
+    public function send_sms($phone_number, $message, $priority = 0, $sent_from =null, $project =null) {
         if ((strlen($phone_number) > 6 && strlen($phone_number) < 20) && $message != '') {
             $sms_key = DB::table('public.sms_keys')->first();
             $sms_keys_id = !empty($sms_key) ? $sms_key->id : null;
             if ($sms_keys_id) {
                 \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message,
-                    'type' => $priority, 'priority' => $priority, 'sent_from' => $sent_from, 'sms_keys_id' => $sms_keys_id));
+                    'type' => $priority, 'priority' => $priority, 'sent_from' => $sent_from, 'sms_keys_id' => $sms_keys_id, 'project' => $project));
             }
         }
         return $this;
@@ -399,7 +399,7 @@ class Controller extends BaseController {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
             $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $phone . "')"))->first();
-            $data = array('message' => $message, 'phone' => $phone->whatsapp_phone, 'company_file_id' => $company_file_id,'project'=>$project);
+            $data = array('message' => $message, 'phone' => $phone->whatsapp_phone, 'company_file_id' => $company_file_id, 'project'=>$project);
             \App\Models\WhatsAppMessages::create($data);
         }
         return $this;

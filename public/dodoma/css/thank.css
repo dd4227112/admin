@@ -1,0 +1,31 @@
+.success-page {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 190px;
+    margin-top: -85px;
+    margin-left: -150px;
+    text-align: center;
+  }
+  .success-page h4 {
+    font-weight: 400;
+    margin: 20px 0 0 0;
+    font-size: 18px;
+    font-size: 1.125rem;
+  }
+  .success-page h4 span {
+    display: block;
+    margin-bottom: 0;
+    font-weight: 500;
+    font-size: 21px;
+    font-size: 1.3125rem;
+  }
+  .icon--order-success svg path {
+    -webkit-animation: checkmark 0.25s ease-in-out 0.7s backwards;
+    animation: checkmark 0.25s ease-in-out 0.7s backwards;
+  }
+  .icon--order-success svg circle {
+    -webkit-animation: checkmark-circle 0.6s ease-in-out backwards;
+    animation: checkmark-circle 0.6s ease-in-out backwards;
+  }
