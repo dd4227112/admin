@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' =>'mail.romatun.co.tz',
+    'host' =>'nl1-ss107.a2hosting.com',
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'port' => 587,
+    'port' => 465,
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     */
 
     'from' => [
-        'address' => 'noreply@shulesoft.com',
+        'address' => 'noreply@shulesoft.africa',
         'name' => 'ShuleSoft - School Management System',
     ],
 
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'no-reply@romatun.co.tz',
+    'username' => 'noreply@shulesoft.africa',
 
-    'password' =>'PCpLvnyh?~wx',
+    'password' =>'q~y+REGr^4k2',
 
     /*
     |--------------------------------------------------------------------------

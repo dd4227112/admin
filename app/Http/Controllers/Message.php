@@ -305,7 +305,7 @@ class Message extends Controller {
                     $data = ['content' => $sms->body, 'link' => $link, 'photo' => $user->photo, 'sitename' => $sms->schema_name, 'name' => $user->name];
                     $message = (object) ['sitename' => $sms->schema_name, 'email' => $user->email, 'subject' => $sms->subject];
                     $return = \Mail::send('email.default', $data, function ($m) use ($message) {
-                                $m->from('noreply@shulesoft.com', $message->sitename);
+                                $m->from('noreply@shulesoft.africa', $message->sitename);
                                 $m->to($message->email)->subject($message->subject);
                             });
                 } catch (\Exception $e) {
