@@ -25,7 +25,9 @@ function check_status($table, $where = null)
         \collect(DB::select('select created_at::date from shulesoft.' . $table . '  where schema_name =\''.$schema.'\''. $where .' order by created_at::date desc limit 1'))->first();
     }
     if (!empty($report)) {
-        $echo = '<label class="badge badge-success">' . date('d M Y', strtotime('2023-07-18')) . '</label>';
+       // $echo = '<label class="badge badge-success">' . date('d M Y', strtotime('2023-07-18')) . '</label>';
+        $echo = '<label class="badge badge-success">' . date('d M Y', strtotime($report->created_at)) . '</label>';
+        
     } else {
         $echo = '<label class="badge badge-inverse-warning">Not Defined</label>';
 
