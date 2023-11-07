@@ -254,7 +254,7 @@ class Customer extends Controller
                 . chr(10) . 'By :' . \Auth::user()->name
                 . chr(10) . 'Thank You.';
             $this->send_whatsapp_sms($user->phone, $message);
-            $this->send_sms($user->phone, $message, 1);
+            $this->send_sms($user->phone, $message, 1, null, 'admin');
 
             //email to zone manager
             // findOrFail zone manager based on school location
@@ -1121,7 +1121,7 @@ class Customer extends Controller
                         . chr(10) . 'Thanks and regards.';
 
                     $this->send_whatsapp_sms($user->phone, $sms);
-                    $this->send_sms($user->phone, $sms, 1);
+                    $this->send_sms($user->phone, $sms, 1, null, 'admin');
                 }
             }
             if ((int) request('to_user_id') > 0) {
@@ -1156,7 +1156,7 @@ class Customer extends Controller
                 //                $data1 = $story->post($url, $fields);
 
                 $this->send_whatsapp_sms($user->phone, $sms);
-                $this->send_sms($user->phone, $sms, 1);
+                $this->send_sms($user->phone, $sms, 1, null, 'admin');
             }
             if (request('notify_to')) {
                 $users_selected = request('notify_to');
@@ -1198,7 +1198,7 @@ class Customer extends Controller
                     //$data1 = $story->post($url, $fields);
 
                     $this->send_whatsapp_sms($user->phone, $sms);
-                    $this->send_sms($user->phone, $sms, 1);
+                    $this->send_sms($user->phone, $sms, 1, null, 'admin');
                 }
             }
         }
@@ -1253,7 +1253,7 @@ class Customer extends Controller
                     $user = \DB::table('admin.all_users')->where('sid', $data->user_sid)->where('schema_name', $data->school->schema_name)->first();
                 }
                 $this->send_whatsapp_sms($user->phone, $message);
-                $this->send_sms($user->phone, $message, 1);
+                $this->send_sms($user->phone, $message, 1, null, 'admin');
             }
         }
         if (preg_match('/[0-9]/', $data->contact) && $action == 'Completed') {
@@ -1275,7 +1275,7 @@ class Customer extends Controller
                         $user = \DB::table('admin.all_users')->where('sid', $data->user_sid)->where('schema_name', $data->school->schema_name)->first();
                     }
                     $this->send_whatsapp_sms($user->phone, $message1);
-                    $this->send_sms($user->phone, $message1, 1);
+                    $this->send_sms($user->phone, $message1, 1, null, 'admin');
                 }
             }
         }
@@ -2079,8 +2079,8 @@ class Customer extends Controller
                         . chr(10) . 'napenda kukutaarifu kwamba tarehe ya malipo ya mfumo wa ShuleSoft system umepita na unahitajika kufanya malipo kuondoa namna yeyote ya usumbufu ikiwemo system kujifunga'
                         . chr(10) . 'Asante.';
 
-                    //  $this->send_sms($director->phone, $message, 1);
-                    $this->send_sms($director->phone, $ujumbe, 1);
+                    //  $this->send_sms($director->phone, $message, 1, null, 'admin');
+                    $this->send_sms($director->phone, $ujumbe, 1, null, 'admin');
                     $controller = new \App\Http\Controllers\Controller();
                     //  $controller->send_whatsapp_sms($director->phone, $message);
                     $controller->send_whatsapp_sms($director->phone, $ujumbe);

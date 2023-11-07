@@ -50,7 +50,7 @@ class HRContractRemainders extends Command
                                 . chr(10) . 'Thanks.';
                         $controller = new \App\Http\Controllers\Controller();
                         $controller->send_whatsapp_sms($hr_officer->phone, $message);
-                        $controller->send_sms($hr_officer->phone, $message, 1);
+                        $controller->send_sms($hr_officer->phone, $message, 1, null, 'admin');
                         $controller->send_email($hr_officer->email, 'Employee Contract', $message);
                     } else {
                         $message = 'Hello HR,' . $hr_officer->firstname . ' ' . $hr_officer->lastname . '.'
@@ -58,7 +58,7 @@ class HRContractRemainders extends Command
                                 . chr(10) . 'Thanks.';
                         $controller = new \App\Http\Controllers\Controller();
                         $controller->send_whatsapp_sms($hr_officer->phone, $message);
-                        $controller->send_sms($hr_officer->phone, $message, 1);
+                        $controller->send_sms($hr_officer->phone, $message, 1, null, 'admin');
                         $controller->send_email($hr_officer->email, 'Employee Contract', $message);
                     }
                 }

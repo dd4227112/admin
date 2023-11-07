@@ -244,8 +244,8 @@ class Partner extends Controller {
             epayment@shulesoft.com';
             $this->send_email($key_contact->email, 'Onboarding Request: School Electronic Payment Integration Request', $message);
             $this->send_email($request->user->email, 'School Onboarding: School Electronic Payment Integration Request', $message);
-            $this->send_sms($key_contact->phone, $message, 1);
-            $this->send_sms($request->user->phone, $message, 1);
+            $this->send_sms($key_contact->phone, $message, 1, null,  'admin');
+            $this->send_sms($request->user->phone, $message, 1, null,  'admin');
 
             //Send Email to Shulesoft Team
             $shulesoft_email = 'You have new application request for [ ' . $request->banks->referBank->name . '] Electronic Payment Integration from [' . $request->client->username . ']. Please login in admin.shulesoft.com  for application review and verification
@@ -271,7 +271,7 @@ class Partner extends Controller {
         To start using service please login ' . $partner->client->username . '.shulesoft.com go to settings then system settings and click Payment Integration. .   
         Thanks';
             $this->send_email($partner->client->email, 'School Electronic Payment Integration Accepted', $message);
-            $this->send_sms($partner->client->phone, $message, 1);
+            $this->send_sms($partner->client->phone, $message, 1, null,  'admin');
         }
         return view('partners.show_prefix', $this->data);
     }
@@ -332,7 +332,7 @@ class Partner extends Controller {
         DB::table('admin.clients')->where('id', $client_id)->update(['code' => $trial_code]);
         $user = $client->first();
         $message = 'Hello ' . $user->name . '. Your Invoice Trial Code is ' . $trial_code;
-        $this->send_sms($user->phone, $message, 1);
+        $this->send_sms($user->phone, $message, 1, null,  'admin');
         $this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
 
         $sql = "insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($list_schema) AND usertype !='Student' {$in_array} AND phone is not NULL ";
@@ -353,7 +353,7 @@ class Partner extends Controller {
                 <br>ShuleSoft Support Team';
                 $this->send_email($request->user->email, 'School Onboarding: School Electronic Payment Integration Rejected', $message);
             }
-            $this->send_sms($request->user->phone, $message, 1);
+            $this->send_sms($request->user->phone, $message, 1, null,  'admin');
             return redirect('Partner/show/' . request('integration_request_id'));
         } else {
             return redirect('Partner/index/');
@@ -523,7 +523,7 @@ class Partner extends Controller {
             $message = 'Dear ' . $client->name . ' 
 We are glad to inform you that your application was successfully submitted for  TRA Virtual EFD  Integration. Your application is on verification stage.
 We shall let you know once we have done with verification, then you can proceed with  integration services. ';
-            $this->send_sms($client->phone, $message);
+            $this->send_sms($client->phone, $message, null,  'admin');
             $this->send_email($client->email, 'VFD Application Status', $message);
             return redirect('Partner/index/1')->with('success', 'success');
         }
@@ -645,7 +645,7 @@ We shall let you know once we have done with verification, then you can proceed 
                 <br>Thanks
                 <br>ShuleSoft Support Team';
         $this->send_email($setting->email, 'School Onboarding: VFD application is successfully', $email_message);
-        $this->send_sms($setting->phone, $message, 1);
+        $this->send_sms($setting->phone, $message, 1, null,  'admin');
     }
 
     public function VerifyPayment() {

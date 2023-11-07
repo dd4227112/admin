@@ -748,7 +748,7 @@ group by ownership');
 
         if (in_array("quick-sms", $channels)) {
             // Send messages by quick sms
-            $this->send_sms($phonenumber, $message, 1, 'quick-sms');
+            $this->send_sms($phonenumber, $message, 1, 'quick-sms', 'admin');
         }
 
         if (in_array("whatsapp", $channels)) {
@@ -761,7 +761,7 @@ group by ownership');
 
         if (in_array("phone-sms", $channels)) {
             // Send messages by  normal sms
-            $this->send_sms($phonenumber, $message, 0, 'phone-sms');
+            $this->send_sms($phonenumber, $message, 0, 'phone-sms', 'admin');
         }
 
         if (in_array("email", $channels)) {

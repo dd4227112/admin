@@ -1503,7 +1503,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                         $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
                             . chr(10) . 'Remember to check matured standing order from ' . $standing->client->name
                             . chr(10) . 'Thanks.';
-                        $controller->send_sms($user->phone, $message, 1);
+                        $controller->send_sms($user->phone, $message, 1, null, 'admin');
                         $controller->send_whatsapp_sms($user->phone, $message);
                     }
                 }
@@ -1526,7 +1526,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                         . chr(10) . 'Asante';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($contact->phone, $message);
-                    $controller->send_sms($contact->phone, $message, 1);
+                    $controller->send_sms($contact->phone, $message, 1, null, 'admin');
                 }
             }
         }
@@ -1545,7 +1545,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                         . chr(10) . 'Thanks.';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($hr_officer->phone, $message);
-                    $controller->send_sms($hr_officer->phone, $message, 1);
+                    $controller->send_sms($hr_officer->phone, $message, 1, null, 'admin');
                     $controller->send_email($hr_officer->email, 'Employee Contract', $message);
                 } else {
                     $message = 'Hello HR,' . $hr_officer->firstname . ' ' . $hr_officer->lastname . '.'
@@ -1553,7 +1553,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                         . chr(10) . 'Thanks.';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($hr_officer->phone, $message);
-                    $controller->send_sms($hr_officer->phone, $message, 1);
+                    $controller->send_sms($hr_officer->phone, $message, 1,  null, 'admin');
                     $controller->send_email($hr_officer->email, 'Employee Contract', $message);
                 }
             }
@@ -1582,7 +1582,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                         . chr(10) . 'Thanks.';
                     $controller = new \App\Http\Controllers\Controller();
                     $controller->send_whatsapp_sms($hr_officer->phone, $message);
-                    $controller->send_sms($hr_officer->phone, $message, 1);
+                    $controller->send_sms($hr_officer->phone, $message, 1, null, 'admin');
                     $controller->send_email($hr_officer->email, 'Employee Annual leave', $message);
                 }
             }
@@ -1618,7 +1618,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                                 . chr(10) . 'By: ' . $task->user->name . '.'
                                 . chr(10) . 'Thanks.';
                             $controller->send_whatsapp_sms($user->phone, $msg);
-                            $controller->send_sms($user->phone, $msg);
+                            $controller->send_sms($user->phone, $msg, 1, null, 'admin');
                         }
                     }
                 }
@@ -1654,7 +1654,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             . chr(10) . 'Thanks.';
                         $controller = new \App\Http\Controllers\Controller();
                         $controller->send_whatsapp_sms($director->phone, $message);
-                        $controller->send_sms($director->phone, $message, 1);
+                        $controller->send_sms($director->phone, $message, 1, null, 'admin');
                     }
                 }
             }
@@ -1683,7 +1683,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             . chr(10) . 'Thanks.';
                         $controller = new \App\Http\Controllers\Controller();
                         $controller->send_whatsapp_sms($director->phone, $message);
-                        $controller->send_sms($director->phone, $message, 1);
+                        $controller->send_sms($director->phone, $message, 1, null, 'admin');
                     }
                 }
             }
