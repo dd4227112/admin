@@ -1,6 +1,6 @@
 <!-- @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
+<?php  $root = url('/') . '/public/' ?>
 
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -384,7 +384,7 @@
                     </div> -->
 
                     <div class="col-sm-6 text-right">
-                        <?php if ((int) $request->bank_approved <> 1 && $request->type_id == 1) { ?>
+                        <?php if ((int) $request->bank_approved <> 1 && $request->type_id == 4) { ?>
                             <a href="<?= url('Partner/InvoicePrefix/' . $request->id) ?>" style="float: right;" class="btn btn-success">Bank Validate This Application</a>
                         <?php } ?>
                     </div>
