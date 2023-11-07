@@ -174,7 +174,7 @@
         </div>
 
     <?php } ?>
-     <?php if (\Auth::user()->role_id != 15) { ?>
+     <?php if (\Auth::user()->role_id ==1) { ?>
     <div class="card">
         <div class="card-header">
             <h5>School Analytics</h5>
