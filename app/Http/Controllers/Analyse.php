@@ -58,6 +58,10 @@ class Analyse extends Controller {
             $sql = "select a.id, a.end_date,f.name as school,a.activity as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id join admin.clients f on f.id = c.client_id WHERE a.user_id = $user order by a.created_at::date desc";
             $this->data['activities'] = DB::select($sql);
             $this->data['summary'] = $this->summary();
+            $this->data['total_clients']=DB::table('admin.clients')->where('status',1)->count();
+            $this->data['total_schools']=\collect(DB::select('select count(*) from (select name, schema_name from shulesoft.classlevel where schema_name in (select username from admin.clients where is_new_version=1 and status=1) union all select name,schema_name from admin.all_classlevel where schema_name in (select username from admin.clients where status=1 and is_new_version <>1) ) v'))->first()->count;
+            $this->data['school_summary']=DB::select('select lower(name) as name, sum(count) as count from (select name, count(*) from shulesoft.classlevel where schema_name in (select username from admin.clients where is_new_version=1 and status=1) group by name union all select name,count(*) from admin.all_classlevel where schema_name in (select username from admin.clients where status=1 and is_new_version <>1) group by name) b group by b.name;');
+            
         }
         $this->data['new_schools'] = DB::select("select count(distinct schema_name) as schools,date_trunc('month', created_at) AS month from admin.all_setting a where extract(year from a.created_at)= extract(year from current_date) group by month order by month");
         return view('analyse.index', $this->data);

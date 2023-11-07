@@ -108,10 +108,12 @@
                             $(document).ready(search_inputs);
                         </script>
                          <div id="morphsearch" class="morphsearch">
+                              <?php if (\Auth::user()->role_id != 15) { ?>
                             <form class="morphsearch-form">
                                 <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
                                 <button class="morphsearch-submit" type="submit">Search</button>
                             </form>
+                              <?php } ?>
                             <div class="morphsearch-content">
                                 <div class="dummy-column">
                                     <h2>Invoices</h2>
