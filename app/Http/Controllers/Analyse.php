@@ -422,7 +422,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['current'] = $current = \collect(DB::select("SELECT COUNT(distinct schema_name) from admin.all_payments where created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "'"))->first()->count;
         $this->data['last'] = $last = \collect(DB::select("SELECT COUNT(distinct schema_name) from admin.all_payments where created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "'"))->first()->count;
         $this->data['difference'] = $difference = $current - $last;
-        $this->data['percent'] = $current > 0 ? ($difference / $current) * 100 : ($difference / $last) * 100;
+        $this->data['percent'] = number_format($current > 0 ? ($difference / $current) * 100 : ($difference / $last) * 100);
         $this->data['next1'] = $next1;
         $this->data['next2'] = $next2;
         $this->data['date'] = $date;
