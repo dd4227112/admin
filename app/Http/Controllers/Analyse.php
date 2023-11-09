@@ -389,12 +389,14 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
     public function acconts_usage()
     {
         //default value, we take interval of one month, this  and the last month
+        DB::select('refresh materialized view admin.all_payments');
         $date = date('Y-m-d');
         $duration = 'Month';
         $next1 = date('Y-m-d', strtotime($date . ' -1 month'));
         $next2 = date('Y-m-d', strtotime($next1 . ' -1 month'));
         $this->data['days'] = request()->segment(3);
         if ($_POST) {
+            DB::select('refresh materialized view admin.all_payments');
             $date = request('date');
             $date = date('Y-m-d', strtotime($date));
             $duration = request('duration');
@@ -436,18 +438,6 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
     {
         $item = request()->segment(6);
         $schools = DB::select($this->query($item));
-        // $html = "";
-        // $id = 1;
-        // foreach ($schools as $key => $school) {
-        //     $html .= "
-        //         <tr>
-        //             <td>" . $id . "</td>
-        //             <td>" . Client::where('username', $school->schema_name)->value('name') . "</td>
-        //             <td>" . date('Y-m-d', strtotime($school->created_at)) . "</td>
-        //         </tr>";
-        //     $id++;
-        // }
-        // echo $html;
         echo json_encode(array('data' => $schools));
     }
     public function query($item)
