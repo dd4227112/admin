@@ -447,17 +447,17 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $date = request()->segment(5);
 
         if ($item == 'current') {
-            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at) as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "' group by a.schema_name, c.name";
+            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "' group by a.schema_name, c.name";
         } else if ($item == 'last') {
-            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at) as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "' group by a.schema_name, c.name";
+            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "' group by a.schema_name, c.name";
         } else if ($item == 'difference') {
             $difference = request()->segment(7);
             if ($difference < 0) {
                 $not_in = "SELECT distinct a.schema_name from admin.all_payments a where a.created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "'";
-                $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at) as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "' and a.schema_name not in (" . $not_in . ") group by a.schema_name, c.name";
+                $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "' and a.schema_name not in (" . $not_in . ") group by a.schema_name, c.name";
             } else {
                 $not_in = "SELECT distinct a. schema_name  from admin.all_payments a  where a.created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "'";
-                $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at) as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "'  and a.schema_name not in (" . $not_in . ") group by a.schema_name, c.name";
+                $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "'  and a.schema_name not in (" . $not_in . ") group by a.schema_name, c.name";
             }
         } else {
             return false;
