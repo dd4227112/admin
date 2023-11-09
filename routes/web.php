@@ -135,7 +135,7 @@ Route::get('/migration', 'Software@migration');
 Route::get('/fdjjfhnuvhr28y74890ffbwffwfjrrgowhfn', 'Recruitments@report');
 // Example route configuration in routes/web.php
 Route::post('update_target', 'Report@update_target');
-// Route::post('/form2-submit', 'YourController@form2Submit');
+Route::post('Analyse/fetch_school', 'Analyse@fetch_school');
 
 
 //});
