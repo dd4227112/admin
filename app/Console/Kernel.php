@@ -105,7 +105,7 @@ class Kernel extends ConsoleKernel
         }
         // configure the service set RestartSec = 1 minute (60s)
         try {
-            $schedule->command('payment:optimize')->everyTwoMinutes();
+            $schedule->command('payment:optimize')->everyMinute();
         } catch (\Exception $e) {
             Log::error('Payment Optimization failed: ' . $e->getMessage());
         }
