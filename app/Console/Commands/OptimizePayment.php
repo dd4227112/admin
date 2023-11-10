@@ -37,7 +37,7 @@ class OptimizePayment extends Command {
      * @return int
      */
     public function handle() {
-        $client = DB::table('admin.clients')->where('status', 4)->first(); //We transfer one at a time
+      //  $client = DB::table('admin.clients')->where('status', 4)->first(); //We transfer one at a time
         //we first check if all payments have been transferred or else we limit distribution
         $can_distribute = 0;
 //        if (!empty($client)) {
@@ -50,7 +50,7 @@ class OptimizePayment extends Command {
 //                        . 'select student_id,\'' . $client->username . '\' from shulesoft.student where schema_name=\'' . $client->username . '\' and student_id not in (select student_id from shulesoft.store_students_id)');
 //            }
 //        }
-        $students = DB::table('shulesoft.store_students_id')->where('status', 0)->limit(9)->get();
+        $students = DB::table('shulesoft.store_students_id')->where('status', 0)->limit(1)->get();
         //check if all payments has been uploaded
         foreach ($students as $student) {
             if (!empty($student)) {
