@@ -1477,7 +1477,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                             <tr>
                                                                 <th scope="row">7</th>
                                                                 <td>Expenses</td>
-                                                                <td> <?= !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id in (2,3)) ') : check_status("expense", " and refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND financial_category_id in (2,3)) "); ?>
+                                                                <td> <?= !empty($username) ? check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id in (2,3)) ') : check_status("expenses", " and refer_expense_id in (select id from shulesoft.refer_expense where schema_name='{$schema}' AND financial_category_id in (2,3)) "); ?>
                                                                     <br />
                                                                 </td>
                                                             </tr>
