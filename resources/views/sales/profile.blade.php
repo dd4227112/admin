@@ -285,7 +285,7 @@
                                         $second_tasks=\App\Models\Task::where('client_id', $client_id)
                                                 ->orderBy('created_at', 'desc');
               
-                                        $tasks = $first_tasks->unionAll($second_tasks)->get();
+                                        $tasks = $first_tasks->unionAll($second_tasks)->orderBy('created_at', 'desc')->get();
 
                                         if (sizeof($tasks)) {
                                             // dd($tasks);
