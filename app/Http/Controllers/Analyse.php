@@ -8,27 +8,23 @@ use Illuminate\Support\Facades\DB;
 use App\Charts\SimpleChart;
 use Illuminate\Support\Facades\Auth;
 
-class Analyse extends Controller
-{
+class Analyse extends Controller {
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth');
         $this->data['insight'] = $this;
     }
 
-    public function logRequest()
-    {
+    public function logRequest() {
         $sql = "select count(*),created_at::date from admin.all_log where created_at::date <= '2018-02-03' and created_at::date>= '2018-01-03' group by created_at::date order by created_at desc";
     }
 
-    public function index()
-    {
+    public function index() {
         $this->data['users'] = [];
         $year = date('Y');
         if (Auth::user()->role_id == 7) {
@@ -71,26 +67,22 @@ class Analyse extends Controller
         return view('analyse.index', $this->data);
     }
 
-    public function customers()
-    {
+    public function customers() {
         $this->data['days'] = request()->segment(3);
         return view('analyse.customers', $this->data);
     }
 
-    public function software()
-    {
+    public function software() {
         $this->data['days'] = request()->segment(3);
         return view('analyse.software', $this->data);
     }
 
-    public function moreInsight()
-    {
+    public function moreInsight() {
         $this->data['days'] = request()->segment(3);
         return view('analyse.insight', $this->data);
     }
 
-    public function sales()
-    {
+    public function sales() {
         $this->data['days'] = request()->segment(3);
         $this->data['shulesoft_schools'] = \collect(DB::select("select count(*) as count from admin.all_classlevel where lower(name) NOT like '%nursery%' and schema_name not in ('public','accounts')"))->first()->count;
         $this->data['schools'] = \collect(DB::select("select count(*) as count from admin.schools where lower(ownership)<>'government'"))->first()->count;
@@ -104,14 +96,13 @@ class Analyse extends Controller
         return view('analyse.sales', $this->data);
     }
 
-    public function summary()
-    {
+    public function summary() {
         $this->data['parents'] = \collect(DB::select('select count(*) as count from admin.all_parent'))->first()->count;
         $this->data['students'] = \collect(DB::select('select count(*) as count from admin.all_student'))->first()->count;
         $this->data['teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
         $this->data['users'] = \collect(DB::select('select count(*) as count from admin.all_users'))->first()->count;
         $this->data['total_schools'] = \collect(DB::select("select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema','pg_catalog')"))->first()->aggregate;
-        $this->data['schools_with_students'] =  \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
+        $this->data['schools_with_students'] = \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
         $this->data['active_parents'] = \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
         $this->data['active_students'] = \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
         $this->data['active_teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
@@ -119,14 +110,12 @@ class Analyse extends Controller
         return $this->data;
     }
 
-    public function setting()
-    {
+    public function setting() {
         $this->data['association'] = \App\Models\Association::first();
         return view('analyse.setting', $this->data);
     }
 
-    public function accounts()
-    {
+    public function accounts() {
         $this->data['association'] = \App\Models\Association::first();
         $sql_2 = "select sum(count) as count, month from (
         select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=" . date('Y') . " group by month
@@ -135,15 +124,12 @@ class Analyse extends Controller
         return view('analyse.accounts', $this->data);
     }
 
-    public function marketing()
-    {
+    public function marketing() {
         $this->data['association'] = \App\Models\Association::first();
         return view('analyse.marketing', $this->data);
     }
 
-
-    public function search()
-    {
+    public function search() {
         $q = strtolower(request('q'));
         $users = DB::select("select a.reference,a.id,b.name,b.username from admin.invoices a join admin.clients b on b.id=a.client_id where (lower(a.reference) like  '%" . $q . "%'  or lower(b.name) like  '%" . $q . "%' )");
         $user_list = '';
@@ -161,8 +147,8 @@ class Analyse extends Controller
         $schools = DB::select(" select  * from (select  name as sname, username as schema_name, 'default.png' as photo, CASE WHEN EXISTS (SELECT 1 FROM admin.client_schools a WHERE a.client_id = c.id and a.status=1 and c.status is not null) THEN 1 ELSE (select id from admin.schools where lower(schema_name) ilike '%" . $q . "%' limit 1 ) END AS is_schema from admin.clients c where  LOWER(username) LIKE '%" . $q . "%' union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%') b order by is_schema asc limit 10");
 
         foreach ($schools as $school) {
-            $url = $school->is_schema == 1 && (int) $school->is_schema == 0 ? url('customer/profile/' . $school->schema_name) : 
-                url('sales/profile/' . $school->is_schema);
+            $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) :
+                    url('sales/profile/' . $school->is_schema);
             $type = $school->is_schema == 1 ? ' (Already Client)' : '';
             $school_list .= ' <a class="dummy-media-object" href="' . $url . '">
                                         <img src="' . url('public/assets/images/avatar-1.png') . '" alt="' . $school->schema_name . '" />
@@ -185,8 +171,7 @@ class Analyse extends Controller
         ]);
     }
 
-    public function index2()
-    {
+    public function index2() {
         $this->data['pg_id'] = clean_htmlentities($this->uri->segment(3));
         $this->data['page'] = clean_htmlentities($this->uri->segment(4));
         if ($this->data['pg_id'] == 1) {
@@ -205,8 +190,7 @@ class Analyse extends Controller
      * @param type $table
      * @return type
      */
-    public function getUsers($table = 'student')
-    {
+    public function getUsers($table = 'student') {
         $this->data['user'] = \collect(DB::SELECT("with total as (select count(*) as total from $table where status=1 ),total_male as (select count(*) as male from $table where status=1 and lower(sex)='male'),total_female as (select count(*) as female from $table where status=1 and lower(sex) <>'male') SELECT * FROM total,total_male, total_female"))->first();
 
         $this->data['student_by_class'] = DB::SELECT('with classes AS (select count(a.*) as total,a."classesID",b.classes from student a join classes b on a."classesID"=b."classesID"  where a.status=1 group by a."classesID",b.classes ),
@@ -219,8 +203,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         return $this->data;
     }
 
-    public function custom()
-    {
+    public function custom() {
         $class_id = request('class_id');
         $sql_ = 'select round(avg(a.average),1) as count, EXTRACT(YEAR FROM age(cast(b.dob as date))) as age from sum_exam_average_done a join student b on a.student_id=b.student_id where a."classesID"=' . $class_id . ' group by b.dob';
         echo $this->createChartBySql($sql_, 'age', 'Overall Average', 'scatter', false);
@@ -228,13 +211,11 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         echo '<p>Correlation Factor : ' . round($corr->corr, 3) . '</p>';
     }
 
-    public function charts()
-    {
+    public function charts() {
         return view('analyse.charts.logins', $this->data);
     }
 
-    public function myschools()
-    {
+    public function myschools() {
         if (request()->segment(3) != '') {
             $id = request()->segment(3);
         } else {
@@ -251,20 +232,19 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
             }
             // user role 1 i.e admin, select all schools/clients
         } else if (($user->role_id) && ($user->role_id) == 1) {
-            $schools =  \App\Models\ClientSchool::latest()->get();
+            $schools = \App\Models\ClientSchool::latest()->get();
         } else {
             // Else select schools/clients based on school associates
             //  $schools =  \App\Models\UserClient::where('user_id', $id)->get();
-            $schools =  \App\Models\ClientSchool::latest()->get();
+            $schools = \App\Models\ClientSchool::latest()->get();
         }
-        $this->data['schools'] =  $schools;
+        $this->data['schools'] = $schools;
         $this->data['users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', '7')->get();
         $this->data['staff'] = \App\Models\User::where('id', $id)->where('status', '=', '1')->first();
         return view('analyse.myschool', $this->data);
     }
 
-    public function myreport()
-    {
+    public function myreport() {
         $id = [];
         if ($_POST) {
 
@@ -294,9 +274,9 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['staff'] = $user = \App\Models\User::where('id', Auth::user()->id)->first();
         $this->data['task_users'] = \App\Models\User::whereIn('id', $id)->get();
         $this->data['tasks'] = \App\Models\Task::whereIn('user_id', $id)->whereIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))
-            ->select(DB::raw('count(*) as count, status'))->groupBy('status')
-            ->whereRaw('updated_at::date >= ' . $start)->whereRaw('updated_at::date < ' . $end)
-            ->get();
+                ->select(DB::raw('count(*) as count, status'))->groupBy('status')
+                ->whereRaw('updated_at::date >= ' . $start)->whereRaw('updated_at::date < ' . $end)
+                ->get();
         $this->data['start'] = $start;
         $this->data['end'] = $end;
         $this->data['all_tasks'] = \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereRaw('updated_at::date > ' . $start)->whereRaw('updated_at::date < ' . $end)->get();
@@ -304,8 +284,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         return view('analyse.my_report', $this->data);
     }
 
-    public function checkTask($id)
-    {
+    public function checkTask($id) {
         $this->data['clients'] = $clients = \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereIn('task_id', \App\Models\Task::whereIn('user_id', $id)->where('status', '<>', 'complete')->get(['id']))->get();
         if (!empty($clients)) {
             foreach ($clients as $client) {
@@ -376,9 +355,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         }
     }
 
-
-    public function ratings()
-    {
+    public function ratings() {
         $this->data['nps'] = \collect(DB::select('select  (a.promoter/c.total::float)*100 - (b.detractor/c.total::float)*100 as NPS from (select sum(rate) as promoter from admin.rating where rate > 8) a,(select sum(rate) as detractor from admin.rating where rate < 7 ) b,(select sum(rate) as total from admin.rating) c'))->first();
         $this->data['ratings'] = \App\Models\Rating::latest()->get();
         $this->data['commentators'] = \collect(DB::select("select distinct user_id from admin.rating"))->count();
@@ -389,8 +366,8 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['rators'] = DB::select($sql_);
         return view('market.ratings', $this->data);
     }
-    public function acconts_usage()
-    {
+
+    public function acconts_usage() {
         //default value, we take interval of one month, this  and the last month
         DB::select('refresh materialized view admin.all_payments');
         $date = date('Y-m-d');
@@ -430,21 +407,19 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['next2'] = $next2;
         $this->data['date'] = $date;
 
-
-
         $this->data['duration'] = $duration;
         $this->data['date'] = $date;
 
         return view('analyse.account_usage', $this->data);
     }
-    public function fetch_school()
-    {
+
+    public function fetch_school() {
         $item = request()->segment(6);
         $schools = DB::select($this->query($item));
         echo json_encode(array('data' => $schools));
     }
-    public function query($item)
-    {
+
+    public function query($item) {
         $next1 = request()->segment(3);
         $next2 = request()->segment(4);
         $date = request()->segment(5);
@@ -467,4 +442,5 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         }
         return $sql;
     }
+
 }
