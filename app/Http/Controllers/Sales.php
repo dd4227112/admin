@@ -125,13 +125,13 @@ class Sales extends Controller {
     }
 
     public function schools() {
-        
-        $id = request()->segment(3)??1;
+
+        $id = request()->segment(3) ?? 1;
         // dd($id);
         // dd($id);
         $reg_id = request()->segment(4);
-        $this->data['selected'] =1;
-        if ($id ==2) {
+        $this->data['selected'] = 1;
+        if ($id == 2) {
             // if (isset($reg_id) && (int) $reg_id > 0) {
             //     $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id', \App\Models\School::whereIn('ward_id', \App\Models\Ward::whereIn('district_id', \App\Models\District::whereIn('region_id', [$reg_id])->get(['id']))->get(['id']))->get(['id']))->get();
             //     $this->data['selected'] =$id;
@@ -139,25 +139,21 @@ class Sales extends Controller {
             //     $this->data['schools'] = \App\Models\ClientSchool::whereIn('school_id', \App\Models\School::whereIn('ward_id', \App\Models\Ward::whereIn('district_id', \App\Models\District::whereIn('region_id', \App\Models\Region::get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
             // }
             $this->data['schools'] = DB::select("select * from admin.schools where id in (select school_id from admin.client_schools where client_id in (select id from admin.clients where status =1))");
-
         }
-         // Leads status =1
-        if($id ==3){
+        // Leads status =1
+        if ($id == 3) {
             $this->data['schools'] = \App\Models\School::where('sales_status', 1)->get();
-
         }
         // Prospects status = 0
-        if($id ==4){
+        if ($id == 4) {
             // $this->data['schools'] = \App\Models\School::where(['sales_status'=>0, 'ownership'=>'Non-Government'])->get();
-            $this->data['schools'] = \App\Models\School::where('sales_status',0)->where('ownership', 'ilike', 'Non-Government')->get();
+            $this->data['schools'] = \App\Models\School::where('sales_status', 0)->where('ownership', 'ilike', 'Non-Government')->get();
         }
-         // Qualified status =2
-        if($id ==5){
+        // Qualified status =2
+        if ($id == 5) {
             $this->data['schools'] = \App\Models\School::where('sales_status', 2)->get();
-
         }
-        $this->data['selected'] =$id;
-
+        $this->data['selected'] = $id;
 
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
@@ -266,7 +262,7 @@ class Sales extends Controller {
      */
     public function show() {
         $page = request('page');
-      
+
         switch ($page) {
             case 'leads':
                 $sql = 'select a.* from admin.leads a join admin.schools b on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.prospects d on d.id=a.prospect_id join admin.tasks e on e.id=a.task_id';
@@ -357,7 +353,7 @@ class Sales extends Controller {
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             default:
-                 if ((int) request('type') == 3) {
+                if ((int) request('type') == 3) {
                     $sql = "SELECT *  from admin.schools a where a.schema_name NOT IN  (select schema_name from admin.all_setting) AND  lower(a.ownership) <>'government'";
                 } else if ((int) request('type') == 2) {
                     $sql = "SELECT *  from admin.schools a where a.schema_name in  (select schema_name from admin.all_setting) AND  lower(a.ownership) <>'government'";
@@ -365,7 +361,7 @@ class Sales extends Controller {
                     $sql = "SELECT * from admin.schools a  where lower(a.ownership) <>'government'";
                 }
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
-               
+
                 break;
         }
     }
@@ -411,11 +407,13 @@ class Sales extends Controller {
         }
 
         // $this->data['school'] = \App\Models\School::findOrFail($id);
-        $this->data['school'] = DB::table('schools')->leftJoin('school_agreement', 'school_agreement.school_id', '=', 'schools.id')->where('schools.id', $id)->
+        $this->data['school'] = (int) $id > 0 ? DB::table('schools')
+                        ->leftJoin('school_agreement', 'school_agreement.school_id', '=', 'schools.id')->where('schools.id', $id)->
                         get(['schools.id', 'school_agreement.id as agreement_id', 'schools.type', 'schools.ward', 'schools.name', 'schools.ownership', 'schools.nmb_school_name',
                             'schools.account_number', 'schools.students', 'school_agreement.contact_person_name', 'school_agreement.contact_person_phone',
                             'school_agreement.contact_person_designation', 'school_agreement.agreement_date', 'schools.nmb_branch',
-                            'school_agreement.form_type', 'school_agreement.company_file_id'])->first();
+                            'school_agreement.form_type', 'school_agreement.company_file_id'])->first() :
+                DB::table('admin.clients')->where('username', $id)->first();
         if ($_POST) {
             $file = request()->file('agreement_file');
             $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
@@ -447,7 +445,7 @@ class Sales extends Controller {
                     'school_id' => request('school_id'),
                     'user_id' => Auth::user()->id,
                     'title' => request('title'),
-                    'notes'=>request('notes')
+                    'notes' => request('notes')
                 ]);
                 return redirect()->back()->with('success', 'user recorded successfully');
             } else {
@@ -670,7 +668,7 @@ class Sales extends Controller {
                     . chr(10) . 'School :' . $school->name . ' has been onboarded succesfully'
                     . chr(10) . 'Thank you.';
             $this->send_whatsapp_sms($user->phone, $message);
-            $this->send_sms($user->phone, $message, 1, null,  'admin');
+            $this->send_sms($user->phone, $message, 1, null, 'admin');
 
             $finance = \App\Models\User::where('designation_id', 2)->where('status', 1)->first();
             $sms = 'Hello ' . $finance->firstname . ' ' . $finance->lastname
@@ -678,7 +676,7 @@ class Sales extends Controller {
                     . chr(10) . 'You are remainded to verify the invoice document'
                     . chr(10) . 'Thank you.';
             $this->send_whatsapp_sms($finance->phone, $sms);
-            $this->send_sms($finance->phone, $sms, 1, null,  'admin');
+            $this->send_sms($finance->phone, $sms, 1, null, 'admin');
 
             return redirect('sales/implementation/' . $client_id);
         }
@@ -816,7 +814,7 @@ class Sales extends Controller {
                 . chr(10) . 'Link  https://admin.shulesoft.com/sales/implementation/' . $client_id
                 . chr(10) . 'Thank you.';
         $this->send_whatsapp_sms($user->phone, $message);
-        $this->send_sms($user->phone, $message, 1, null,  'admin');
+        $this->send_sms($user->phone, $message, 1, null, 'admin');
 
         return redirect()->back()->with('success', 'School Approved for onboarding');
     }
@@ -909,7 +907,7 @@ class Sales extends Controller {
                         . chr(10) . 'By :' . Auth::user()->name
                         . chr(10) . 'Thank you';
                 $this->send_whatsapp_sms($user->phone, $sms);
-                $this->send_sms($user->phone, $sms, 1, null,  'admin');
+                $this->send_sms($user->phone, $sms, 1, null, 'admin');
 
                 //email to zonal manager
                 $sales = new \App\Http\Controllers\Customer();
@@ -931,7 +929,7 @@ class Sales extends Controller {
                                 . chr(10) . 'A task is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' up to ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
                                 . chr(10) . 'Thank you';
                         $this->send_whatsapp_sms($manager->phone, $message);
-                        $this->send_sms($manager->phone, $message, 1, null,  'admin');
+                        $this->send_sms($manager->phone, $message, 1, null, 'admin');
                     }
                 }
                 //sms to school personel
@@ -943,7 +941,7 @@ class Sales extends Controller {
                             . chr(10) . 'A task is expected to start at ' . date('F,d Y', strtotime($start_date)) . ' up to ' . date('F,d Y', strtotime($start_date . " + {$section->time} days"))
                             . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($phonenumber, $sms);
-                    $this->send_sms($phonenumber, $sms, 1, null,  'admin');
+                    $this->send_sms($phonenumber, $sms, 1, null, 'admin');
                 }
             }
         }
