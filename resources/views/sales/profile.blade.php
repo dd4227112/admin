@@ -71,9 +71,10 @@
                     <div class="user-body" style="min-height: 625px;">
                         <?php
                         // $school_clients = DB::table('client_schools')->where('school_id', (int) $school->id)->first();
-                        $school_clients = DB::select('select * from admin.clients where id in (select client_id from admin.client_schools where school_id ='. (int) $school->id.') and status is not null');
-
+                        $school_clients = DB::select('select * from admin.clients where id in (select client_id from admin.client_schools where school_id =' . (int) $school->id . ') and status is not null');
+  $client_id = 0;
                         if (empty($school_clients)) {
+                           
                             ?>
                             <div class="card-block">
                                 <?php
@@ -86,7 +87,7 @@
                             </div>
                             <?php
                         } else {
-                            $sclient=\collect($school_clients)->first();
+                            $sclient = \collect($school_clients)->first();
                             $client_id = $sclient->id;
                             ?>
                             <br />
@@ -277,7 +278,15 @@
                                     </div>
                                     <div class="col-md-12 timeline-dot">
                                         <?php
-                                        $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
+                                        $school_tasks = \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']);
+
+                                        $first_tasks = \App\Models\Task::whereIn('id', $school_tasks)
+                                                ->orderBy('created_at', 'desc');
+                                        $second_tasks=\App\Models\Task::where('client_id', $client_id)
+                                                ->orderBy('created_at', 'desc');
+              
+                                        $tasks = $first_tasks->unionAll($second_tasks)->get();
+
                                         if (sizeof($tasks)) {
                                             // dd($tasks);
                                             echo '<input type="hidden" value="' . sizeof($tasks) . '" id="task_count"/>';
@@ -452,9 +461,8 @@
                                                         </td>
                                                     </tr>
                                                     <?php
-                                                     $i++;
+                                                    $i++;
                                                 }
-                                               
                                             }
                                             ?>
 
@@ -464,209 +472,209 @@
 
                                 </div>
                             </div>
-                                <div class="live_tabs" id='school_details' style="display:none">
-                                    <div class="card-block">
-                                        <?php if (can_access('edit_school')) { ?>
-                                            <button id="edit-btn" type="button"
-                                                    class="btn btn-primary waves-effect waves-light f-right" data-toggle="modal"
-                                                    data-target="#large-Modal-edit-school">
-                                                <i class="icofont icofont-edit"></i>
-                                            </button>
-                                        <?php } ?>
-                                        <div id="view-info" class="row">
-                                            <div class="col-lg-12 col-md-12">
-                                                <form>
-                                                    <table class="table m-b-0">
-                                                        <tbody>
-                                                            <tr>
-                                                                <th class="b-none p-t-0">School Name
-                                                                </th>
-                                                                <td class="social-user-name b-none p-t-0 text-muted">
-                                                                    <?= $school->name ?? '' ?>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="b-none p-t-0">Number of students
-                                                                </th>
-                                                                <td class="social-user-name b-none p-t-0 text-muted">
-                                                                    <?= $school->students ?>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="b-no">Owership</th>
-                                                                <td class="social-user-nam-none text-muted">
-                                                                    <?= $school->ownership ?></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="b-no">Account name</th>
-                                                                <td class="social-user-nam-none text-muted">
-                                                                    <?= $school->nmb_school_name ?></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="b-no">Account number</th>
-                                                                <td class="social-user-nam-none text-muted">
-                                                                    <?= $school->account_number ?></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="b-no p-b-0">Use NMB</th>
-                                                                <td class="social-user-nam-none p-b-0 text-muted">
-                                                                    <?= strlen($school->nmb_branch) > 2 ? 'YES : ' . ucwords($school->nmb_branch) . ' Branch' : 'NO' ?>
-                                                                </td>
-                                                            </tr>
+                            <div class="live_tabs" id='school_details' style="display:none">
+                                <div class="card-block">
+                                    <?php if (can_access('edit_school')) { ?>
+                                        <button id="edit-btn" type="button"
+                                                class="btn btn-primary waves-effect waves-light f-right" data-toggle="modal"
+                                                data-target="#large-Modal-edit-school">
+                                            <i class="icofont icofont-edit"></i>
+                                        </button>
+                                    <?php } ?>
+                                    <div id="view-info" class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <form>
+                                                <table class="table m-b-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th class="b-none p-t-0">School Name
+                                                            </th>
+                                                            <td class="social-user-name b-none p-t-0 text-muted">
+                                                                <?= $school->name ?? '' ?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="b-none p-t-0">Number of students
+                                                            </th>
+                                                            <td class="social-user-name b-none p-t-0 text-muted">
+                                                                <?= $school->students ?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="b-no">Owership</th>
+                                                            <td class="social-user-nam-none text-muted">
+                                                                <?= $school->ownership ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="b-no">Account name</th>
+                                                            <td class="social-user-nam-none text-muted">
+                                                                <?= $school->nmb_school_name ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="b-no">Account number</th>
+                                                            <td class="social-user-nam-none text-muted">
+                                                                <?= $school->account_number ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="b-no p-b-0">Use NMB</th>
+                                                            <td class="social-user-nam-none p-b-0 text-muted">
+                                                                <?= strlen($school->nmb_branch) > 2 ? 'YES : ' . ucwords($school->nmb_branch) . ' Branch' : 'NO' ?>
+                                                            </td>
+                                                        </tr>
 
-                                                            <tr>
-                                                                <th class="b-no">Contact person  name</th>
-                                                                <td class="social-user-nam-none text-muted">
-                                                                    <?= $school->contact_person_name ?></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="b-no">Contact person phone</th>
-                                                                <td class="social-user-nam-none text-muted">
-                                                                    <?= $school->contact_person_phone ?></td>
-                                                            </tr>
+                                                        <tr>
+                                                            <th class="b-no">Contact person  name</th>
+                                                            <td class="social-user-nam-none text-muted">
+                                                                <?= $school->contact_person_name ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="b-no">Contact person phone</th>
+                                                            <td class="social-user-nam-none text-muted">
+                                                                <?= $school->contact_person_phone ?></td>
+                                                        </tr>
 
-                                                            <tr>
-                                                                <th class="b-no">Contact person designation</th>
-                                                                <td class="social-user-nam-none text-muted">
-                                                                    <?= $school->contact_person_designation ?></td>
-                                                            </tr>
+                                                        <tr>
+                                                            <th class="b-no">Contact person designation</th>
+                                                            <td class="social-user-nam-none text-muted">
+                                                                <?= $school->contact_person_designation ?></td>
+                                                        </tr>
 
-                                                            <tr>
-                                                                <th class="b-no"> Agreement date</th>
-                                                                <td class="social-user-nam-none text-muted">
-                                                                    <?= isset($school->agreement_date) ? date('d-m-Y', strtotime($school->agreement_date)) : '' ?></td>
-                                                            </tr>
+                                                        <tr>
+                                                            <th class="b-no"> Agreement date</th>
+                                                            <td class="social-user-nam-none text-muted">
+                                                                <?= isset($school->agreement_date) ? date('d-m-Y', strtotime($school->agreement_date)) : '' ?></td>
+                                                        </tr>
 
-                                                            <tr>
-                                                                <th class="b-no"> Agreement document</th>
-                                                                <td class="social-user-nam-none text-muted">
-                                                                    <?php if (!empty($school->company_file_id)) { ?>
-                                                                        <a  target="_blank" href="<?php
-                                                                        $view_url = "customer/viewContract/$school->agreement_id/agreement";
-                                                                        echo url($view_url)
-                                                                        ?>" class="btn btn-primary btn-mini btn-round">View</a>
-                                                                        <?php } else { ?>
-                                                                        <b> Document not uploaded</b>
-                                                                    <?php } ?>
-                                                                </td>
-                                                            </tr>
+                                                        <tr>
+                                                            <th class="b-no"> Agreement document</th>
+                                                            <td class="social-user-nam-none text-muted">
+                                                                <?php if (!empty($school->company_file_id)) { ?>
+                                                                    <a  target="_blank" href="<?php
+                                                                    $view_url = "customer/viewContract/$school->agreement_id/agreement";
+                                                                    echo url($view_url)
+                                                                    ?>" class="btn btn-primary btn-mini btn-round">View</a>
+                                                                    <?php } else { ?>
+                                                                    <b> Document not uploaded</b>
+                                                                <?php } ?>
+                                                            </td>
+                                                        </tr>
 
-                                                        </tbody>
-                                                    </table>
-                                                </form>
-                                                <br />
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                            <br />
 
-                                                <?php
-                                                if (isset($client_id) && (int) $client_id > 0) {
-                                                    $client = DB::table('admin.clients')->where('id', (int) $client_id)->first();
-                                                    ?>
-                                                    <h3>Onboarding Details</h3>
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Name</th>
-                                                                <th>Client Phone</th>
-                                                                <th>Client Try Code</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td><?= $client->name ?></td>
-                                                                <td><?= $client->phone ?></td>
-                                                                <td><?= $client->code ?></td>
-                                                            </tr>
+                                            <?php
+                                            if (isset($client_id) && (int) $client_id > 0) {
+                                                $client = DB::table('admin.clients')->where('id', (int) $client_id)->first();
+                                                ?>
+                                                <h3>Onboarding Details</h3>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Name</th>
+                                                            <th>Client Phone</th>
+                                                            <th>Client Try Code</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td><?= $client->name ?></td>
+                                                            <td><?= $client->phone ?></td>
+                                                            <td><?= $client->code ?></td>
+                                                        </tr>
 
-                                                        </tbody>
-                                                    </table>
-                                                <?php } ?>
-                                            </div>
+                                                    </tbody>
+                                                </table>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
 
+                        </div>
+                    </div>
+                </div>
+                <!-- Right-side section end -->
+            </div>
+        </div>
+        <!-- Email-card end -->
+    </div>
+</div>
+
+
+
+
+
+
+<div class="modal fade" id="large-Modal-add-person" tabindex="-1" role="dialog" aria-hidden="true"
+     style="z-index: 1050; display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add New Person</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form action="#" method="post">
+                <div class="modal-body">
+                    <span>Person Details </span>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                Name
+                                <input type="text" name="name" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                Phone
+                                <input type="text" name="phone" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                Email
+                                <input type="text" name="email" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                Title
+                                <select name="title" class="form-control">
+                                    <option value="director">Director/Owner</option>
+                                    <option value="manager">School Manager</option>
+                                    <option value="head teacher">Head Teacher</option>
+                                    <option value="Second Master/Mistress">Second Master/Mistress</option>
+                                    <option value="academic master">Academic Master</option>
+                                    <option value="teacher">Normal Teacher</option>
+                                    <option value="Accountant">Accountant</option>
+                                    <option value="Other Staff">Other Non Teaching Staff</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                Notes <small>(notes or anything unique, eg tamongsco2023, tapie2022 etc)</small>
+                                <input type="text" name="notes" class="form-control" />
                             </div>
                         </div>
                     </div>
-                    <!-- Right-side section end -->
+
+
+
                 </div>
-            </div>
-            <!-- Email-card end -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                </div>
+                <input type="hidden" value="<?= $school->id ?>" name="school_id" />
+                <input type="hidden" value="1" name="add_user" />
+                <?= csrf_field() ?>
+            </form>
         </div>
     </div>
+</div>
 
 
-
-
-
-
-    <div class="modal fade" id="large-Modal-add-person" tabindex="-1" role="dialog" aria-hidden="true"
-         style="z-index: 1050; display: none;">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add New Person</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="#" method="post">
-                    <div class="modal-body">
-                        <span>Person Details </span>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    Name
-                                    <input type="text" name="name" class="form-control" />
-                                </div>
-                                <div class="col-md-6">
-                                    Phone
-                                    <input type="text" name="phone" class="form-control" />
-                                </div>
-                                <div class="col-md-6">
-                                    Email
-                                    <input type="text" name="email" class="form-control" />
-                                </div>
-                                <div class="col-md-6">
-                                    Title
-                                    <select name="title" class="form-control">
-                                        <option value="director">Director/Owner</option>
-                                        <option value="manager">School Manager</option>
-                                        <option value="head teacher">Head Teacher</option>
-                                        <option value="Second Master/Mistress">Second Master/Mistress</option>
-                                        <option value="academic master">Academic Master</option>
-                                        <option value="teacher">Normal Teacher</option>
-                                        <option value="Accountant">Accountant</option>
-                                        <option value="Other Staff">Other Non Teaching Staff</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    Notes <small>(notes or anything unique, eg tamongsco2023, tapie2022 etc)</small>
-                                    <input type="text" name="notes" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                    </div>
-                    <input type="hidden" value="<?= $school->id ?>" name="school_id" />
-                    <input type="hidden" value="1" name="add_user" />
-                    <?= csrf_field() ?>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Page-body end -->
+<!-- Page-body end -->
 </div>
 <div class="modal fade" id="large-Modal-edit-school" tabindex="-1" role="dialog" aria-hidden="true"
      style="z-index: 1050; display: none;">
