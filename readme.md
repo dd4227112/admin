@@ -77,3 +77,9 @@ postgresqltuner --ssd
 
 #getting wifi password
 netsh wlan show profile name="network_name" key=clear
+
+#update from another table
+UPDATE shulesoft.proforma_invoices a
+SET    reference = b.reference
+FROM  shulesoft.invoice_prefix b join shulesoft.invoices c on c.id=b.invoice_id
+WHERE  c.student_id = a.student_id
