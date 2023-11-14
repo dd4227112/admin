@@ -86,7 +86,8 @@
                             </div>
                             <?php
                         } else {
-                            $client_id = $school_clients->client_id;
+                            $sclient=\collect($school_clients)->first();
+                            $client_id = $sclient->id;
                             ?>
                             <br />
                             <div class="card-block alert alert-warning">
