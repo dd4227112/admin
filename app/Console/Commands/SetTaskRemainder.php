@@ -49,7 +49,7 @@ class SetTaskRemainder extends Command
                         . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
                         . chr(10) . 'Thanks.';
                 $controller->send_whatsapp_sms($task->user->phone, $message);
-                $controller->send_sms($task->user->phone, $message);
+                $controller->send_sms($task->user->phone, $message, 1, null, 'admin');
 
                 if ($task->taskUsers()->count() > 0) {
                     foreach ($task->taskUsers()->get() as $task_user) {
@@ -64,7 +64,7 @@ class SetTaskRemainder extends Command
                                     . chr(10) . 'By: ' . $task->user->name . '.'
                                     . chr(10) . 'Thanks.';
                             $controller->send_whatsapp_sms($user->phone, $msg);
-                            $controller->send_sms($user->phone, $msg);
+                            $controller->send_sms($user->phone, $msg,1, null, 'admin');
                         }
                     }
                 }

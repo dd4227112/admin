@@ -48,7 +48,7 @@ class StandingOrderRemainder extends Command
                             $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '.'
                                     . chr(10) . 'Remember to check matured standing order from ' . $standing->client->name
                                     . chr(10) . 'Thanks.';
-                            $controller->send_sms($user->phone, $message, 1);
+                            $controller->send_sms($user->phone, $message, 1, null, 'admin');
                             $controller->send_whatsapp_sms($user->phone, $message);
                         }
                     }

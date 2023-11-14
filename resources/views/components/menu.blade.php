@@ -874,6 +874,11 @@
                                                                                                             <span class="pcoded-mtext">Dashboard Settings</span>
                                                                                                         </a>
                                                                                                     </li>
+                                                                                                    <li class="">
+                                                                                                        <a href="<?= url('Analyse/acconts_usage') ?>">
+                                                                                                            <span class="pcoded-mtext">Schools Fee Collection</span>
+                                                                                                        </a>
+                                                                                                    </li>
                                                                                                 </ul>
                                                                                             </li>
                                                                                         <?php } ?> 

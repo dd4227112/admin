@@ -110,8 +110,8 @@ class Controller extends BaseController {
             $sms_key = DB::table('public.sms_keys')->first();
             $sms_keys_id = !empty($sms_key) ? $sms_key->id : null;
             if ($sms_keys_id) {
-                \DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message,
-                    'type' => $priority, 'priority' => $priority, 'sent_from' => $sent_from, 'sms_keys_id' => $sms_keys_id, 'project' => $project));
+                \DB::table('shulesoft.sms')->insert(array('phone_number' => $phone_number, 'body' => $message,
+                    'type' => $priority, 'priority' => $priority, 'sent_from' => $sent_from, 'sms_keys_id' => $sms_keys_id,'schema_name'=>'public', 'project' => $project));
             }
         }
         return $this;

@@ -315,7 +315,7 @@ class Users extends Controller {
                     . ' which has to end at ' . date('d-m-Y', strtotime($end_date)) . '';
 
             $this->send_email($user->email, 'Success: Absent leave granted', $message);
-            $this->send_sms($user->phone, $message, 1);
+            $this->send_sms($user->phone, $message, 1, null,  'admin');
 
             return redirect()->back()->with('success', 'Approved successfully');
         }
@@ -948,7 +948,7 @@ class Users extends Controller {
                             . chr(10) . request('url') . ''
                             . chr(10) . 'Deadline ' . date('d-m-Y', strtotime(request('to_date')));
                     $this->send_whatsapp_sms($user->phone, $message);
-                    $this->send_sms($user->phone, $message, 1);
+                    $this->send_sms($user->phone, $message, 1, null,  'admin');
                 }
             }
             return redirect()->back()->with('success', 'Course created successfull!');

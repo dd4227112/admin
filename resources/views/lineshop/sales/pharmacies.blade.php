@@ -52,7 +52,7 @@
                         </div>
                         <div class="card-block">
                             <div class="">
-                                <table id="list_of_pharmacies" class="table  table-striped table-bordered ">
+                                <table class="table  table-striped table-bordered dataTable ">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -111,8 +111,6 @@
 
 <script>
     $(document).ready(function() {
-        $('#list_of_pharmacies').DataTable();
-
         $('#pharmacies_selector').change(function () {
             var val = $(this).val();
             window.location.href = '<?= url('lineshop/pharmacies') ?>/' + val;

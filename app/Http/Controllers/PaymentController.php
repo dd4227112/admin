@@ -512,7 +512,7 @@ class PaymentController extends Controller {
 //We are glad to inform you that your application was successfully submitted for 
 //' . strtoupper($this->data['type']) . ' Electronic Payment Integration. Your application is on verification stage.
 //We shall let you know once we have done with verification, then you can proceed with payment integration services. ';
-//                $this->send_sms($client->phone_number, $message);
+//                $this->send_sms($client->phone_number, $message,1, null,  'admin');
 //                $this->send_email($client->email, 'E-Payment Application Status', $message);
                 $page = $this->data['partner'] && (int) $this->data['partner']->price > 0 ? 'stepthree' : 'stepfour';
                 break;
@@ -838,7 +838,7 @@ class PaymentController extends Controller {
                 'reject_reason' => json_encode($reject_reason)
             ]);
             $parent = \App\Model\Parents::find($payment->userID);
-            $this->send_sms($parent->phone_number, 'Payment Rejection: ' . $reason);
+            $this->send_sms($parent->phone_number, 'Payment Rejection: ' . $reason, 1, null,  'admin');
             $this->send_email($parent->email, 'Payment Rejected ', $reason);
 
             echo 1;

@@ -37,7 +37,7 @@ class OptimizePayment extends Command {
      * @return int
      */
     public function handle() {
-        $client = DB::table('admin.clients')->where('status', 4)->first(); //We transfer one at a time
+      //  $client = DB::table('admin.clients')->where('status', 4)->first(); //We transfer one at a time
         //we first check if all payments have been transferred or else we limit distribution
         $can_distribute = 0;
 //        if (!empty($client)) {

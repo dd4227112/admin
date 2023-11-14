@@ -670,7 +670,7 @@ class Sales extends Controller {
                     . chr(10) . 'School :' . $school->name . ' has been onboarded succesfully'
                     . chr(10) . 'Thank you.';
             $this->send_whatsapp_sms($user->phone, $message);
-            $this->send_sms($user->phone, $message, 1);
+            $this->send_sms($user->phone, $message, 1, null,  'admin');
 
             $finance = \App\Models\User::where('designation_id', 2)->where('status', 1)->first();
             $sms = 'Hello ' . $finance->firstname . ' ' . $finance->lastname
@@ -678,7 +678,7 @@ class Sales extends Controller {
                     . chr(10) . 'You are remainded to verify the invoice document'
                     . chr(10) . 'Thank you.';
             $this->send_whatsapp_sms($finance->phone, $sms);
-            $this->send_sms($finance->phone, $sms, 1);
+            $this->send_sms($finance->phone, $sms, 1, null,  'admin');
 
             return redirect('sales/implementation/' . $client_id);
         }
@@ -816,7 +816,7 @@ class Sales extends Controller {
                 . chr(10) . 'Link  https://admin.shulesoft.com/sales/implementation/' . $client_id
                 . chr(10) . 'Thank you.';
         $this->send_whatsapp_sms($user->phone, $message);
-        $this->send_sms($user->phone, $message, 1);
+        $this->send_sms($user->phone, $message, 1, null,  'admin');
 
         return redirect()->back()->with('success', 'School Approved for onboarding');
     }
@@ -909,7 +909,7 @@ class Sales extends Controller {
                         . chr(10) . 'By :' . Auth::user()->name
                         . chr(10) . 'Thank you';
                 $this->send_whatsapp_sms($user->phone, $sms);
-                $this->send_sms($user->phone, $sms, 1);
+                $this->send_sms($user->phone, $sms, 1, null,  'admin');
 
                 //email to zonal manager
                 $sales = new \App\Http\Controllers\Customer();
@@ -931,7 +931,7 @@ class Sales extends Controller {
                                 . chr(10) . 'A task is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' up to ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
                                 . chr(10) . 'Thank you';
                         $this->send_whatsapp_sms($manager->phone, $message);
-                        $this->send_sms($manager->phone, $message, 1);
+                        $this->send_sms($manager->phone, $message, 1, null,  'admin');
                     }
                 }
                 //sms to school personel
@@ -943,7 +943,7 @@ class Sales extends Controller {
                             . chr(10) . 'A task is expected to start at ' . date('F,d Y', strtotime($start_date)) . ' up to ' . date('F,d Y', strtotime($start_date . " + {$section->time} days"))
                             . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($phonenumber, $sms);
-                    $this->send_sms($phonenumber, $sms, 1);
+                    $this->send_sms($phonenumber, $sms, 1, null,  'admin');
                 }
             }
         }

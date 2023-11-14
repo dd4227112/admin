@@ -490,7 +490,7 @@ class Background extends Controller {
         $sms = preg_replace($patterns, $replacements, $message);
         $new_user_message = 'Hi ' . $applicant->name . ', Your accounts ( in https://demo.shulesoft.com, https://academy.shulesoft.com) '
                 . 'has been created successfully with username: ' . $applicant->username . ' and password: ' . $applicant->default_password . ' .Check your email for detailed information. Thanks ';
-        $this->send_sms($applicant->phone, $new_user_message);
+        $this->send_sms($applicant->phone, $new_user_message, 1, null, 'admin');
         $this->send_email($applicant->email, 'Success: ShuleSoft Account Registration', $sms);
         die('Success: Your Account has been created, kindly wait for the confirmation email with details on how to get started. Thanks');
     }
@@ -513,7 +513,7 @@ class Background extends Controller {
                     . 'You are kindly invited to Join ShuleSoft Associate Program. Our Associates will be directly involved to provide training, data entry and configuration '
                     . 'to ALL schools (600+) and get paid per task done but also exposed to '
                     . 'schools that are looking for candidates who knows ShuleSoft. Click this link to join (' . $this->shortenUrl($url) . ') or visit our website (www.shulesoft.com) to learn more. Thanks';
-            $this->send_sms($applicant->phone, $new_user_message);
+            $this->send_sms($applicant->phone, $new_user_message, 1, null, 'admin');
             $this->send_email($applicant->email, 'We are looking for ShuleSoft Regional and Local Associates', $sms);
             echo 'Email and SMS sent to ' . $applicant->name . '<br/>';
         }

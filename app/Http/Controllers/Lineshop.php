@@ -231,7 +231,7 @@ class Lineshop extends Controller
                 . chr(10) . 'Pharmacy :' . $pharmacy->name . ' has been onboarded succesfully'
                 . chr(10) . 'Thank you.';
             $this->send_whatsapp_sms($user->phone, $message);
-            $this->send_sms($user->phone, $message, 1);
+            $this->send_sms($user->phone, $message, 1, null, 'lineshop');
 
             // $finance = \App\Models\User::where('designation_id', 2)->where('status', 1)->first();
             // $sms = 'Hello ' . $finance->firstname . ' ' . $finance->lastname
@@ -239,7 +239,7 @@ class Lineshop extends Controller
             //     . chr(10) . 'You are remainded to verify the invoice document'
             //     . chr(10) . 'Thank you.';
             // $this->send_whatsapp_sms($finance->phone, $sms);
-            // $this->send_sms($finance->phone, $sms, 1);
+            // $this->send_sms($finance->phone, $sms, 1, null, 'lineshop');
             // return $this->url(strtolower(request('name')));
             return redirect(base_url('lineshop/profile/' . $pharmacy_id))->with('success', 'Pharmacy :' . $pharmacy->name . ' has been onboarded succesfully');
         }
@@ -561,17 +561,17 @@ class Lineshop extends Controller
                         . '</p>Your Requirement has been submitted for implementation</p>'
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
-                    $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+                    $this->send_email($user->email, 'Lineshop New Customer Requirement', $message);
 
                     $sms = 'Hello ' . $user->name . '.'
                         . chr(10) . 'Your Requirement: ' . $new_req . '.'
                         . chr(10) . strip_tags($req->note)
-                        . chr(10) . 'is received by ShuleSoft team. We will update you for any status about it. '
+                        . chr(10) . 'is received by Lineshop team. We will update you for any status about it. '
                         . ''
                         . chr(10) . 'Thanks and regards.';
 
                     $this->send_whatsapp_sms($user->phone, $sms);
-                    $this->send_sms($user->phone, $sms, 1);
+                    $this->send_sms($user->phone, $sms, 1, null, 'lineshop');
                 }
             }
             if ((int) request('to_user_id') > 0) {
@@ -582,7 +582,7 @@ class Lineshop extends Controller
                     . 'There is ' . $new_req . '</p>'
                     . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                     . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
-                $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+                $this->send_email($user->email, 'Lineshop New Customer Requirement', $message);
 
                 $sms = 'Hello ' . $user->name . '.'
                     . chr(10) . 'There is ' . $new_req . '.'
@@ -606,7 +606,7 @@ class Lineshop extends Controller
                 //                $data1 = $story->post($url, $fields);
 
                 $this->send_whatsapp_sms($user->phone, $sms);
-                $this->send_sms($user->phone, $sms, 1);
+                $this->send_sms($user->phone, $sms, 1, null, 'lineshop');
             }
             if (request('notify_to')) {
                 $users_selected = request('notify_to');
@@ -648,7 +648,7 @@ class Lineshop extends Controller
                     //$data1 = $story->post($url, $fields);
 
                     $this->send_whatsapp_sms($user->phone, $sms);
-                    $this->send_sms($user->phone, $sms, 1);
+                    $this->send_sms($user->phone, $sms, 1, null, 'lineshop');
                 }
             }
         }
@@ -1029,7 +1029,7 @@ class Lineshop extends Controller
 
         if (in_array("quick-sms", $channels)) {
             // Send messages by quick sms
-            $this->send_sms($phonenumber, $message, 1, 'lineshop');
+            $this->send_sms($phonenumber, $message, 1, null, 'lineshop'); 
         }
 
         if (in_array("whatsapp", $channels)) {
@@ -1042,7 +1042,7 @@ class Lineshop extends Controller
 
         if (in_array("phone-sms", $channels)) {
             // Send messages by  normal sms
-            $this->send_sms($phonenumber, $message, 'lineshop');
+            $this->send_sms($phonenumber, $message, 1, null, 'lineshop');
         }
 
         if (in_array("email", $channels)) {
