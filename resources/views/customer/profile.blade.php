@@ -10,8 +10,7 @@ $root = url('/') . '/public/';
 define('SCHEMA', $schema);
 $username = \DB::table("admin.clients")->where('username', $schema)->where('is_new_version', 0)->first();
 
-function check_status($table, $where = null)
-{
+function check_status($table, $where = null) {
     $schema = SCHEMA;
     $username = \DB::table("admin.clients")->where('username', $schema)->where('is_new_version', 0)->first();
 
@@ -19,18 +18,16 @@ function check_status($table, $where = null)
         $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
     } elseif ($table == 'invoices') {
         $report = !empty($username) ? \collect(DB::select('select date::date as created_at from ' . $schema . '.' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first() :
-        \collect(DB::select('select date::date as created_at from shulesoft.' . $table . '  ' . $where . '  order by date::date desc limit 1'))->first();
+                \collect(DB::select('select date::date as created_at from shulesoft.' . $table . '  ' . $where . '  order by date::date desc limit 1'))->first();
     } else {
         $report = !empty($username) ? \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first() :
-        \collect(DB::select('select created_at::date from shulesoft.' . $table . '  where schema_name =\''.$schema.'\''. $where .' order by created_at::date desc limit 1'))->first();
+                \collect(DB::select('select created_at::date from shulesoft.' . $table . '  where schema_name =\'' . $schema . '\'' . $where . ' order by created_at::date desc limit 1'))->first();
     }
     if (!empty($report)) {
-       // $echo = '<label class="badge badge-success">' . date('d M Y', strtotime('2023-07-18')) . '</label>';
+        // $echo = '<label class="badge badge-success">' . date('d M Y', strtotime('2023-07-18')) . '</label>';
         $echo = '<label class="badge badge-success">' . date('d M Y', strtotime($report->created_at)) . '</label>';
-        
     } else {
         $echo = '<label class="badge badge-inverse-warning">Not Defined</label>';
-
     }
     return $echo;
 }
@@ -137,7 +134,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                     <div class="card-block">
                                         <?php
                                         if ($is_client == 1) {
-                                        ?>
+                                            ?>
                                             <div class="">
                                                 <div class="row m-2">
                                                     <label class="badge badge-inverse-primary">
@@ -197,7 +194,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                         <?php } ?>
                                         <?php
                                         if ($is_client == 1) {
-                                        ?>
+                                            ?>
                                             <div class="card">
                                                 <div class="card-header">
                                                     <h6 class="card-header-text">Top user Logins</h6>
@@ -206,7 +203,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                     <?php
                                                     if (!empty($top_users)) {
                                                         foreach ($top_users as $log) {
-                                                    ?>
+                                                            ?>
                                                             <div class="media m-b-10">
                                                                 <a class="media-left" href="#!">
                                                                     <?php $user_image = base_url('storage/uploads/images/defualt.png'); ?>
@@ -219,7 +216,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                         <?= $log->usertype ?></div>
                                                                 </div>
                                                             </div>
-                                                    <?php
+                                                            <?php
                                                         }
                                                     }
                                                     ?>
@@ -330,11 +327,11 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                     $types = Auth::user()->role_id == 1 ? DB::table('task_types')->get() : DB::table('task_types')->where('department', Auth::user()->department)->get();
                                                                                     if (!empty($types)) {
                                                                                         foreach ($types as $type) {
-                                                                                    ?>
+                                                                                            ?>
                                                                                             <option value="<?= $type->id ?>">
                                                                                                 <?= $type->name ?>
                                                                                             </option>
-                                                                                    <?php
+                                                                                            <?php
                                                                                         }
                                                                                     }
                                                                                     ?>
@@ -349,11 +346,11 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                     $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
                                                                                     if (!empty($staffs)) {
                                                                                         foreach ($staffs as $staff) {
-                                                                                    ?>
+                                                                                            ?>
                                                                                             <option value="<?= $staff->id ?>">
                                                                                                 <?= $staff->firstname . ' ' . $staff->lastname ?>
                                                                                             </option>
-                                                                                    <?php
+                                                                                            <?php
                                                                                         }
                                                                                     }
                                                                                     ?>
@@ -415,11 +412,11 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                             $modules = DB::table('modules')->get();
                                                                             if (!empty($modules)) {
                                                                                 foreach ($modules as $module) {
-                                                                            ?>
+                                                                                    ?>
                                                                                     <option value="<?= $module->id ?>">
                                                                                         <?= $module->name ?>
                                                                                     </option>
-                                                                            <?php
+                                                                                    <?php
                                                                                 }
                                                                             }
                                                                             ?>
@@ -458,7 +455,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                 $tasks = \App\Models\Task::whereIn('id', $tasks_ids)->orderBy('created_at', 'desc')->get();
                                                 if (!empty($tasks)) {
                                                     foreach ($tasks as $task) {
-                                                ?>
+                                                        ?>
                                                         <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
                                                             <div class="row">
                                                                 <div class="col-xs-2 col-sm-1">
@@ -512,10 +509,10 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 if (count($modules) > 0) {
                                                                                     echo '<p>Task Module Performed</p>';
                                                                                     foreach ($modules as $module) {
-                                                                                ?>
+                                                                                        ?>
                                                                                         <?= $module->module->name ?> &nbsp;
                                                                                         &nbsp; |
-                                                                                <?php
+                                                                                        <?php
                                                                                     }
                                                                                 }
                                                                                 ?>
@@ -540,12 +537,12 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 <?php
                                                                                 $comments = $task->taskComments()->get();
                                                                                 if (count($comments) > 0) {
-                                                                                ?>
+                                                                                    ?>
                                                                                     <div class="mt-1"> <span class="f-14"><a href="#">What have been
                                                                                                 done</a></span></div>
                                                                                     <?php
                                                                                     foreach ($comments as $comment) {
-                                                                                    ?>
+                                                                                        ?>
                                                                                         <div class="media" class="pb-1">
                                                                                             <a class="media-left" href="#">
                                                                                                 <?php
@@ -565,7 +562,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                             </div>
                                                                                         </div>
 
-                                                                                <?php
+                                                                                        <?php
                                                                                     }
                                                                                 }
                                                                                 ?>
@@ -618,7 +615,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                 @endif
                                                             </div>
                                                         </div>
-                                                <?php
+                                                        <?php
                                                     }
                                                 }
                                                 ?>
@@ -679,12 +676,12 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 <tr>
                                                                                     <th class="social-label b-none p-b-0">School Level</th>
                                                                                     <td class="social-user-name b-none p-b-0"><?php
-                                                                                                                                if (!empty($levels)) {
-                                                                                                                                    foreach ($levels as $level) {
-                                                                                                                                        echo $level->name . ' - ' . $level->result_format . '<br/>';
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                                ?>
+                                                                                        if (!empty($levels)) {
+                                                                                            foreach ($levels as $level) {
+                                                                                                echo $level->name . ' - ' . $level->result_format . '<br/>';
+                                                                                            }
+                                                                                        }
+                                                                                        ?>
                                                                                     </td>
 
                                                                                     <?php /* if( can_access('reset_school_password') && isset($school->username) && !preg_match('/stfrancisgirls/i', strtolower($school->username))) { ?>
@@ -917,7 +914,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                             $i = 1;
                                                                             if (!empty($client_contracts)) {
                                                                                 foreach ($client_contracts as $client_contract) {
-                                                                            ?>
+                                                                                    ?>
                                                                                     <tr>
                                                                                         <th scope="row"><?= $i ?></th>
                                                                                         <td><?= isset($client_contract->name) ? $client_contract->name : '' ?>
@@ -938,7 +935,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                         </td>
                                                                                     </tr>
 
-                                                                            <?php
+                                                                                    <?php
                                                                                     $i++;
                                                                                 }
                                                                             }
@@ -999,11 +996,11 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                         $modules = DB::table('modules')->get();
                                                                         if (!empty($modules)) {
                                                                             foreach ($modules as $module) {
-                                                                        ?>
+                                                                                ?>
                                                                                 <input type="checkbox" id="features<?= $module->id ?>" value="{{$module->id}}" name="module_ids[]">
                                                                                 <?php echo $module->name; ?> &nbsp;
                                                                                 &nbsp;
-                                                                        <?php
+                                                                                <?php
                                                                             }
                                                                         }
                                                                         ?>
@@ -1039,7 +1036,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                             $x = 1;
                                                             $jobcards = \DB::select("select a.*,b.name from admin.client_job_cards a join admin.users b on a.created_by = b.id where client_id = '{$client_id}' order by a.id desc");
                                                             foreach ($jobcards as $jobcard) {
-                                                            ?>
+                                                                ?>
                                                                 <tr>
                                                                     <th scope="row"><?= $x ?></th>
                                                                     <td><?= date('d-m-Y', strtotime($jobcard->date)) ?></td>
@@ -1048,7 +1045,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                         <a target="_break" href="<?= url('customer/viewContract/' . $jobcard->id . '/jobcard') ?>" class="btn btn-sm btn-primary btn-round">View </a>
                                                                     </td>
                                                                 </tr>
-                                                            <?php
+                                                                <?php
                                                                 $x++;
                                                             }
                                                             ?>
@@ -1224,7 +1221,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                             $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->whereIn('train_item_id', \App\Models\TrainItem::where('status', 1)->get(['id']))->get();
                                                             foreach ($trainings as $training) {
                                                                 $status = check_implementation($training->trainItem->content, $schema);
-                                                            ?>
+                                                                ?>
                                                                 <tr>
                                                                     <th scope="row"><input type="checkbox" /></th>
                                                                     <td><?= $training->trainItem->content ?></td>
@@ -1235,9 +1232,9 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                         <?php
                                                                         if (preg_match('/not implemented/i', $status)) {
                                                                             if (date('Y', strtotime($training->start_date)) == 1970 || strtotime($training->start_date) < time()) {
-                                                                        ?>
+                                                                                ?>
                                                                                 <select id="start_date<?= $training->id ?>" class="task_group" data-task-id="<?= $training->id ?>" data-user_id="<?= $training->task->user_id ?>"><?= $customer->getDate($training->task->user_id, $training->start_date) ?></select>
-                                                                        <?php
+                                                                                <?php
                                                                             } else {
                                                                                 echo date('d M Y', strtotime($training->start_date));
                                                                             }
@@ -1259,12 +1256,12 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                     <td>
                                                                         <?php
                                                                         if (preg_match('/not implemented/i', $status)) {
-                                                                        ?>
+                                                                            ?>
                                                                             <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-primary btn-sm btn-round task_allocated_id">Save</button>
                                                                         <?php } ?>
                                                                     </td>
                                                                 </tr>
-                                                            <?php
+                                                                <?php
                                                                 $x++;
                                                             }
                                                             ?>
@@ -1341,9 +1338,9 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                 <td>Basic Configuration</td>
                                                                 <td>
                                                                     <?php
-                                                                    //classlevel
+//classlevel
                                                                     $levels = !empty($username) ? DB::table($schema . '.classlevel')->get() :
-                                                                        DB::table('shulesoft.classlevel')->where('schema_name', $schema)->get();
+                                                                            DB::table('shulesoft.classlevel')->where('schema_name', $schema)->get();
                                                                     if (empty($levels)) {
                                                                         echo '<label class="badge badge-warning">Class Level Not Defined</label>';
                                                                     }
@@ -1354,8 +1351,8 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                         foreach ($levels as $level) {
 
                                                                             $academic_year = !empty($username) ?
-                                                                                DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first() :
-                                                                                DB::table('shulesoft.academic_year')->where('schema_name', $schema)->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first();
+                                                                                    DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first() :
+                                                                                    DB::table('shulesoft.academic_year')->where('schema_name', $schema)->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first();
                                                                             if (empty($academic_year)) {
                                                                                 echo '<label class="badge badge-inverse-warning">Academic Year Not Defined for ' . $level->name . ' (' . date('Y') . ')</label><br/>';
                                                                             }
@@ -1429,7 +1426,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                             <tr>
                                                                 <th scope="row">6</th>
                                                                 <td>SMS sents</td>
-                                                                <td> <?= !empty($username) ? check_status('sms', " where (body not ilike '%kuzaliwa%'  OR body not ilike '%password%' OR body not ilike '%655406004%') "):check_status('sms', " and (body not ilike '%kuzaliwa%'  OR body not ilike '%password%' OR body not ilike '%655406004%') "); ?>
+                                                                <td> <?= !empty($username) ? check_status('sms', " where (body not ilike '%kuzaliwa%'  OR body not ilike '%password%' OR body not ilike '%655406004%') ") : check_status('sms', " and (body not ilike '%kuzaliwa%'  OR body not ilike '%password%' OR body not ilike '%655406004%') "); ?>
                                                                     <br />
                                                                     <?php
                                                                     /*
@@ -1500,7 +1497,19 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                     Integration Date:
                                                                     <?= check_status('bank_accounts_integrations'); ?><br />
                                                                     Last Online Transaction Date:
-                                                                    <?= !empty($username) ? check_status('payments', ' WHERE token is not null'):check_status('payments', ' and token is not null'); ?>
+                                                                    <?= !empty($username) ? check_status('payments', ' WHERE token is not null') : check_status('payments', ' and token is not null'); ?>
+
+                                                                    <h4>Banks</h4>
+                                                                    <?php
+//school defined banks
+                                                                    $bank_details = !empty($username) ?
+                                                                            DB::table($schema . '.bank_accounts')->get() :
+                                                                            DB::table('shulesoft.bank_accounts')->where('schema_name', $schema)->get();
+                                                                    foreach ($bank_details as $bank) {
+                                                                        $refer = DB::table('constant.refer_banks')->where('id', $bank->refer_bank_id)->first();
+                                                                        echo!empty($refer) ? '<br/>'.$refer->name . ',<br/>' : '';
+                                                                    }
+                                                                    ?>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -1615,7 +1624,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                             $users = !empty($username) ? DB::table($schema . '.user')->where('status', 1)->get() : DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->get();
                                                             if (!empty($users)) {
                                                                 foreach ($users as $user) {
-                                                            ?>
+                                                                    ?>
                                                                     <tr>
                                                                         <td><?= $i ?></td>
                                                                         <td><?= $user->name ?></td>
@@ -1623,7 +1632,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                         <td><?= $user->email ?></td>
                                                                         <td><?= $user->usertype ?></td>
                                                                     </tr>
-                                                            <?php
+                                                                    <?php
                                                                     $i++;
                                                                 }
                                                             }
@@ -1722,11 +1731,11 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 $banks = DB::table('constant.refer_banks')->get();
                                                                                 if (!empty($banks)) {
                                                                                     foreach ($banks as $bank) {
-                                                                                ?>
+                                                                                        ?>
                                                                                         <option value="<?= $bank->id ?>">
                                                                                             <?= $bank->name ?>
                                                                                         </option>
-                                                                                <?php
+                                                                                        <?php
                                                                                     }
                                                                                 }
                                                                                 ?>
@@ -1790,7 +1799,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                 <?php
                                                                 $i = 1;
                                                                 foreach ($standingorders as $order) {
-                                                                ?>
+                                                                    ?>
                                                                     <tr>
                                                                         <td><?= $i ?></td>
                                                                         <td><?= $order->type ?? '' ?></td>
@@ -1806,7 +1815,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                             <?php } ?>
                                                                         </td>
                                                                     </tr>
-                                                                <?php
+                                                                    <?php
                                                                     $i++;
                                                                 }
                                                                 ?>
@@ -1854,7 +1863,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                     $total_paid += $paid;
                                                                     $total_amount += $amount;
                                                                     $total_unpaid += $unpaid;
-                                                                ?>
+                                                                    ?>
 
                                                                     <tr>
                                                                         <td><?= $invoice->client->username ?></td>
@@ -1871,10 +1880,10 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                                 <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"><span class="point-marker bg-danger"></span>View</a>
                                                                                     <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a>
                                                                                     {{-- <a
-                                            class="dropdown-item waves-light waves-effect"
-                                            href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
-                                                                                        class="point-marker bg-warning"></span>Delete</a> --}}
-                                                                                    <?php if ((int) $unpaid > 0) { ?>
+                                                    class="dropdown-item waves-light waves-effect"
+                                                    href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
+                                                                                    class="point-marker bg-warning"></span>Delete</a> --}}
+                                                                                        <?php if ((int) $unpaid > 0) { ?>
                                                                                         <hr />
                                                                                         <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add
                                                                                             Payments</a>
@@ -1890,7 +1899,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                             </div>
                                                                         </td>
                                                                     </tr>
-                                                                <?php
+                                                                    <?php
                                                                     $i++;
                                                                 }
                                                                 ?>
@@ -2002,9 +2011,9 @@ $s_address = isset($school->address) ? $school->address : '';
                                 $ctypes = DB::table('admin.contracts_types')->where('id', '!=', '8')->get();
                                 if (!empty($ctypes)) {
                                     foreach ($ctypes as $ctype) {
-                                ?>
+                                        ?>
                                         <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
-                                <?php
+                                        <?php
                                     }
                                 }
                                 ?>
@@ -2061,7 +2070,7 @@ $s_address = isset($school->address) ? $school->address : '';
 
 <?php
 if (!empty($profile)) {
-?>
+    ?>
     <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style=" display: none;" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -2252,296 +2261,296 @@ if (!empty($profile)) {
 <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        $('.getAttachment').click(function() {
-            var task_id = $(this).attr("id");
-            alert(task_id);
-        });
-    });
+                                                                                    $(document).ready(function () {
+                                                                                        $('.getAttachment').click(function () {
+                                                                                            var task_id = $(this).attr("id");
+                                                                                            alert(task_id);
+                                                                                        });
+                                                                                    });
 
-    function RemoveAttr(a) {
-        var val = a;
-        if (val !== '') {
-            $.ajax({
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "<?= base_url('customer/removeTag/null') ?>",
-                data: {
-                    "id": val
-                },
-                dataType: "html",
-                success: function(data) {
-                    toastr.success(data);
-                    location.reload();
-                }
-            });
-        }
-    }
+                                                                                    function RemoveAttr(a) {
+                                                                                        var val = a;
+                                                                                        if (val !== '') {
+                                                                                            $.ajax({
+                                                                                                type: 'POST',
+                                                                                                headers: {
+                                                                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                                                                },
+                                                                                                url: "<?= base_url('customer/removeTag/null') ?>",
+                                                                                                data: {
+                                                                                                    "id": val
+                                                                                                },
+                                                                                                dataType: "html",
+                                                                                                success: function (data) {
+                                                                                                    toastr.success(data);
+                                                                                                    location.reload();
+                                                                                                }
+                                                                                            });
+                                                                                        }
+                                                                                    }
 
-    function chooseValue(value) {
-        if (value == 'complete') {
-            $('#end_date').hide();
-            $('#remainder_date').hide();
-        } else {
-            $('#end_date').show();
-            $('#remainder_date').show();
-        }
-    }
-
-
-    function save(a, id, column) {
-        var val = $('#' + a).text();
-        if (val !== '') {
-            $.ajax({
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "<?= base_url('account/editSetting/null') ?>",
-                data: {
-                    "id": id,
-                    newvalue: val,
-                    column: column,
-                    table: 'tasks'
-                },
-                dataType: "html",
-                beforeSend: function(xhr) {
-                    $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
-                },
-                complete: function(xhr, status) {
-                    $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
-                },
-                success: function(data) {
-                    toastr.success(data);
-                }
-            });
-        }
-    }
-
-    $(document).ready(function() {
-        $('#example').DataTable();
-    });
-
-    $(".select2").select2({
-        theme: "bootstrap",
-        dropdownAutoWidth: false,
-        allowClear: false,
-        debug: true
-    });
-
-    $('#supplied').click(function() {
-        $('#idate')[this.checked ? "show" : "hide"]();
-    });
-
-    function calculate() {
-        var myBox1 = document.getElementById('box1').value;
-        var myBox2 = document.getElementById('box2').value;
-        ue;
-        var result = document.getElementById('result');
-        var myResult = myBox1 * myBox2;
-        x2;
-        result.value = myResult;
-    }
+                                                                                    function chooseValue(value) {
+                                                                                        if (value == 'complete') {
+                                                                                            $('#end_date').hide();
+                                                                                            $('#remainder_date').hide();
+                                                                                        } else {
+                                                                                            $('#end_date').show();
+                                                                                            $('#remainder_date').show();
+                                                                                        }
+                                                                                    }
 
 
-    function save_comment(id) {
-        var content = $('#task_comment' + id).val();
-        var task_id = $('#task_id' + id).val();
-        $.ajax({
-            type: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: "<?= url('customer/taskComment/null') ?>",
-            data: {
-                content: content,
-                task_id: task_id
-            },
-            dataType: "html",
-            success: function(data) {
-                $('input[type="text"],textarea').val('');
-                $('.new_comment' + id).after(data);
-            }
-        });
-    }
+                                                                                    function save(a, id, column) {
+                                                                                        var val = $('#' + a).text();
+                                                                                        if (val !== '') {
+                                                                                            $.ajax({
+                                                                                                type: 'POST',
+                                                                                                headers: {
+                                                                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                                                                },
+                                                                                                url: "<?= base_url('account/editSetting/null') ?>",
+                                                                                                data: {
+                                                                                                    "id": id,
+                                                                                                    newvalue: val,
+                                                                                                    column: column,
+                                                                                                    table: 'tasks'
+                                                                                                },
+                                                                                                dataType: "html",
+                                                                                                beforeSend: function (xhr) {
+                                                                                                    $('#stat' + id).html('<a href="#/refresh"<i class="feather icon-refresh-ccw f-13"></i> </a>');
+                                                                                                },
+                                                                                                complete: function (xhr, status) {
+                                                                                                    $('#stat' + id).html('<label class="badge badge-info ">' + status + '</label>');
+                                                                                                },
+                                                                                                success: function (data) {
+                                                                                                    toastr.success(data);
+                                                                                                }
+                                                                                            });
+                                                                                        }
+                                                                                    }
 
-    notify = function(title, message, type) {
-        new PNotify({
-            title: title,
-            text: message,
-            type: type,
-            hide: 'false',
-            icon: 'icofont icofont-info-circle'
-        });
-    }
+                                                                                    $(document).ready(function () {
+                                                                                        $('#example').DataTable();
+                                                                                    });
 
-    allocate = function(a, role_id) {
-        $.ajax({
-            url: '<?= url('customer/allocate/null') ?>',
-            data: {
-                user_id: a,
-                school_id: '<?= $school->school_id ?? '' ?>',
-                role_id: role_id,
-                schema: '<?= $schema ?>'
-            },
-            dataType: 'html',
-            success: function(data) {
-                $('#supportl').html(data);
-            }
-        });
-    }
+                                                                                    $(".select2").select2({
+                                                                                        theme: "bootstrap",
+                                                                                        dropdownAutoWidth: false,
+                                                                                        allowClear: false,
+                                                                                        debug: true
+                                                                                    });
 
-    show_tabs = function(a) {
-        $('.live_tabs').hide(function() {
-            $('#' + a).show();
-        });
-    }
+                                                                                    $('#supplied').click(function () {
+                                                                                        $('#idate')[this.checked ? "show" : "hide"]();
+                                                                                    });
 
-    $('#school_id').click(function() {
-        var val = $(this).val();
-        $.ajax({
-            url: '<?= url('customer/search/null') ?>',
-            data: {
-                val: val,
-                type: 'school',
-                schema: '<?= $schema ?>'
-            },
-            dataType: 'html',
-            success: function(data) {
-
-                $('#search_result').html(data);
-            }
-        });
-    });
+                                                                                    function calculate() {
+                                                                                        var myBox1 = document.getElementById('box1').value;
+                                                                                        var myBox2 = document.getElementById('box2').value;
+                                                                                        ue;
+                                                                                        var result = document.getElementById('result');
+                                                                                        var myResult = myBox1 * myBox2;
+                                                                                        x2;
+                                                                                        result.value = myResult;
+                                                                                    }
 
 
+                                                                                    function save_comment(id) {
+                                                                                        var content = $('#task_comment' + id).val();
+                                                                                        var task_id = $('#task_id' + id).val();
+                                                                                        $.ajax({
+                                                                                            type: 'POST',
+                                                                                            headers: {
+                                                                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                                                            },
+                                                                                            url: "<?= url('customer/taskComment/null') ?>",
+                                                                                            data: {
+                                                                                                content: content,
+                                                                                                task_id: task_id
+                                                                                            },
+                                                                                            dataType: "html",
+                                                                                            success: function (data) {
+                                                                                                $('input[type="text"],textarea').val('');
+                                                                                                $('.new_comment' + id).after(data);
+                                                                                            }
+                                                                                        });
+                                                                                    }
+
+                                                                                    notify = function (title, message, type) {
+                                                                                        new PNotify({
+                                                                                            title: title,
+                                                                                            text: message,
+                                                                                            type: type,
+                                                                                            hide: 'false',
+                                                                                            icon: 'icofont icofont-info-circle'
+                                                                                        });
+                                                                                    }
+
+                                                                                    allocate = function (a, role_id) {
+                                                                                        $.ajax({
+                                                                                            url: '<?= url('customer/allocate/null') ?>',
+                                                                                            data: {
+                                                                                                user_id: a,
+                                                                                                school_id: '<?= $school->school_id ?? '' ?>',
+                                                                                                role_id: role_id,
+                                                                                                schema: '<?= $schema ?>'
+                                                                                            },
+                                                                                            dataType: 'html',
+                                                                                            success: function (data) {
+                                                                                                $('#supportl').html(data);
+                                                                                            }
+                                                                                        });
+                                                                                    }
+
+                                                                                    show_tabs = function (a) {
+                                                                                        $('.live_tabs').hide(function () {
+                                                                                            $('#' + a).show();
+                                                                                        });
+                                                                                    }
+
+                                                                                    $('#school_id').click(function () {
+                                                                                        var val = $(this).val();
+                                                                                        $.ajax({
+                                                                                            url: '<?= url('customer/search/null') ?>',
+                                                                                            data: {
+                                                                                                val: val,
+                                                                                                type: 'school',
+                                                                                                schema: '<?= $schema ?>'
+                                                                                            },
+                                                                                            dataType: 'html',
+                                                                                            success: function (data) {
+
+                                                                                                $('#search_result').html(data);
+                                                                                            }
+                                                                                        });
+                                                                                    });
 
 
-    task_group = function() {
-        $('.task_groups').change(function() {
-            var val = $(this).val();
-            var task_id = $(this).attr('data-task-id');
-            var data_attr = $('#task_user' + task_id).val();
-            $.ajax({
-                url: '<?= url('customer/getAvailableSlot') ?>/null',
-                method: 'get',
-                data: {
-                    start_date: val,
-                    user_id: data_attr
-                },
-                success: function(data) {
-                    $('#start_slot' + task_id).html(data);
-                }
-            });
-        });
-        $('.task_school_group').blur(function() {
-            var val = $(this).text();
-            var data_attr = $(this).attr('data-attr');
-            var task_id = $(this).attr('task-id');
-            // var date=$('#'+task_id).val();
-            $.ajax({
-                url: '<?= url('customer/editTrain') ?>/null',
-                method: 'get',
-                dataType: 'html',
-                data: {
-                    task_id: task_id,
-                    value: val,
-                    attr: data_attr
-                },
-                success: function(data) {
-                    // $(this).after(data).addClass('label label-success');
-                    notify('Success', 'Success', 'success');
-                }
-            });
-        });
-        $(document).on("click", ".user_dialog", function() {
-            var UserName = $(this).data('id');
-            $(".modal-body #job_date").val(UserName);
-        });
-        $('.slot').change(function() {
-            var val = $(this).val();
-            //var data_attr = $(this).attr('data-attr');
-            var task_id = $(this).attr('data-id');
-            var date = $('#' + task_id).val();
-            $.ajax({
-                url: '<?= url('customer/editTrain') ?>/null',
-                method: 'get',
-                dataType: 'json',
-                data: {
-                    task_id: task_id,
-                    value: date,
-                    slot_id: val,
-                    attr: 'start_date'
-                },
-                success: function(data) {
-                    $('#task_end_date_id' + data.task_id).html(data.end_date);
-                    notify('Success', 'Success', 'success');
-                }
-            });
-        });
 
-        $('.task_allocated_id').mousedown(function() {
-            var task_id = $(this).attr('task-id');
-            var start_date = $('#start_date' + task_id).val();
-            var school_person = $('#school_person' + task_id).text();
-            var section_id = $(this).attr('section_id');
-            $.ajax({
-                url: '<?= url('customer/editTrain') ?>/null',
-                method: 'get',
-                data: {
-                    task_id: task_id,
-                    start_date: start_date,
-                    school_person: school_person,
-                    section_id: section_id
-                },
-                success: function(data) {
-                    notify('Success', data, 'success');
-                }
-            });
-        });
-    }
-    $(document).ready(task_group);
-    $("#town").geocomplete()
-        .bind("geocode:result", function(event, result) {
-            var loc = result.geometry.location;
-            $("#location").val(loc.lng() + ", " + loc.lat());
-        })
-        .bind("geocode:error", function(event, status) {
-            console.log("ERROR: " + status);
-        })
-        .bind("geocode:multiple", function(event, results) {
-            console.log("Multiple: " + results.length + " results found");
-        });
 
-    $('select[name =status]').change(function() {
-        var val = $(this).val();
-        var id = $(this).attr('id');
-        $.ajax({
-            url: '<?= url('customer/updateSstatus') ?>',
-            method: 'POST',
-            dataType: 'json',
-            data: {
-                task_id: id,
-                status: val,
+                                                                                    task_group = function () {
+                                                                                        $('.task_groups').change(function () {
+                                                                                            var val = $(this).val();
+                                                                                            var task_id = $(this).attr('data-task-id');
+                                                                                            var data_attr = $('#task_user' + task_id).val();
+                                                                                            $.ajax({
+                                                                                                url: '<?= url('customer/getAvailableSlot') ?>/null',
+                                                                                                method: 'get',
+                                                                                                data: {
+                                                                                                    start_date: val,
+                                                                                                    user_id: data_attr
+                                                                                                },
+                                                                                                success: function (data) {
+                                                                                                    $('#start_slot' + task_id).html(data);
+                                                                                                }
+                                                                                            });
+                                                                                        });
+                                                                                        $('.task_school_group').blur(function () {
+                                                                                            var val = $(this).text();
+                                                                                            var data_attr = $(this).attr('data-attr');
+                                                                                            var task_id = $(this).attr('task-id');
+                                                                                            // var date=$('#'+task_id).val();
+                                                                                            $.ajax({
+                                                                                                url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                method: 'get',
+                                                                                                dataType: 'html',
+                                                                                                data: {
+                                                                                                    task_id: task_id,
+                                                                                                    value: val,
+                                                                                                    attr: data_attr
+                                                                                                },
+                                                                                                success: function (data) {
+                                                                                                    // $(this).after(data).addClass('label label-success');
+                                                                                                    notify('Success', 'Success', 'success');
+                                                                                                }
+                                                                                            });
+                                                                                        });
+                                                                                        $(document).on("click", ".user_dialog", function () {
+                                                                                            var UserName = $(this).data('id');
+                                                                                            $(".modal-body #job_date").val(UserName);
+                                                                                        });
+                                                                                        $('.slot').change(function () {
+                                                                                            var val = $(this).val();
+                                                                                            //var data_attr = $(this).attr('data-attr');
+                                                                                            var task_id = $(this).attr('data-id');
+                                                                                            var date = $('#' + task_id).val();
+                                                                                            $.ajax({
+                                                                                                url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                method: 'get',
+                                                                                                dataType: 'json',
+                                                                                                data: {
+                                                                                                    task_id: task_id,
+                                                                                                    value: date,
+                                                                                                    slot_id: val,
+                                                                                                    attr: 'start_date'
+                                                                                                },
+                                                                                                success: function (data) {
+                                                                                                    $('#task_end_date_id' + data.task_id).html(data.end_date);
+                                                                                                    notify('Success', 'Success', 'success');
+                                                                                                }
+                                                                                            });
+                                                                                        });
 
-            },
-            success: function(data) {
-                toastr.success(data.message);
-                window.location.reload();
-            }
-        });
-    });
+                                                                                        $('.task_allocated_id').mousedown(function () {
+                                                                                            var task_id = $(this).attr('task-id');
+                                                                                            var start_date = $('#start_date' + task_id).val();
+                                                                                            var school_person = $('#school_person' + task_id).text();
+                                                                                            var section_id = $(this).attr('section_id');
+                                                                                            $.ajax({
+                                                                                                url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                method: 'get',
+                                                                                                data: {
+                                                                                                    task_id: task_id,
+                                                                                                    start_date: start_date,
+                                                                                                    school_person: school_person,
+                                                                                                    section_id: section_id
+                                                                                                },
+                                                                                                success: function (data) {
+                                                                                                    notify('Success', data, 'success');
+                                                                                                }
+                                                                                            });
+                                                                                        });
+                                                                                    }
+                                                                                    $(document).ready(task_group);
+                                                                                    $("#town").geocomplete()
+                                                                                            .bind("geocode:result", function (event, result) {
+                                                                                                var loc = result.geometry.location;
+                                                                                                $("#location").val(loc.lng() + ", " + loc.lat());
+                                                                                            })
+                                                                                            .bind("geocode:error", function (event, status) {
+                                                                                                console.log("ERROR: " + status);
+                                                                                            })
+                                                                                            .bind("geocode:multiple", function (event, results) {
+                                                                                                console.log("Multiple: " + results.length + " results found");
+                                                                                            });
 
-    function printDiv(divID) {
-        var divElements = document.getElementById(divID).innerHTML;
-        var oldPage = document.body.innerHTML;
+                                                                                    $('select[name =status]').change(function () {
+                                                                                        var val = $(this).val();
+                                                                                        var id = $(this).attr('id');
+                                                                                        $.ajax({
+                                                                                            url: '<?= url('customer/updateSstatus') ?>',
+                                                                                            method: 'POST',
+                                                                                            dataType: 'json',
+                                                                                            data: {
+                                                                                                task_id: id,
+                                                                                                status: val,
 
-        document.body.innerHTML = '<html><head><title></title></head><body>' + divElements + '</body>';
-        window.print();
-        //Restore orignal HTML
-        document.body.innerHTML = oldPage;
-    }
+                                                                                            },
+                                                                                            success: function (data) {
+                                                                                                toastr.success(data.message);
+                                                                                                window.location.reload();
+                                                                                            }
+                                                                                        });
+                                                                                    });
+
+                                                                                    function printDiv(divID) {
+                                                                                        var divElements = document.getElementById(divID).innerHTML;
+                                                                                        var oldPage = document.body.innerHTML;
+
+                                                                                        document.body.innerHTML = '<html><head><title></title></head><body>' + divElements + '</body>';
+                                                                                        window.print();
+                                                                                        //Restore orignal HTML
+                                                                                        document.body.innerHTML = oldPage;
+                                                                                    }
 </script>
 @endsection
