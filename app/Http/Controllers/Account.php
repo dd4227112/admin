@@ -30,6 +30,90 @@ class Account extends Controller {
         return view('account.report.index', $this->data);
     }
 
+    public function fee() {
+        $this->data['users'] = [];
+        $this->data['students'] = 400;
+        $id = request()->segment(3);
+        if ((int) $id > 0) {
+            $this->data['students'] = $id;
+        }
+        $this->data['modules'] = ['Administration', 'Operations', 'Academic', 'Digital Learning', 'Communications', 'Accounts'];
+
+        return view('account.invoice.setfee', $this->data);
+    }
+
+    private function getModuleName($key) {
+        $modules = [
+            'Administration' => [0, 6, 12],
+            'Operations' => [1, 7, 13],
+            'Academic' => [2, 8, 14],
+            'Digital Learning' => [3, 9, 15],
+            'Communications' => [4, 10, 16],
+            'Accounts' => [5, 11, 17]
+        ];
+        $module = '';
+        foreach ($modules as $key1 => $value) {
+            if (in_array($key, $value)) {
+                $module = $key1;
+            }
+        }
+        return $module;
+    }
+
+    public function getPackageType($key) {
+        $package = '';
+        if ($key >= 0 && $key <= 5) {
+            $package = 'Basic';
+        } else if ($key >= 6 && $key <= 11) {
+            $package = 'Standard';
+        } else {
+            $package = 'Premium';
+        }
+        return $package;
+    }
+
+    public function getMinimumStudents($students) {
+        $min = '';
+        if ($students == 400) {
+            $min = 201;
+        } else if ($students == 1000) {
+            $min = 401;
+        } else {
+            $min = 1000;
+        }
+        return $min;
+    }
+
+    public function setPrice() {
+        $students = request()->student;
+        $packages = request()->select;
+        foreach ($packages as $key => $value) {
+            if ((int) $value > 0) {
+                $check = DB::table('admin.price_packages')
+                                ->where('number', $key)
+                                ->where('package_type', $this->getPackageType($key))
+                                ->where('module_name', $this->getModuleName($key))
+                                ->where('maximum_students', $students)->first();
+                if (empty($check)) {
+                    DB::table('admin.price_packages')->insert([
+                        'module_name' => $this->getModuleName($key),
+                        'package_type' => $this->getPackageType($key),
+                        'number' => $key,
+                        'price' => $value,
+                        'maximum_students' => $students,
+                        'minimum_students' => $this->getMinimumStudents($students)]);
+                } else {
+                    DB::table('admin.price_packages')
+                            ->where('number', $key)
+                            ->where('package_type', $this->getPackageType($key))
+                            ->where('module_name', $this->getModuleName($key))
+                            ->where('maximum_students', $students)->update(['price' => $value]);
+                }
+            }
+        }
+        echo 'success';
+    }
+
     public function projection() {
         $this->data['invoice_type'] = $invoice_type = request()->segment(3);
         $this->data['client_id'] = $client_id = request()->segment(4);
@@ -1720,7 +1804,7 @@ class Account extends Controller {
         $paid_amount = request('paid_amount');
         $username = request('username');
         $invoice = DB::table('invoices_sent')->where('year', date('Y'))->where('schema_name', $username)->first();
-        if (!empty($invoice)) {          
+        if (!empty($invoice)) {
             DB::table('invoices_sent')
                     ->where('year', date('Y'))
                     ->where('schema_name', $username)

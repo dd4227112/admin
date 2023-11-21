@@ -76,7 +76,7 @@ postgresqltuner --ssd
 
 
 #getting wifi password
-netsh wlan show profile name="network_name" key=clear
+netsh wlan show profile name="SHULESOFT" key=clear
 
 #update from another table
 UPDATE shulesoft.proforma_invoices a
