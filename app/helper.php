@@ -1,4 +1,5 @@
 <?php
+define('TOKEN_LIVE','LuHa6bAjKV5g5');
 
 function check_implementation($activity, $schema_name) {
     $status = '';
@@ -8,7 +9,7 @@ function check_implementation($activity, $schema_name) {
         //all classes have published an exam
         $classes = !empty($username) ? DB::table($schema_name . '.classes')->count() : DB::table('shulesoft.classes')->where('schema_name', $schema_name)->count();
         $exams = !empty($username) ? DB::table($schema_name . '.exam_report')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.exam_report')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
-        ;
+    
         if ($exams >= $classes) {
             $status = ' Implemented';
         } else {
@@ -18,7 +19,7 @@ function check_implementation($activity, $schema_name) {
         //receive at least 10 payments
 
         $payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->where('schema_name', $schema_name)->count();
-        ;
+        
         if ($payments >= 10) {
             $status = 'Implemented';
         } else {
@@ -27,7 +28,7 @@ function check_implementation($activity, $schema_name) {
     } else if (preg_match('/nmb/i', strtolower($activity))) {
         //receive at least 10 payments
         $nmb_payments = !empty($username) ? DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count() : DB::table('shulesoft.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->where('schema_name', $schema_name)->count();
-        ;
+        
         $mappend = !empty($username) ? DB::table($schema_name . '.bank_accounts_integrations')->join($schema_name . '.bank_accounts', $schema_name . '.bank_accounts.id', '=', $schema_name . '.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks', $schema_name . '.bank_accounts.refer_bank_id', '=', 'constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count() : DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $schema_name)->count();
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
         if ($nmb_payments >= 10) {

@@ -26,7 +26,7 @@ class Customer extends Controller
 
     public function __construct()
     {
-        if (!preg_match('/898uuhihdsdskj/i', request()->segment(1))) {
+        if (!preg_match('/'.TOKEN_LIVE.'/i', request()->segment(1))) {
             $this->middleware('auth');
         }
     }

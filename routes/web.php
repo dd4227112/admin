@@ -53,7 +53,7 @@ foreach ($bad_url as $value) {
         exit;
     }
 }
-$token='4343';
+$token=TOKEN_LIVE;
 Route::get('/'.$token.'/live/{id}/{year}/{is_customer?}', 'Customer@usageAnalysis');
 
 //list of schools that use particular bank eg NMB, CRDB etc
