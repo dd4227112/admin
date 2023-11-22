@@ -1381,7 +1381,7 @@ class Customer extends Controller
         $sql = 'select distinct b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, 
         a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id 
         JOIN shulesoft.setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where a.is_allocated=1 and f.status=1 and b.status=1 and 
-          a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id)';
+          a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id) and b.region_id in (select id from admin.regions where refer_zone_id in (select zone_id from admin.zone_managers where user_id=a.user_id))';
 
         $this->data['contents'] = DB::select($sql);
         $this->data['headers'] = \collect($this->data['contents'])->first();
