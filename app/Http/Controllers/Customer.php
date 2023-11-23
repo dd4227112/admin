@@ -1292,7 +1292,7 @@ class Customer extends Controller
         $sql = DB::table('admin.clients')->where('status', 1)
             ->whereNotIn('username', $skip);
         strlen(request('schools')) > 3 ? $sql->whereIn('username', explode(',', request('schools'))) : '';
-        strlen(request('regions')) > 3 ? $sql->whereIn('regions', explode(',', request('regions'))) : '';
+        strlen(request('regions')) > 3 ? $sql->whereIn('region_id', explode(',', request('regions'))) : '';
         $year = date('Y') - 1;
         (int) request('is_client') == 1 ? $sql->whereIn('username', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', '>=', $year)->get(['client_id']))->get(['username'])) : '';
         $this->data['schools'] = $sql->get();
