@@ -69,7 +69,7 @@
             <form action="" method="POST" class="form">
                 @csrf
                 <h6>Pick date </h6>
-                <input type="date" name="date" value="{{$date}}" class="form-control">
+                <input type="date" name="date1" value="{{$dates[0]}}" class="form-control">
         </div>
         <div class="col-sm-12 col-lg-3 m-b-20">
             <h6>Duration </h6>
@@ -86,9 +86,10 @@
         </div>
         </form>
     </div>
-    <input type="hidden" name="date" value="{{$date}}">
-    <input type="hidden" name="next1" value="{{$next1}}">
-    <input type="hidden" name="next2" value="{{$next2}}">
+    <input type="hidden" name="date1" value="{{$dates[0]}}"> 
+    <input type="hidden" name="date2" value="{{$dates[1]}}">
+    <input type="hidden" name="date3" value="{{$dates[2]}}">
+    <input type="hidden" name="date4" value="{{$dates[3]}}">
     <input type="hidden" name="difference" value="{{$difference}}">
     <div class="row">
         <div class="col-md-6 col-xl-4 click_view this_month">
@@ -98,7 +99,7 @@
                         <div class="col-8">
                             <h4 class="text-c-green f-w-700">{{ number_format($current)}} </h4>
                             <h6 class="text-muted m-b-0">This {{$duration}} </h6>
-                            <h6 class="text-muted m-b-0">{{$next1}} - {{$date}} </h6>
+                            <h6 class="text-muted m-b-0">{{$dates[0]}} - {{$dates[1]}} </h6>
                         </div>
                         <div class="col-4 text-right">
                             <i class="feather icon-activity f-30"></i>
@@ -118,7 +119,7 @@
                         <div class="col-8">
                             <h4 class="text-c-green f-w-700">{{ number_format($last)}} </h4>
                             <h6 class="text-muted m-b-0">Last {{$duration}}</h6>
-                            <h6 class="text-muted m-b-0">{{$next2}} - {{$next1}} </h6>
+                            <h6 class="text-muted m-b-0">{{$dates[2]}} - {{$dates[3]}} </h6>
                         </div>
                         <div class="col-4 text-right">
                             <i class="feather icon-activity f-30"></i>
@@ -134,7 +135,7 @@
                     <div class="row align-items-center">
                         <div class="col-8">
                             <h4 class="text-<?=$difference<0?'danger':'success'?> f-w-700">{{ number_format($difference)}} ({{$percent}})% </h4>
-                            <h6 class="text-muted m-b-0">Difference</h6>
+                            <h6 class="text-muted m-b-0">Not Issues last {{ $duration }}</h6>
                         </div>
                         <div class="col-4 text-right">
                             <i class="feather icon-activity f-30"></i>
@@ -180,12 +181,14 @@
 <script type="text/javascript">
     function fetch_data(item) {
         $('.body').html("<div class='loader-container'><div class='loader'></div><div class='loading-text'>Please Wait...</div></div>");
-        var date = $('input[name =date]').val();
-        var next1 = $('input[name =next1]').val();
-        var next2 = $('input[name =next2]').val();
+        var date1 = $('input[name =date1]').val();
+        var date2 = $('input[name =date2]').val();
+        var date3 = $('input[name =date3]').val();
+        var date4 = $('input[name =date4]').val();
+
         var difference  = $('input[name =difference]').val();
         $.ajax({
-            url: "fetch_school/" + next1 + "/" + next2 + "/" + date + "/" + item+"/"+difference,
+            url: "fetch_school/" + date1 + "/" + date2 + "/" + date3 + "/"+date4+"/" + item+"/"+difference,
             type: 'POST',
             dataType: 'json', // Assuming the response is in JSON format
             success: function(data) {
@@ -193,7 +196,7 @@
                 table.destroy();
                 $('#load_data').DataTable({
                     ajax: {
-                        url: "fetch_school/" + next1 + "/" + next2 + "/" + date + "/" + item+"/"+difference,
+                        url: "fetch_school/" + date1 + "/" + date2 + "/" + date3 + "/"+date4+"/" + item+"/"+difference,
                         dataSrc: 'data',
                     },
                     columns: [{
@@ -233,10 +236,6 @@
     difference = function() {
         $('.difference_btn').on('click', function() {
             var difference  = $('input[name =difference]').val();
-            if(difference ==0){
-                alert('No differences');
-                return false;
-            }
             fetch_data('difference');
         });
 
