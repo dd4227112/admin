@@ -430,8 +430,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $sql = "SELECT COUNT(distinct a.schema_name) from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $date3 . ' 00:00:00' . "' and '" . $date4 . ' 23:59:59' . "' and a.schema_name not in (" . $not_in . ") and schema_name not in ".$demo_schema."  and schema_name in (select username from admin.clients where status in (1,2))";
        
         $this->data['difference'] = $difference = \collect(DB::select("$sql"))->first()->count;
-        $this->data['percent'] =  number_format($current > 0 ? ($difference / $current) * 100 :0);
-
+        
         $this->data['duration'] = $duration;
         $this->data['dates'] = $dates;
         return view('analyse.account_usage', $this->data);

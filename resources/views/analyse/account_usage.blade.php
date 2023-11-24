@@ -134,8 +134,8 @@
                 <div class="card-block">
                     <div class="row align-items-center">
                         <div class="col-8">
-                            <h4 class="text-<?=$difference<0?'danger':'success'?> f-w-700">{{ number_format($difference)}} ({{$percent}})% </h4>
-                            <h6 class="text-muted m-b-0">Not Issues last {{ $duration }}</h6>
+                            <h4 class="text-<?=$difference<0?'danger':'success'?> f-w-700">{{ number_format($difference)}} </h4>
+                            <h6 class="text-muted m-b-0">Not Issues this {{ $duration }} but Issued last {{ $duration }}</h6>
                         </div>
                         <div class="col-4 text-right">
                             <i class="feather icon-activity f-30"></i>
