@@ -179,7 +179,11 @@ $s_address = isset($school->address) ? $school->address : '';
                                                             echo '<div class="btn btn-warning">Resale</div>';
                                                         } elseif ($st->school_status == 4) {
                                                             echo '<div class="btn btn-danger"> Inactive </div>';
-                                                        } elseif ($st->school_status == 6) {
+                                                        } 
+                                                        elseif ($st->school_status == 5) {
+                                                            echo '<div class="btn btn-warning"> Migration </div>';
+                                                        }
+                                                        elseif ($st->school_status == 6) {
                                                             echo '<div class="btn btn-warning"> Suspended </div>';
                                                         } else {
                                                             echo '<div class="btn btn-warning">Not defined</div>';

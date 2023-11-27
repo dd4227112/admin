@@ -36,8 +36,8 @@ class SyncDataToNewVersion extends Command {
      * @return int
      */
     public function handle() {
-
-        $client = DB::table('admin.clients')->where('status', 4)->first(); //We transfer one at a time
+        // migration status changed from 4 to 5 refer controller Customer@schoolStatus
+        $client = DB::table('admin.clients')->where('status', 5)->first(); //We transfer one at a time
         // We first set basic data via transfer control
         if (!empty($client)) {
             $control_check = DB::table('admin.transfer_control')->where('schema_name', $client->username)->first();
@@ -233,6 +233,7 @@ class SyncDataToNewVersion extends Command {
         DB::table('admin.transfer_control')->where('schema_name', $client->username)->update(['ten_stage' => 1]);
         //update clients tables
         DB::table('admin.clients')->where('username', $client->username)->update(['status' => 1, 'is_new_version' => 1]);
+        DB::table('shulesoft.setting')->where('schema_name', $client->username)->update(['school_status' => 1]);
         DB::statement('update shulesoft.salaries a  set user_sid=(select sid from shulesoft.users where schema_name=\'' . $client->username . '\' and  id=a.user_id and "table"=a."table" ) where schema_name=\'' . $client->username . '\' and user_sid is null');
         $this->install_chart_account($client);
         $this->insertReveneExpense($client);

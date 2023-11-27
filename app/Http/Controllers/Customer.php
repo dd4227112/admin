@@ -1566,23 +1566,16 @@ class Customer extends Controller
 
     public function schoolStatus()
     {
+       
+    //    Now I have update to use the same status number for both setting and clients tables to remove confusion
+    // where 1= active and paid, 2 = active, 3 = resale  4 = inactive, 5 = under migration and 6 = suspended
         if ($_POST) {
             $schema = request('schema_name');
             $status = request('status');
-            // migration, update admin.clients set status =4 (4=migration)
-            if ($status == 5) {
-                DB::table('admin.clients')->where('username', $schema)->update(['status' => 4]);
-            }
-            // suspended, update admin.clients set status =3 (3=suspended)
-            if ($status == 6) {
-                DB::table('admin.clients')->where('username', $schema)->update(['status' => 3]);
-            }
             $is_new_version = DB::table('admin.clients')->where(['username' => $schema, 'is_new_version' => 1])->first();
             !empty($is_new_version)? DB::table('shulesoft.setting')->where('schema_name', $schema)->update(['school_status' => $status]) : DB::table($schema . '.setting')->update(['school_status' => $status]);
-            //also update client status, set status = 1 active
-            if ($status == 1 || $status == 2) {
-                DB::table('admin.clients')->where('username', $schema)->update(['status' => 1]);
-            }
+            //also update client status
+            DB::table('admin.clients')->where('username', $schema)->update(['status' => $status]);
             return redirect()->back()->with('success', $schema . ' Status Updated successfuly');
         }
     }
