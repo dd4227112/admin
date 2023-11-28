@@ -1625,7 +1625,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                         <tbody>
                                                             <?php
                                                             $i = 1;
-                                                            $users = !empty($username) ? DB::table($schema . '.user')->where('status', 1)->get() : DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->get();
+                                                            $users = !empty($username) ? DB::table($schema . '.user')->where('status', 1)->whereNotIn('usertype', ['customer', 'student', 'parent', 'cook', 'Normal', 'vendor', 'Scout'])->get() : DB::table('shulesoft.user')->where('schema_name', $schema)->where('status', 1)->whereNotIn('usertype', ['customer', 'student', 'parent', 'cook', 'Normal', 'Scout'])->get();
                                                             if (!empty($users)) {
                                                                 foreach ($users as $user) {
                                                                     ?>
