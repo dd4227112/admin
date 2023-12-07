@@ -780,7 +780,7 @@ We shall let you know once we have done with verification, then you can proceed 
         $quantity = $amount / 20;
         $addon_payment = [
             'payment_id' => $payment_id,
-            'addon_id' => $addon_id,
+            'fee_id' => $addon_id,
             'client_id' => $client_id,
             'quantity' => $quantity
         ];
@@ -806,6 +806,7 @@ We shall let you know once we have done with verification, then you can proceed 
         $id = request()->segment(3);
         $this->data['request'] = $request = \App\Models\IntegrationRequest::find($id);
         $this->data['comments'] = \App\Models\IntegrationRequestComment::where('integration_request_id', $id)->get();
+        $this->data['sender_name'] =DB::table('shulesoft.sms_keys')->where('schema_name', $request->client->username)->where('name', 'quick-sms')->first();
         $school = DB::table('admin.schools')->where('schema_name', $request->client->username)->first();
         $this->data['school'] = !empty($school) ? \App\Models\SchoolContact::where('school_id', $school->id)->first() : [];
         $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();

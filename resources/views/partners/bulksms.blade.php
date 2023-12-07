@@ -201,159 +201,29 @@
                                         <tr>
                                             <th scope="row">Sender Name</th>
                                             <th>
-                                                <?php
-                                                if ($request->user_id != '') {
-                                                    echo $refer_bank;
-                                                }
-                                                ?>
+                                               {{ $sender_name->phone_number }}
                                         </tr>
-                                        <tr>
-                                            <th> Account Number </th>
-                                            <th><?php echo $number; ?> </th>
-                                        </tr>
-
-                                        <tr>
-                                            <th>Branch Name</th>
-                                            <th> <?= $branch ?></th>
-                                        </tr>
-                                        <?php
-                                        if ((int) $request->bank_approved == 1) {
-                                            if (!empty($request)) {
-                                                ?>
-                                                <?php
-                                                $client = DB::table('admin.clients')->where('username', $request->client->username)->first();
-
-                                                if ((int) $client->is_new_version == 1) {
-                                                  $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->where('schema_name', $request->client->username)->first();
-                                                  if (empty($integrated) ){
-                                                    $bank_id = \DB::select("select * from shulesoft.bank_accounts where uuid =(select uuid from ".$request->client->username.".bank_accounts where id =".$request->bank_account_id.")");
-                                                    $integrated = \DB::table('shulesoft.bank_accounts_integrations')->where('bank_account_id', $bank_id[0]->id)->where('schema_name', $request->client->username)->first();
-                                                    
-                                                  }
-
-                                                }else{
-                                                        $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
-                                                
-                                                }
-                                                
-                                               
-                                                ?>
-                                                <tr>
-                                                    <th>Invoice Prefix</th>
-                                                    <th> <?= $integrated->invoice_prefix ?></th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Payment Type </th>
-                                                    <th> <?= $integrated->payment_type ?></th>
-                                                </tr>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="col-sm-6">
                                 <h3>Attachments</h3>
                                 <?php
-                                $bank_docs = \App\Models\IntegrationRequestDocument::where('integration_request_id', $request->id)->get();
-                                if (count($bank_docs) > 0) {
+                                if (isset($sender_name->file_path)) {
                                     ?>
                                     <table class="table m-0">
                                         <tbody>
-                                            <?php
-                                            foreach ($bank_docs as $bank_doc) {
-                                                if ($bank_doc->company_file_id) {
-                                                    ?>
                                                     <tr>
-                                                        <th scope="row"><?= $bank_doc->companyfile->name ?> </th>
-
-                                                        <th> <a href="<?= url('Partner/viewfile/' . $bank_doc->company_file_id) ?>" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
+                                                        <th scope="row"></th>
+                                                        <th> <a href=" {{ $sender_name->file_path }}" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
                                                     </tr>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
                                         </tbody>
                                     </table>
                                 <?php } ?>
                             </div>
                         </div>
                         <hr>
-                        <div class="row">
-                            <div class="col-sm-6">
 
-                                <div class="table-responsive">
-
-                                    <table class="table">
-
-                                        <thead>
-                                            <tr  style="border-bottom: 5px solid #8CDDCD;">
-                                                <th colspan="2" style="background:#8CDDCD;text-align: center;
-                                                    font-size: 18px;
-                                                    color: white;">
-                                                    <?= $refer_bank ?>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p>On behalf of <b> <?= $refer_bank ?></b> Limited, the aforementioned services headed by</p>
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Name:</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Designation:</td>
-                                            </tr>
-                                            <!-- <tr>
-                                            <td>Department:</td>
-                                          </tr> -->
-                                            <tr>
-                                                <td>Signature</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="table-responsive">
-                                    <table class="table">
-
-                                        <thead>
-                                            <tr  style="border-bottom: 5px solid #8CDDCD;">
-                                                <th colspan="2" style="background:#8CDDCD;text-align: center;
-                                                    font-size: 18px;
-                                                    color: white;">SHULESOFT LIMITED</th>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    <p>On behalf of <b>SHULESOFT Limited</b>, the aforementioned services headed by</p>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Name:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; <?= $user_name ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Designation:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <?= $usertype ?></td>
-                                            </tr>
-                                            <!-- <tr>
-                                            <td>Department:</td>
-                                          </tr> -->
-                                            <tr>
-                                                <td>Signature   &nbsp; &nbsp;  &nbsp; &nbsp;</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                        </div>
                         <table class="table">
                             <tr>
                                 <td style="width: 60% !important;">
