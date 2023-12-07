@@ -41,7 +41,8 @@ class SendBirhdayWishes extends Command
         if(date('H:i') =='04:40'){
             $schemas = DB::select('select distinct schema_name as table_schema from  shulesoft.setting where schema_name in (select username from admin.clients where status=1 )');
             foreach ($schemas as $schema) {
-                if (!in_array($schema->table_schema, array('public', 'betatwo', 'api', 'admin'))) {
+                // activetots requested  to disable birthday sms
+                if (!in_array($schema->table_schema, array('public', 'betatwo', 'api', 'admin', 'activetots'))) {
                     //Remind parents,class and section teachers to wish their students
 
                     $sql = "insert into shulesoft.sms (schema_name,body,phone_number,status,type,user_id,\"table\",sms_keys_id)"

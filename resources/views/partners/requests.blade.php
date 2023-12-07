@@ -125,13 +125,13 @@ $objects = [
                 </div>
 
                 <div class="card-header">
-                    <h5>Schools Onboarding Status </h5>
-
-                    <div class='form-group row col-lg-8'>
-                        <label for="parent_type" class="col-sm-2 control-label">
-                            Select Type <span class="red">*</span>
+                     <div class='form-group row col-sm-12'>
+                     <div class="col-sm-2">
+                        <label for="parent_type" class="control-label">
+                            Select Integration Type
                         </label>
-                        <div class="col-sm-10">
+                     </div>
+                        <div class="col-sm-6">
 
                             <select name="type_id" id="integration_type" onchange="window.location.href = '<?= url('Partner/index') ?>/' + this.value" class="form-control">
                                 <?php
@@ -235,8 +235,14 @@ $objects = [
                                             <td><?= $request->shulesoft_approved == 1 ? '<b class="label label-success" title="' . $request->approval->name . '"> Approved </b>' : '<b class="label label-warning"> Not Approved </b>' ?></td>
                                             <td><?= timeAgo($request->created_at) ?></td>
                                             <td>
+                                                <!-- crdb integration -->
+                                                <?php if($type_id == 4 ){?>
                                                 <a class="btn btn-info btn-sm" href="<?= url('Partner/view/' . $request->id) ?>">View</a>
                                                 <!--<a href="https://<?= $request->client->username ?>.shulesoft.com/database/<?php echo $request->client->username; ?>" target="_blank" class="btn btn-success btn-sm"> Install System</a>-->
+                                                <!-- bulk sms request -->
+                                                <?php } if ($type_id == 2) {?> 
+                                                    <a class="btn btn-info btn-sm" href="<?= url('Partner/viewbulksms/' . $request->id) ?>">View</a>
+                                               <?php } ?>
                                             </td>
                                             </tr>
                                             <?php

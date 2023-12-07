@@ -802,5 +802,15 @@ We shall let you know once we have done with verification, then you can proceed 
         $samplefile = storage_path('uploads/images/sample.pdf'); // Upload the actual sample pdf file named sample
         return response()->download($samplefile);
     }
+    public function viewbulksms(){
+        $id = request()->segment(3);
+        $this->data['request'] = $request = \App\Models\IntegrationRequest::find($id);
+        $this->data['comments'] = \App\Models\IntegrationRequestComment::where('integration_request_id', $id)->get();
+        $school = DB::table('admin.schools')->where('schema_name', $request->client->username)->first();
+        $this->data['school'] = !empty($school) ? \App\Models\SchoolContact::where('school_id', $school->id)->first() : [];
+        $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();
+        return view('partners.bulksms', $this->data);
+
+    }
 
 }
