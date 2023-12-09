@@ -41,6 +41,8 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\checkBeamSMSBalance::class,
         \App\Console\Commands\missingPayment::class,
         \App\Console\Commands\Lineshop\DailyReport::class,
+        \App\Console\Commands\transferMissing::class,
+
 
 
 
@@ -172,6 +174,14 @@ class Kernel extends ConsoleKernel
         } catch (\Exception $e) {
             Log::error('Lineshop daily report failed' . $e->getMessage());
         }
+
+        try {
+            $schedule->command('transfer:missing')->weeklyOn('Saturday', $time = '18:30');
+        } catch (\Exception $e) {
+            Log::error('Lineshop daily report failed' . $e->getMessage());
+        }
+
+        
 
         // configure the service set RestartSec = 1 minute currently disabled
         // try {

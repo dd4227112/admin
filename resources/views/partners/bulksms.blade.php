@@ -265,55 +265,22 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add Comment For this Application Request</h4>
+                <h4 class="modal-title">Approve Application Request</h4>
             </div>
-            <form action="<?= url('Partner/RequestComment') ?>" class="form-card" method="post">
+            <form action="<?= url('Partner/UpdateSMSStatus') ?>" class="form-card" method="post">
                 <div class="modal-body">
 
                     <div class="form-group">
                         <div class="row">
-                            <?php
-                            $i = 1;
-                            if (sizeof($comments)) {
-                                ?>
-                                <div class="col-sm-12">
-                                    <?php foreach ($comments as $act) { ?>
-                                        <div class="media chat-messages">
-                                            <a class="media-left photo-table" href="#!">
-                                                <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
-                                            </a>
-                                            <div class="media-body chat-menu-content">
-                                                <div class="">
-                                                    <p class="chat-cont"><?= $act->comment ?><br>
-                                                        <b>By</b> - <?= $act->user->name ?>   &nbsp; &nbsp; &nbsp; &nbsp;
-                                                        <b>On</b> - <?= timeAgo($act->created_at) ?>   &nbsp; &nbsp; &nbsp; &nbsp;
-                                                        <b>Status</b> - <?= ucfirst($act->status) ?>   &nbsp; &nbsp; &nbsp; &nbsp;
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                    <?php } ?>
-                                </div>
-                            <?php } ?>
                             <div class="col-md-12">
-                                <strong> Select Comment Status</strong>
+                                <strong> Select Option</strong>
                                 <input type="hidden" name="integration_request_id" value="<?= $request->id ?>"  class="form-control">
                                 <input type="hidden" name="user_id" value="<?= Auth::user()->id ?>"  class="form-control">
                                 <select type="text" name="status" required class="form-control select2">
                                     <option value='1'>Select Here...</option>
-                                    <option value='Accepted'>Accepted</option>
-                                    <option value='Rejected'>Rejected</option>
-                                    <option value='Pending'>Pending</option>
+                                    <option value='1'>Accepted</option>
+                                    <option value='2'>Rejected</option>
                                 </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <strong> Write your Comment</strong>
-                                <textarea name="comment" value="" rows="5" class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
