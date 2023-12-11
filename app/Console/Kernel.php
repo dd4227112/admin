@@ -175,11 +175,11 @@ class Kernel extends ConsoleKernel
             Log::error('Lineshop daily report failed' . $e->getMessage());
         }
 
-        try {
-            $schedule->command('transfer:missing')->weeklyOn('Saturday', $time = '18:30');
-        } catch (\Exception $e) {
-            Log::error('Lineshop daily report failed' . $e->getMessage());
-        }
+        // try {
+        //     $schedule->command('transfer:missing')->weeklyOn('Saturday', $time = '18:30');
+        // } catch (\Exception $e) {
+        //     Log::error('Lineshop daily report failed' . $e->getMessage());
+        // }
 
         
 
