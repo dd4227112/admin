@@ -61,7 +61,8 @@ class SendWhatsappSms extends Command
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
             }
         }
-        echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10);
+      //  echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10);
+        Log::info('WhatsApp SMS sent : Total ' .$total_count . chr(10));
         //(new Message())->sendEmail();
        return 0;
     }
