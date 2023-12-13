@@ -47,6 +47,19 @@
                                 </select>
                             </div>
                         </div>
+                        <div class='form-group row show_attachment' style="display: none;">
+                            <div class="col-sm-4">
+                                <label for="sms_attachement">
+                                    <?= __("Attachment") ?>
+                                </label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="file" name="file" id="sms_attachement" class="form-control">
+                            </div>
+                            <span class="col-sm-1 control-label">
+                                <?php echo form_error($errors, 'sms_attachement'); ?>
+                            </span>
+                        </div>
 
                         <div class="form-group row">
                             <div class="col-sm-4">
@@ -374,6 +387,22 @@
         debug: true
     });
 
+    load_attachment = function() {
+        $('#sms_keys_id').on('change', function() {
+            var channel = $(this).val();
+            var selected_file = $('#sms_attachement').val();
+
+            if (channel.includes('whatsapp')) {
+                $('.show_attachment').show();
+            } else {
+                if (selected_file != '') {
+                    $('#sms_attachement').val('');
+                }
+                $('.show_attachment').hide();
+            }
+        });
+    }
+    $(document).ready(load_attachment);
 
     get_estimated_delivery_time = function() {
         // var type = $('#sms_keys_id').val();
