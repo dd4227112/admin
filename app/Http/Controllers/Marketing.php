@@ -448,6 +448,7 @@ group by ownership');
     }
 
     public function communication() {
+        $this->data['user_types'] =['Admin', 'Owner', 'Director', 'Parent', 'Student', 'Teacher', 'Accountant', 'Academic', 'Matron', 'Patron', 'Driver', 'Head', 'Manager'];
         $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
         if ($_POST) {
             $this->validate(request(), [
@@ -470,6 +471,7 @@ group by ownership');
             $criteria = request('less_than');
             $student_number = request('student_number');
             $file = request('file_');
+            $user_types = request('target_users');
             $from_date =request('from_date');
             $to_date =request('to_date');
             if (request('from_date') && request('to_date')) {
@@ -510,7 +512,7 @@ group by ownership');
                     break;
                 case 04:
                     // Not Custom selection
-                    return $this->sendCustomSms($message);
+                    return $this->sendCustomSms($message, $user_types, $file_id);
                     break;
                 default:
                     break;
@@ -656,8 +658,33 @@ group by ownership');
         }
     }
 
-    public function sendCustomSms($message) {
-        return false;
+    public function sendCustomSms($message, $user_types, $file_id=null){
+        $user_roles = implode(',', $user_types);
+        $user_roles = implode('', array_map(function($item) {
+            return "'%$item%' or usertype ilike ";
+        }, $user_types));
+        $role = rtrim($user_roles, 'or usertype ilike');
+        //
+        //refresh materialized view
+        DB::select("refresh materialized view admin.alls_users");
+        //exclude all demo schemas
+        $demo_schema = "('theresia', 'lufadahighschool', 'lilian', 'demo', 'betatwo', 'jacktonkweyamba',  'braysonmushi', 'usdemo')";
+        $sql ="select  distinct phone, username, name, schema_name from admin.alls_users where usertype ilike ".$role." and schema_name in (SELECT username from admin.clients where status in (1,2)) and schema_name not in ".$demo_schema;
+        $customers = DB::select($sql);
+        if (isset($customers) && count($customers) > 0) {
+            foreach ($customers as $customer) {
+                $replacements = array(
+                    $customer->name, $customer->schema_name, $customer->schema_name
+                );
+                $sms = $this->getCleanSms($replacements, $message, array(
+                    '/#name/i', '/#schema_name/i', '/#username/i'
+                ));
+                $this->sendMessages($customer->phone, $sms, $file_id);
+            }
+            return redirect()->back()->with('success', 'Message sent successfuly');
+        } else {
+            return redirect()->back()->with('error', 'Message Failed to be sent');
+        }
     }
 
     public function sendCustomSmsBySegment($message, $customer_segment, $criteria, $students_number, $file_id=null) {

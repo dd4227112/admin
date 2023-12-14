@@ -75,7 +75,7 @@
                                     <option value="02">Leads (all schools sign for shulesoft but not customers)</option>
                                     <option value="05">Churned Schools (All schools once ware customers)</option>
                                     <option value="03">All customer contacts(schools, teachers, admins, directors)</option>
-                                    <option value="04">Custom selection</option>
+                                    <option value="04">Target User</option>
                                 </select>
 
                             </div>
@@ -227,7 +227,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group row" id="target_user" style="display: none;">
+                            <div class="col-sm-4">
+                                <label for="form-field-select-4">
+                                    Target User
+                                </label>
+                            </div>
 
+
+                            <div class="col-sm-8">
+                                <select id="form-field-select-3" class="select2 from-control" multiple name="target_users[]">
+                                    @foreach($user_types as $key=>$value)
+                                    <option value="{{$value }}">{{$value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
 
                         <div class='form-group row'>
@@ -488,6 +503,7 @@
                 break;
             case '04':
                 $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
+                $('#target_user').show();
                 break;
             default:
                 break;
@@ -520,9 +536,10 @@
                 $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status,#number_of_student').hide();
                 break;
             case '5':
-                $('#category').hide();
-                $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel,#number_of_student').hide();
-                $('#by_customer_segment').show();
+                alert('here');
+                // $('#category').hide();
+                // $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel,#number_of_student').hide();
+                // $('#target_user').show();
                 break;
             default:
                 break;
@@ -549,6 +566,9 @@
                 break;
             case 4:
                 $('#number_of_student').show();
+                $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
+            case 5:
+                $('#target_user').show();
                 $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
                 break;
             default:
