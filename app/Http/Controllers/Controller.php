@@ -346,7 +346,15 @@ class Controller extends BaseController
             $videos = ['mp4', 'webm', 'mov', 'avi', 'flv', '3gp', 'mkv'];
             $audio = ['mp3', 'wav', 'ogg', 'aac', 'flac', 'wma'];
             $filePath = $body;
-            $content = file_get_contents($filePath);
+
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $content = file_get_contents($filePath, false, $context);
+            //$content = file_get_contents($filePath);
             $base64content = base64_encode($content);
             if ($extension == 'pdf') {
                 $data = 'data:application/pdf;base64,'. $base64content;
