@@ -227,20 +227,40 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row" id="target_user" style="display: none;">
-                            <div class="col-sm-4">
-                                <label for="form-field-select-4">
-                                    Target User
-                                </label>
+                        <div id="target_user" style="display: none;">
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label for="form-field-select-4">
+                                        Target User
+                                    </label>
+                                </div>
+
+
+                                <div class="col-sm-8">
+                                    <select id="form-field-select-3" class="select2 from-control" multiple name="target_users[]">
+                                        @foreach($user_types as $key=>$value)
+                                        <option value="{{$value }}">{{$value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label for="form-field-select-3">
+                                        User Status
+                                    </label>
+                                </div>
 
 
-                            <div class="col-sm-8">
-                                <select id="form-field-select-3" class="select2 from-control" multiple name="target_users[]">
-                                    @foreach($user_types as $key=>$value)
-                                    <option value="{{$value }}">{{$value }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="col-sm-8">
+                                    <select id="form-field-select-3"id="form-field-select-3" class="select2" name="user_status">
+                                    <option value="">--select--</option>
+                                        <option value="1">All</option>
+                                        <option value="2">Active</option>
+                                        <option value="3">Inactive</option>
+                                    
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -488,21 +508,21 @@
         switch (value) {
             case '00':
                 $('#parents_selection').show();
-                $('#by_customer_segment,#leads_selection,#prospect_selection,#custom_number_selection,#teachersPhones,#number_of_student').hide();
+                $('#by_customer_segment,#leads_selection,#prospect_selection,#custom_number_selection,#teachersPhones,#number_of_student,#target_user').hide();
                 break;
             case '01':
-                $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection,#number_of_student').hide();
+                $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection,#number_of_student,#target_user').hide();
                 $('#prospect_selection').show();
                 break;
             case '02':
-                $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
+                $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student,#target_user').hide();
                 $('#leads_selection').show();
                 break;
             case '03':
-                $('#leads_selection,#by_customer_segment,#custom_number_selection,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
+                $('#leads_selection,#by_customer_segment,#custom_number_selection,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student,#target_user').hide();
                 break;
             case '04':
-                $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
+                $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student,#target_user').hide();
                 $('#target_user').show();
                 break;
             default:

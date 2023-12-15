@@ -343,14 +343,24 @@ class Controller extends BaseController
     {
         if (isset($body) && !empty($body)) {
             $images = ['png', 'jpg', 'jpeg', 'jig', 'gif', 'webp'];
+            $videos = ['mp4', 'webm', 'mov', 'avi', 'flv', '3gp', 'mkv'];
+            $audio = ['mp3', 'wav', 'ogg', 'aac', 'flac', 'wma'];
             $filePath = $body;
             $content = file_get_contents($filePath);
             $base64content = base64_encode($content);
             if ($extension == 'pdf') {
-                $data = 'data:application/pdf;base64,' . $base64content;
-            } else if (in_array($extension, $images)) {
-                $data = 'data:image/jpeg;base64,' . $base64content;
-            } else {
+                $data = 'data:application/pdf;base64,'. $base64content;
+            } 
+            else if (in_array($extension, $images)) {
+                $data = 'data:image/jpeg;base64,'. $base64content;
+            } 
+            else if (in_array($extension, $videos)) {
+                $data = 'data:Video/mp4;base64,'. $base64content;
+            } 
+            else if (in_array($extension, $audio)) {
+                 $data = 'data:Audio/mp3;base64,' . $base64content;
+             }
+            else {
                 return false;
             }
             $data = json_encode(array(
