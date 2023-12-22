@@ -11,7 +11,7 @@
             <tbody>
                 <?php
                 $i = 1;
-                $directory='storage/schema_backups';
+                $directory=__DIR__.'../../../schema_backups';
                 $file = scandir($directory);
 
                 // Remove . and .. from the list (current directory and parent directory)
@@ -22,7 +22,7 @@
              
                     ?>
                     <tr>
-                        <td>{{$table->school}}</td>
+                        <td>{{$file}}</td>
                         <td><a href="https://admin.shulesoft.africa/storage/schema_backups/<?= $file ?>">Download</a></td>
 
                     </tr>
