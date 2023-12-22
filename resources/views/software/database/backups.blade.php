@@ -23,7 +23,7 @@
                     ?>
                     <tr>
                         <td>{{$file}}</td>
-                        <td><a href="https://admin.shulesoft.africa/storage/schema_backups/<?= $file ?>">Download</a></td>
+                        <td><a href="https://admin.shulesoft.africa/storage/schema_backups/2023-12-212040/<?= $file ?>">Download</a></td>
 
                     </tr>
                     <?php
