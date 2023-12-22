@@ -7,6 +7,7 @@ use App\Models\User;
 use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class Partner extends Controller {
 
@@ -41,6 +42,7 @@ class Partner extends Controller {
             $ids = [22, 8];
             $this->data['requests'] = \App\Models\IntegrationRequest::where('type_id', $type_id)->latest()->get();
         }
+        
         $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::whereIn('refer_bank_id', $ids)->get(['client_id']))->where('note', 'integration')->latest()->get();
         return view('partners.requests', $this->data);
     }
@@ -780,7 +782,7 @@ We shall let you know once we have done with verification, then you can proceed 
         $quantity = $amount / 20;
         $addon_payment = [
             'payment_id' => $payment_id,
-            'addon_id' => $addon_id,
+            'fee_id' => $addon_id,
             'client_id' => $client_id,
             'quantity' => $quantity
         ];
@@ -801,6 +803,37 @@ We shall let you know once we have done with verification, then you can proceed 
     public function downloadSample() {
         $samplefile = storage_path('uploads/images/sample.pdf'); // Upload the actual sample pdf file named sample
         return response()->download($samplefile);
+    }
+    public function viewbulksms()
+    {
+        $id = request()->segment(3);
+        $this->data['request'] = $request = \App\Models\IntegrationRequest::find($id);
+        $this->data['sender_name'] = DB::table('shulesoft.sms_keys')->where('schema_name', $request->client->username)->where('name', 'quick-sms')->first();
+        $school = DB::table('admin.schools')->where('schema_name', $request->client->username)->first();
+        $this->data['school'] = !empty($school) ? \App\Models\SchoolContact::where('school_id', $school->id)->first() : [];
+        $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();
+        return view('partners.bulksms', $this->data);
+    }
+    public function UpdateSMSStatus(Request $request)
+    {
+        $integration_request  = \App\Models\IntegrationRequest::find($request->integration_request_id);
+       // update datail in  admin panel
+        $update = [
+            "shulesoft_approved" => $request->status,
+            "updated_at" => now(),
+            "approval_user_id" => Auth::User()->id,
+        ];
+        $integration_request->update($update);
+
+        // update  shulesoft.sms_keys
+        DB::table('shulesoft.sms_keys')->where(['schema_name' =>$request->schema_name, 'name' =>'quick-sms'])->update(['is_approved'=>$request->status]);
+ 
+        //update shulesoft.message_channels
+        DB::table('shulesoft.message_channels')->where(['schema_name' =>$integration_request->schema_name, 'name' =>'quick-sms'])->update(['is_approved'=>$request->status, 'status' =>$request->status]);
+        $status = $request->status ==1?'accepted':'rejected';
+       // return redirect()->back()->with('success', "Integration request ".$status." successfully.");
+        return Redirect::to(base_url('Partner/index/2'))->with('success', "Integration request ".$status." successfully.");
+
     }
 
 }

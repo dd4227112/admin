@@ -2,11 +2,13 @@
 @section('content')
 <?php
 $integration = '';
-$checksystem = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='" . $partner->client->username . "'"))->first();
-$bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $partner->id)->first();
+// $checksystem = collect(DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='" . $partner->client->username . "'"))->first();
+$checksystem = collect(DB::select("SELECT *  FROM admin.clients WHERE username='" . $partner->client->username . "' and is_new_version=1"))->first();
+
+//$bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $partner->id)->first();
 $bank = \DB::table('shulesoft.bank_accounts')->where('id', $partner->bank_account_id)->where('schema_name', $partner->client->username)->first();
 
-if (!empty($bank) && empty($checksystem)) {
+if (!empty($bank) && !empty($checksystem)) {
     $banks = \DB::table('shulesoft.bank_accounts_integrations')->where('schema_name', $partner->client->username)->where('bank_account_id', $bank->id)->first();
     $type = $banks->payment_type;
     $integration = $banks->invoice_prefix;
@@ -17,7 +19,7 @@ if (!empty($bank) && empty($checksystem)) {
         $user_name = $user->name;
         $usertype = ucfirst($user->usertype);
     }
-} elseif (!empty($checksystem)) {
+} elseif (empty($checksystem)) {
 
     $bank = DB::table($partner->client->username . '.bank_accounts')->where('id', $partner->bank_account_id)->first();
 

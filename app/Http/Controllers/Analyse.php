@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Charts\SimpleChart;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class Analyse extends Controller {
 
@@ -366,77 +367,131 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['rators'] = DB::select($sql_);
         return view('market.ratings', $this->data);
     }
+    public function acconts_usage()
+    {
+        //default value, we take interval of one month, this (current)  and the last month
 
-    public function acconts_usage() {
-        //default value, we take interval of one month, this  and the last month
+
         DB::select('refresh materialized view admin.all_payments');
-        $date = date('Y-m-d');
+
+        $date = date('Y-m');
+        $dates = $this->formatdate($date);
+
         $duration = 'Month';
-        $next1 = date('Y-m-d', strtotime($date . ' -1 month'));
-        $next2 = date('Y-m-d', strtotime($next1 . ' -1 month'));
+        $date1 = $dates[0];
+        $date2 =  $dates[1];
+        $date3 = $dates[2];
+        $date4 = $dates[3];
+
         $this->data['days'] = request()->segment(3);
         if ($_POST) {
             DB::select('refresh materialized view admin.all_payments');
-            $date = request('date');
-            $date = date('Y-m-d', strtotime($date));
             $duration = request('duration');
             switch ($duration) {
                 case 'Week':
-                    $next1 = date('Y-m-d', strtotime($date . ' -1 week'));
-                    $next2 = date('Y-m-d', strtotime($next1 . ' -1 week'));
+                    $date  = request('date1');
+                    $date1 =  date('Y-m-d', strtotime($date . ' -1 week'));
+                    $date2 = $date;
+                    $date3 = date('Y-m-d', strtotime($date1 . ' -1 week'));
+                    $date4 = $date1;
+                    $dates = [$date1, $date2, $date3, $date4];
+                   
                     break;
                 case 'Month':
-                    $next1 = date('Y-m-d', strtotime($date . ' -1 month'));
-                    $next2 = date('Y-m-d', strtotime($next1 . ' -1 month'));
+                    $date1 = request('date1');
+                    $dates = $this->formatdate($date1);
+                    $date1 = $dates[0];
+                    $date2 =  $dates[1];
+                    $date3 = $dates[2];
+                    $date4 = $dates[3];
+                    $dates = [$date1, $date2, $date3, $date4];
                     break;
                 case 'Year':
-                    $next1 = date('Y-m-d', strtotime($date . ' -1 year'));
-                    $next2 = date('Y-m-d', strtotime($next1 . ' -1 year'));
+                    $date  = request('date1');
+                    $date1 = date('Y-01-01', strtotime($date));
+                    $date2 = date('Y-12-31', strtotime($date));
+                    $last = date('Y-01-01', strtotime($date.' - 1 year'));
+                    $date3 = date('Y-01-01', strtotime($last));
+                    $date4 = date('Y-12-31', strtotime($last));
+
+                    $dates = [$date1, $date2, $date3, $date4];
                     break;
                 default:
-                    $next1 = date('Y-m-d', strtotime($date));
+                    $date = date('Y-m');
+                    $dates = $this->formatdate($date);
                     break;
             }
-            // $duration = $next;
         }
-        $this->data['current'] = $current = \collect(DB::select("SELECT COUNT(distinct schema_name) from admin.all_payments where created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "'"))->first()->count;
-        $this->data['last'] = $last = \collect(DB::select("SELECT COUNT(distinct schema_name) from admin.all_payments where created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "'"))->first()->count;
-        $this->data['difference'] = $difference = $current - $last;
-        $this->data['percent'] = number_format($current > 0 ? ($difference / $current) * 100 : ($difference / $last) * 100);
-        $this->data['next1'] = $next1;
-        $this->data['next2'] = $next2;
-        $this->data['date'] = $date;
-
+        $demo_schema = "('theresia', 'lufadahighschool', 'lilian', 'demo', 'betatwo', 'jacktonkweyamba',  'braysonmushi', 'usdemo')";
+        $this->data['current'] = $current = \collect(DB::select("SELECT COUNT(distinct schema_name) from admin.all_payments where created_at between  '" . $date1 . ' 00:00:00' . "' and '" . $date2 . ' 23:59:59' . "'  and schema_name in (select username from admin.clients where status in (1,2)) and schema_name not in ".$demo_schema))->first()->count;
+        $this->data['last'] = $last = \collect(DB::select("SELECT COUNT(distinct schema_name) from admin.all_payments where created_at between  '" . $date3 . ' 00:00:00' . "' and '" . $date4 . ' 23:59:59' . "'  and schema_name in (select username from admin.clients where status in (1,2))  and schema_name not in ".$demo_schema))->first()->count;
+        $not_in = "SELECT distinct a.schema_name from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $date1 . ' 00:00:00' . "' and '" . $date2 . ' 23:59:59' . "' and schema_name not in ".$demo_schema."  and schema_name in (select username from admin.clients where status in (1,2))   group by a.schema_name";
+           
+        $sql = "SELECT COUNT(distinct a.schema_name) from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $date3 . ' 00:00:00' . "' and '" . $date4 . ' 23:59:59' . "' and a.schema_name not in (" . $not_in . ") and schema_name not in ".$demo_schema."  and schema_name in (select username from admin.clients where status in (1,2))";
+       
+        $this->data['difference'] = $difference = \collect(DB::select("$sql"))->first()->count;
+        
         $this->data['duration'] = $duration;
-        $this->data['date'] = $date;
-
+        $this->data['dates'] = $dates;
         return view('analyse.account_usage', $this->data);
     }
+    public function formatdate($date)
+    {
+        $formated = [];
+        // current month
+        $current  =  date('Y-m', strtotime($date));
 
-    public function fetch_school() {
-        $item = request()->segment(6);
+        $firstDay = Carbon::parse($current)->startOfMonth();
+
+        $lastDay = Carbon::parse($current)->endOfMonth();
+
+        $current_start = $firstDay->toDateString();
+        $current_end =  $lastDay->toDateString();
+
+        // previous month
+        $previous  =  date('Y-m', strtotime($date . ' - 1 month'));
+
+        $firstDay = Carbon::parse($previous)->startOfMonth();
+
+        $lastDay = Carbon::parse($previous)->endOfMonth();
+
+        $previous_start = $firstDay->toDateString();
+        $previous_end =  $lastDay->toDateString();
+
+
+        $formated = [
+            $current_start,
+            $current_end,
+            $previous_start,
+            $previous_end
+        ];
+        return $formated;
+    }
+    public function fetch_school()
+    {
+        $item = request()->segment(7);
         $schools = DB::select($this->query($item));
         echo json_encode(array('data' => $schools));
     }
+    public function query($item)
+    {
+        $date1 = request()->segment(3);
+        $date2 = request()->segment(4);
+        $date3 = request()->segment(5);
+        $date4 = request()->segment(6);
 
-    public function query($item) {
-        $next1 = request()->segment(3);
-        $next2 = request()->segment(4);
-        $date = request()->segment(5);
+        $demo_schema = "('theresia', 'lufadahighschool', 'lilian', 'demo', 'betatwo', 'jacktonkweyamba',  'braysonmushi', 'usdemo')";
 
         if ($item == 'current') {
-            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "' group by a.schema_name, c.name";
+            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $date1 . ' 00:00:00' . "' and '" . $date2 . ' 23:59:59' . "' and schema_name not in ".$demo_schema."  and schema_name in (select username from admin.clients where status in (1,2))   group by a.schema_name, c.name";
+            
         } else if ($item == 'last') {
-            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "' group by a.schema_name, c.name";
+            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $date3 . ' 00:00:00' . "' and '" . $date4 . ' 23:59:59' . "' and schema_name not in ".$demo_schema."  and schema_name in (select username from admin.clients where status in (1,2))   group by a.schema_name, c.name";
+    
         } else if ($item == 'difference') {
-            $difference = request()->segment(7);
-            if ($difference < 0) {
-                $not_in = "SELECT distinct a.schema_name from admin.all_payments a where a.created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "'";
-                $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "' and a.schema_name not in (" . $not_in . ") group by a.schema_name, c.name";
-            } else {
-                $not_in = "SELECT distinct a. schema_name  from admin.all_payments a  where a.created_at between  '" . $next2 . ' 00:00:00' . "' and '" . $next1 . ' 23:59:59' . "'";
-                $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $next1 . ' 00:00:00' . "' and '" . $date . ' 23:59:59' . "'  and a.schema_name not in (" . $not_in . ") group by a.schema_name, c.name";
-            }
+            $not_in = "SELECT distinct a.schema_name from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $date1 . ' 00:00:00' . "' and '" . $date2 . ' 23:59:59' . "' and schema_name not in ".$demo_schema."  and schema_name in (select username from admin.clients where status in (1,2))   group by a.schema_name";
+           
+            $sql = "SELECT distinct a.schema_name, c.name,  max(a.created_at)::date as created_at from admin.all_payments a join admin.clients c on a.schema_name =c.username where a.created_at between  '" . $date3 . ' 00:00:00' . "' and '" . $date4 . ' 23:59:59' . "' and a.schema_name not in (" . $not_in . ") and schema_name not in ".$demo_schema."  and schema_name in (select username from admin.clients where status in (1,2))  group by a.schema_name, c.name";
         } else {
             return false;
         }

@@ -47,6 +47,19 @@
                                 </select>
                             </div>
                         </div>
+                        <div class='form-group row show_attachment' style="display: none;">
+                            <div class="col-sm-4">
+                                <label for="sms_attachement">
+                                    <?= __("Attachment") ?>
+                                </label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="file" name="file" id="sms_attachement" class="form-control">
+                            </div>
+                            <span class="col-sm-1 control-label">
+                                <?php echo form_error($errors, 'sms_attachement'); ?>
+                            </span>
+                        </div>
 
                         <div class="form-group row">
                             <div class="col-sm-4">
@@ -62,7 +75,7 @@
                                     <option value="02">Leads (all schools sign for shulesoft but not customers)</option>
                                     <option value="05">Churned Schools (All schools once ware customers)</option>
                                     <option value="03">All customer contacts(schools, teachers, admins, directors)</option>
-                                    <option value="04">Custom selection</option>
+                                    <option value="04">Target User</option>
                                 </select>
 
                             </div>
@@ -214,7 +227,42 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="target_user" style="display: none;">
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label for="form-field-select-4">
+                                        Target User
+                                    </label>
+                                </div>
 
+
+                                <div class="col-sm-8">
+                                    <select id="form-field-select-3" class="select2 from-control" multiple name="target_users[]">
+                                        @foreach($user_types as $key=>$value)
+                                        <option value="{{$value }}">{{$value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label for="form-field-select-3">
+                                        User Status
+                                    </label>
+                                </div>
+
+
+                                <div class="col-sm-8">
+                                    <select id="form-field-select-3"id="form-field-select-3" class="select2" name="user_status">
+                                    <option value="">--select--</option>
+                                        <option value="1">All</option>
+                                        <option value="2">Active</option>
+                                        <option value="3">Inactive</option>
+                                    
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <div class='form-group row'>
@@ -374,6 +422,22 @@
         debug: true
     });
 
+    load_attachment = function() {
+        $('#sms_keys_id').on('change', function() {
+            var channel = $(this).val();
+            var selected_file = $('#sms_attachement').val();
+
+            if (channel.includes('whatsapp')) {
+                $('.show_attachment').show();
+            } else {
+                if (selected_file != '') {
+                    $('#sms_attachement').val('');
+                }
+                $('.show_attachment').hide();
+            }
+        });
+    }
+    $(document).ready(load_attachment);
 
     get_estimated_delivery_time = function() {
         // var type = $('#sms_keys_id').val();
@@ -444,21 +508,22 @@
         switch (value) {
             case '00':
                 $('#parents_selection').show();
-                $('#by_customer_segment,#leads_selection,#prospect_selection,#custom_number_selection,#teachersPhones,#number_of_student').hide();
+                $('#by_customer_segment,#leads_selection,#prospect_selection,#custom_number_selection,#teachersPhones,#number_of_student,#target_user').hide();
                 break;
             case '01':
-                $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection,#number_of_student').hide();
+                $('#by_customer_segment,#leads_selection,#category6,#category8,#account_tags,#parents_selection,#number_of_student,#target_user').hide();
                 $('#prospect_selection').show();
                 break;
             case '02':
-                $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
+                $('#load_types,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student,#target_user').hide();
                 $('#leads_selection').show();
                 break;
             case '03':
-                $('#leads_selection,#by_customer_segment,#custom_number_selection,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
+                $('#leads_selection,#by_customer_segment,#custom_number_selection,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student,#target_user').hide();
                 break;
             case '04':
-                $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student').hide();
+                $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#parents_selection,#prospect_selection,#number_of_student,#target_user').hide();
+                $('#target_user').show();
                 break;
             default:
                 break;
@@ -491,9 +556,10 @@
                 $('#by_customer_segment,#load_hostel,#load_fees,#load_payment_status,#number_of_student').hide();
                 break;
             case '5':
-                $('#category').hide();
-                $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel,#number_of_student').hide();
-                $('#by_customer_segment').show();
+                alert('here');
+                // $('#category').hide();
+                // $('#load_payment_status,#load_fees,#account_tags,#load_payment_amount,#load_hostel,#number_of_student').hide();
+                // $('#target_user').show();
                 break;
             default:
                 break;
@@ -520,6 +586,9 @@
                 break;
             case 4:
                 $('#number_of_student').show();
+                $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
+            case 5:
+                $('#target_user').show();
                 $('#leads_selection,#by_customer_segment,#category6,#category8,#account_tags,#prospect_selection').hide();
                 break;
             default:

@@ -49,7 +49,7 @@ class SendWhatsappSms extends Command
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 if (!empty($message->company_file_id)) {
                     $file = \App\Models\CompanyFile::find($message->company_file_id);
-                    $controller->sendMessageFile($message->phone, $message->message, $file->name, $file->path);
+                    $controller->sendMessageFile($message->phone, $file->path, $file->name, $message->message, $file->extension);
                 } else {
                     $controller->sendMessage($message->phone, $message->message);
                 }
@@ -61,7 +61,8 @@ class SendWhatsappSms extends Command
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
             }
         }
-        echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10);
+      //  echo '>> Whatsapp Messages sent : Total sent =' . $total_count . chr(10);
+        Log::info('WhatsApp SMS sent : Total ' .$total_count . chr(10));
         //(new Message())->sendEmail();
        return 0;
     }

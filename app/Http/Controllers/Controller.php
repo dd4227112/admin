@@ -10,7 +10,8 @@ use App\Charts\SimpleChart;
 use DB;
 use Auth;
 
-class Controller extends BaseController {
+class Controller extends BaseController
+{
 
     use AuthorizesRequests,
         DispatchesJobs,
@@ -40,13 +41,15 @@ class Controller extends BaseController {
     public $bot;
     public $main_menu = '';
 
-    public function createBarGraph() {
+    public function createBarGraph()
+    {
         $sql = 'select count(created_at::date), "user"  as dataname,created_at::date as timeline from all_log where "user" is not null group by "user",created_at::date order by created_at::date desc limit 10 ';
         $this->data['results'] = DB::select($sql);
         // return view('graph.bargraph', $this->data);
     }
 
-    public function ajaxTable($table, $columns, $custom_sql = null, $order_name = null, $count = null) {
+    public function ajaxTable($table, $columns, $custom_sql = null, $order_name = null, $count = null)
+    {
         ## Read value
         if (isset($_POST) && request()->ajax() == true) {
             $draw = $_POST['draw'];
@@ -56,7 +59,7 @@ class Controller extends BaseController {
             $columnName = $_POST['columns'][$columnIndex]['data']; // Column name
             $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
             $searchValue = $_POST['search']['value']; // Search value
-## Search 
+            ## Search 
             $searchQuery = " ";
             if ($searchValue != '') {
                 $searchQuery = " and ( ";
@@ -67,10 +70,10 @@ class Controller extends BaseController {
                 $searchQuery = $searchQuery . rtrim($list, 'or ') . ' )';
             }
 
-## Total number of records without filtering
+            ## Total number of records without filtering
             // $sel = DB::select("select count(*) as allcount from employee");
-## Total number of record with filtering
-## Fetch records
+            ## Total number of record with filtering
+            ## Fetch records
             $columnName = strlen($columnName) < 1 ? '1' : $columnName;
             $total_records = 0;
             if (strlen($custom_sql) < 2) {
@@ -86,7 +89,7 @@ class Controller extends BaseController {
             }
             $empRecords = DB::select($empQuery);
 
-## Response
+            ## Response
             $response = array(
                 "draw" => intval($draw),
                 "iTotalRecords" => $total_records,
@@ -97,28 +100,33 @@ class Controller extends BaseController {
         }
     }
 
-    public function send_email($email, $subject, $message, $project=null) {
+    public function send_email($email, $subject, $message, $project = null)
+    {
         // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $obj = array('body' => $message, 'subject' => $subject, 'email' => $email, 'project'=>$project);
+        $obj = array('body' => $message, 'subject' => $subject, 'email' => $email, 'project' => $project);
         DB::table('public.email')->insert($obj);
         // }
         return $this;
     }
 
-    public function send_sms($phone_number, $message, $priority = 0, $sent_from =null, $project =null) {
+    public function send_sms($phone_number, $message, $priority = 0, $sent_from = null, $project = null)
+    {
         if ((strlen($phone_number) > 6 && strlen($phone_number) < 20) && $message != '') {
             $sms_key = DB::table('public.sms_keys')->first();
             $sms_keys_id = !empty($sms_key) ? $sms_key->id : null;
             if ($sms_keys_id) {
-                \DB::table('shulesoft.sms')->insert(array('phone_number' => $phone_number, 'body' => $message,
-                    'type' => $priority, 'priority' => $priority, 'sent_from' => $sent_from, 'sms_keys_id' => $sms_keys_id,'schema_name'=>'public', 'project' => $project));
+                \DB::table('shulesoft.sms')->insert(array(
+                    'phone_number' => $phone_number, 'body' => $message,
+                    'type' => $priority, 'priority' => $priority, 'sent_from' => $sent_from, 'sms_keys_id' => $sms_keys_id, 'schema_name' => 'public', 'project' => $project
+                ));
             }
         }
         return $this;
     }
 
     //Altenative function to store files locally
-    public function saveFile($file, $local = null) {
+    public function saveFile($file, $local = null)
+    {
         if ($local == TRUE) {
             $url = $this->uploadFileLocal($file);
             $file_id = DB::table('company_files')->insertGetId([
@@ -133,7 +141,8 @@ class Controller extends BaseController {
         }
     }
 
-    public function uploadFileLocal($file) {
+    public function uploadFileLocal($file)
+    {
         //Move Uploaded File
         $destinationPath = 'storage/uploads/images';
         !is_dir($destinationPath) ? mkdir($destinationPath) : '';
@@ -142,11 +151,12 @@ class Controller extends BaseController {
         return url($destinationPath . '/' . $filename);
     }
 
-    public function curlPrivate($fields, $url = null) {
+    public function curlPrivate($fields, $url = null)
+    {
         // Open connection
         $url = $url == null ? 'http://75.119.140.177:8081/api/payment' : $url;
         $ch = curl_init();
-// Set the url, number of POST vars, POST data
+        // Set the url, number of POST vars, POST data
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -172,7 +182,8 @@ class Controller extends BaseController {
      * @param type $custom
      * @return type
      */
-    public function createChartBySql($sql, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+    public function createChartBySql($sql, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false)
+    {
         $data = DB::select($sql);
         return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
     }
@@ -188,15 +199,16 @@ class Controller extends BaseController {
      * @param type $as_alias
      * @return type
      */
-    public function createChart($table, $base_column, $join_table = false, $join_table_array = false, $chart_type = 'bar', $custom = false, $as_alias = false) {
+    public function createChart($table, $base_column, $join_table = false, $join_table_array = false, $chart_type = 'bar', $custom = false, $as_alias = false)
+    {
 
         $data = $join_table == false ? DB::table($table)
-                        ->select(DB::raw('count(*)'), DB::raw($base_column))
-                        ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get() :
-                DB::table($table)
-                        ->join($join_table, array_keys($join_table_array)[0] . '.' . array_values($join_table_array)[0], array_keys($join_table_array)[1] . '.' . array_values($join_table_array)[1])
-                        ->select(DB::raw('count(*)'), DB::raw($base_column))
-                        ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get();
+            ->select(DB::raw('count(*)'), DB::raw($base_column))
+            ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get() :
+            DB::table($table)
+            ->join($join_table, array_keys($join_table_array)[0] . '.' . array_values($join_table_array)[0], array_keys($join_table_array)[1] . '.' . array_values($join_table_array)[1])
+            ->select(DB::raw('count(*)'), DB::raw($base_column))
+            ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get();
         $column = preg_replace('/^([^::]*).*$/', '$1', $as_alias == FALSE ? $base_column : $as_alias);
         list($firstpart) = explode(',', $column);
         return $this->createGraph($data, $firstpart, $table, $chart_type, $custom);
@@ -209,7 +221,8 @@ class Controller extends BaseController {
      * @param type $base_column
      * @return type
      */
-    private function createCustomChart($data, $chart_type, $base_column) {
+    private function createCustomChart($data, $chart_type, $base_column)
+    {
         $insight = $this;
         return view('insight.highcharts', compact('data', 'chart_type', 'base_column', 'insight'));
     }
@@ -224,7 +237,8 @@ class Controller extends BaseController {
      * @param type $call_back_sql
      * @return type
      */
-    private function createGraph($data, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+    private function createGraph($data, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false)
+    {
         $k = [];
         $l = [];
         foreach ($data as $value) {
@@ -243,7 +257,7 @@ class Controller extends BaseController {
             }
         }
         $title = $this->graph_title == '' ?
-                ucwords('Relationship Between ' . $table . ' and ' . str_replace('_', ' ', $firstpart)) : $this->graph_title;
+            ucwords('Relationship Between ' . $table . ' and ' . str_replace('_', ' ', $firstpart)) : $this->graph_title;
         $chart->title($title);
         $this->data['chart'] = $chart;
         return $custom == true ? $this->createCustomChart($data, $chart_type, $firstpart) : view('analyse.charts.chart', $this->data);
@@ -255,7 +269,8 @@ class Controller extends BaseController {
      * @param type $firstpart
      * @return type
      */
-    private function createCallBack($data, $firstpart) {
+    private function createCallBack($data, $firstpart)
+    {
         $k = [];
         $l = [];
         foreach ($data as $value) {
@@ -268,7 +283,8 @@ class Controller extends BaseController {
     //sends a file. it is called when the bot gets the command "file"
     //@param $chatId [string] [required] - the ID of chat where we send a message
     //@param $format [string] [required] - file format, from the params in the message body (text[1], etc)
-    public function file($chatId, $format, $filename, $caption = null) {
+    public function file($chatId, $format, $filename, $caption = null)
+    {
         $availableFiles = array(
             'doc' => 'document.doc',
             'gif' => 'gifka.gif',
@@ -300,7 +316,8 @@ class Controller extends BaseController {
 
     //sends a voice message. it is called when the bot gets the command "ptt"
     //@param $chatId [string] [required] - the ID of chat where we send a message
-    public function ptt($chatId) {
+    public function ptt($chatId)
+    {
         $data = array(
             'audio' => 'https://shulesoft.africa/PHP/ptt.ogg',
             'chatId' => $chatId
@@ -311,7 +328,8 @@ class Controller extends BaseController {
     //creates a group. it is called when the bot gets the command "group"
     //@param chatId [string] [required] - the ID of chat where we send a message
     //@param author [string] [required] - "author" property of the message
-    public function group($author) {
+    public function group($author)
+    {
         $phone = str_replace('@c.us', '', $author);
         $data = array(
             'groupName' => 'Group with the bot PHP',
@@ -321,29 +339,65 @@ class Controller extends BaseController {
         $this->sendRequest('group', $data);
     }
 
-    public function sendMessageFile($chatId, $caption, $filename, $path) {
-        $data = json_encode(array(
-            'chatId' => $chatId,
-            'body' => $path,
-            'filename' => $filename,
-            'caption' => $caption
-        ));
-        $this->sendRequest('sendFile', $data);
+    public function sendMessageFile($chatId, $body, $filename, $caption, $extension)
+    {
+        if (isset($body) && !empty($body)) {
+            $images = ['png', 'jpg', 'jpeg', 'jig', 'gif', 'webp'];
+            $videos = ['mp4', 'webm', 'mov', 'avi', 'flv', '3gp', 'mkv'];
+            $audio = ['mp3', 'wav', 'ogg', 'aac', 'flac', 'wma'];
+            $filePath = $body;
+
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $content = file_get_contents($filePath, false, $context);
+            //$content = file_get_contents($filePath);
+            $base64content = base64_encode($content);
+            if ($extension == 'pdf') {
+                $data = 'data:application/pdf;base64,'. $base64content;
+            } 
+            else if (in_array($extension, $images)) {
+                $data = 'data:image/jpeg;base64,'. $base64content;
+            } 
+            else if (in_array($extension, $videos)) {
+                $data = 'data:Video/mp4;base64,'. $base64content;
+            } 
+            else if (in_array($extension, $audio)) {
+                 $data = 'data:Audio/mp3;base64,' . $base64content;
+             }
+            else {
+                return false;
+            }
+            $data = json_encode(array(
+                'chatId' => $chatId,
+                'body' => $data,
+                'filename' => $filename,
+                'caption' => $caption
+            ));
+            $this->sendRequest('sendFile', $data);
+        } else {
+            return false;
+        }
     }
 
-    public function sendMessage($chatId, $text, $schema = null) {
+    public function sendMessage($chatId, $text, $schema = null)
+    {
         $data = array('chatId' => $chatId, 'body' => $text);
         $this->sendRequest('message', $data, $schema);
     }
 
-    public function sendRequest($method, $data, $schema = null) {
+    public function sendRequest($method, $data, $schema = null)
+    {
 
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
             $url = $this->APIurl . $method . '?token=' . $this->token;
             if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
                 $url = $this->token . $method . '?token=' . $this->APIurl;
             }
-            if ( $schema == 'michaelmausa') {
+            if ($schema == 'michaelmausa') {
                 $api = 'https://api.1msg.io/226778/';
                 $token_ = 'z9y63dtih3n0mfau';
                 $url = $api . $method . '?token=' . $token_;
@@ -353,7 +407,7 @@ class Controller extends BaseController {
                 $token_ = 'bldz8l1vsxx1oc03';
                 $url = $api . $method . '?token=' . $token_;
             }
-            if ( $schema == 'capricorninstitute') {
+            if ($schema == 'capricorninstitute') {
                 $api = 'https://api.1msg.io/377666/';
                 $token_ = 'aumoa17acohddcpa';
                 $url = $api . $method . '?token=' . $token_;
@@ -362,9 +416,10 @@ class Controller extends BaseController {
                 $data = json_encode($data);
             }
             $options = stream_context_create(['http' => [
-                    'method' => 'POST',
-                    'header' => 'Content-type: application/json',
-                    'content' => $data]]);
+                'method' => 'POST',
+                'header' => 'Content-type: application/json',
+                'content' => $data
+            ]]);
             $response = @file_get_contents($url, false, $options);
             //$response = $this->curlServer($body, $url);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
@@ -374,7 +429,8 @@ class Controller extends BaseController {
         }
     }
 
-    public function sendWhatsappTest() {
+    public function sendWhatsappTest()
+    {
         $token = 'ZGF2aWQuZGFuaWVsOm13ZXNpR0VNV0Ux';
         $jsonData = ["from" => "N-SMS", "to" => "255743414770", "text" => "this is the test sms", "reference" => "aswqetgcv"];
         $data = json_encode($jsonData);
@@ -395,17 +451,19 @@ class Controller extends BaseController {
         echo $response;
     }
 
-    public function send_whatsapp_sms($phone, $message, $company_file_id = null, $project=null) {
+    public function send_whatsapp_sms($phone, $message, $company_file_id = null, $project = null)
+    {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $message = str_replace("'", "", $message);
             $phone = \collect(\DB::select("select admin.whatsapp_phone('" . $phone . "')"))->first();
-            $data = array('message' => $message, 'phone' => $phone->whatsapp_phone, 'company_file_id' => $company_file_id, 'project'=>$project);
+            $data = array('message' => $message, 'phone' => $phone->whatsapp_phone, 'company_file_id' => $company_file_id, 'project' => $project);
             \App\Models\WhatsAppMessages::create($data);
         }
         return $this;
     }
 
-    public function syncMissingPayments() {
+    public function syncMissingPayments()
+    {
         $this->data['prefix'] = '';
         $returns = array();
         $allschemas = DB::select('select * from admin.all_setting');
@@ -424,7 +482,7 @@ class Controller extends BaseController {
                     );
                     $push_status = 'reconcilliation';
                     $url = $invoice->schema_name == 'beta_testing' ?
-                            'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                        'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
                     $curl = $background->curlServer($fields, $url);
                     array_push($returns, json_decode($curl));
                 }
@@ -436,7 +494,8 @@ class Controller extends BaseController {
         }
     }
 
-    public function syncMissingInv($data, $prefix, $schema_name) {
+    public function syncMissingInv($data, $prefix, $schema_name)
+    {
         $trans = (object) $data;
         foreach ($trans as $tran) {
             if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
@@ -453,7 +512,8 @@ class Controller extends BaseController {
         }
     }
 
-    public function action($action) {
+    public function action($action)
+    {
         if (request()->ajax()) {
             return response()->json(['error' => 'Not Found'], 404);
         } else {
@@ -461,7 +521,8 @@ class Controller extends BaseController {
         }
     }
 
-    public function imartSMSAPIs() {
+    public function imartSMSAPIs()
+    {
         $api_key = '262A04B6B5635A';
         $contacts = '0655007457';
         $from = 'Shule';
@@ -479,7 +540,8 @@ class Controller extends BaseController {
         echo $response;
     }
 
-    public function test2() {
+    public function test2()
+    {
         $api_key = '262A04B6B5635A';
         $contacts = '655007457,753683801';
         $from = 'Shule';
@@ -492,7 +554,8 @@ class Controller extends BaseController {
         echo $response;
     }
 
-    public function test3() {
+    public function test3()
+    {
         $variable = '{""ack"":[{""id"":""gBEGJVdUVAEIAgl-OgngAw5QHR4"",""chatId"":""255754540108@c.us"",""status"":""read""}],""instanceId"":210904}';
 
         $variable1 = '{""messages"":[{""id"":""gBEGJVdUVAEIAgl-OgngAw5QHR4"",""body"":""NOTREDAMESEC: Habari SHUMA MAZUNGU,  nenotumizi (username) lako ni: +255754540108 na nenosiri (password) ni : 613hgf. Kumbuka kubadili neno siri ukishaingia kwenye account yako ya notredamesec. Asante\n\n Download  Shulesoft Parent Experience App on\nPlayStore(Android)?? \nhttps:\/\/cutt.ly\/parentalApp\n\nAppStore(Iphone)??\nhttps:\/\/cutt.ly\/fT2Qn5f"",""self"":1,""type"":""chat"",""author"":""255655406004@c.us"",""chatId"":""255754540108@c.us"",""fromMe"":true,""caption"":null,""chatName"":""255754540108"",""senderName"":""255655406004@c.us"",""isForwarded"":false,""time"":""1657093119""}],""instanceId"":210904}';
@@ -522,7 +585,8 @@ class Controller extends BaseController {
         }
     }
 
-    public function sendText() {
+    public function sendText()
+    {
         $phone = '255743414770';
         $api_key = '788455074ffb68f3';
         $secret_key = 'ZWUzM2M5YjVlMTljYmJjNTAxZmRjMjUxYzIyOGI2NGE3MTg4MjdkZjUxNzQxNGEwMzBmYzgwMTRiYTRmMDQ4NA==';
@@ -554,5 +618,4 @@ class Controller extends BaseController {
         $res = json_decode($response);
         print_r($res);
     }
-
 }
