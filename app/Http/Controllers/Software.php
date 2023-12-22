@@ -17,6 +17,7 @@ class Software extends Controller {
     }
 
     public function backups() {
+        $this->data['sub'] = 1;
          $view = 'software.database.backups';
         if (view()->exists($view)) {
             return view($view, $this->data);
