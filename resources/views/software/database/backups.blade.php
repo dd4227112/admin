@@ -11,7 +11,7 @@
             <tbody>
                 <?php
                 $i = 1;
-                $directory=__DIR__.'../../../schema_backups';
+                $directory=__DIR__.'../../../storage/schema_backups';
                 $file = scandir($directory);
 
                 // Remove . and .. from the list (current directory and parent directory)
