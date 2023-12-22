@@ -5,19 +5,26 @@
                 <tr>
                     <th>school</th>
                     <th>action</th>
-                
+
                 </tr>
             </thead>
             <tbody>
                 <?php
                 $i = 1;
-                $master_tables=DB::select('select username  as  school,  is_new_version  from  admin.clients  where  status=1  and  is_new_version=0');
-                foreach ($master_tables as $table) {
+                $directory='storage/schema_backups';
+                $file = scandir($directory);
+
+                // Remove . and .. from the list (current directory and parent directory)
+                $files = array_diff($file, array('.', '..'));
+
+                // Display the list of filenames
+                foreach ($files as $file) {
+             
                     ?>
                     <tr>
                         <td>{{$table->school}}</td>
-                        <td><a href="https://admin.shulesoft.africa/storage/schema_backups/2023-12-212040<?=$table->school?>.dump">Download</a></td>
-                
+                        <td><a href="https://admin.shulesoft.africa/storage/schema_backups/<?= $file ?>">Download</a></td>
+
                     </tr>
                     <?php
                     $i++;
