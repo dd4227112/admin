@@ -16,7 +16,7 @@
                     ?>
                     <tr>
                         <td>{{$table->school}}</td>
-                        <td><a href="https://admin.shulesoft.africa/storage/schema_backups/2023-12-212040.<?=$table->school?>">Download</a></td>
+                        <td><a href="https://admin.shulesoft.africa/storage/schema_backups/2023-12-212040<?=$table->school?>.dump">Download</a></td>
                 
                     </tr>
                     <?php
