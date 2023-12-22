@@ -11,7 +11,7 @@
             <tbody>
                 <?php
                 $i = 1;
-                $directory='/usr/share/nginx/html/admin/storage/schema_backups';
+                $directory='/usr/share/nginx/html/admin/storage/schema_backups/2023-12-212040';
                 $file = scandir($directory);
 
                 // Remove . and .. from the list (current directory and parent directory)
