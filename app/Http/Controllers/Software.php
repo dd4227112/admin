@@ -16,6 +16,12 @@ class Software extends Controller {
         }
     }
 
+    public function backups() {
+         $view = 'software.database.backups';
+        if (view()->exists($view)) {
+            return view($view, $this->data);
+        }
+    }
     /**
      * Display a listing of the resource.
      *
