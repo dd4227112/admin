@@ -834,11 +834,11 @@
                                                                                                     <span class="pcoded-mtext text-bold">Settings</span>
                                                                                                 </a>
                                                                                                 <ul class="pcoded-submenu">
-                                                                                                    <li class="">
+<!--                                                                                                    <li class="">
                                                                                                         <a href="<?= url('account/client') ?>">
                                                                                                             <span class="pcoded-mtext">Clients </span>
                                                                                                         </a>
-                                                                                                    </li> 
+                                                                                                    </li> -->
 
                                                                                                     <li class="">
                                                                                                         <a href="<?= url('account/bank') ?>">

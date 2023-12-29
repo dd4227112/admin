@@ -654,6 +654,7 @@ class Account extends Controller {
     }
 
     public function client() {
+        return false;
         $this->data['clients'] = \App\Models\Client::all();
         $seg = request()->segment(3);
         $id = request()->segment(4);
