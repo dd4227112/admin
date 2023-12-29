@@ -605,7 +605,7 @@ We shall let you know once we have done with verification, then you can proceed 
             if (is_array($phone_number)) {
                 $phone = str_replace('+', null, validate_phone_number($invoice->client->phone)[1]);
             } else {
-                $phone = '255754406004';
+                $phone = '255655406004';
             }
             $order = array("order_id" => $order_id, "amount" => $amount,
                 'buyer_name' => $invoice->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);

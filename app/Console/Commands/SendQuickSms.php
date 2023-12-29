@@ -38,7 +38,7 @@ class SendQuickSms extends Command {
      * @return int
      */
     public function handle() {
-        $schemas = DB::select('select * from admin.sms_status where  message_left >0');
+        $schemas = DB::select('select * from admin.sms_status a join admin.clients b on b.username=a.schema_name where  message_left >0');
         $total_sms_sent = 0;
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;

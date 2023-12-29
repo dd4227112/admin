@@ -42,28 +42,6 @@
                     <?php if (isset($voucher) && !empty($voucher)) { ?>
                         <section   class="content invoice" style=" margin: 0px auto; padding-left: 10%; padding-right: 10%; page-break-inside: avoid;">
                     
-                            <div class="">
-                                <table class=" table-striped center" style="margin: 1px 2px 1px 0px;">
-                                    <thead>
-                                    <tr>
-                                        <th class="col-md-2" style="padding-bottom:0px">
-                                                <img src="{{url('public/assets/images/inets.png')}}" height="140" alt="INETS Company Limtied, ShuleSoft School Management System" style="margin-right: 40%;">
-                                                    
-                                        </th>
-                                        <th class="col-md-8 text-center " style="margin: 1% 0 0 16%; padding-top: 2%; ">
-
-                                            <h3 style="font-weight: bolder !important;">INETS COMPANY LTD</h3>
-                                            <h6><?= 'P.O. BOX 32282,Dar es salaam '?></h6>
-                                            <h6><b><?= __('Cell') ?>:</b> +255 655/754 406004</h6>
-                                           <h6> <b><?= __('Email') ?>:</b> info@inetstz.com</h6>
-                                            <h6><b><?= __('Website') ?>:</b> www.inetstz.com</h6>
-                                        </th>
-                                        <th class="col-md-2" style="padding-bottom:0px"></th>
-
-                                    </tr>
-                                    </thead>
-                                </table>
-                            </div>
                             <hr/>
 
 

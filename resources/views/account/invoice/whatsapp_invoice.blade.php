@@ -30,13 +30,7 @@
                                             <tbody>
                                                 <tr style="text-align: left;">
                                                     <td>
-                                                        <li style="font-size: 1.5rem;list-style: none; text-align:left;">From</li>
-                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;"><strong>SHULESOFT LIMITED</strong></li>
-                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;">P.o Box 32282 Dar es Salaam</li>
-                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;">Shamo Park House</li>
-                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;">3rd Floor, Bagamoyo Road</li>
-                                                        <li style="font-size: 0.9rem;list-style: none; text-align:left;">Mobile no: +255 655/754 406004</li>
-                                                    </td>
+                                                   </td>
                                                     <td>
                                                         <ul  style="border-left: 1px solid #cccc; padding-left: 3em; margin-left:20px;list-style: none;">
                                                             <li style="font-size: 1.5rem; font-weght: bold;">To</li>

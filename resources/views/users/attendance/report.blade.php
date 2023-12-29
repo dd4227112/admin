@@ -146,9 +146,9 @@ table td {
                                                     <th style="width: 50%;">
                                                         <h6 style="margin-top: 0px;">
                                                            
-                                                            <br> Email: support@shulesoft.com<br>
-                                                            Phone Number: +255 655/754 406004
-                                                            <br> Website: <a href="https://www.shulesoft.com/">www.shulesoft.com/ </a>
+                                                            <br> Email: support@shulesoft.africa<br>
+                                                            Phone Number: +255 655 406004
+                                                            <br> Website: <a href="https://www.shulesoft.africa/">www.shulesoft.africa/ </a>
                                                             </h6>
                                                     </th>
                                                     <th style="width: 25%;">

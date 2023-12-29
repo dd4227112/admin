@@ -260,7 +260,6 @@
             <!--</div>-->
 
             <div class="modal-footer">
-                <a style="float:left"> For Help Call - <b>+255754406004</b></a>
 
 
 <!--                <a href="<?= url('/') ?>" class="btn btn-sm btn-danger">Cancel </a>
