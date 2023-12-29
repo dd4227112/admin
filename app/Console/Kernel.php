@@ -100,11 +100,11 @@ class Kernel extends ConsoleKernel
         }
 
         // configure the service set RestartSec = 1 minute (60s)
-        try {
-            $schedule->command('sync:invoice')->everyMinute();
-        } catch (\Exception $e) {
-            Log::error('Sync Invoice failed: ' . $e->getMessage());
-        }
+//        try {
+//            $schedule->command('sync:invoice')->everyMinute();
+//        } catch (\Exception $e) {
+//            Log::error('Sync Invoice failed: ' . $e->getMessage());
+//        }
         // configure the service set RestartSec = 1 minute (60s)
         try {
             $schedule->command('payment:optimize')->everyMinute();
