@@ -85,7 +85,7 @@ class SendQuickSms extends Command {
     }
 
     function beem_sms($phone_number, $message, $schema) {
-        return new App\Http\Controllers\Plugins\BeemSms($phone_number, $message, $schema);
+        return new \App\Http\Controllers\Plugins\BeemSms($phone_number, $message, $schema);
     }
 
 }
