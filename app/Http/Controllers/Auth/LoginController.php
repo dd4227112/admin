@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+
 
 class LoginController extends Controller
 {
@@ -32,6 +34,12 @@ class LoginController extends Controller
      *
      * @return void
      */
+      use ThrottlesLogins;
+
+    protected $maxAttempts = 4; // Maximum login attempts
+    protected $decayMinutes = 5; // Lockout time in minutes after exceeding maximum attempts
+
+    
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

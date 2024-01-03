@@ -126,7 +126,7 @@
 
                                         </div>
                                         <div class="input-group ">
-                                            <input type="password" name="password" class="form-control" placeholder="Password">
+                                            <input type="password" name="password" min="8" max="70" class="form-control" placeholder="Password">
                                             <span class="md-line"></span>
 
                                         </div>
