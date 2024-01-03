@@ -53,6 +53,7 @@ foreach ($bad_url as $value) {
         exit;
     }
 }
+
 $token=TOKEN_LIVE;
 Route::get('/'.$token.'/live/{id}/{year}/{is_customer?}', 'Customer@usageAnalysis');
 

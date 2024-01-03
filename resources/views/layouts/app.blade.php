@@ -1,5 +1,5 @@
 <?php
-$root = url('/') . '/public/';
+$root = url('/');
 $value = \App\Models\UsersSchool::where('user_id', Auth::user()->id)->get();
 //isset($value) ? dd($value) : 'vaaaaaaaa' 
 $pass = time();
@@ -18,15 +18,15 @@ $pass = time();
         <meta name="keywords" content="ShuleSoft, Admin, Admin Panel">
         <meta name="author" content="ShuleSoft">
         <!-- Favicon icon -->
-        <link rel="icon" href="<?= $root ?>assets/images/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="<?= $root ?>/assets/images/favicon.ico" type="image/x-icon">
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
         <!-- Required Fremwork -->
 
-        {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">   --}}
+        {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/bootstrap/dist/css/bootstrap.min.css">   --}}
         <link rel="stylesheet" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css">  
 
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/assets/pages/menu-search/css/component.css">
 
 
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css">
@@ -41,8 +41,8 @@ $pass = time();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
 
 
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css"> 
+        <link rel="stylesheet" href="<?= $root ?>/assets/select2/css/select2.css">
+        <link rel="stylesheet" href="<?= $root ?>/assets/select2/css/gh-pages.css"> 
 
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
         <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>

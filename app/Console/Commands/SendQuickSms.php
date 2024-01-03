@@ -40,6 +40,7 @@ class SendQuickSms extends Command {
     public function handle() {
         $schemas = DB::select('select * from admin.sms_status a join admin.clients b on b.username=a.schema_name where  message_left >0');
         $total_sms_sent = 0;
+        print_r($schemas); exit;
         foreach ($schemas as $schema_) {
             $schema = $schema_->schema_name;
             if ($schema_->schema_name == 'public') {
@@ -53,11 +54,11 @@ class SendQuickSms extends Command {
             } else {
                 $messages = DB::select("select a.phone_number as phone, a.body  as body, a.sms_id as id, a.sent_from"
                                 . " from " . $schema . ".sms a where a.status = 0 and a.type = 1"
-                                . " and sent_from not in ('phonesms','phone-sms') order by priority DESC limit 30");
+                                . " and sent_from not in ('phonesms','phone-sms','phonesms,whatsapp') order by priority DESC limit 30");
             }
 
             $total_sms_sent += !empty($messages) ? count($messages) : 0;
-
+            
             if (!empty($messages)) {
                 foreach ($messages as $message) {
 
@@ -85,6 +86,7 @@ class SendQuickSms extends Command {
     }
 
     function beem_sms($phone_number, $message, $schema) {
+        return ['all'=>'well'];
         return new \App\Http\Controllers\Plugins\BeemSms($phone_number, $message, $schema);
     }
 

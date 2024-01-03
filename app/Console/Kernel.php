@@ -93,11 +93,11 @@ class Kernel extends ConsoleKernel
         }
 
         // configure the service set RestartSec = 1 minute (60s)
-        try {
-            $schedule->command('whatsapp:sms')->everyMinute();
-        } catch (\Exception $e) {
-            Log::error('Send a WhatsApp SMS failed: ' . $e->getMessage());
-        }
+//        try {
+//            $schedule->command('whatsapp:sms')->everyMinute();
+//        } catch (\Exception $e) {
+//            Log::error('Send a WhatsApp SMS failed: ' . $e->getMessage());
+//        }
 
         // configure the service set RestartSec = 1 minute (60s)
 //        try {
@@ -106,11 +106,11 @@ class Kernel extends ConsoleKernel
 //            Log::error('Sync Invoice failed: ' . $e->getMessage());
 //        }
         // configure the service set RestartSec = 1 minute (60s)
-        try {
-            $schedule->command('payment:optimize')->everyMinute();
-        } catch (\Exception $e) {
-            Log::error('Payment Optimization failed: ' . $e->getMessage());
-        }
+//        try {
+//            $schedule->command('payment:optimize')->everyMinute();
+//        } catch (\Exception $e) {
+//            Log::error('Payment Optimization failed: ' . $e->getMessage());
+//        }
 
         // configure the service set RestartSec everyFiveMinutes
         try {
@@ -169,11 +169,11 @@ class Kernel extends ConsoleKernel
             Log::error('Send beem sms balance failed' . $e->getMessage());
         }
         // configure the service set RestartSec = 1 minute (60s)
-        try {
-            $schedule->command('daily:report')->everyMinute();
-        } catch (\Exception $e) {
-            Log::error('Lineshop daily report failed' . $e->getMessage());
-        }
+//        try {
+//            $schedule->command('daily:report')->everyMinute();
+//        } catch (\Exception $e) {
+//            Log::error('Lineshop daily report failed' . $e->getMessage());
+//        }
 
         // try {
         //     $schedule->command('transfer:missing')->weeklyOn('Saturday', $time = '18:30');

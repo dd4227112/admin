@@ -1,4 +1,4 @@
-<?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/' ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -50,7 +50,7 @@
                                     <div class="row m-b-20">
                                             <div class="col-md-12">
                                             <div class="text-center">
-                                        <img src="<?= $root ?>/images/shulesoft_logo.png" alt="logo.png" width="70px">
+                                        <img src="<?= $root ?>images/shulesoft_logo.png" alt="logo.png" width="70px">
                                     </div>
                                                 <small style="color:black; text-align: center">ShuleSoft Administration Panel</small>
                                                 <h3 style ="font-size:18px;margin-bottom:0px;" class="text-left txt-primary">Reset Password</h3>
@@ -103,7 +103,7 @@
                                         <div class="row m-b-20">
                                             <div class="col-md-12">
                                             <div class="text-center">
-                                        <img src="<?= $root ?>/images/shulesoft_logo.png" alt="logo.png" width="70px">
+                                        <img src="<?= $root ?>images/shulesoft_logo.png" alt="logo.png" width="70px">
                                     </div>
                                                 <small style="color:black; text-align: center">ShuleSoft Administration Panel</small>
                                                 <h3 style ="font-size:18px;" class="text-left txt-primary">Sign In</h3>
