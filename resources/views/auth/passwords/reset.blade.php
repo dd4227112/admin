@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/' ?>
 <html lang="en">
     <head>
         <title>ShuleSoft Admin Panel</title>
@@ -34,7 +34,7 @@
     <style>
         label{ color: black}
     </style>
-    <?php $root = url('/') . '/public/' ?>
+    <?php $root = url('/') . '/' ?>
     <body class="fix-menu">
         <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
             <!-- Container-fluid starts -->
