@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider {
     public function boot() {
         Paginator::useBootstrap();
         if (class_exists('Swift_Preferences')) {
-            \Swift_Preferences::getInstance()->setTempDir(storage_path() . '/tmp');
+            \Swift_Preferences::getInstance()->setTempDir('storage/tmp');
         } else {
             \Log::warning('Class Swift_Preferences does not exists');
         }
