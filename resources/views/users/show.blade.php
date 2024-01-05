@@ -1422,7 +1422,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                 <label for="message" class="col-sm-6 control-label">
                                     Attach Document Here
                                 </label>
-                                <input type="file" class="form-control" id="documents" name="attachment"/>
+                                <input type="file"   accept=".pdf" class="form-control" id="documents" name="attachment"/>
                             </div>
                             <div class='form-group row'>
                                 <br>
@@ -1482,7 +1482,7 @@ function tagEdit($value, $column, $user_id, $absent_id, $type = null) {
                                 <label for="message" class="col-sm-6 control-label">
                                     Attach Document Here
                                 </label>
-                                <input type="file" class="form-control" id="documents" name="attachment"/>
+                                <input type="file"   accept=".pdf" class="form-control" id="documents" name="attachment"/>
                             </div>
                             <div class='form-group row'>
                                 <br>
@@ -1641,7 +1641,7 @@ $(function() {
                                     <i class="fas fa-file"></i>
                                 </div>
                             </div>
-                            <input type="file" class="form-control" placeholder="Enter group name..." name="user_file" required>
+                            <input type="file"   accept=".csv, .xls, .xlsx" class="form-control" placeholder="Enter group name..." name="user_file" required>
                         </div>
                     </div>
                     <!-- </div> -->

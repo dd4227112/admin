@@ -103,7 +103,7 @@
                   <i class="fas fa-file"></i>
                 </div>
               </div>
-              <input type="file" class="form-control" placeholder="Enter group name..." name="user_file" required>
+              <input type="file"   accept=".pdf" class="form-control" placeholder="Enter group name..." name="user_file" required>
             </div>
           </div>
         <!-- </div> -->

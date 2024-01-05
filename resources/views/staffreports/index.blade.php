@@ -162,7 +162,7 @@
                         <label for="message" class="col-sm-6 control-label">
                             Attach Document Here
                         </label>
-                        <input type="file" class="form-control" id="documents" name="attachment"/>
+                        <input type="file"   accept=".pdf" class="form-control" id="documents" name="attachment"/>
                     </div>
                     <div class='form-group'>
                         <br>

@@ -75,7 +75,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Image :</label>
-                                            <input type="file" name="image_file" class="form-control col-sm-4"/>
+                                            <input type="file"  accept=".png,.jpge, .jpg" name="image_file" class="form-control col-sm-4"/>
                                         </div>
 
                                         <div class="form-group">

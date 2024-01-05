@@ -54,7 +54,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <input type="file" name="file" id="sms_attachement" class="form-control">
+                                <input type="file"   accept=".pdf" name="file" id="sms_attachement" class="form-control">
                             </div>
                             <span class="col-sm-1 control-label">
                                 <?php echo form_error($errors, 'sms_attachement'); ?>

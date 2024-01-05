@@ -710,7 +710,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label> Document </label>
-                                <input type="file" name="agreement_file" class="form-control" />
+                                <input type="file"   accept=".pdf"  name="agreement_file" class="form-control" />
                             </div>
                         </div>
                     </div>

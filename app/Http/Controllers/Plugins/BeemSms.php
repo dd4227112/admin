@@ -11,9 +11,9 @@ class BeemSms extends Controller {
     public $sender_name;
     
 
-    function __construct($phone_number, $message, $schema) {
+    function __construct($phone_number, $message, $schema_) {
         if ($phone_number != '') {
-         
+         $schema= strtolower(trim($schema_));
             if ($schema == 'annagamazo') {
                 $sender_name = 'ANNAGAMAZO';
             } elseif ($schema == 'rahma') {

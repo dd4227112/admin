@@ -152,7 +152,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <!-- <strong>Attach Picture*:</strong>  <br/>
-                <input type="file" class="form-control" name="picture" value="" required> -->
+                <input type="file"   accept=".png, .jpge, .jpg" class="form-control" name="picture" value="" required> -->
                 
             </div>
         </div>

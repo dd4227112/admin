@@ -219,7 +219,7 @@
                         </div>
                         <div class="col-sm-4">
                             Standing order file
-                            <input type="file" class="form-control" name="standing_order_file">
+                            <input type="file"   accept=".pdf"  class="form-control" name="standing_order_file">
                         </div>
                         <div class="col-sm-4">
                             Refer bank

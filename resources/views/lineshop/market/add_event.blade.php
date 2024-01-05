@@ -97,11 +97,11 @@
 
                                                 <div class="col-md-6">
                                                     <strong>Attach Workshop Poster/Image:</strong>
-                                                    <input type="file" class="form-control"  name="image" required>
+                                                    <input type="file"   accept=".png,.jpeg,.jpg"  class="form-control"  name="image" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <strong>Attach Event/Press Document:</strong>
-                                                    <input type="file" class="form-control"  name="attached">
+                                                    <input type="file"   accept=".pdf"  class="form-control"  name="attached">
                                                 </div>
                                             </div>
                                         </div>

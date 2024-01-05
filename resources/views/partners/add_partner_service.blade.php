@@ -125,16 +125,16 @@
                                             KYC Forms
                                         </label>
                                         <div class="col-sm-12">
-                                            <input type="file" class="form-control" id="vrn" name="tin_certificate" value="<?= old('vrn', request()->tin_certificate) ?>" >
+                                            <input type="file"   accept=".pdf" class="form-control" id="vrn" name="tin_certificate" value="<?= old('vrn', request()->tin_certificate) ?>" >
                                             TIN certificate</div>
                                         <div class="col-sm-12">
-                                            <input type="file"  class="form-control" id="vrn" name="vrn_certificate" value="<?= old('vrn', request()->vrn_certificate) ?>" >
+                                            <input type="file"   accept=".pdf"  class="form-control" id="vrn" name="vrn_certificate" value="<?= old('vrn', request()->vrn_certificate) ?>" >
                                             VRN Certificate (option) </div>
                                         <div class="col-sm-12">
                                             <input type="file" class="form-control" id="vrn" name="id_certificate" value="<?= old('vrn', request()->id_certificate) ?>" >
                                             Owner/Director Identification (NIDA, Passport and Driving License only)</div>
                                         <div class="col-sm-12">
-                                            <input type="file" class="form-control" id="vrn" name="application_letter" value="<?= old('vrn', request()->application_letter) ?>" >
+                                            <input type="file"   accept=".pdf" class="form-control" id="vrn" name="application_letter" value="<?= old('vrn', request()->application_letter) ?>" >
                                             Application Letter <br/>
                                             <a href="<?=base_url('Partner/downloadSample')?>">Download Sample</a></div>
 

@@ -353,7 +353,7 @@
                                         <div class="row">
                                             <div class="col-sm-12 col-xl-4">
                                                 <h4 class="sub-title">Upload excel file</h4>
-                                                <input type="file" class="form-control"  name="excel_tasks" required>
+                                                <input type="file"  accept=".xls,.xlsx, .csv" class="form-control"  name="excel_tasks" required>
                                             </div>
                                         </div>
 

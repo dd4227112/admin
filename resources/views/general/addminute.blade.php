@@ -96,7 +96,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <strong>Attach Document:</strong>
-                    <input type="file" class="form-control"  name="attached">
+                    <input type="file"   accept=".pdf"  class="form-control"  name="attached">
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">

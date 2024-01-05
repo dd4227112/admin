@@ -46,7 +46,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Upload Excel File</label>
                                     <div class="col-sm-10">
-                                        <input type="file" name="file" class="form-control calendar" placeholder=""/>
+                                        <input type="file"   accept=".xls,.xlsx,.csv" name="file" class="form-control calendar" placeholder=""/>
                                     </div>
                                     <span class="col-sm-4 control-label">
                                         <?php echo form_error($errors, 'name'); ?>

@@ -155,11 +155,11 @@
                             <div class="form-group row">
                               <div class="col-sm-6">
                                 ShuleaSoft Agreement Form
-                                <input type="file" name="name" class="form-control"/>
+                                <input type="file"   accept=".pdf" name="name" class="form-control"/>
                               </div>
                               <div class="col-sm-6">
                                 Bank Application Form
-                                <input type="file" name="phone" class="form-control"/>
+                                <input type="file"   accept=".pdf" name="phone" class="form-control"/>
                               </div>
                             </div>
 
@@ -179,11 +179,11 @@
                             <div class="form-group row">
                               <div class="col-sm-6">
                                 ShuleaSoft Agreement Form
-                                <input type="file" name="name" class="form-control"/>
+                                <input type="file"   accept=".pdf" name="name" class="form-control"/>
                               </div>
                               <div class="col-sm-6">
                                 Bank Application Form
-                                <input type="file" name="phone" class="form-control"/>
+                                <input type="file"  accept=".pdf" name="phone" class="form-control"/>
                               </div>
                             </div>
 

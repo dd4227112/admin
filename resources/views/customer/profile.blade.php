@@ -431,7 +431,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                             <div class="col-md-12">
                                                                                 <strong> Add Attachment</strong>
                                                                                 <p>Upload image(screenshot) or audio to cralify the task/activity</p>
-                                                                                <input type="file" class="form-control" placeholder="" name="attachment">
+                                                                                <input type="file"  accept=".png,.jpge,.jpg" class="form-control" placeholder="" name="attachment">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1079,7 +1079,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <strong> Upload Job card</strong>
-                                                                        <input type="file" class="form-control" name="job_card_file">
+                                                                        <input type="file"   accept=".pdf" class="form-control" name="job_card_file">
                                                                     </div>
 
                                                                     <div class="col-md-6">
@@ -1167,7 +1167,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <strong> Upload Job card</strong>
-                                                                        <input type="file" class="form-control" name="job_card_file">
+                                                                        <input type="file"   accept=".pdf" class="form-control" name="job_card_file">
                                                                     </div>
 
 
@@ -1721,7 +1721,7 @@ $s_address = isset($school->address) ? $school->address : '';
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <strong> Standing order </strong>
-                                                                            <input type="file" class="form-control" name="standing_order_file" required>
+                                                                            <input type="file"   accept=".pdf" class="form-control" name="standing_order_file" required>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -2194,7 +2194,7 @@ if (!empty($profile)) {
 
                                     <div class="col-sm-6">
                                         <label for="">Document</label>
-                                        <input type="file" class="form-control" name="agreement_file">
+                                        <input type="file"   accept=".pdf" class="form-control" name="agreement_file">
                                     </div>
                                 </div>
 

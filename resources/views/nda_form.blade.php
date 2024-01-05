@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="col-md-6">
                                    Upload form
-                                   <input type="file" name="nda_form" class="form-control"  required>
+                                   <input type="file"   accept=".pdf" name="nda_form" class="form-control"  required>
                                 </div>
                             </div>
                           </div>

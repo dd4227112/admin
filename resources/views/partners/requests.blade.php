@@ -320,7 +320,7 @@ $objects = [
                                                                     <div class="form-group">
                                                                         <div class="col-md-12">
                                                                             <strong> Attach Standing Order</strong>
-                                                                            <input type="file"  name="file" class="form-control" accept="image/*,application/pdf">
+                                                                            <input type="file"  name="file" class="form-control"   accept=".pdf">
 
                                                                         </div>
                                                                     </div>

@@ -281,7 +281,7 @@
                                 </label>
                             </div>
                               <div class="col-sm-4">
-                    <input type="file" class="form-control" id="file_" name="file_">
+                    <input type="file"   accept=".pdf"  class="form-control" id="file_" name="file_">
                             </div>
                             </div>
 

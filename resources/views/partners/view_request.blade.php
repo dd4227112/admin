@@ -499,7 +499,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <strong> Attach Standing Order</strong>
-                                    <input type="file" name="standing_order"  class="form-control">
+                                    <input type="file"   accept=".pdf" name="standing_order"  class="form-control">
 
                                 </div>
                             </div>

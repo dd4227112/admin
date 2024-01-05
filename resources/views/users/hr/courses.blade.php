@@ -208,7 +208,7 @@ data-dismiss="modal">Close</button>
                   <i class="fas fa-file"></i>
                 </div>
               </div>
-              <input type="file" class="form-control" placeholder="Enter group name..." name="" required>
+              <input type="file"   accept=".pdf" class="form-control" placeholder="Enter group name..." name="" required>
             </div>
           </div>
         <!-- </div> -->

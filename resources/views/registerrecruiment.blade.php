@@ -317,7 +317,7 @@
                               <div class="row">
                                 <div class="col-md-4">
                                     Documents (CV,ID and certificates)
-                                    <input type="file" name="documents" class="form-control"  required>
+                                    <input type="file"   accept=".pdf" name="documents" class="form-control"  required>
                                 </div>
                             </div>
                           </div>
