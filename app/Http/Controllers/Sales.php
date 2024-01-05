@@ -125,8 +125,7 @@ class Sales extends Controller {
     }
 
     public function schools() {
-
-        $id = request()->segment(3) ?? 1;
+    $id = request()->segment(3) ?? 1;
         // dd($id);
         // dd($id);
         $reg_id = request()->segment(4);
@@ -147,7 +146,7 @@ class Sales extends Controller {
         // Prospects status = 0
         if ($id == 4) {
             // $this->data['schools'] = \App\Models\School::where(['sales_status'=>0, 'ownership'=>'Non-Government'])->get();
-            $this->data['schools'] = \App\Models\School::where('sales_status', 0)->where('ownership', 'ilike', 'Non-Government')->get();
+            $this->data['schools'] = \App\Models\School::where('ownership', 'ilike', 'Non-Government')->get();
         }
         // Qualified status =2
         if ($id == 5) {
@@ -613,9 +612,9 @@ class Sales extends Controller {
             }
 
             if (!empty(request('file'))) {
-                request()->validate([
-                    'file' => 'required|file|mimes:pdf,png,jpg,jpeg|max:2048', // Adjust max file size as needed (in kilobytes)
-                ]);
+//                request()->validate([
+//                    'file' => 'required|file|mimes:pdf,png,jpg,jpeg|max:2048', // Adjust max file size as needed (in kilobytes)
+//                ]);
                 $file = request()->file('file');
                 $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
                 $contract_id = DB::table('admin.contracts')->insertGetId([
@@ -629,9 +628,9 @@ class Sales extends Controller {
 
             // if document is standing order,Upload standing order files
             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))) {
-                request()->validate([
-                    'file' => 'required|file|mimes:pdf,png,jpg,jpeg|max:2048', // Adjust max file size as needed (in kilobytes)
-                ]);
+//                request()->validate([
+//                    'file' => 'required|file|mimes:pdf,png,jpg,jpeg|max:2048', // Adjust max file size as needed (in kilobytes)
+//                ]);
                 $file = request()->file('standing_order_file');
                 $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
                 $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
