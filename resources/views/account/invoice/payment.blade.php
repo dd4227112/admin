@@ -224,7 +224,7 @@ $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as las
                    Bank Slip Title
                 </label>
                 <div class="col-sm-6">
-                    <input class="form-control" type="file" accept=".png,.jpg,.jpeg,.gif,.pdf" class="upload" name="image" >
+                    <input accept=".pdf" class="form-control" type="file" accept=".png,.jpg,.jpeg,.gif,.pdf" class="upload" name="image" >
 
                 </div>
                 <span class="col-sm-2 control-label">

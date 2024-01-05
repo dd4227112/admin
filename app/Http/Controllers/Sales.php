@@ -572,7 +572,7 @@ class Sales extends Controller {
                 'note' => nl2br(request('description'))
             ];
 
-            $this->sendDataToAccounts($school_name, $schema_name, request('students'), $school_email, $school_phone, $address);
+            //$this->sendDataToAccounts($school_name, $schema_name, request('students'), $school_email, $school_phone, $address);
             if (!empty($check_client)) {
                 $client_id = $check_client->id;
                 DB::table('admin.clients')->where('id', $client_id)->update(Arr::except($client_data, ['username']));
@@ -613,6 +613,9 @@ class Sales extends Controller {
             }
 
             if (!empty(request('file'))) {
+                request()->validate([
+                    'file' => 'required|file|mimes:pdf,png,jpg,jpeg|max:2048', // Adjust max file size as needed (in kilobytes)
+                ]);
                 $file = request()->file('file');
                 $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
                 $contract_id = DB::table('admin.contracts')->insertGetId([
@@ -626,6 +629,9 @@ class Sales extends Controller {
 
             // if document is standing order,Upload standing order files
             if (!empty(request('standing_order_file')) && preg_match('/Standing Order/i', request('payment_option'))) {
+                request()->validate([
+                    'file' => 'required|file|mimes:pdf,png,jpg,jpeg|max:2048', // Adjust max file size as needed (in kilobytes)
+                ]);
                 $file = request()->file('standing_order_file');
                 $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
                 $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
@@ -662,7 +668,7 @@ class Sales extends Controller {
             DB::table('admin.clients')->where('id', $client_id)->update(['code' => $trial_code]);
             $user = $client->first();
 
-            $user = \App\Models\User::find(request('sales_user_id'));
+            $user = \App\Models\User::where('id',request('sales_user_id'))->where('status',1)->first();
 
             $message = 'Hello ' . $user->firstname . ' ' . $user->lastname
                     . chr(10) . 'School :' . $school->name . ' has been onboarded succesfully'
@@ -686,6 +692,7 @@ class Sales extends Controller {
 
     // fx to send data to accounts system
     public function sendDataToAccounts($school_name, $schema, $no_of_students, $email, $phone, $address) {
+        return false;
         $classlevel = DB::table('accounts.classlevel')->first();
         $object = [
             'classes' => $school_name,
@@ -747,24 +754,25 @@ class Sales extends Controller {
         DB::table('accounts.student')->insert($derived_values);
 
         $fees = DB::table('accounts.fees')->get();
-        foreach ($fees as $fee) {
-            $check_fee_class = DB::table('accounts.fees_classes')->where('class_id', $class_id)->where('fee_id', $fee->id)->first();
-            if (empty($check_fee_class)) {
-                $fee_class_id = DB::table('accounts.fees_classes')->insertGetId(['fee_id' => $fee->id, 'class_id' => $class_id]);
-                $this->addNewFeesInstallments($fee->id, $class_id);
-                $banks = DB::table('accounts.bank_accounts')->get();
-                foreach ($banks as $bank) {
-                    DB::table('accounts.bank_accounts_fees_classes')->insert([
-                        'bank_account_id' => $bank->id,
-                        'fees_classes_id' => $fee_class_id
-                    ]);
-                }
-            }
-        }
+//        foreach ($fees as $fee) {
+//            $check_fee_class = DB::table('accounts.fees_classes')->where('class_id', $class_id)->where('fee_id', $fee->id)->first();
+//            if (empty($check_fee_class)) {
+//                $fee_class_id = DB::table('accounts.fees_classes')->insertGetId(['fee_id' => $fee->id, 'class_id' => $class_id]);
+//                //$this->addNewFeesInstallments($fee->id, $class_id);
+//                $banks = DB::table('accounts.bank_accounts')->get();
+//                foreach ($banks as $bank) {
+//                    DB::table('accounts.bank_accounts_fees_classes')->insert([
+//                        'bank_account_id' => $bank->id,
+//                        'fees_classes_id' => $fee_class_id
+//                    ]);
+//                }
+//            }
+//        }
     }
 
     // Function from shulesoft main project
     public function addNewFeesInstallments($fee_id, $classes_id) {
+        return false;
         $installments = DB::table('accounts.installments as u')->select('u.*')->join('accounts.academic_year as y', 'y.id', '=', 'u.academic_year_id')->join('accounts.classes as c', 'c.classlevel_id', '=', 'y.class_level_id')->where('c.classesID', $classes_id)->get();
 
         if (!empty($installments)) {
@@ -805,7 +813,7 @@ class Sales extends Controller {
         \App\Models\Client::where('id', (int) $client_id)->update(['status' => 3]);
         DB::table('admin.standing_orders')->where('client_id', (int) $client_id)->update(['is_approved' => 1]);
 
-        $user = \App\Models\User::find(761);  //Head of product Mr Paul --default 
+        $user = \App\Models\User::find(2); 
         $client = \App\Models\Client::find($client_id);
 
         $message = 'Dear ' . $user->firstname . ' ' . $user->lastname
@@ -889,7 +897,7 @@ class Sales extends Controller {
                 }
 
                 // email to shulesoft personel
-                $user = \App\Models\User::where('id', $support_user_id)->first();
+                $user = \App\Models\User::where('id', $support_user_id)->where('status',1)->first();
                 $start_date = date('d-m-Y', strtotime($start_date)) == '01-01-1970' ? date('Y-m-d') : date('d-m-Y', strtotime($start_date));
                 $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '<br/>'
                         . 'A task ' . $section->content . ' has been allocated to you'
@@ -913,7 +921,7 @@ class Sales extends Controller {
                 $sales = new \App\Http\Controllers\Customer();
                 $zm = $sales->zonemanager($client_id);
                 if (isset($zm->user_id) && !empty((int) $zm->user_id)) {
-                    $manager = \App\Models\User::where(['id' => $zm->user_id, 'status' => 1])->first();
+                    $manager = \App\Models\User::where('id', $zm->user_id)->where('status', 1)->first();
 
                     if (!empty($manager)) {
                         $manager_message = 'Hello ' . $manager->firstname . '<br/>'
@@ -1325,7 +1333,7 @@ class Sales extends Controller {
         if ($_POST) {
             $this->data['user_id'] = $user_id = request('user_id');
             $this->data['month_num'] = $month_num = request('month');
-            $this->data['name'] = \App\Models\User::where('id', $user_id)->first()->name;
+            $this->data['name'] = \App\Models\User::where('id', $user_id)->where('status',1)->first()->name;
             $this->data['schools'] = $schools = DB::table('users_schools')
                             ->join('schools', 'users_schools.school_id', '=', 'schools.id')
                             ->select('schools.id', 'schools.name')->where('users_schools.user_id', $user_id)->get();

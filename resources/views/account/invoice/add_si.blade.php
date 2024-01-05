@@ -139,6 +139,7 @@
                                 <strong> Standing order  </strong>
                                 <input type="file"
                                     class="form-control"
+                                    accept=".pdf"
                                     name="standing_order_file"
                                     required>
                             </div>

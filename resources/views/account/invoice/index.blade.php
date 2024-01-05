@@ -359,7 +359,7 @@
 
                                   <div class="col-md-4">
                                       File
-                                    <input type="file" class="form-control"  name="invoice_file">
+                                    <input accept=".pdf" type="file" class="form-control"  name="invoice_file">
                                 </div>
                             </div>
                         </div>
