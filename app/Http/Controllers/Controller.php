@@ -144,7 +144,7 @@ class Controller extends BaseController
     public function uploadFileLocal($file)
     {
         //Move Uploaded File
-        $destinationPath = 'storage/uploads/images';
+        $destinationPath = '../storage/uploads/images';
         !is_dir($destinationPath) ? mkdir($destinationPath) : '';
         $filename = rand(145, 87998) . time() . '.' . $file->getClientOriginalExtension();
         $file->move($destinationPath, $filename);
