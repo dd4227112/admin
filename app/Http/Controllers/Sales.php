@@ -797,7 +797,8 @@ class Sales extends Controller {
         $this->data['client'] = \App\Models\Client::where('id', (int) $client_id)->first();
         $this->data['trial_code'] = $trial_code = $client_id . time();
         if ($_POST) {
-            $this->scheduleActivities($client_id, $trial_code);
+            //$this->scheduleActivities($client_id, $trial_code);
+            
             return view('sales.customer_success', $this->data);
         }
         $this->data['payments'] = DB::select('select *  from admin.payments where id = ' . $client_id . ' ');
