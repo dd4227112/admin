@@ -1,4 +1,4 @@
-<?php $root = url('/') . '/' ?>
+<?php $root = url('/public') . '/' ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>

@@ -1,5 +1,5 @@
 <?php
-$root = url('/');
+$root = url('/public/');
 $value = \App\Models\UsersSchool::where('user_id', Auth::user()->id)->get();
 //isset($value) ? dd($value) : 'vaaaaaaaa' 
 $pass = time();

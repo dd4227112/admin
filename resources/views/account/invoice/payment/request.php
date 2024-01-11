@@ -102,6 +102,6 @@ i will fix it later to detect the request comes from which page
 </div>
 <script type="text/javascript">
     function loadAjax(pg,method,content,return_div){
-        window.location.href='<?=url(str_replace('@', '/', createRoute())).'/'.$invoice_id?>/'+method;
+        window.location.href='<?=url(createRoute()['controller'].'/'.createRoute()['method']).'/'.$invoice_id?>/'+method;
     }
 </script>

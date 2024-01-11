@@ -54,44 +54,44 @@ foreach ($bad_url as $value) {
     }
 }
 
-$token=TOKEN_LIVE;
-Route::get('/'.$token.'/live/{id}/{year}/{is_customer?}', 'Customer@usageAnalysis');
+$token = TOKEN_LIVE;
+Route::get('/' . $token . '/live/{id}/{year}/{is_customer?}', 'Customer@usageAnalysis');
 
 //list of schools that use particular bank eg NMB, CRDB etc
-Route::get('/'.$token.'/live/', 'Customer@schoolBanks');
+Route::get('/' . $token . '/live/', 'Customer@schoolBanks');
 
 //list of branches
-Route::get('/'.$token.'/live/branches', 'Customer@Banksbranches');
+Route::get('/' . $token . '/live/branches', 'Customer@Banksbranches');
 
 //Integration status
-Route::get('/'.$token.'/live/intergration', 'Customer@IntegrationStatus');
+Route::get('/' . $token . '/live/intergration', 'Customer@IntegrationStatus');
 
 //Integration bank status
-Route::get('/'.$token.'/live/banks', 'Customer@BankStatus');
+Route::get('/' . $token . '/live/banks', 'Customer@BankStatus');
 
 //Employees
-Route::get('/'.$token.'/live/emp', 'Customer@Emplist');
+Route::get('/' . $token . '/live/emp', 'Customer@Emplist');
 
 //List of customers
-Route::get('/'.$token.'/custmlist/{month}/{year}', 'Customer@customerslist');
+Route::get('/' . $token . '/custmlist/{month}/{year}', 'Customer@customerslist');
 //custom reports
-Route::get('/'.$token.'/custrpt/{q}', 'Customer@customSqlReport');
+Route::get('/' . $token . '/custrpt/{q}', 'Customer@customSqlReport');
 
-Route::get('/'.$token.'/{q}', 'Customer@implementationReport');
+Route::get('/' . $token . '/{q}', 'Customer@implementationReport');
 
-Route::get('/'.$token.'/send', 'Customer@event');
+Route::get('/' . $token . '/send', 'Customer@event');
 //churn calculations
-Route::get('/'.$token.'/{year}', 'Customer@churnReport');
+Route::get('/' . $token . '/{year}', 'Customer@churnReport');
 
-Route::get('/'.$token.'/expense', 'Customer@expenseRecords');
+Route::get('/' . $token . '/expense', 'Customer@expenseRecords');
 
 Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();
 //});
 //All users
-Route::get('/'.$token.'/allusers', 'Customer@allusers');
-Route::get('/'.$token.'/software/{q}/{z?}', 'Software@tasksSummary');
+Route::get('/' . $token . '/allusers', 'Customer@allusers');
+Route::get('/' . $token . '/software/{q}/{z?}', 'Software@tasksSummary');
 
 Route::get('/epayment/i/{id}/{amount?}', 'Background@epayment');
 Route::any('/create/epayment/{id}/{amount?}', 'Background@createEpayment');
@@ -107,18 +107,36 @@ Route::get('/customer/getschools/null', function () {
 
 //dd(createRoute());
 
-if (createRoute() != NULL) {
-    $route = explode('@', createRoute());
-    $file = app_path() . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $route[0] . '.php';
+// if (createRoute() != NULL) {
+//     $route = explode('@', createRoute());
+//     $file = app_path() . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $route[0] . '.php';
+
+//     if (file_exists($file)) {
+//         Route::any('/{controller?}/{method?}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}/{param7?}', createRoute());
+
+//     } else if ($route[0] == 'LoginController') {
+
+//     }
+// }
+
+$routeInfo = createRoute();
+
+if ($routeInfo !== null) {
+    $file = app_path() . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $routeInfo['controller'] . '.php';
 
     if (file_exists($file)) {
-        Route::any('/{controller?}/{method?}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}/{param7?}', createRoute());
-    } else if ($route[0] == 'LoginController') {
-        
+
+        Route::any('/{controller?}/{method?}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}/{param7?}', $routeInfo['controller'] . '@' . $routeInfo['method']);
+    } else {
+        return view('errors.404');
     }
+} else {
+    return view('errors.404');
 }
 
+
 Auth::routes();
+Route::get('/', 'Analyse@index')->name('/');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/workshop', 'Workshop@index')->name('workshop');

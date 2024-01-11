@@ -38,7 +38,7 @@ class Handler extends ExceptionHandler {
         $object = [
             'error_message' => $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'],
             'file' => @$e->getTrace()[0]['file'],
-            'route' => createRoute(),
+            'route' => createRoute()['controller'].'/'.createRoute()['method'],
             "url" => url()->current(),
             'error_instance' => get_class($e),
             'request' => json_encode(request()->all()),
@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler {
         $err .= "\t<li>usertype " . session('usertype') . "</li>\n";
         $err .= "\t<li>error msg: [" . $e->getCode() . '] ' . $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'] . "</li>\n";
         $err .= "\t<li>url: " . url()->current() . "</li>\n";
-        $err .= "\t<li>Controller route: " . createRoute() . "</li>\n";
+        $err .= "\t<li>Controller route: " . createRoute()['controller'] ."/". createRoute()['method']."</li>\n";
         $err .= "\t<li>Error from which host: " . gethostname() . "</li>\n";
         $err .= "\t<li>Error from username: " . session('username') . "</li>\n";
         $err .= "</ul>\n\n";
