@@ -19,8 +19,10 @@ class Pharmacies extends Model
         return $this->belongsTo(\App\Models\Ward::class, 'ward_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
-    public function client() {
-        return $this->belongsToMany(\App\Models\LineshopCLient::class, 'client_pharmacy', 'client_id', 'pharmacy_id');
+    // public function client() {
+    //     return $this->belongsToMany(\App\Models\LineshopCLient::class, 'client_pharmacy', 'client_id', 'pharmacy_id');
+    // }
+    public function clientPharmacy() {
+        return $this->belongsTo(\App\Models\ClientPharmacy::class, 'id', 'pharmacy_id');
     }
-
 }

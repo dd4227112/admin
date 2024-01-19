@@ -145,7 +145,7 @@
                         <div class="col-md-4">
                             <div class="row follower-counter">
                                 <div class="col-md-12 col-lg-12">
-                                    <div class="text-white " contenteditable="true" onblur="$.get('<?= url('sales/updateStudent/null/') ?>', {no: $(this).text(), school_id:<?= $pharmacy->id ?>}, function (data) {
+                                    <div class="text-white " contenteditable="true" onblur="$.get('<?= url('sales/updateStudent/null/') ?>', {no: $(this).text(), pharmacy_id:<?= $pharmacy->id ?>}, function (data) {
                                                 alert(data)
                                             })"></div>
                                     <div class="text-white">No. of Warehouse</div>
@@ -608,7 +608,7 @@
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
                 </div>
-                <input type="hidden" value="<?= $pharmacy->id ?>" name="school_id" />
+                <input type="hidden" value="<?= $pharmacy->id ?>" name="pharmacy_id" />
                 <input type="hidden" value="1" name="add_user" />
                 <?= csrf_field() ?>
             </form>

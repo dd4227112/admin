@@ -10,11 +10,11 @@ class ClientPharmacy extends Model {
     protected $fillable = ['id', 'client_id', 'pharmacy_id', 'created_at', 'updated_at'];
 
     public function pharmacies() {
-        return $this->belongsTo(\App\Models\Pharmacies::class, 'pharmacy_id', 'id')->withDefault(['name'=>'Not Defined']);
+        return $this->hasMany(\App\Models\Pharmacies::class, 'pharmacy_id', 'id')->withDefault(['name'=>'Not Defined']);
     }
 
-    // public function client() {
-    //     return $this->belongsTo(\App\Models\LineshopCLient::class, 'client_id', 'id')->withDefault(['name'=>'Not Defined']);
-    // }
+    public function client() {
+        return $this->hasMany(\App\Models\LineshopCLient::class, 'client_id', 'id')->withDefault(['name'=>'Not Defined']);
+    }
 
 }

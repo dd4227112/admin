@@ -34,26 +34,29 @@
                                 </ul>
                             </div>
                             @endif
-                            {!! Form::open(array('url' => 'users/store','method'=>'POST')) !!}
+                          
+                            <form action="{{ url('users/store')}}" method="POST">
+                                @csrf
                             <div class="card-block">
                                 <div class="row">  
                                 <div class="col-xs-12 col-sm-3 col-md-3">
                                     <div class="form-group">
                                         <strong>First Name:</strong>
-                                        {!! Form::text('firstname', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+                                        <input type="text" name="firstname" placeholder="Name" class="form-control" value="{{ old('firstname') }}" />
                                     </div>
                                    </div>
                                    <div class="col-xs-12 col-sm-3 col-md-3">
                                     <div class="form-group">
                                         <strong>Last Name:</strong>
-                                        {!! Form::text('lastname', null, array('placeholder' => 'Last Name','class' => 'form-control')) !!}
+                                        <input type="text" name="lastname" placeholder="Last Name" class="form-control" value="{{ old('lastname') }}" />
                                     </div>
                                   </div>
 
                                   <div class="col-xs-12 col-sm-3 col-md-3">
                                     <div class="form-group">
                                         <strong>Phone:</strong>
-                                        {!! Form::text('phone', null, array('placeholder' => 'Phone Number','class' => 'form-control phoneNumber','type'=>'tel','id'=>'phone')) !!}
+                                        <input type="tel" name="phone" placeholder="Phone Number" class="form-control phoneNumber" id="phone" value="{{ old('phone') }}" />
+
                                         <span id="valid-msg" class="hide">✓ Valid</span>
                                         <span id="error-msg" class="hide">Invalid number</span>
                                     </div>
@@ -61,7 +64,7 @@
                                 <div class="col-xs-12 col-sm-3 col-md-3">
                                     <div class="form-group">
                                         <strong>Personal Email:</strong>
-                                        {!! Form::email('personal_email', null, array('placeholder' => 'Personal Email','class' => 'form-control ','type'=>'email','id'=>'personal_email')) !!}
+                                        <input type="email" name="personal_email" placeholder="Personal Email" class="form-control" id="personal_email" value="{{ old('personal_email') }}" />
                                     </div>
                                 </div>
                                 </div>
@@ -72,7 +75,7 @@
                                 <div class="col-xs-12 col-sm-3 col-md-3">
                                     <div class="form-group">
                                         <strong>Company Email:</strong>
-                                        {!! Form::email('email', null, array('placeholder' => 'Email','class' => 'form-control ','type'=>'email','id'=>'email')) !!}
+                                        <input type="email" name="email" id="email" placeholder ="Email" class = "form-control">
                                         <span class="hinge">Please login into hosting account and create an email ID for this person</span>
                                     </div>
                                 </div>
@@ -276,7 +279,7 @@
                                     </button>
                                 </div>
                             </div>
-                            {!! Form::close() !!}
+                        </form>
 
                         </div>
                     </div>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientPharmacy;
+use App\Models\LineshopCLient;
 use Illuminate\Http\Request;
 use \App\Models\UserAllowance;
 use App\Models\SalaryAllowance;
@@ -257,8 +259,22 @@ class Lineshop extends Controller
         }
 
         // $this->data['school'] = \App\Models\School::findOrFail($id);
-        $this->data['pharmacy'] = $pharmacy=DB::table('pharmacies')->where('pharmacies.id', $id)->get(['id', 'name','ownership', 'account_number' , 'created_at', 'updated_at', 'ward_id' , 'status', 'type', 'registered', 'region', 'district' ])->first();
-        $this->data['link'] =strtolower($this->url($pharmacy->name));
+        //$this->data['pharmacy'] = $pharmacy=DB::table('pharmacies')->where('pharmacies.id', $id)->get(['id', 'name','ownership', 'account_number' , 'created_at', 'updated_at', 'ward_id' , 'status', 'type', 'registered', 'region', 'district' ])->first();
+        $this->data['pharmacy'] = $pharmacy = Pharmacies::where('id', $id)->first();
+        if (!empty($pharmacy->clientPharmacy)) {
+
+            $client = LineshopCLient::find($pharmacy->clientPharmacy->client_id);
+
+            $this->data['link'] = strtolower($this->url($client->username));
+        } else {
+            $this->data['link'] = '';
+        }
+        // DB::table('pharmacies')->where('pharmacies.id', $id)->get(['id', 'name','ownership', 'account_number' , 'created_at', 'updated_at', 'ward_id' , 'status', 'type', 'registered', 'region', 'district' ])->first();
+        if (empty($pharmacy)) {
+            return view('errors.404');
+        }
+
+
         if ($_POST) {
             $file = request()->file('agreement_file');
             $company_file_id = $file ? $this->saveFile($file, TRUE) : 1;
@@ -287,7 +303,8 @@ class Lineshop extends Controller
 
                 return redirect()->back()->with('success', 'School record updated successfully');
             } else if ((int) request('add_user') == 1) {
-                \App\Models\SchoolContact::create([
+                // dd(request()->all());
+                \App\Models\PharmacyContact::create([
                     'name' => request('name'),
                     'email' => request('email'),
                     'phone' => request('phone'),
@@ -332,7 +349,8 @@ class Lineshop extends Controller
         }
         return view('lineshop.sales.add_pharmacies', $this->data);
     }
-    public function url($client_name){
+    public function url($client_name)
+    {
         $host = $_SERVER['HTTP_HOST'];
         if ($host == 'localhost') {
             $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -1029,7 +1047,7 @@ class Lineshop extends Controller
 
         if (in_array("quick-sms", $channels)) {
             // Send messages by quick sms
-            $this->send_sms($phonenumber, $message, 1, null, 'lineshop'); 
+            $this->send_sms($phonenumber, $message, 1, null, 'lineshop');
         }
 
         if (in_array("whatsapp", $channels)) {

@@ -199,7 +199,8 @@ $objects = [
                                             $bank = null;
                                             foreach ($requests as $request) {
                                                 if ($type_id == 4) { // CRDB Bank
-                                                    $check_school = DB::table('all_setting')->where('schema_name', $request->client->username)->first();
+                                                    // $check_school = DB::table('all_setting')->where('schema_name', $request->client->username)->first();
+                                                    $check_school = DB::table('admin.clients')->where('username', $request->client->username)->whereNot('is_new_version', 1)->first();
                                                     if (!empty($check_school)) {
                                                         $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $request->bank_account_id)->first();
                                                     } else {

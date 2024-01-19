@@ -59,22 +59,21 @@
                                         </ul>
                                     </div>
                                     @endif
-                                    {!! Form::open(array('url' => 'Phone_call/store','method'=>'POST')) !!}
+                                    <form action="{{ url('Phone_call/store') }}" method="POST">
+                                        @csrf
                                     <div class="card-block">
                                         <div class="col-xs-12 col-sm-12 col-md-12">
                                             <div class="form-group">
                                                 <strong>First Name:</strong>
-                                                {!! Form::text('full_name', null, array('placeholder' => 'Name','class'
-                                                => 'form-control')) !!}
+                                                <input type="text" name="full_name" placeholder="Name" class="form-control" value="{{ old('full_name') }}" />
+
                                             </div>
                                         </div>
 
                                         <div class="col-xs-12 col-sm-12 col-md-12">
                                             <div class="form-group">
                                                 <strong>Phone:</strong>
-                                                {!! Form::text('phone_number', null, array('placeholder' => 'Phone
-                                                Number','class' => 'form-control
-                                                phoneNumber','type'=>'tel','id'=>'phone')) !!}
+                                                <input type="tel" name="phone_number" placeholder="Phone Number" class="form-control phoneNumber" id="phone" value="{{ old('phone_number') }}" />
                                                 <span id="valid-msg" class="hide">✓ Valid</span>
                                                 <span id="error-msg" class="hide">Invalid number</span>
                                             </div>
@@ -82,9 +81,7 @@
                                         <div class="col-xs-12 col-sm-12 col-md-12">
                                             <div class="form-group">
                                                 <strong>Email:</strong>
-                                                {!! Form::email('email', null, array('placeholder' => 'Email','class' =>
-                                                'form-control ','type'=>'email','id'=>'email')) !!}
-
+                                                <input type="email" name="email" placeholder="Email" class="form-control" id="email" value="{{ old('email') }}" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -167,7 +164,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    {!! Form::close() !!}
+                                    </form>
 
                                 </div>
                             </div>
